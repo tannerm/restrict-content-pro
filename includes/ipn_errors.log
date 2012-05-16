@@ -1935,3 +1935,19 @@ Stack trace:
 [16-May-2012 00:15:25 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
 [16-May-2012 00:15:25 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
 [16-May-2012 00:15:25 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[16-May-2012 00:18:20 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[16-May-2012 00:18:20 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[16-May-2012 00:18:20 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[16-May-2012 00:18:20 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[16-May-2012 00:18:20 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[16-May-2012 00:18:20 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[16-May-2012 00:18:55 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[16-May-2012 00:18:55 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[16-May-2012 00:18:55 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[16-May-2012 00:18:55 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[16-May-2012 00:18:55 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[16-May-2012 00:18:55 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[16-May-2012 00:19:16 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[16-May-2012 00:19:40 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[16-May-2012 00:20:02 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[16-May-2012 00:20:26 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
