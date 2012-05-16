@@ -118,8 +118,18 @@ function rcp_members_page()
 				<tbody>
 				<?php 
 			
-				$members = rcp_get_members($status, $subscription_id, $offset, $per_page, $order);
-
+				if( isset($_GET['signup_method']) ) {
+					$method = $_GET['signup_method'] == 'live' ? 'live' : 'manual';
+					$members = get_users( array(
+							'meta_key' => 'rcp_signup_method',
+							'meta_value' => $method,
+							'number' => 999999
+						)
+					);
+					$per_page = 999999;
+				} else {
+					$members = rcp_get_members($status, $subscription_id, $offset, $per_page, $order);
+				}
 				if($members) :
 					$i = 1;
 					foreach( $members as $key => $member) : ?>
@@ -149,7 +159,7 @@ function rcp_members_page()
 					<tr><td colspan="9"><?php _e('No subscribers found', 'rcp'); ?></td></tr>
 				<?php endif; ?>
 			</table>
-			<?php if ($total_pages > 1) : ?>
+			<?php if ($total_pages > 1 && !isset($_GET['signup_method']) ) : ?>
 				<div class="tablenav">
 					<div class="tablenav-pages alignright">
 						<?php
