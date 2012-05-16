@@ -264,7 +264,9 @@ function rcp_user_subscription_details($atts, $content = null ) {
 	if(is_user_logged_in())	{
 		$details = '<ul id="rcp_subscription_details">';
 			$details .= '<li>' . __('Subscription Level', 'rcp') . ': ' . rcp_get_subscription($user_ID) . '</li>';
-			$details .= '<li>' . __('Expiration Date', 'rcp') . ': ' . rcp_get_expiration_date($user_ID) . '</li>';
+			if( rcp_get_expiration_date($user_ID) ) {
+				$details .= '<li>' . __('Expiration Date', 'rcp') . ': ' . rcp_get_expiration_date($user_ID) . '</li>';
+			}			
 			$details .= '<li>' . __('Recurring', 'rcp') . ': ';
 			$details .= rcp_is_recurring($user_ID) ? __('yes', 'rcp') : __('no', 'rcp') . '</li>';
 			$details .= '<li>' . __('Current Status', 'rcp') . ': ' . rcp_print_status($user_ID) . '</li>';

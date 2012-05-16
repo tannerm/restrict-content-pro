@@ -230,7 +230,10 @@ function rcp_user_has_access($user_id, $access_level_needed) {
 */
 function rcp_get_expiration_date($user_id) {
 	$expiration = get_user_meta($user_id, 'rcp_expiration', true);
-	return $expiration != 'none' ? date(get_option('date_format'), strtotime($expiration)) : __('none', 'rcp');
+	if($expiration) {
+		return $expiration != 'none' ? date(get_option('date_format'), strtotime($expiration)) : __('none', 'rcp');
+	}
+	return false;
 }
 
 /*

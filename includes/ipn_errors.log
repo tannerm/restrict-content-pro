@@ -1929,3 +1929,9 @@ Stack trace:
  in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-download.php on line 67
 [15-May-2012 23:06:08 UTC] PHP Warning:  readfile(http://localhost/wordpress/wp-content/uploads/edd/2012/05/01_preview.__large_preview.jpg): failed to open stream: HTTP request failed! HTTP/1.1 403 Forbidden
  in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-download.php on line 67
+[16-May-2012 00:15:25 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[16-May-2012 00:15:25 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[16-May-2012 00:15:25 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[16-May-2012 00:15:25 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[16-May-2012 00:15:25 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[16-May-2012 00:15:25 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
