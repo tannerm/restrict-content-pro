@@ -1957,3 +1957,506 @@ Stack trace:
 [16-May-2012 00:43:54 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
 [16-May-2012 00:43:54 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
 [16-May-2012 00:43:54 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[17-May-2012 01:01:37 UTC] PHP Parse error:  syntax error, unexpected T_GLOBAL, expecting '{' in /home/pippin/sites/wordpress/wp-content/plugins/cgc-user-following-system/includes/display-functions.php on line 5
+[17-May-2012 01:01:39 UTC] PHP Parse error:  syntax error, unexpected T_GLOBAL, expecting '{' in /home/pippin/sites/wordpress/wp-content/plugins/cgc-user-following-system/includes/display-functions.php on line 5
+[17-May-2012 01:01:39 UTC] PHP Parse error:  syntax error, unexpected T_GLOBAL, expecting '{' in /home/pippin/sites/wordpress/wp-content/plugins/cgc-user-following-system/includes/display-functions.php on line 5
+[17-May-2012 01:01:53 UTC] PHP Parse error:  syntax error, unexpected $end in /home/pippin/sites/wordpress/wp-content/plugins/cgc-user-following-system/includes/display-functions.php on line 23
+[17-May-2012 01:01:55 UTC] PHP Parse error:  syntax error, unexpected $end in /home/pippin/sites/wordpress/wp-content/plugins/cgc-user-following-system/includes/display-functions.php on line 23
+[17-May-2012 01:01:55 UTC] PHP Parse error:  syntax error, unexpected $end in /home/pippin/sites/wordpress/wp-content/plugins/cgc-user-following-system/includes/display-functions.php on line 23
+[17-May-2012 01:09:01 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/class-custom-plugin-updater.php on line 73
+[17-May-2012 01:09:01 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/class-custom-plugin-updater.php on line 73
+[17-May-2012 01:09:04 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/class-custom-plugin-updater.php on line 73
+[17-May-2012 01:09:05 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/class-custom-plugin-updater.php on line 73
+[17-May-2012 02:02:17 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[17-May-2012 02:02:17 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[17-May-2012 02:02:17 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[17-May-2012 02:02:17 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[17-May-2012 02:02:17 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[17-May-2012 02:02:17 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[17-May-2012 02:02:27 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[17-May-2012 02:02:27 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[17-May-2012 02:02:27 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[17-May-2012 02:02:27 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[17-May-2012 02:02:27 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[17-May-2012 02:02:27 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[17-May-2012 02:12:38 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 42
+[17-May-2012 02:12:38 UTC] PHP Notice:  Undefined index: list_id in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 43
+[17-May-2012 02:12:38 UTC] PHP Notice:  Undefined index: message in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 44
+[17-May-2012 14:20:00 UTC] PHP Notice:  Undefined index: edd_email in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-purchase.php on line 9
+[17-May-2012 14:20:00 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[17-May-2012 14:32:00 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[17-May-2012 14:37:06 UTC] PHP Notice:  Undefined index: 7 in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/cart-functions.php on line 134
+[17-May-2012 14:37:15 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[17-May-2012 15:04:33 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[17-May-2012 15:04:33 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[17-May-2012 15:04:33 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[17-May-2012 15:04:33 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[17-May-2012 15:04:33 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[17-May-2012 15:04:33 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[17-May-2012 15:29:14 UTC] PHP Notice:  Undefined index: 7 in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/cart-functions.php on line 134
+[17-May-2012 15:29:45 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[17-May-2012 15:30:16 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[17-May-2012 15:55:18 UTC] PHP Notice:  Undefined index: 7 in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/cart-functions.php on line 134
+[17-May-2012 15:55:25 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[17-May-2012 15:56:31 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[17-May-2012 18:59:51 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[17-May-2012 19:01:57 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[17-May-2012 19:01:57 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[17-May-2012 19:01:57 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[17-May-2012 19:01:57 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[17-May-2012 19:01:57 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[17-May-2012 19:01:57 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[17-May-2012 19:06:53 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 42
+[17-May-2012 19:06:53 UTC] PHP Notice:  Undefined index: list_id in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 43
+[17-May-2012 19:06:53 UTC] PHP Notice:  Undefined index: message in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 44
+[17-May-2012 20:20:27 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/class-custom-plugin-updater.php on line 73
+[17-May-2012 20:20:27 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/class-custom-plugin-updater.php on line 73
+[17-May-2012 20:20:29 UTC] PHP Notice:  wp_tiny_mce is <strong>deprecated</strong> since version 3.3! Use wp_editor() instead. in /home/pippin/sites/wordpress/wp-includes/functions.php on line 3467
+[17-May-2012 20:20:48 UTC] PHP Notice:  wp_tiny_mce is <strong>deprecated</strong> since version 3.3! Use wp_editor() instead. in /home/pippin/sites/wordpress/wp-includes/functions.php on line 3467
+[17-May-2012 20:20:56 UTC] PHP Notice:  wp_tiny_mce is <strong>deprecated</strong> since version 3.3! Use wp_editor() instead. in /home/pippin/sites/wordpress/wp-includes/functions.php on line 3467
+[17-May-2012 20:21:05 UTC] PHP Notice:  wp_tiny_mce is <strong>deprecated</strong> since version 3.3! Use wp_editor() instead. in /home/pippin/sites/wordpress/wp-includes/functions.php on line 3467
+[17-May-2012 20:24:22 UTC] PHP Notice:  wp_tiny_mce is <strong>deprecated</strong> since version 3.3! Use wp_editor() instead. in /home/pippin/sites/wordpress/wp-includes/functions.php on line 3467
+[17-May-2012 20:24:38 UTC] PHP Notice:  wp_tiny_mce is <strong>deprecated</strong> since version 3.3! Use wp_editor() instead. in /home/pippin/sites/wordpress/wp-includes/functions.php on line 3467
+[17-May-2012 20:25:07 UTC] PHP Notice:  wp_tiny_mce is <strong>deprecated</strong> since version 3.3! Use wp_editor() instead. in /home/pippin/sites/wordpress/wp-includes/functions.php on line 3467
+[17-May-2012 20:26:05 UTC] PHP Notice:  wp_tiny_mce is <strong>deprecated</strong> since version 3.3! Use wp_editor() instead. in /home/pippin/sites/wordpress/wp-includes/functions.php on line 3467
+[17-May-2012 20:26:17 UTC] PHP Notice:  wp_tiny_mce is <strong>deprecated</strong> since version 3.3! Use wp_editor() instead. in /home/pippin/sites/wordpress/wp-includes/functions.php on line 3467
+[17-May-2012 20:26:24 UTC] PHP Notice:  wp_tiny_mce is <strong>deprecated</strong> since version 3.3! Use wp_editor() instead. in /home/pippin/sites/wordpress/wp-includes/functions.php on line 3467
+[17-May-2012 23:46:16 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/class-custom-plugin-updater.php on line 73
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: max_label_size in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: args in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: max_label_size in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: args in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: max_label_size in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: args in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: max_label_size in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: args in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: max_label_size in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: args in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: max_label_size in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: args in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: max_label_size in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 00:22:55 UTC] PHP Notice:  Undefined variable: args in /home/pippin/sites/wordpress/wp-content/plugins/gravityforms/common.php on line 427
+[18-May-2012 15:01:44 UTC] PHP Notice:  Undefined index: 7 in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/cart-functions.php on line 134
+[18-May-2012 15:02:19 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[18-May-2012 15:03:01 UTC] PHP Fatal error:  Class 'RGForms' not found in /home/pippin/sites/wordpress/wp-content/plugins/gravityformspaypal/paypal.php on line 1858
+[18-May-2012 15:03:26 UTC] PHP Notice:  Undefined index: 7 in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/cart-functions.php on line 134
+[18-May-2012 15:03:49 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[18-May-2012 19:19:44 UTC] PHP Warning:  Missing argument 4 for add_comments_page(), called in /home/pippin/sites/wordpress/wp-content/plugins/comment-menu-links/comment-menu-links.php on line 12 and defined in /home/pippin/sites/wordpress/wp-admin/includes/plugin.php on line 1245
+[18-May-2012 19:19:44 UTC] PHP Notice:  Undefined variable: menu_slug in /home/pippin/sites/wordpress/wp-admin/includes/plugin.php on line 1246
+[18-May-2012 19:19:59 UTC] PHP Warning:  Missing argument 4 for add_comments_page(), called in /home/pippin/sites/wordpress/wp-content/plugins/comment-menu-links/comment-menu-links.php on line 12 and defined in /home/pippin/sites/wordpress/wp-admin/includes/plugin.php on line 1245
+[18-May-2012 19:19:59 UTC] PHP Notice:  Undefined variable: menu_slug in /home/pippin/sites/wordpress/wp-admin/includes/plugin.php on line 1246
+[18-May-2012 19:20:01 UTC] PHP Warning:  Missing argument 4 for add_comments_page(), called in /home/pippin/sites/wordpress/wp-content/plugins/comment-menu-links/comment-menu-links.php on line 12 and defined in /home/pippin/sites/wordpress/wp-admin/includes/plugin.php on line 1245
+[18-May-2012 19:20:01 UTC] PHP Notice:  Undefined variable: menu_slug in /home/pippin/sites/wordpress/wp-admin/includes/plugin.php on line 1246
+[18-May-2012 19:41:59 UTC] PHP Notice:  Undefined index: comment_status in /home/pippin/sites/wordpress/wp-content/plugins/comment-menu-links/comment-menu-links.php on line 25
+[18-May-2012 20:26:40 UTC] WordPress database error Unknown column 'menu_position' in 'field list' for query SELECT `menu_position` FROM `wp_ecpt_taxonomies` made by activate_plugin, do_action, call_user_func_array, ecpt_options_upgrade
+[18-May-2012 20:26:40 UTC] WordPress database error Duplicate column name 'post_ids' for query ALTER TABLE wp_ecpt_meta_boxes ADD `post_ids` mediumtext made by activate_plugin, do_action, call_user_func_array, ecpt_options_upgrade
+[19-May-2012 18:15:51 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 42
+[19-May-2012 18:15:51 UTC] PHP Notice:  Undefined index: list_id in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 43
+[19-May-2012 18:15:51 UTC] PHP Notice:  Undefined index: message in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 44
+[19-May-2012 18:19:25 UTC] PHP Notice:  Undefined variable: download_id in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/template-functions.php on line 126
+[19-May-2012 18:32:31 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[19-May-2012 18:34:02 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[19-May-2012 18:37:36 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[19-May-2012 18:37:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[19-May-2012 18:37:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[19-May-2012 18:37:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[19-May-2012 18:37:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[19-May-2012 18:37:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[19-May-2012 18:37:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[19-May-2012 18:38:19 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[19-May-2012 18:38:19 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[19-May-2012 18:38:19 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[19-May-2012 18:38:19 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[19-May-2012 18:38:19 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[19-May-2012 18:38:19 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[19-May-2012 18:38:30 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[19-May-2012 18:38:30 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[19-May-2012 18:38:30 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[19-May-2012 18:38:30 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[19-May-2012 18:38:30 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[19-May-2012 18:38:30 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[19-May-2012 18:48:41 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[19-May-2012 18:53:03 UTC] PHP Notice:  Undefined index: 7 in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/cart-functions.php on line 154
+[19-May-2012 18:53:26 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 65
+[21-May-2012 17:40:01 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/class-custom-plugin-updater.php on line 73
+[21-May-2012 17:40:01 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/class-custom-plugin-updater.php on line 73
+[21-May-2012 21:19:51 UTC] PHP Warning:  include(/home/pippin/sites/wordpress/wp-content/plugins/hobbes-llc-slider/includes/slider-widgets.php): failed to open stream: No such file or directory in /home/pippin/sites/wordpress/wp-content/plugins/hobbes-llc-slider/hobbs-llc-slider.php on line 31
+[21-May-2012 21:19:51 UTC] PHP Warning:  include(): Failed opening '/home/pippin/sites/wordpress/wp-content/plugins/hobbes-llc-slider/includes/slider-widgets.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear') in /home/pippin/sites/wordpress/wp-content/plugins/hobbes-llc-slider/hobbs-llc-slider.php on line 31
+[21-May-2012 21:19:51 UTC] PHP Fatal error:  Class 'hls_meta_box' not found in /home/pippin/sites/wordpress/wp-content/plugins/hobbes-llc-slider/includes/metabox.php on line 48
+[21-May-2012 21:20:07 UTC] PHP Fatal error:  Class 'hls_meta_box' not found in /home/pippin/sites/wordpress/wp-content/plugins/hobbes-llc-slider/includes/metabox.php on line 48
+[21-May-2012 21:20:35 UTC] PHP Fatal error:  Class 'hls_meta_box' not found in /home/pippin/sites/wordpress/wp-content/plugins/hobbes-llc-slider/includes/metabox.php on line 48
+[22-May-2012 16:29:50 UTC] PHP Notice:  Undefined variable: wp_rewrite in /home/pippin/sites/wordpress/wp-content/plugins/custom-functions/custom-functions.php on line 18
+[22-May-2012 16:29:50 UTC] PHP Fatal error:  Call to a member function preg_index() on a non-object in /home/pippin/sites/wordpress/wp-content/plugins/custom-functions/custom-functions.php on line 18
+[22-May-2012 17:09:38 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[22-May-2012 17:09:38 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[22-May-2012 17:09:38 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[22-May-2012 17:09:38 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[22-May-2012 17:09:38 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[22-May-2012 17:09:38 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:22:10 UTC] PHP Notice:  A non well formed numeric value encountered in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/shortcodes.php on line 134
+[22-May-2012 17:31:21 UTC] PHP Warning:  readfile(http://localhost/wordpress/wp-content/uploads/edd/2012/05/01_preview.__large_preview.jpg): failed to open stream: HTTP request failed! HTTP/1.1 403 Forbidden
+ in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-download.php on line 90
+[22-May-2012 21:19:04 UTC] PHP Notice:  Undefined variable: edd_options in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/functions.php on line 13
+[22-May-2012 21:22:26 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[22-May-2012 21:22:26 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[22-May-2012 21:22:26 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[22-May-2012 21:22:26 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[22-May-2012 21:22:26 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[22-May-2012 21:22:26 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[22-May-2012 21:22:40 UTC] PHP Fatal error:  Call to undefined function pmc_get_campaign_monitor_lists() in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/signup-form.php on line 61
+[22-May-2012 21:23:20 UTC] PHP Notice:  Undefined variable: edd_options in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/functions.php on line 61
+[22-May-2012 21:23:20 UTC] PHP Notice:  Undefined variable: edd_options in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/functions.php on line 63
+[22-May-2012 21:25:38 UTC] PHP Notice:  Undefined index: double_opt_in in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/settings.php on line 61
+[22-May-2012 21:33:13 UTC] PHP Notice:  Undefined index: double_opt_in in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/settings.php on line 66
+[22-May-2012 21:41:33 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 175
+[22-May-2012 21:41:33 UTC] PHP Notice:  Undefined index: add_text in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 176
+[22-May-2012 21:41:33 UTC] PHP Notice:  Undefined index: delete_text in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 177
+[22-May-2012 21:41:33 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/widgets.php on line 42
+[22-May-2012 21:41:33 UTC] PHP Notice:  Undefined index: list_id in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/widgets.php on line 43
+[22-May-2012 21:41:33 UTC] PHP Notice:  Undefined index: message in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/widgets.php on line 44
+[22-May-2012 21:41:33 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 42
+[22-May-2012 21:41:33 UTC] PHP Notice:  Undefined index: list_id in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 43
+[22-May-2012 21:41:33 UTC] PHP Notice:  Undefined index: message in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 44
+[22-May-2012 21:41:34 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 109
+[22-May-2012 21:41:34 UTC] PHP Notice:  Undefined index: delete in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 110
+[22-May-2012 21:41:34 UTC] PHP Notice:  Undefined index: delete_text in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 111
+[22-May-2012 21:41:34 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 237
+[22-May-2012 21:41:34 UTC] PHP Notice:  Undefined index: number in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 238
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 175
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: add_text in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 176
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: delete_text in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 177
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 42
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: list_id in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 43
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: message in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 44
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 109
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: delete in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 110
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: delete_text in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 111
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/widgets.php on line 42
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: list_id in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/widgets.php on line 43
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: message in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/widgets.php on line 44
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 237
+[22-May-2012 21:41:49 UTC] PHP Notice:  Undefined index: number in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 238
+[22-May-2012 21:42:39 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 175
+[22-May-2012 21:42:39 UTC] PHP Notice:  Undefined index: add_text in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 176
+[22-May-2012 21:42:39 UTC] PHP Notice:  Undefined index: delete_text in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 177
+[22-May-2012 21:42:39 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 42
+[22-May-2012 21:42:39 UTC] PHP Notice:  Undefined index: list_id in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 43
+[22-May-2012 21:42:39 UTC] PHP Notice:  Undefined index: message in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 44
+[22-May-2012 21:42:39 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 109
+[22-May-2012 21:42:39 UTC] PHP Notice:  Undefined index: delete in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 110
+[22-May-2012 21:42:39 UTC] PHP Notice:  Undefined index: delete_text in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 111
+[22-May-2012 21:42:39 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 237
+[22-May-2012 21:42:39 UTC] PHP Notice:  Undefined index: number in /home/pippin/sites/wordpress/wp-content/plugins/user-bookmarks/user-bookmarks.php on line 238
+[22-May-2012 21:42:51 UTC] PHP Fatal error:  Call to undefined function pmc_campaign_monitor_form() in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/widgets.php on line 27
+[22-May-2012 21:44:06 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[22-May-2012 21:44:06 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[22-May-2012 21:44:06 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[22-May-2012 21:44:06 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[22-May-2012 21:44:06 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[22-May-2012 21:44:06 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[22-May-2012 21:44:31 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 42
+[22-May-2012 21:44:31 UTC] PHP Notice:  Undefined index: list_id in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 43
+[22-May-2012 21:44:31 UTC] PHP Notice:  Undefined index: message in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 44
+[22-May-2012 21:45:13 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 42
+[22-May-2012 21:45:13 UTC] PHP Notice:  Undefined index: list_id in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 43
+[22-May-2012 21:45:13 UTC] PHP Notice:  Undefined index: message in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 44
+[22-May-2012 21:45:52 UTC] PHP Notice:  Undefined index: double_opt_in in /home/pippin/sites/wordpress/wp-content/plugins/mailchimp-signup/includes/settings.php on line 66
+[23-May-2012 00:34:50 UTC] WordPress database error Unknown column 'menu_position' in 'field list' for query SELECT `menu_position` FROM `wp_ecpt_taxonomies` made by activate_plugin, do_action, call_user_func_array, ecpt_options_upgrade
+[23-May-2012 00:34:50 UTC] WordPress database error Duplicate column name 'post_ids' for query ALTER TABLE wp_ecpt_meta_boxes ADD `post_ids` mediumtext made by activate_plugin, do_action, call_user_func_array, ecpt_options_upgrade
+[23-May-2012 00:35:40 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:40 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:35:46 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[23-May-2012 00:35:46 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[23-May-2012 00:35:46 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[23-May-2012 00:35:46 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[23-May-2012 00:35:46 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[23-May-2012 00:35:46 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[23-May-2012 00:41:49 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 33
+[23-May-2012 00:41:49 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 41
+[23-May-2012 00:41:49 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 42
+[23-May-2012 00:41:49 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
+[23-May-2012 00:41:49 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
+[23-May-2012 00:41:49 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[23-May-2012 00:44:41 UTC] PHP Notice:  Undefined variable: _post in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/process-data.php on line 15
+[23-May-2012 00:45:40 UTC] PHP Notice:  Undefined variable: _post in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/process-data.php on line 15
+[23-May-2012 00:46:07 UTC] PHP Notice:  Undefined variable: _post in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/process-data.php on line 15
+[23-May-2012 00:46:21 UTC] PHP Notice:  Undefined variable: _post in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/process-data.php on line 15
+[23-May-2012 00:50:48 UTC] PHP Notice:  Undefined index: ecpt-edit-cpt-nonce in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/process-data.php on line 258
+[23-May-2012 00:51:24 UTC] PHP Notice:  Undefined index: ecpt-edit-cpt-nonce in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/process-data.php on line 258
+[23-May-2012 00:52:17 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:17 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined index: ecpt-metabox-nonce in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/process-data.php on line 172
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:52:21 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined index: ecpt-metabox-nonce in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/process-data.php on line 172
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:19 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:26 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:33 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:53:37 UTC] PHP Notice:  Undefined index: ecpt-field-nonce in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/process-data.php on line 214
+[23-May-2012 00:54:21 UTC] PHP Notice:  Undefined index: ecpt-field-nonce in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/process-data.php on line 214
+[23-May-2012 00:54:31 UTC] PHP Notice:  Undefined index: ecpt-field-nonce in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/process-data.php on line 214
+[23-May-2012 00:54:47 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:47 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:50 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Notice:  Undefined variable: selected_pages in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:54:54 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/metabox-add-new.php on line 18
+[23-May-2012 00:57:08 UTC] PHP Notice:  Undefined variable: name in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/export-admin.php on line 66
+[23-May-2012 00:57:08 UTC] PHP Notice:  Undefined variable: single_name in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/export-admin.php on line 67
+[23-May-2012 00:57:08 UTC] PHP Notice:  Undefined variable: name in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/export-admin.php on line 66
+[23-May-2012 00:57:08 UTC] PHP Notice:  Undefined variable: single_name in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/export-admin.php on line 67
+[23-May-2012 00:57:08 UTC] PHP Notice:  Undefined variable: name in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/export-admin.php on line 66
+[23-May-2012 00:57:08 UTC] PHP Notice:  Undefined variable: single_name in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/export-admin.php on line 67
+[23-May-2012 21:59:05 UTC] PHP Notice:  Undefined index: title in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 42
+[23-May-2012 21:59:05 UTC] PHP Notice:  Undefined index: list_id in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 43
+[23-May-2012 21:59:05 UTC] PHP Notice:  Undefined index: message in /home/pippin/sites/wordpress/wp-content/plugins/campaign-monitor-signup/includes/widgets.php on line 44
+[23-May-2012 21:59:18 UTC] PHP Notice:  Undefined index: assigned_to in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 189
+[23-May-2012 21:59:18 UTC] PHP Notice:  Undefined index: deadline in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 190
+[23-May-2012 21:59:18 UTC] PHP Notice:  Undefined index: progress in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 191
+[23-May-2012 21:59:23 UTC] PHP Notice:  Undefined index: assigned_to in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 189
+[23-May-2012 21:59:23 UTC] PHP Notice:  Undefined index: deadline in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 190
+[23-May-2012 21:59:23 UTC] PHP Notice:  Undefined index: progress in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 191

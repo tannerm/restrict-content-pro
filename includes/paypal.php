@@ -8,9 +8,16 @@ function rcp_process_paypal($subscription_data) {
 	$paypal_email = $rcp_options['paypal_email'];
 	$listener_url = home_url('/') . '?listener=IPN';
 	
+	if( isset($rcp_options['sandbox'])) {
+		$paypal_redirect = 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
+	} else {
+		$paypal_redirect = 'https://www.paypal.com/cgi-bin/webscr/?';
+	}	
+	
+	// recurring paypal payment
 	if($subscription_data['auto_renew']) {
 		// recurring paypal payment
-		$paypal_redirect .= 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick-subscriptions&src=1&sra=1';
+		$paypal_redirect .= 'cmd=_xclick-subscriptions&src=1&sra=1';
 		$paypal_redirect .= '&a3=' . $subscription_data['price'];
 		$paypal_redirect .= '&p3=' . $subscription_data['length'];
 		switch ($subscription_data['length_unit']) :
@@ -26,7 +33,7 @@ function rcp_process_paypal($subscription_data) {
 		endswitch;
 	} else {
 		// one time payment
-		$paypal_redirect .= 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amount=' . $subscription_data['price'];
+		$paypal_redirect .= 'cmd=_xclick&amount=' . $subscription_data['price'];
 	}
 	
 	$paypal_redirect .= '&business=' . $paypal_email;
