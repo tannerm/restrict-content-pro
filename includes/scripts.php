@@ -9,7 +9,6 @@ function rcp_admin_scripts($hook) {
 		wp_enqueue_script('jquery-ui-datepicker');
 		wp_enqueue_script('bbq', RCP_PLUGIN_DIR . 'includes/js/jquery.ba-bbq.min.js');
 		wp_enqueue_script('rcp-admin-scripts', RCP_PLUGIN_DIR . 'includes/js/admin-scripts.js');
-		wp_enqueue_script('prettify', RCP_PLUGIN_DIR . 'includes/js/jquery.beautyOfCode-min.js');
 	}
 	if($hook == $rcp_members_page) {
 		wp_localize_script('rcp-admin-scripts', 'rcp_member_vars', array(
@@ -17,6 +16,9 @@ function rcp_admin_scripts($hook) {
 			)
 		);
 		
+	}
+	if($hook == $rcp_help_page) {
+		wp_enqueue_script('prettify', RCP_PLUGIN_DIR . 'includes/js/jquery.beautyOfCode-min.js');	
 	}
 }
 add_action('admin_enqueue_scripts', 'rcp_admin_scripts');

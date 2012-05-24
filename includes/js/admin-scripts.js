@@ -67,12 +67,13 @@ jQuery(document).ready(function($) {
 			});
 		}
 	});
-	// prettify the documentation code samples
-	$.beautyOfCode.init({
-			theme: 'Default',
-		brushes: ['Php']
-	});
-	
+	if($('.rcp-help').length) {
+		// prettify the documentation code samples
+		$.beautyOfCode.init({
+				theme: 'Default',
+			brushes: ['Php']
+		});
+	}	
 	// auto calculate the subscription expiration when manually adding a user
 	$('#rcp-level').change(function() {
 		var level_id = $('option:selected', this).val();
