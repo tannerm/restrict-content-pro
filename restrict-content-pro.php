@@ -112,6 +112,7 @@ include($rcp_base_dir . '/includes/payment-tracking-functions.php');
 include($rcp_base_dir . '/includes/handle-registration-login.php');
 include($rcp_base_dir . '/includes/gateway-functions.php');
 include($rcp_base_dir . '/includes/cron-functions.php');
+include($rcp_base_dir . '/includes/ajax-actions.php');
 
 // front-end only includes
 if(!is_admin()) {

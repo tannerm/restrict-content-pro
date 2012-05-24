@@ -189,16 +189,10 @@ function rcp_members_page()
 								<label for="rcp-username"><?php _e('Username', 'rcp'); ?></label>
 							</th>
 							<td>
-								<select name="user" id="rcp-user">
-									<option value="choose"><?php _e('--choose a user--', 'rcp'); ?></option>
-									<?php
-										$users = get_users();
-										foreach($users as $user) : 
-											echo '<option value="' . $user->ID . '">' . $user->user_login . '</option>';
-										endforeach;
-									?>
-								</select>
-								<p class="description"><?php _e('The username for which you want to add a subscription', 'rcp'); ?></p>
+								<input type="text" name="user" id="rcp-user" class="regular-text rcp-user-search" style="width: 120px;"/>
+								<img class="rcp-ajax" src="<?php echo RCP_PLUGIN_DIR; ?>includes/images/loading.gif" style="display:none;"/>
+								<div id="rcp_users_search_results"></div>								
+								<p class="description"><?php _e('Begin typing the user name to add a subscription to.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr class="form-field">

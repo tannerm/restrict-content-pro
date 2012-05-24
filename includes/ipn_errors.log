@@ -2460,3 +2460,62 @@ Stack trace:
 [23-May-2012 21:59:23 UTC] PHP Notice:  Undefined index: assigned_to in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 189
 [23-May-2012 21:59:23 UTC] PHP Notice:  Undefined index: deadline in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 190
 [23-May-2012 21:59:23 UTC] PHP Notice:  Undefined index: progress in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 191
+[24-May-2012 15:15:35 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 47
+[24-May-2012 15:15:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 570
+[24-May-2012 15:15:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 572
+[24-May-2012 15:15:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 573
+[24-May-2012 15:15:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 575
+[24-May-2012 15:15:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 570
+[24-May-2012 15:15:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 572
+[24-May-2012 15:15:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 573
+[24-May-2012 15:15:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 575
+[24-May-2012 15:15:58 UTC] PHP Notice:  Object of class WP_Error could not be converted to int in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 30
+[24-May-2012 15:15:58 UTC] PHP Warning:  trim() expects parameter 1 to be string, object given in /home/pippin/sites/wordpress/wp-includes/capabilities.php on line 497
+[24-May-2012 15:15:58 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[24-May-2012 15:15:59 UTC] PHP Catchable fatal error:  Object of class WP_Error could not be converted to string in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 120
+[24-May-2012 15:16:54 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[24-May-2012 15:16:59 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[24-May-2012 15:18:22 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 47
+[24-May-2012 15:18:47 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 570
+[24-May-2012 15:18:47 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 572
+[24-May-2012 15:18:47 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 573
+[24-May-2012 15:18:47 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 575
+[24-May-2012 15:18:47 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 570
+[24-May-2012 15:18:47 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 572
+[24-May-2012 15:18:47 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 573
+[24-May-2012 15:18:47 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 575
+[24-May-2012 15:18:47 UTC] PHP Notice:  Object of class WP_Error could not be converted to int in /home/pippin/sites/wordpress/wp-includes/pluggable.php on line 30
+[24-May-2012 15:18:47 UTC] PHP Warning:  trim() expects parameter 1 to be string, object given in /home/pippin/sites/wordpress/wp-includes/capabilities.php on line 497
+[24-May-2012 15:18:47 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[24-May-2012 15:18:48 UTC] PHP Catchable fatal error:  Object of class WP_Error could not be converted to string in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 120
+[24-May-2012 16:53:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/admin-ajax-actions.php on line 50
+[24-May-2012 18:19:44 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:20:00 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:34:55 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:36:56 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:37:03 UTC] PHP Parse error:  syntax error, unexpected T_DOUBLE_ARROW in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 148
+[24-May-2012 18:37:07 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:37:31 UTC] PHP Notice:  Undefined variable: level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 159
+[24-May-2012 18:37:31 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 159
+[24-May-2012 18:37:31 UTC] PHP Notice:  Undefined variable: level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 159
+[24-May-2012 18:37:31 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 159
+[24-May-2012 18:37:31 UTC] PHP Notice:  Undefined variable: level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 159
+[24-May-2012 18:37:31 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 159
+[24-May-2012 18:39:14 UTC] PHP Notice:  Undefined variable: level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 160
+[24-May-2012 18:39:14 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 160
+[24-May-2012 18:39:14 UTC] PHP Notice:  Undefined variable: level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 160
+[24-May-2012 18:39:14 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 160
+[24-May-2012 18:39:14 UTC] PHP Notice:  Undefined variable: level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 160
+[24-May-2012 18:39:14 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 160
+[24-May-2012 18:40:28 UTC] PHP Notice:  Undefined variable: level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 159
+[24-May-2012 18:40:28 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 159
+[24-May-2012 18:40:28 UTC] PHP Notice:  Undefined variable: level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 159
+[24-May-2012 18:40:28 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 159
+[24-May-2012 18:40:28 UTC] PHP Notice:  Undefined variable: level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 159
+[24-May-2012 18:40:28 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 159
+[24-May-2012 18:43:17 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:43:17 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:45:26 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:45:26 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:45:30 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:45:30 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154

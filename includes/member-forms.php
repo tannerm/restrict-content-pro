@@ -139,13 +139,13 @@ function rcp_registration_form_fields( $args = array() ) {
 				
 			</fieldset>
 			<?php } ?>
-			<fieldset class="rcp_subscription_fieldset">
+			<?php 						
+			$levels = rcp_get_subscription_levels('active', true);
+			if($levels && count($levels) > 1) : ?>
+			<fieldset class="rcp_subscription_fieldset">			
 				<p class="rcp_subscription_message"><?php _e('Choose your subscription level', 'rcp'); ?></p>
-			
 				<ul id="rcp_subscription_levels">
-					<?php 						
-					$levels = rcp_get_subscription_levels('active', true);
-					if($levels) :
+					<?php
 						foreach( $levels as $key => $level ) : ?>
 							<li>
 								<input type="radio" class="required rcp_level" <?php if( $key == 0 ){ echo 'checked="checked"'; }?> name="rcp_level" rel="<?php echo $level->price; ?>" value="<?php echo $level->id . ':' . $level->price; ?>"/>&nbsp;
@@ -153,13 +153,14 @@ function rcp_registration_form_fields( $args = array() ) {
 								<span class="rcp_level_duration"><?php echo $level->duration > 0 ? $level->duration . ' ' . rcp_filter_duration_unit($level->duration_unit, $level->duration) : __('unlimited', 'rcp'); ?></span>
 								<div class="rcp_level_description <?php if( $single_level ){ echo 'rcp_single_level_description'; }?>"> <?php echo stripslashes(utf8_decode($level->description)); ?></div>
 							</li>
-						<?php 
-						endforeach; 
-					else: ?>
-						<li><?php _e('You have not created any subscription levels yet', 'rcp'); ?></li>
-					<?php endif; ?>
+						<?php endforeach; ?>
 				</ul>
-			
+			<?php elseif($levels) : ?>
+				<input type="hidden" class="rcp_level" name="rcp_level" rel="<?php echo $levels[0]->price; ?>" value="<?php echo $levels[0]->id . ':' . $levels[0]->price; ?>"/>
+			<?php else : ?>
+				<p><strong><?php _e('You have not created any subscription levels yet', 'rcp'); ?></strong></p>
+			<?php endif; ?>
+			</fieldset>
 				<?php 
 				$discounts = $wpdb->get_results("SELECT * FROM " . $rcp_discounts_db_name . ";");
 				if($discounts) : ?>
@@ -177,7 +178,8 @@ function rcp_registration_form_fields( $args = array() ) {
 				
 				$gateways = rcp_get_enabled_payment_gateways();
 				if(count($gateways) > 1) :
-					echo '<p id="rcp_payment_gateways" style="display: none;">';
+					$display = rcp_has_paid_levels() ? '' : ' style="display: none;"';
+					echo '<p id="rcp_payment_gateways"' . $display . '>';
 						echo '<select name="rcp_gateway" id="rcp_gateway">';
 							foreach($gateways as $key => $gateway) :
 								echo '<option value="' . $key . '">' . $gateway . '</option>';

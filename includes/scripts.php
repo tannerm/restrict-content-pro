@@ -6,10 +6,17 @@ function rcp_admin_scripts($hook) {
 	
 	if(in_array($hook, $pages)) {
 		wp_enqueue_script('jquery-ui-sortable');
+		wp_enqueue_script('jquery-ui-datepicker');
 		wp_enqueue_script('bbq', RCP_PLUGIN_DIR . 'includes/js/jquery.ba-bbq.min.js');
 		wp_enqueue_script('rcp-admin-scripts', RCP_PLUGIN_DIR . 'includes/js/admin-scripts.js');
-		wp_enqueue_script('jquery-ui.min', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js', false, '1.8', 'all');
 		wp_enqueue_script('prettify', RCP_PLUGIN_DIR . 'includes/js/jquery.beautyOfCode-min.js');
+	}
+	if($hook == $rcp_members_page) {
+		wp_localize_script('rcp-admin-scripts', 'rcp_member_vars', array(
+				'rcp_member_nonce' => wp_create_nonce('rcp_member_nonce')
+			)
+		);
+		
 	}
 }
 add_action('admin_enqueue_scripts', 'rcp_admin_scripts');

@@ -12,6 +12,7 @@
 #members-filter, #payments-filter { width: 200px; float: right; text-align: right; margin: 0 0 5px; }
 #members-filter { width: 500px; }
 #members-filter input.regular-text, #payments-filter input.regular-text { width: 30px; }
+#rcp_users_search_results ul { padding: 10px 10px 4px; background: #f0f0f0; border: 1px solid #DFDFDF; width: 300px; }
 #rcp-order { margin-right: 10px; }
 .total { float: left; }
 .rcp_payment_details { border-bottom: 1px solid #f0f0f0; width: 400px; }

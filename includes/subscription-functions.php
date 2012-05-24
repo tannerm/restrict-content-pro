@@ -253,3 +253,13 @@ function rcp_filter_duration_unit($unit, $length) {
 	endswitch;
 	return $new_unit;
 }
+
+/*
+* Checks to see if there are any paid subscription levels created 
+*
+* @since 1.1.9
+* @return boolean - TRUE if paid levels exist, false if only free
+*/
+function rcp_has_paid_levels() {
+	return false;
+}

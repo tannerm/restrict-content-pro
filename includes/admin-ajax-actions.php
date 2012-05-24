@@ -33,26 +33,29 @@ function rcp_update_subscription_order() {
 }
 add_action('wp_ajax_update-subscription-order', 'rcp_update_subscription_order');
 
-/*
-* Check whether a discount code is valid. Used during registration to validate a discount code on the fly
-* @param - string $code - the discount code to validate
-* return none
-*/
-function rcp_validate_discount_with_ajax() {
-	if(isset($_POST['code'])) {
-		if(rcp_validate_discount($_POST['code'])) {
-			$code_details = rcp_get_discount_details_by_code($_POST['code']);
-			if($code_details && $code_details->amount == 100 && $code_details->unit == '%') {
-				// this is a 100% discount
-				echo 'valid and full';
-			} else {
-				echo 'valid';
-			}
+function rcp_search_users() {
+	if( wp_verify_nonce( $_POST['rcp_nonce'], 'rcp_member_nonce' ) ) {
+		$search_query = trim($_POST['user_name']);
+		$found_users = get_users( array(
+				'number' => 9999,
+				'search' => $search_query . '*' // find all users that start with our query
+			)
+		);
+
+		if($found_users) {
+			
+			$user_list = '<ul>';
+				foreach($found_users as $user) {
+					$user_list .= '<li><a href="#" data-login="' . $user->user_login . '">' . $user->user_login . '</a></li>';
+				}
+			$user_list .= '</ul>';
+			
+			echo json_encode( array( 'results' => $user_list, 'id' => 'found' ) );
+	
 		} else {
-			echo 'invalid';
+			echo json_encode( array( 'msg' => __('No users found', 'rcp'), 'results' => 'none', 'id' => 'fail') );			
 		}
 	}
 	die();
 }
-add_action('wp_ajax_validate_discount', 'rcp_validate_discount_with_ajax');
-add_action('wp_ajax_nopriv_validate_discount', 'rcp_validate_discount_with_ajax');
+add_action('wp_ajax_rcp_search_users', 'rcp_search_users');
