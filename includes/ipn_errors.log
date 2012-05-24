@@ -2519,3 +2519,14 @@ Stack trace:
 [24-May-2012 18:45:26 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
 [24-May-2012 18:45:30 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
 [24-May-2012 18:45:30 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:53:11 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:53:11 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:53:30 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:53:30 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:53:44 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:53:44 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:53:52 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:53:52 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:54:16 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:54:16 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 18:54:16 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154

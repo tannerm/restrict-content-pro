@@ -261,5 +261,12 @@ function rcp_filter_duration_unit($unit, $length) {
 * @return boolean - TRUE if paid levels exist, false if only free
 */
 function rcp_has_paid_levels() {
+	$levels = rcp_get_subscription_levels();
+	if($levels) {
+		foreach($levels as $level) {
+			if($level->price > 0)
+				return true;	
+		}	
+	}
 	return false;
 }
