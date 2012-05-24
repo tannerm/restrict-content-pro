@@ -2536,3 +2536,6 @@ Stack trace:
 [24-May-2012 19:21:34 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 43
 [24-May-2012 19:21:34 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 44
 [24-May-2012 19:21:34 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/full-screen-background/includes/meta-box.php on line 51
+[24-May-2012 22:01:18 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 22:01:18 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
+[24-May-2012 22:01:18 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154

@@ -55,6 +55,7 @@ function rcp_process_data() {
 				// clear the cache
 				delete_transient('rcp_subscription_levels');
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-added=1';
+				do_action('rcp_add_subscription', $_POST['subscription_id'], $_POST);	
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-added=0';
 			}
@@ -83,9 +84,11 @@ function rcp_process_data() {
 				// clear the cache
 				delete_transient('rcp_subscription_levels');
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-updated=1';
+				do_action('rcp_edit_subscription', $_POST['subscription_id'], $_POST);			
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-updated=0';
 			}
+
 			header ("Location:" . $url);
 		}
 	
