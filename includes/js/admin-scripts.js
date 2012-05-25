@@ -93,33 +93,32 @@ jQuery(document).ready(function($) {
 			action: 'rcp_search_users',
 			user_name: user_search,
 			rcp_nonce: rcp_member_vars.rcp_member_nonce
-			
 		};
+		
 		$.ajax({
          type: "POST",
          data: data,
          dataType: "json",
          url: ajaxurl,
-         success: function (search_response) {
+			success: function (search_response) {
+				
+				$('.rcp-ajax').hide();				
+				
+				$('#rcp_user_search_results').html('');
 
-         	$('#rcp_users_search_results').html('');
-            if (search_response.id == 'found') {
-             	$(search_response.results).appendTo('#rcp_users_search_results');
-            } else if(search_response.id == 'fail') {
-               $('#rcp_users_search_results').text(search_response.msg);
-            }
-            $('.rcp-ajax').hide();
-        }
-    	}).fail(function (data) {
-     		console.log(data);
-     	});
-     //	$('body').on('click.eddRemoveFromCart', '.edd-remove-from-cart',
-     	$('body').on('click.rcpSelectUser', '#rcp_users_search_results a', function(e) {
-     		e.preventDefault();
-     		var login = $(this).data('login');
-     		$('#rcp-user').val(login);
-     		$('#rcp_users_search_results').remove();
-		});
-	});	
+				if(search_response.id == 'found') {
+					$(search_response.results).appendTo('#rcp_user_search_results');
+				} else if(search_response.id == 'fail') {
+					$('#rcp_user_search_results').text(search_response.msg);
+				}	
+			}
+		});		
+	});
+	$('body').on('click.rcpSelectUser', '#rcp_user_search_results a', function(e) {
+		e.preventDefault();
+		var login = $(this).data('login');
+		$('#rcp-user').val(login);
+		$('#rcp_users_search_results').html('');
+	});
 	
 });
