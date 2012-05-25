@@ -2552,3 +2552,41 @@ Stack trace:
 [24-May-2012 22:39:51 UTC] PHP Notice:  Undefined variable: single_level in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/member-forms.php on line 154
 [25-May-2012 13:00:06 UTC] PHP Notice:  Undefined index: user in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/admin-ajax-actions.php on line 40
 [25-May-2012 13:00:06 UTC] PHP Notice:  Undefined index: user in /home/pippin/sites/wordpress/wp-content/plugins/restrict-content-pro/includes/admin-ajax-actions.php on line 40
+[25-May-2012 20:08:24 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:08:24 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:14:20 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[25-May-2012 20:14:20 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-functions.php on line 79
+[25-May-2012 20:14:25 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:14:25 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:14:25 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:08 UTC] PHP Notice:  Undefined variable: _user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:15 UTC] PHP Catchable fatal error:  Object of class WP_Error could not be converted to string in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:32 UTC] PHP Notice:  Object of class WP_Error could not be converted to int in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:32 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:32 UTC] PHP Notice:  Object of class WP_Error could not be converted to int in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:32 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:37 UTC] PHP Notice:  Object of class WP_Error could not be converted to int in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:16:37 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[25-May-2012 20:21:02 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[25-May-2012 20:21:02 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-functions.php on line 79
+[25-May-2012 20:35:47 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[25-May-2012 20:36:10 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 47
