@@ -12,7 +12,9 @@
 #members-filter, #payments-filter { width: 200px; float: right; text-align: right; margin: 0 0 5px; }
 #members-filter { width: 500px; }
 #members-filter input.regular-text, #payments-filter input.regular-text { width: 30px; }
-#rcp_user_search_results ul { padding: 10px 10px 4px; background: #f0f0f0; border: 1px solid #DFDFDF; width: 300px; }
+#cp-add-new-member td { position: relative; }
+#rcp_user_search_results { position: absolute; }
+#rcp_user_search_results ul { padding: 10px 10px 4px; margin: 0; background: #f0f0f0; border: 1px solid #DFDFDF; width: 300px; max-height: 200px; overflow-y: scroll; }
 #rcp-order { margin-right: 10px; }
 .total { float: left; }
 .rcp_payment_details { border-bottom: 1px solid #f0f0f0; width: 400px; }

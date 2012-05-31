@@ -2590,3 +2590,104 @@ Stack trace:
 [25-May-2012 20:21:02 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-functions.php on line 79
 [25-May-2012 20:35:47 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
 [25-May-2012 20:36:10 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 47
+[26-May-2012 20:34:26 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 47
+[26-May-2012 20:35:39 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[26-May-2012 20:39:02 UTC] PHP Notice:  Undefined index: user_login in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-purchase.php on line 529
+[26-May-2012 20:39:02 UTC] PHP Notice:  Undefined index: user_pass in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-purchase.php on line 530
+[26-May-2012 20:39:02 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[26-May-2012 20:39:42 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[26-May-2012 20:39:42 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[26-May-2012 20:48:51 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 173
+[26-May-2012 20:50:03 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 47
+[26-May-2012 20:51:51 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[26-May-2012 20:52:58 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 47
+[26-May-2012 20:53:12 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[26-May-2012 21:11:26 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 204
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 214
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 218
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 220
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 204
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 214
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 218
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 220
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 204
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 214
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 218
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 220
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 204
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 214
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 218
+[26-May-2012 21:18:42 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 220
+[26-May-2012 21:18:50 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 204
+[26-May-2012 21:18:50 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 214
+[26-May-2012 21:18:50 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 218
+[26-May-2012 21:18:50 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 220
+[26-May-2012 21:19:03 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 204
+[26-May-2012 21:19:03 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 214
+[26-May-2012 21:19:03 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 218
+[26-May-2012 21:19:03 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 220
+[26-May-2012 21:19:48 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 204
+[26-May-2012 21:19:48 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 214
+[26-May-2012 21:19:48 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 218
+[26-May-2012 21:19:48 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 220
+[26-May-2012 21:20:11 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-actions.php on line 100
+[26-May-2012 21:21:52 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 204
+[26-May-2012 21:24:19 UTC] PHP Notice:  Undefined variable: download in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 208
+[26-May-2012 21:34:37 UTC] PHP Notice:  Undefined index: 7 in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/cart-functions.php on line 226
+[26-May-2012 21:34:41 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[26-May-2012 21:35:54 UTC] PHP Notice:  Undefined index: 7 in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/cart-functions.php on line 226
+[26-May-2012 21:35:59 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[26-May-2012 21:37:03 UTC] PHP Notice:  Undefined index: 7 in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/cart-functions.php on line 226
+[26-May-2012 21:37:11 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[26-May-2012 21:40:33 UTC] PHP Warning:  explode() expects parameter 2 to be string, array given in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 109
+[26-May-2012 21:40:33 UTC] PHP Warning:  explode() expects parameter 2 to be string, array given in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 109
+[26-May-2012 21:40:33 UTC] PHP Warning:  explode() expects parameter 2 to be string, array given in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/admin-pages/payments-history.php on line 109
+[28-May-2012 16:51:35 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-actions.php on line 100
+[28-May-2012 16:51:59 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[28-May-2012 19:30:38 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/class-custom-plugin-updater.php on line 73
+[28-May-2012 19:30:39 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/class-custom-plugin-updater.php on line 73
+[28-May-2012 19:31:46 UTC] PHP Warning:  call_user_func() expects parameter 1 to be a valid callback, function 'edd_hook_callback' not found or invalid function name in /home/pippin/sites/wordpress/wp-admin/includes/template.php on line 1138
+[28-May-2012 19:32:03 UTC] PHP Warning:  call_user_func() expects parameter 1 to be a valid callback, function 'edd_hook_callback' not found or invalid function name in /home/pippin/sites/wordpress/wp-admin/includes/template.php on line 1138
+[28-May-2012 19:36:41 UTC] PHP Notice:  Undefined variable: payment in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 82
+[28-May-2012 19:36:41 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 82
+[28-May-2012 19:36:41 UTC] PHP Notice:  Undefined variable: payment_meta in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 84
+[28-May-2012 19:36:41 UTC] PHP Notice:  Undefined variable: payment_meta in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 108
+[28-May-2012 19:36:41 UTC] PHP Notice:  Undefined variable: user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 113
+[28-May-2012 19:36:41 UTC] PHP Notice:  Undefined variable: user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 113
+[28-May-2012 19:36:41 UTC] PHP Notice:  Undefined variable: payment_meta in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 114
+[28-May-2012 19:36:41 UTC] PHP Notice:  Undefined variable: payment_meta in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 115
+[28-May-2012 19:36:41 UTC] PHP Notice:  Undefined variable: user_info in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 115
+[28-May-2012 22:41:04 UTC] PHP Warning:  Missing argument 1 for edd_get_email_templates(), called in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/register-settings.php on line 185 and defined in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 218
+[28-May-2012 22:44:54 UTC] PHP Warning:  Missing argument 1 for edd_get_email_templates(), called in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/register-settings.php on line 185 and defined in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 218
+[29-May-2012 10:41:17 UTC] PHP Notice:  Undefined variable: name in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 78
+[29-May-2012 12:09:05 UTC] PHP Warning:  readfile(http://localhost/wordpress/wp-content/uploads/edd/2012/05/01_preview.__large_preview.jpg): failed to open stream: HTTP request failed! HTTP/1.1 403 Forbidden
+ in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-download.php on line 90
+[29-May-2012 12:10:40 UTC] PHP Notice:  Undefined index: 7 in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/cart-functions.php on line 226
+[29-May-2012 12:10:51 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[29-May-2012 12:10:52 UTC] PHP Fatal error:  Call to undefined function edd_email_download_link() in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 181
+[29-May-2012 12:12:27 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[30-May-2012 16:05:12 UTC] PHP Notice:  Undefined variable: desc in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/includes/display-functions.php on line 304
+[30-May-2012 16:13:13 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/class-custom-plugin-updater.php on line 73
+[30-May-2012 16:13:13 UTC] PHP Notice:  Undefined property: stdClass::$checked in /home/pippin/sites/wordpress/wp-content/plugins/easy-content-types/class-custom-plugin-updater.php on line 73
+[30-May-2012 16:16:29 UTC] PHP Notice:  Undefined index: test_mode in /home/pippin/sites/wordpress/wp-content/plugins/wordpress-stripe-integration/includes/settings.php on line 24
+[30-May-2012 16:16:50 UTC] PHP Fatal error:  Uncaught exception 'Stripe_AuthenticationError' with message 'No API key provided.  (HINT: set your API key using "Stripe::setApiKey(<API-KEY>)".  You can generate API keys from the Stripe web interface.  See https://stripe.com/api for details, or email support@stripe.com if you have any questions.' in /home/pippin/sites/wordpress/wp-content/plugins/wordpress-stripe-integration/lib/Stripe/ApiRequestor.php:87
+Stack trace:
+#0 /home/pippin/sites/wordpress/wp-content/plugins/wordpress-stripe-integration/lib/Stripe/ApiRequestor.php(53): Stripe_ApiRequestor->_requestRaw('get', '/plans', Array)
+#1 /home/pippin/sites/wordpress/wp-content/plugins/wordpress-stripe-integration/lib/Stripe/ApiResource.php(60): Stripe_ApiRequestor->request('get', '/plans', NULL)
+#2 /home/pippin/sites/wordpress/wp-content/plugins/wordpress-stripe-integration/lib/Stripe/Plan.php(38): Stripe_ApiResource::_scopedAll('Stripe_Plan', NULL, NULL)
+#3 /home/pippin/sites/wordpress/wp-content/plugins/wordpress-stripe-integration/includes/stripe-functi in /home/pippin/sites/wordpress/wp-content/plugins/wordpress-stripe-integration/lib/Stripe/ApiRequestor.php on line 87
+[30-May-2012 16:17:08 UTC] PHP Notice:  Undefined index: test_mode in /home/pippin/sites/wordpress/wp-content/plugins/wordpress-stripe-integration/includes/settings.php on line 24
+[30-May-2012 17:56:11 UTC] PHP Notice:  Undefined index: user_login in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-purchase.php on line 529
+[30-May-2012 17:56:11 UTC] PHP Notice:  Undefined index: user_pass in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-purchase.php on line 530
+[30-May-2012 17:56:11 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[30-May-2012 17:57:22 UTC] PHP Notice:  Undefined index: user_login in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-purchase.php on line 529
+[30-May-2012 17:57:22 UTC] PHP Notice:  Undefined index: user_pass in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-purchase.php on line 530
+[30-May-2012 17:57:22 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[30-May-2012 17:58:12 UTC] PHP Notice:  Undefined index: user_login in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-purchase.php on line 529
+[30-May-2012 17:58:12 UTC] PHP Notice:  Undefined index: user_pass in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-purchase.php on line 530
+[30-May-2012 17:58:13 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
+[30-May-2012 18:00:29 UTC] PHP Notice:  Trying to get property of non-object in /home/pippin/sites/wordpress/wp-content/plugins/cleverness-to-do-list/includes/cleverness-to-do-list-widget.class.php on line 47
+[30-May-2012 18:00:42 UTC] PHP Notice:  Undefined index: user_login in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-purchase.php on line 529
+[30-May-2012 18:00:42 UTC] PHP Notice:  Undefined index: user_pass in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/process-purchase.php on line 530
+[30-May-2012 18:00:42 UTC] PHP Notice:  Undefined index: HTTP_X_FORWARD_FOR in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-functions.php on line 104
