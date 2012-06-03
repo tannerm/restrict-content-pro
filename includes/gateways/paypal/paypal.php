@@ -57,10 +57,10 @@ ini_set('error_log', dirname(__FILE__).'/ipn_errors.log');
 
 function rcp_check_ipn() {
 
-	global $rcp_options;
+	global $rcp_options, $rcp_base_dir;
 
 	// instantiate the IpnListener class
-	include('paypal/ipnlistener.php');
+	include($rcp_base_dir . '/includes/gateways/paypal/ipnlistener.php');
 	$listener = new IpnListener();
 
 	if(isset($rcp_options['sandbox']) && $rcp_options['sandbox'])
@@ -114,7 +114,7 @@ function rcp_check_ipn() {
 			if(rcp_check_for_existing_payment($_POST['txn_type'], $_POST['payment_date'], $subscription_key))
 				return; // this IPN request has already been processed
 		}
-		if(isset($rcp_options['email_ipn_reports']) && $rcp_options['email_ipn_reports']) {
+		if(isset($rcp_options['email_ipn_reports'])) {
 			wp_mail(get_bloginfo('admin_email'), __('IPN report', 'rcp'), $listener->getTextReport());
 		}
 	
