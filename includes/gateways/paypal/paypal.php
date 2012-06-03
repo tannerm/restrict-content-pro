@@ -126,7 +126,7 @@ function rcp_check_ipn() {
 				return;
 			}
 		}
-		if(rcp_get_subscription_key($user_id) !== $subscription_key) {
+		if(rcp_get_subscription_key($user_id) != $subscription_key) {
 			// the subscription key is invalid
 			return;
 		}
@@ -221,7 +221,7 @@ function rcp_check_ipn() {
 		endswitch;
 
 	} else {
-		if(isset($rcp_options['email_ipn_reports']) && $rcp_options['email_ipn_reports']) {
+		if(isset($rcp_options['email_ipn_reports'])) {
 			// an invalid IPN attempt was made. Send an email to the admin account to investigate
 			wp_mail(get_bloginfo('admin_email'), __('Invalid IPN', 'rcp'), $listener->getTextReport());
 		}
