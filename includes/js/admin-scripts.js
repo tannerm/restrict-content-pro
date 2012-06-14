@@ -118,7 +118,7 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		var login = $(this).data('login');
 		$('#rcp-user').val(login);
-		$('#rcp_users_search_results').html('');
+		$('#rcp_user_search_results').html('');
 	});
 	
 });

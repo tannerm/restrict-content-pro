@@ -7,6 +7,9 @@
 **************************************************************************/
 function rcp_process_data() {
 
+	if( ! is_admin() )
+		return;
+
 	global $wpdb, $rcp_db_name, $rcp_discounts_db_name;
 
 	$rcp_post = (!empty($_POST)) ? true : false;
@@ -101,11 +104,13 @@ function rcp_process_data() {
 				header ("Location:" . $url);
 		
 			else:
-			
-				update_user_meta($_POST['user'], 'rcp_status', 'active');
-				update_user_meta($_POST['user'], 'rcp_expiration', $_POST['expiration']);
-				update_user_meta($_POST['user'], 'rcp_subscription_level', $_POST['level']);
-				update_user_meta($_POST['user'], 'rcp_signup_method', 'manual');
+				
+				$user = get_user_by('login', $_POST['user']);				
+				
+				update_user_meta($user->ID, 'rcp_status', 'active');
+				update_user_meta($user->ID, 'rcp_expiration', $_POST['expiration']);
+				update_user_meta($user->ID, 'rcp_subscription_level', $_POST['level']);
+				update_user_meta($user->ID, 'rcp_signup_method', 'manual');
 			
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&user-added=1';
 				header ("Location:" .  $url);

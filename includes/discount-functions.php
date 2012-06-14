@@ -4,6 +4,7 @@
 * Functions for getting non-member 
 * specific info about discount codes
 *****************************************/
+
 /*
 * returns the DB object for a discount code
 * @param int $id - the ID number of the discount to retrieve data for
@@ -14,6 +15,7 @@ function rcp_get_discount_details($id) {
 	$code = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $rcp_discounts_db_name . " WHERE id='" . $id . "';"));
 	return $code[0];
 }
+
 /*
 * returns the DB object for a discount code, based on the code provided
 * @param string $code - the discount code to retrieve all information for

@@ -78,6 +78,7 @@ function rcp_display_message_to_editors($content)
 	}
 	return $content;
 }
+
 function rcp_display_message_authors($content)
 {
 	global $rcp_options, $post, $user_ID;
@@ -103,6 +104,7 @@ function rcp_display_message_authors($content)
 	// return the content unfilitered
 	return $content;
 }
+
 function rcp_display_message_to_contributors($content)
 {
 	global $rcp_options, $post, $user_ID;
@@ -128,6 +130,7 @@ function rcp_display_message_to_contributors($content)
 	// return the content unfilitered
 	return $content;
 }
+
 function rcp_display_message_to_subscribers($content)
 {
 	global $rcp_options, $post, $user_ID;
@@ -198,7 +201,6 @@ function rcp_format_teaser($message) {
 
 // wraps the restricted message in paragraph tags. This is the default filter
 function rcp_restricted_message_filter($message) {
-
 	return wpautop($message);
 }
 add_filter('rcp_restricted_message', 'rcp_restricted_message_filter', 10, 1);
