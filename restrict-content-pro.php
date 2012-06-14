@@ -101,9 +101,9 @@ if(is_admin()) {
 }
 
 // global includes
+include($rcp_base_dir . '/includes/gateways/paypal/paypal.php');
 include($rcp_base_dir . '/includes/misc-functions.php');
 include($rcp_base_dir . '/includes/scripts.php');
-include($rcp_base_dir . '/includes/paypal.php');
 include($rcp_base_dir . '/includes/member-functions.php');
 include($rcp_base_dir . '/includes/discount-functions.php');
 include($rcp_base_dir . '/includes/subscription-functions.php');
