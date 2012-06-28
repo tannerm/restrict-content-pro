@@ -59,7 +59,11 @@ if(!defined('RCP_PLUGIN_FILE')) {
 * plugin text domain for translations
 *******************************************/
 
-load_plugin_textdomain( 'rcp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+function rcp_load_textdomain() {
+	load_plugin_textdomain( 'rcp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+}
+add_action('init', 'rcp_load_textdomain');
+
 
 /*
 error_reporting(E_ALL);
