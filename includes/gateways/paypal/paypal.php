@@ -57,6 +57,7 @@ ini_set('error_log', dirname(__FILE__).'/ipn_errors.log');
 
 function rcp_check_ipn() {
 
+
 	global $rcp_options, $rcp_base_dir;
 
 	// instantiate the IpnListener class
@@ -66,7 +67,11 @@ function rcp_check_ipn() {
 	if(isset($rcp_options['sandbox']) && $rcp_options['sandbox'])
 		$listener->use_sandbox = true;
 
-	//$listener->use_ssl = false;
+	if(isset($rcp_options['ssl']) && $rcp_options['ssl']) {
+		$listener->use_ssl = true;
+	} else {
+		$listener->use_ssl = false;
+	}
 	
 	//To post using the fsockopen() function rather than cURL, use:
 	if(isset($rcp_options['disable_curl']))
@@ -82,38 +87,42 @@ function rcp_check_ipn() {
 		exit(0);
 	}
 
-
 	/*
 	The processIpn() method returned true if the IPN was "VERIFIED" and false if it
 	was "INVALID".
 	*/
-	if ($verified) {
-		$user_id 			= $_POST['custom'];
-		$subscription_key 	= $_POST['item_number'];
-		$amount 			= $_POST['mc_gross'];
-		$amount2 			= $_POST['mc_amount3'];
-		$payment_status 	= $_POST['payment_status'];
-		$currency_code		= $_POST['mc_currency'];
+	if ($verified || isset( $_POST['verification_override'] ) )  {
+		
+		$posted = apply_filters('rcp_ipn_post', $_POST); // allow $_POST to be modified
+
+		$user_id 			= $posted['custom'];
+		$subscription_key 	= $posted['item_number'];
+		$amount 			= $posted['mc_gross'];
+		$amount2 			= $posted['mc_amount3'];
+		$payment_status 	= $posted['payment_status'];
+		$currency_code		= $posted['mc_currency'];
 		$subscription_price = rcp_get_subscription_price(rcp_get_subscription_id($user_id));
 		
 		// setup the payment info in an array for storage
 		$payment_data = array(
-			'date' => date('Y-m-d g:i:s', strtotime($_POST['payment_date'])),
-			'subscription' => $_POST['item_name'],
-			'payment_type' => $_POST['txn_type'],
-			'payer_email' => $_POST['payer_email'],
+			'date' => date('Y-m-d g:i:s', strtotime($posted['payment_date'])),
+			'subscription' => $posted['item_name'],
+			'payment_type' => $posted['txn_type'],
+			'payer_email' => $posted['payer_email'],
 			'subscription_key' => $subscription_key,
 			'amount' => $amount,
 			'amount2' => $amount2,
 			'user_id' => $user_id
 		);
+
+		do_action('rcp_valid_ipn', $payment_data, $user_id, $posted);
 		
-		
-		if($_POST['txn_type'] == 'web_accept' || $_POST['txn_type'] == 'subscr_payment') {
+		if($posted['txn_type'] == 'web_accept' || $posted['txn_type'] == 'subscr_payment') {
 			// only check for an existing payment if this is a payment IPD request
-			if(rcp_check_for_existing_payment($_POST['txn_type'], $_POST['payment_date'], $subscription_key))
+			if(rcp_check_for_existing_payment($posted['txn_type'], $posted['payment_date'], $subscription_key))
 				return; // this IPN request has already been processed
 		}
+
 		if(isset($rcp_options['email_ipn_reports'])) {
 			wp_mail(get_bloginfo('admin_email'), __('IPN report', 'rcp'), $listener->getTextReport());
 		}
@@ -138,7 +147,7 @@ function rcp_check_ipn() {
 		/* now process the kind of subscription/payment */
 		
 		// Subscriptions
-		switch ($_POST['txn_type']) :
+		switch ($posted['txn_type']) :
 			
 			case "subscr_signup" :
 				// when a new user signs up
@@ -147,21 +156,33 @@ function rcp_check_ipn() {
 				rcp_set_status($user_id, 'active');
 				
 				wp_new_user_notification($user_id);
+				
 				// send welcome email
 				rcp_email_subscription_status($user_id, 'active');
+
+				update_user_meta( $user_id, 'rcp_recurring', 'yes');
+
+				do_action('rcp_ipn_subscr_signup');
 
 			break;
 			case "subscr_payment" :
 				// when a user makes a recurring payment
 				// record this payment in the database
 				rcp_insert_payment($payment_data);
+				
 				$subscription = rcp_get_subscription_details_by_name($payment_data['subscription']);
 				
 				// update the user's expiration to correspond with the new payment
 				$member_new_expiration = date('Y-m-d', strtotime('+' . $subscription->duration . ' ' . $subscription->duration_unit));
+				
 				update_user_meta( $user_id, 'rcp_expiration', $member_new_expiration );
+				
 				// make sure the user's status is active
 				rcp_set_status($user_id, 'active');
+
+				update_user_meta( $user_id, 'rcp_recurring', 'yes');
+
+				do_action('rcp_ipn_subscr_payment');
 				
 			break;
 			case "subscr_cancel" :
@@ -172,23 +193,34 @@ function rcp_check_ipn() {
 				
 				// send sub cancelled email
 				rcp_email_subscription_status($user_id, 'cancelled');
+
+				do_action('rcp_ipn_subscr_cancel');
+
 			break;
 			case "subscr_failed" :
+				do_action('rcp_ipn_subscr_failed');
+				break;
+
 			case "subscr_eot" :
 				// user's subscription has reach the end of its term
 				
 				// set the use to no longer be recurring
 				update_user_meta( $user_id, 'rcp_recurring', 'no');
+
 				rcp_set_status($user_id, 'expired');
+
 				// send expired email
 				rcp_email_subscription_status($user_id, 'expired');
+
+				do_action('rcp_ipn_subscr_eot');
+
 			break;
 			default;
 			break;
 		endswitch;
 		
 		// Single Payments
-		switch ($_POST['txn_type']) :
+		switch ($posted['txn_type']) :
 			
 			case "cart" :
 			case "express_checkout" :
@@ -196,6 +228,20 @@ function rcp_check_ipn() {
 				
 				switch (strtolower($payment_status)) :
 		            case 'completed' :
+		            
+		            	if( isset( $_POST['verification_override'] ) ) {
+
+		            		// this signup is coming from amember, so add the expiration
+
+			            	$subscription = rcp_get_subscription_details_by_name($payment_data['subscription']);
+
+			            	// update the user's expiration to correspond with the new payment
+							$member_new_expiration = date('Y-m-d', strtotime('+' . $subscription->duration . ' ' . $subscription->duration_unit));
+					
+							update_user_meta( $user_id, 'rcp_expiration', $member_new_expiration );
+
+						}
+
 						// set this user to active
 						rcp_set_status($user_id, 'active');
 						
@@ -204,6 +250,7 @@ function rcp_check_ipn() {
 						rcp_email_subscription_status($user_id, 'active');
 						// send welcome email here
 						wp_new_user_notification($user_id);
+
 		            break;
 		            case 'denied' :
 		            case 'expired' :
