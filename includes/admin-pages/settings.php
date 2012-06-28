@@ -84,7 +84,8 @@ function rcp_settings_page()
 				                'SEK' => __('Swedish Krona', 'rcp'),
 				                'CHF' => __('Swiss Franc', 'rcp'),
 				                'TWD' => __('Taiwan New Dollars', 'rcp'),
-				                'THB' => __('Thai Baht', 'rcp')
+				                'THB' => __('Thai Baht', 'rcp'),
+				                'TRY' => __('Turkish Lira', 'rcp')
 							);
 							foreach($currencies as $key => $currency) {
 								echo '<option value="' . $key . '" ' . selected($key, $rcp_options['currency'], false) . '>' . $currency . '</option>';
