@@ -265,7 +265,7 @@ function rcp_user_subscription_details($atts, $content = null ) {
 		$details = '<ul id="rcp_subscription_details">';
 			$details .= '<li><span class="rcp_subscription_name">' . __('Subscription Level', 'rcp') . '</span><span class="rcp_sub_details_separator">:&nbsp;</span><span class="rcp_sub_details_current_level">' . rcp_get_subscription($user_ID) . '</span></li>';
 			if( rcp_get_expiration_date($user_ID) ) {
-				$details .= '<li>' . __('Expiration Date', 'rcp') . '<span class="rcp_sub_details_separator">:&nbsp;</span>' . rcp_get_expiration_date($user_ID) . '</li>';
+				$details .= '<li><span class="rcp_sub_details_exp">' . __('Expiration Date', 'rcp') . '</span><span class="rcp_sub_details_separator">:&nbsp;</span><span class="rcp_sub_details_exp_date">' . rcp_get_expiration_date($user_ID) . '</span></li>';
 			}			
 			$details .= '<li><span class="rcp_sub_details_recurring">' . __('Recurring', 'rcp') . '</span><span class="rcp_sub_details_separator">:&nbsp;</span><span class="rcp_sub_is_recurring">';
 			$details .= rcp_is_recurring($user_ID) ? __('yes', 'rcp') : __('no', 'rcp') . '</span></li>';
