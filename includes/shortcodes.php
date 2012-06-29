@@ -263,15 +263,15 @@ function rcp_user_subscription_details($atts, $content = null ) {
 	
 	if(is_user_logged_in())	{
 		$details = '<ul id="rcp_subscription_details">';
-			$details .= '<li>' . __('Subscription Level', 'rcp') . ': ' . rcp_get_subscription($user_ID) . '</li>';
+			$details .= '<li><span class="rcp_subscription_name">' . __('Subscription Level', 'rcp') . '</span><span class="rcp_sub_details_separator">:&nbsp;</span><span class="rcp_sub_details_current_level">' . rcp_get_subscription($user_ID) . '</span></li>';
 			if( rcp_get_expiration_date($user_ID) ) {
-				$details .= '<li>' . __('Expiration Date', 'rcp') . ': ' . rcp_get_expiration_date($user_ID) . '</li>';
+				$details .= '<li>' . __('Expiration Date', 'rcp') . '<span class="rcp_sub_details_separator">:&nbsp;</span>' . rcp_get_expiration_date($user_ID) . '</li>';
 			}			
-			$details .= '<li>' . __('Recurring', 'rcp') . ': ';
-			$details .= rcp_is_recurring($user_ID) ? __('yes', 'rcp') : __('no', 'rcp') . '</li>';
-			$details .= '<li>' . __('Current Status', 'rcp') . ': ' . rcp_print_status($user_ID) . '</li>';
+			$details .= '<li><span class="rcp_sub_details_recurring">' . __('Recurring', 'rcp') . '</span><span class="rcp_sub_details_separator">:&nbsp;</span><span class="rcp_sub_is_recurring">';
+			$details .= rcp_is_recurring($user_ID) ? __('yes', 'rcp') : __('no', 'rcp') . '</span></li>';
+			$details .= '<li><span class="rcp_sub_details_status">' . __('Current Status', 'rcp') . '</span><span class="rcp_sub_details_separator">:&nbsp;</span><span class="rcp_sub_details_current_status">' . rcp_print_status($user_ID) . '</span></li>';
 			if(!rcp_is_active($user_ID)) {
-				$details .= '<li><a href="' . get_permalink($rcp_options['registration_page']) . '" title="' . __('Renew your subscription', 'rcp') . '">' . __('Renew your subscription', 'rcp') . '</a></li>';
+				$details .= '<li><a href="' . get_permalink($rcp_options['registration_page']) . '" title="' . __('Renew your subscription', 'rcp') . '" class="rcp_sub_details_renew">' . __('Renew your subscription', 'rcp') . '</a></li>';
 			}
 			$details = apply_filters('rcp_subscription_details_list', $details);
 		$details .= '</ul>';
