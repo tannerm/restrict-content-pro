@@ -270,8 +270,10 @@ function rcp_user_subscription_details($atts, $content = null ) {
 			$details .= '<li><span class="rcp_sub_details_recurring">' . __('Recurring', 'rcp') . '</span><span class="rcp_sub_details_separator">:&nbsp;</span><span class="rcp_sub_is_recurring">';
 			$details .= rcp_is_recurring($user_ID) ? __('yes', 'rcp') : __('no', 'rcp') . '</span></li>';
 			$details .= '<li><span class="rcp_sub_details_status">' . __('Current Status', 'rcp') . '</span><span class="rcp_sub_details_separator">:&nbsp;</span><span class="rcp_sub_details_current_status">' . rcp_print_status($user_ID) . '</span></li>';
-			if(!rcp_is_active($user_ID)) {
+			if(rcp_is_expired($user_ID) || rcp_get_status($user_ID) == 'cancelled') {
 				$details .= '<li><a href="' . get_permalink($rcp_options['registration_page']) . '" title="' . __('Renew your subscription', 'rcp') . '" class="rcp_sub_details_renew">' . __('Renew your subscription', 'rcp') . '</a></li>';
+			} elseif(!rcp_is_active($user_ID)) {
+				$details .= '<li><a href="' . get_permalink($rcp_options['registration_page']) . '" title="' . __('Upgrade your subscription', 'rcp') . '" class="rcp_sub_details_renew">' . __('Upgrade your subscription', 'rcp') . '</a></li>';
 			}
 			$details = apply_filters('rcp_subscription_details_list', $details);
 		$details .= '</ul>';
