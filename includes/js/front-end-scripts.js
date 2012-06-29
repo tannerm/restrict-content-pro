@@ -39,6 +39,7 @@ jQuery(document).ready(function($) {
 			}
 		});
 	}
+
 	$('.rcp_level').change(function() {
 		if( $(this).next().next().next().attr('rel') == 0 ) {
 			$('#rcp_auto_renew_wrap').hide();
@@ -47,6 +48,15 @@ jQuery(document).ready(function($) {
 			$('#rcp_auto_renew_wrap').show();
 		}
 	});
+
+	if( $('#rcp_subscription_levels input:checked').next().next().next().attr('rel') == 0 ) {
+		$('#rcp_auto_renew_wrap').hide();
+		$('#rcp_auto_renew_wrap input').attr('checked', false);
+	} else {
+		$('#rcp_auto_renew_wrap').show();
+	}
+	
+
 	$('#rcp_discount_code').keyup(function(key) {
 		if(key.which != 13) {
 			var discount = $(this).val();
