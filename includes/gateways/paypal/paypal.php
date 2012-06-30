@@ -44,6 +44,7 @@ function rcp_process_paypal($subscription_data) {
 	$paypal_redirect .= '&charset=UTF-8&return=' . urlencode($subscription_data['return_url']);
 	$paypal_redirect .= '&notify_url=' . urlencode($listener_url);
 	$paypal_redirect .= '&rm=2&custom=' . $subscription_data['user_id'];
+	$paypal_redirect .= '&tax=0';
 		
 	// Redirect to paypal
 	header('Location: ' . $paypal_redirect);
