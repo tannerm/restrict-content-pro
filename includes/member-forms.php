@@ -4,15 +4,6 @@
 function rcp_login_form_fields( $args = array() ) {
 		
 	global $post;	
-		
-	// parse the arguments passed
-	$defaults = array (
- 		'redirect' => home_url(),
- 		'class' => 'rcp_form'
-	);
-	$args = wp_parse_args( $args, $defaults );
-	// setup each argument in its own variable
-	extract( $args, EXTR_SKIP );	
 			
 	if (is_singular()) :
 		$pageURL =  get_permalink($post->ID);
@@ -24,6 +15,15 @@ function rcp_login_form_fields( $args = array() ) {
 		else $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
 	endif;	
 		
+	// parse the arguments passed
+	$defaults = array (
+ 		'redirect' => $pageURL,
+ 		'class' => 'rcp_form'
+	);
+	$args = wp_parse_args( $args, $defaults );
+	// setup each argument in its own variable
+	extract( $args, EXTR_SKIP );	
+
 	ob_start();
 		
 		do_action('rcp_before_login_form');

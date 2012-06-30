@@ -1,0 +1,10 @@
+[30-Jun-2012 00:14:22 UTC] PHP Warning:  Missing argument 2 for eddrcp_add_subscription_access() in /home/pippin/sites/wordpress/wp-content/plugins/edd-rcp/edd-rcp.php on line 11
+[30-Jun-2012 00:14:22 UTC] PHP Warning:  Missing argument 3 for eddrcp_add_subscription_access() in /home/pippin/sites/wordpress/wp-content/plugins/edd-rcp/edd-rcp.php on line 11
+[30-Jun-2012 00:15:17 UTC] PHP Warning:  Missing argument 2 for eddrcp_add_subscription_access() in /home/pippin/sites/wordpress/wp-content/plugins/edd-rcp/edd-rcp.php on line 11
+[30-Jun-2012 00:15:17 UTC] PHP Warning:  Missing argument 3 for eddrcp_add_subscription_access() in /home/pippin/sites/wordpress/wp-content/plugins/edd-rcp/edd-rcp.php on line 11
+[30-Jun-2012 00:15:29 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-actions.php on line 40
+[30-Jun-2012 00:15:29 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 35
+[30-Jun-2012 00:15:29 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-functions.php on line 51
+[30-Jun-2012 00:16:35 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/payment-actions.php on line 40
+[30-Jun-2012 00:16:35 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-template.php on line 35
+[30-Jun-2012 00:16:35 UTC] PHP Warning:  Invalid argument supplied for foreach() in /home/pippin/sites/wordpress/wp-content/plugins/easy-digital-downloads/includes/email-functions.php on line 51
