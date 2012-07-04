@@ -25,44 +25,40 @@ function rcp_get_paid_posts() {
 }
 
 function rcp_currency_filter( $price ) {
-	if($price > 0) {
-		global $rcp_options;
-		$currency = $rcp_options['currency'];
-		$position = $rcp_options['currency_position'];
-		if(!isset($position) || $position == 'before') :
-			switch ($currency) :
-				case "GBP" : return '&pound;' . $price; break;
-				case "USD" : 
-				case "AUD" : 
-				case "BRL" : 
-				case "CAD" : 
-				case "HKD" : 
-				case "MXN" : 
-				case "SGD" : 
-					return '&#36;' . $price; 
-				break;
-				case "JPY" : return '&yen;' . $price; break;
-				default : return $currency . ' ' . $price; break;
-			endswitch;
-		else :
-			switch ($currency) :
-				case "GBP" : return $price . '&pound;'; break;
-				case "USD" : 
-				case "AUD" : 
-				case "BRL" : 
-				case "CAD" : 
-				case "HKD" : 
-				case "MXN" : 
-				case "SGD" : 
-					return $price . '&#36;'; 
-				break;
-				case "JPY" : return $price . '&yen;'; break;
-				default : return $price . ' ' . $currency; break;
-			endswitch;	
-		endif;
-	} else {
-		return __('Free', 'rcp');
-	}
+	global $rcp_options;
+	$currency = $rcp_options['currency'];
+	$position = $rcp_options['currency_position'];
+	if(!isset($position) || $position == 'before') :
+		switch ($currency) :
+			case "GBP" : return '&pound;' . $price; break;
+			case "USD" : 
+			case "AUD" : 
+			case "BRL" : 
+			case "CAD" : 
+			case "HKD" : 
+			case "MXN" : 
+			case "SGD" : 
+				return '&#36;' . $price; 
+			break;
+			case "JPY" : return '&yen;' . $price; break;
+			default : return $currency . ' ' . $price; break;
+		endswitch;
+	else :
+		switch ($currency) :
+			case "GBP" : return $price . '&pound;'; break;
+			case "USD" : 
+			case "AUD" : 
+			case "BRL" : 
+			case "CAD" : 
+			case "HKD" : 
+			case "MXN" : 
+			case "SGD" : 
+				return $price . '&#36;'; 
+			break;
+			case "JPY" : return $price . '&yen;'; break;
+			default : return $price . ' ' . $currency; break;
+		endswitch;	
+	endif;
 }
 
 // reverse of strstr()
