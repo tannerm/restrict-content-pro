@@ -53,9 +53,6 @@ function rcp_process_paypal($subscription_data) {
 }
 add_action('rcp_gateway_paypal', 'rcp_process_paypal');
 
-ini_set('log_errors', true);
-ini_set('error_log', dirname(__FILE__).'/ipn_errors.log');
-
 function rcp_check_ipn() {
 
 
@@ -82,9 +79,6 @@ function rcp_check_ipn() {
 		$listener->requirePostMethod();
 		$verified = $listener->processIpn();
 	} catch (Exception $e) {
-		if(isset($rcp_options['log_ipn_errors']) && $rcp_options['log_ipn_errors']) {
-			error_log($e->getMessage());
-		}
 		exit(0);
 	}
 
