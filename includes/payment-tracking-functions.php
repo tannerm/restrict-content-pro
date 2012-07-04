@@ -72,7 +72,7 @@ function rcp_insert_payment($payment_data = array()) {
 		array( 
 			'%s', 
 			'%s',
-			'%d',
+			'%s',
 			'%d',
 			'%s',
 			'%s'
