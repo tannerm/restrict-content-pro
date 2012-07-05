@@ -19,7 +19,11 @@ function rcp_check_for_expired_users() {
 	);
 	if($expired_members) {
 		foreach($expired_members as $member) {
-			if(rcp_get_status($member->ID) != 'pending' && rcp_is_expired($member->ID)) {
+			
+			$expiration_date = rcp_get_expiration_timestamp( $member->ID );
+			$expiration_date += 86400; // to make sure we have given PayPal enough time to send the IPN
+
+			if(rcp_get_status($member->ID) != 'pending' && rcp_is_expired($member->ID) && ( time() > $expiration_date ) ) {
 				if(!get_user_meta($member->ID, '_rcp_expired_email_sent', true)) {
 					rcp_email_subscription_status($member->ID, 'expired');
 					add_user_meta($member->ID, '_rcp_expired_email_sent', 'yes');

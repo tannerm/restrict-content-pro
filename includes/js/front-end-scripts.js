@@ -31,7 +31,7 @@ jQuery(document).ready(function($) {
 	if($('#rcp_payment_gateways').length > 0 ) {
 		// show the Select Payment method option
 		$('.rcp_level').change(function() {	
-			var price = $(this).attr('rel');
+			var price = parseInt( $(this).attr('rel') );
 			if(price > 0) {
 				$('#rcp_payment_gateways').show(200);
 			} else {
