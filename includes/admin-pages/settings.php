@@ -370,11 +370,6 @@ function rcp_settings_page()
 						<label for="rcp_settings[email_ipn_reports]"><?php _e( 'Email IPN reports', 'rcp' ); ?></label><br/>		
 						<div class="description"><?php _e('Check this to send an email each time an IPN request is made with PayPal. The email will contain a list of all data sent. This is useful for debugging in the case that something is not working with the PayPal integration.', 'rcp'); ?></div>
 					</p>
-					<p>
-						<input type="checkbox" value="1" name="rcp_settings[log_ipn_errors]" id="rcp_settings[log_ipn_errors]" <?php if(isset($rcp_options['log_ipn_errors'])) checked('1', $rcp_options['log_ipn_errors']); ?>/>
-						<label for="rcp_settings[log_ipn_errors]"><?php _e( 'Log IPN errors', 'rcp' ); ?></label><br/>		
-						<div class="description"><?php _e('Check this to enable logging of all IPN errors. This is useful for debugging in the case that something is not working with the PayPal integration. The log file will be located in restrict-content-pro/includes/ipn_errors.log', 'rcp'); ?></div>
-					</p>
 					<?php do_action('rcp_log_settings', $rcp_options); ?>
 				</div><!--end #logging-->
 

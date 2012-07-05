@@ -75,15 +75,16 @@ function rcp_options_upgrade() {
 		update_option('rcp_db_version', $rcp_db_version );	
 	}
 
+	/****************************************
+	* upgrade payments DB
+	****************************************/
+
 	if(get_option('rcp_payments_db_version') == 1.0) 
 	{
 		$wpdb->query("ALTER TABLE " . $rcp_payments_db_name . " MODIFY `amount` mediumtext");
 		update_option("rcp_payments_db_version", $rcp_payments_db_version);	
 	}	
 	
-	/****************************************
-	* upgrade payments DB
-	****************************************/
 	
 }
 register_activation_hook(RCP_PLUGIN_FILE, 'rcp_options_upgrade');

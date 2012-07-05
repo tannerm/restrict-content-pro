@@ -10,7 +10,7 @@ add_filter('manage_users_columns', 'rcp_add_user_columns');
  
 function rcp_show_user_columns($value, $column_name, $user_id) {
 	if ( 'rcp_status' == $column_name )
-		return get_user_meta($user_id, 'rcp_status', true);
+		return rcp_get_status($user_id);
 	if ( 'rcp_subscription' == $column_name ) {
 		return rcp_get_subscription($user_id);
 	}
@@ -25,4 +25,4 @@ function rcp_show_user_columns($value, $column_name, $user_id) {
 		return $links;
 	}
 }
-add_action('manage_users_custom_column',  'rcp_show_user_columns', 100, 3);
+add_filter('manage_users_custom_column',  'rcp_show_user_columns', 100, 3);

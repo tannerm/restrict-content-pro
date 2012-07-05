@@ -58,7 +58,7 @@ function rcp_process_data() {
 				// clear the cache
 				delete_transient('rcp_subscription_levels');
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-added=1';
-				do_action('rcp_add_subscription', $_POST['subscription_id'], $_POST);	
+				do_action('rcp_add_subscription', $_POST);	
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-added=0';
 			}
