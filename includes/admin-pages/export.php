@@ -31,6 +31,7 @@ function rcp_export_page()
 					<option value="pending"><?php _e('Pending', 'rcp'); ?></option>
 					<option value="expired"><?php _e('Expired', 'rcp'); ?></option>
 					<option value="cancelled"><?php _e('Cancelled', 'rcp'); ?></option>
+					<option value="free"><?php _e('Free', 'rcp'); ?></option>
 				</select>
 				<label for="rcp-status"><?php _e('Choose the status to export', 'rcp'); ?></label>
 			</p>
