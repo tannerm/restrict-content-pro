@@ -264,6 +264,8 @@ function rcp_check_ipn() {
 							wp_new_user_notification($user_id);
 
 						}
+
+						do_action('rcp_ipn_web_accept');
 						
 		            break;
 		            case 'denied' :
@@ -272,6 +274,7 @@ function rcp_check_ipn() {
 		            case 'voided' :
 						rcp_set_status($user_id, 'cancelled');
 						// send cancelled email here
+						do_action('rcp_ipn_voided');
 		            break;
 		        endswitch;
 				
