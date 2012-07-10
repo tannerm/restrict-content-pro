@@ -58,8 +58,11 @@ function rcp_check_ipn() {
 
 	global $rcp_options, $rcp_base_dir;
 
-	// instantiate the IpnListener class
-	include($rcp_base_dir . '/includes/gateways/paypal/ipnlistener.php');
+	if( !class_exists('IpnListener') ) {
+		// instantiate the IpnListener class
+		include($rcp_base_dir . '/includes/gateways/paypal/ipnlistener.php');
+	}
+
 	$listener = new IpnListener();
 
 	if(isset($rcp_options['sandbox']) && $rcp_options['sandbox'])
@@ -79,24 +82,24 @@ function rcp_check_ipn() {
 		$listener->requirePostMethod();
 		$verified = $listener->processIpn();
 	} catch (Exception $e) {
-		exit(0);
+		//exit(0);
 	}
 
 	/*
 	The processIpn() method returned true if the IPN was "VERIFIED" and false if it
 	was "INVALID".
 	*/
-	if ($verified || isset( $_POST['verification_override'] ) )  {
+	if ($verified || isset( $_POST['verification_override'] ) || isset( $rcp_options['sandbox'] ) )  {
 		
 		$posted = apply_filters('rcp_ipn_post', $_POST); // allow $_POST to be modified
 
 		$user_id 			= $posted['custom'];
 		$subscription_key 	= $posted['item_number'];
-		$amount 			= $posted['mc_gross'];
-		$amount2 			= $posted['mc_amount3'];
+		$amount 			= number_format((float)$posted['mc_gross'], 2);
+		$amount2 			= number_format((float)$posted['mc_amount3'], 2);
 		$payment_status 	= $posted['payment_status'];
 		$currency_code		= $posted['mc_currency'];
-		$subscription_price = rcp_get_subscription_price(rcp_get_subscription_id($user_id));
+		$subscription_price = number_format((float) rcp_get_subscription_price( rcp_get_subscription_id($user_id) ), 2) ;
 		
 		// setup the payment info in an array for storage
 		$payment_data = array(
@@ -114,8 +117,9 @@ function rcp_check_ipn() {
 		
 		if($posted['txn_type'] == 'web_accept' || $posted['txn_type'] == 'subscr_payment') {
 			// only check for an existing payment if this is a payment IPD request
-			if(rcp_check_for_existing_payment($posted['txn_type'], $posted['payment_date'], $subscription_key))
+			if(rcp_check_for_existing_payment($posted['txn_type'], $posted['payment_date'], $subscription_key)) {
 				return; // this IPN request has already been processed
+			}
 		}
 
 		if(isset($rcp_options['email_ipn_reports'])) {
@@ -124,7 +128,7 @@ function rcp_check_ipn() {
 	
 		/* do some quick checks to make sure all necessary data validates */
 		
-		if($subscription_price != $amount && $subscription_price != $amount2) {
+		if ( $amount != $subscription_price && $amount2 != $subscription_price ) {	
 			// the subscription price doesn't match, so lets check to see if it matches with a discount code
 			if(!rcp_check_paypal_return_price_after_discount($subscription_price, $amount, $amount2, $user_id)) {
 				return;
@@ -165,7 +169,9 @@ function rcp_check_ipn() {
 
 			break;
 			case "subscr_payment" :
+
 				// when a user makes a recurring payment
+
 				// record this payment in the database
 				rcp_insert_payment($payment_data);
 				
@@ -185,6 +191,7 @@ function rcp_check_ipn() {
 				
 			break;
 			case "subscr_cancel" :
+
 				// user is not canceled until end of term
 				
 				// set the use to no longer be recurring
@@ -201,6 +208,7 @@ function rcp_check_ipn() {
 				break;
 
 			case "subscr_eot" :
+
 				// user's subscription has reach the end of its term
 				
 				// set the use to no longer be recurring

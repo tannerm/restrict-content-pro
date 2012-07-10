@@ -274,6 +274,8 @@ function rcp_user_subscription_details($atts, $content = null ) {
 				$details .= '<li><a href="' . get_permalink($rcp_options['registration_page']) . '" title="' . __('Renew your subscription', 'rcp') . '" class="rcp_sub_details_renew">' . __('Renew your subscription', 'rcp') . '</a></li>';
 			} elseif(!rcp_is_active($user_ID)) {
 				$details .= '<li><a href="' . get_permalink($rcp_options['registration_page']) . '" title="' . __('Upgrade your subscription', 'rcp') . '" class="rcp_sub_details_renew">' . __('Upgrade your subscription', 'rcp') . '</a></li>';
+			} elseif( rcp_is_active($user_ID) ) {
+				$details .= '<li class="rcp_cancel"><a href="https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_manage-paylist" target="_blank" title="' . __('Cancel your subscription', 'rcp') . '">' . __('Cancel your subscription', 'rcp') . '</a></li>';
 			}
 			$details = apply_filters('rcp_subscription_details_list', $details);
 		$details .= '</ul>';
