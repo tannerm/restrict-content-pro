@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Restrict Content Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-25 16:08-0600\n"
-"PO-Revision-Date: 2012-05-25 16:08-0600\n"
+"POT-Creation-Date: 2012-07-10 10:38-0600\n"
+"PO-Revision-Date: 2012-07-10 10:38-0600\n"
 "Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Poedit-Basepath: ../\n"
 "X-Poedit-SearchPath-0: includes\n"
 
-#: includes/discount-functions.php:181
+#: includes/discount-functions.php:183
 msgid "None"
 msgstr ""
 
@@ -55,7 +55,6 @@ msgid "Cancelled"
 msgstr ""
 
 #: includes/member-functions.php:288
-#: includes/misc-functions.php:64
 msgid "Free"
 msgstr ""
 
@@ -225,67 +224,67 @@ msgstr ""
 msgid "Year"
 msgstr ""
 
-#: includes/email-functions.php:16
-#: includes/email-functions.php:25
-#: includes/email-functions.php:34
-#: includes/email-functions.php:43
-#: includes/email-functions.php:52
+#: includes/email-functions.php:21
+#: includes/email-functions.php:33
+#: includes/email-functions.php:46
+#: includes/email-functions.php:59
+#: includes/email-functions.php:72
 msgid "Hello"
 msgstr ""
 
-#: includes/email-functions.php:16
-#: includes/email-functions.php:43
-#: includes/email-functions.php:52
+#: includes/email-functions.php:21
+#: includes/email-functions.php:59
+#: includes/email-functions.php:72
 msgid "is now subscribed to"
 msgstr ""
 
-#: includes/email-functions.php:16
-#: includes/email-functions.php:43
-#: includes/email-functions.php:52
+#: includes/email-functions.php:21
+#: includes/email-functions.php:59
+#: includes/email-functions.php:72
 msgid "Subscription level"
 msgstr ""
 
-#: includes/email-functions.php:18
-#: includes/email-functions.php:27
-#: includes/email-functions.php:36
-#: includes/email-functions.php:45
-#: includes/email-functions.php:54
+#: includes/email-functions.php:23
+#: includes/email-functions.php:35
+#: includes/email-functions.php:48
+#: includes/email-functions.php:61
+#: includes/email-functions.php:74
 msgid "Thank you"
 msgstr ""
 
-#: includes/email-functions.php:20
+#: includes/email-functions.php:24
 msgid "New subscription on "
 msgstr ""
 
-#: includes/email-functions.php:25
+#: includes/email-functions.php:33
 msgid "has cancelled their subscription to"
 msgstr ""
 
-#: includes/email-functions.php:25
+#: includes/email-functions.php:33
 msgid "Their subscription level was"
 msgstr ""
 
-#: includes/email-functions.php:29
+#: includes/email-functions.php:36
 msgid "Cancelled subscription on "
 msgstr ""
 
-#: includes/email-functions.php:34
+#: includes/email-functions.php:46
 msgid "subscription has expired"
 msgstr ""
 
-#: includes/email-functions.php:38
+#: includes/email-functions.php:49
 msgid "Expired subscription on "
 msgstr ""
 
-#: includes/email-functions.php:47
+#: includes/email-functions.php:62
 msgid "New free subscription on "
 msgstr ""
 
-#: includes/email-functions.php:56
+#: includes/email-functions.php:75
 msgid "New trial subscription on "
 msgstr ""
 
-#: includes/admin-ajax-actions.php:58
+#: includes/admin-ajax-actions.php:60
 msgid "No users found"
 msgstr ""
 
@@ -309,20 +308,12 @@ msgstr ""
 msgid "Database upgrade complete"
 msgstr ""
 
-#: includes/paypal.php:118
-msgid "IPN report"
-msgstr ""
-
-#: includes/paypal.php:226
-msgid "Invalid IPN"
-msgstr ""
-
 #: includes/handle-registration-login.php:48
 msgid "Username already taken"
 msgstr ""
 
 #: includes/handle-registration-login.php:52
-#: includes/handle-registration-login.php:300
+#: includes/handle-registration-login.php:305
 msgid "Invalid username"
 msgstr ""
 
@@ -339,12 +330,12 @@ msgid "Email already registered"
 msgstr ""
 
 #: includes/handle-registration-login.php:68
-#: includes/handle-registration-login.php:305
+#: includes/handle-registration-login.php:310
 msgid "Please enter a password"
 msgstr ""
 
 #: includes/handle-registration-login.php:72
-#: includes/handle-registration-login.php:354
+#: includes/handle-registration-login.php:359
 msgid "Passwords do not match"
 msgstr ""
 
@@ -372,15 +363,15 @@ msgstr ""
 msgid "The words/numbers you entered did not match the reCaptcha"
 msgstr ""
 
-#: includes/handle-registration-login.php:312
+#: includes/handle-registration-login.php:317
 msgid "Incorrect password"
 msgstr ""
 
-#: includes/handle-registration-login.php:350
+#: includes/handle-registration-login.php:355
 msgid "Please enter a password, and confirm it"
 msgstr ""
 
-#: includes/handle-registration-login.php:386
+#: includes/handle-registration-login.php:391
 msgid "Error"
 msgstr ""
 
@@ -416,11 +407,15 @@ msgstr ""
 msgid "Renew your subscription"
 msgstr ""
 
-#: includes/shortcodes.php:279
+#: includes/shortcodes.php:276
+msgid "Upgrade your subscription"
+msgstr ""
+
+#: includes/shortcodes.php:281
 msgid "Your Payment History"
 msgstr ""
 
-#: includes/shortcodes.php:284
+#: includes/shortcodes.php:286
 msgid "You must be logged in to view your subscription details"
 msgstr ""
 
@@ -520,6 +515,14 @@ msgstr ""
 
 #: includes/member-forms.php:282
 msgid "Change Password"
+msgstr ""
+
+#: includes/gateways/paypal/paypal.php:122
+msgid "IPN report"
+msgstr ""
+
+#: includes/gateways/paypal/paypal.php:277
+msgid "Invalid IPN"
 msgstr ""
 
 #: includes/admin-pages/edit-discount.php:5
@@ -886,23 +889,23 @@ msgstr ""
 msgid "Choose the subscription to export members from"
 msgstr ""
 
-#: includes/admin-pages/export.php:35
+#: includes/admin-pages/export.php:36
 msgid "Choose the status to export"
 msgstr ""
 
-#: includes/admin-pages/export.php:38
+#: includes/admin-pages/export.php:39
 msgid "Download Member CSV"
 msgstr ""
 
-#: includes/admin-pages/export.php:42
+#: includes/admin-pages/export.php:43
 msgid "Payments Export"
 msgstr ""
 
-#: includes/admin-pages/export.php:43
+#: includes/admin-pages/export.php:44
 msgid "Download payment data as a CSV file. Use this file for your own record keeping or tracking."
 msgstr ""
 
-#: includes/admin-pages/export.php:46
+#: includes/admin-pages/export.php:47
 msgid "Download Payments CSV"
 msgstr ""
 
@@ -1141,332 +1144,340 @@ msgstr ""
 msgid "Thai Baht"
 msgstr ""
 
-#: includes/admin-pages/settings.php:95
-msgid "Currency"
+#: includes/admin-pages/settings.php:88
+msgid "Turkish Lira"
 msgstr ""
 
 #: includes/admin-pages/settings.php:96
+msgid "Currency"
+msgstr ""
+
+#: includes/admin-pages/settings.php:97
 msgid "Choose your currency."
 msgstr ""
 
-#: includes/admin-pages/settings.php:100
+#: includes/admin-pages/settings.php:101
 msgid "Before - $10"
 msgstr ""
 
-#: includes/admin-pages/settings.php:101
+#: includes/admin-pages/settings.php:102
 msgid "After - 10$"
 msgstr ""
 
-#: includes/admin-pages/settings.php:103
+#: includes/admin-pages/settings.php:104
 msgid "Currency Position"
 msgstr ""
 
-#: includes/admin-pages/settings.php:104
+#: includes/admin-pages/settings.php:105
 msgid "Show the currency sign before or after the price?"
 msgstr ""
 
-#: includes/admin-pages/settings.php:107
+#: includes/admin-pages/settings.php:108
 msgid "Gateways"
 msgstr ""
 
-#: includes/admin-pages/settings.php:109
+#: includes/admin-pages/settings.php:110
 msgid "Check each of the payment gateways you would like to enable. Configure the selected gateways below."
 msgstr ""
 
-#: includes/admin-pages/settings.php:124
+#: includes/admin-pages/settings.php:125
 msgid "PayPal Address"
 msgstr ""
 
-#: includes/admin-pages/settings.php:126
+#: includes/admin-pages/settings.php:127
 msgid "Enter your PayPal email address."
 msgstr ""
 
-#: includes/admin-pages/settings.php:130
+#: includes/admin-pages/settings.php:131
 msgid "Sandbox Mode"
 msgstr ""
 
-#: includes/admin-pages/settings.php:131
+#: includes/admin-pages/settings.php:132
 msgid "Use PayPal in Sandbox mode. This allows you to test the plugin with the <a href=\"http://developer.paypal.com\">PayPal IPN tester</a>"
 msgstr ""
 
-#: includes/admin-pages/settings.php:135
+#: includes/admin-pages/settings.php:136
 msgid "Disable CURL"
 msgstr ""
 
-#: includes/admin-pages/settings.php:136
+#: includes/admin-pages/settings.php:137
 msgid "Only check this option if your host does not allow cURL"
 msgstr ""
 
-#: includes/admin-pages/settings.php:146
+#: includes/admin-pages/settings.php:147
 msgid "jQuery Validation"
 msgstr ""
 
-#: includes/admin-pages/settings.php:147
+#: includes/admin-pages/settings.php:148
 msgid "Check this to enable live, front end form validation. If this is disabled, all validation will be done server side and will require a page reload."
 msgstr ""
 
-#: includes/admin-pages/settings.php:151
+#: includes/admin-pages/settings.php:152
 msgid "Disable Form CSS"
 msgstr ""
 
-#: includes/admin-pages/settings.php:152
+#: includes/admin-pages/settings.php:153
 msgid "Check this to disable all included form styling."
 msgstr ""
 
-#: includes/admin-pages/settings.php:165
-#: includes/admin-pages/settings.php:183
-#: includes/admin-pages/settings.php:331
-#: includes/admin-pages/settings.php:355
+#: includes/admin-pages/settings.php:166
+#: includes/admin-pages/settings.php:184
+#: includes/admin-pages/settings.php:339
+#: includes/admin-pages/settings.php:363
 msgid "No pages found"
 msgstr ""
 
-#: includes/admin-pages/settings.php:169
-#: includes/admin-pages/settings.php:335
+#: includes/admin-pages/settings.php:170
+#: includes/admin-pages/settings.php:343
 msgid "Redirect Page"
 msgstr ""
 
-#: includes/admin-pages/settings.php:170
+#: includes/admin-pages/settings.php:171
 msgid "This is the page users are redirected to after a successful registration"
 msgstr ""
 
-#: includes/admin-pages/settings.php:187
+#: includes/admin-pages/settings.php:188
 msgid "Registration Page"
 msgstr ""
 
-#: includes/admin-pages/settings.php:188
+#: includes/admin-pages/settings.php:189
 msgid "Choose the page that has the [register_form] short code"
 msgstr ""
 
-#: includes/admin-pages/settings.php:192
+#: includes/admin-pages/settings.php:193
 msgid "Enable reCaptcha"
 msgstr ""
 
-#: includes/admin-pages/settings.php:193
+#: includes/admin-pages/settings.php:194
 msgid "Check this to enable reCaptcha on the registration form."
 msgstr ""
 
-#: includes/admin-pages/settings.php:196
+#: includes/admin-pages/settings.php:197
 msgid "reCaptcha Public Key"
 msgstr ""
 
-#: includes/admin-pages/settings.php:198
+#: includes/admin-pages/settings.php:199
 msgid "This your own personal reCaptcha Public key. Go to"
 msgstr ""
 
-#: includes/admin-pages/settings.php:198
-#: includes/admin-pages/settings.php:203
+#: includes/admin-pages/settings.php:199
+#: includes/admin-pages/settings.php:204
 msgid "your account"
 msgstr ""
 
-#: includes/admin-pages/settings.php:198
+#: includes/admin-pages/settings.php:199
 msgid "then click on your domain (or add a new one) to find your public key."
 msgstr ""
 
-#: includes/admin-pages/settings.php:201
+#: includes/admin-pages/settings.php:202
 msgid "reCaptcha Private Key"
 msgstr ""
 
-#: includes/admin-pages/settings.php:203
+#: includes/admin-pages/settings.php:204
 msgid "This your own personal reCaptcha Private key. Go to"
 msgstr ""
 
-#: includes/admin-pages/settings.php:203
+#: includes/admin-pages/settings.php:204
 msgid "then click on your domain (or add a new one) to find your private key."
 msgstr ""
 
-#: includes/admin-pages/settings.php:218
+#: includes/admin-pages/settings.php:219
 msgid "reCaptcha Style"
 msgstr ""
 
-#: includes/admin-pages/settings.php:219
+#: includes/admin-pages/settings.php:220
 msgid "Choose the style you wish to use for your reCaptcha form"
 msgstr ""
 
-#: includes/admin-pages/settings.php:223
+#: includes/admin-pages/settings.php:224
 msgid "SSL"
 msgstr ""
 
-#: includes/admin-pages/settings.php:224
+#: includes/admin-pages/settings.php:225
 msgid "Check this option if your registration page is using the https:// protocol. This will be the case if you have an SSL certificate installed."
 msgstr ""
 
-#: includes/admin-pages/settings.php:228
+#: includes/admin-pages/settings.php:229
 msgid "Disable Auto Renew"
 msgstr ""
 
-#: includes/admin-pages/settings.php:229
+#: includes/admin-pages/settings.php:230
 msgid "Check this option if you do NOT want to allow recurring subscriptions"
 msgstr ""
 
-#: includes/admin-pages/settings.php:238
+#: includes/admin-pages/settings.php:239
 msgid "Active Subscription Email"
 msgstr ""
 
-#: includes/admin-pages/settings.php:240
+#: includes/admin-pages/settings.php:241
 msgid "Subject line for the Active email"
 msgstr ""
 
-#: includes/admin-pages/settings.php:242
+#: includes/admin-pages/settings.php:243
 msgid "The subject line for the email sent to users when their subscription becomes active."
 msgstr ""
 
-#: includes/admin-pages/settings.php:245
+#: includes/admin-pages/settings.php:246
 msgid "Active Email Message"
 msgstr ""
 
-#: includes/admin-pages/settings.php:247
+#: includes/admin-pages/settings.php:248
 msgid "This is the email message that is sent to users when their subscription becomes active."
 msgstr ""
 
-#: includes/admin-pages/settings.php:250
+#: includes/admin-pages/settings.php:251
 msgid "Cancelled Subscription Email"
 msgstr ""
 
-#: includes/admin-pages/settings.php:252
+#: includes/admin-pages/settings.php:253
 msgid "Subject line for the Cancelled email"
 msgstr ""
 
-#: includes/admin-pages/settings.php:254
+#: includes/admin-pages/settings.php:255
 msgid "The subject line for the email sent to users when their subscription is cancelled."
 msgstr ""
 
-#: includes/admin-pages/settings.php:257
+#: includes/admin-pages/settings.php:258
 msgid "Cancelled Email Message"
 msgstr ""
 
-#: includes/admin-pages/settings.php:259
+#: includes/admin-pages/settings.php:260
 msgid "This is the email message that is sent to users when their subscription is cancelled."
 msgstr ""
 
-#: includes/admin-pages/settings.php:262
+#: includes/admin-pages/settings.php:263
 msgid "Expired Subscription Email"
 msgstr ""
 
-#: includes/admin-pages/settings.php:264
+#: includes/admin-pages/settings.php:265
 msgid "Subject line for the Expired email"
 msgstr ""
 
-#: includes/admin-pages/settings.php:266
+#: includes/admin-pages/settings.php:267
 msgid "The subject line for the email sent to users when their subscription is expired."
 msgstr ""
 
-#: includes/admin-pages/settings.php:269
+#: includes/admin-pages/settings.php:270
 msgid "Expired Email Message"
 msgstr ""
 
-#: includes/admin-pages/settings.php:271
+#: includes/admin-pages/settings.php:272
 msgid "This is the email message that is sent to users when their subscription is expired."
 msgstr ""
 
-#: includes/admin-pages/settings.php:274
+#: includes/admin-pages/settings.php:275
 msgid "Free Subscription Email"
 msgstr ""
 
-#: includes/admin-pages/settings.php:276
+#: includes/admin-pages/settings.php:277
 msgid "Subject line for the Free membership email"
 msgstr ""
 
-#: includes/admin-pages/settings.php:278
+#: includes/admin-pages/settings.php:279
 msgid "The subject line for the email sent to users when they sign up for a free membership."
 msgstr ""
 
-#: includes/admin-pages/settings.php:281
+#: includes/admin-pages/settings.php:282
 msgid "Free Email Message"
 msgstr ""
 
-#: includes/admin-pages/settings.php:283
+#: includes/admin-pages/settings.php:284
 msgid "This is the email message that is sent to users when they sign up for a free account."
 msgstr ""
 
-#: includes/admin-pages/settings.php:286
+#: includes/admin-pages/settings.php:287
 msgid "Trial Subscription Email"
 msgstr ""
 
-#: includes/admin-pages/settings.php:288
+#: includes/admin-pages/settings.php:289
 msgid "Subject line for the Free Trial email"
 msgstr ""
 
-#: includes/admin-pages/settings.php:290
+#: includes/admin-pages/settings.php:291
 msgid "The subject line for the email sent to users when they sign up for a free trial."
 msgstr ""
 
-#: includes/admin-pages/settings.php:293
+#: includes/admin-pages/settings.php:294
 msgid "Trial Email Message"
 msgstr ""
 
-#: includes/admin-pages/settings.php:295
+#: includes/admin-pages/settings.php:296
 msgid "This is the email message that is sent to users when they sign up for a free trial."
 msgstr ""
 
+#: includes/admin-pages/settings.php:299
+msgid "New User Notifications"
+msgstr ""
+
 #: includes/admin-pages/settings.php:302
+msgid "Disable New User Notifications"
+msgstr ""
+
+#: includes/admin-pages/settings.php:303
+msgid "Check this option if you do NOT want to receive emails when new users signup"
+msgstr ""
+
+#: includes/admin-pages/settings.php:310
 msgid "Available Template Tags"
 msgstr ""
 
-#: includes/admin-pages/settings.php:304
+#: includes/admin-pages/settings.php:312
 msgid "will be replaced with the name of your site"
 msgstr ""
 
-#: includes/admin-pages/settings.php:305
+#: includes/admin-pages/settings.php:313
 msgid "will be replaced with the user name of the person receiving the email"
 msgstr ""
 
-#: includes/admin-pages/settings.php:306
+#: includes/admin-pages/settings.php:314
 msgid "will be replaced with the expiration date of subscription"
 msgstr ""
 
-#: includes/admin-pages/settings.php:307
+#: includes/admin-pages/settings.php:315
 msgid "will be replaced with the name of the subscription"
 msgstr ""
 
-#: includes/admin-pages/settings.php:308
+#: includes/admin-pages/settings.php:316
 msgid "will be replaced with the unique, 32 character key created when the user is registered"
 msgstr ""
 
-#: includes/admin-pages/settings.php:317
+#: includes/admin-pages/settings.php:325
 msgid "Hide Premium Posts"
 msgstr ""
 
-#: includes/admin-pages/settings.php:318
+#: includes/admin-pages/settings.php:326
 msgid "Check this to hide all premium posts from queries when user is not logged in. Note, this will only hide posts that have the \"Paid Only?\" checkbox checked."
 msgstr ""
 
-#: includes/admin-pages/settings.php:336
+#: includes/admin-pages/settings.php:344
 msgid "This is the page non-subscribed users are redirected to when attempting to access a premium post or page"
 msgstr ""
 
-#: includes/admin-pages/settings.php:341
+#: includes/admin-pages/settings.php:349
 msgid "Redirect Default Login URL"
 msgstr ""
 
-#: includes/admin-pages/settings.php:342
+#: includes/admin-pages/settings.php:350
 msgid "Check this to force the default login URL to redirect to the page specified below."
 msgstr ""
 
-#: includes/admin-pages/settings.php:359
+#: includes/admin-pages/settings.php:367
 msgid "Login Page"
 msgstr ""
 
-#: includes/admin-pages/settings.php:360
+#: includes/admin-pages/settings.php:368
 msgid "This is the page the default login URL redirects to, if the option above is checked. This should be the page that contains the [login_form] short code."
 msgstr ""
 
-#: includes/admin-pages/settings.php:369
+#: includes/admin-pages/settings.php:377
 msgid "Email IPN reports"
 msgstr ""
 
-#: includes/admin-pages/settings.php:370
+#: includes/admin-pages/settings.php:378
 msgid "Check this to send an email each time an IPN request is made with PayPal. The email will contain a list of all data sent. This is useful for debugging in the case that something is not working with the PayPal integration."
 msgstr ""
 
-#: includes/admin-pages/settings.php:374
-msgid "Log IPN errors"
-msgstr ""
-
-#: includes/admin-pages/settings.php:375
-msgid "Check this to enable logging of all IPN errors. This is useful for debugging in the case that something is not working with the PayPal integration. The log file will be located in restrict-content-pro/includes/ipn_errors.log"
-msgstr ""
-
-#: includes/admin-pages/settings.php:384
+#: includes/admin-pages/settings.php:387
 msgid "Save Options"
 msgstr ""
 
