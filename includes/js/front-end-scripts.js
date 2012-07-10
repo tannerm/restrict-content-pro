@@ -50,6 +50,7 @@ jQuery(document).ready(function($) {
 	});
 
 	if( $('#rcp_subscription_levels input:checked').next().next().next().attr('rel') == 0 ) {
+		alert('test');
 		$('#rcp_auto_renew_wrap').hide();
 		$('#rcp_auto_renew_wrap input').attr('checked', false);
 	} else {

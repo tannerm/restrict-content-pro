@@ -149,7 +149,7 @@ function rcp_registration_form_fields( $args = array() ) {
 						foreach( $levels as $key => $level ) : ?>
 							<li>
 								<input type="radio" class="required rcp_level" <?php if( $key == 0 || (isset($_GET['level']) && $_GET['level'] == $key) ){ echo 'checked="checked"'; }?> name="rcp_level" rel="<?php echo $level->price; ?>" value="<?php echo $level->id . ':' . $level->price; ?>"/>&nbsp;
-								<span class="rcp_subscription_level_name"><?php echo utf8_decode($level->name); ?></span> - <span class="rcp_price" rel="<?php echo $level->price; ?>"><?php echo $level->price > 0 ? rcp_currency_filter($level->price) : __('free', 'rcp'); ?> - </span>
+								<span class="rcp_subscription_level_name"><?php echo utf8_decode($level->name); ?></span><span class="rcp_separator"> - </span><span class="rcp_price" rel="<?php echo $level->price; ?>"><?php echo $level->price > 0 ? rcp_currency_filter($level->price) : __('free', 'rcp'); ?><span class="rcp_separator"> - </span></span>
 								<span class="rcp_level_duration"><?php echo $level->duration > 0 ? $level->duration . ' ' . rcp_filter_duration_unit($level->duration_unit, $level->duration) : __('unlimited', 'rcp'); ?></span>
 								<div class="rcp_level_description <?php if( $single_level ){ echo 'rcp_single_level_description'; }?>"> <?php echo stripslashes(utf8_decode($level->description)); ?></div>
 							</li>
@@ -196,7 +196,7 @@ function rcp_registration_form_fields( $args = array() ) {
 				do_action('rcp_before_registration_submit_field');
 				
 				if($levels && !isset($rcp_options['disable_auto_renew'])) : ?>
-				<p>
+				<p id="rcp_auto_renew_wrap">
 					<input name="rcp_auto_renew" id="rcp_auto_renew" type="checkbox" checked="checked"/>
 					<label for="rcp_auto_renew"><?php _e('Auto Renew', 'rcp'); ?></label>
 				</p>
