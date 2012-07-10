@@ -257,9 +257,14 @@ function rcp_add_new_member() {
 					update_user_meta($user_id, 'rcp_expiration', $member_expires);
 					
 					if($need_new_user) {
-					
-						// send an email to the admin alerting them of the registration
-						wp_new_user_notification($user_id);
+						
+						if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
+
+							// send an email to the admin alerting them of the registration
+							wp_new_user_notification($user_id);
+		
+						}
+
 						// log the new user in
 						rcp_login_user_in($user_id, $user_login, $user_pass);
 
