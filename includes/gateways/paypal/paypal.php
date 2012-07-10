@@ -150,8 +150,12 @@ function rcp_check_ipn() {
 				// set the user's status to active
 				rcp_set_status($user_id, 'active');
 				
-				wp_new_user_notification($user_id);
-				
+				if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
+
+					wp_new_user_notification($user_id);
+	
+				}
+
 				// send welcome email
 				rcp_email_subscription_status($user_id, 'active');
 
@@ -243,9 +247,14 @@ function rcp_check_ipn() {
 						rcp_insert_payment($payment_data);
 						
 						rcp_email_subscription_status($user_id, 'active');
-						// send welcome email here
-						wp_new_user_notification($user_id);
 
+
+						if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
+							// send welcome email here
+							wp_new_user_notification($user_id);
+
+						}
+						
 		            break;
 		            case 'denied' :
 		            case 'expired' :
