@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Restrict Content Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-10 10:38-0600\n"
-"PO-Revision-Date: 2012-07-10 10:38-0600\n"
+"POT-Creation-Date: 2012-07-10 10:44-0600\n"
+"PO-Revision-Date: 2012-07-10 10:44-0600\n"
 "Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -411,11 +411,15 @@ msgstr ""
 msgid "Upgrade your subscription"
 msgstr ""
 
-#: includes/shortcodes.php:281
+#: includes/shortcodes.php:278
+msgid "Cancel your subscription"
+msgstr ""
+
+#: includes/shortcodes.php:283
 msgid "Your Payment History"
 msgstr ""
 
-#: includes/shortcodes.php:286
+#: includes/shortcodes.php:288
 msgid "You must be logged in to view your subscription details"
 msgstr ""
 

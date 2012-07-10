@@ -38,6 +38,11 @@ jQuery(document).ready(function($) {
 				$('#rcp_payment_gateways').hide(200);
 			}
 		});
+		if( parseInt( $('.rcp_level').attr('rel') ) > 0 ) {	
+			$('#rcp_payment_gateways').show(200);
+		} else {
+			$('#rcp_payment_gateways').hide(200);
+		}
 	}
 
 	$('.rcp_level').change(function() {
@@ -50,7 +55,6 @@ jQuery(document).ready(function($) {
 	});
 
 	if( $('#rcp_subscription_levels input:checked').next().next().next().attr('rel') == 0 ) {
-		alert('test');
 		$('#rcp_auto_renew_wrap').hide();
 		$('#rcp_auto_renew_wrap input').attr('checked', false);
 	} else {
