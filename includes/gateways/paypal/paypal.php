@@ -143,6 +143,8 @@ function rcp_check_ipn() {
 			return;
 		}
 		
+		update_user_meta( $user_id, 'rcp_paypal_subscriber', 'yes');
+
 		/* now process the kind of subscription/payment */
 		
 		// Subscriptions
