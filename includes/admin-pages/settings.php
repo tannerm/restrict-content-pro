@@ -296,6 +296,13 @@ function rcp_settings_page()
 							<div class="description"><?php _e('This is the email message that is sent to users when they sign up for a free trial.', 'rcp'); ?></div>
 						</p>
 						
+						<h3><?php _e('New User Notifications', 'rcp'); ?></h3>
+						<p>
+							<input type="checkbox" value="1" name="rcp_settings[disable_new_user_notices]" id="rcp_settings[disable_new_user_notices]" <?php if(isset($rcp_options['disable_new_user_notices'])) checked('1', $rcp_options['disable_new_user_notices']); ?>/>
+							<label for="rcp_settings[disable_new_user_notices]"><?php _e( 'Disable New User Notifications', 'rcp' ); ?></label><br/>		
+							<div class="description"><?php _e('Check this option if you do NOT want to receive emails when new users signup', 'rcp'); ?></div>
+						</p>
+
 						<?php do_action('rcp_email_settings', $rcp_options); ?>
 						
 					</div><!--end #rcp_email_options-->
