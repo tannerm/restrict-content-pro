@@ -284,9 +284,10 @@ add_action('init', 'rcp_add_new_member', 100);
 
 // logs the specified user in
 function rcp_login_user_in($user_id, $user_login, $user_pass) {
+	$user = get_userdata( $user_id );
 	wp_set_auth_cookie($user_id);
 	wp_set_current_user($user_id, $user_login);	
-	do_action('wp_login', $user_login);
+	do_action('wp_login', $user_login, $user);
 }
 
 // logs a member in after submitting a form
