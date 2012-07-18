@@ -168,7 +168,7 @@ function rcp_process_data() {
 				`name`='" . $name . "',
 				`description`='" . addslashes($description) . "',
 				`amount`='" . $amount . "',
-				`status`='disabled',
+				`status`='active',
 				`unit`='" . $_POST['unit'] . "',
 				`code`='" . $_POST['code'] . "',
 				`expiration`='" . $expiration . "',
