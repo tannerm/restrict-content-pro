@@ -119,7 +119,7 @@ function rcp_get_discounted_price($base_price, $amount, $type) {
 		$discounted_price = $base_price - $amount;
 	}
 
-	return $discounted_price;
+	return number_format( (float) $discounted_price, 2);
 }
 
 /*
