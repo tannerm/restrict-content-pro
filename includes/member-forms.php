@@ -110,30 +110,30 @@ function rcp_registration_form_fields( $args = array() ) {
 			<?php do_action('rcp_before_register_form_fields'); ?>
 			
 			<fieldset class="rcp_user_fieldset">
-				<p>
+				<p id="rcp_user_login_wrap">
 					<label for="rcp_user_Login"><?php _e('Username', 'rcp'); ?></label>
-					<input name="rcp_user_login" id="rcp_user_login" class="required" type="text"/>
+					<input name="rcp_user_login" id="rcp_user_login" class="required" type="text" <?php if(isset($_POST['rcp_user_login'])) { echo 'value="' . $_POST['rcp_user_login'] . '"'; } ?>/>
 				</p>
-				<p>
+				<p id="rcp_user_email_wrap">
 					<label for="rcp_user_email"><?php _e('Email', 'rcp'); ?></label>
-					<input name="rcp_user_email" id="rcp_user_email" class="required" type="email"/>
+					<input name="rcp_user_email" id="rcp_user_email" class="required" type="email" <?php if(isset($_POST['rcp_user_email'])) { echo 'value="' . $_POST['rcp_user_email'] . '"'; } ?>/>
 				</p>
-				<p>
+				<p id="rcp_user_first_wrap">
 					<label for="rcp_user_first"><?php _e('First Name', 'rcp'); ?></label>
-					<input name="rcp_user_first" id="rcp_user_first" type="text"/>
+					<input name="rcp_user_first" id="rcp_user_first" type="text" <?php if(isset($_POST['rcp_user_first'])) { echo 'value="' . $_POST['rcp_user_first'] . '"'; } ?>/>
 				</p>
-				<p>
+				<p id="rcp_user_last_wrap">
 					<label for="rcp_user_last"><?php _e('Last Name', 'rcp'); ?></label>
-					<input name="rcp_user_last" id="rcp_user_last" type="text"/>
+					<input name="rcp_user_last" id="rcp_user_last" type="text" <?php if(isset($_POST['rcp_user_last'])) { echo 'value="' . $_POST['rcp_user_last'] . '"'; } ?>/>
 				</p>
-				<p>
+				<p id="rcp_password_wrap">
 					<label for="password"><?php _e('Password', 'rcp'); ?></label>
 					<input name="rcp_user_pass" id="rcp_password" class="required" type="password"/>
 				</p>
-				<p>
+				<p id="rcp_password_again_wrap">
 					<label for="password_again"><?php _e('Password Again', 'rcp'); ?></label>
 					<input name="rcp_user_pass_confirm" id="rcp_password_again" class="required" type="password"/>
-				</p>
+				</p id="rcp_user_login_wrap">
 				
 				<?php do_action('rcp_after_password_registration_field'); ?>
 				
@@ -219,7 +219,7 @@ function rcp_registration_form_fields( $args = array() ) {
 				?>
 				
 			</fieldset>
-			<p>
+			<p id="rcp_submit_wrap">
 				<input type="hidden" name="rcp_register_nonce" value="<?php echo wp_create_nonce('rcp-register-nonce'); ?>"/>
 				<input type="submit" name="rcp_submit_registration" id="rcp_submit" value="<?php _e('Register', 'rcp'); ?>"/>
 			</p>
