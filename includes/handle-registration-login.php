@@ -22,19 +22,17 @@ function rcp_add_new_member() {
 			$user_login = $userdata->user_login;
 			$user_email = $userdata->user_email;
 		}
-		$level = '';
+		$subscription_id = false;
 		if(isset($_POST["rcp_level"])) {
-			$level = $_POST["rcp_level"];
+			$subscription_id = $_POST["rcp_level"];
 		}
 		$code = '';
 		if(isset($_POST['rcp_discount'])) {
 			$code = $_POST["rcp_discount"];
 		}
 		
-		// extract the subscription id and price from the input
-		$subscription_id = rcp_rstrstr($level, ':');
-		$price = str_replace(':', '', strstr($level, ':'));
-		$expiration = rcp_get_subscription_length($subscription_id);
+		$price = rcp_get_subscription_price( $subscription_id );
+		$expiration = rcp_get_subscription_length( $subscription_id );
 
 		/***********************
 		* validate the form
@@ -72,9 +70,15 @@ function rcp_add_new_member() {
 				rcp_errors()->add('password_mismatch', __('Passwords do not match', 'rcp'));
 			}
 		}
-		if(!isset($level) || $level == '') {
+		if( ! $subscription_id ) {
 			// no subscription level was chosen
 			rcp_errors()->add('no_level', __('Please choose a subscription level', 'rcp'));
+		}
+		if( $subscription_id ) {
+			if($price == 0 && $expiration->duration > 0 && rcp_has_used_trial($user_id)) {
+				// this ensures that users only sign up for a free trial once
+				rcp_errors()->add('free_trial_used', __('You may only sign up for a free trial once', 'rcp'));
+			}
 		}
 		if(strlen(trim($code)) > 0) {
 			if(!rcp_validate_discount($code)) {
@@ -83,12 +87,6 @@ function rcp_add_new_member() {
 			}
 			if(!$need_new_user && rcp_user_has_used_discount($user_id, $code)) {
 				rcp_errors()->add('discount_already_used', __('You can only use the discount code once', 'rcp'));
-			}
-		}
-		if(isset($level) && $level != '') {
-			if($price == 0 && $expiration->duration > 0 && rcp_has_used_trial($user_id)) {
-				// this ensures that users only sign up for a free trial once
-				rcp_errors()->add('free_trial_used', __('You may only sign up for a free trial once', 'rcp'));
 			}
 		}
 		if($price == 0 && isset($_POST['rcp_auto_renew'])) {
