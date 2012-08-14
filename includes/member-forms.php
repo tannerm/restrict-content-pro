@@ -164,7 +164,7 @@ function rcp_registration_form_fields( $args = array() ) {
 				<?php 
 				$discounts = $wpdb->get_results("SELECT * FROM " . $rcp_discounts_db_name . ";");
 				if($discounts) : ?>
-					<p>
+					<p id="rcp_discount_code_wrap">
 						<label for="rcp_discount_code">
 							<?php _e('Discount Code', 'rcp'); ?>
 							<span class="rcp_discount_valid" style="display: none;"> - <?php _e('Valid', 'rcp'); ?></span>
