@@ -162,7 +162,7 @@ function rcp_add_new_member() {
 				update_user_meta($user_id, 'rcp_status', 'pending' );
 				update_user_meta($user_id, 'rcp_expiration', $member_expires);
 				
-				do_action('rcp_form_processing', $_POST, $user_id);
+				do_action('rcp_form_processing', $_POST, $user_id, $price);
 				
 				// process a paid subscription
 				if($price > '0') {
