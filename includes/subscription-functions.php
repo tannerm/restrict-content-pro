@@ -38,7 +38,7 @@ function rcp_get_subscription_levels($status = 'all', $cache = true) {
 	if($levels)
 		return $levels;
 	else
-		return false;
+		return array();
 }
 
 /*

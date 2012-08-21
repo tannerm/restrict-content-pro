@@ -219,7 +219,7 @@ function rcp_members_page()
 								<select name="level" id="rcp-level">
 									<option value="choose"><?php _e('--choose--', 'rcp'); ?></option>
 									<?php
-										foreach( $wpdb->get_results("SELECT * FROM " . $rcp_db_name . ";") as $key => $level) :
+										foreach( rcp_get_subscription_levels() as $level) :
 											echo '<option value="' . $level->id . '">' . utf8_decode($level->name) . '</option>';
 										endforeach;
 									?>
