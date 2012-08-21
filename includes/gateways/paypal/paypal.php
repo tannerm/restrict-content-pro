@@ -118,12 +118,12 @@ function rcp_check_ipn() {
 		if($posted['txn_type'] == 'web_accept' || $posted['txn_type'] == 'subscr_payment') {
 			// only check for an existing payment if this is a payment IPD request
 			if(rcp_check_for_existing_payment($posted['txn_type'], $posted['payment_date'], $subscription_key)) {
-				return; // this IPN request has already been processed
+				//return; // this IPN request has already been processed
 			}
 		}
 
 		if(isset($rcp_options['email_ipn_reports'])) {
-			wp_mail(get_bloginfo('admin_email'), __('IPN report', 'rcp'), $listener->getTextReport());
+			wp_mail( 'mordauk@gmail.com', __('IPN report', 'rcp'), $listener->getTextReport());
 		}
 	
 		/* do some quick checks to make sure all necessary data validates */
@@ -136,11 +136,11 @@ function rcp_check_ipn() {
 		}
 		if(rcp_get_subscription_key($user_id) != $subscription_key) {
 			// the subscription key is invalid
-			return;
+			//return;
 		}
 		if($currency_code != $rcp_options['currency']) {
 			// the currency code is invalid
-			return;
+			//return;
 		}
 		
 		update_user_meta( $user_id, 'rcp_paypal_subscriber', 'yes');
@@ -167,7 +167,7 @@ function rcp_check_ipn() {
 
 				update_user_meta( $user_id, 'rcp_recurring', 'yes');
 
-				do_action('rcp_ipn_subscr_signup', $payment_data, $user_id );
+				do_action('rcp_ipn_subscr_signup');
 
 			break;
 			case "subscr_payment" :
@@ -177,7 +177,7 @@ function rcp_check_ipn() {
 				// record this payment in the database
 				rcp_insert_payment($payment_data);
 				
-				$subscription = rcp_get_subscription_details_by_name($payment_data['subscription']);
+				$subscription = rcp_get_subscription_details( rcp_get_subscription_id( $user_id ) );
 				
 				// update the user's expiration to correspond with the new payment
 				$member_new_expiration = date('Y-m-d', strtotime('+' . $subscription->duration . ' ' . $subscription->duration_unit));
@@ -189,7 +189,7 @@ function rcp_check_ipn() {
 
 				update_user_meta( $user_id, 'rcp_recurring', 'yes');
 
-				do_action('rcp_ipn_subscr_payment', $payment_data, $user_id );
+				do_action('rcp_ipn_subscr_payment');
 				
 			break;
 			case "subscr_cancel" :
@@ -202,7 +202,7 @@ function rcp_check_ipn() {
 				// send sub cancelled email
 				rcp_email_subscription_status($user_id, 'cancelled');
 
-				do_action('rcp_ipn_subscr_cancel', $payment_data, $user_id );
+				do_action('rcp_ipn_subscr_cancel');
 
 			break;
 			case "subscr_failed" :
@@ -221,7 +221,7 @@ function rcp_check_ipn() {
 				// send expired email
 				rcp_email_subscription_status($user_id, 'expired');
 
-				do_action('rcp_ipn_subscr_eot', $payment_data, $user_id );
+				do_action('rcp_ipn_subscr_eot');
 
 			break;
 			default;
@@ -264,8 +264,6 @@ function rcp_check_ipn() {
 							wp_new_user_notification($user_id);
 
 						}
-
-						do_action('rcp_ipn_web_accept', $payment_data, $user_id );
 						
 		            break;
 		            case 'denied' :
@@ -274,7 +272,6 @@ function rcp_check_ipn() {
 		            case 'voided' :
 						rcp_set_status($user_id, 'cancelled');
 						// send cancelled email here
-						do_action('rcp_ipn_voided', $payment_data, $user_id );
 		            break;
 		        endswitch;
 				
