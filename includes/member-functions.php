@@ -23,12 +23,18 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 	*****************************************/
 	
 	if($subscription && $status != 'free') {
-	
-		$members = array();
-	
-		$members_by_status = get_users(array(
-			'meta_key' => 'rcp_status', 
-			'meta_value' => $status, 
+			
+		$members = get_users(array(
+			'meta_query' => array(
+				array(
+					'key' => 'rcp_status',
+					'value' => $status
+				),
+				array(
+					'key' => 'rcp_subscription_level',
+					'value' => $subscription
+				)
+			),
 			'offset' => $offset, 
 			'number' => $number, 
 			'count_total' => false,
@@ -36,23 +42,6 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 			'order' => $order
 			)
 		);
-		
-		$members_by_subscription = get_users(array(
-			'meta_key' => 'rcp_subscription_level', 
-			'meta_value' => $subscription, 
-			'offset' => $offset, 
-			'number' => $number, 
-			'count_total' => false,
-			'orderby' => 'ID',
-			'order' => $order
-			)
-		);
-		
-		foreach($members_by_subscription as $key => $m) {
-			if(in_array($m, $members_by_status)) {
-				array_push($members, $m);
-			}
-		}
 		
 		if(!empty($members))
 			return $members;
