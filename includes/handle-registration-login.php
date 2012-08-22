@@ -31,7 +31,7 @@ function rcp_add_new_member() {
 			$code = $_POST["rcp_discount"];
 		}
 		
-		$price = rcp_get_subscription_price( $subscription_id );
+		$price = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
 		$expiration = rcp_get_subscription_length( $subscription_id );
 
 		/***********************
@@ -225,7 +225,7 @@ function rcp_add_new_member() {
 					}
 					
 					// send all of the subscription data off for processing by the gateway
-					rcp_send_to_gateway($gateway, $subscription_data);
+					rcp_send_to_gateway($gateway, apply_filters('rcp_subscription_data', $subscription_data ) );
 				
 				// process a free or trial subscription	
 				} else {
