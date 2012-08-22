@@ -17,65 +17,29 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 	
 	global $wpdb;
 	
-	/****************************************
-	* this function is messy and expensive.
-	* It needs redone with JOIN queries
-	*****************************************/
-	
-	if($subscription && $status != 'free') {
-			
-		$members = get_users(array(
-			'meta_query' => array(
-				array(
-					'key' => 'rcp_status',
-					'value' => $status
-				),
-				array(
-					'key' => 'rcp_subscription_level',
-					'value' => $subscription
-				)
+	$members = get_users(array(
+		'meta_query' => array(
+			array(
+				'key' => 'rcp_status',
+				'value' => $status
 			),
-			'offset' => $offset, 
-			'number' => $number, 
-			'count_total' => false,
-			'orderby' => 'ID',
-			'order' => $order
+			array(
+				'key' => 'rcp_subscription_level',
+				'value' => $subscription
 			)
-		);
-		
-		if(!empty($members))
-			return $members;
-		else
-			return false;
+		),
+		'offset' => $offset, 
+		'number' => $number, 
+		'count_total' => false,
+		'orderby' => 'ID',
+		'order' => $order
+		)
+	);
 	
-	} else {
-		if($status != 'free') {
-			$members = get_users(array(
-				'meta_key' => 'rcp_status', 
-				'meta_value' => $status, 
-				'offset' => $offset, 
-				'number' => $number, 
-				'count_total' => false,
-				'orderby' => 'ID',
-				'order' => $order
-				)
-			);
-		} else {
-			$members = $wpdb->get_results( $wpdb->prepare(
-				"SELECT * FROM $wpdb->users
-				LEFT JOIN $wpdb->usermeta ON $wpdb->users.ID = $wpdb->usermeta.user_id
-				WHERE meta_key = 'rcp_status'
-				AND meta_value != 'active'
-				AND meta_value != 'pending'
-				AND meta_value != 'expired'
-				AND meta_value != 'cancelled'
-				ORDER BY $wpdb->users.ID {$order} LIMIT %d, %d;"
-			, $offset, $number ));
-				
-		}
-	}	
+	if(!empty($members))
+		return $members;
 	
-	return $members;
+	return false;
 }
 
 /*

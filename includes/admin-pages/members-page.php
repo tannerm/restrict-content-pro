@@ -83,7 +83,7 @@ function rcp_members_page()
 			</ul>
 			<form id="members-filter" action="" method="get">
 				<?php
-				$levels = rcp_get_subscription_levels();
+				$levels = rcp_get_subscription_levels('all', false);
 				if($levels) : ?>
 					<select name="subscription" id="rcp-subscription">
 						<option value="all"><?php _e('All Subscriptions', 'rcp'); ?></option>
