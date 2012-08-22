@@ -48,9 +48,12 @@ jQuery(document).ready(function($) {
 	$('.rcp_level').change(function() {
 		if( $(this).next().next().next().attr('rel') == 0 ) {
 			$('#rcp_auto_renew_wrap').hide();
+			$('#rcp_discount_code_wrap').hide();
+			$('#rcp_discount_code_wrap input').val('');
 			$('#rcp_auto_renew_wrap input').attr('checked', false);
 		} else {
 			$('#rcp_auto_renew_wrap').show();
+			$('#rcp_discount_code_wrap').show();
 		}
 	});
 
