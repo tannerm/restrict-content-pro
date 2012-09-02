@@ -97,6 +97,9 @@ function rcp_excerpt_by_id($post, $length = 50, $tags = '<a><em><strong><blockqu
 	} else {
 		$the_excerpt = $post->post_content;
 	}
+
+	$tags = apply_filters( 'rcp_excerpt_tags', $tags );
+
 	if($more) {
 		$the_excerpt = strip_shortcodes( strip_tags( stripslashes( substr($the_excerpt, 0, $length) ), $tags) );
 	} else {
