@@ -38,15 +38,15 @@ jQuery(document).ready(function($) {
 				$('#rcp_payment_gateways').hide(200);
 			}
 		});
-		if( parseInt( $('.rcp_level').attr('rel') ) > 0 ) {	
-			$('#rcp_payment_gateways').show(200);
-		} else {
+		if( parseInt( $('#rcp_subscription_levels input:checked').attr('rel') ) == 0 ) {	
 			$('#rcp_payment_gateways').hide(200);
+		} else {
+			$('#rcp_payment_gateways').show(200);
 		}
 	}
 
 	$('.rcp_level').change(function() {
-		if( $(this).next().next().next().attr('rel') == 0 ) {
+		if( parseInt( $(this).attr('rel') ) == 0 ) {
 			$('#rcp_auto_renew_wrap').hide();
 			$('#rcp_discount_code_wrap').hide();
 			$('#rcp_discount_code_wrap input').val('');
@@ -57,11 +57,14 @@ jQuery(document).ready(function($) {
 		}
 	});
 
-	if( $('#rcp_subscription_levels input:checked').next().next().next().attr('rel') == 0 ) {
+	if( parseInt( $('#rcp_subscription_levels input:checked').attr('rel') ) == 0 ) {	
 		$('#rcp_auto_renew_wrap').hide();
 		$('#rcp_auto_renew_wrap input').attr('checked', false);
+		$('#rcp_discount_code_wrap').hide();
+		$('#rcp_discount_code_wrap input').val('');
 	} else {
 		$('#rcp_auto_renew_wrap').show();
+		$('#rcp_discount_code_wrap').show();
 	}
 	
 

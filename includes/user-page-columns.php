@@ -24,5 +24,6 @@ function rcp_show_user_columns($value, $column_name, $user_id) {
 		}
 		return $links;
 	}
+	return $value;
 }
 add_filter('manage_users_custom_column',  'rcp_show_user_columns', 100, 3);
