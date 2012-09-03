@@ -17,7 +17,7 @@ $rcp_meta_box = array(
         	'name' => __('Paid Only?', 'rcp'),
         	'id' => '_is_paid',
         	'type' => 'checkbox',
-        	'desc' => __('Restrict this entry to paid users only', 'rcp')
+        	'desc' => __('Restrict this entry to active paid users only.', 'rcp')
      	),
 		array(
         	'name' => __('Show Excerpt?', 'rcp'),
