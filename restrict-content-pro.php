@@ -65,18 +65,13 @@ function rcp_load_textdomain() {
 add_action('init', 'rcp_load_textdomain');
 
 
-/*
-error_reporting(E_ALL);
-*/
-ini_set('display_errors', 'on');
-
 /*******************************************
 * file includes
 *******************************************/
 
 // admin only includes
 if(is_admin()) {
-	//require($rcp_base_dir . '/update-notifier.php');
+
 	if(!class_exists('Custom_Plugin_Updater')) {
 		include_once($rcp_base_dir . '/class-custom-plugin-updater.php' );
 	}
