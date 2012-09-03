@@ -6,7 +6,7 @@
 .rcp_options_form input.regular-text { border: 1px solid #DFDFDF; }
 .dragHandle	{ cursor: move; display: block; height: 20px; width: 20px; background: url('../images/cross-hair.png'); }
 #rcp_email_options { width: 320px; float: left; margin: 0 20px 0 0; }
-#rcp_email_tags { float: left; width: 400px; }
+#rcp_email_tags { position: absolute; left: 500px; top: 80px; }
 .wp-list-table th { font-size: 12px; }
 #side-info-column td.rcp_meta_box_desc { display: none!important; }
 #members-filter, #payments-filter { width: 200px; float: right; text-align: right; margin: 0 0 5px; }
