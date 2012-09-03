@@ -54,6 +54,9 @@ if(!defined('RCP_PLUGIN_DIR')) {
 if(!defined('RCP_PLUGIN_FILE')) {
 	define('RCP_PLUGIN_FILE', __FILE__ );
 }
+if(!defined('RCP_PLUGIN_VERSION')) {
+	define('RCP_PLUGIN_VERSION', '1.2.4' );
+}
 
 /*******************************************
 * plugin text domain for translations
@@ -95,7 +98,7 @@ if(is_admin()) {
 	include($rcp_base_dir . '/includes/admin-ajax-actions.php');	
 	
 	// setup the plugin updater
-	$rcp_updater = new Custom_Plugin_Updater( 'http://pippinsplugins.com/updater/api/', RCP_PLUGIN_FILE, array());
+	$rcp_updater = new Custom_Plugin_Updater( 'http://pippinsplugins.com/updater/api/', RCP_PLUGIN_FILE, array( 'version' => RCP_PLUGIN_VERSION ) );
 	
 }
 

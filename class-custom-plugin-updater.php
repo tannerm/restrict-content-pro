@@ -1,7 +1,7 @@
 <?php
 
 // uncomment this line for testing
-//set_site_transient( 'update_plugins', null );
+set_site_transient( 'update_plugins', null );
 
 /**
  * Allows plugins to use their own update API.
@@ -65,12 +65,13 @@ class Custom_Plugin_Updater
 	 */
 	function pre_set_site_transient_update_plugins_filter( $_transient_data )
 	{
+
 		if( empty( $_transient_data ) ) return $_transient_data;
 
 		$to_send = array( 'slug' => $this->slug );
 
 		$api_response = $this->api_request( 'plugin_latest_version', $to_send );
-		if( false !== $api_response && version_compare( $_transient_data->checked[$this->name], $api_response->new_version, '<' ) ) $_transient_data->response[$this->name] = $api_response;
+		if( false !== $api_response && version_compare( $this->api_data['version'], $api_response->new_version, '<' ) ) $_transient_data->response[$this->name] = $api_response;
 
 		return $_transient_data;
 	}
@@ -88,7 +89,6 @@ class Custom_Plugin_Updater
 	function plugins_api_filter( $_data, $_action = '', $_args = null )
 	{
 		if ( ( $_action != 'plugin_information' ) || !isset( $_args->slug ) || ( $_args->slug != $this->slug ) ) return $_data;
-
 		$to_send = array( 'slug' => $this->slug );
 
 		$api_response = $this->api_request( 'plugin_information', $to_send );
