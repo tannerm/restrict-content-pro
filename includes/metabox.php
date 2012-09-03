@@ -67,7 +67,7 @@ function rcp_add_meta_boxes() {
 	
 	foreach ($post_types as $page)	{
 		if(!in_array($page->name, $excluded_post_types))
-			add_meta_box($rcp_meta_box['id'], $rcp_meta_box['title'], 'rcp_render_meta_box', $page->name, $rcp_meta_box['context'], $rcp_meta_box['priority']);
+			add_meta_box( $rcp_meta_box['id'], $rcp_meta_box['title'], 'rcp_render_meta_box', $page->name, $rcp_meta_box['context'], $rcp_meta_box['priority'] );
 	}
 }
 add_action('admin_menu', 'rcp_add_meta_boxes');
@@ -84,7 +84,7 @@ function rcp_render_meta_box() {
 
 	echo '<tr><td colspan="3">' . __('Use these options to restrict this entire entry, or the [restrict ...] ... [/restrict] short code to restrict partial content.', 'rcp') . '</td></tr>';
 	
-    foreach ($rcp_meta_box['fields'] as $field) {
+    foreach ( apply_filters( 'rcp_metabox_fields', $rcp_meta_box['fields'] ) as $field) {
         // get current post meta data
         $meta = get_post_meta($post->ID, $field['id'], true);
         
