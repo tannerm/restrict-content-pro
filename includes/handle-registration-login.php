@@ -134,7 +134,7 @@ function rcp_add_new_member() {
 						'first_name'		=> $user_first,
 						'last_name'			=> $user_last,
 						'user_registered'	=> date('Y-m-d H:i:s'),
-						'role'				=> 'subscriber'
+						'role'				=> apply_filters( 'rcp_default_user_level', 'subscriber' )
 					)
 				);
 			}
