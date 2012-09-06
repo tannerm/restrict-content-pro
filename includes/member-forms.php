@@ -138,8 +138,8 @@ function rcp_registration_form_fields( $args = array() ) {
 				<?php do_action('rcp_after_password_registration_field'); ?>
 				
 			</fieldset>
-			<?php } ?>
-			<?php 						
+			<?php }
+
 			$levels = rcp_get_subscription_levels('active', true);
 			if($levels && count($levels) > 1) : ?>
 			<fieldset class="rcp_subscription_fieldset">			
@@ -147,7 +147,7 @@ function rcp_registration_form_fields( $args = array() ) {
 				<ul id="rcp_subscription_levels">
 					<?php
 						foreach( $levels as $key => $level ) : ?>
-							<li id="rcp_subscription_level_<?php echo $level['id']; ?>" class="rcp_subscription_level">
+							<li id="rcp_subscription_level_<?php echo $level->id; ?>" class="rcp_subscription_level">
 								<input type="radio" class="required rcp_level" <?php if( $key == 0 || (isset($_GET['level']) && $_GET['level'] == $key) ){ echo 'checked="checked"'; }?> name="rcp_level" rel="<?php echo $level->price; ?>" value="<?php echo $level->id; ?>"/>&nbsp;
 								<span class="rcp_subscription_level_name"><?php echo utf8_decode($level->name); ?></span><span class="rcp_separator"> - </span><span class="rcp_price" rel="<?php echo $level->price; ?>"><?php echo $level->price > 0 ? rcp_currency_filter($level->price) : __('free', 'rcp'); ?><span class="rcp_separator"> - </span></span>
 								<span class="rcp_level_duration"><?php echo $level->duration > 0 ? $level->duration . ' ' . rcp_filter_duration_unit($level->duration_unit, $level->duration) : __('unlimited', 'rcp'); ?></span>
