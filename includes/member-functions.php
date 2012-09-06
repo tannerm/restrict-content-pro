@@ -254,7 +254,7 @@ function rcp_print_status($user_id) {
 */
 function rcp_set_status($user_id, $new_status) {
 	if(update_user_meta($user_id, 'rcp_status', $new_status)) {
-		delete_user_meta($member->ID, '_rcp_expired_email_sent');
+		delete_user_meta($user_id, '_rcp_expired_email_sent');
 		return true;
 	}
 	return false;
