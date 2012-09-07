@@ -11,7 +11,8 @@ function rcp_admin_scripts($hook) {
 		wp_enqueue_script('rcp-admin-scripts', RCP_PLUGIN_DIR . 'includes/js/admin-scripts.js');
 	}
 	if($hook == $rcp_help_page) {
-		wp_enqueue_script('prettify', RCP_PLUGIN_DIR . 'includes/js/jquery.beautyOfCode-min.js');	
+		wp_enqueue_style('jquery-snippet', RCP_PLUGIN_DIR . 'includes/css/jquery.snippet.min.css');	
+		wp_enqueue_script('jquery-snippet', RCP_PLUGIN_DIR . 'includes/js/jquery.snippet.min.js');	
 	}
 	if($hook == $rcp_members_page) {
 		wp_localize_script('rcp-admin-scripts', 'rcp_member_vars', array(

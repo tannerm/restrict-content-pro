@@ -249,45 +249,61 @@ function rcp_help_page()
 							<p>If no user ID is supplied, then the function will check the ID of the currently logged-in user.</p>
 							<p>If the user ID is active, the function returns <em>TRUE</em>, otherwise it returns <em>FALSE</em>.</p>
 							<p><strong>Example usage</strong>:</p>
-							<pre class="code">
-								<code class="php">
-									if(rcp_is_active(34)) {
-										// user ID 34 has an active subscription
-									} else {
-										// user ID 34 does not have an active subscription
-									}
-								</code>
-							</pre>
+<pre class="code php">
+if(rcp_is_active(34)) {
+	// user ID 34 has an active subscription
+} else {
+	// user ID 34 does not have an active subscription
+}
+</pre>
 							
 							<h4>rcp_is_recurring($user_id = null)</h4>
 							<p>This function will check whether the user ID supplied to the function has currently active recurring subscription.</p>
 							<p>If no user ID is supplied, then the function will check the ID of the currently logged-in user.</p>
 							<p>If the user ID has a recurring subscription, the function returns <em>TRUE</em>, otherwise it returns <em>FALSE</em>.</p>
 							<p><strong>Example usage</strong>:</p>
-							<pre class="code">
-								<code class="php">
-									if(rcp_is_recurring(34)) {
-										// user ID 34 has an active and recurring subscription
-									} else {
-										// user ID 34 does not have a recurring subscription
-									}
-								</code>
-							</pre>
+<pre class="code php">
+if(rcp_is_recurring(34)) {
+	// user ID 34 has an active and recurring subscription
+} else {
+	// user ID 34 does not have a recurring subscription
+}
+</pre>
 							
 							<h4>rcp_is_expired($user_id = null)</h4>
 							<p>This function will check whether the subscription of the user ID supplied to the function is expired.</p>
 							<p>If no user ID is supplied, then the function will check the ID of the currently logged-in user.</p>
 							<p>If the user's subscription is expired, the function returns <em>TRUE</em>, otherwise it returns <em>FALSE</em>.</p>
 							<p><strong>Example usage</strong>:</p>
-							<pre class="code">
-								<code class="php">
-									if(rcp_is_expired(34)) {
-										// user ID 34's subscription is expired
-									} else {
-										// user ID 34's subscription is active, not expired
-									}
-								</code>
-							</pre>
+<pre class="code php">
+if(rcp_is_expired(34)) {
+	// user ID 34's subscription is expired
+} else {
+	// user ID 34's subscription is active, not expired
+}
+</pre>
+
+							<h4>rcp_get_subscription_id( $user_id )</h4>
+							<p>This function can be used for retrieving the ID number of the subscription the current user is subscribed to. It will return an integer, such as 2, 3, or 4.</p>
+							<p><strong>Example usage</strong>:</p>
+<pre class="code php">
+global $user_ID;
+$subscription_id = rcp_get_subscription_id( $user_ID );
+if( $subscription_id == 2 ) {
+	// do something here
+}
+</pre>
+
+							<h4>rcp_get_subscription( $user_id )</h4>
+							<p>This function can be used for retrieving the name of the subscription the current user is subscribed to. It will return a string, such as Gold, Silver, or Platinum.</p>
+							<p><strong>Example usage</strong>:</p>
+<pre class="code php">
+global $user_ID;
+$subscription = rcp_get_subscription( $user_ID );
+if( $subscription == 'Gold' ) {
+	// do something here
+}
+</pre>
 							
 						</div> <!-- .inside -->
 					</div><!--end postbox-->
@@ -309,15 +325,13 @@ function rcp_help_page()
 							</ul>
 							
 							<p>Sample function to wrap the restricted message in SPAN tags:</p>
-							<pre class="code">
-								<code class="php">
-									function sample_change_restricted_message($message) {
+<pre class="code php">
+function sample_change_restricted_message($message) {
 
-										return '&lt;span style="color: red;"&gt;' . $message . '&lt;span&gt;';
-									}
-									add_filter('rcp_restricted_message', 'sample_change_restricted_message', 100);
-								</code>
-							</pre>
+	return '&lt;span style="color: red;"&gt;' . $message . '&lt;span&gt;';
+}
+add_filter('rcp_restricted_message', 'sample_change_restricted_message', 100);
+</pre>
 							
 						</div> <!-- .inside -->
 					</div><!--end postbox-->
@@ -363,15 +377,13 @@ function rcp_help_page()
 							</ul>
 							
 							<p>Sample hook to add extra HTML to the login form:</p>
-							<pre class="code">
-								<code class="php">
-									function display_content_before_login() {
-										// this will be displayed just before the login form
-										echo 'This is extra content';
-									}
-									add_action('rcp_before_login_form', 'display_content_before_login');
-								</code>
-							</pre>
+<pre class="code php">
+function display_content_before_login() {
+	// this will be displayed just before the login form
+	echo 'This is extra content';
+}
+add_action('rcp_before_login_form', 'display_content_before_login');
+</pre>
 							
 							<p><strong>Processing hooks</strong> - These are used in processing form data</p>
 							<ul>
@@ -387,27 +399,25 @@ function rcp_help_page()
 								<li><em>rcp_edit_discount</em> - runs when a discount code is edited. Parameter: $posted - this contains all posted data.</li>
 							</ul>
 							<p>Sample functions to add an extra required field (perhaps for user agreement) to the registration form:</p>
-							<pre class="code">
-								<code class="php">
-									function add_sample_registration_form_field() {
-										ob_start(); ?&gt; 
-											&lt;p&gt;
-												&lt;input name="rcp_sample_required_field" id="rcp_sample_required_field" type="checkbox" checked="checked"/&gt;
-												&lt;label for="rcp_sample_required_field"&gt;Your field label*&lt;/label&gt;
-											&lt;/p&gt;
-										&lt;?php
-										echo ob_get_clean();
-									}
-									add_action('rcp_after_register_form_fields', 'add_sample_registration_form_field');
-									
-									function validate_sample_form_field($posted) {
-										if(!isset($posted['rcp_sample_required_field'])) {
-											rcp_errors()->add('sample_field_required', __('You must check this field', 'rcp'));
-										}
-									}
-									add_action('rcp_form_errors', 'validate_sample_form_field');
-								</code>
-							</pre>
+<pre class="code php">
+function add_sample_registration_form_field() {
+	ob_start(); ?&gt; 
+		&lt;p&gt;
+			&lt;input name="rcp_sample_required_field" id="rcp_sample_required_field" type="checkbox" checked="checked"/&gt;
+			&lt;label for="rcp_sample_required_field"&gt;Your field label*&lt;/label&gt;
+		&lt;/p&gt;
+	&lt;?php
+	echo ob_get_clean();
+}
+add_action('rcp_after_register_form_fields', 'add_sample_registration_form_field');
+
+function validate_sample_form_field($posted) {
+	if(!isset($posted['rcp_sample_required_field'])) {
+		rcp_errors()->add('sample_field_required', __('You must check this field', 'rcp'));
+	}
+}
+add_action('rcp_form_errors', 'validate_sample_form_field');
+</pre>
 							<p>Now, if users don't check the "Your field label" field, an error will be displayed and no account will be created.</p>
 						</div> <!-- .inside -->
 					</div><!--end postbox-->

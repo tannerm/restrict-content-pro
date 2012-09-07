@@ -69,10 +69,7 @@ jQuery(document).ready(function($) {
 	});
 	if($('.rcp-help').length) {
 		// prettify the documentation code samples
-		$.beautyOfCode.init({
-				theme: 'Default',
-			brushes: ['Php']
-		});
+		$("pre.php").snippet("php", {style: 'ide-eclipse'});
 	}	
 	// auto calculate the subscription expiration when manually adding a user
 	$('#rcp-level').change(function() {
