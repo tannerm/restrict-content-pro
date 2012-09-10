@@ -150,6 +150,10 @@ function rcp_help_page()
 							<h4>Members register, but stay as "pending" after completing payment. How do I fix it?</h4>
 							<p>This is usually caused because your website host does not support cURL, which is a PHP tool. There is an option in Restrict > Settings > Payments that will allow you do disable cURL and use an alternate method. If disabling cURL does not fix the problem, contact support.</p>
 							
+							<h4>Are there any conflicts with caching plugins?</h4>
+							<p>In general no, but there is one conflict with a particular kind of caching often available in caching plugins: <strong>object caching</strong></p>
+							<p>When object caching is enabled, some users may not experience their accounts getting automatically set to "active" after signing up. If you are experiencing this problem, and have object caching enabled, please disable it.</p>
+
 						</div> <!-- .inside -->
 					</div><!--end postbox-->
 					
