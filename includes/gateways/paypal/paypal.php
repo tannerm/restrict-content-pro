@@ -123,7 +123,7 @@ function rcp_check_ipn() {
 		}
 
 		if(isset($rcp_options['email_ipn_reports'])) {
-			wp_mail( 'mordauk@gmail.com', __('IPN report', 'rcp'), $listener->getTextReport());
+			wp_mail( get_bloginfo('admin_email'), __('IPN report', 'rcp'), $listener->getTextReport());
 		}
 	
 		/* do some quick checks to make sure all necessary data validates */
