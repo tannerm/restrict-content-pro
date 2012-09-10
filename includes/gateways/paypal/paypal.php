@@ -136,11 +136,11 @@ function rcp_check_ipn() {
 		}
 		if(rcp_get_subscription_key($user_id) != $subscription_key) {
 			// the subscription key is invalid
-			//return;
+			return;
 		}
 		if($currency_code != $rcp_options['currency']) {
 			// the currency code is invalid
-			//return;
+			return;
 		}
 		
 		update_user_meta( $user_id, 'rcp_paypal_subscriber', 'yes');
