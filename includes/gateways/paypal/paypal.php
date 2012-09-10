@@ -65,10 +65,10 @@ function rcp_check_ipn() {
 
 	$listener = new IpnListener();
 
-	if(isset($rcp_options['sandbox']) && $rcp_options['sandbox'])
+	if(isset($rcp_options['sandbox']))
 		$listener->use_sandbox = true;
 
-	if(isset($rcp_options['ssl']) && $rcp_options['ssl']) {
+	if(isset($rcp_options['ssl'])) {
 		$listener->use_ssl = true;
 	} else {
 		$listener->use_ssl = false;
@@ -89,7 +89,7 @@ function rcp_check_ipn() {
 	The processIpn() method returned true if the IPN was "VERIFIED" and false if it
 	was "INVALID".
 	*/
-	if ($verified || isset( $_POST['verification_override'] ) || isset( $rcp_options['sandbox'] ) )  {
+	if ( $verified || isset( $_POST['verification_override'] ) || ( isset( $rcp_options['sandbox'] ) || isset( $rcp_options['disable_ipn_verify'] ) ) )  {
 		
 		$posted = apply_filters('rcp_ipn_post', $_POST); // allow $_POST to be modified
 

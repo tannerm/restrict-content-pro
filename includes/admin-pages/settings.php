@@ -180,6 +180,15 @@ function rcp_settings_page()
 								<span class="description"><?php _e('Only check this option if your host does not allow cURL', 'rcp'); ?></span>
 							</td>
 						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[disable_ipn_verify]"><?php _e( 'Disable IPN Verification', 'rcp' ); ?></label>	
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[disable_ipn_verify]" id="rcp_settings[disable_ipn_verify]" <?php if(isset($rcp_options['disable_ipn_verify'])) checked('1', $rcp_options['disable_ipn_verify']); ?>/>
+								<span class="description"><?php _e('Only check this option if your members statuses are not getting changed to "active"', 'rcp'); ?></span>
+							</td>
+						</tr>
 					</table>
 					<?php do_action('rcp_payments_settings', $rcp_options); ?>
 					
