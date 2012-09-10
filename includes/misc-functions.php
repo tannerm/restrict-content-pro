@@ -67,6 +67,35 @@ function rcp_currency_filter( $price ) {
 	endif;
 }
 
+function rcp_get_currencies() {
+	$currencies = array(
+		'USD' => __('US Dollars (&#36;)', 'rcp'),
+	    'EUR' => __('Euros (&euro;)', 'rcp'),
+	    'GBP' => __('Pounds Sterling (&pound;)', 'rcp'),
+	    'AUD' => __('Australian Dollars (&#36;)', 'rcp'),
+	    'BRL' => __('Brazilian Real (&#36;)', 'rcp'),
+	    'CAD' => __('Canadian Dollars (&#36;)', 'rcp'),
+	    'CZK' => __('Czech Koruna', 'rcp'),
+	    'DKK' => __('Danish Krone', 'rcp'),
+	    'HKD' => __('Hong Kong Dollar (&#36;)', 'rcp'),
+	    'HUF' => __('Hungarian Forint', 'rcp'),
+	    'ILS' => __('Israeli Shekel', 'rcp'),
+	    'JPY' => __('Japanese Yen (&yen;)', 'rcp'),
+	    'MYR' => __('Malaysian Ringgits', 'rcp'),
+	    'MXN' => __('Mexican Peso (&#36;)', 'rcp'),
+	    'NZD' => __('New Zealand Dollar (&#36;)', 'rcp'),
+	    'NOK' => __('Norwegian Krone', 'rcp'),
+	    'PHP' => __('Philippine Pesos', 'rcp'),
+	    'PLN' => __('Polish Zloty', 'rcp'),
+	    'SGD' => __('Singapore Dollar (&#36;)', 'rcp'),
+	    'SEK' => __('Swedish Krona', 'rcp'),
+	    'CHF' => __('Swiss Franc', 'rcp'),
+	    'TWD' => __('Taiwan New Dollars', 'rcp'),
+	    'THB' => __('Thai Baht', 'rcp'),
+	    'TRY' => __('Turkish Lira', 'rcp')
+	);
+	return apply_filters('rcp_currencies', $currencies);
+}
 
 // reverse of strstr()
 function rcp_rstrstr($haystack,$needle) {
