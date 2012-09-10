@@ -199,6 +199,7 @@ function rcp_check_ipn() {
 				
 				// set the use to no longer be recurring
 				delete_user_meta( $user_id, 'rcp_recurring');
+				delete_user_meta( $user_id, 'rcp_paypal_subscriber');
 				
 				// send sub cancelled email
 				rcp_email_subscription_status($user_id, 'cancelled');
