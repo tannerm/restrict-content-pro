@@ -138,7 +138,7 @@ function rcp_check_ipn() {
 			// the subscription key is invalid
 			return;
 		}
-		if($currency_code != $rcp_options['currency']) {
+		if( strtolower( $currency_code ) != strtolower( $rcp_options['currency'] ) ) {
 			// the currency code is invalid
 			return;
 		}
