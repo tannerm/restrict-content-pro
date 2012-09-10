@@ -104,6 +104,8 @@ function rcp_settings_page()
 								<div class="description"><?php _e('Show the currency sign before or after the price?', 'rcp'); ?></div>
 							</td>
 						</tr>
+						<?php $gateways = rcp_get_payment_gateways(); ?>
+						<?php if ( count( $gateways ) > 1 ) : ?>
 						<tr valign="top">
 							<th>
 								<h3><?php _e('Gateways', 'rcp'); ?></h3>
@@ -125,6 +127,7 @@ function rcp_settings_page()
 								?>
 							</td>
 						</tr>
+						<?php endif; ?>
 						<tr valign="top">
 							<th colspan=2><h3><?php _e('PayPal Settings', 'rcp'); ?></h3></th>
 						</tr>
