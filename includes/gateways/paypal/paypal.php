@@ -142,8 +142,6 @@ function rcp_check_ipn() {
 			// the currency code is invalid
 			return;
 		}
-		
-		update_user_meta( $user_id, 'rcp_paypal_subscriber', 'yes');
 
 		/* now process the kind of subscription/payment */
 		
@@ -153,6 +151,9 @@ function rcp_check_ipn() {
 			case "subscr_signup" :
 				// when a new user signs up
 				
+				// store the recurring payment ID
+				update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['recurring_payment_id'] );
+
 				// set the user's status to active
 				rcp_set_status($user_id, 'active');
 				
