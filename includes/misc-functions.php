@@ -26,9 +26,9 @@ function rcp_get_paid_posts() {
 
 function rcp_currency_filter( $price ) {
 	global $rcp_options;
-	$currency = $rcp_options['currency'];
-	$position = $rcp_options['currency_position'];
-	if(!isset($position) || $position == 'before') :
+	$currency = isset($rcp_options['currency']) ? $rcp_options['currency'] : 'USD';
+	$position = isset($rcp_options['currency_position']) ? $rcp_options['currency_position'] : 'before';
+	if($position == 'before') :
 		switch ($currency) :
 			case "GBP" : return '&pound;' . $price; break;
 			case "USD" : 
@@ -41,7 +41,10 @@ function rcp_currency_filter( $price ) {
 				return '&#36;' . $price; 
 			break;
 			case "JPY" : return '&yen;' . $price; break;
-			default : return $currency . ' ' . $price; break;
+			default :
+			    $formatted = $currency . ' ' . $price;
+    		    return apply_filters('rcp_' . strtolower($currency) . '_currency_filter_before', $formatted, $currency, $price);
+			break;
 		endswitch;
 	else :
 		switch ($currency) :
@@ -56,10 +59,14 @@ function rcp_currency_filter( $price ) {
 				return $price . '&#36;'; 
 			break;
 			case "JPY" : return $price . '&yen;'; break;
-			default : return $price . ' ' . $currency; break;
+			default : 
+			    $formatted = $price . ' ' . $currency;
+			    return apply_filters('rcp_' . strtolower($currency) . '_currency_filter_after', $formatted, $currency, $price);
+			break;
 		endswitch;	
 	endif;
 }
+
 
 // reverse of strstr()
 function rcp_rstrstr($haystack,$needle) {
