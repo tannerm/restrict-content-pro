@@ -408,7 +408,7 @@ function rcp_settings_page()
 							</tr>
 							<tr valign="top">
 								<th>
-									<label for="rcp_settings[trial_subject]"><?php _e( 'Subject line for the Free Trial email', 'rcp' ); ?></label>
+									<label for="rcp_settings[trial_subject]"><?php _e( 'Subject', 'rcp' ); ?></label>
 								</th>
 								<td>
 									<input class="regular-text" id="rcp_settings[trial_subject]" style="width: 300px;" name="rcp_settings[trial_subject]" value="<?php if(isset($rcp_options['trial_subject'])) { echo $rcp_options['trial_subject']; } ?>"/>
