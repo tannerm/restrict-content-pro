@@ -3,12 +3,22 @@
 Plugin Name: Restrict Content Pro
 Plugin URL: http://pippinsplugins.com/restrict-content-pro-premium-content-plugin
 Description: Setup a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
-Version: 1.3
+Version: 1.3.1
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
 Contributors: mordauk
 */
 
+
+if(!defined('RCP_PLUGIN_DIR')) {
+	define('RCP_PLUGIN_DIR', plugin_dir_url( __FILE__ ));
+}
+if(!defined('RCP_PLUGIN_FILE')) {
+	define('RCP_PLUGIN_FILE', __FILE__ );
+}
+if(!defined('RCP_PLUGIN_VERSION')) {
+	define('RCP_PLUGIN_VERSION', '1.3.1' );
+}
 
 /*******************************************
 * global variables
@@ -17,10 +27,6 @@ global $wpdb;
 
 // load the plugin options
 $rcp_options = get_option( 'rcp_settings' );
-
-// the plugin base directory
-global $rcp_base_dir;
-$rcp_base_dir = dirname(__FILE__);
 
 global $rcp_db_name;
 $rcp_db_name = $wpdb->prefix . 'restrict_content_pro';
@@ -48,15 +54,6 @@ global $rcp_payments_page;
 global $rcp_settings_page;
 global $rcp_export_page;
 
-if(!defined('RCP_PLUGIN_DIR')) {
-	define('RCP_PLUGIN_DIR', plugin_dir_url( __FILE__ ));
-}
-if(!defined('RCP_PLUGIN_FILE')) {
-	define('RCP_PLUGIN_FILE', __FILE__ );
-}
-if(!defined('RCP_PLUGIN_VERSION')) {
-	define('RCP_PLUGIN_VERSION', '1.2.4' );
-}
 
 /*******************************************
 * plugin text domain for translations
@@ -76,26 +73,26 @@ add_action('init', 'rcp_load_textdomain');
 if(is_admin()) {
 
 	if(!class_exists('Custom_Plugin_Updater')) {
-		include_once($rcp_base_dir . '/class-custom-plugin-updater.php' );
+		include_once(RCP_PLUGIN_DIR . 'class-custom-plugin-updater.php' );
 	}
-	require($rcp_base_dir . '/includes/install.php');
-	include($rcp_base_dir . '/includes/upgrades.php');
-	include($rcp_base_dir . '/includes/admin-pages.php');
-	include($rcp_base_dir . '/includes/admin-pages/screen-options.php');
-	include($rcp_base_dir . '/includes/admin-pages/members-page.php');
-	include($rcp_base_dir . '/includes/admin-pages/settings.php');
-	include($rcp_base_dir . '/includes/admin-pages/subscription-levels.php');
-	include($rcp_base_dir . '/includes/admin-pages/discount-codes.php');
-	include($rcp_base_dir . '/includes/admin-pages/help-menus.php');
-	include($rcp_base_dir . '/includes/admin-pages/payments-page.php');
-	include($rcp_base_dir . '/includes/admin-pages/export.php');
-	include($rcp_base_dir . '/includes/admin-pages/help-page.php');
-	include($rcp_base_dir . '/includes/user-page-columns.php');
-	include($rcp_base_dir . '/includes/metabox.php');
-	include($rcp_base_dir . '/includes/process-data.php');
-	include($rcp_base_dir . '/includes/export-functions.php');
-	include($rcp_base_dir . '/includes/admin-notices.php');	
-	include($rcp_base_dir . '/includes/admin-ajax-actions.php');	
+	require(RCP_PLUGIN_DIR . 'includes/install.php');
+	include(RCP_PLUGIN_DIR . 'includes/upgrades.php');
+	include(RCP_PLUGIN_DIR . 'includes/admin-pages.php');
+	include(RCP_PLUGIN_DIR . 'includes/admin-pages/screen-options.php');
+	include(RCP_PLUGIN_DIR . 'includes/admin-pages/members-page.php');
+	include(RCP_PLUGIN_DIR . 'includes/admin-pages/settings.php');
+	include(RCP_PLUGIN_DIR . 'includes/admin-pages/subscription-levels.php');
+	include(RCP_PLUGIN_DIR . 'includes/admin-pages/discount-codes.php');
+	include(RCP_PLUGIN_DIR . 'includes/admin-pages/help-menus.php');
+	include(RCP_PLUGIN_DIR . 'includes/admin-pages/payments-page.php');
+	include(RCP_PLUGIN_DIR . 'includes/admin-pages/export.php');
+	include(RCP_PLUGIN_DIR . 'includes/admin-pages/help-page.php');
+	include(RCP_PLUGIN_DIR . 'includes/user-page-columns.php');
+	include(RCP_PLUGIN_DIR . 'includes/metabox.php');
+	include(RCP_PLUGIN_DIR . 'includes/process-data.php');
+	include(RCP_PLUGIN_DIR . 'includes/export-functions.php');
+	include(RCP_PLUGIN_DIR . 'includes/admin-notices.php');	
+	include(RCP_PLUGIN_DIR . 'includes/admin-ajax-actions.php');	
 	
 	// setup the plugin updater
 	$rcp_updater = new Custom_Plugin_Updater( 'http://pippinsplugins.com/updater/api/', RCP_PLUGIN_FILE, array( 'version' => RCP_PLUGIN_VERSION ) );
@@ -103,30 +100,30 @@ if(is_admin()) {
 }
 
 // global includes
-include($rcp_base_dir . '/includes/gateways/paypal/paypal.php');
-include($rcp_base_dir . '/includes/misc-functions.php');
-include($rcp_base_dir . '/includes/scripts.php');
-include($rcp_base_dir . '/includes/member-functions.php');
-include($rcp_base_dir . '/includes/discount-functions.php');
-include($rcp_base_dir . '/includes/subscription-functions.php');
-include($rcp_base_dir . '/includes/email-functions.php');
-include($rcp_base_dir . '/includes/payment-tracking-functions.php');
-include($rcp_base_dir . '/includes/handle-registration-login.php');
-include($rcp_base_dir . '/includes/gateway-functions.php');
-include($rcp_base_dir . '/includes/cron-functions.php');
-include($rcp_base_dir . '/includes/ajax-actions.php');
+include(RCP_PLUGIN_DIR . 'includes/gateways/paypal/paypal.php');
+include(RCP_PLUGIN_DIR . 'includes/misc-functions.php');
+include(RCP_PLUGIN_DIR . 'includes/scripts.php');
+include(RCP_PLUGIN_DIR . 'includes/member-functions.php');
+include(RCP_PLUGIN_DIR . 'includes/discount-functions.php');
+include(RCP_PLUGIN_DIR . 'includes/subscription-functions.php');
+include(RCP_PLUGIN_DIR . 'includes/email-functions.php');
+include(RCP_PLUGIN_DIR . 'includes/payment-tracking-functions.php');
+include(RCP_PLUGIN_DIR . 'includes/handle-registration-login.php');
+include(RCP_PLUGIN_DIR . 'includes/gateway-functions.php');
+include(RCP_PLUGIN_DIR . 'includes/cron-functions.php');
+include(RCP_PLUGIN_DIR . 'includes/ajax-actions.php');
 
 // front-end only includes
 if(!is_admin()) {
-	include($rcp_base_dir . '/includes/shortcodes.php');
-	include($rcp_base_dir . '/includes/member-forms.php');
-	include($rcp_base_dir . '/includes/content-filters.php');
-	include($rcp_base_dir . '/includes/feed-functions.php');
+	include(RCP_PLUGIN_DIR . 'includes/shortcodes.php');
+	include(RCP_PLUGIN_DIR . 'includes/member-forms.php');
+	include(RCP_PLUGIN_DIR . 'includes/content-filters.php');
+	include(RCP_PLUGIN_DIR . 'includes/feed-functions.php');
 	if(isset($rcp_options['enable_recaptcha']) && $rcp_options['enable_recaptcha']) {
-		require_once( $rcp_base_dir . '/includes/recaptchalib.php');	
+		require_once( RCP_PLUGIN_DIR . 'includes/recaptchalib.php');	
 	}
-	include($rcp_base_dir . '/includes/user-checks.php');
-	include($rcp_base_dir . '/includes/query-filters.php');
-	include($rcp_base_dir . '/includes/redirects.php');
+	include(RCP_PLUGIN_DIR . 'includes/user-checks.php');
+	include(RCP_PLUGIN_DIR . 'includes/query-filters.php');
+	include(RCP_PLUGIN_DIR . 'includes/redirects.php');
 }
 

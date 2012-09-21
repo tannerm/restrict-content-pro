@@ -56,11 +56,11 @@ add_action('rcp_gateway_paypal', 'rcp_process_paypal');
 function rcp_check_ipn() {
 
 
-	global $rcp_options, $rcp_base_dir;
+	global $rcp_options;
 
 	if( !class_exists('IpnListener') ) {
 		// instantiate the IpnListener class
-		include($rcp_base_dir . '/includes/gateways/paypal/ipnlistener.php');
+		include(RCP_PLUGIN_DIR . 'includes/gateways/paypal/ipnlistener.php');
 	}
 
 	$listener = new IpnListener();
