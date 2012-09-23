@@ -65,7 +65,6 @@ class Custom_Plugin_Updater
 	 */
 	function pre_set_site_transient_update_plugins_filter( $_transient_data )
 	{
-
 		if( empty( $_transient_data ) ) return $_transient_data;
 
 		$to_send = array( 'slug' => $this->slug );
@@ -89,6 +88,7 @@ class Custom_Plugin_Updater
 	function plugins_api_filter( $_data, $_action = '', $_args = null )
 	{
 		if ( ( $_action != 'plugin_information' ) || !isset( $_args->slug ) || ( $_args->slug != $this->slug ) ) return $_data;
+
 		$to_send = array( 'slug' => $this->slug );
 
 		$api_response = $this->api_request( 'plugin_information', $to_send );
