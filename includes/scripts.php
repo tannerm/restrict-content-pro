@@ -7,12 +7,12 @@ function rcp_admin_scripts($hook) {
 	if(in_array($hook, $pages)) {
 		wp_enqueue_script('jquery-ui-sortable');
 		wp_enqueue_script('jquery-ui-datepicker');
-		wp_enqueue_script('bbq', RCP_PLUGIN_DIR . 'includes/js/jquery.ba-bbq.min.js');
-		wp_enqueue_script('rcp-admin-scripts', RCP_PLUGIN_DIR . 'includes/js/admin-scripts.js');
+		wp_enqueue_script('bbq',  RCP_PLUGIN_URL . '/includes/js/jquery.ba-bbq.min.js');
+		wp_enqueue_script('rcp-admin-scripts',  RCP_PLUGIN_URL . '/includes/js/admin-scripts.js');
 	}
 	if($hook == $rcp_help_page) {
-		wp_enqueue_style('jquery-snippet', RCP_PLUGIN_DIR . 'includes/css/jquery.snippet.min.css');	
-		wp_enqueue_script('jquery-snippet', RCP_PLUGIN_DIR . 'includes/js/jquery.snippet.min.js');	
+		wp_enqueue_style('jquery-snippet',  RCP_PLUGIN_URL . '/includes/css/jquery.snippet.min.css');	
+		wp_enqueue_script('jquery-snippet',  RCP_PLUGIN_URL . '/includes/js/jquery.snippet.min.js');	
 	}
 	if($hook == $rcp_members_page) {
 		wp_localize_script('rcp-admin-scripts', 'rcp_member_vars', array(
@@ -39,8 +39,8 @@ function rcp_admin_styles($hook) {
 	);
 	
 	if(in_array($hook, $pages)) {
-		wp_enqueue_style('datepicker', RCP_PLUGIN_DIR . 'includes/css/datepicker.css');
-		wp_enqueue_style('rcp-admin', RCP_PLUGIN_DIR . 'includes/css/admin-styles.css');
+		wp_enqueue_style('datepicker',  RCP_PLUGIN_URL . '/includes/css/datepicker.css');
+		wp_enqueue_style('rcp-admin',  RCP_PLUGIN_URL . '/includes/css/admin-styles.css');
 	}
 }
 add_action('admin_enqueue_scripts', 'rcp_admin_styles');
@@ -48,14 +48,14 @@ add_action('admin_enqueue_scripts', 'rcp_admin_styles');
 
 // register our form css
 function rcp_register_css() {
-	wp_register_style('rcp-form-css', RCP_PLUGIN_DIR . 'includes/css/forms.css');
+	wp_register_style('rcp-form-css',  RCP_PLUGIN_URL . '/includes/css/forms.css');
 }
 add_action('init', 'rcp_register_css');
 
 // register our front end scripts
 function rcp_register_scripts() {
-	wp_register_script('rcp-scripts', RCP_PLUGIN_DIR . 'includes/js/front-end-scripts.js', array('jquery'));
-	wp_register_script('jquery-validate', RCP_PLUGIN_DIR . 'includes/js/jquery.validate.min.js', array('jquery'));
+	wp_register_script('rcp-scripts',  RCP_PLUGIN_URL . '/includes/js/front-end-scripts.js', array('jquery'));
+	wp_register_script('jquery-validate',  RCP_PLUGIN_URL . '/includes/js/jquery.validate.min.js', array('jquery'));
 }
 add_action('init', 'rcp_register_scripts');
  
