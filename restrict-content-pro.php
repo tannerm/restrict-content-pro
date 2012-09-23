@@ -54,16 +54,6 @@ function rcp_get_payments_db_name() {
 }
 
 
-if(!defined('RCP_PLUGIN_DIR')) {
-	define('RCP_PLUGIN_DIR', plugin_dir_url( __FILE__ ));
-}
-if(!defined('RCP_PLUGIN_FILE')) {
-	define('RCP_PLUGIN_FILE', __FILE__ );
-}
-if(!defined('RCP_PLUGIN_VERSION')) {
-	define('RCP_PLUGIN_VERSION', '1.3.1' );
-}
-
 /*******************************************
 * global variables
 *******************************************/
