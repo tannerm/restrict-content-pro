@@ -22,6 +22,7 @@ if(!defined('RCP_PLUGIN_VERSION')) {
 	define('RCP_PLUGIN_VERSION', '1.3.1.1' );
 }
 
+
 /*******************************************
 * setup DB names
 *******************************************/
@@ -58,6 +59,10 @@ function rcp_get_payments_db_name() {
 * global variables
 *******************************************/
 global $wpdb;
+
+// the plugin base directory
+global $rcp_base_dir; // not used any more, but just in case someone else is
+$rcp_base_dir = dirname(__FILE__);
 
 // load the plugin options
 $rcp_options = get_option( 'rcp_settings' );
