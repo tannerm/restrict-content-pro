@@ -161,8 +161,7 @@ function rcp_add_new_member() {
 						$discount = rcp_get_discount_details_by_code($code);
 
 						// calculate the after-discount price
-						$discounted_price = rcp_get_discounted_price($price, $discount->amount, $discount->unit);
-						$price = $discounted_price;
+						$price = rcp_get_discounted_price( $price, $discount->amount, $discount->unit );
 						
 						// record the usage of this discount code
 						rcp_store_discount_use_for_user( $code, $user_id, $discount );
