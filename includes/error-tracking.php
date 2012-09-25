@@ -3,6 +3,7 @@
 // displays error messages from form submissions
 function rcp_show_error_messages() {
 	if($codes = rcp_errors()->get_error_codes()) {
+		do_action( 'rcp_errors_before' );
 		echo '<div class="rcp_message error">';
 		    // Loop error codes and display errors
 		   foreach($codes as $code){
@@ -12,6 +13,7 @@ function rcp_show_error_messages() {
 		        do_action( 'rcp_error_after' );
 		    }
 		echo '</div>';
+		do_action( 'rcp_errors_after' );
 	}	
 }
 
