@@ -192,19 +192,19 @@ function rcp_add_new_member() {
 					}
 					
 					$subscription_data = array(
-						'price' => $price,
-						'length' => $expiration_length,
-						'length_unit' => strtolower($expiration_unit),
+						'price' 			=> $price,
+						'length' 			=> $expiration_length,
+						'length_unit' 		=> strtolower($expiration_unit),
 						'subscription_name' => $subscription->name,
-						'key' => $subscription_key,
-						'user_id' => $user_id,
-						'user_name' => $user_login,
-						'user_email' => $user_email,
-						'currency' => $rcp_options['currency'],
-						'auto_renew' => $auto_renew,
-						'return_url' => rcp_get_return_url(),
-						'new_user' => $need_new_user,
-						'post_data' => $_POST
+						'key' 				=> $subscription_key,
+						'user_id' 			=> $user_id,
+						'user_name' 		=> $user_login,
+						'user_email' 		=> $user_email,
+						'currency' 			=> $rcp_options['currency'],
+						'auto_renew' 		=> $auto_renew,
+						'return_url' 		=> rcp_get_return_url(),
+						'new_user' 			=> $need_new_user,
+						'post_data' 		=> $_POST
 					);
 					
 					// get the selected payment method/gateway
