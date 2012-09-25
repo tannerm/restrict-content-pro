@@ -7,7 +7,9 @@ function rcp_show_error_messages() {
 		    // Loop error codes and display errors
 		   foreach($codes as $code){
 		        $message = rcp_errors()->get_error_message($code);
+		        do_action( 'rcp_error_before' );
 		        echo '<p class="rcp_error"><span><strong>' . __('Error', 'rcp') . '</strong>: ' . $message . '</span></p>';
+		        do_action( 'rcp_error_after' );
 		    }
 		echo '</div>';
 	}	
