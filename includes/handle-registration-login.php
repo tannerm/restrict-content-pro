@@ -139,17 +139,7 @@ function rcp_add_new_member() {
 				);
 			}
 			if($user_id) {
-				
-				// the page to send users after a successfull registration
-				if(isset($rcp_options['redirect'])) {
-					$redirect = get_permalink($rcp_options['redirect']);
-				} else {
-					$redirect = home_url();
-				}
-				
-				$currency = $rcp_options['currency'];
-				$return_url = $redirect;
-				
+								
 				// get the details of this subscription
 				$subscription = rcp_get_subscription_details($_POST['rcp_level']);
 				
@@ -210,9 +200,9 @@ function rcp_add_new_member() {
 						'user_id' => $user_id,
 						'user_name' => $user_login,
 						'user_email' => $user_email,
-						'currency' => $currency,
+						'currency' => $rcp_options['currency'],
 						'auto_renew' => $auto_renew,
-						'return_url' => $return_url,
+						'return_url' => rcp_get_return_url(),
 						'new_user' => $need_new_user,
 						'post_data' => $_POST
 					);
