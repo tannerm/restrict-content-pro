@@ -119,13 +119,15 @@ function rcp_add_new_member() {
 			
 			// deterime the expiration date of the user's subscription
 			if($expiration->duration > 0) {
-				$expiration_unit = $expiration->duration_unit;
-				$expiration_length = $expiration->duration;
-				$member_expires = date('Y-m-d', strtotime('+' . $expiration_length . ' ' . $expiration_unit));
+			
+				$member_expires = rcp_calc_member_expiration( $expiration );
+
 			} else {
 				$member_expires = 'none';
 			}
 			
+			echo $member_expires; exit;
+
 			if($need_new_user) {
 				$user_id = wp_insert_user(array(
 						'user_login'		=> $user_login,

@@ -176,6 +176,15 @@ function rcp_user_has_access($user_id, $access_level_needed) {
 	return false;
 }
 
+function rcp_calc_member_expiration( $expiration_object ) {
+	$expiration_unit 	= $expiration_object->duration_unit;
+	$expiration_length 	= $expiration_object->duration;
+	$member_expires 	= date( 'Y-m-d H:i:s', strtotime( '+' . $expiration_length . ' ' . $expiration_unit . ' 23:59:59') );
+
+	return apply_filters( 'rcp_calc_member_expiration', $member_expires, $expiration_object );
+}
+
+
 /*
 * Gets the date of a user's expiration in a nice format
 * @param int $user_id - the ID of the user to return the subscription level of
