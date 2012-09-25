@@ -166,6 +166,8 @@ function rcp_add_new_member() {
 						
 						// record the usage of this discount code
 						$user_discounts = get_user_meta($user_id, 'rcp_user_discounts', true);
+						if( !is_array( $user_discounts ) )
+							$user_discounts = array();
 						$user_discounts[] = $code;
 						update_user_meta($user_id, 'rcp_user_discounts', $user_discounts);
 						rcp_increase_code_use($discount->id);
@@ -182,7 +184,6 @@ function rcp_add_new_member() {
 					
 					// this is a premium registration
 					if(isset($_POST['rcp_auto_renew'])) {
-						
 						// set the user to recurring
 						update_user_meta( $user_id, 'rcp_recurring', 'yes');
 						$auto_renew = true;
