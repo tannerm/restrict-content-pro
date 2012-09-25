@@ -165,11 +165,9 @@ function rcp_add_new_member() {
 						$price = $discounted_price;
 						
 						// record the usage of this discount code
-						$user_discounts = get_user_meta($user_id, 'rcp_user_discounts', true);
-						if( !is_array( $user_discounts ) )
-							$user_discounts = array();
-						$user_discounts[] = $code;
-						update_user_meta($user_id, 'rcp_user_discounts', $user_discounts);
+						rcp_store_discount_use_for_user( $code, $user_id, $discount );
+
+						// incrase the usage count for the code
 						rcp_increase_code_use($discount->id);
 						
 						// if the discount is 100%, log the user in and redirect to success page

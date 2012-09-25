@@ -122,6 +122,33 @@ function rcp_get_discounted_price($base_price, $amount, $type) {
 	return number_format( (float) $discounted_price, 2);
 }
 
+
+/*
+* Stores a discount code in a user's history
+*
+* @param string $code - the discount code to store
+* @param int $user_id - the ID of the user to store the discount for
+* @param object $discount_object - the object containing all info about the discount
+* return void
+*/
+function rcp_store_discount_use_for_user( $code, $user_id, $discount_object ) {
+
+	$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true) ;
+	
+	if( !is_array( $user_discounts ) )
+		$user_discounts = array();
+
+	$user_discounts[] = $code;
+
+	do_action( 'rcp_pre_store_discount_for_user', $code, $user_id, $discount_object );
+
+	update_user_meta( $user_id, 'rcp_user_discounts', $user_discounts );
+	
+	do_action( 'rcp_store_discount_for_user', $code, $user_id, $discount_object );
+
+}
+
+
 /*
 * Checks whether a user has used a particular discount code
 * This is used to preventing users from spamming discount codes
