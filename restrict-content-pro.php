@@ -155,6 +155,7 @@ include(RCP_PLUGIN_DIR . 'includes/ajax-actions.php');
 
 // front-end only includes
 if(!is_admin()) {
+	include(RCP_PLUGIN_DIR . 'includes/error-tracking.php');
 	include(RCP_PLUGIN_DIR . 'includes/shortcodes.php');
 	include(RCP_PLUGIN_DIR . 'includes/member-forms.php');
 	include(RCP_PLUGIN_DIR . 'includes/content-filters.php');
