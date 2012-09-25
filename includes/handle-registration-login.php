@@ -126,8 +126,6 @@ function rcp_add_new_member() {
 				$member_expires = 'none';
 			}
 			
-			echo $member_expires; exit;
-
 			if($need_new_user) {
 				$user_id = wp_insert_user(array(
 						'user_login'		=> $user_login,
