@@ -121,7 +121,8 @@ function rcp_render_meta_box() {
 			echo '<td class="rcp_meta_box_desc">', $field['desc'], '</td>';
         echo '</tr>';
     }
-	echo '<tr><td colspan="3"><strong>' . __('Note', 'rcp') . '</strong>: ' . __('Access level, subscription level, and user level can all be combined to require the user meet all three specifications.', 'rcp') . '</td></tr>';
+    echo '<tr><td colspan="3"><strong>' . __('Note 1', 'rcp') . '</strong>: ' . __('To hide this content from logged-out users, but allow free and paid, set the User Level to "Subscriber".', 'rcp') . '</td></tr>';
+	echo '<tr><td colspan="3"><strong>' . __('Note 2', 'rcp') . '</strong>: ' . __('Access level, subscription level, and user level can all be combined to require the user meet all three specifications.', 'rcp') . '</td></tr>';
     
     echo '</table>';
 }
