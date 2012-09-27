@@ -26,4 +26,3 @@ p.rcp_error span { display: block; background: #ffbfbf; border-top: 1px solid #f
 .rcp_level_description { border-left: 1px solid #f0f0f0; margin-left: 10px; padding-left: 8px; font-size: 12px; }
 .rcp_discount_valid { color: #42961e; }
 .rcp_discount_invalid { color: #b01000; }
-.rcp_lost_password { padding-left: 280px; }
