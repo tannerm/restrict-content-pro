@@ -35,8 +35,8 @@ $level = rcp_get_subscription_details(urldecode($_GET['edit_subscription']));
 				<td>
 					<select id="rcp-level" name="level">
 						<?php
-						for($i = 0; $i <= 10; $i++) {
-							echo '<option value="' . $i . '" ' . selected($i, $level->level, false) . '">' . $i . '</option>';
+						foreach( rcp_get_access_levels() as $access ) {
+							echo '<option value="' . $access . '" ' . selected($access, $level->level, false) . '">' . $access . '</option>';
 						}	
 						?>
 					</select>

@@ -36,7 +36,7 @@ $rcp_meta_box = array(
             'id' => $rcp_prefix . 'access_level',
             'type' => 'select',
             'desc' => __('Choose the access level required see this content. The access level is determined by the subscription the member is subscribed to.', 'rcp'),
-            'options' => array(0,1,2,3,4,5,6,7,8,9,10),
+            'options' => rcp_get_access_levels(),
             'std' => 'All'
         ),
 		array(
@@ -82,7 +82,11 @@ function rcp_render_meta_box() {
     
     echo '<table class="form-table">';
 
-	echo '<tr><td colspan="3">' . __('Use these options to restrict this entire entry, or the [restrict ...] ... [/restrict] short code to restrict partial content.', 'rcp') . '</td></tr>';
+	echo '<tr><td colspan="3">' . sprintf(
+            __('Use these options to restrict this entire entry, or the [restrict] ... [/restrict] short code to restrict partial content. %sView documentation%s.', 'rcp'),
+            '<a href="' . admin_url( 'admin.php?page=rcp-help#restricting-content' ) . '">',
+            '</a>'
+        ) . '</td></tr>';
 	
     foreach ( apply_filters( 'rcp_metabox_fields', $rcp_meta_box['fields'] ) as $field) {
         // get current post meta data

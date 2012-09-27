@@ -270,3 +270,27 @@ function rcp_has_paid_levels() {
 	}
 	return false;
 }
+
+
+/*
+* Retrieves available access levels
+*
+* @since 1.3.2
+* @return array
+*/
+function rcp_get_access_levels() {
+	$levels = array(
+		0 => 'None',
+		1 => '1',
+		2 => '2',
+		3 => '3',
+		4 => '4',
+		5 => '5',
+		6 => '6',
+		7 => '7',
+		8 => '8',
+		9 => '9',
+		10 => '10'
+	);
+	return apply_filters( 'rcp_access_levels', $levels );
+}

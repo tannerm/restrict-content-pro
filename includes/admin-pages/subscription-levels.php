@@ -110,8 +110,9 @@ function rcp_member_levels_page()
 							<td>
 								<select id="rcp-level" name="level">
 									<?php
-									for($i = 0; $i <= 10; $i++) {
-										echo '<option value="' . $i . ' ' . selected($i, $level->level, false) . '">' . $i . '</option>';
+									$access_levels = rcp_get_access_levels();
+									foreach( $access_levels as $access ) {
+										echo '<option value="' . $access . ' ' . selected($accessi, $level->level, false) . '">' . $access . '</option>';
 									}	
 									?>
 								</select>
