@@ -45,7 +45,7 @@ function rcp_help_page()
 						<div class="inside">
 							<p>This help page will help you setup restricted content in your posts, pages, and custom post types.</p>
 							<p>All documentation for configuring this plugin, such as creating subscription levels and discounts, is located on the admin page for that section, in the Help Tab, which is placed in the top right corner of the screen.</p>
-							<p><img class="help-image" src="<?php echo RCP_PLUGIN_DIR; ?>/includes/images/help_images/help-tab.png"/></p>
+							<p><img class="help-image" src="<?php echo RCP_PLUGIN_URL; ?>/includes/images/help_images/help-tab.png"/></p>
 						</div> <!-- .inside -->
 					</div><!--end postbox-->
 					
