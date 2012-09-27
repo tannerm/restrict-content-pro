@@ -86,7 +86,7 @@ function rcp_help_page()
 							
 							<h4>Restricting Entire Posts / Pages</h4>
 							<p>On every post, page, and custom post type is a meta box called <em>Restrict this Content</em>. It has several options, which will allow you to restrict the entire contents of your post or page to registered users only, either free or paid.</p>
-							<p><img class="help-image" src="<?php echo RCP_PLUGIN_DIR; ?>/includes/images/help_images/metabox.png" /></p>
+							<p><img class="help-image" src="<?php echo RCP_PLUGIN_URL; ?>/includes/images/help_images/metabox.png" /></p>
 							<ul>
 								<li><em><?php _e('Paid Only?', 'rcp'); ?></em> - Check this box to restrict the entire contents of this post / page to paid subscribers only. Members who have an active, free trial will also be able to view this content.</li> 
 									<li><em><?php _e('Show Excerpt?', 'rcp'); ?></em> - Check this box to show the post / page excerpt to non-active users (or those without an active paid subscription). If this box is left unchecked, then only the text defined in the Messages section of the Settings page will be shown when a user attempts to view this post / page.</li>
