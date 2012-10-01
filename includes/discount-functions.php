@@ -5,6 +5,23 @@
 * specific info about discount codes
 *****************************************/
 
+
+/*
+* Retrieves all discount codes
+*
+* return object/bool
+*/
+
+function rcp_get_discounts() {
+	global $wpdb, $rcp_discounts_db_name;
+	$discounts = $wpdb->get_results("SELECT * FROM " . $rcp_discounts_db_name . ";");
+	if( $discounts ) {
+		return $discounts;
+	}
+	return false;
+}
+
+
 /*
 * returns the DB object for a discount code
 * @param int $id - the ID number of the discount to retrieve data for
@@ -111,7 +128,7 @@ function rcp_is_discount_not_expired($code_id) {
 * @param - string $type - the kind of discount, either % or flat
 * return float
 */
-function rcp_get_discounted_price($base_price, $amount, $type) {
+function rcp_get_discounted_price( $base_price, $amount, $type ) {
 
 	if($type == '%') {
 		$discounted_price = $base_price - ( $base_price * ( $amount / 100 ) );
