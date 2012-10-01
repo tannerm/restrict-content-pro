@@ -201,6 +201,6 @@ function rcp_format_teaser($message) {
 
 // wraps the restricted message in paragraph tags. This is the default filter
 function rcp_restricted_message_filter($message) {
-	return wpautop($message);
+	return do_shortcode( wpautop( $message ) );
 }
 add_filter('rcp_restricted_message', 'rcp_restricted_message_filter', 10, 1);
