@@ -33,7 +33,7 @@ function rcp_filter_restricted_content($content) {
 			}
 			return $content;
 		}
-	} elseif($subscription_level && $subscription_level != 'all') {
+	} elseif( $subscription_level && $subscription_level != 'all' ) {
 		// this content is restricted to a subscription level, but is free
 		
 		$access_level = get_post_meta($post->ID, 'rcp_access_level', true);
@@ -48,6 +48,7 @@ function rcp_filter_restricted_content($content) {
 			return rcp_format_teaser($free_message);
 		}
 	} else {
+		echo 'test'; exit;
 		// this content is not restricted at all
 		return $content;
 	}
