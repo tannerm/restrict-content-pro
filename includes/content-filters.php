@@ -13,11 +13,11 @@ function rcp_filter_restricted_content($content) {
 	$free_message = $rcp_options['free_message']; // message shown for free content
 	
 	$subscription_level = get_post_meta($post->ID, 'rcp_subscription_level', true);
-	
+	$access_level = get_post_meta($post->ID, 'rcp_access_level', true);
+
 	if(rcp_is_paid_content($post->ID)) {
 		// this conent is for paid users only
 		
-		$access_level = get_post_meta($post->ID, 'rcp_access_level', true);
 		if( !rcp_is_paid_user($user_ID) || ( !rcp_user_has_access($user_ID, $access_level) && $access_level > 0 ) ) {
 			return rcp_format_teaser($message);
 		} else {
@@ -34,9 +34,9 @@ function rcp_filter_restricted_content($content) {
 			return $content;
 		}
 	} elseif( $subscription_level && $subscription_level != 'all' ) {
+		
 		// this content is restricted to a subscription level, but is free
 		
-		$access_level = get_post_meta($post->ID, 'rcp_access_level', true);
 		if($access_level > 0) {
 			$has_access = rcp_user_has_access($user_ID, $access_level);
 		} else {
@@ -45,11 +45,17 @@ function rcp_filter_restricted_content($content) {
 		if(rcp_get_subscription_id($user_ID) == $subscription_level && $has_access) {
 			return $content;
 		} else {
-			return rcp_format_teaser($free_message);
+			return rcp_format_teaser( $free_message );
+		}
+
+	} elseif( $access_level > 0 ) {
+
+		if( rcp_user_has_access( $user_ID, $access_level ) ) {
+			return $content;
+		} else {
+			return rcp_format_teaser( $free_message );
 		}
 	} else {
-		echo 'test'; exit;
-		// this content is not restricted at all
 		return $content;
 	}
 }
