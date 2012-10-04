@@ -112,7 +112,7 @@ function rcp_member_levels_page()
 									<?php
 									$access_levels = rcp_get_access_levels();
 									foreach( $access_levels as $access ) {
-										echo '<option value="' . $access . ' ' . selected($accessi, $level->level, false) . '">' . $access . '</option>';
+										echo '<option value="' . $access . ' ' . selected($access, $level->level, false) . '">' . $access . '</option>';
 									}	
 									?>
 								</select>
