@@ -3,7 +3,7 @@
 function rcp_payments_page()
 {
 	global $rcp_options, $rcp_db_name, $wpdb;	
-	$current_page = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-payments';
+	$current_page = admin_url( '/wp-admin/admin.php?page=rcp-payments' );
 	?>
 	<div class="wrap">
 		<h2><?php _e('Payments', 'rcp'); ?></h2>
