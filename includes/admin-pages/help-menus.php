@@ -9,8 +9,8 @@ if ( get_bloginfo('version') < 3.3 ) {
 	include('help-menus-setup.php');
 }
 
-function rcp_render_members_tab_content($id) {
-	switch($id) :
+function rcp_render_members_tab_content( $id ) {
+	switch( $id ) :
 	
 		case 'general' :
 			ob_start(); ?>
@@ -65,8 +65,8 @@ function rcp_render_members_tab_content($id) {
 	return ob_get_clean();
 }
 
-function rcp_render_subscriptions_tab_content($id) {
-	switch($id) :
+function rcp_render_subscriptions_tab_content( $id ) {
+	switch( $id ) :
 
 		case 'general' :
 			ob_start(); ?>
@@ -110,8 +110,8 @@ function rcp_render_subscriptions_tab_content($id) {
 	return ob_get_clean();	
 }
 
-function rcp_render_discounts_tab_content($id) {
-	switch($id) :
+function rcp_render_discounts_tab_content( $id ) {
+	switch( $id ) :
 	
 		case 'general' :
 			ob_start(); ?>
@@ -158,8 +158,8 @@ function rcp_render_discounts_tab_content($id) {
 	return ob_get_clean();
 }
 
-function rcp_render_payments_tab_content($id) {
-	switch($id) :
+function rcp_render_payments_tab_content( $id ) {
+	switch( $id ) :
 	
 		case 'general' :
 			ob_start(); ?>
@@ -178,9 +178,9 @@ function rcp_render_payments_tab_content($id) {
 	return ob_get_clean();
 }
 
-function rcp_render_settings_tab_content($id) {
+function rcp_render_settings_tab_content( $id ) {
 	
-	switch($id) :
+	switch( $id ) :
 	
 		case 'general' :
 			ob_start(); ?>
