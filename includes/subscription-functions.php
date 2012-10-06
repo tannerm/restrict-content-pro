@@ -46,10 +46,10 @@ function rcp_get_subscription_levels( $status = 'all', $cache = true ) {
 * @param int $id - the ID of the subscription level to retrieve
 * return mixed - object on success, false otherwise
 */
-function rcp_get_subscription_details($id) {
+function rcp_get_subscription_details( $id ) {
 	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $rcp_db_name . " WHERE id='" . $id . "';"));
-	if($level)
+	$level = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_db_name . " WHERE id='" . $id . "';" ) );
+	if( $level )
 		return $level[0];
 	return false;
 }
@@ -59,10 +59,10 @@ function rcp_get_subscription_details($id) {
 * @param int $name - the name of the subscription level to retrieve
 * return mixed - object on success, false otherwise
 */
-function rcp_get_subscription_details_by_name($name) {
+function rcp_get_subscription_details_by_name( $name ) {
 	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $rcp_db_name . " WHERE name='" . $name . "';"));
-	if($level)
+	$level = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_db_name . " WHERE name='" . $name . "';" ) );
+	if( $level )
 		return $level[0];
 	return false;
 }
@@ -72,13 +72,13 @@ function rcp_get_subscription_details_by_name($name) {
 * @param int $id - the ID of the subscription level to retrieve
 * return string - name of subscription, or error message on failure
 */
-function rcp_get_subscription_name($id) {
+function rcp_get_subscription_name( $id ) {
 	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results($wpdb->prepare("SELECT name FROM " . $rcp_db_name . " WHERE id='" . $id . "';"));
-	if($level) {
-		return utf8_decode($level[0]->name);
+	$level = $wpdb->get_results( $wpdb->prepare( "SELECT name FROM " . $rcp_db_name . " WHERE id='" . $id . "';" ) );
+	if( $level ) {
+		return utf8_decode( $level[0]->name );
 	} else {
-		return __('No subscription', 'rcp');
+		return __( 'No subscription', 'rcp' );
 	}
 }
 
@@ -87,10 +87,10 @@ function rcp_get_subscription_name($id) {
 * @param int $id - the ID of the subscription level to retrieve
 * return object - length and unit (m/d/y) of subscription
 */
-function rcp_get_subscription_length($id) {
+function rcp_get_subscription_length( $id ) {
 	global $wpdb, $rcp_db_name;
-	$level_length = $wpdb->get_results($wpdb->prepare("SELECT duration, duration_unit FROM " . $rcp_db_name . " WHERE id='" . $id . "';"));
-	if($level_length)
+	$level_length = $wpdb->get_results( $wpdb->prepare( "SELECT duration, duration_unit FROM " . $rcp_db_name . " WHERE id='" . $id . "';" ) );
+	if( $level_length )
 		return $level_length[0];
 	return false;
 }
@@ -100,11 +100,11 @@ function rcp_get_subscription_length($id) {
 * @param int $id - the ID of the subscription level to retrieve
 * return string - nicely formatted date of expiration
 */
-function rcp_calculate_subscription_expiration($id) {
+function rcp_calculate_subscription_expiration( $id ) {
 	global $wpdb, $rcp_db_name;
 	
-	$length = rcp_get_subscription_length($id);
-	$expiration = date('Y-m-d', strtotime('+' . $length->duration . ' ' . $length->duration_unit));
+	$length = rcp_get_subscription_length( $id );
+	$expiration = date( 'Y-m-d', strtotime( '+' . $length->duration . ' ' . $length->duration_unit ) );
 
 	return $expiration;
 }
@@ -114,10 +114,10 @@ function rcp_calculate_subscription_expiration($id) {
 * @param int $id - the ID of the subscription level to retrieve
 * return mixed - price of subscription level, false on failure 
 */
-function rcp_get_subscription_price($id) {
+function rcp_get_subscription_price( $id ) {
 	global $wpdb, $rcp_db_name;
-	$price = $wpdb->get_results($wpdb->prepare("SELECT price FROM " . $rcp_db_name . " WHERE id='" . $id . "';"));
-	if($price)
+	$price = $wpdb->get_results( $wpdb->prepare( "SELECT price FROM " . $rcp_db_name . " WHERE id='" . $id . "';" ) );
+	if( $price )
 		return $price[0]->price;
 	return false;
 }
@@ -127,10 +127,10 @@ function rcp_get_subscription_price($id) {
 * @param int $id - the ID of the subscription level to retrieve
 * return int - the numerical access level the subscription gives
 */
-function rcp_get_subscription_access_level($id) {
+function rcp_get_subscription_access_level( $id ) {
 	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results($wpdb->prepare("SELECT level FROM " . $rcp_db_name . " WHERE id='" . $id . "';"));
-	if($level)
+	$level = $wpdb->get_results( $wpdb->prepare( "SELECT level FROM " . $rcp_db_name . " WHERE id='" . $id . "';" ) );
+	if( $level )
 		return $level[0]->level;
 	return 0;
 }
@@ -145,7 +145,7 @@ function rcp_get_subscription_access_level($id) {
 function rcp_count_members( $level = '', $status = 'active' ) {	
 	global $wpdb;
 	
-	if($status == 'free') {
+	if( $status == 'free' ) {
 	
 		if (strlen(trim($level)) > 0) :
 			$count = $wpdb->get_var( $wpdb->prepare(
@@ -214,11 +214,11 @@ function rcp_count_members( $level = '', $status = 'active' ) {
 */
 function rcp_get_members_of_subscription( $id = 1, $fields = 'ID') {	
 	$members = get_users(array(
-			'meta_key' => 'rcp_subscription_level', 
-			'meta_value' => $id, 
-			'number' => 0, 
-			'fields' => $fields,
-			'count_total' => false
+			'meta_key' 		=> 'rcp_subscription_level', 
+			'meta_value' 	=> $id, 
+			'number' 		=> 0, 
+			'fields' 		=> $fields,
+			'count_total' 	=> false
 		)
 	);
 	return $members;
@@ -230,25 +230,25 @@ function rcp_get_members_of_subscription( $id = 1, $fields = 'ID') {
 * @param int - the duration of the subscription level
 * return string - a formatted unit display. Example "days" becomes "Days". Return is localized
 */
-function rcp_filter_duration_unit($unit, $length) {
-	switch ($unit) :
+function rcp_filter_duration_unit( $unit, $length ) {
+	switch ( $unit ) :
 		case 'day' :
-			if($length > 1)
-				$new_unit = __('Days', 'rcp');
+			if( $length > 1 )
+				$new_unit = __( 'Days', 'rcp' );
 			else
-				$new_unit = __('Day', 'rcp');
+				$new_unit = __( 'Day', 'rcp' );
 		break;
 		case 'month' :
-			if($length > 1)
-				$new_unit = __('Months', 'rcp');
+			if( $length > 1 )
+				$new_unit = __( 'Months', 'rcp' );
 			else
-				$new_unit = __('Month', 'rcp');
+				$new_unit = __( 'Month', 'rcp' );
 		break;
 		case 'year' :
-			if($length > 1)
-				$new_unit = __('Years', 'rcp');
+			if( $length > 1 )
+				$new_unit = __( 'Years', 'rcp' );
 			else
-				$new_unit = __('Year', 'rcp');
+				$new_unit = __( 'Year', 'rcp' );
 		break;
 	endswitch;
 	return $new_unit;
@@ -262,9 +262,9 @@ function rcp_filter_duration_unit($unit, $length) {
 */
 function rcp_has_paid_levels() {
 	$levels = rcp_get_subscription_levels();
-	if($levels) {
-		foreach($levels as $level) {
-			if($level->price > 0)
+	if( $levels ) {
+		foreach( $levels as $level ) {
+			if( $level->price > 0 )
 				return true;	
 		}	
 	}
