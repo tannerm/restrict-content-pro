@@ -8,12 +8,12 @@ function rcp_add_new_member() {
 		global $rcp_options, $user_ID;
 	
 		if( !is_user_logged_in() ) {
-			$user_login		= $_POST["rcp_user_login"];	
-			$user_email		= $_POST["rcp_user_email"];
-			$user_first 	= $_POST["rcp_user_first"];
-			$user_last	 	= $_POST["rcp_user_last"];
-			$user_pass		= $_POST["rcp_user_pass"];
-			$pass_confirm 	= $_POST["rcp_user_pass_confirm"];
+			$user_login		= $_POST['rcp_user_login'];	
+			$user_email		= $_POST['rcp_user_email'];
+			$user_first 	= $_POST['rcp_user_first'];
+			$user_last	 	= $_POST['rcp_user_last'];
+			$user_pass		= $_POST['rcp_user_pass'];
+			$pass_confirm 	= $_POST['rcp_user_pass_confirm'];
 			$need_new_user 	= true;
 		} else {
 			$user_id 		= $user_ID;
@@ -23,12 +23,12 @@ function rcp_add_new_member() {
 			$user_email 	= $userdata->user_email;
 		}
 		$subscription_id 	= false;
-		if( isset( $_POST["rcp_level"] ) ) {
-			$subscription_id = $_POST["rcp_level"];
+		if( isset( $_POST['rcp_level'] ) ) {
+			$subscription_id = $_POST['rcp_level'];
 		}
 		$code = '';
 		if( isset( $_POST['rcp_discount'] ) ) {
-			$code = $_POST["rcp_discount"];
+			$code = $_POST['rcp_discount'];
 		}
 		
 		$price = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
