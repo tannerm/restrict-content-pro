@@ -15,7 +15,7 @@ function rcp_help_page()
 					<h3><span><?php _e('Restrict Content Pro', 'rcp'); ?></span></h3>
 					<div class="inside">
 						<p>Created by Pippin Williamson</p>
-						<p>&copy; Copyright 2011 - <?php echo date('Y'); ?> <a href="http://pippinsplugins.com">Pippin's Plugins</a></p>
+						<p>&copy; Copyright 2011 - <?php echo date_i18n('Y'); ?> <a href="http://pippinsplugins.com">Pippin's Plugins</a></p>
 					</div>
 				</div>
 				
