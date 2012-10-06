@@ -177,20 +177,6 @@ function rcp_registration_form_fields( $args = array() ) {
 				
 				do_action( 'rcp_before_registration_submit_field', $levels );
 				
-				// reCaptcha		
-				if( isset( $rcp_options['enable_recaptcha']) && $rcp_options['enable_recaptcha'] ) {
-					$ssl = false;
-					$publickey = $rcp_options['recaptcha_public_key']; // you got this from the signup page
-					if( isset( $rcp_options['ssl'] ) && $rcp_options['ssl'] ) {
-						$ssl = true;
-					}
-					echo '<script type="text/javascript">
-					var RecaptchaOptions = {
-					    theme : "' . $rcp_options['recaptcha_style'] . '"
-					};
-					</script>';
-					echo '<p>' . recaptcha_get_html( $publickey, null, $ssl ) . '</p>';
-				}
 				?>
 				
 			</fieldset>

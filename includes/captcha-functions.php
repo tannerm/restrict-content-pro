@@ -1,5 +1,18 @@
 <?php
 
+function rcp_show_captcha() {
+	global $rcp_options;
+	// reCaptcha		
+	if( isset( $rcp_options['enable_recaptcha'] ) ) {
+		$publickey = trim( $rcp_options['recaptcha_public_key'] );
+		$ssl = isset( $rcp_options['ssl'] );
+		echo '<script type="text/javascript"> var RecaptchaOptions = { theme : "' . $rcp_options['recaptcha_style'] . '" };</script>';
+		echo '<p id="rcp_recaptcha">' . recaptcha_get_html( $publickey, null, $ssl ) . '</p>';
+	}
+}
+add_action( 'rcp_before_registration_submit_field', 'rcp_show_captcha', 100 );
+
+
 function rcp_validate_captcha() {
 	global $rcp_options;
 	/* validate recaptcha, if enabled */
