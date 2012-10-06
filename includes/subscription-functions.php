@@ -294,3 +294,14 @@ function rcp_get_access_levels() {
 	);
 	return apply_filters( 'rcp_access_levels', $levels );
 }
+
+
+/*
+ * Generates a new subscription key
+ *
+ * @since 1.3.2
+ * @return array
+ */
+function rcp_generate_subscription_key() {
+	return apply_filters( 'rcp_subscription_key', urlencode( strtolower( md5( uniqid() ) ) ) );
+}

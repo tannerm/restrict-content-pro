@@ -129,7 +129,7 @@ function rcp_add_new_member() {
 				$subscription = rcp_get_subscription_details( $_POST['rcp_level'] );
 				
 				// setup a unique key for this subscription
-				$subscription_key = urlencode( strtolower( md5( uniqid() ) ) );
+				$subscription_key = rcp_generate_subcription_key();
 				update_user_meta( $user_id, 'rcp_subscription_key', $subscription_key );
 				update_user_meta( $user_id, 'rcp_subscription_level', $subscription_id );
 				update_user_meta( $user_id, 'rcp_status', 'pending' );
