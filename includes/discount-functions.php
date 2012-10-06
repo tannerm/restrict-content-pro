@@ -27,9 +27,9 @@ function rcp_get_discounts() {
 * @param int $id - the ID number of the discount to retrieve data for
 * return object
 */
-function rcp_get_discount_details($id) {
+function rcp_get_discount_details( $id ) {
 	global $wpdb, $rcp_discounts_db_name;
-	$code = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $rcp_discounts_db_name . " WHERE id='" . $id . "';"));
+	$code = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_discounts_db_name . " WHERE id='" . $id . "';" ) );
 	return $code[0];
 }
 
@@ -38,9 +38,9 @@ function rcp_get_discount_details($id) {
 * @param string $code - the discount code to retrieve all information for
 * return object
 */
-function rcp_get_discount_details_by_code($code) {
+function rcp_get_discount_details_by_code( $code ) {
 	global $wpdb, $rcp_discounts_db_name;
-	$code = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $rcp_discounts_db_name . " WHERE code='" . $code . "';"));
+	$code = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_discounts_db_name . " WHERE code='" . $code . "';" ) );
 	return $code[0];
 }
 
@@ -49,11 +49,11 @@ function rcp_get_discount_details_by_code($code) {
 * @param - string $code - the discount code to validate
 * return boolean
 */
-function rcp_validate_discount($code) {
+function rcp_validate_discount( $code ) {
 	global $wpdb, $rcp_discounts_db_name;
-	$test_code = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $rcp_discounts_db_name . " WHERE code='" . $code . "';"));
-	if($test_code && rcp_get_discount_status($test_code[0]->id) == 'active') {
-		if(rcp_is_discount_not_expired($test_code[0]->id) && rcp_discount_has_uses_left($test_code[0]->id)) {
+	$test_code = rcp_get_discount_details_by_code( $code );
+	if( $test_code && rcp_get_discount_status( $test_code->id ) == 'active' ) {
+		if( rcp_is_discount_not_expired( $test_code->id ) && rcp_discount_has_uses_left( $test_code->id ) ) {
 			return true;
 		}
 	}
