@@ -1,5 +1,5 @@
 <?php
-$user = get_userdata(urldecode($_GET['edit_member']));
+$user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 ?>
 <h2>
 	<?php _e('Edit Member:', 'rcp'); echo ' ' . $user->display_name; ?> - 
