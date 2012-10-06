@@ -12,39 +12,38 @@ function rcp_process_data() {
 
 	global $wpdb, $rcp_db_name, $rcp_discounts_db_name;
 
-	$rcp_post = (!empty($_POST)) ? true : false;
-	if($rcp_post) // if data is being sent
-	{
+	$rcp_post = ( !empty( $_POST ) ) ? true : false;
+	if( $rcp_post ) {
 	
 		/****************************************
 		* subscription levels
 		****************************************/
 	
 		// add a new subscription level
-		if(isset($_POST['rcp-action']) && $_POST['rcp-action'] == 'add-level') {
+		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'add-level' ) {
 	
-			if($_POST['duration'] == '' || $_POST['duration'] == 0) {
+			if( $_POST['duration'] == '' || $_POST['duration'] == 0 ) {
 				$duration = 'unlimited';
 			} else {
 				$duration = $_POST['duration'];
 			}
 			
 			$name = 'no name';
-			if(isset($_POST['name']) && $_POST['name'] != '') $name = $_POST['name'];
+			if( isset( $_POST['name']) && $_POST['name'] != '') $name = $_POST['name'];
 			
 			$duration_unit = 'm';
-			if(isset($_POST['duration-unit'])) $duration_unit = $_POST['duration-unit'];
+			if( isset( $_POST['duration-unit'] ) ) $duration_unit = $_POST['duration-unit'];
 			
 			$price = 0;
-			if(isset($_POST['price']) && $_POST['price'] != '') $price = $_POST['price'];
+			if( isset( $_POST['price']) && $_POST['price'] != '') $price = $_POST['price'];
 			
 			$level = 0;
-			if(isset($_POST['level']) && $_POST['level'] != '') $level = $_POST['level'];
+			if( isset( $_POST['level']) && $_POST['level'] != '') $level = $_POST['level'];
 			
 			$description = '';
-			if(isset($_POST['description']) && $_POST['description'] != '') $description = $_POST['description'];
+			if( isset( $_POST['description']) && $_POST['description'] != '') $description = $_POST['description'];
 			
-			$add = $wpdb->query("INSERT INTO `" . $rcp_db_name . "` SET 
+			$add = $wpdb->query( "INSERT INTO `" . $rcp_db_name . "` SET 
 				`name`='" . utf8_encode($name) . "',
 				`description`='" . addslashes(utf8_encode($description)) . "',
 				`duration`='" . $duration . "',
@@ -66,7 +65,7 @@ function rcp_process_data() {
 		}
 	
 		// edit a subscription level
-		if(isset($_POST['rcp-action']) && $_POST['rcp-action'] == 'edit-subscription') {
+		if( isset( $_POST['rcp-action']) && $_POST['rcp-action'] == 'edit-subscription') {
 	
 			if($_POST['duration'] == '' || $_POST['duration'] == 0) {
 				$duration = 'unlimited';
@@ -75,7 +74,7 @@ function rcp_process_data() {
 			}
 			$update = $wpdb->query("UPDATE " . $rcp_db_name . " SET 
 				`name`='" . utf8_encode($_POST['name']) . "',
-				`description`='" . addslashes(utf8_encode($_POST['description'])) . "',
+				`description`='" . addslashes(utf8_encode($_POST['description'] ) ) . "',
 				`duration`='" . $duration . "',
 				`duration_unit`='" . $_POST['duration-unit'] . "',
 				`price`='" . $_POST['price'] . "',
@@ -127,15 +126,15 @@ function rcp_process_data() {
 			$expires = $_POST['expiration'];
 			$level = $_POST['level'];
 		
-			if(isset($_POST['status'])) update_user_meta($user_id, 'rcp_status', $status);
-			if(isset($_POST['expiration']) && strlen(trim($expires)) > 0) update_user_meta($user_id, 'rcp_expiration', $expires);
-			if(isset($_POST['level'])) update_user_meta($user_id, 'rcp_subscription_level', $level);
-			if(isset($_POST['recurring'])) {
+			if( isset( $_POST['status'] ) ) update_user_meta($user_id, 'rcp_status', $status);
+			if( isset( $_POST['expiration']) && strlen(trim($expires)) > 0) update_user_meta($user_id, 'rcp_expiration', $expires);
+			if( isset( $_POST['level'] ) ) update_user_meta($user_id, 'rcp_subscription_level', $level);
+			if( isset( $_POST['recurring'] ) ) {
 				update_user_meta($user_id, 'rcp_recurring', 'yes'); 
 			} else {
 				update_user_meta($user_id, 'rcp_recurring', 'no');
 			}
-			if(isset($_POST['signup_method'])) update_user_meta($user_id, 'rcp_signup_method', $_POST['signup_method']);
+			if( isset( $_POST['signup_method'] ) ) update_user_meta($user_id, 'rcp_signup_method', $_POST['signup_method']);
 		
 			$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&user-updated=1';
 			header ("Location:" . $url);
@@ -147,22 +146,22 @@ function rcp_process_data() {
 		****************************************/
 		
 		// add a new discount code
-		if(isset($_POST['rcp-action']) && $_POST['rcp-action'] == 'add-discount') {
+		if( isset( $_POST['rcp-action']) && $_POST['rcp-action'] == 'add-discount') {
 			
 			$name = 'no name';
-			if(isset($_POST['name']) && $_POST['name'] != '') $name = $_POST['name'];
+			if( isset( $_POST['name']) && $_POST['name'] != '') $name = $_POST['name'];
 			
 			$description = '';
-			if(isset($_POST['description']) && $_POST['description'] != '') $description = $_POST['description'];
+			if( isset( $_POST['description']) && $_POST['description'] != '') $description = $_POST['description'];
 			
 			$amount = 0;
-			if(isset($_POST['amount']) && $_POST['amount'] != '') $amount = $_POST['amount'];
+			if( isset( $_POST['amount']) && $_POST['amount'] != '') $amount = $_POST['amount'];
 			
 			$expiration = '';
-			if(isset($_POST['expiration']) && $_POST['expiration'] != '') $expiration = $_POST['expiration'];
+			if( isset( $_POST['expiration']) && $_POST['expiration'] != '') $expiration = $_POST['expiration'];
 			
 			$max = '';
-			if(isset($_POST['max']) && $_POST['max'] != '') $max = $_POST['max'];
+			if( isset( $_POST['max']) && $_POST['max'] != '') $max = $_POST['max'];
 			
 			$add = $wpdb->query("INSERT INTO `" . $rcp_discounts_db_name . "` SET 
 				`name`='" . $name . "',
@@ -187,7 +186,7 @@ function rcp_process_data() {
 		}
 	
 		// edit a discount code
-		if(isset($_POST['rcp-action']) && $_POST['rcp-action'] == 'edit-discount') {
+		if( isset( $_POST['rcp-action']) && $_POST['rcp-action'] == 'edit-discount') {
 	
 			$update = $wpdb->query("UPDATE " . $rcp_discounts_db_name . " SET 
 				`name`='" . $_POST['name'] . "',
@@ -222,15 +221,15 @@ function rcp_process_data() {
 	{
 		
 		/* member processing */
-		if(isset($_GET['deactivate_member'])) {
+		if( isset( $_GET['deactivate_member'] ) ) {
 			update_user_meta(urldecode($_GET['deactivate_member']), 'rcp_status', 'cancelled');
 		}
-		if(isset($_GET['activate_member'])) {
+		if( isset( $_GET['activate_member'] ) ) {
 			update_user_meta(urldecode($_GET['activate_member']), 'rcp_status', 'active');
 		}
 		
 		/* subscription processing */
-		if(isset($_GET['delete_subscription']) && $_GET['delete_subscription'] > 0) {
+		if( isset( $_GET['delete_subscription']) && $_GET['delete_subscription'] > 0) {
 			$members_of_subscription = rcp_get_members_of_subscription($_GET['delete_subscription']);
 
 			// cancel all active members of this subscription
@@ -242,24 +241,24 @@ function rcp_process_data() {
 			$remove = $wpdb->query("DELETE FROM " . $rcp_db_name . " WHERE `id`='" . urldecode($_GET['delete_subscription']) . "';");
 			delete_transient('rcp_subscription_levels');
 		}
-		if(isset($_GET['activate_subscription']) && $_GET['activate_subscription'] > 0) {
-			$wpdb->update($rcp_db_name, array('status' => 'active' ), array('id' => $_GET['activate_subscription']));
+		if( isset( $_GET['activate_subscription']) && $_GET['activate_subscription'] > 0) {
+			$wpdb->update($rcp_db_name, array('status' => 'active' ), array('id' => $_GET['activate_subscription'] ) );
 			delete_transient('rcp_subscription_levels');
 		}
-		if(isset($_GET['deactivate_subscription']) && $_GET['deactivate_subscription'] > 0) {
-			$wpdb->update($rcp_db_name, array('status' => 'inactive' ), array('id' => $_GET['deactivate_subscription']));
+		if( isset( $_GET['deactivate_subscription']) && $_GET['deactivate_subscription'] > 0) {
+			$wpdb->update($rcp_db_name, array('status' => 'inactive' ), array('id' => $_GET['deactivate_subscription'] ) );
 			delete_transient('rcp_subscription_levels');
 		}
 		
 		/* discount processing */
-		if(isset($_GET['delete_discount']) && $_GET['delete_discount'] > 0) {
+		if( isset( $_GET['delete_discount']) && $_GET['delete_discount'] > 0) {
 			$remove = $wpdb->query("DELETE FROM " . $rcp_discounts_db_name . " WHERE `id`='" . urldecode($_GET['delete_discount']) . "';");
 		}
-		if(isset($_GET['activate_discount']) && $_GET['activate_discount'] > 0) {
-			$wpdb->update($rcp_discounts_db_name, array('status' => 'active' ), array('id' => $_GET['activate_discount']));
+		if( isset( $_GET['activate_discount']) && $_GET['activate_discount'] > 0) {
+			$wpdb->update($rcp_discounts_db_name, array('status' => 'active' ), array('id' => $_GET['activate_discount'] ) );
 		}
-		if(isset($_GET['deactivate_discount']) && $_GET['deactivate_discount'] > 0) {
-			$wpdb->update($rcp_discounts_db_name, array('status' => 'disabled' ), array('id' => $_GET['deactivate_discount']));
+		if( isset( $_GET['deactivate_discount']) && $_GET['deactivate_discount'] > 0) {
+			$wpdb->update($rcp_discounts_db_name, array('status' => 'disabled' ), array('id' => $_GET['deactivate_discount'] ) );
 		}
 	}
 }
