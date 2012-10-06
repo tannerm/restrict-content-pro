@@ -1,5 +1,5 @@
 <?php
-$user = get_userdata( urldecode( $_GET['view_member'] ) );
+$user = get_userdata( absint( urldecode( $_GET['view_member'] ) ) );
 ?>
 <h2>
 	<?php _e( 'View Member Details:', 'rcp' ); echo ' ' . $user->display_name; ?> - 
