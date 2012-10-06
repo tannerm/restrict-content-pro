@@ -25,7 +25,7 @@ function rcp_login_form_fields( $args = array() ) {
 			// show any error messages after form submission
 			rcp_show_error_messages(); ?>
 		
-			<form id="rcp_login_form"  class="<?php echo $class; ?>" method="POST" action="<?php echo $action; ?>">
+			<form id="rcp_login_form"  class="<?php echo $class; ?>" method="POST" action="<?php echo esc_url( $action ); ?>">
 				<fieldset class="rcp_login_data">
 					<p>
 						<label for="rcp_user_Login"><?php _e( 'Username', 'rcp' ); ?></label>
@@ -35,10 +35,10 @@ function rcp_login_form_fields( $args = array() ) {
 						<label for="rcp_user_pass"><?php _e( 'Password', 'rcp' ); ?></label>
 						<input name="rcp_user_pass" id="rcp_user_pass" class="required" type="password"/>
 					</p>
-					<p class="rcp_lost_password"><a href="<?php echo wp_lostpassword_url( $action ); ?>"><?php _e( 'Lost your password?', 'rcp' ); ?></a></p>
+					<p class="rcp_lost_password"><a href="<?php echo esc_url( wp_lostpassword_url( $action ) ); ?>"><?php _e( 'Lost your password?', 'rcp' ); ?></a></p>
 					<p>
 						<input type="hidden" name="rcp_action" value="login"/>
-						<input type="hidden" name="rcp_redirect" value="<?php echo $redirect; ?>"/>
+						<input type="hidden" name="rcp_redirect" value="<?php echo esc_url( $redirect ); ?>"/>
 						<input type="hidden" name="rcp_login_nonce" value="<?php echo wp_create_nonce( 'rcp-login-nonce' ); ?>"/>
 						<input id="rcp_login_submit" type="submit" value="Login"/>
 					</p>
@@ -85,7 +85,7 @@ function rcp_registration_form_fields( $args = array() ) {
 		// show any error messages after form submission
 		rcp_show_error_messages(); ?>
 		
-		<form id="rcp_registration_form" class="<?php echo $class; ?>" method="POST" action="<?php echo $action; ?>">
+		<form id="rcp_registration_form" class="<?php echo esc_attr( $class ); ?>" method="POST" action="<?php echo esc_url( $action ); ?>">
 		
 			<?php if( !is_user_logged_in() ) { ?>
 			
@@ -94,19 +94,19 @@ function rcp_registration_form_fields( $args = array() ) {
 			<fieldset class="rcp_user_fieldset">
 				<p id="rcp_user_login_wrap">
 					<label for="rcp_user_Login"><?php _e( 'Username', 'rcp' ); ?></label>
-					<input name="rcp_user_login" id="rcp_user_login" class="required" type="text" <?php if( isset( $_POST['rcp_user_login'] ) ) { echo 'value="' . $_POST['rcp_user_login'] . '"'; } ?>/>
+					<input name="rcp_user_login" id="rcp_user_login" class="required" type="text" <?php if( isset( $_POST['rcp_user_login'] ) ) { echo 'value="' . esc_attr( $_POST['rcp_user_login'] ) . '"'; } ?>/>
 				</p>
 				<p id="rcp_user_email_wrap">
 					<label for="rcp_user_email"><?php _e( 'Email', 'rcp' ); ?></label>
-					<input name="rcp_user_email" id="rcp_user_email" class="required" type="email" <?php if( isset( $_POST['rcp_user_email'] ) ) { echo 'value="' . $_POST['rcp_user_email'] . '"'; } ?>/>
+					<input name="rcp_user_email" id="rcp_user_email" class="required" type="email" <?php if( isset( $_POST['rcp_user_email'] ) ) { echo 'value="' . esc_attr( $_POST['rcp_user_email'] ) . '"'; } ?>/>
 				</p>
 				<p id="rcp_user_first_wrap">
 					<label for="rcp_user_first"><?php _e( 'First Name', 'rcp' ); ?></label>
-					<input name="rcp_user_first" id="rcp_user_first" type="text" <?php if( isset( $_POST['rcp_user_first'] ) ) { echo 'value="' . $_POST['rcp_user_first'] . '"'; } ?>/>
+					<input name="rcp_user_first" id="rcp_user_first" type="text" <?php if( isset( $_POST['rcp_user_first'] ) ) { echo 'value="' . esc_attr( $_POST['rcp_user_first'] ) . '"'; } ?>/>
 				</p>
 				<p id="rcp_user_last_wrap">
 					<label for="rcp_user_last"><?php _e( 'Last Name', 'rcp' ); ?></label>
-					<input name="rcp_user_last" id="rcp_user_last" type="text" <?php if( isset( $_POST['rcp_user_last'] ) ) { echo 'value="' . $_POST['rcp_user_last'] . '"'; } ?>/>
+					<input name="rcp_user_last" id="rcp_user_last" type="text" <?php if( isset( $_POST['rcp_user_last'] ) ) { echo 'value="' . esc_attr( $_POST['rcp_user_last'] ) . '"'; } ?>/>
 				</p>
 				<p id="rcp_password_wrap">
 					<label for="password"><?php _e( 'Password', 'rcp' ); ?></label>
@@ -130,22 +130,22 @@ function rcp_registration_form_fields( $args = array() ) {
 					<?php
 						foreach( $levels as $key => $level ) : ?>
 							<li id="rcp_subscription_level_<?php echo $level->id; ?>" class="rcp_subscription_level">
-								<input type="radio" class="required rcp_level" <?php if( $key == 0 || ( isset( $_GET['level']) && $_GET['level'] == $key ) ){ echo 'checked="checked"'; }?> name="rcp_level" rel="<?php echo $level->price; ?>" value="<?php echo $level->id; ?>"/>&nbsp;
-								<span class="rcp_subscription_level_name"><?php echo utf8_decode( $level->name ); ?></span><span class="rcp_separator">&nbsp;-&nbsp;</span><span class="rcp_price" rel="<?php echo $level->price; ?>"><?php echo $level->price > 0 ? rcp_currency_filter( $level->price ) : __( 'free', 'rcp' ); ?><span class="rcp_separator">&nbsp;-&nbsp;</span></span>
+								<input type="radio" class="required rcp_level" <?php if( $key == 0 || ( isset( $_GET['level']) && $_GET['level'] == $key ) ){ echo 'checked="checked"'; }?> name="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>" value="<?php echo esc_attr( absint( $level->id ) ); ?>"/>&nbsp;
+								<span class="rcp_subscription_level_name"><?php echo utf8_decode( $level->name ); ?></span><span class="rcp_separator">&nbsp;-&nbsp;</span><span class="rcp_price" rel="<?php echo esc_attr( $level->price ); ?>"><?php echo $level->price > 0 ? rcp_currency_filter( $level->price ) : __( 'free', 'rcp' ); ?><span class="rcp_separator">&nbsp;-&nbsp;</span></span>
 								<span class="rcp_level_duration"><?php echo $level->duration > 0 ? $level->duration . '&nbsp;' . rcp_filter_duration_unit( $level->duration_unit, $level->duration ) : __( 'unlimited', 'rcp' ); ?></span>
-								<div class="rcp_level_description <?php if( $single_level ){ echo 'rcp_single_level_description'; }?>"> <?php echo stripslashes( utf8_decode( $level->description ) ); ?></div>
+								<div class="rcp_level_description <?php if( $single_level ){ echo 'rcp_single_level_description'; }?>"> <?php echo esc_html( stripslashes( utf8_decode( $level->description ) ) ); ?></div>
 							</li>
 						<?php endforeach; ?>
 				</ul>
 			<?php elseif($levels) : ?>
-				<input type="hidden" class="rcp_level" name="rcp_level" rel="<?php echo $levels[0]->price; ?>" value="<?php echo $levels[0]->id; ?>"/>
+				<input type="hidden" class="rcp_level" name="rcp_level" rel="<?php echo esc_attr( $levels[0]->price ); ?>" value="<?php echo esc_attr( $levels[0]->id ); ?>"/>
 			<?php else : ?>
 				<p><strong><?php _e( 'You have not created any subscription levels yet', 'rcp' ); ?></strong></p>
 			<?php endif; ?>
 			</fieldset>
 				<?php 
 				$discounts = rcp_get_discounts();
-				if($discounts) : ?>
+				if( $discounts ) : ?>
 					<p id="rcp_discount_code_wrap">
 						<label for="rcp_discount_code">
 							<?php _e( 'Discount Code', 'rcp' ); ?>
@@ -163,15 +163,15 @@ function rcp_registration_form_fields( $args = array() ) {
 					$display = rcp_has_paid_levels() ? '' : ' style="display: none;"';
 					echo '<p id="rcp_payment_gateways"' . $display . '>';
 						echo '<select name="rcp_gateway" id="rcp_gateway">';
-							foreach($gateways as $key => $gateway) :
-								echo '<option value="' . $key . '">' . $gateway . '</option>';
+							foreach( $gateways as $key => $gateway ) :
+								echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $gateway ) . '</option>';
 							endforeach;
 						echo '</select>';
 						echo '<label for="rcp_gateway">' . __( 'Choose Your Payment Method', 'rcp' ) . '</label>';
 					echo '</p>';
 				else:
 					foreach( $gateways as $key => $gateway ) :
-						echo '<input type="hidden" name="rcp_gateway" value="' . $key . '"/>';
+						echo '<input type="hidden" name="rcp_gateway" value="' . esc_attr( $key ) . '"/>';
 					endforeach;
 				endif;
 				
@@ -230,7 +230,7 @@ function rcp_change_password_form( $args = array() ) {
 				<span><?php _e( 'Password changed successfully', 'rcp' ); ?></span>
 			</div>
 		<?php } ?>
-		<form id="rcp_password_form"  class="<?php echo $class; ?>" method="POST" action="<?php echo $current_url; ?>">
+		<form id="rcp_password_form"  class="<?php echo esc_attr( $class ); ?>" method="POST" action="<?php echo esc_url( $current_url ); ?>">
 			<fieldset class="rcp_change_password_fieldset">
 				<p>
 					<label for="rcp_user_pass"><?php _e( 'New Password', 'rcp' ); ?></label>
@@ -242,7 +242,7 @@ function rcp_change_password_form( $args = array() ) {
 				</p>
 				<p>
 					<input type="hidden" name="rcp_action" value="reset-password"/>
-					<input type="hidden" name="rcp_redirect" value="<?php echo $redirect; ?>"/>
+					<input type="hidden" name="rcp_redirect" value="<?php echo esc_url( $redirect ); ?>"/>
 					<input type="hidden" name="rcp_password_nonce" value="<?php echo wp_create_nonce('rcp-password-nonce' ); ?>"/>
 					<input id="rcp_password_submit" type="submit" value="<?php _e( 'Change Password', 'rcp' ); ?>"/>
 				</p>
