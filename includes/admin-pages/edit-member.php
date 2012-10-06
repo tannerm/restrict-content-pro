@@ -17,10 +17,10 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 				<td>
 					<select name="status" id="rcp-status">
 						<?php
-							$statuses = array('active', 'expired', 'cancelled', 'pending', 'free');
-							$current_status = get_user_meta($user->ID, 'rcp_status', true);
-							foreach($statuses as $status) : 
-								echo '<option value="' . $status .  '"' . selected($status, rcp_get_status($user->ID), false) . '>' . ucwords($status) . '</option>';
+							$statuses = array( 'active', 'expired', 'cancelled', 'pending', 'free' );
+							$current_status = get_user_meta( $user->ID, 'rcp_status', true );
+							foreach( $statuses as $status ) : 
+								echo '<option value="' . $status .  '"' . selected( $status, rcp_get_status( $user->ID ), false ) . '>' . ucwords( $status ) . '</option>';
 							endforeach;
 						?>
 					</select>
@@ -35,7 +35,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 					<select name="level" id="rcp-level">
 						<?php
 							foreach( $wpdb->get_results("SELECT * FROM " . $rcp_db_name . ";") as $key => $level) :
-								echo '<option value="' . $level->id . '"' . selected($level->name, rcp_get_subscription($user->ID), false) . '>' . $level->name . '</option>';
+								echo '<option value="' . $level->id . '"' . selected( $level->name, rcp_get_subscription( $user->ID ), false ) . '>' . $level->name . '</option>';
 							endforeach;
 						?>
 					</select>
@@ -47,7 +47,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 					<label for="rcp-expiration"><?php _e( 'Expiration date', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="datepicker" value="<?php echo get_user_meta($user->ID, 'rcp_expiration', true); ?>"/>
+					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="datepicker" value="<?php echo get_user_meta( $user->ID, 'rcp_expiration', true ); ?>"/>
 					<p class="description"><?php _e( 'Enter the expiration date for this user in the format of yyyy-mm-dd', 'rcp' ); ?></p>
 				</td>
 			</tr>
@@ -57,7 +57,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 				</th>
 				<td>
 					<label for="rcp-recurring">
-						<input name="recurring" id="rcp-recurring" type="checkbox" value="1" <?php checked(1, rcp_is_recurring($user->ID)); ?>/>
+						<input name="recurring" id="rcp-recurring" type="checkbox" value="1" <?php checked( 1, rcp_is_recurring( $user->ID ) ); ?>/>
 						<?php _e( 'Is this user\'s subscription recurring?', 'rcp' ); ?>
 					</label>
 				</td>
@@ -67,7 +67,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 					<?php _e( 'Sign Up Method', 'rcp' ); ?>
 				</th>
 				<td>
-					<?php $method = get_user_meta($user->ID, 'rcp_signup_method', true) ? get_user_meta($user->ID, 'rcp_signup_method', true) : 'live';?>
+					<?php $method = get_user_meta( $user->ID, 'rcp_signup_method', true ) ? get_user_meta( $user->ID, 'rcp_signup_method', true ) : 'live';?>
 					<select name="signup_method" id="rcp-signup-method">
 						<option value="live" <?php echo $method == 'live' ? 'selected="selected"' : ''; ?>><?php _e( 'User Signup', 'rcp' ); ?>
 						<option value="manual" <?php echo $method == 'manual' ? 'selected="selected"' : ''; ?>><?php _e( 'Added by admin manually', 'rcp' ); ?>
@@ -79,7 +79,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 	</table>
 	<p class="submit">
 		<input type="hidden" name="rcp-action" value="edit-member"/>
-		<input type="hidden" name="user" value="<?php echo urldecode($_GET['edit_member']); ?>"/>
+		<input type="hidden" name="user" value="<?php echo absint( urldecode( $_GET['edit_member'] ) ); ?>"/>
 		<input type="submit" value="<?php _e( 'Update User Subscription', 'rcp' ); ?>" class="button-primary"/>
 	</p>
 </form>
