@@ -17,18 +17,18 @@ function rcp_payments_page()
 		$user = get_current_user_id();
 		$screen = get_current_screen();
 		$screen_option = $screen->get_option('per_page', 'option');
-		$per_page = get_user_meta($user, $screen_option, true);
+		$per_page = get_user_meta( $user, $screen_option, true );
 		if ( empty ( $per_page) || $per_page < 1 ) {
 			$per_page = $screen->get_option( 'per_page', 'default' );
 		}
 		$total_pages = 1;
-		$offset = $per_page * ($page-1);
+		$offset = $per_page * ( $page-1 );
 		
-		$payments = rcp_get_payments($offset, $per_page);
+		$payments = rcp_get_payments( $offset, $per_page );
 		$payment_count = rcp_count_payments();
-		$total_pages = ceil($payment_count/$per_page);
+		$total_pages = ceil( $payment_count / $per_page );
 		?>
-		<p class="total"><strong><?php _e( 'Total Earnings', 'rcp' ); ?>: <?php echo rcp_currency_filter(rcp_get_earnings()); ?></strong></p>
+		<p class="total"><strong><?php _e( 'Total Earnings', 'rcp' ); ?>: <?php echo rcp_currency_filter( rcp_get_earnings() ); ?></strong></p>
 		<table class="wp-list-table widefat fixed posts rcp-payments">
 			<thead>
 				<tr>
@@ -51,25 +51,25 @@ function rcp_payments_page()
 					<th><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
 					<th><?php _e( 'User', 'rcp' ); ?></th>
-					<?php do_action('rcp_payments_page_table_footer'); ?>
+					<?php do_action( 'rcp_payments_page_table_footer' ); ?>
 				</tr>
 			</tfoot>
 			<tbody>
 				<?php
-					if($payments) :
+					if( $payments ) :
 						$i = 0; $total_earnings = 0;
-						foreach($payments as $payment) : 
-							$user = get_userdata($payment->user_id);
+						foreach( $payments as $payment ) : 
+							$user = get_userdata( $payment->user_id );
 							?>
-							<tr class="rcp_payment <?php if(rcp_is_odd($i)) echo 'alternate'; ?>">
+							<tr class="rcp_payment <?php if( rcp_is_odd( $i ) ) echo 'alternate'; ?>">
 								<td><?php echo $payment->id; ?></td>
 								<td><?php echo $payment->subscription; ?></td>
 								<td><?php echo $payment->subscription_key; ?></td>
 								<td><?php echo $payment->date; ?></td>
 								<td><?php echo rcp_currency_filter($payment->amount); ?></td>
 								<td><?php echo $payment->payment_type; ?></td>
-								<td><?php echo isset($user->display_name) ? $user->display_name : ''; ?></td>
-								<?php do_action('rcp_payments_page_table_column', $payment->id); ?>
+								<td><?php echo isset( $user->display_name ) ? $user->display_name : ''; ?></td>
+								<?php do_action( 'rcp_payments_page_table_column', $payment->id ); ?>
 							</tr>
 						<?php
 						$i++; $total_earnings = $total_earnings + $payment->amount;
@@ -88,20 +88,20 @@ function rcp_payments_page()
 								$base = 'admin.php?page=rcp-payments%_%';
 							}
 							echo paginate_links( array(
-								'base' => $base,
-								'format' => '&p=%#%',
-								'prev_text' => __('&laquo; Previous'),
-								'next_text' => __('Next &raquo;'),
-								'total' => $total_pages,
-								'current' => $page,
-								'end_size' => 1,
-								'mid_size' => 5,
+								'base' 		=> $base,
+								'format' 	=> '&p=%#%',
+								'prev_text' => __( '&laquo; Previous' ),
+								'next_text' => __( 'Next &raquo;' ),
+								'total' 	=> $total_pages,
+								'current' 	=> $page,
+								'end_size' 	=> 1,
+								'mid_size' 	=> 5,
 							));
 						?>	
 				    </div>
 				</div><!--end .tablenav-->
 			<?php endif; ?>
-			<?php do_action('rcp_payments_page_bottom'); ?>
+			<?php do_action( 'rcp_payments_page_bottom' ); ?>
 	</div><!--end wrap-->
 	<?php
 }
