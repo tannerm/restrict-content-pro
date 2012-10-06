@@ -160,6 +160,7 @@ if(is_admin()) {
 	include(RCP_PLUGIN_DIR . 'includes/content-filters.php');
 	include(RCP_PLUGIN_DIR . 'includes/feed-functions.php');
 	if(isset($rcp_options['enable_recaptcha']) && $rcp_options['enable_recaptcha']) {
+		require_once( RCP_PLUGIN_DIR . 'includes/captcha-functions.php');	
 		require_once( RCP_PLUGIN_DIR . 'includes/recaptchalib.php');	
 	}
 	include(RCP_PLUGIN_DIR . 'includes/user-checks.php');

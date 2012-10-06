@@ -93,22 +93,7 @@ function rcp_add_new_member() {
 			// since free subscriptions do not go through PayPal, they cannot be auto renewed
 			rcp_errors()->add( 'invalid_auto_renew', __( 'Free subscriptions cannot be automatically renewed', 'rcp' ) );
 		}
-		
-		/* validate recaptcha, if enabled */
-		if( isset( $rcp_options['enable_recaptcha'] ) && $rcp_options['enable_recaptcha'] ) {
-			$privatekey = $rcp_options['recaptcha_private_key'];
-			$resp = recaptcha_check_answer(
-				$privatekey,
-				$_SERVER["REMOTE_ADDR"],
-				$_POST["recaptcha_challenge_field"],
-				$_POST["recaptcha_response_field"]
-			);
-			if ( !$resp->is_valid ) {
-				// recaptcha is incorrect
-				rcp_errors()->add( 'invalid_recaptcha', __( 'The words/numbers you entered did not match the reCaptcha', 'rcp' ) );
-			}
-		}
-		
+				
 		do_action( 'rcp_form_errors', $_POST );
 		
 		// retrieve all error messages, if any
