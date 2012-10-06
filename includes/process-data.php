@@ -190,7 +190,7 @@ function rcp_process_data() {
 	
 			$update = $wpdb->query( $wpdb->prepare( "UPDATE " . $rcp_discounts_db_name . " SET 
 				`name`='" . $_POST['name'] . "',
-				`description`='" . addslashes($_POST['description'] ) . "',
+				`description`='" . addslashes( $_POST['description'] ) . "',
 				`amount`='" . $_POST['amount'] . "',
 				`unit`='" . $_POST['unit'] . "',
 				`code`='" . $_POST['code'] . "',
@@ -222,10 +222,10 @@ function rcp_process_data() {
 		
 		/* member processing */
 		if( isset( $_GET['deactivate_member'] ) ) {
-			update_user_meta(urldecode($_GET['deactivate_member'] ), 'rcp_status', 'cancelled');
+			update_user_meta( urldecode( $_GET['deactivate_member'] ), 'rcp_status', 'cancelled' );
 		}
 		if( isset( $_GET['activate_member'] ) ) {
-			update_user_meta(urldecode($_GET['activate_member'] ), 'rcp_status', 'active');
+			update_user_meta( urldecode( $_GET['activate_member'] ), 'rcp_status', 'active' );
 		}
 		
 		/* subscription processing */
@@ -233,33 +233,33 @@ function rcp_process_data() {
 			$members_of_subscription = rcp_get_members_of_subscription($_GET['delete_subscription'] );
 
 			// cancel all active members of this subscription
-			if($members_of_subscription) {
-				foreach($members_of_subscription as $member) {
-					rcp_set_status($member, 'cancelled');
+			if( $members_of_subscription ) {
+				foreach( $members_of_subscription as $member ) {
+					rcp_set_status( $member, 'cancelled' );
 				}
 			}
-			$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM " . $rcp_db_name . " WHERE `id`='" . urldecode($_GET['delete_subscription'] ) . "';") );
-			delete_transient('rcp_subscription_levels');
+			$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM " . $rcp_db_name . " WHERE `id`='" . urldecode( $_GET['delete_subscription'] ) . "';" ) );
+			delete_transient( 'rcp_subscription_levels' );
 		}
 		if( isset( $_GET['activate_subscription'] ) && $_GET['activate_subscription'] > 0) {
 			$wpdb->update($rcp_db_name, array('status' => 'active' ), array('id' => $_GET['activate_subscription'] ) );
-			delete_transient('rcp_subscription_levels');
+			delete_transient( 'rcp_subscription_levels' );
 		}
 		if( isset( $_GET['deactivate_subscription'] ) && $_GET['deactivate_subscription'] > 0) {
-			$wpdb->update($rcp_db_name, array('status' => 'inactive' ), array('id' => $_GET['deactivate_subscription'] ) );
-			delete_transient('rcp_subscription_levels');
+			$wpdb->update( $rcp_db_name, array( 'status' => 'inactive' ), array('id' => $_GET['deactivate_subscription'] ) );
+			delete_transient( 'rcp_subscription_levels' );
 		}
 		
 		/* discount processing */
 		if( isset( $_GET['delete_discount'] ) && $_GET['delete_discount'] > 0) {
-			$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM " . $rcp_discounts_db_name . " WHERE `id`='" . urldecode($_GET['delete_discount'] ) . "';" ) );
+			$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM " . $rcp_discounts_db_name . " WHERE `id`='" . urldecode( $_GET['delete_discount'] ) . "';" ) );
 		}
 		if( isset( $_GET['activate_discount'] ) && $_GET['activate_discount'] > 0) {
-			$wpdb->update($rcp_discounts_db_name, array('status' => 'active' ), array('id' => $_GET['activate_discount'] ) );
+			$wpdb->update( $rcp_discounts_db_name, array( 'status' => 'active' ), array( 'id' => $_GET['activate_discount'] ) );
 		}
 		if( isset( $_GET['deactivate_discount'] ) && $_GET['deactivate_discount'] > 0) {
-			$wpdb->update($rcp_discounts_db_name, array('status' => 'disabled' ), array('id' => $_GET['deactivate_discount'] ) );
+			$wpdb->update( $rcp_discounts_db_name, array( 'status' => 'disabled' ), array( 'id' => $_GET['deactivate_discount'] ) );
 		}
 	}
 }
-add_action('init', 'rcp_process_data');
+add_action( 'admin_init', 'rcp_process_data' );
