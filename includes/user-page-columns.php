@@ -1,9 +1,9 @@
 <?php 
 
 function rcp_add_user_columns( $columns ) {
-	$columns['rcp_subscription'] 	= 'Subscription';
-    $columns['rcp_status'] 			= 'Status';
-	$columns['rcp_links'] 			= 'Actions';
+	$columns['rcp_subscription'] 	= __('Subscription', 'rcp' );
+    $columns['rcp_status'] 			= __( 'Status', 'rcp' );
+	$columns['rcp_links'] 			= __( 'Actions', 'rcp' );
     return $columns;
 }
 add_filter( 'manage_users_columns', 'rcp_add_user_columns' );
