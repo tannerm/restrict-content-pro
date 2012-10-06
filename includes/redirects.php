@@ -6,18 +6,18 @@
 */
 function rcp_redirect_from_premium_post() {
 	global $rcp_options, $user_ID, $post;
-	if(isset($rcp_options['hide_premium']) && $rcp_options['hide_premium']) {
-		if(!rcp_is_active($user_ID) && is_singular() && rcp_is_paid_content($post->ID)) {
-			if(isset($rcp_options['redirect_from_premium']) && $rcp_options['redirect_from_premium']) {
-				$redirect = get_permalink($rcp_options['redirect_from_premium']);
+	if( isset($rcp_options['hide_premium'] ) && $rcp_options['hide_premium'] ) {
+		if( !rcp_is_active( $user_ID ) && is_singular() && rcp_is_paid_content( $post->ID ) ) {
+			if( isset( $rcp_options['redirect_from_premium'] ) ) {
+				$redirect = get_permalink( $rcp_options['redirect_from_premium'] );
 			} else {
 				$redirect = home_url();
 			}
-			wp_redirect($redirect); exit;
+			wp_redirect( $redirect ); exit;
 		}
 	}
 }
-add_filter('template_redirect', 'rcp_redirect_from_premium_post', 999);
+add_action( 'template_redirect', 'rcp_redirect_from_premium_post', 999 );
 
 /*
 * Hijack the default WP login URL and redirect users to custom login page
