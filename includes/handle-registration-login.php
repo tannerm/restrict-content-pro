@@ -177,7 +177,7 @@ function rcp_add_new_member() {
 					$subscription_data = array(
 						'price' 			=> $price,
 						'length' 			=> $expiration_length,
-						'length_unit' 		=> strtolower($expiration_unit),
+						'length_unit' 		=> strtolower( $expiration_unit ),
 						'subscription_name' => $subscription->name,
 						'key' 				=> $subscription_key,
 						'user_id' 			=> $user_id,
