@@ -20,7 +20,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 							$statuses = array( 'active', 'expired', 'cancelled', 'pending', 'free' );
 							$current_status = get_user_meta( $user->ID, 'rcp_status', true );
 							foreach( $statuses as $status ) : 
-								echo '<option value="' . $status .  '"' . selected( $status, rcp_get_status( $user->ID ), false ) . '>' . ucwords( $status ) . '</option>';
+								echo '<option value="' . esc_attr( $status ) .  '"' . selected( $status, rcp_get_status( $user->ID ), false ) . '>' . ucwords( $status ) . '</option>';
 							endforeach;
 						?>
 					</select>
@@ -35,7 +35,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 					<select name="level" id="rcp-level">
 						<?php
 							foreach( rcp_get_subscription_levels() as $key => $level) :
-								echo '<option value="' . $level->id . '"' . selected( $level->name, rcp_get_subscription( $user->ID ), false ) . '>' . $level->name . '</option>';
+								echo '<option value="' . esc_attr( absint( $level->id ) ) . '"' . selected( $level->name, rcp_get_subscription( $user->ID ), false ) . '>' . esc_html( $level->name ) . '</option>';
 							endforeach;
 						?>
 					</select>
@@ -47,7 +47,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 					<label for="rcp-expiration"><?php _e( 'Expiration date', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="datepicker" value="<?php echo get_user_meta( $user->ID, 'rcp_expiration', true ); ?>"/>
+					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="datepicker" value="<?php echo esc_attr( get_user_meta( $user->ID, 'rcp_expiration', true ) ); ?>"/>
 					<p class="description"><?php _e( 'Enter the expiration date for this user in the format of yyyy-mm-dd', 'rcp' ); ?></p>
 				</td>
 			</tr>
@@ -69,8 +69,8 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 				<td>
 					<?php $method = get_user_meta( $user->ID, 'rcp_signup_method', true ) ? get_user_meta( $user->ID, 'rcp_signup_method', true ) : 'live';?>
 					<select name="signup_method" id="rcp-signup-method">
-						<option value="live" <?php echo $method == 'live' ? 'selected="selected"' : ''; ?>><?php _e( 'User Signup', 'rcp' ); ?>
-						<option value="manual" <?php echo $method == 'manual' ? 'selected="selected"' : ''; ?>><?php _e( 'Added by admin manually', 'rcp' ); ?>
+						<option value="live" <?php selected( $method, 'live' ); ?>><?php _e( 'User Signup', 'rcp' ); ?>
+						<option value="manual" <?php selected( $method, 'manual' ); ?>><?php _e( 'Added by admin manually', 'rcp' ); ?>
 					</select>
 					<p class="description"><?php _e( 'Was this a real signup or a membership given to the user', 'rcp' ); ?></p>
 				</td>
