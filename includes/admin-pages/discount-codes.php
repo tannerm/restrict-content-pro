@@ -158,6 +158,7 @@ function rcp_discounts_page()
 								<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'rcp' ); ?></p>
 							</td>
 						</tr>
+						<?php do_action( 'rcp_add_discount_form' ); ?>
 					</tbody>
 				</table>
 				<p class="submit">
