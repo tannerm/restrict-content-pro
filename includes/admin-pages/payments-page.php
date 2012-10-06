@@ -3,10 +3,10 @@
 function rcp_payments_page()
 {
 	global $rcp_options, $rcp_db_name, $wpdb;	
-	$current_page = admin_url( '/wp-admin/admin.php?page=rcp-payments' );
+	$current_page = admin_url( '/admin.php?page=rcp-payments' );
 	?>
 	<div class="wrap">
-		<h2><?php _e('Payments', 'rcp'); ?></h2>
+		<h2><?php _e( 'Payments', 'rcp' ); ?></h2>
 		
 		<?php do_action('rcp_payments_page_top'); ?>
 		
@@ -28,29 +28,29 @@ function rcp_payments_page()
 		$payment_count = rcp_count_payments();
 		$total_pages = ceil($payment_count/$per_page);
 		?>
-		<p class="total"><strong><?php _e('Total Earnings', 'rcp'); ?>: <?php echo rcp_currency_filter(rcp_get_earnings()); ?></strong></p>
+		<p class="total"><strong><?php _e( 'Total Earnings', 'rcp' ); ?>: <?php echo rcp_currency_filter(rcp_get_earnings()); ?></strong></p>
 		<table class="wp-list-table widefat fixed posts rcp-payments">
 			<thead>
 				<tr>
-					<th style="width: 40px;"><?php _e('ID', 'rcp'); ?></th>
-					<th style="width: 150px;"><?php _e('Subscription', 'rcp'); ?></th>
-					<th style="width: 240px;"><?php _e('Subscription Key', 'rcp'); ?></th>
-					<th><?php _e('Date', 'rcp'); ?></th>
-					<th style="width: 90px;"><?php _e('Amount', 'rcp'); ?></th>
-					<th><?php _e('Type', 'rcp'); ?></th>
-					<th style="width: 90px;"><?php _e('User', 'rcp'); ?></th>
+					<th style="width: 40px;"><?php _e( 'ID', 'rcp' ); ?></th>
+					<th style="width: 150px;"><?php _e( 'Subscription', 'rcp' ); ?></th>
+					<th style="width: 240px;"><?php _e( 'Subscription Key', 'rcp' ); ?></th>
+					<th><?php _e( 'Date', 'rcp' ); ?></th>
+					<th style="width: 90px;"><?php _e( 'Amount', 'rcp' ); ?></th>
+					<th><?php _e( 'Type', 'rcp' ); ?></th>
+					<th style="width: 90px;"><?php _e( 'User', 'rcp' ); ?></th>
 					<?php do_action('rcp_payments_page_table_header'); ?>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
-					<th style="width: 40px;"><?php _e('ID', 'rcp'); ?></th>
-					<th><?php _e('Subscription', 'rcp'); ?></th>
-					<th><?php _e('Subscription Key', 'rcp'); ?></th>
-					<th><?php _e('Date', 'rcp'); ?></th>
-					<th><?php _e('Amount', 'rcp'); ?></th>
-					<th><?php _e('Type', 'rcp'); ?></th>
-					<th><?php _e('User', 'rcp'); ?></th>
+					<th style="width: 40px;"><?php _e( 'ID', 'rcp' ); ?></th>
+					<th><?php _e( 'Subscription', 'rcp' ); ?></th>
+					<th><?php _e( 'Subscription Key', 'rcp' ); ?></th>
+					<th><?php _e( 'Date', 'rcp' ); ?></th>
+					<th><?php _e( 'Amount', 'rcp' ); ?></th>
+					<th><?php _e( 'Type', 'rcp' ); ?></th>
+					<th><?php _e( 'User', 'rcp' ); ?></th>
 					<?php do_action('rcp_payments_page_table_footer'); ?>
 				</tr>
 			</tfoot>
@@ -75,7 +75,7 @@ function rcp_payments_page()
 						$i++; $total_earnings = $total_earnings + $payment->amount;
 						endforeach;
 					else : ?>
-					<tr><td colspan="7"><?php _e('No payments recorded yet', 'rcp'); ?></td></tr>
+					<tr><td colspan="7"><?php _e( 'No payments recorded yet', 'rcp' ); ?></td></tr>
 				<?php endif;?>
 			</table>
 			<?php if ($total_pages > 1) : ?>
