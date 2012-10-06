@@ -5,19 +5,11 @@ function rcp_login_form_fields( $args = array() ) {
 		
 	global $post;	
 			
-	if ( is_singular() ) :
-		$pageURL =  get_permalink( $post->ID );
-	else :
-		$pageURL = 'http';
-		if ( $_SERVER["HTTPS"] == "on") $pageURL .= "s";
-		$pageURL .= "://";
-		if ( $_SERVER["SERVER_PORT"] != "80") $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
-		else $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-	endif;	
+	$action = rcp_get_current_url();
 		
 	// parse the arguments passed
 	$defaults = array (
- 		'redirect' => $pageURL,
+ 		'redirect' => $action,
  		'class' => 'rcp_form'
 	);
 	$args = wp_parse_args( $args, $defaults );
@@ -33,7 +25,7 @@ function rcp_login_form_fields( $args = array() ) {
 			// show any error messages after form submission
 			rcp_show_error_messages(); ?>
 		
-			<form id="rcp_login_form"  class="<?php echo $class; ?>" method="POST" action="<?php echo $pageURL; ?>">
+			<form id="rcp_login_form"  class="<?php echo $class; ?>" method="POST" action="<?php echo $action; ?>">
 				<fieldset class="rcp_login_data">
 					<p>
 						<label for="rcp_user_Login"><?php _e( 'Username', 'rcp' ); ?></label>
@@ -43,7 +35,7 @@ function rcp_login_form_fields( $args = array() ) {
 						<label for="rcp_user_pass"><?php _e( 'Password', 'rcp' ); ?></label>
 						<input name="rcp_user_pass" id="rcp_user_pass" class="required" type="password"/>
 					</p>
-					<p class="rcp_lost_password"><a href="<?php echo wp_lostpassword_url( $pageURL ); ?>"><?php _e( 'Lost your password?', 'rcp' ); ?></a></p>
+					<p class="rcp_lost_password"><a href="<?php echo wp_lostpassword_url( $action ); ?>"><?php _e( 'Lost your password?', 'rcp' ); ?></a></p>
 					<p>
 						<input type="hidden" name="rcp_action" value="login"/>
 						<input type="hidden" name="rcp_redirect" value="<?php echo $redirect; ?>"/>
@@ -74,17 +66,7 @@ function rcp_registration_form_fields( $args = array() ) {
 	// setup each argument in its own variable
 	extract( $args, EXTR_SKIP );
 	
-   	if ( is_singular() ) :
-   		$action =  get_permalink( $post->ID );
-   	else :
-   		$pageURL = 'http';
-   		if ($_SERVER["HTTPS"] == "on") $pageURL .= "s";
-   		$pageURL .= "://";
-   		if ($_SERVER["SERVER_PORT"] != "80") $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
-   		else $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-		$action = $pageURL;
-   	endif;
-  
+	$action = rcp_get_current_url(); 
 	
 	ob_start(); ?>	
 	
@@ -224,18 +206,8 @@ function rcp_registration_form_fields( $args = array() ) {
 
 function rcp_change_password_form( $args = array() ) {
 	global $post;	
-		
-   	if ( is_singular() ) :
-   		$current_url = get_permalink( $post->ID );
-   	else :
-   		$pageURL = 'http';
-   		if ($_SERVER["HTTPS"] == "on") $pageURL .= "s";
-   		$pageURL .= "://";
-   		if ($_SERVER["SERVER_PORT"] != "80") $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
-   		else $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-   		$current_url = $pageURL;
-   	endif;		
-	$redirect = $current_url;
+
+	$redirect = rcp_get_current_url();
 		
 	// parse the arguments passed
 	$defaults = array (

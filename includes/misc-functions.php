@@ -155,3 +155,19 @@ function rcp_excerpt_length($excerpt_length) {
 	return 100;
 }
 add_filter('rcp_filter_excerpt_length', 'rcp_excerpt_length');
+
+
+function rcp_get_current_url() {
+	global $post;
+	if ( is_singular() ) :
+   		$current_url = get_permalink( $post->ID );
+   	else :
+   		$pageURL = 'http';
+   		if ($_SERVER["HTTPS"] == "on") $pageURL .= "s";
+   		$pageURL .= "://";
+   		if ($_SERVER["SERVER_PORT"] != "80") $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+   		else $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+   		$current_url = $pageURL;
+   	endif;	
+   	return apply_filters( 'rcp_current_url', $current_url );
+}
