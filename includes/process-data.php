@@ -215,7 +215,7 @@ function rcp_process_data() {
 	/*************************************
 	* delete data
 	*************************************/
-	$rcp_get = ( !empty( $_GE T) ) ? true : false;
+	$rcp_get = ( !empty( $_GET) ) ? true : false;
 
 	if( $rcp_get ) // if data is being sent
 	{
