@@ -108,7 +108,7 @@ function rcp_discount_has_uses_left( $code_id ) {
 */
 function rcp_is_discount_not_expired( $code_id ) {
 	global $wpdb, $rcp_discounts_db_name;
-	$expiration = $wpdb->get_results($wpdb->prepare("SELECT expiration FROM " . $rcp_discounts_db_name . " WHERE id='" . $code_id . "';" ) );
+	$expiration = $wpdb->get_results( $wpdb->prepare( "SELECT expiration FROM " . $rcp_discounts_db_name . " WHERE id='" . $code_id . "';" ) );
 	
 	// if no expiration is set, return true
 	if( $expiration[0]->expiration == '' )
@@ -197,7 +197,7 @@ function rcp_user_has_used_discount( $user_id, $code ) {
 function rcp_increase_code_use( $code_id ) {
 	global $wpdb, $rcp_discounts_db_name;
 	// add the post ID to the count database if it doesn't already exist
-	if( ! $wpdb->query("SELECT `use_count` FROM `" . $rcp_discounts_db_name . "` WHERE id=" . $code_id . ";" ) ) {
+	if( ! $wpdb->query( $wpdb->prepare( "SELECT `use_count` FROM `" . $rcp_discounts_db_name . "` WHERE id=" . $code_id . ";" ) ) ) {
 		$increase_count = $wpdb->insert( $rcp_discounts_db_name, 
 			array(
 				'id' => $code_id, 
@@ -205,7 +205,7 @@ function rcp_increase_code_use( $code_id ) {
 			)
 		);
 	} else {	
-		$count = $wpdb->query( "UPDATE " . $rcp_discounts_db_name . " SET use_count = use_count + 1 WHERE id=" . $code_id . ";" );
+		$count = $wpdb->query( $wpdb->prepare( "UPDATE " . $rcp_discounts_db_name . " SET use_count = use_count + 1 WHERE id=" . $code_id . ";" ) );
 	}
 }
 
