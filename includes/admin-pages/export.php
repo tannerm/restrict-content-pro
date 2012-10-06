@@ -1,13 +1,11 @@
 <?php
 
-function rcp_export_page()
-{
+function rcp_export_page() {
 	global $rcp_options, $rcp_db_name, $wpdb;	
-	$current_page = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-export';
+	$current_page = admin_url( '/wp-admin/admin.php?page=rcp-export' );
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'Export', 'rcp' ); ?></h2>
-		
 		<h3><?php _e( 'Members Export', 'rcp' ); ?></h3>
 		<p><?php _e( 'Download member data as a CSV file. This is useful for tasks such as importing batch users into Mail Chimp, or other systems.', 'rcp' ); ?></p>
 		<form id="rcp_export" action="<?php echo $current_page; ?>" method="post">
@@ -15,10 +13,10 @@ function rcp_export_page()
 				<select name="rcp-subscription" id="rcp-subscription">
 					<option value="all"><?php _e( 'All', 'rcp' ); ?></option>
 					<?php 
-					$levels = $wpdb->get_results("SELECT * FROM " . $rcp_db_name . " ORDER BY list_order;");
+					$levels = rcp_get_subscription_levels( 'all', false );
 					if($levels) :
 						foreach( $levels as $key => $level) : ?>
-						<option value="<?php echo $level->id; ?>"><?php echo $level->name; ?></option>
+						<option value="<?php echo absint( $level->id ); ?>"><?php echo esc_html( $level->name ); ?></option>
 						<?php
 						endforeach;
 					endif; ?>
@@ -42,7 +40,7 @@ function rcp_export_page()
 		<!-- payments export -->
 		<h3><?php _e( 'Payments Export', 'rcp' ); ?></h3>
 		<p><?php _e( 'Download payment data as a CSV file. Use this file for your own record keeping or tracking.', 'rcp' ); ?></p>
-		<form id="rcp_export" action="<?php echo $current_page; ?>" method="post">
+		<form id="rcp_export" action="<?php echo esc_url( $current_page ); ?>" method="post">
 			<input type="hidden" name="rcp-action" value="export-payments"/>
 			<input type="submit" class="button-secondary" value="<?php _e( 'Download Payments CSV', 'rcp' ); ?>"/>
 		</form>
