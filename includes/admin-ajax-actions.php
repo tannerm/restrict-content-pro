@@ -15,16 +15,16 @@ add_action( 'wp_ajax_rcp_get_subscription_expiration', 'rcp_ajax_get_subscriptio
 function rcp_update_subscription_order() {
 	if( isset( $_POST['recordsArray'] ) ) {
 		global $wpdb, $rcp_db_name;
-		$updateRecordsArray = $_POST['recordsArray'];
-		$listingCounter = 1;
-		foreach ( $updateRecordsArray as $recordIDValue ) {
+		$subscription_levels = $_POST['recordsArray'];
+		$counter = 1;
+		foreach ( $subscription_levels as $level ) {
 			$new_order = $wpdb->update(
 				$rcp_db_name, 
-				array('list_order' 	=> $listingCounter ), 
-				array('id' 			=> $recordIDValue),
+				array('list_order' 	=> $counter ), 
+				array('id' 			=> $level),
 				array('%d')
 			);
-			$listingCounter++;
+			$counter++;
 		}
 		// clear the cache
 		delete_transient('rcp_subscription_levels');
@@ -49,7 +49,7 @@ function rcp_search_users() {
 		if( $found_users ) {
 			$user_list = '<ul>';
 				foreach( $found_users as $user ) {
-					$user_list .= '<li><a href="#" data-login="' . $user->user_login . '">' . $user->user_login . '</a></li>';	
+					$user_list .= '<li><a href="#" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';	
 				}
 			$user_list .= '</ul>';
 			
