@@ -64,7 +64,7 @@ function rcp_settings_page() {
 							</td>
 						</tr>
 					</table>		
-					<?php do_action('rcp_messages_settings', $rcp_options); ?>
+					<?php do_action( 'rcp_messages_settings', $rcp_options ); ?>
 			
 				</div><!--end #messages-->
 				
@@ -167,7 +167,7 @@ function rcp_settings_page() {
 							</td>
 						</tr>
 					</table>
-					<?php do_action('rcp_payments_settings', $rcp_options); ?>
+					<?php do_action( 'rcp_payments_settings', $rcp_options ); ?>
 					
 				</div><!--end #payments-->
 			
@@ -302,7 +302,7 @@ function rcp_settings_page() {
 						</tr>
 					</table>
 			
-					<?php do_action('rcp_forms_settings', $rcp_options); ?>
+					<?php do_action( 'rcp_forms_settings', $rcp_options ); ?>
 					
 				</div><!--end #forms-->
 				
@@ -438,7 +438,7 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 						</table>
-						<?php do_action('rcp_email_settings', $rcp_options); ?>
+						<?php do_action( 'rcp_email_settings', $rcp_options ); ?>
 						
 					</div><!--end #rcp_email_options-->
 					<div id="rcp_email_tags">
@@ -519,7 +519,7 @@ function rcp_settings_page() {
 							</td>
 						</tr>
 					</table>
-					<?php do_action('rcp_misc_settings', $rcp_options); ?>
+					<?php do_action( 'rcp_misc_settings', $rcp_options ); ?>
 				</div><!--end #misc-->
 				
 				<div class="tab_content" id="logging">
@@ -534,7 +534,7 @@ function rcp_settings_page() {
 							</td>
 						</tr>
 					</table>
-					<?php do_action('rcp_log_settings', $rcp_options); ?>
+					<?php do_action( 'rcp_log_settings', $rcp_options ); ?>
 				</div><!--end #logging-->
 
 			</div><!--end #tab_container-->
