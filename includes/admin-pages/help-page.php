@@ -3,7 +3,7 @@
 function rcp_help_page()
 {
 	global $rcp_options, $rcp_db_name, $wpdb;	
-	$page = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-help';
+	$page = admin_url( '/wp-admin/admin.php?page=rcp-help' );
 	?>
 	<div class="wrap rcp-help">
 		<h2><?php _e('Help Documentation', 'rcp'); ?></h2>
