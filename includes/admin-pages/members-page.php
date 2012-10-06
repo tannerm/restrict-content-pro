@@ -3,7 +3,7 @@
 function rcp_members_page()
 {
 	global $rcp_options, $rcp_db_name, $wpdb;
-	$current_page = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members';
+	$current_page = admin_url( '/wp-admin/admin.php?page=rcp-members' );
 	?>
 	<div class="wrap">
 		
