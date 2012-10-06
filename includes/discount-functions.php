@@ -66,12 +66,12 @@ function rcp_validate_discount( $code ) {
 * @param - string $code_id - the discount code ID to validate
 * return string on success, false on failure
 */
-function rcp_get_discount_status($code_id) {
+function rcp_get_discount_status( $code_id ) {
 	global $wpdb, $rcp_discounts_db_name;
 		
-	$code = $wpdb->get_results($wpdb->prepare("SELECT status FROM " . $rcp_discounts_db_name . " WHERE id='" . $code_id . "';"));
-	if($code) {
-		return $code[0]->status;
+	$code = rcp_get_discount_details( $code_id );
+	if( $code ) {
+		return $code->status;
 	}
 	return false;
 }
