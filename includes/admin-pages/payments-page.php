@@ -62,13 +62,13 @@ function rcp_payments_page()
 							$user = get_userdata( $payment->user_id );
 							?>
 							<tr class="rcp_payment <?php if( rcp_is_odd( $i ) ) echo 'alternate'; ?>">
-								<td><?php echo $payment->id; ?></td>
-								<td><?php echo $payment->subscription; ?></td>
-								<td><?php echo $payment->subscription_key; ?></td>
-								<td><?php echo $payment->date; ?></td>
-								<td><?php echo rcp_currency_filter($payment->amount); ?></td>
-								<td><?php echo $payment->payment_type; ?></td>
-								<td><?php echo isset( $user->display_name ) ? $user->display_name : ''; ?></td>
+								<td><?php echo absint( $payment->id ); ?></td>
+								<td><?php echo esc_html( $payment->subscription ); ?></td>
+								<td><?php echo esc_html( $payment->subscription_key ); ?></td>
+								<td><?php echo esc_html( $payment->date ); ?></td>
+								<td><?php echo rcp_currency_filter( $payment->amount ); ?></td>
+								<td><?php echo esc_html( $payment->payment_type ); ?></td>
+								<td><?php echo isset( $user->display_name ) ? esc_html( $user->display_name ) : ''; ?></td>
 								<?php do_action( 'rcp_payments_page_table_column', $payment->id ); ?>
 							</tr>
 						<?php
