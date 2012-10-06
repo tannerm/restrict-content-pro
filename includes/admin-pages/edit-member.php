@@ -34,7 +34,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 				<td>
 					<select name="level" id="rcp-level">
 						<?php
-							foreach( $wpdb->get_results("SELECT * FROM " . $rcp_db_name . ";") as $key => $level) :
+							foreach( rcp_get_subscription_levels() as $key => $level) :
 								echo '<option value="' . $level->id . '"' . selected( $level->name, rcp_get_subscription( $user->ID ), false ) . '>' . $level->name . '</option>';
 							endforeach;
 						?>
