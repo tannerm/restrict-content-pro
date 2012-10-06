@@ -11,7 +11,7 @@ function rcp_payments_page()
 		<?php do_action('rcp_payments_page_top'); ?>
 		
 		<?php 
-		if (isset($_GET['p'])) $page = $_GET['p']; else $page = 1;
+		$page = isset( $_GET['p'] ) ? $_GET['p'] : 1;
 		$per_page = 20;
 		
 		$user = get_current_user_id();
