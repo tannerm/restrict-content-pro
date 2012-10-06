@@ -68,7 +68,7 @@ function rcp_discounts_page()
 							</td>
 							<td><?php if($code->max_uses > 0) { echo rcp_count_discount_code_uses($code->code) . '/' . $code->max_uses; } else { echo rcp_count_discount_code_uses($code->code); }?></td>
 							<td><?php echo rcp_discount_has_uses_left($code->id) ? 'yes' : 'no'; ?></td>
-							<td><?php echo $code->expiration == '' ? __('none', 'rcp') : date('Y-m-d', strtotime($code->expiration)); ?></td>
+							<td><?php echo $code->expiration == '' ? __('none', 'rcp') : date_i18n('Y-m-d', strtotime( $code->expiration ) ); ?></td>
 							<?php do_action('rcp_discounts_page_table_column', $code->id); ?>
 							<td>
 								<a href="<?php echo add_query_arg('edit_discount', $code->id, $page); ?>"><?php _e('Edit', 'rcp'); ?></a> |
