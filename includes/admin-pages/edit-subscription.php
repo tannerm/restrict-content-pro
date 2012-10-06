@@ -3,7 +3,7 @@ $level = rcp_get_subscription_details( absint( urldecode( $_GET['edit_subscripti
 ?>
 <h2>
 	<?php _e( 'Edit Subscription Level:', 'rcp' ); echo ' ' . utf8_decode( $level->name ); ?> - 
-	<a href="<?php echo admin_url( '/wp-admin/admin.php?page=rcp-member-levels' ); ?>" class="button-secondary">
+	<a href="<?php echo admin_url( '/admin.php?page=rcp-member-levels' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
 </h2>

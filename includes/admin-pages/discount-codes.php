@@ -3,7 +3,7 @@
 function rcp_discounts_page()
 {
 	global $rcp_options, $rcp_discounts_db_name, $wpdb;	
-	$page = admin_url( '/wp-admin/admin.php?page=rcp-discounts' );
+	$page = admin_url( '/admin.php?page=rcp-discounts' );
 	?>
 	<div class="wrap">
 		<?php if( isset( $_GET['edit_discount'] ) ) :

@@ -2,7 +2,7 @@
 
 function rcp_export_page() {
 	global $rcp_options, $rcp_db_name, $wpdb;	
-	$current_page = admin_url( '/wp-admin/admin.php?page=rcp-export' );
+	$current_page = admin_url( '/admin.php?page=rcp-export' );
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'Export', 'rcp' ); ?></h2>

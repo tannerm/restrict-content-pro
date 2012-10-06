@@ -3,7 +3,7 @@ $code = rcp_get_discount_details( urldecode( $_GET['edit_discount'] ) );
 ?>
 <h2>
 	<?php _e( 'Edit Discount Code:', 'rcp' ); echo ' ' . $code->name; ?> - 
-	<a href="<?php echo admin_url( '/wp-admin/admin.php?page=rcp-discounts' ); ?>" class="button-secondary">
+	<a href="<?php echo admin_url( '/admin.php?page=rcp-discounts' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
 </h2>
