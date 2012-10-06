@@ -3,7 +3,7 @@ $user = get_userdata( urldecode( $_GET['view_member'] ) );
 ?>
 <h2>
 	<?php _e( 'View Member Details:', 'rcp' ); echo ' ' . $user->display_name; ?> - 
-	<a href="<?php echo get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members'; ?>" class="button-secondary">
+	<a href="<?php echo admin_url( '/admin.php?page=rcp-members' ); ?>" class="button-secondary">
 		<?php _e( 'Go Back', 'rcp' ); ?>
 	</a>	
 </h2>
