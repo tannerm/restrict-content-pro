@@ -2,17 +2,10 @@
 
 // function to create the DB / Options / Defaults					
 function rcp_options_install() {
-   global $wpdb;
-  	global $rcp_db_name;
-	global $rcp_db_version;
-	global $rcp_discounts_db_name;
-	global $rcp_discounts_db_version;
-	global $rcp_payments_db_name;
-	global $rcp_payments_db_version;
+   	global $wpdb,$rcp_db_name, $rcp_db_version, $rcp_discounts_db_name, $rcp_discounts_db_version, $rcp_payments_db_name, $rcp_payments_db_version;
 
 	// create the RCP subscription level database table
-	if($wpdb->get_var("show tables like '$rcp_db_name'") != $rcp_db_name) 
-	{
+	if ($wpdb->get_var( "show tables like '$rcp_db_name'" ) != $rcp_db_name ) {
 		$sql = "CREATE TABLE " . $rcp_db_name . " (
 		`id` mediumint(9) NOT NULL AUTO_INCREMENT,
 		`name` tinytext NOT NULL,
@@ -26,15 +19,14 @@ function rcp_options_install() {
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 		
-		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-		dbDelta($sql);
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
 				
-		add_option("rcp_db_version", $rcp_db_version);	
+		add_option( "rcp_db_version", $rcp_db_version );	
 	}
 	
 	// create the RCP discounts database table
-	if($wpdb->get_var("show tables like '$rcp_discounts_db_name'") != $rcp_discounts_db_name) 
-	{
+	if( $wpdb->get_var( "show tables like '$rcp_discounts_db_name'" ) != $rcp_discounts_db_name ) {
 		$sql = "CREATE TABLE " . $rcp_discounts_db_name . " (
 		`id` mediumint(9) NOT NULL AUTO_INCREMENT,
 		`name` tinytext NOT NULL,
@@ -49,15 +41,14 @@ function rcp_options_install() {
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 		
-		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-		dbDelta($sql);
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
 				
-		add_option("rcp_discounts_db_version", $rcp_discounts_db_version);	
+		add_option( "rcp_discounts_db_version", $rcp_discounts_db_version );	
 	}
 	
 	// create the RCP payments database table
-	if($wpdb->get_var("show tables like '$rcp_payments_db_name'") != $rcp_payments_db_name) 
-	{
+	if( $wpdb->get_var( "show tables like '$rcp_payments_db_name'" ) != $rcp_payments_db_name ) {
 		$sql = "CREATE TABLE " . $rcp_payments_db_name . " (
 		`id` mediumint(9) NOT NULL AUTO_INCREMENT,
 		`subscription` mediumtext NOT NULL,
@@ -69,11 +60,11 @@ function rcp_options_install() {
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 		
-		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-		dbDelta($sql);
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
 				
-		add_option("rcp_payments_db_version", $rcp_payments_db_version);	
+		add_option( "rcp_payments_db_version", $rcp_payments_db_version );	
 	}
 }
 // run the install scripts upon plugin activation
-register_activation_hook(RCP_PLUGIN_FILE, 'rcp_options_install');
+register_activation_hook( RCP_PLUGIN_FILE, 'rcp_options_install' );

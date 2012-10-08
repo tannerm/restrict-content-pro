@@ -3,7 +3,7 @@
 function rcp_member_levels_page()
 {
 	global $rcp_options, $rcp_db_name, $wpdb;	
-	$page = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels';
+	$page = admin_url( '/admin.php?page=rcp-member-levels' );
 	?>
 	<div class="wrap">
 		<?php if(isset($_GET['edit_subscription'])) :
@@ -112,7 +112,7 @@ function rcp_member_levels_page()
 									<?php
 									$access_levels = rcp_get_access_levels();
 									foreach( $access_levels as $access ) {
-										echo '<option value="' . $access . ' ' . selected($accessi, $level->level, false) . '">' . $access . '</option>';
+										echo '<option value="' . $access . ' ' . selected($access, $level->level, false) . '">' . $access . '</option>';
 									}	
 									?>
 								</select>

@@ -3,7 +3,7 @@
 function rcp_help_page()
 {
 	global $rcp_options, $rcp_db_name, $wpdb;	
-	$page = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-help';
+	$page = admin_url( '/admin.php?page=rcp-help' );
 	?>
 	<div class="wrap rcp-help">
 		<h2><?php _e('Help Documentation', 'rcp'); ?></h2>
@@ -15,7 +15,7 @@ function rcp_help_page()
 					<h3><span><?php _e('Restrict Content Pro', 'rcp'); ?></span></h3>
 					<div class="inside">
 						<p>Created by Pippin Williamson</p>
-						<p>&copy; Copyright 2011 - <?php echo date('Y'); ?> <a href="http://pippinsplugins.com">Pippin's Plugins</a></p>
+						<p>&copy; Copyright 2011 - <?php echo date_i18n('Y'); ?> <a href="http://pippinsplugins.com">Pippin's Plugins</a></p>
 					</div>
 				</div>
 				
