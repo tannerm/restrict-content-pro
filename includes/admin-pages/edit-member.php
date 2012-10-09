@@ -34,7 +34,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 				<td>
 					<select name="level" id="rcp-level">
 						<?php
-							foreach( rcp_get_subscription_levels() as $key => $level) :
+							foreach( rcp_get_subscription_levels( 'all', false ) as $key => $level) :
 								echo '<option value="' . esc_attr( absint( $level->id ) ) . '"' . selected( $level->name, rcp_get_subscription( $user->ID ), false ) . '>' . esc_html( $level->name ) . '</option>';
 							endforeach;
 						?>
