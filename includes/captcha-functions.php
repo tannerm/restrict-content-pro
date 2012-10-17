@@ -1,5 +1,10 @@
 <?php
 
+
+if( ! function_exists( 'recaptcha_get_html' ) ) {
+	require_once( RCP_PLUGIN_DIR . 'includes/recaptchalib.php' );
+}
+
 function rcp_show_captcha() {
 	global $rcp_options;
 	// reCaptcha		
