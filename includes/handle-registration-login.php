@@ -174,6 +174,8 @@ function rcp_add_new_member() {
 						$auto_renew = false;
 					}
 					
+					$redirect = rcp_get_return_url();
+
 					$subscription_data = array(
 						'price' 			=> $price,
 						'length' 			=> $expiration->duration,
@@ -185,7 +187,7 @@ function rcp_add_new_member() {
 						'user_email' 		=> $user_email,
 						'currency' 			=> $rcp_options['currency'],
 						'auto_renew' 		=> $auto_renew,
-						'return_url' 		=> rcp_get_return_url(),
+						'return_url' 		=> $redirect,
 						'new_user' 			=> $need_new_user,
 						'post_data' 		=> $_POST
 					);
