@@ -305,3 +305,26 @@ function rcp_get_access_levels() {
 function rcp_generate_subscription_key() {
 	return apply_filters( 'rcp_subscription_key', urlencode( strtolower( md5( uniqid() ) ) ) );
 }
+
+
+/*
+ * Determines if a subscription level should be shown
+ *
+ * @since 1.3.2.3
+ * @return bool
+ */
+function rcp_show_subscription_level( $level_id = 0, $user_id = 0 ) {
+
+	if( empty( $user_id ) )
+		$user_id = get_current_user_id();
+
+	$ret = true;
+
+	$user_level = rcp_get_subscription_id( $user_id );
+	$sub_price 	= rcp_get_subscription_price( $level_id );
+
+	if( is_user_logged_in() && $sub_price == '0' )
+		$ret = false;
+
+	return apply_filters( 'rcp_show_subscription_level', $ret, $level_id, $user_id );
+}
