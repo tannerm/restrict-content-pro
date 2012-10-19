@@ -243,7 +243,7 @@ function rcp_add_new_member() {
 
 					}
 					// send the newly created user to the redirect page after logging them in
-					wp_redirect( $redirect ); exit;
+					wp_redirect( rcp_get_return_url() ); exit;
 				
 				} // end price check
 				
