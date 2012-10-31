@@ -175,7 +175,7 @@ function rcp_check_ipn() {
 				// when a user makes a recurring payment
 
 				// record this payment in the database
-				rcp_insert_payment($payment_data);
+				rcp_insert_payment( $payment_data );
 				
 				$subscription = rcp_get_subscription_details( rcp_get_subscription_id( $user_id ) );
 				
@@ -189,7 +189,7 @@ function rcp_check_ipn() {
 
 				update_user_meta( $user_id, 'rcp_recurring', 'yes' );
 
-				do_action('rcp_ipn_subscr_payment' );
+				do_action( 'rcp_ipn_subscr_payment' );
 				
 			break;
 			case "subscr_cancel" :
