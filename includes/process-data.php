@@ -200,6 +200,8 @@ function rcp_process_data() {
 			else
 				$unit = 'flat';
 
+			do_action( 'rcp_pre_edit_discount', absint( $_POST['discount_id'] ) );
+
 			$update = $wpdb->query( $wpdb->prepare( "UPDATE " . $rcp_discounts_db_name . " SET 
 				`name`='" 			. sanitize_text_field( $_POST['name'] ) . "',
 				`description`='" 	. strip_tags( addslashes( $_POST['description'] ) ) . "',
@@ -212,7 +214,7 @@ function rcp_process_data() {
 				WHERE `id` ='" 		. absint( $_POST['discount_id'] ) . "'
 			;" ) );
 			
-			do_action( 'rcp_edit_discount', $_POST );
+			do_action( 'rcp_edit_discount', $_POST, $wpdb->insert_id );
 			
 			if($update) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-updated=1';
