@@ -157,6 +157,11 @@ function rcp_process_data() {
 			$amount = 0;
 			if( isset( $_POST['amount'] ) && $_POST['amount'] != '' ) $amount = sanitize_text_field( $_POST['amount'] );
 			
+			if( isset( $_POST['unit'] ) && $_POST['unit'] == '%' )
+				$unit = '%%';
+			else
+				$unit = 'flat';
+
 			$expiration = '';
 			if( isset( $_POST['expiration'] ) && $_POST['expiration'] != '' ) $expiration = $_POST['expiration'];
 			
@@ -170,7 +175,7 @@ function rcp_process_data() {
 				`description`='" 	. strip_tags( addslashes( $description ) ) . "',
 				`amount`='" 		. $amount . "',
 				`status`='active',
-				`unit`='" 			. sanitize_text_field( $_POST['unit'] ) . "',
+				`unit`='" 			. $wpdb->escape( $unit ) . "',
 				`code`='" 			. sanitize_text_field( $_POST['code'] ) . "',
 				`expiration`='" 	. $expiration . "',
 				`max_uses`='" 		. $max . "',
