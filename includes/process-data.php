@@ -155,7 +155,7 @@ function rcp_process_data() {
 			if( isset( $_POST['description'] ) && $_POST['description'] != '' ) $description = $_POST['description'];
 			
 			$amount = 0;
-			if( isset( $_POST['amount'] ) && $_POST['amount'] != '' ) $amount = $_POST['amount'];
+			if( isset( $_POST['amount'] ) && $_POST['amount'] != '' ) $amount = sanitize_text_field( $_POST['amount'] );
 			
 			$expiration = '';
 			if( isset( $_POST['expiration'] ) && $_POST['expiration'] != '' ) $expiration = $_POST['expiration'];
@@ -163,8 +163,6 @@ function rcp_process_data() {
 			$max = '';
 			if( isset( $_POST['max'] ) && $_POST['max'] != '' ) $max = $_POST['max'];
 			
-			//echo '<pre>'; print_r( $_POST ); echo '</pre>'; exit;
-
 			do_action( 'rcp_pre_add_discount' );
 
 			$add = $wpdb->query( $wpdb->prepare( "INSERT INTO `" . $rcp_discounts_db_name . "` SET 
@@ -178,8 +176,8 @@ function rcp_process_data() {
 				`max_uses`='" 		. $max . "',
 				`use_count`='0'
 			;" ) );
-			
-			do_action( 'rcp_add_discount', $_POST );
+
+ 			do_action( 'rcp_add_discount', $_POST, $wpdb->insert_id );
 			
 			if($add) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-added=1';
