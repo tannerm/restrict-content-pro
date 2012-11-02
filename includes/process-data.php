@@ -163,13 +163,17 @@ function rcp_process_data() {
 			$max = '';
 			if( isset( $_POST['max'] ) && $_POST['max'] != '' ) $max = $_POST['max'];
 			
+			//echo '<pre>'; print_r( $_POST ); echo '</pre>'; exit;
+
+			do_action( 'rcp_pre_add_discount' );
+
 			$add = $wpdb->query( $wpdb->prepare( "INSERT INTO `" . $rcp_discounts_db_name . "` SET 
 				`name`='" 			. $name . "',
-				`description`='" 	. addslashes( $description ) . "',
+				`description`='" 	. strip_tags( addslashes( $description ) ) . "',
 				`amount`='" 		. $amount . "',
 				`status`='active',
-				`unit`='" 			. $_POST['unit'] . "',
-				`code`='" 			. $_POST['code'] . "',
+				`unit`='" 			. sanitize_text_field( $_POST['unit'] ) . "',
+				`code`='" 			. sanitize_text_field( $_POST['code'] ) . "',
 				`expiration`='" 	. $expiration . "',
 				`max_uses`='" 		. $max . "',
 				`use_count`='0'
