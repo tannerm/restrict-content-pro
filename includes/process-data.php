@@ -149,7 +149,7 @@ function rcp_process_data() {
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'add-discount') {
 			
 			$name = 'no name';
-			if( isset( $_POST['name'] ) && $_POST['name'] != '' ) $name = $_POST['name'];
+			if( isset( $_POST['name'] ) && $_POST['name'] != '' ) $name = sanitize_text_field( $_POST['name'] );
 			
 			$description = '';
 			if( isset( $_POST['description'] ) && $_POST['description'] != '' ) $description = $_POST['description'];
@@ -163,7 +163,7 @@ function rcp_process_data() {
 				$unit = 'flat';
 
 			$expiration = '';
-			if( isset( $_POST['expiration'] ) && $_POST['expiration'] != '' ) $expiration = $_POST['expiration'];
+			if( isset( $_POST['expiration'] ) && $_POST['expiration'] != '' ) $expiration = sanitize_text_field( $_POST['expiration'] );
 			
 			$max = '';
 			if( isset( $_POST['max'] ) && $_POST['max'] != '' ) $max = $_POST['max'];
@@ -195,16 +195,21 @@ function rcp_process_data() {
 		// edit a discount code
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-discount' ) {
 	
+			if( isset( $_POST['unit'] ) && $_POST['unit'] == '%' )
+				$unit = '%%';
+			else
+				$unit = 'flat';
+
 			$update = $wpdb->query( $wpdb->prepare( "UPDATE " . $rcp_discounts_db_name . " SET 
-				`name`='" 			. $_POST['name'] . "',
-				`description`='" 	. addslashes( $_POST['description'] ) . "',
-				`amount`='" 		. $_POST['amount'] . "',
-				`unit`='" 			. $_POST['unit'] . "',
-				`code`='" 			. $_POST['code'] . "',
-				`status`='" 		. $_POST['status'] . "',
-				`expiration`='" 	. $_POST['expiration'] . "',
-				`max_uses`='" 		. $_POST['max'] . "'
-				WHERE `id` ='" 		. $_POST['discount_id'] . "'
+				`name`='" 			. sanitize_text_field( $_POST['name'] ) . "',
+				`description`='" 	. strip_tags( addslashes( $_POST['description'] ) ) . "',
+				`amount`='" 		. sanitize_text_field( $_POST['amount'] ) . "',
+				`unit`='" 			. $wpdb->escape( $unit ) . "',
+				`code`='" 			. sanitize_text_field( $_POST['code'] ) . "',
+				`status`='" 		. sanitize_text_field( $_POST['status'] ) . "',
+				`expiration`='" 	. sanitize_text_field( $_POST['expiration'] ) . "',
+				`max_uses`='" 		. sanitize_text_field( $_POST['max'] ) . "'
+				WHERE `id` ='" 		. absint( $_POST['discount_id'] ) . "'
 			;" ) );
 			
 			do_action( 'rcp_edit_discount', $_POST );
