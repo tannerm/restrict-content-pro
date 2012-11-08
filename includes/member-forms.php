@@ -93,27 +93,27 @@ function rcp_registration_form_fields( $args = array() ) {
 			
 			<fieldset class="rcp_user_fieldset">
 				<p id="rcp_user_login_wrap">
-					<label for="rcp_user_Login"><?php _e( 'Username', 'rcp' ); ?></label>
+					<label for="rcp_user_Login"><?php echo apply_filters ( 'rcp_registration_username_label', __( 'Username', 'rcp' ) ); ?></label>
 					<input name="rcp_user_login" id="rcp_user_login" class="required" type="text" <?php if( isset( $_POST['rcp_user_login'] ) ) { echo 'value="' . esc_attr( $_POST['rcp_user_login'] ) . '"'; } ?>/>
 				</p>
 				<p id="rcp_user_email_wrap">
-					<label for="rcp_user_email"><?php _e( 'Email', 'rcp' ); ?></label>
+					<label for="rcp_user_email"><?php echo apply_filters ( 'rcp_registration_email_label', __( 'Email', 'rcp' ) ); ?></label>
 					<input name="rcp_user_email" id="rcp_user_email" class="required" type="email" <?php if( isset( $_POST['rcp_user_email'] ) ) { echo 'value="' . esc_attr( $_POST['rcp_user_email'] ) . '"'; } ?>/>
 				</p>
 				<p id="rcp_user_first_wrap">
-					<label for="rcp_user_first"><?php _e( 'First Name', 'rcp' ); ?></label>
+					<label for="rcp_user_first"><?php echo apply_filters ( 'rcp_registration_firstname_label', __( 'First Name', 'rcp' ) ); ?></label>
 					<input name="rcp_user_first" id="rcp_user_first" type="text" <?php if( isset( $_POST['rcp_user_first'] ) ) { echo 'value="' . esc_attr( $_POST['rcp_user_first'] ) . '"'; } ?>/>
 				</p>
 				<p id="rcp_user_last_wrap">
-					<label for="rcp_user_last"><?php _e( 'Last Name', 'rcp' ); ?></label>
+					<label for="rcp_user_last"><?php echo apply_filters ( 'rcp_registration_lastname_label', __( 'Last Name', 'rcp' ) ); ?></label>
 					<input name="rcp_user_last" id="rcp_user_last" type="text" <?php if( isset( $_POST['rcp_user_last'] ) ) { echo 'value="' . esc_attr( $_POST['rcp_user_last'] ) . '"'; } ?>/>
 				</p>
 				<p id="rcp_password_wrap">
-					<label for="password"><?php _e( 'Password', 'rcp' ); ?></label>
+					<label for="password"><?php echo apply_filters ( 'rcp_registration_password_label', __( 'Password', 'rcp' ) ); ?></label>
 					<input name="rcp_user_pass" id="rcp_password" class="required" type="password"/>
 				</p>
 				<p id="rcp_password_again_wrap">
-					<label for="password_again"><?php _e( 'Password Again', 'rcp' ); ?></label>
+					<label for="password_again"><?php echo apply_filters ( 'rcp_registration_password_again_label', __( 'Password Again', 'rcp' ) ); ?></label>
 					<input name="rcp_user_pass_confirm" id="rcp_password_again" class="required" type="password"/>
 				</p id="rcp_user_login_wrap">
 				
@@ -125,7 +125,7 @@ function rcp_registration_form_fields( $args = array() ) {
 			$levels = rcp_get_subscription_levels( 'active', true );
 			if( $levels && count( $levels ) > 1 ) : ?>
 			<fieldset class="rcp_subscription_fieldset">			
-				<p class="rcp_subscription_message"><?php _e( 'Choose your subscription level', 'rcp' ); ?></p>
+				<p class="rcp_subscription_message"><?php echo apply_filters ( 'rcp_registration_choose_subscription', __( 'Choose your subscription level', 'rcp' ) ); ?></p>
 				<ul id="rcp_subscription_levels">
 					<?php
 						foreach( $levels as $key => $level ) : ?>
@@ -182,7 +182,7 @@ function rcp_registration_form_fields( $args = array() ) {
 			</fieldset>
 			<p id="rcp_submit_wrap">
 				<input type="hidden" name="rcp_register_nonce" value="<?php echo wp_create_nonce('rcp-register-nonce' ); ?>"/>
-				<input type="submit" name="rcp_submit_registration" id="rcp_submit" value="<?php _e( 'Register', 'rcp' ); ?>"/>
+				<input type="submit" name="rcp_submit_registration" id="rcp_submit" value="<?php echo apply_filters ( 'rcp_registration_register_button', __( 'Register', 'rcp' ) ); ?>"/>
 			</p>
 		</form>
 		<?php
@@ -219,18 +219,18 @@ function rcp_change_password_form( $args = array() ) {
 		<form id="rcp_password_form"  class="<?php echo esc_attr( $class ); ?>" method="POST" action="<?php echo esc_url( $current_url ); ?>">
 			<fieldset class="rcp_change_password_fieldset">
 				<p>
-					<label for="rcp_user_pass"><?php _e( 'New Password', 'rcp' ); ?></label>
+					<label for="rcp_user_pass"><?php echo apply_filters ( 'rcp_registration_new_password_label', __( 'New Password', 'rcp' ) ); ?></label>
 					<input name="rcp_user_pass" id="rcp_user_pass" class="required" type="password"/>
 				</p>
 				<p>
-					<label for="rcp_user_pass_confirm"><?php _e( 'Password Confirm', 'rcp' ); ?></label>
+					<label for="rcp_user_pass_confirm"><?php echo apply_filters ( 'rcp_registration_confirm_password_label', __( 'Password Confirm', 'rcp' ) ); ?></label>
 					<input name="rcp_user_pass_confirm" id="rcp_user_pass_confirm" class="required" type="password"/>
 				</p>
 				<p>
 					<input type="hidden" name="rcp_action" value="reset-password"/>
 					<input type="hidden" name="rcp_redirect" value="<?php echo esc_url( $redirect ); ?>"/>
 					<input type="hidden" name="rcp_password_nonce" value="<?php echo wp_create_nonce('rcp-password-nonce' ); ?>"/>
-					<input id="rcp_password_submit" type="submit" value="<?php _e( 'Change Password', 'rcp' ); ?>"/>
+					<input id="rcp_password_submit" type="submit" value="<?php echo apply_filters ( 'rcp_registration_change_password_button', __( 'Change Password', 'rcp' ) ); ?>"/>
 				</p>
 			</fieldset>
 		</form>
@@ -244,7 +244,7 @@ function rcp_add_auto_renew( $levels ) {
 	if( $levels && !isset( $rcp_options['disable_auto_renew'] ) ) : ?>
 	<p id="rcp_auto_renew_wrap">
 		<input name="rcp_auto_renew" id="rcp_auto_renew" type="checkbox" checked="checked"/>
-		<label for="rcp_auto_renew"><?php _e( 'Auto Renew', 'rcp' ); ?></label>
+		<label for="rcp_auto_renew"><?php echo apply_filters ( 'rcp_registration_auto_renew', __( 'Auto Renew', 'rcp' ) ); ?></label>
 	</p>
 	<?php endif;
 }
