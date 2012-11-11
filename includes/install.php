@@ -65,6 +65,17 @@ function rcp_options_install() {
 				
 		add_option( "rcp_payments_db_version", $rcp_payments_db_version );	
 	}
+
+	// and option that allows us to make sure RCP is installed
+	add_option( 'rcp_is_installed', '1' );
+
 }
 // run the install scripts upon plugin activation
 register_activation_hook( RCP_PLUGIN_FILE, 'rcp_options_install' );
+
+function rcp_check_if_installed() {
+	// this is mainly for network activated installs
+	if( ! get_option( 'rcp_is_installed' ) )
+		rcp_options_install();
+}
+add_action( 'admin_init', 'rcp_check_if_installed' );
