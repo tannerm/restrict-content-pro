@@ -276,19 +276,19 @@ function rcp_process_login_form() {
 		
 			if( !$user ) {
 				// if the user name doesn't exist
-				rcp_errors()->add( 'empty_username', __( 'Invalid username' ), 'login' );
+				rcp_errors()->add( 'empty_username', __( 'Invalid username', 'rcp' ), 'login' );
 			}
 			
 			if( !isset( $_POST['rcp_user_pass'] ) || $_POST['rcp_user_pass'] == '') {
 				// if no password was entered
-				rcp_errors()->add( 'empty_password', __( 'Please enter a password' ), 'login' );
+				rcp_errors()->add( 'empty_password', __( 'Please enter a password', 'rcp' ), 'login' );
 			}
 			
 			if( $user ) {	
 				// check the user's login with their password
 				if( !wp_check_password( $_POST['rcp_user_pass'], $user->user_pass, $user->ID ) ) {
 					// if the password is incorrect for the specified user
-					rcp_errors()->add( 'empty_password', __( 'Incorrect password' ), 'login' );
+					rcp_errors()->add( 'empty_password', __( 'Incorrect password', 'rcp' ), 'login' );
 				}
 			}
 			do_action( 'rcp_login_form_errors', $_POST );
