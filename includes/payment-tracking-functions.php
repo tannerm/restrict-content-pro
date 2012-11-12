@@ -95,15 +95,9 @@ function rcp_insert_payment( $payment_data = array() ) {
 function rcp_check_for_existing_payment( $type, $date, $subscription_key ) {
 	
 	global $wpdb, $rcp_payments_db_name;
-	
-	if( $type == 'subscr_payment' ) {
-		// recurring payment
-		if( $wpdb->get_results( $wpdb->prepare( "SELECT id FROM " . $rcp_payments_db_name . " WHERE `date`='" . $date . "' AND `subscription_key`='" . $subscription_key . "';" ) ) )
-			return true; // this payment already exists
-	} else {
-		// payments entered from add-on gateways
-		if( $wpdb->get_results( $wpdb->prepare("SELECT id FROM " . $rcp_payments_db_name . " WHERE `subscription_key`='" . $subscription_key . "' AND `payment_type`='" . $type . "';" ) ) )
-			return true; // this payment already exists
-	}
+
+	if( $wpdb->get_results( $wpdb->prepare("SELECT id FROM " . $rcp_payments_db_name . " WHERE `date`='" . $date . "' AND `subscription_key`='" . $subscription_key . "' AND `payment_type`='" . $type . "';" ) ) )
+		return true; // this payment already exists
+
 	return false; // this payment doesn't exist
 }
