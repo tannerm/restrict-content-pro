@@ -43,55 +43,55 @@ function rcp_add_new_member() {
 		if( $need_new_user ) {
 			if( username_exists( $user_login ) ) {
 				// Username already registered
-				rcp_errors()->add( 'username_unavailable', __( 'Username already taken', 'rcp' ) );
+				rcp_errors()->add( 'username_unavailable', __( 'Username already taken', 'rcp' ), 'register' );
 			}
 			if( !validate_username($user_login)) {
 				// invalid username
-				rcp_errors()->add( 'username_invalid', __( 'Invalid username', 'rcp' ) );
+				rcp_errors()->add( 'username_invalid', __( 'Invalid username', 'rcp' ), 'register' );
 			}
 			if( $user_login == '') {
 				// empty username
-				rcp_errors()->add( 'username_empty', __( 'Please enter a username', 'rcp' ) );
+				rcp_errors()->add( 'username_empty', __( 'Please enter a username', 'rcp' ), 'register' );
 			}
 			if( !is_email($user_email)) {
 				//invalid email
-				rcp_errors()->add( 'email_invalid', __( 'Invalid email', 'rcp' ) );
+				rcp_errors()->add( 'email_invalid', __( 'Invalid email', 'rcp' ), 'register' );
 			}
 			if( email_exists($user_email)) {
 				//Email address already registered
-				rcp_errors()->add( 'email_used', __( 'Email already registered', 'rcp' ) );
+				rcp_errors()->add( 'email_used', __( 'Email already registered', 'rcp' ), 'register' );
 			}
 			if( $user_pass == '') {
 				// passwords do not match
-				rcp_errors()->add( 'password_empty', __( 'Please enter a password', 'rcp' ) );
+				rcp_errors()->add( 'password_empty', __( 'Please enter a password', 'rcp' ), 'register' );
 			}
 			if( $user_pass != $pass_confirm) {
 				// passwords do not match
-				rcp_errors()->add( 'password_mismatch', __( 'Passwords do not match', 'rcp' ) );
+				rcp_errors()->add( 'password_mismatch', __( 'Passwords do not match', 'rcp' ), 'register' );
 			}
 		}
 		if( ! $subscription_id ) {
 			// no subscription level was chosen
-			rcp_errors()->add( 'no_level', __( 'Please choose a subscription level', 'rcp' ) );
+			rcp_errors()->add( 'no_level', __( 'Please choose a subscription level', 'rcp' ), 'register' );
 		}
 		if( $subscription_id ) {
 			if( $price == 0 && $expiration->duration > 0 && rcp_has_used_trial( $user_id ) ) {
 				// this ensures that users only sign up for a free trial once
-				rcp_errors()->add( 'free_trial_used', __( 'You may only sign up for a free trial once', 'rcp' ) );
+				rcp_errors()->add( 'free_trial_used', __( 'You may only sign up for a free trial once', 'rcp' ), 'register' );
 			}
 		}
 		if( strlen( trim( $code ) ) > 0 ) {
 			if( !rcp_validate_discount( $code ) ) {
 				// the entered discount code is incorrect
-				rcp_errors()->add( 'invalid_discount', __( 'The discount you entered is invalid', 'rcp' ) );
+				rcp_errors()->add( 'invalid_discount', __( 'The discount you entered is invalid', 'rcp' ), 'register' );
 			}
 			if( !$need_new_user && rcp_user_has_used_discount( $user_id, $code ) ) {
-				rcp_errors()->add( 'discount_already_used', __( 'You can only use the discount code once', 'rcp' ) );
+				rcp_errors()->add( 'discount_already_used', __( 'You can only use the discount code once', 'rcp' ), 'register' );
 			}
 		}
 		if( $price == 0 && isset($_POST['rcp_auto_renew'] ) ) {
 			// since free subscriptions do not go through PayPal, they cannot be auto renewed
-			rcp_errors()->add( 'invalid_auto_renew', __( 'Free subscriptions cannot be automatically renewed', 'rcp' ) );
+			rcp_errors()->add( 'invalid_auto_renew', __( 'Free subscriptions cannot be automatically renewed', 'rcp' ), 'register' );
 		}
 				
 		do_action( 'rcp_form_errors', $_POST );
@@ -276,19 +276,19 @@ function rcp_process_login_form() {
 		
 			if( !$user ) {
 				// if the user name doesn't exist
-				rcp_errors()->add( 'empty_username', __( 'Invalid username' ) );
+				rcp_errors()->add( 'empty_username', __( 'Invalid username' ), 'login' );
 			}
 			
 			if( !isset( $_POST['rcp_user_pass'] ) || $_POST['rcp_user_pass'] == '') {
 				// if no password was entered
-				rcp_errors()->add( 'empty_password', __( 'Please enter a password' ) );
+				rcp_errors()->add( 'empty_password', __( 'Please enter a password' ), 'login' );
 			}
 			
 			if( $user ) {	
 				// check the user's login with their password
 				if( !wp_check_password( $_POST['rcp_user_pass'], $user->user_pass, $user->ID ) ) {
 					// if the password is incorrect for the specified user
-					rcp_errors()->add( 'empty_password', __( 'Incorrect password' ) );
+					rcp_errors()->add( 'empty_password', __( 'Incorrect password' ), 'login' );
 				}
 			}
 			do_action( 'rcp_login_form_errors', $_POST );
@@ -324,11 +324,11 @@ function rcp_reset_password() {
 		
 			if( $_POST['rcp_user_pass'] == '' || $_POST['rcp_user_pass_confirm'] == '' ) {
 				// password(s) field empty
-				rcp_errors()->add( 'password_empty', __( 'Please enter a password, and confirm it', 'rcp' ) );
+				rcp_errors()->add( 'password_empty', __( 'Please enter a password, and confirm it', 'rcp' ), 'password' );
 			}
 			if( $_POST['rcp_user_pass'] != $_POST['rcp_user_pass_confirm'] ) {
 				// passwords do not match
-				rcp_errors()->add( 'password_mismatch', __( 'Passwords do not match', 'rcp' ) );
+				rcp_errors()->add( 'password_mismatch', __( 'Passwords do not match', 'rcp' ), 'password' );
 			}
 			
 			do_action( 'rcp_password_form_errors', $_POST );

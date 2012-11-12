@@ -23,7 +23,7 @@ function rcp_login_form_fields( $args = array() ) {
 		if( !is_user_logged_in() ) {
 		
 			// show any error messages after form submission
-			rcp_show_error_messages(); ?>
+			rcp_show_error_messages( 'login' ); ?>
 		
 			<form id="rcp_login_form"  class="<?php echo $class; ?>" method="POST" action="<?php echo esc_url( $action ); ?>">
 				<fieldset class="rcp_login_data">
@@ -83,7 +83,7 @@ function rcp_registration_form_fields( $args = array() ) {
 		do_action( 'rcp_before_register_form' );
 		
 		// show any error messages after form submission
-		rcp_show_error_messages(); ?>
+		rcp_show_error_messages( 'register' ); ?>
 		
 		<form id="rcp_registration_form" class="<?php echo esc_attr( $class ); ?>" method="POST" action="<?php echo esc_url( $action ); ?>">
 		
@@ -211,7 +211,7 @@ function rcp_change_password_form( $args = array() ) {
 		do_action( 'rcp_before_password_form' );
 		
 		// show any error messages after form submission
-		rcp_show_error_messages(); ?>
+		rcp_show_error_messages( 'password' ); ?>
 		
 		<?php if( isset( $_GET['password-reset']) && $_GET['password-reset'] == 'true') { ?>
 			<div class="rcp_message success">
