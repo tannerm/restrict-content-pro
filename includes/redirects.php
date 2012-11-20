@@ -22,11 +22,24 @@ add_action( 'template_redirect', 'rcp_redirect_from_premium_post', 999 );
 /*
 * Hijack the default WP login URL and redirect users to custom login page
 */
-function rcp_redirect_to_login_page( $login_url ) {
+function rcp_hijack_login_url( $login_url ) {
 	global $rcp_options;
 	if( isset( $rcp_options['hijack_login_url'] ) && isset( $rcp_options['login_redirect'] ) ) {
 		$login_url = get_permalink( $rcp_options['login_redirect'] );
 	}
 	return $login_url;
 }
-add_filter( 'login_url', 'rcp_redirect_to_login_page' );
+add_filter( 'login_url', 'rcp_hijack_login_url' );
+
+
+/*
+* Redirects users to the custom login page when access wp-login.php
+*/
+function rcp_redirect_from_wp_login() {
+	global $rcp_options;
+
+	if( isset( $rcp_options['hijack_login_url'] ) && isset( $rcp_options['login_redirect'] ) ) {
+		wp_redirect( get_permalink( $rcp_options['login_redirect'] ) ); exit;
+	}
+}
+add_action( 'login_form_login', 'rcp_redirect_from_wp_login' );
