@@ -162,15 +162,8 @@ function rcp_registration_form( $atts, $content = null ) {
 		$rcp_load_css = true;
 		$rcp_load_scripts = true;
 		
-		// check to make sure user registration is enabled
-		$registration_enabled = get_option( 'users_can_register' );
-	
-		// only show the registration form if allowed
-		if( $registration_enabled ) {
-			$output = rcp_registration_form_fields();
-		} else {
-			$output = __( 'User registration is not enabled.', 'rcp' );
-		}
+		$output = rcp_registration_form_fields();
+
 	} else {
 		$output = $registered_message;
 	}
