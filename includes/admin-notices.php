@@ -16,6 +16,9 @@ function rcp_upgrade_needed_notice() {
 	if( isset( $_GET['rcp-db'] ) && $_GET['rcp-db'] == 'updated' ) {
 		echo '<div class="updated fade"><p>' . __( 'The Restrict Content Pro database has been updated', 'rcp' ) . '</p></div>';
 	}
+	if( isset( $_GET['edit_member'] ) && isset( $_GET['updated'] ) && $_GET['updated'] == 'true' ) {
+		echo '<div class="updated fade"><p>' . __( 'Member updated', 'rcp' ) . '</p></div>';
+	}
 }
 add_action('admin_notices', 'rcp_upgrade_needed_notice' );
 
