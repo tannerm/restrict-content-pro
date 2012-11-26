@@ -9,6 +9,7 @@ $user = get_userdata( absint( urldecode( $_GET['view_member'] ) ) );
 </h2>
 <table class="form-table">
 	<tbody>
+		<?php do_action( 'rcp_view_member_before', $user->ID ); ?>
 		<tr class="form-field">
 			<th scope="row" valign="top">
 				<?php _e( 'Status', 'rcp' ); ?>
@@ -94,6 +95,6 @@ $user = get_userdata( absint( urldecode( $_GET['view_member'] ) ) );
 				<?php echo rcp_print_user_payments( $user->ID ); ?>
 			</td>
 		</tr>
-		
+		<?php do_action( 'rcp_view_member_after', $user->ID ); ?>
 	</tbody>
 </table>
