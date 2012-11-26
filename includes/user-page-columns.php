@@ -18,10 +18,11 @@ function rcp_show_user_columns( $value, $column_name, $user_id ) {
 		$page = admin_url( '/admin.php?page=rcp-members' );
 		if( rcp_is_active( $user_id ) ) {
 			$links = '<a href="' . esc_url( $page ) . '&edit_member=' . esc_attr( absint( $user_id ) ) . '">' . __( 'Edit Subscription', 'rcp' ) . '</a>';
-			$links .= ' | <a href="' . esc_url( $page ) . '&view_member=' . esc_attr( absint( $user_id ) ) . '">' . __( 'View Details','rcp' ) . '</a>';
 		} else {
 			$links = '<a href="' . esc_url( $page ) . '&edit_member=' . esc_attr( absint( $user_id ) ) . '">' . __( 'Add Subscription', 'rcp' ) . '</a>';
 		}
+		$links .= ' | <a href="' . esc_url( $page ) . '&view_member=' . esc_attr( absint( $user_id ) ) . '">' . __( 'View Details','rcp' ) . '</a>';
+		
 		return $links;
 	}
 	return $value;
