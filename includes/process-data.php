@@ -121,12 +121,12 @@ function rcp_process_data() {
 		// edit a member's subscription
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-member' ) {
 		
-			$user_id = $_POST['user'];
-			$status = $_POST['status'];
-			$expires = $_POST['expiration'];
-			$level = $_POST['level'];
+			$user_id  = absint( $_POST['user'] );
+			$status   = sanitize_text_field( $_POST['status'] );
+			$expires  = sanitize_text_field( $_POST['expiration'] );
+			$level    = absint( $_POST['level'] );
 		
-			if( isset( $_POST['status'] ) ) update_user_meta($user_id, 'rcp_status', $status);
+			if( isset( $_POST['status'] ) ) update_user_meta($user_id, 'rcp_status', $status );
 			if( isset( $_POST['expiration'] ) && strlen( trim( $expires ) ) > 0 ) update_user_meta( $user_id, 'rcp_expiration', $expires );
 			if( isset( $_POST['level'] ) ) update_user_meta( $user_id, 'rcp_subscription_level', $level );
 			if( isset( $_POST['recurring'] ) ) {
@@ -137,8 +137,7 @@ function rcp_process_data() {
 			if( isset( $_POST['signup_method'] ) ) update_user_meta( $user_id, 'rcp_signup_method', $_POST['signup_method'] );
 			if( isset( $_POST['notes'] ) ) update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'] ) );
 		
-			header ( "Location:" . $url );
-			wp_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id) ); exit;
+			wp_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id . '&updated=true' ) ); exit;
 		}
 		
 		
