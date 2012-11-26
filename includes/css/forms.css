@@ -1,3 +1,4 @@
+.rcp_form fieldset { border: none; margin: 0; padding: 0; }
 .rcp_form label { display: block; float: left; width: 280px; }
 .rcp_form input[type="text"], .rcp_form input[type="password"],
 .rcp_form input[type="email"] {

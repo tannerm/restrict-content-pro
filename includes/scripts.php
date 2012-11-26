@@ -48,7 +48,7 @@ add_action( 'admin_enqueue_scripts', 'rcp_admin_styles' );
 
 // register our form css
 function rcp_register_css() {
-	wp_register_style('rcp-form-css',  RCP_PLUGIN_URL . 'includes/css/forms.css');
+	wp_register_style('rcp-form-css',  RCP_PLUGIN_URL . 'includes/css/forms.css', RCP_PLUGIN_VERSION );
 }
 add_action('init', 'rcp_register_css');
 
