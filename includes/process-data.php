@@ -135,9 +135,10 @@ function rcp_process_data() {
 				update_user_meta( $user_id, 'rcp_recurring', 'no' );
 			}
 			if( isset( $_POST['signup_method'] ) ) update_user_meta( $user_id, 'rcp_signup_method', $_POST['signup_method'] );
+			if( isset( $_POST['notes'] ) ) update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'] ) );
 		
-			$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&user-updated=1';
 			header ( "Location:" . $url );
+			wp_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id) ); exit;
 		}
 		
 		

@@ -74,7 +74,16 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 					</select>
 					<p class="description"><?php _e( 'Was this a real signup or a membership given to the user', 'rcp' ); ?></p>
 				</td>
-			</tr>	
+			</tr>
+			<tr valign="top">
+				<th scope="row" valign="top">
+					<label for="rcp-notes"><?php _e( 'User Notes', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<textarea name="notes" id="rcp-notes" class="large-text" rows="10" cols="50"><?php echo esc_textarea( get_user_meta( $user->ID, 'rcp_notes', true ) ); ?></textarea>
+					<p class="description"><?php _e( 'Use this area to record notes about this user if needed', 'rcp' ); ?></p>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	<p class="submit">

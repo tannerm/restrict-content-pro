@@ -80,11 +80,20 @@ $user = get_userdata( absint( urldecode( $_GET['view_member'] ) ) );
 		</tr>
 		<tr class="form-field">
 			<th scope="row" valign="top">
+				<?php _e( 'Member Notes', 'rcp' ); ?>
+			</th>
+			<td>
+				<?php echo wpautop( get_user_meta( $user->ID, 'rcp_notes', true ) ); ?>
+			</td>
+		</tr>
+		<tr class="form-field">
+			<th scope="row" valign="top">
 				<?php _e( 'Payments', 'rcp' ); ?>
 			</th>
 			<td>
 				<?php echo rcp_print_user_payments( $user->ID ); ?>
 			</td>
-		</tr>	
+		</tr>
+		
 	</tbody>
 </table>
