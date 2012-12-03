@@ -27,12 +27,12 @@ function rcp_get_subscription_levels( $status = 'all', $cache = true ) {
 	
 		$levels = get_transient( 'rcp_subscription_levels' );
 		if($levels === false) {
-			$levels = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" ) );
+			$levels = $wpdb->get_results( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" );
 			// cache the levels with a 3 hour expiration
 			set_transient( 'rcp_subscription_levels', $levels, 10800 );
 		}
 	} else {
-		$levels = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" ) );
+		$levels = $wpdb->get_results( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" );
 	}	
 		
 	if( $levels )
