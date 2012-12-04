@@ -8,12 +8,12 @@
 function rcp_get_payments( $offset = 0, $number = 20 ) {
 	global $wpdb, $rcp_payments_db_name;
 	if( $number > 0 ) {
-		$payments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $wpdb->escape( $rcp_payments_db_name ) . " ORDER BY id DESC LIMIT " . absint( $offset ) . "," . absint( $number ) . ";" ) );
+		$payments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $wpdb->escape( $rcp_payments_db_name ) . " ORDER BY id DESC LIMIT %d,%d;", absint( $offset ), absint( $number ) ) );
 	} else {
 		// when retrieving all payments, the query is cached
 		$payments = get_transient( 'rcp_payments' );
 		if( $payments === false ) {
-			$payments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $wpdb->escape( $rcp_payments_db_name ) . " ORDER BY id DESC;" ) ); // this is to get all payments
+			$payments = $wpdb->get_results( "SELECT * FROM " . $wpdb->escape( $rcp_payments_db_name ) . " ORDER BY id DESC;" ); // this is to get all payments
 			set_transient( 'rcp_payments', $payments, 10800 );
 		}
 	}
@@ -26,7 +26,7 @@ function rcp_count_payments() {
 	global $wpdb, $rcp_payments_db_name;
 	$count = get_transient( 'rcp_payments_count' );
 	if( $count === false ) {
-		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM " . $rcp_payments_db_name . ";" ) );
+		$count = $wpdb->get_var( "SELECT COUNT(*) FROM " . $rcp_payments_db_name . ";" );
 		set_transient( 'rcp_payments_count', $count, 10800 );
 	}
 	return $count;
@@ -36,7 +36,7 @@ function rcp_get_earnings() {
 	global $wpdb, $rcp_payments_db_name;
 	$payments = get_transient( 'rcp_earnings' );
 	if( $payments === false ) {
-		$payments = $wpdb->get_results( $wpdb->prepare( "SELECT amount FROM " . $rcp_payments_db_name . ";" ) );
+		$payments = $wpdb->get_results( "SELECT amount FROM " . $rcp_payments_db_name . ";" );
 		// cache the payments query
 		set_transient( 'rcp_earnings', $payments, 10800 );
 	}
@@ -96,7 +96,7 @@ function rcp_check_for_existing_payment( $type, $date, $subscription_key ) {
 	
 	global $wpdb, $rcp_payments_db_name;
 
-	if( $wpdb->get_results( $wpdb->prepare("SELECT id FROM " . $rcp_payments_db_name . " WHERE `date`='" . $date . "' AND `subscription_key`='" . $subscription_key . "' AND `payment_type`='" . $type . "';" ) ) )
+	if( $wpdb->get_results( $wpdb->prepare("SELECT id FROM " . $rcp_payments_db_name . " WHERE `date`='%d' AND `subscription_key`='%s' AND `payment_type`='%s';", $date, $subscription_key, $type ) ) )
 		return true; // this payment already exists
 
 	return false; // this payment doesn't exist
