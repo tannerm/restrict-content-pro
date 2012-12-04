@@ -302,7 +302,7 @@ function rcp_has_used_trial( $user_id = null) {
 // retrieves all recorded payments for a user ID
 function rcp_get_user_payments( $user_id ) {
 	global $wpdb, $rcp_payments_db_name;
-	$payments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_payments_db_name . " WHERE `user_id` = '" . $user_id . "';" ) );
+	$payments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_payments_db_name . " WHERE `user_id` = '%d';", $user_id ) );
 	return $payments;
 }
 
