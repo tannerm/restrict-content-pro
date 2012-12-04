@@ -27,12 +27,12 @@ function rcp_get_subscription_levels( $status = 'all', $cache = true ) {
 	
 		$levels = get_transient( 'rcp_subscription_levels' );
 		if($levels === false) {
-			$levels = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" ) );
+			$levels = $wpdb->get_results( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" );
 			// cache the levels with a 3 hour expiration
 			set_transient( 'rcp_subscription_levels', $levels, 10800 );
 		}
 	} else {
-		$levels = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" ) );
+		$levels = $wpdb->get_results( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" );
 	}	
 		
 	if( $levels )
@@ -48,7 +48,7 @@ function rcp_get_subscription_levels( $status = 'all', $cache = true ) {
 */
 function rcp_get_subscription_details( $id ) {
 	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_db_name . " WHERE id='" . $id . "';" ) );
+	$level = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_db_name . " WHERE id='%d';", $id ) );
 	if( $level )
 		return $level[0];
 	return false;
@@ -61,7 +61,7 @@ function rcp_get_subscription_details( $id ) {
 */
 function rcp_get_subscription_details_by_name( $name ) {
 	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_db_name . " WHERE name='" . $name . "';" ) );
+	$level = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_db_name . " WHERE name='%s';", $name ) );
 	if( $level )
 		return $level[0];
 	return false;
@@ -74,7 +74,7 @@ function rcp_get_subscription_details_by_name( $name ) {
 */
 function rcp_get_subscription_name( $id ) {
 	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results( $wpdb->prepare( "SELECT name FROM " . $rcp_db_name . " WHERE id='" . $id . "';" ) );
+	$level = $wpdb->get_results( $wpdb->prepare( "SELECT name FROM " . $rcp_db_name . " WHERE id='%d';", $id ) );
 	if( $level ) {
 		return utf8_decode( $level[0]->name );
 	} else {
@@ -89,7 +89,7 @@ function rcp_get_subscription_name( $id ) {
 */
 function rcp_get_subscription_length( $id ) {
 	global $wpdb, $rcp_db_name;
-	$level_length = $wpdb->get_results( $wpdb->prepare( "SELECT duration, duration_unit FROM " . $rcp_db_name . " WHERE id='" . $id . "';" ) );
+	$level_length = $wpdb->get_results( $wpdb->prepare( "SELECT duration, duration_unit FROM " . $rcp_db_name . " WHERE id='%d';", $id ) );
 	if( $level_length )
 		return $level_length[0];
 	return false;
@@ -116,7 +116,7 @@ function rcp_calculate_subscription_expiration( $id ) {
 */
 function rcp_get_subscription_price( $id ) {
 	global $wpdb, $rcp_db_name;
-	$price = $wpdb->get_results( $wpdb->prepare( "SELECT price FROM " . $rcp_db_name . " WHERE id='" . $id . "';" ) );
+	$price = $wpdb->get_results( $wpdb->prepare( "SELECT price FROM " . $rcp_db_name . " WHERE id='%d';", $id ) );
 	if( $price )
 		return $price[0]->price;
 	return false;
@@ -129,7 +129,7 @@ function rcp_get_subscription_price( $id ) {
 */
 function rcp_get_subscription_access_level( $id ) {
 	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results( $wpdb->prepare( "SELECT level FROM " . $rcp_db_name . " WHERE id='" . $id . "';" ) );
+	$level = $wpdb->get_results( $wpdb->prepare( "SELECT level FROM " . $rcp_db_name . " WHERE id='%d';", $id ) );
 	if( $level )
 		return $level[0]->level;
 	return 0;
@@ -165,7 +165,7 @@ function rcp_count_members( $level = '', $status = 'active' ) {
 				;"
 			, $level ));
 		else :
-			$count = $wpdb->get_var( $wpdb->prepare(
+			$count = $wpdb->get_var(
 				"SELECT COUNT(*) FROM $wpdb->users
 				LEFT JOIN $wpdb->usermeta ON $wpdb->users.ID = $wpdb->usermeta.user_id
 				WHERE meta_key = 'rcp_status'
@@ -174,7 +174,7 @@ function rcp_count_members( $level = '', $status = 'active' ) {
 				AND meta_value != 'expired'
 				AND meta_value != 'cancelled'
 				;"
-			));
+			);
 		endif;
 		
 	} else {
