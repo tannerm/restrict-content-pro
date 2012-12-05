@@ -110,7 +110,6 @@ add_action( 'init', 'rcp_load_textdomain' );
 
 
 // global includes
-
 include( RCP_PLUGIN_DIR . 'includes/gateways/paypal/paypal.php' );
 include( RCP_PLUGIN_DIR . 'includes/misc-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/scripts.php' );
@@ -124,6 +123,9 @@ include( RCP_PLUGIN_DIR . 'includes/handle-registration-login.php' );
 include( RCP_PLUGIN_DIR . 'includes/gateway-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/cron-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/ajax-actions.php' );
+if( !class_exists( 'WP_Logging' ) ) {
+	include( RCP_PLUGIN_DIR . 'includes/class-wp-logging.php' );
+}
 
 // admin only includes
 if( is_admin() ) {
