@@ -117,6 +117,20 @@ function rcp_check_ipn() {
 		if( $posted['txn_type'] == 'web_accept' || $posted['txn_type'] == 'subscr_payment' ) {
 			// only check for an existing payment if this is a payment IPD request
 			if( rcp_check_for_existing_payment( $posted['txn_type'], $posted['payment_date'], $subscription_key ) ) {
+
+				$log_data = array(
+				    'post_title'    => __( 'Duplicate Payment', 'rcp' ),
+				    'post_content'  =>  __( 'A duplicate payment was detected. The new payment was still recorded, so you may want to check into both payments.', 'rcp' ),
+				    'post_parent'   => 0,
+				    'log_type'      => 'gateway_error'
+				);
+
+				$log_meta = array(
+				    'user_subscription' => $posted['item_name'],
+				    'user_id'           => $user_id
+				);
+				$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
+
 				//return; // this IPN request has already been processed
 			}
 		}
@@ -129,16 +143,58 @@ function rcp_check_ipn() {
 		
 		if ( $amount != $subscription_price && $amount2 != $subscription_price ) {	
 			// the subscription price doesn't match, so lets check to see if it matches with a discount code
-			if( !rcp_check_paypal_return_price_after_discount( $subscription_price, $amount, $amount2, $user_id ) ) {
+			if( ! rcp_check_paypal_return_price_after_discount( $subscription_price, $amount, $amount2, $user_id ) ) {
+				
+				$log_data = array(
+				    'post_title'    => __( 'Price Mismatch', 'rcp' ),
+				    'post_content'  =>  sprintf( __( 'The price in an IPN request did not match the subscription price. Payment data: %s', 'rcp' ), json_encode( $payment_data ) ),
+				    'post_parent'   => 0,
+				    'log_type'      => 'gateway_error'
+				);
+
+				$log_meta = array(
+				    'user_subscription' => $posted['item_name'],
+				    'user_id'           => $user_id
+				);
+				$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
+
 				return;
 			}
 		}
 		if( rcp_get_subscription_key( $user_id ) != $subscription_key ) {
 			// the subscription key is invalid
+
+			$log_data = array(
+			    'post_title'    => __( 'Subscription Key Mismatch', 'rcp' ),
+			    'post_content'  =>  sprintf( __( 'The subscription key in an IPN request did not match the subscription key recorded for the user. Payment data: %s', 'rcp' ), json_encode( $payment_data ) ),
+			    'post_parent'   => 0,
+			    'log_type'      => 'gateway_error'
+			);
+
+			$log_meta = array(
+			    'user_subscription' => $posted['item_name'],
+			    'user_id'           => $user_id
+			);
+			$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
+
 			return;
 		}
 		if( strtolower( $currency_code ) != strtolower( $rcp_options['currency'] ) ) {
 			// the currency code is invalid
+
+			$log_data = array(
+			    'post_title'    => __( 'Invalid Currency Code', 'rcp' ),
+			    'post_content'  =>  sprintf( __( 'The currency code in an IPN request did not match the site currency code. Payment data: %s', 'rcp' ), json_encode( $payment_data ) ),
+			    'post_parent'   => 0,
+			    'log_type'      => 'gateway_error'
+			);
+
+			$log_meta = array(
+			    'user_subscription' => $posted['item_name'],
+			    'user_id'           => $user_id
+			);
+			$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
+
 			return;
 		}
 

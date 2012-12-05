@@ -180,3 +180,24 @@ function rcp_get_current_url() {
 
 	return apply_filters( 'rcp_current_url', $current_url );
 }
+
+
+/**
+ * Log Types
+ *
+ * Sets up the valid log types for WP_Logging
+ *
+ * @access      private
+ * @since       1.3.4
+ * @return      array
+*/
+
+function rcp_log_types( $types ) {
+
+    $types = array(
+    	'gateway_error'
+    );
+    return $types;
+
+}
+add_filter( 'wp_log_types', 'rcp_log_types' );
