@@ -12,12 +12,15 @@ function rcp_is_paid_content( $post_id ) {
 	if ( $post_id == '' || !is_int( $post_id ) )
 		$post_id = get_the_ID();
 
+	$return = false;
+
 	$is_paid = get_post_meta( $post_id, '_is_paid', true );
 	if ( $is_paid ) {
 		// this post is for paid users only
-		return true;
+		$return = true;
 	}
-	return false;
+
+	return (bool) apply_filters( 'rcp_is_paid_content', $return, $post_id );
 }
 
 
