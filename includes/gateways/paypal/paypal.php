@@ -225,15 +225,13 @@ function rcp_check_ipn() {
 				do_action('rcp_ipn_subscr_eot' );
 
 			break;
-			default;
-			break;
-		endswitch;
-		
-		// Single Payments
-		switch ($posted['txn_type']) :
 			
 			case "cart" :
+				return; // get out of here
+
 			case "express_checkout" :
+				return; // get out of here
+			
 			case "web_accept" :
 				
 				switch ( strtolower( $payment_status ) ) :
