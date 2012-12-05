@@ -1,5 +1,13 @@
 <?php
 
+
+/**
+ * Checks whether the post is Paid Only
+ *
+ * @access      private
+ * @return      bool
+*/
+
 function rcp_is_paid_content( $post_id ) {
 	if ( $post_id == '' || !is_int( $post_id ) )
 		$post_id = get_the_ID();
@@ -11,6 +19,14 @@ function rcp_is_paid_content( $post_id ) {
 	}
 	return false;
 }
+
+
+/**
+ * Retrieve a list of all Paid Only posts
+ *
+ * @access      public
+ * @return      array
+*/
 
 function rcp_get_paid_posts() {
 	$paid_ids = array();
@@ -24,6 +40,14 @@ function rcp_get_paid_posts() {
 	return $paid_ids;
 }
 
+
+/**
+ * Apply the currency sign to a price
+ *
+ * @access      public
+ * @return      string
+*/
+
 function rcp_currency_filter( $price ) {
 	global $rcp_options;
 	$currency = isset( $rcp_options['currency'] ) ? $rcp_options['currency'] : 'USD';
@@ -31,41 +55,49 @@ function rcp_currency_filter( $price ) {
 	if ( $position == 'before' ) :
 		switch ( $currency ) :
 		case "GBP" : return '&pound;' . $price; break;
-case "USD" :
-case "AUD" :
-case "BRL" :
-case "CAD" :
-case "HKD" :
-case "MXN" :
-case "SGD" :
-	return '&#36;' . $price;
-	break;
-case "JPY" : return '&yen;' . $price; break;
-default :
-	$formatted = $currency . ' ' . $price;
-	return apply_filters( 'rcp_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
-	break;
-	endswitch;
-	else :
-		switch ( $currency ) :
-		case "GBP" : return $price . '&pound;'; break;
-case "USD" :
-case "AUD" :
-case "BRL" :
-case "CAD" :
-case "HKD" :
-case "MXN" :
-case "SGD" :
-	return $price . '&#36;';
-	break;
-case "JPY" : return $price . '&yen;'; break;
-default :
+		case "USD" :
+		case "AUD" :
+		case "BRL" :
+		case "CAD" :
+		case "HKD" :
+		case "MXN" :
+		case "SGD" :
+			return '&#36;' . $price;
+			break;
+		case "JPY" : return '&yen;' . $price; break;
+		default :
+			$formatted = $currency . ' ' . $price;
+			return apply_filters( 'rcp_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
+			break;
+			endswitch;
+			else :
+				switch ( $currency ) :
+				case "GBP" : return $price . '&pound;'; break;
+		case "USD" :
+		case "AUD" :
+		case "BRL" :
+		case "CAD" :
+		case "HKD" :
+		case "MXN" :
+		case "SGD" :
+			return $price . '&#36;';
+			break;
+		case "JPY" : return $price . '&yen;'; break;
+		default :
 	$formatted = $price . ' ' . $currency;
 	return apply_filters( 'rcp_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
 	break;
 	endswitch;
 	endif;
 }
+
+
+/**
+ * Get the currency list
+ *
+ * @access      private
+ * @return      array
+*/
 
 function rcp_get_currencies() {
 	$currencies = array(
@@ -97,15 +129,32 @@ function rcp_get_currencies() {
 	return apply_filters( 'rcp_currencies', $currencies );
 }
 
-// reverse of strstr()
+
+/**
+ * reverse of strstr()
+ *
+ * @access      private
+ * @return      string
+*/
+
 function rcp_rstrstr( $haystack, $needle ) {
 	return substr( $haystack, 0, strpos( $haystack, $needle ) );
 }
 
-// checks whether an integer is odd
+
+/**
+ * Is odd?
+ *
+ * Checks if a number is odd
+ *
+ * @access      private
+ * @return      bool
+*/
+
 function rcp_is_odd( $int ) {
 	return $int & 1;
 }
+
 
 /*
 * Gets the excerpt of a specific post ID or object
@@ -114,6 +163,7 @@ function rcp_is_odd( $int ) {
 * @param - $tags - string - the allowed HTML tags. These will not be stripped out
 * @param - $extra - string - text to append to the end of the excerpt
 */
+
 function rcp_excerpt_by_id( $post, $length = 50, $tags = '<a><em><strong><blockquote><ul><ol><li><p>', $extra = ' . . .' ) {
 
 	if ( is_int( $post ) ) {
@@ -148,13 +198,29 @@ function rcp_excerpt_by_id( $post, $length = 50, $tags = '<a><em><strong><blockq
 	return wpautop( $the_excerpt );
 }
 
-// this is just a sample function to change the length of the excerpts
+
+/**
+ * The default length for excerpts
+ *
+ * @access      private
+ * @return      string
+*/
+
 function rcp_excerpt_length( $excerpt_length ) {
 	// the number of words to show in the excerpt
 	return 100;
 }
 add_filter( 'rcp_filter_excerpt_length', 'rcp_excerpt_length' );
 
+
+/**
+ * Get current URL
+ *
+ * Returns the URL to the current page, including detection for https
+ *
+ * @access      private
+ * @return      string
+*/
 
 function rcp_get_current_url() {
 	global $post;
