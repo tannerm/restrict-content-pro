@@ -193,7 +193,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[redirect]"><?php _e( 'Redirect Page', 'rcp' ); ?></label>
+								<label for="rcp_settings[redirect]"><?php _e( 'Success Page', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<select id="rcp_settings[redirect]" name="rcp_settings[redirect]">
