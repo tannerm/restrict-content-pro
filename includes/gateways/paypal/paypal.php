@@ -131,7 +131,7 @@ function rcp_check_ipn() {
 				);
 				$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
 
-				//return; // this IPN request has already been processed
+				return; // this IPN request has already been processed
 			}
 		}
 
