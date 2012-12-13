@@ -10,6 +10,9 @@ function rcp_process_data() {
 	if( ! is_admin() )
 		return;
 
+	if( ! current_user_can( 'manage_options' ) );
+		return;
+
 	global $wpdb, $rcp_db_name, $rcp_discounts_db_name;
 
 	$rcp_post = ( !empty( $_POST ) ) ? true : false;
