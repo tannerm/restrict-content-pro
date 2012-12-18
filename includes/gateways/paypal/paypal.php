@@ -93,13 +93,23 @@ function rcp_check_ipn() {
 		$posted = apply_filters('rcp_ipn_post', $_POST); // allow $_POST to be modified
 
 		$user_id 			= $posted['custom'];
+		$subscription_name 	= $posted['item_name'];
 		$subscription_key 	= $posted['item_number'];
 		$amount 			= number_format( (float) $posted['mc_gross'], 2 );
 		$amount2 			= number_format( (float) $posted['mc_amount3'], 2 );
 		$payment_status 	= $posted['payment_status'];
 		$currency_code		= $posted['mc_currency'];
+		$subscription_id    = rcp_get_subscription_id( $user_id );
 		$subscription_price = number_format( (float) rcp_get_subscription_price( rcp_get_subscription_id( $user_id ) ), 2) ;
 		
+		$user_data          = get_userdata( $user_id );
+
+		if( ! $user_data || ! $subscription_id )
+			return;
+
+		if( ! rcp_get_subscription_details_by_name( $subscription_name ) )
+			return;
+
 		// setup the payment info in an array for storage
 		$payment_data = array(
 			'date' 				=> date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'] ) ),
