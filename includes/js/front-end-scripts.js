@@ -14,7 +14,7 @@ jQuery(document).ready(function($) {
 				form.submit();
 			}
 		});
-		
+
 		$("#rcp_password_form").validate({
 			rules: {
 				rcp_user_pass_confirm: {
@@ -27,10 +27,10 @@ jQuery(document).ready(function($) {
 			}
 		});
 	}
-	
+
 	if($('#rcp_payment_gateways').length > 0 ) {
 		// show the Select Payment method option
-		$('.rcp_level').change(function() {	
+		$('.rcp_level').change(function() {
 			var price = parseInt( $(this).attr('rel') );
 			if(price > 0) {
 				$('#rcp_payment_gateways').show(200);
@@ -38,7 +38,7 @@ jQuery(document).ready(function($) {
 				$('#rcp_payment_gateways').hide(200);
 			}
 		});
-		if( parseInt( $('#rcp_subscription_levels input:checked').attr('rel') ) == 0 ) {	
+		if( parseInt( $('#rcp_subscription_levels input:checked').attr('rel') ) == 0 ) {
 			$('#rcp_payment_gateways').hide(200);
 		} else {
 			$('#rcp_payment_gateways').show(200);
@@ -63,23 +63,18 @@ jQuery(document).ready(function($) {
 		}
 	});
 
-	if( parseInt( $('#rcp_subscription_levels input:checked').attr('rel') ) == 0 ) {	
+	if( parseInt( $('#rcp_subscription_levels input:checked').attr('rel') ) == 0 ) {
 		$('#rcp_auto_renew_wrap').hide();
 		$('#rcp_auto_renew_wrap input').attr('checked', false);
 		$('#rcp_discount_code_wrap').hide();
 		$('#rcp_discount_code_wrap input').val('');
-	} else {
-		$('#rcp_auto_renew_wrap').show();
-		$('#rcp_discount_code_wrap').show();
-	}
-
-	if( $('#rcp_subscription_levels input:checked') == 'forever' ) {
+	} else if( $('#rcp_subscription_levels input:checked') == 'forever' ) {
 		$('#rcp_auto_renew_wrap').hide();
 		$('#rcp_auto_renew_wrap input').attr('checked', false);
 	} else {
 		$('#rcp_auto_renew_wrap').show();
+		$('#rcp_discount_code_wrap').show();
 	}
-
 
 	$('#rcp_discount_code').keyup(function(key) {
 		if(key.which != 13) {
