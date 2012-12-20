@@ -3,7 +3,7 @@
 Plugin Name: Restrict Content Pro
 Plugin URL: http://pippinsplugins.com/restrict-content-pro-premium-content-plugin
 Description: Setup a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
-Version: 1.4.1
+Version: 1.4.2
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
 Contributors: mordauk
@@ -19,7 +19,7 @@ if ( !defined( 'RCP_PLUGIN_FILE' ) ) {
 	define( 'RCP_PLUGIN_FILE', __FILE__ );
 }
 if ( !defined( 'RCP_PLUGIN_VERSION' ) ) {
-	define( 'RCP_PLUGIN_VERSION', '1.4.1' );
+	define( 'RCP_PLUGIN_VERSION', '1.4.2' );
 }
 
 
@@ -149,9 +149,9 @@ if( is_admin() ) {
 	include( RCP_PLUGIN_DIR . 'includes/metabox.php' );
 	include( RCP_PLUGIN_DIR . 'includes/process-data.php' );
 	include( RCP_PLUGIN_DIR . 'includes/export-functions.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-notices.php' );	
-	include( RCP_PLUGIN_DIR . 'includes/admin-ajax-actions.php' );	
-	
+	include( RCP_PLUGIN_DIR . 'includes/admin-notices.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin-ajax-actions.php' );
+
 	// setup the plugin updater
 	$rcp_updater = new Custom_Plugin_Updater( 'http://pippinsplugins.com/updater/api/', RCP_PLUGIN_FILE, array( 'version' => RCP_PLUGIN_VERSION ) );
 
@@ -163,7 +163,7 @@ if( is_admin() ) {
 	include( RCP_PLUGIN_DIR . 'includes/content-filters.php' );
 	include( RCP_PLUGIN_DIR . 'includes/feed-functions.php' );
 	if( isset( $rcp_options['enable_recaptcha'] ) ) {
-		require_once( RCP_PLUGIN_DIR . 'includes/captcha-functions.php' );		
+		require_once( RCP_PLUGIN_DIR . 'includes/captcha-functions.php' );
 	}
 	include( RCP_PLUGIN_DIR . 'includes/user-checks.php' );
 	include( RCP_PLUGIN_DIR . 'includes/query-filters.php' );
