@@ -142,7 +142,7 @@ include( RCP_PLUGIN_DIR . 'includes/member-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/discount-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/subscription-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/email-functions.php' );
-include( RCP_PLUGIN_DIR . 'includes/payment-tracking-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/payments.php' );
 include( RCP_PLUGIN_DIR . 'includes/handle-registration-login.php' );
 include( RCP_PLUGIN_DIR . 'includes/gateway-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/cron-functions.php' );
