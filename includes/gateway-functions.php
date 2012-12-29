@@ -1,9 +1,14 @@
 <?php
 
-// returns a list of all available gateways
+/**
+ * Register default payment gateways
+ *
+ * @access      private
+ * @return      array
+*/
+
 function rcp_get_payment_gateways() {
 
-	// default, built-in gateways
 	$gateways = array(
 		'paypal' => 'PayPal'
 	);
@@ -11,7 +16,14 @@ function rcp_get_payment_gateways() {
 	return $apply_filters( 'rcp_payment_gateways', $gateways );
 }
 
-// returns a list of all enabled gateways
+
+/**
+ * Return list of active gateways
+ *
+ * @access      private
+ * @return      array
+*/
+
 function rcp_get_enabled_payment_gateways() {
 	global $rcp_options;
 	$gateways = rcp_get_payment_gateways();
@@ -30,7 +42,13 @@ function rcp_get_enabled_payment_gateways() {
 }
 
 
-// sends the registration data to the specified gateway
+/**
+ * Send payment / subscription data to gateway
+ *
+ * @access      private
+ * @return      array
+*/
+
 function rcp_send_to_gateway( $gateway, $subscription_data ) {
 	do_action( 'rcp_gateway_' . $gateway, $subscription_data );
 }
