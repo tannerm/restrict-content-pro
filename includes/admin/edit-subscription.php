@@ -2,7 +2,7 @@
 $level = rcp_get_subscription_details( absint( urldecode( $_GET['edit_subscription'] ) ) );
 ?>
 <h2>
-	<?php _e( 'Edit Subscription Level:', 'rcp' ); echo ' ' . utf8_decode( $level->name ); ?> - 
+	<?php _e( 'Edit Subscription Level:', 'rcp' ); echo ' ' . utf8_decode( stripslashes( $level->name ) ); ?> -
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-member-levels' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
@@ -37,7 +37,7 @@ $level = rcp_get_subscription_details( absint( urldecode( $_GET['edit_subscripti
 						<?php
 						foreach( rcp_get_access_levels() as $access ) {
 							echo '<option value="' . absint( $access ) . '" ' . selected( $access, $level->level, false ) . '">' . esc_html( $access ) . '</option>';
-						}	
+						}
 						?>
 					</select>
 					<p class="description"><?php _e( 'Level of access this subscription gives.', 'rcp' ); ?></p>
