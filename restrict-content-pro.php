@@ -135,22 +135,22 @@ if( is_admin() ) {
 	}
 	require( RCP_PLUGIN_DIR . 'includes/install.php' );
 	include( RCP_PLUGIN_DIR . 'includes/upgrades.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-pages.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-pages/screen-options.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-pages/members-page.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-pages/settings.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-pages/subscription-levels.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-pages/discount-codes.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-pages/help-menus.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-pages/payments-page.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-pages/export.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-pages/help-page.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/menu-links.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/admin-notices.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/admin-ajax-actions.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/screen-options.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/members-page.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/settings.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/subscription-levels.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/discount-codes.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/help-menus.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/payments-page.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/export.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/help-page.php' );
 	include( RCP_PLUGIN_DIR . 'includes/user-page-columns.php' );
 	include( RCP_PLUGIN_DIR . 'includes/metabox.php' );
 	include( RCP_PLUGIN_DIR . 'includes/process-data.php' );
 	include( RCP_PLUGIN_DIR . 'includes/export-functions.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-notices.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin-ajax-actions.php' );
 
 	// setup the plugin updater
 	$rcp_updater = new Custom_Plugin_Updater( 'http://pippinsplugins.com/updater/api/', RCP_PLUGIN_FILE, array( 'version' => RCP_PLUGIN_VERSION ) );
