@@ -99,7 +99,31 @@ global $rcp_help_page;
 *******************************************/
 
 function rcp_load_textdomain() {
-	load_plugin_textdomain( 'rcp', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
+	// Set filter for plugin's languages directory
+	$rcp_lang_dir = dirname( plugin_basename( RCP_PLUGIN_FILE ) ) . '/languages/';
+	$rcp_lang_dir = apply_filters( 'rcp_languages_directory', $rcp_lang_dir );
+
+
+	// Traditional WordPress plugin locale filter
+	$locale        = apply_filters( 'plugin_locale',  get_locale(), 'rcp' );
+	$mofile        = sprintf( '%1$s-%2$s.mo', 'rcp', $locale );
+
+	// Setup paths to current locale file
+	$mofile_local  = $rcp_lang_dir . $mofile;
+	$mofile_global = WP_LANG_DIR . '/rcp/' . $mofile;
+
+	if ( file_exists( $mofile_global ) ) {
+		// Look in global /wp-content/languages/rcp folder
+		load_textdomain( 'rcp', $mofile_global );
+	} elseif ( file_exists( $mofile_local ) ) {
+		// Look in local /wp-content/plugins/easy-digital-downloads/languages/ folder
+		load_textdomain( 'rcp', $mofile_local );
+	} else {
+		// Load the default language files
+		load_plugin_textdomain( 'rcp', false, $rcp_lang_dir );
+	}
+
 }
 add_action( 'init', 'rcp_load_textdomain' );
 
