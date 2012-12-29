@@ -13,7 +13,7 @@ function rcp_get_payment_gateways() {
 		'paypal' => 'PayPal'
 	);
 
-	return $apply_filters( 'rcp_payment_gateways', $gateways );
+	return apply_filters( 'rcp_payment_gateways', $gateways );
 }
 
 
