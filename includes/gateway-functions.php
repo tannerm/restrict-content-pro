@@ -2,15 +2,13 @@
 
 // returns a list of all available gateways
 function rcp_get_payment_gateways() {
-	
+
 	// default, built-in gateways
 	$gateways = array(
 		'paypal' => 'PayPal'
 	);
-	
-	$gateways = apply_filters( 'rcp_payment_gateways', $gateways );
-	
-	return $gateways;
+
+	return $apply_filters( 'rcp_payment_gateways', $gateways );
 }
 
 // returns a list of all enabled gateways
