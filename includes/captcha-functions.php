@@ -2,12 +2,12 @@
 
 
 if( ! function_exists( 'recaptcha_get_html' ) ) {
-	require_once( RCP_PLUGIN_DIR . 'includes/recaptchalib.php' );
+	require_once( RCP_PLUGIN_DIR . 'includes/libraries/recaptchalib.php' );
 }
 
 function rcp_show_captcha() {
 	global $rcp_options;
-	// reCaptcha		
+	// reCaptcha
 	if( isset( $rcp_options['enable_recaptcha'] ) ) {
 		$publickey = trim( $rcp_options['recaptcha_public_key'] );
 		$ssl = isset( $rcp_options['ssl'] );
