@@ -1,7 +1,7 @@
 <?php
 
 /****************************************
-* Functions for getting non-member 
+* Functions for getting non-member
 * specific info about subscription
 * levels
 *****************************************/
@@ -14,17 +14,17 @@
 */
 function rcp_get_subscription_levels( $status = 'all', $cache = true ) {
 	global $wpdb, $rcp_db_name;
-	
+
 	if( $status == 'active' ) {
 		$where = "WHERE `status` !='inactive'";
 	} elseif( $status == 'inactive' ) {
 		$where = "WHERE `status` ='{$status}'";
 	} else {
 		$where = "";
-	}		
-	
+	}
+
 	if( $cache ) {
-	
+
 		$levels = get_transient( 'rcp_subscription_levels' );
 		if($levels === false) {
 			$levels = $wpdb->get_results( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" );
@@ -33,8 +33,8 @@ function rcp_get_subscription_levels( $status = 'all', $cache = true ) {
 		}
 	} else {
 		$levels = $wpdb->get_results( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" );
-	}	
-		
+	}
+
 	if( $levels )
 		return $levels;
 	else
@@ -102,7 +102,7 @@ function rcp_get_subscription_length( $id ) {
 */
 function rcp_calculate_subscription_expiration( $id ) {
 	global $wpdb, $rcp_db_name;
-	
+
 	$length = rcp_get_subscription_length( $id );
 	$expiration = date( 'Y-m-d H:i:s', strtotime( '+' . $length->duration . ' ' . $length->duration_unit . ' 23:59:59'  ) );
 
@@ -112,7 +112,7 @@ function rcp_calculate_subscription_expiration( $id ) {
 /*
 * Gets the price of a subscription level
 * @param int $id - the ID of the subscription level to retrieve
-* return mixed - price of subscription level, false on failure 
+* return mixed - price of subscription level, false on failure
 */
 function rcp_get_subscription_price( $id ) {
 	global $wpdb, $rcp_db_name;
@@ -142,11 +142,11 @@ function rcp_get_subscription_access_level( $id ) {
 * @param string - the status to count
 * return int - the number of members for the specified subscription level and status
 */
-function rcp_count_members( $level = '', $status = 'active' ) {	
+function rcp_count_members( $level = '', $status = 'active' ) {
 	global $wpdb;
-	
+
 	if( $status == 'free' ) {
-	
+
 		if (strlen(trim($level)) > 0) :
 			$count = $wpdb->get_var( $wpdb->prepare(
 				"SELECT COUNT(*) FROM $wpdb->users
@@ -176,9 +176,9 @@ function rcp_count_members( $level = '', $status = 'active' ) {
 				;"
 			);
 		endif;
-		
+
 	} else {
-		
+
 		if (strlen(trim($level)) > 0) :
 			$count = $wpdb->get_var( $wpdb->prepare(
 				"SELECT COUNT(*) FROM $wpdb->users
@@ -200,8 +200,8 @@ function rcp_count_members( $level = '', $status = 'active' ) {
 				WHERE meta_key = 'rcp_status'
 				AND meta_value = '$status';"
 			, $level ));
-		endif;	
-			
+		endif;
+
 	}
 	return $count;
 }
@@ -212,11 +212,11 @@ function rcp_count_members( $level = '', $status = 'active' ) {
 * @param mixed $fields - the user fields to restrieve. String or array
 * return array - an array of user objects
 */
-function rcp_get_members_of_subscription( $id = 1, $fields = 'ID') {	
+function rcp_get_members_of_subscription( $id = 1, $fields = 'ID') {
 	$members = get_users(array(
-			'meta_key' 		=> 'rcp_subscription_level', 
-			'meta_value' 	=> $id, 
-			'number' 		=> 0, 
+			'meta_key' 		=> 'rcp_subscription_level',
+			'meta_value' 	=> $id,
+			'number' 		=> 0,
 			'fields' 		=> $fields,
 			'count_total' 	=> false
 		)
@@ -255,7 +255,7 @@ function rcp_filter_duration_unit( $unit, $length ) {
 }
 
 /*
-* Checks to see if there are any paid subscription levels created 
+* Checks to see if there are any paid subscription levels created
 *
 * @since 1.1.9
 * @return boolean - TRUE if paid levels exist, false if only free
@@ -264,9 +264,9 @@ function rcp_has_paid_levels() {
 	$levels = rcp_get_subscription_levels();
 	if( $levels ) {
 		foreach( $levels as $level ) {
-			if( $level->price > 0 )
-				return true;	
-		}	
+			if( $level->price > 0 && $level->status == 'active' )
+				return true;
+		}
 	}
 	return false;
 }

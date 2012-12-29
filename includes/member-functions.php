@@ -1,7 +1,7 @@
 <?php
 
 /****************************************
-* Functions for getting member info 
+* Functions for getting member info
 *****************************************/
 
 /*
@@ -13,10 +13,10 @@
 * @param string $order - the order in which to display users: ASC / DESC
 * Return array
 */
-function rcp_get_members( $status = 'active', $subscription = null, $offset = 0, $number = -1, $order = 'DESC') {	
-	
+function rcp_get_members( $status = 'active', $subscription = null, $offset = 0, $number = -1, $order = 'DESC') {
+
 	global $wpdb;
-	
+
 	$members = get_users( array(
 		'meta_query' => array(
 			array(
@@ -28,17 +28,17 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 				'value' => $subscription
 			)
 		),
-		'offset' => $offset, 
-		'number' => $number, 
+		'offset' => $offset,
+		'number' => $number,
 		'count_total' => false,
 		'orderby' => 'ID',
 		'order' => $order
 		)
 	);
-	
+
 	if( !empty( $members ) )
 		return $members;
-	
+
 	return false;
 }
 
@@ -87,12 +87,12 @@ function rcp_get_subscription( $user_id ) {
 * return bool - TRUE if the user is recurring, false otherwise
 */
 function rcp_is_recurring( $user_id = null ) {
-	
+
 	if( $user_id == null && is_user_logged_in() ) {
 		global $user_ID;
 		$user_id = $user_ID;
 	}
-	
+
 	$recurring = get_user_meta( $user_id, 'rcp_recurring', true );
 	if( $recurring == 'yes' ) {
 		return true;
@@ -107,12 +107,12 @@ function rcp_is_recurring( $user_id = null ) {
 * return bool - TRUE if the user is expired, false otherwise
 */
 function rcp_is_expired( $user_id = null ) {
-	
+
 	if( $user_id == null && is_user_logged_in() ) {
 		global $user_ID;
 		$user_id = $user_ID;
 	}
-	
+
 	$expiration = get_user_meta( $user_id, 'rcp_expiration', true );
 	if( $expiration == 'none' ) {
 		return false;
@@ -129,12 +129,12 @@ function rcp_is_expired( $user_id = null ) {
 * return bool - TRUE if the user has an active, paid subscription (or is trialing), false otherwise
 */
 function rcp_is_active( $user_id = null ) {
-	
+
 	if( $user_id == null && is_user_logged_in() ) {
 		global $user_ID;
 		$user_id = $user_ID;
 	}
-	
+
 	if( !rcp_is_expired( $user_id ) && rcp_get_status( $user_id ) == 'active' && strlen( trim( rcp_get_subscription( $user_id ) ) ) > 0 ) {
 		return true;
 	}
@@ -147,12 +147,12 @@ function rcp_is_active( $user_id = null ) {
 * return bool - TRUE if the user has an active, paid subscription (or is trialing), false otherwise
 */
 function rcp_is_paid_user( $user_id = null) {
-	
+
 	if( $user_id == null && is_user_logged_in() ) {
 		global $user_ID;
 		$user_id = $user_ID;
 	}
-	
+
 	if( rcp_is_active( $user_id ) ) {
 		return true;
 	}
@@ -163,15 +163,15 @@ function rcp_is_paid_user( $user_id = null) {
 * returns true if the user's subscription gives access to the provided access level
 */
 function rcp_user_has_access( $user_id, $access_level_needed) {
-	
+
 	$subscription_level = rcp_get_subscription_id( $user_id );
 	$user_access_level = rcp_get_subscription_access_level( $subscription_level );
-	
+
 	if( ( $user_access_level >= $access_level_needed ) || $access_level_needed == 0 ) {
 		// the user has access
 		return true;
-	}	
-	
+	}
+
 	// the user does not have access
 	return false;
 }
@@ -215,7 +215,7 @@ function rcp_get_expiration_timestamp( $user_id ) {
 */
 function rcp_get_status( $user_id ) {
 	$status = get_user_meta( $user_id, 'rcp_status', true);
-	
+
 	// double check that the status and expiration match. Update if needed
 	if( $status == 'active' && rcp_is_expired( $user_id ) ) {
 		update_user_meta( $user_id, 'rcp_status', 'expired' );
@@ -233,7 +233,7 @@ function rcp_get_status( $user_id ) {
 function rcp_print_status( $user_id ) {
 	$status = rcp_get_status( $user_id );
 	switch ( $status ) :
-	
+
 		case 'active';
 			$print_status = __( 'Active', 'rcp' );
 		break;
@@ -249,9 +249,9 @@ function rcp_print_status( $user_id ) {
 		default:
 			$print_status = __( 'Free', 'rcp' );
 		break;
-	
+
 	endswitch;
-	
+
 	return $print_status;
 }
 
@@ -287,12 +287,12 @@ function rcp_get_subscription_key( $user_id ) {
 * return bool - TRUE if the user has trialed, false otherwise
 */
 function rcp_has_used_trial( $user_id = null) {
-	
+
 	if( $user_id == null && is_user_logged_in() ) {
 		global $user_ID;
 		$user_id = $user_ID;
 	}
-	
+
 	if( get_user_meta( $user_id, 'rcp_has_trialed', true) == 'yes' ) {
 		return true;
 	}
@@ -333,9 +333,9 @@ function rcp_print_user_payments( $user_id ) {
 
 // returns the role of the specified user
 function rcp_get_user_role( $user_id ) {
-	
+
 	global $wpdb;
-	
+
 	$user = get_userdata( $user_id );
 	$capabilities = $user->{$wpdb->prefix . 'capabilities'};
 
@@ -346,5 +346,28 @@ function rcp_get_user_role( $user_id ) {
 
 	   if ( array_key_exists( $role, $capabilities ) )
 	   return $role;
-	}	
+	}
+}
+
+
+/**
+ * Determine if it's possible to upgrade a user's subscription
+ *
+ * @since       v1.5
+ * @access      public
+ * @param       $user_id INT the ID of the user to check
+ * @return      bool
+*/
+
+function rcp_subscription_upgrade_possible( $user_id = 0 ) {
+
+	if( empty( $user_id ) )
+		$user_id = get_current_user_id();
+
+	$ret = false;
+
+	if( ! rcp_is_active( $user_id ) && rcp_has_paid_levels() )
+		$ret = true;
+
+	return (bool) apply_filters( 'rcp_can_upgrade_subscription', $ret, $user_id );
 }
