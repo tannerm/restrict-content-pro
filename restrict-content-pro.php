@@ -124,7 +124,7 @@ include( RCP_PLUGIN_DIR . 'includes/gateway-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/cron-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/ajax-actions.php' );
 if( !class_exists( 'WP_Logging' ) ) {
-	include( RCP_PLUGIN_DIR . 'includes/class-wp-logging.php' );
+	include( RCP_PLUGIN_DIR . 'includes/libraries/class-wp-logging.php' );
 }
 
 // admin only includes
