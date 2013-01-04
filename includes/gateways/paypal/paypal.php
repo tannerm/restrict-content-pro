@@ -7,13 +7,13 @@ function rcp_process_paypal( $subscription_data ) {
 	$paypal_redirect = '';
 	$paypal_email = $rcp_options['paypal_email'];
 	$listener_url = home_url( '/' ) . '?listener=IPN';
-	
+
 	if( isset( $rcp_options['sandbox'] ) ) {
 		$paypal_redirect = 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
 	} else {
 		$paypal_redirect = 'https://www.paypal.com/cgi-bin/webscr/?';
-	}	
-	
+	}
+
 	// recurring paypal payment
 	if( $subscription_data['auto_renew'] ) {
 		// recurring paypal payment
@@ -35,7 +35,7 @@ function rcp_process_paypal( $subscription_data ) {
 		// one time payment
 		$paypal_redirect .= 'cmd=_xclick&amount=' . $subscription_data['price'];
 	}
-	
+
 	$paypal_redirect .= '&business=' . $paypal_email;
 	$paypal_redirect .= '&item_name=' . $subscription_data['subscription_name'];
 	$paypal_redirect .= '&email=' . $subscription_data['user_email'];
@@ -45,11 +45,11 @@ function rcp_process_paypal( $subscription_data ) {
 	$paypal_redirect .= '&notify_url=' . urlencode( $listener_url );
 	$paypal_redirect .= '&rm=2&custom=' . $subscription_data['user_id'];
 	$paypal_redirect .= '&tax=0';
-		
+
 	// Redirect to paypal
 	header( 'Location: ' . $paypal_redirect );
 	exit;
-	
+
 }
 add_action( 'rcp_gateway_paypal', 'rcp_process_paypal' );
 
@@ -72,7 +72,7 @@ function rcp_check_ipn() {
 	} else {
 		$listener->use_ssl = false;
 	}
-	
+
 	//To post using the fsockopen() function rather than cURL, use:
 	if( isset( $rcp_options['disable_curl'] ) )
 		$listener->use_curl = false;
@@ -89,7 +89,7 @@ function rcp_check_ipn() {
 	was "INVALID".
 	*/
 	if ( $verified || isset( $_POST['verification_override'] ) || ( isset( $rcp_options['sandbox'] ) || isset( $rcp_options['disable_ipn_verify'] ) ) )  {
-		
+
 		$posted = apply_filters('rcp_ipn_post', $_POST); // allow $_POST to be modified
 
 		$user_id 			= $posted['custom'];
@@ -101,7 +101,7 @@ function rcp_check_ipn() {
 		$currency_code		= $posted['mc_currency'];
 		$subscription_id    = rcp_get_subscription_id( $user_id );
 		$subscription_price = number_format( (float) rcp_get_subscription_price( rcp_get_subscription_id( $user_id ) ), 2) ;
-		
+
 		$user_data          = get_userdata( $user_id );
 
 		if( ! $user_data || ! $subscription_id )
@@ -123,7 +123,7 @@ function rcp_check_ipn() {
 		);
 
 		do_action( 'rcp_valid_ipn', $payment_data, $user_id, $posted );
-		
+
 		if( $posted['txn_type'] == 'web_accept' || $posted['txn_type'] == 'subscr_payment' ) {
 			// only check for an existing payment if this is a payment IPD request
 			if( rcp_check_for_existing_payment( $posted['txn_type'], $posted['payment_date'], $subscription_key ) ) {
@@ -148,13 +148,13 @@ function rcp_check_ipn() {
 		if( isset( $rcp_options['email_ipn_reports'] ) ) {
 			wp_mail( get_bloginfo('admin_email'), __( 'IPN report', 'rcp' ), $listener->getTextReport() );
 		}
-	
+
 		/* do some quick checks to make sure all necessary data validates */
-		
-		if ( $amount != $subscription_price && $amount2 != $subscription_price ) {	
+
+		if ( $amount != $subscription_price && $amount2 != $subscription_price ) {
 			// the subscription price doesn't match, so lets check to see if it matches with a discount code
 			if( ! rcp_check_paypal_return_price_after_discount( $subscription_price, $amount, $amount2, $user_id ) ) {
-				
+
 				$log_data = array(
 				    'post_title'    => __( 'Price Mismatch', 'rcp' ),
 				    'post_content'  =>  sprintf( __( 'The price in an IPN request did not match the subscription price. Payment data: %s', 'rcp' ), json_encode( $payment_data ) ),
@@ -209,23 +209,23 @@ function rcp_check_ipn() {
 		}
 
 		/* now process the kind of subscription/payment */
-		
+
 		// Subscriptions
 		switch ( $posted['txn_type'] ) :
-			
+
 			case "subscr_signup" :
 				// when a new user signs up
-				
+
 				// store the recurring payment ID
 				update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['recurring_payment_id'] );
 
 				// set the user's status to active
 				rcp_set_status( $user_id, 'active' );
-				
+
 				if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
 
 					wp_new_user_notification( $user_id );
-	
+
 				}
 
 				// send welcome email
@@ -242,30 +242,30 @@ function rcp_check_ipn() {
 
 				// record this payment in the database
 				rcp_insert_payment( $payment_data );
-				
+
 				$subscription = rcp_get_subscription_details( rcp_get_subscription_id( $user_id ) );
-				
+
 				// update the user's expiration to correspond with the new payment
 				$member_new_expiration = date( 'Y-m-d H:i:s', strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59' ) );
-				
+
 				update_user_meta( $user_id, 'rcp_expiration', $member_new_expiration );
-				
+
 				// make sure the user's status is active
 				rcp_set_status( $user_id, 'active' );
 
 				update_user_meta( $user_id, 'rcp_recurring', 'yes' );
 
 				do_action( 'rcp_ipn_subscr_payment' );
-				
+
 			break;
 			case "subscr_cancel" :
 
 				// user is not canceled until end of term
-				
+
 				// set the use to no longer be recurring
 				delete_user_meta( $user_id, 'rcp_recurring' );
 				delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
-				
+
 				// send sub cancelled email
 				rcp_email_subscription_status( $user_id, 'cancelled' );
 
@@ -279,7 +279,7 @@ function rcp_check_ipn() {
 			case "subscr_eot" :
 
 				// user's subscription has reach the end of its term
-				
+
 				// set the use to no longer be recurring
 				update_user_meta( $user_id, 'rcp_recurring', 'no' );
 
@@ -291,18 +291,18 @@ function rcp_check_ipn() {
 				do_action('rcp_ipn_subscr_eot' );
 
 			break;
-			
+
 			case "cart" :
 				return; // get out of here
 
 			case "express_checkout" :
 				return; // get out of here
-			
+
 			case "web_accept" :
-				
+
 				switch ( strtolower( $payment_status ) ) :
 		            case 'completed' :
-		            
+
 		            	if( isset( $_POST['verification_override'] ) ) {
 
 		            		// this signup is coming from amember, so add the expiration
@@ -311,16 +311,16 @@ function rcp_check_ipn() {
 
 			            	// update the user's expiration to correspond with the new payment
 							$member_new_expiration = date( 'Y-m-d H:i:s', strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59' ) );
-					
+
 							update_user_meta( $user_id, 'rcp_expiration', $member_new_expiration );
 
 						}
 
 						// set this user to active
 						rcp_set_status( $user_id, 'active' );
-						
+
 						rcp_insert_payment( $payment_data );
-						
+
 						rcp_email_subscription_status( $user_id, 'active' );
 
 
@@ -329,7 +329,7 @@ function rcp_check_ipn() {
 							wp_new_user_notification( $user_id );
 
 						}
-						
+
 		            break;
 		            case 'denied' :
 		            case 'expired' :
@@ -339,11 +339,11 @@ function rcp_check_ipn() {
 						// send cancelled email here
 		            break;
 		        endswitch;
-				
+
 			break;
 			default :
 			break;
-			
+
 		endswitch;
 
 	} else {
