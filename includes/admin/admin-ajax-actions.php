@@ -19,8 +19,8 @@ function rcp_update_subscription_order() {
 		$counter = 1;
 		foreach ( $subscription_levels as $level ) {
 			$new_order = $wpdb->update(
-				$rcp_db_name, 
-				array('list_order' 	=> $counter ), 
+				$rcp_db_name,
+				array('list_order' 	=> $counter ),
 				array('id' 			=> $level),
 				array('%d')
 			);
@@ -37,7 +37,7 @@ add_action( 'wp_ajax_update-subscription-order', 'rcp_update_subscription_order'
 function rcp_search_users() {
 
 	if( wp_verify_nonce( $_POST['rcp_nonce'], 'rcp_member_nonce' ) ) {
-		
+
 		$search_query = trim( $_POST['user_name'] );
 
 		$found_users = get_users( array(
@@ -45,21 +45,21 @@ function rcp_search_users() {
 				'search' => $search_query . '*'
 			)
 		);
-		
+
 		if( $found_users ) {
 			$user_list = '<ul>';
 				foreach( $found_users as $user ) {
-					$user_list .= '<li><a href="#" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';	
+					$user_list .= '<li><a href="#" data-login="' . esc_attr( $user->user_login ) . '">' . esc_html( $user->user_login ) . '</a></li>';
 				}
 			$user_list .= '</ul>';
-			
-			echo json_encode( array( 'results' => $user_list, 'id' => 'found' ) );		
-			
+
+			echo json_encode( array( 'results' => $user_list, 'id' => 'found' ) );
+
 		} else {
-			echo json_encode( array( 'msg' => __( 'No users found', 'rcp' ), 'results' => 'none', 'id' => 'fail' ) );	
-		}		
-		
-	}	
+			echo json_encode( array( 'msg' => __( 'No users found', 'rcp' ), 'results' => 'none', 'id' => 'fail' ) );
+		}
+
+	}
 	die();
 }
 add_action( 'wp_ajax_rcp_search_users', 'rcp_search_users' );

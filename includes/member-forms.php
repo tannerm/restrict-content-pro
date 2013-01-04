@@ -2,11 +2,11 @@
 
 // login form fields
 function rcp_login_form_fields( $args = array() ) {
-		
-	global $post;	
-			
+
+	global $post;
+
 	$action = rcp_get_current_url();
-		
+
 	// parse the arguments passed
 	$defaults = array (
  		'redirect' => $action,
@@ -14,17 +14,17 @@ function rcp_login_form_fields( $args = array() ) {
 	);
 	$args = wp_parse_args( $args, $defaults );
 	// setup each argument in its own variable
-	extract( $args, EXTR_SKIP );	
+	extract( $args, EXTR_SKIP );
 
 	ob_start();
-		
+
 		do_action( 'rcp_before_login_form' );
-		
+
 		if( !is_user_logged_in() ) {
-		
+
 			// show any error messages after form submission
 			rcp_show_error_messages( 'login' ); ?>
-		
+
 			<form id="rcp_login_form"  class="<?php echo $class; ?>" method="POST" action="<?php echo esc_url( $action ); ?>">
 				<fieldset class="rcp_login_data">
 					<p>
@@ -46,18 +46,18 @@ function rcp_login_form_fields( $args = array() ) {
 			</form>
 			<?php
 		} else {
-			echo __( 'You are logged in.', 'rcp' ) . ' <a href="' . wp_logout_url( home_url() ) . '">' . __( 'Logout', 'rcp' ) . '</a>';	
+			echo __( 'You are logged in.', 'rcp' ) . ' <a href="' . wp_logout_url( home_url() ) . '">' . __( 'Logout', 'rcp' ) . '</a>';
 		}
-		
+
 		do_action( 'rcp_after_login_form' );
-	
+
 	return ob_get_clean();
 }
 
 // registration form fields
 function rcp_registration_form_fields( $args = array() ) {
 	global $rcp_options, $rcp_db_name, $rcp_discounts_db_name, $wpdb, $post;
-	
+
 	// parse the arguments passed
 	$defaults = array (
  		'class' => 'rcp_form'
@@ -65,11 +65,11 @@ function rcp_registration_form_fields( $args = array() ) {
 	$args = wp_parse_args( $args, $defaults );
 	// setup each argument in its own variable
 	extract( $args, EXTR_SKIP );
-	
-	$action = rcp_get_current_url(); 
-	
-	ob_start(); ?>	
-	
+
+	$action = rcp_get_current_url();
+
+	ob_start(); ?>
+
 		<?php if( !is_user_logged_in() ) { ?>
 			<h3 class="rcp_header">
 				<?php echo apply_filters( 'rcp_registration_header_logged_in', __( 'Register New Account', 'rcp' ) ); ?>
@@ -79,18 +79,18 @@ function rcp_registration_form_fields( $args = array() ) {
 				<?php echo apply_filters( 'rcp_registration_header_logged_out', __( 'Add a Subscription', 'rcp' ) ); ?>
 			</h3>
 		<?php }
-		
+
 		do_action( 'rcp_before_register_form' );
-		
+
 		// show any error messages after form submission
 		rcp_show_error_messages( 'register' ); ?>
-		
+
 		<form id="rcp_registration_form" class="<?php echo esc_attr( $class ); ?>" method="POST" action="<?php echo esc_url( $action ); ?>">
-		
+
 			<?php if( !is_user_logged_in() ) { ?>
-			
+
 			<?php do_action( 'rcp_before_register_form_fields' ); ?>
-			
+
 			<fieldset class="rcp_user_fieldset">
 				<p id="rcp_user_login_wrap">
 					<label for="rcp_user_Login"><?php echo apply_filters ( 'rcp_registration_username_label', __( 'Username', 'rcp' ) ); ?></label>
@@ -116,15 +116,15 @@ function rcp_registration_form_fields( $args = array() ) {
 					<label for="password_again"><?php echo apply_filters ( 'rcp_registration_password_again_label', __( 'Password Again', 'rcp' ) ); ?></label>
 					<input name="rcp_user_pass_confirm" id="rcp_password_again" class="required" type="password"/>
 				</p id="rcp_user_login_wrap">
-				
+
 				<?php do_action( 'rcp_after_password_registration_field' ); ?>
-				
+
 			</fieldset>
 			<?php }
 
 			$levels = rcp_get_subscription_levels( 'active', true );
 			if( $levels && count( $levels ) > 1 ) : ?>
-			<fieldset class="rcp_subscription_fieldset">			
+			<fieldset class="rcp_subscription_fieldset">
 				<p class="rcp_subscription_message"><?php echo apply_filters ( 'rcp_registration_choose_subscription', __( 'Choose your subscription level', 'rcp' ) ); ?></p>
 				<ul id="rcp_subscription_levels">
 					<?php
@@ -132,7 +132,7 @@ function rcp_registration_form_fields( $args = array() ) {
 							<?php if( rcp_show_subscription_level( $level->id ) ) : ?>
 							<li id="rcp_subscription_level_<?php echo $level->id; ?>" class="rcp_subscription_level">
 								<input type="radio" class="required rcp_level" <?php if( $key == 0 || ( isset( $_GET['level']) && $_GET['level'] == $key ) ){ echo 'checked="checked"'; }?> name="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>" value="<?php echo esc_attr( absint( $level->id ) ); ?>" <?php if( $level->duration == 0 ) { echo 'data-duration="forever"'; } ?>/>&nbsp;
-								<span class="rcp_subscription_level_name"><?php echo utf8_decode( $level->name ); ?></span><span class="rcp_separator">&nbsp;-&nbsp;</span><span class="rcp_price" rel="<?php echo esc_attr( $level->price ); ?>"><?php echo $level->price > 0 ? rcp_currency_filter( $level->price ) : __( 'free', 'rcp' ); ?><span class="rcp_separator">&nbsp;-&nbsp;</span></span>
+								<span class="rcp_subscription_level_name"><?php echo utf8_decode( stripcslashes( $level->name ) ); ?></span><span class="rcp_separator">&nbsp;-&nbsp;</span><span class="rcp_price" rel="<?php echo esc_attr( $level->price ); ?>"><?php echo $level->price > 0 ? rcp_currency_filter( $level->price ) : __( 'free', 'rcp' ); ?><span class="rcp_separator">&nbsp;-&nbsp;</span></span>
 								<span class="rcp_level_duration"><?php echo $level->duration > 0 ? $level->duration . '&nbsp;' . rcp_filter_duration_unit( $level->duration_unit, $level->duration ) : __( 'unlimited', 'rcp' ); ?></span>
 								<div class="rcp_level_description <?php if( $single_level ){ echo 'rcp_single_level_description'; }?>"> <?php echo stripslashes( utf8_decode( $level->description ) ); ?></div>
 							</li>
@@ -145,7 +145,7 @@ function rcp_registration_form_fields( $args = array() ) {
 				<p><strong><?php _e( 'You have not created any subscription levels yet', 'rcp' ); ?></strong></p>
 			<?php endif; ?>
 			</fieldset>
-				<?php 
+				<?php
 				$discounts = rcp_get_discounts();
 				if( $discounts ) : ?>
 					<p id="rcp_discount_code_wrap">
@@ -157,9 +157,9 @@ function rcp_registration_form_fields( $args = array() ) {
 						<input type="text" id="rcp_discount_code" name="rcp_discount" class="rcp_discount_code" value=""/>
 					</p>
 				<?php endif;
-			
+
 				do_action( 'rcp_after_register_form_fields', $levels );
-				
+
 				$gateways = rcp_get_enabled_payment_gateways();
 				if( count( $gateways ) > 1 ) :
 					$display = rcp_has_paid_levels() ? '' : ' style="display: none;"';
@@ -176,11 +176,11 @@ function rcp_registration_form_fields( $args = array() ) {
 						echo '<input type="hidden" name="rcp_gateway" value="' . esc_attr( $key ) . '"/>';
 					endforeach;
 				endif;
-				
+
 				do_action( 'rcp_before_registration_submit_field', $levels );
-				
+
 				?>
-				
+
 			</fieldset>
 			<p id="rcp_submit_wrap">
 				<input type="hidden" name="rcp_register_nonce" value="<?php echo wp_create_nonce('rcp-register-nonce' ); ?>"/>
@@ -193,10 +193,10 @@ function rcp_registration_form_fields( $args = array() ) {
 }
 
 function rcp_change_password_form( $args = array() ) {
-	global $post;	
+	global $post;
 
 	$redirect = rcp_get_current_url();
-		
+
 	// parse the arguments passed
 	$defaults = array (
  		'redirect' => $current_url,
@@ -204,15 +204,15 @@ function rcp_change_password_form( $args = array() ) {
 	);
 	$args = wp_parse_args( $args, $defaults );
 	// setup each argument in its own variable
-	extract( $args, EXTR_SKIP );	
-		
+	extract( $args, EXTR_SKIP );
+
 	ob_start();
-	
+
 		do_action( 'rcp_before_password_form' );
-		
+
 		// show any error messages after form submission
 		rcp_show_error_messages( 'password' ); ?>
-		
+
 		<?php if( isset( $_GET['password-reset']) && $_GET['password-reset'] == 'true') { ?>
 			<div class="rcp_message success">
 				<span><?php _e( 'Password changed successfully', 'rcp' ); ?></span>
@@ -238,7 +238,7 @@ function rcp_change_password_form( $args = array() ) {
 		</form>
 		<?php
 		do_action( 'rcp_after_password_form' );
-	return ob_get_clean();	
+	return ob_get_clean();
 }
 
 function rcp_add_auto_renew( $levels ) {
