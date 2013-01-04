@@ -217,7 +217,7 @@ function rcp_check_ipn() {
 				// when a new user signs up
 
 				// store the recurring payment ID
-				update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['recurring_payment_id'] );
+				update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
 				// set the user's status to active
 				rcp_set_status( $user_id, 'active' );
@@ -249,6 +249,8 @@ function rcp_check_ipn() {
 				$member_new_expiration = date( 'Y-m-d H:i:s', strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59' ) );
 
 				update_user_meta( $user_id, 'rcp_expiration', $member_new_expiration );
+
+				update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
 				// make sure the user's status is active
 				rcp_set_status( $user_id, 'active' );
