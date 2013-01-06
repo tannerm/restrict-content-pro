@@ -142,3 +142,18 @@ function rcp_check_for_existing_payment( $type, $date, $subscription_key ) {
 
 	return false; // this payment doesn't exist
 }
+
+
+/**
+ * Retrieves the amount for the lat payment made by a user
+ *
+ * @access      private
+ * @param       $user_id INT The ID of the user to retrieve a payment amount for
+ * @return      float
+*/
+
+function rcp_get_users_last_payment_amount( $user_id = 0 ) {
+	global $wpdb;
+	return $wpdb->get_var( $wpdb->prepare("SELECT amount FROM " . $rcp_payments_db_name . " WHERE `user_id`='%d';", $user_id ) );
+
+}
