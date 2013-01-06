@@ -153,7 +153,7 @@ function rcp_check_for_existing_payment( $type, $date, $subscription_key ) {
 */
 
 function rcp_get_users_last_payment_amount( $user_id = 0 ) {
-	global $wpdb;
+	global $wpdb, $rcp_payments_db_name;
 	return $wpdb->get_var( $wpdb->prepare("SELECT amount FROM " . $rcp_payments_db_name . " WHERE `user_id`='%d';", $user_id ) );
 
 }
