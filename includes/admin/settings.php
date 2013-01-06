@@ -11,7 +11,7 @@ add_action( 'admin_init', 'rcp_register_settings' );
 
 function rcp_settings_page() {
 	global $rcp_options;
-		
+
 	?>
 	<div class="wrap">
 		<?php
@@ -24,9 +24,9 @@ function rcp_settings_page() {
 		<form method="post" action="options.php" class="rcp_options_form">
 
 			<?php settings_fields( 'rcp_settings_group' ); ?>
-			
+
 			<?php $pages = get_pages(); ?>
-			
+
 			<h2 class="nav-tab-wrapper">
 				<?php _e( 'Restrict Content Pro', 'rcp' ); ?>
 				<a href="#messages" class="nav-tab"><?php _e( 'Messages', 'rcp' ); ?></a>
@@ -36,9 +36,9 @@ function rcp_settings_page() {
 				<a href="#misc" class="nav-tab"><?php _e( 'Misc', 'rcp' ); ?></a>
 				<a href="#logging" class="nav-tab"><?php _e( 'Logging', 'rcp' ); ?></a>
 			</h2>
-			
+
 			<div id="tab_container">
-			
+
 				<div class="tab_content" id="messages">
 					<table class="form-table">
 						<tr valign="top">
@@ -46,7 +46,7 @@ function rcp_settings_page() {
 								<label for="rcp_settings[free_message]"><?php _e( 'Free Content Message', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<?php 
+								<?php
 								$free_message = isset( $rcp_options['free_message'] ) ? $rcp_options['free_message'] : '';
 								wp_editor( $free_message, 'rcp_settings[free_message]', array( 'textarea_name' => 'rcp_settings[free_message]', 'teeny' => true ) ); ?>
 								<div class="description"><?php _e( 'This is the message shown to users that do not have privilege to view free, user only content.', 'rcp' ); ?></div>
@@ -54,20 +54,20 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[paid_message]"><?php _e( 'Premium Content Message', 'rcp' ); ?></label>		
+								<label for="rcp_settings[paid_message]"><?php _e( 'Premium Content Message', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<?php 
+								<?php
 								$paid_message = isset( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : '';
 								wp_editor( $paid_message, 'rcp_settings[paid_message]', array( 'textarea_name' => 'rcp_settings[paid_message]', 'teeny' => true ) ); ?>
 								<div class="description"><?php _e( 'This is the message shown to users that do not have privilege to view premium content.', 'rcp' ); ?></div>
 							</td>
 						</tr>
-					</table>		
+					</table>
 					<?php do_action( 'rcp_messages_settings', $rcp_options ); ?>
-			
+
 				</div><!--end #messages-->
-				
+
 				<div class="tab_content" id="payments">
 					<table class="form-table">
 						<tr valign="top">
@@ -81,7 +81,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<select id="rcp_settings[currency]" name="rcp_settings[currency]">
-									<?php 
+									<?php
 									$currencies = rcp_get_currencies();
 									foreach($currencies as $key => $currency) {
 										echo '<option value="' . $key . '" ' . selected($key, $rcp_options['currency'], false) . '>' . $currency . '</option>';
@@ -141,7 +141,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[sandbox]"><?php _e( 'Sandbox Mode', 'rcp' ); ?></label>	
+								<label for="rcp_settings[sandbox]"><?php _e( 'Sandbox Mode', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[sandbox]" id="rcp_settings[sandbox]" <?php if(isset($rcp_options['sandbox'])) checked('1', $rcp_options['sandbox']); ?>/>
@@ -150,7 +150,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[disable_curl]"><?php _e( 'Disable CURL', 'rcp' ); ?></label>	
+								<label for="rcp_settings[disable_curl]"><?php _e( 'Disable CURL', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[disable_curl]" id="rcp_settings[disable_curl]" <?php if(isset($rcp_options['disable_curl'])) checked('1', $rcp_options['disable_curl']); ?>/>
@@ -159,7 +159,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[disable_ipn_verify]"><?php _e( 'Disable IPN Verification', 'rcp' ); ?></label>	
+								<label for="rcp_settings[disable_ipn_verify]"><?php _e( 'Disable IPN Verification', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[disable_ipn_verify]" id="rcp_settings[disable_ipn_verify]" <?php if(isset($rcp_options['disable_ipn_verify'])) checked('1', $rcp_options['disable_ipn_verify']); ?>/>
@@ -168,14 +168,14 @@ function rcp_settings_page() {
 						</tr>
 					</table>
 					<?php do_action( 'rcp_payments_settings', $rcp_options ); ?>
-					
+
 				</div><!--end #payments-->
-			
+
 				<div class="tab_content" id="forms">
 					<table class="form-table">
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[front_end_validate]"><?php _e( 'jQuery Validation', 'rcp' ); ?></label>	
+								<label for="rcp_settings[front_end_validate]"><?php _e( 'jQuery Validation', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[front_end_validate]" id="rcp_settings[front_end_validate]" <?php if(isset($rcp_options['front_end_validate'])) checked('1', $rcp_options['front_end_validate']); ?>/>
@@ -184,7 +184,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[disable_css]"><?php _e( 'Disable Form CSS', 'rcp' ); ?></label><br/>		
+								<label for="rcp_settings[disable_css]"><?php _e( 'Disable Form CSS', 'rcp' ); ?></label><br/>
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[disable_css]" id="rcp_settings[disable_css]" <?php if(isset($rcp_options['disable_css'])) checked('1', $rcp_options['disable_css']); ?>/>
@@ -237,7 +237,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[enable_recaptcha]"><?php _e( 'Enable reCaptcha', 'rcp' ); ?></label>		
+								<label for="rcp_settings[enable_recaptcha]"><?php _e( 'Enable reCaptcha', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[enable_recaptcha]" id="rcp_settings[enable_recaptcha]" <?php if(isset($rcp_options['enable_recaptcha'])) checked('1', $rcp_options['enable_recaptcha']); ?>/>
@@ -264,7 +264,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[recaptcha_style]"><?php _e( 'reCaptcha Style', 'rcp' ); ?></label>	
+								<label for="rcp_settings[recaptcha_style]"><?php _e( 'reCaptcha Style', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<select id="rcp_settings[recaptcha_style]" name="rcp_settings[recaptcha_style]">
@@ -276,7 +276,7 @@ function rcp_settings_page() {
 										$option .= '</option>';
 										echo $option;
 									}
-								
+
 									?>
 								</select>
 								<div class="description"><?php _e( 'Choose the style you wish to use for your reCaptcha form', 'rcp' ); ?></div>
@@ -284,7 +284,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[ssl]"><?php _e( 'SSL', 'rcp' ); ?></label><br/>		
+								<label for="rcp_settings[ssl]"><?php _e( 'SSL', 'rcp' ); ?></label><br/>
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[ssl]" id="rcp_settings[ssl]" <?php if(isset($rcp_options['ssl'])) checked('1', $rcp_options['ssl']); ?>/>
@@ -301,11 +301,11 @@ function rcp_settings_page() {
 							</td>
 						</tr>
 					</table>
-			
+
 					<?php do_action( 'rcp_forms_settings', $rcp_options ); ?>
-					
+
 				</div><!--end #forms-->
-				
+
 				<div class="tab_content" id="emails">
 					<div id="rcp_email_options">
 
@@ -317,7 +317,7 @@ function rcp_settings_page() {
 								<th>
 									<label for="rcp_settings[active_subject]"><?php _e( 'Subject', 'rcp' ); ?></label>
 								</th>
-								<td>		
+								<td>
 									<input class="regular-text" id="rcp_settings[active_subject]" style="width: 300px;" name="rcp_settings[active_subject]" value="<?php if(isset($rcp_options['active_subject'])) { echo $rcp_options['active_subject']; } ?>"/>
 									<div class="description"><?php _e( 'The subject line for the email sent to users when their subscription becomes active.', 'rcp' ); ?></div>
 								</td>
@@ -326,7 +326,7 @@ function rcp_settings_page() {
 								<th>
 									<label for="rcp_settings[active_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
-								<td>	
+								<td>
 									<textarea id="rcp_settings[active_email]" style="width: 300px; height: 100px;" name="rcp_settings[active_email]"><?php if(isset($rcp_options['active_email'])) { echo $rcp_options['active_email']; } ?></textarea>
 									<div class="description"><?php _e( 'This is the email message that is sent to users when their subscription becomes active.', 'rcp' ); ?></div>
 								</td>
@@ -340,7 +340,7 @@ function rcp_settings_page() {
 								<th>
 									<label for="rcp_settings[cancelled_subject]"><?php _e( 'Subject line', 'rcp' ); ?></label>
 								</th>
-								<td>	
+								<td>
 									<input class="regular-text" id="rcp_settings[cancelled_subject]" style="width: 300px;" name="rcp_settings[cancelled_subject]" value="<?php if(isset($rcp_options['cancelled_subject'])) { echo $rcp_options['cancelled_subject']; } ?>"/>
 									<div class="description"><?php _e( 'The subject line for the email sent to users when their subscription is cancelled.', 'rcp' ); ?></div>
 								</td>
@@ -363,7 +363,7 @@ function rcp_settings_page() {
 								<th>
 									<label for="rcp_settings[expired_subject]"><?php _e( 'Subject', 'rcp' ); ?></label>
 								</th>
-								<td>			
+								<td>
 									<input class="regular-text" id="rcp_settings[expired_subject]" style="width: 300px;" name="rcp_settings[expired_subject]" value="<?php if(isset($rcp_options['expired_subject'])) { echo $rcp_options['expired_subject']; } ?>"/>
 									<div class="description"><?php _e( 'The subject line for the email sent to users when their subscription is expired.', 'rcp' ); ?></div>
 								</td>
@@ -386,7 +386,7 @@ function rcp_settings_page() {
 								<th>
 									<label for="rcp_settings[free_subject]"><?php _e( 'Subject', 'rcp' ); ?></label>
 								</th>
-								<td>		
+								<td>
 									<input class="regular-text" id="rcp_settings[free_subject]" style="width: 300px;" name="rcp_settings[free_subject]" value="<?php if(isset($rcp_options['free_subject'])) { echo $rcp_options['free_subject']; } ?>"/>
 									<div class="description"><?php _e( 'The subject line for the email sent to users when they sign up for a free membership.', 'rcp' ); ?></div>
 								</td>
@@ -395,7 +395,7 @@ function rcp_settings_page() {
 								<th>
 									<label for="rcp_settings[free_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
-								<td>	
+								<td>
 									<textarea id="rcp_settings[free_email]" style="width: 300px; height: 100px;" name="rcp_settings[free_email]"><?php if(isset($rcp_options['free_email'])) { echo $rcp_options['free_email']; } ?></textarea>
 									<div class="description"><?php _e( 'This is the email message that is sent to users when they sign up for a free account.', 'rcp' ); ?></div>
 								</td>
@@ -418,7 +418,7 @@ function rcp_settings_page() {
 								<th>
 									<label for="rcp_settings[trial_email]"><?php _e( 'Trial Email Message', 'rcp' ); ?></label>
 								</th>
-								<td>		
+								<td>
 									<textarea id="rcp_settings[trial_email]" style="width: 300px; height: 100px;" name="rcp_settings[trial_email]"><?php if(isset($rcp_options['trial_email'])) { echo $rcp_options['trial_email']; } ?></textarea>
 									<div class="description"><?php _e( 'This is the email message that is sent to users when they sign up for a free trial.', 'rcp' ); ?></div>
 								</td>
@@ -432,14 +432,14 @@ function rcp_settings_page() {
 								<th>
 									<label for="rcp_settings[disable_new_user_notices]"><?php _e( 'Disable New User Notifications', 'rcp' ); ?></label>
 								</th>
-								<td>		
+								<td>
 									<input type="checkbox" value="1" name="rcp_settings[disable_new_user_notices]" id="rcp_settings[disable_new_user_notices]" <?php if(isset($rcp_options['disable_new_user_notices'])) checked('1', $rcp_options['disable_new_user_notices']); ?>/>
 									<span class="description"><?php _e( 'Check this option if you do NOT want to receive emails when new users signup', 'rcp' ); ?></span>
 								</td>
 							</tr>
 						</table>
 						<?php do_action( 'rcp_email_settings', $rcp_options ); ?>
-						
+
 					</div><!--end #rcp_email_options-->
 					<div id="rcp_email_tags">
 						<p><strong><?php _e( 'Available Template Tags', 'rcp' ); ?></strong></p>
@@ -453,14 +453,14 @@ function rcp_settings_page() {
 					</div><!--end #rcp_email_tags-->
 					<div class="clear"></div>
 				</div><!--end #emails-->
-				
+
 				<div class="tab_content" id="misc">
 					<table class="form-table">
 						<tr valign="top">
 							<th>
 								<label for="rcp_settings[hide_premium]"><?php _e( 'Hide Premium Posts', 'rcp' ); ?></label>
 							</th>
-							<td>	
+							<td>
 								<input type="checkbox" value="1" name="rcp_settings[hide_premium]" id="rcp_settings[hide_premium]" <?php if(isset($rcp_options['hide_premium'])) checked('1', $rcp_options['hide_premium']); ?>/>
 								<span class="description"><?php _e( 'Check this to hide all premium posts from queries when user is not logged in. Note, this will only hide posts that have the "Paid Only?" checkbox checked.', 'rcp' ); ?></span>
 							</td>
@@ -498,7 +498,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[redirect]"><?php _e( 'Login Page', 'rcp' ); ?></label>	
+								<label for="rcp_settings[redirect]"><?php _e( 'Login Page', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<select id="rcp_settings[login_redirect]" name="rcp_settings[login_redirect]">
@@ -521,14 +521,14 @@ function rcp_settings_page() {
 					</table>
 					<?php do_action( 'rcp_misc_settings', $rcp_options ); ?>
 				</div><!--end #misc-->
-				
+
 				<div class="tab_content" id="logging">
 					<table class="form-table">
 						<tr valign="top">
 							<th>
 								<label for="rcp_settings[email_ipn_reports]"><?php _e( 'Email IPN reports', 'rcp' ); ?></label>
 							</th>
-							<td>	
+							<td>
 								<input type="checkbox" value="1" name="rcp_settings[email_ipn_reports]" id="rcp_settings[email_ipn_reports]" <?php if(isset($rcp_options['email_ipn_reports'])) checked('1', $rcp_options['email_ipn_reports']); ?>/>
 								<span class="description"><?php _e( 'Check this to send an email each time an IPN request is made with PayPal. The email will contain a list of all data sent. This is useful for debugging in the case that something is not working with the PayPal integration.', 'rcp' ); ?></span>
 							</td>
@@ -538,15 +538,15 @@ function rcp_settings_page() {
 				</div><!--end #logging-->
 
 			</div><!--end #tab_container-->
-			
+
 			<!-- save the options -->
 			<p class="submit">
 				<input type="submit" class="button-primary" value="<?php _e( 'Save Options', 'rcp' ); ?>" />
 			</p>
-							
-			
+
+
 		</form>
 	</div><!--end wrap-->
-		
+
 	<?php
 }
