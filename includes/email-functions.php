@@ -92,6 +92,7 @@ function rcp_filter_email_tags($message, $user_id, $display_name) {
 	$message = str_replace('%expiration%', rcp_get_expiration_date($user_id), $message);
 	$message = str_replace('%subscription_name%', rcp_get_subscription($user_id), $message);
 	$message = str_replace('%subscription_key%', rcp_get_subscription_key($user_id), $message);
+	$message = str_replace('%amount%', rcp_currency_filter( rcp_get_users_last_payment_amount( $user_id ) ), $message);
 
 	return htmlspecialchars($message);
 }
