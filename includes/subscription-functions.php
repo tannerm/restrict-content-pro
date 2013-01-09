@@ -221,6 +221,23 @@ function rcp_count_members( $level = '', $status = 'active' ) {
 }
 
 /*
+* Retrieves the total number of members by subscription status
+* return array - an array of counts
+*/
+function rcp_count_all_members() {
+	global $wpdb, $rcp_db_name;
+	$count = 0;
+	$counts = array(
+		'active' 	=> rcp_count_members('', 'active'),
+		'pending' 	=> rcp_count_members('', 'pending'),
+		'expired' 	=> rcp_count_members('', 'expired'),
+		'cancelled' => rcp_count_members('', 'cancelled'),
+		'free' 		=> rcp_count_members('', 'free')
+	);
+	return $counts;
+}
+
+/*
 * Gets all members of a particular subscription level
 * @param int $id - the ID of the subscription level to retrieve users for
 * @param mixed $fields - the user fields to restrieve. String or array

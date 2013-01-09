@@ -61,22 +61,6 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 	return false;
 }
 
-/*
-* Retrieves the total number of members by subscription status
-* return array - an array of counts
-*/
-function rcp_count_all_members() {
-	global $wpdb, $rcp_db_name;
-	$count = 0;
-	$counts = array(
-		'active' 	=> rcp_count_members('', 'active'),
-		'pending' 	=> rcp_count_members('', 'pending'),
-		'expired' 	=> rcp_count_members('', 'expired'),
-		'cancelled' => rcp_count_members('', 'cancelled'),
-		'free' 		=> rcp_count_members('', 'free')
-	);
-	return $counts;
-}
 
 /*
 * Gets a user's subscription level ID
