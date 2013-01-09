@@ -30,6 +30,7 @@ function rcp_members_page()
 			} else {
 				$subscription_id = null;
 			}
+			$recurring = isset( $_GET['recurring'] ) ? absint( $_GET['recurring'] ) : null;
 
 			// get subscriber count
 			$active_count    = rcp_count_members( $subscription_id, 'active' );
@@ -94,6 +95,11 @@ function rcp_members_page()
 						?>
 					</select>
 				<?php endif; ?>
+				<select name="recurring" id="rcp-recurring">
+					<option value="0"><?php _e('Either', 'rcp'); ?></option>
+					<option value="1"><?php _e('Not Recurring', 'rcp'); ?></option>
+					<option value="2"><?php _e('Recurring', 'rcp'); ?></option>
+				</select>
 				<select name="order" id="rcp-order">
 					<option value="DESC" <?php selected($order, 'DESC'); ?>><?php _e('Newest First', 'rcp'); ?></option>
 					<option value="ASC" <?php selected($order, 'ASC'); ?>><?php _e('Oldest First', 'rcp'); ?></option>
@@ -144,7 +150,7 @@ function rcp_members_page()
 					);
 					$per_page = 999999;
 				} else {
-					$members = rcp_get_members($status, $subscription_id, $offset, $per_page, $order);
+					$members = rcp_get_members( $status, $subscription_id, $offset, $per_page, $order, $recurring );
 				}
 				if($members) :
 					$i = 1;

@@ -283,7 +283,7 @@ function rcp_check_ipn() {
 				// user's subscription has reach the end of its term
 
 				// set the use to no longer be recurring
-				update_user_meta( $user_id, 'rcp_recurring', 'no' );
+				delete_user_meta( $user_id, 'rcp_recurring' );
 
 				rcp_set_status( $user_id, 'expired' );
 

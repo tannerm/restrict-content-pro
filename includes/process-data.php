@@ -136,7 +136,11 @@ function rcp_process_data() {
 				update_user_meta( $user->ID, 'rcp_expiration', $_POST['expiration'] );
 				update_user_meta( $user->ID, 'rcp_subscription_level', $_POST['level'] );
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
-
+				if( isset( $_POST['recurring'] ) ) {
+					update_user_meta( $user->ID, 'rcp_recurring', 'yes' );
+				} else {
+					delete_user_meta( $user->ID, 'rcp_recurring' );
+				}
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&user-added=1';
 				header( "Location:" .  $url);
 
@@ -158,7 +162,7 @@ function rcp_process_data() {
 			if( isset( $_POST['recurring'] ) ) {
 				update_user_meta( $user_id, 'rcp_recurring', 'yes' );
 			} else {
-				update_user_meta( $user_id, 'rcp_recurring', 'no' );
+				delete_user_meta( $user_id, 'rcp_recurring' );
 			}
 			if( isset( $_POST['signup_method'] ) ) update_user_meta( $user_id, 'rcp_signup_method', $_POST['signup_method'] );
 			if( isset( $_POST['notes'] ) ) update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );

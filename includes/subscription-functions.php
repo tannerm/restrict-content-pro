@@ -147,63 +147,77 @@ function rcp_count_members( $level = '', $status = 'active' ) {
 
 	if( $status == 'free' ) {
 
-		if (strlen(trim($level)) > 0) :
-			$count = $wpdb->get_var( $wpdb->prepare(
-				"SELECT COUNT(*) FROM $wpdb->users
-				LEFT JOIN $wpdb->usermeta ON $wpdb->users.ID = $wpdb->usermeta.user_id
-				WHERE meta_key = 'rcp_subscription_level'
-				AND meta_value = %s
-				AND ID IN (
-					SELECT ID FROM $wpdb->users
-					LEFT JOIN $wpdb->usermeta ON $wpdb->users.ID = $wpdb->usermeta.user_id
-					WHERE meta_key = 'rcp_status'
-					AND meta_value != 'active'
-					AND meta_value != 'pending'
-					AND meta_value != 'expired'
-					AND meta_value != 'cancelled'
+		if ( ! empty( $level ) ) :
+
+			$args = array(
+				'meta_key' => 'rcp_subscription_level',
+				'meta_value' => $level,
+				'meta_query' => array(
+					array(
+						'key'   => 'rcp_status',
+						'value' => 'free'
+					),
+					array(
+						'key'   => 'rcp_status',
+						'compare' => 'NOT EXISTS'
+					),
+					'relation'  => 'OR'
 				)
-				;"
-			, $level ));
-		else :
-			$count = $wpdb->get_var(
-				"SELECT COUNT(*) FROM $wpdb->users
-				LEFT JOIN $wpdb->usermeta ON $wpdb->users.ID = $wpdb->usermeta.user_id
-				WHERE meta_key = 'rcp_status'
-				AND meta_value != 'active'
-				AND meta_value != 'pending'
-				AND meta_value != 'expired'
-				AND meta_value != 'cancelled'
-				;"
 			);
+
+		else :
+
+			$args = array(
+				'meta_query' => array(
+					array(
+						'key'   => 'rcp_status',
+						'value' => 'free'
+					),
+					array(
+						'key'   => 'rcp_expiration',
+						'compare' => 'NOT EXISTS'
+					),
+					'relation' => 'OR'
+				)
+			);
+
 		endif;
 
 	} else {
 
-		if (strlen(trim($level)) > 0) :
-			$count = $wpdb->get_var( $wpdb->prepare(
-				"SELECT COUNT(*) FROM $wpdb->users
-				LEFT JOIN $wpdb->usermeta ON $wpdb->users.ID = $wpdb->usermeta.user_id
-				WHERE meta_key = 'rcp_subscription_level'
-				AND meta_value = %s
-				AND ID IN (
-					SELECT ID FROM $wpdb->users
-					LEFT JOIN $wpdb->usermeta ON $wpdb->users.ID = $wpdb->usermeta.user_id
-					WHERE meta_key = 'rcp_status'
-					AND meta_value = '$status'
+		if ( ! empty( $level ) ) :
+
+			$args = array(
+				'meta_query' => array(
+					array(
+						'key'   => 'rcp_subscription_level',
+						'value' =>  $level
+					),
+					array(
+						'key'   => 'rcp_status',
+						'value' => $status
+					)
 				)
-				;"
-			, $level ));
+			);
+
 		else :
-			$count = $wpdb->get_var( $wpdb->prepare(
-				"SELECT COUNT(*) FROM $wpdb->users
-				LEFT JOIN $wpdb->usermeta ON $wpdb->users.ID = $wpdb->usermeta.user_id
-				WHERE meta_key = 'rcp_status'
-				AND meta_value = '$status';"
-			, $level ));
+
+			$args = array(
+				'meta_query' => array(
+					array(
+						'key'   => 'rcp_status',
+						'value' => $status
+					)
+				)
+			);
+
 		endif;
 
 	}
-	return $count;
+
+	$users = new WP_User_Query( $args );
+	return $users->get_total();
+
 }
 
 /*

@@ -13,11 +13,11 @@
 * @param string $order - the order in which to display users: ASC / DESC
 * Return array
 */
-function rcp_get_members( $status = 'active', $subscription = null, $offset = 0, $number = -1, $order = 'DESC') {
+function rcp_get_members( $status = 'active', $subscription = null, $offset = 0, $number = -1, $order = 'DESC', $recurring = null ) {
 
 	global $wpdb;
 
-	$members = get_users( array(
+	$args = array(
 		'meta_query' => array(
 			array(
 				'key' => 'rcp_status',
@@ -33,8 +33,27 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 		'count_total' => false,
 		'orderby' => 'ID',
 		'order' => $order
-		)
 	);
+
+
+	if( ! empty( $recurring ) ) {
+		if( $recurring == 1 ) {
+			// find non recurring users
+
+			$args['meta_query'][] = array(
+				'key'     => 'rcp_recurring',
+				'compare' => 'NOT EXISTS'
+			);
+		} else {
+			// find recurring users
+			$args['meta_query'][] = array(
+				'key'     => 'rcp_recurring',
+				'value'   => 'yes'
+			);
+		}
+	}
+	//echo '<pre>'; print_r( $args ); echo '</pre>'; exit;
+	$members = get_users( $args );
 
 	if( !empty( $members ) )
 		return $members;
