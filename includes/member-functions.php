@@ -149,6 +149,8 @@ function rcp_count_members( $level = '', $status = 'active', $recurring ) {
 		}
 	}
 
+	$args['fields'] = 'ID';
+
 	$users = new WP_User_Query( $args );
 	return $users->get_total();
 
