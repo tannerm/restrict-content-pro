@@ -62,6 +62,134 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 
 
 /*
+* Counts the number of members by subscription level and status
+* @param string/int $level - the ID of the subscription level to count members of
+* @param string - the status to count
+* return int - the number of members for the specified subscription level and status
+*/
+function rcp_count_members( $level = '', $status = 'active', $recurring ) {
+	global $wpdb;
+
+	if( $status == 'free' ) {
+
+		if ( ! empty( $level ) ) :
+
+			$args = array(
+				'meta_query' => array(
+					array(
+						'key' => 'rcp_subscription_level',
+						'value' => $level,
+					),
+					array(
+						'key'   => 'rcp_status',
+						'value' => 'free'
+					)
+				)
+			);
+
+		else :
+
+			$args = array(
+				'meta_query' => array(
+					array(
+						'key'   => 'rcp_status',
+						'value' => 'free'
+					)
+				)
+			);
+
+		endif;
+
+	} else {
+
+		if ( ! empty( $level ) ) :
+
+			$args = array(
+				'meta_query' => array(
+					array(
+						'key'   => 'rcp_subscription_level',
+						'value' =>  $level
+					),
+					array(
+						'key'   => 'rcp_status',
+						'value' => $status
+					)
+				)
+			);
+
+		else :
+
+			$args = array(
+				'meta_query' => array(
+					array(
+						'key'   => 'rcp_status',
+						'value' => $status
+					)
+				)
+			);
+
+		endif;
+
+	}
+
+	if( ! empty( $recurring ) ) {
+		if( $recurring == 1 ) {
+			// find non recurring users
+
+			$args['meta_query'][] = array(
+				'key'     => 'rcp_recurring',
+				'compare' => 'NOT EXISTS'
+			);
+		} else {
+			// find recurring users
+			$args['meta_query'][] = array(
+				'key'     => 'rcp_recurring',
+				'value'   => 'yes'
+			);
+		}
+	}
+
+	$users = new WP_User_Query( $args );
+	return $users->get_total();
+
+}
+
+/*
+* Retrieves the total number of members by subscription status
+* return array - an array of counts
+*/
+function rcp_count_all_members() {
+	global $wpdb, $rcp_db_name;
+	$count = 0;
+	$counts = array(
+		'active' 	=> rcp_count_members('', 'active'),
+		'pending' 	=> rcp_count_members('', 'pending'),
+		'expired' 	=> rcp_count_members('', 'expired'),
+		'cancelled' => rcp_count_members('', 'cancelled'),
+		'free' 		=> rcp_count_members('', 'free')
+	);
+	return $counts;
+}
+
+/*
+* Gets all members of a particular subscription level
+* @param int $id - the ID of the subscription level to retrieve users for
+* @param mixed $fields - the user fields to restrieve. String or array
+* return array - an array of user objects
+*/
+function rcp_get_members_of_subscription( $id = 1, $fields = 'ID') {
+	$members = get_users(array(
+			'meta_key' 		=> 'rcp_subscription_level',
+			'meta_value' 	=> $id,
+			'number' 		=> 0,
+			'fields' 		=> $fields,
+			'count_total' 	=> false
+		)
+	);
+	return $members;
+}
+
+/*
 * Gets a user's subscription level ID
 * @param int $user_id - the ID of the user to return the subscription level of
 * return int - the ID of the user's subscription level
