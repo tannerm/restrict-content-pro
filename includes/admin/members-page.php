@@ -6,15 +6,15 @@ function rcp_members_page()
 	$current_page = admin_url( '/admin.php?page=rcp-members' );
 	?>
 	<div class="wrap">
-		
+
 		<?php if(isset($_GET['edit_member'])) :
-			include('edit-member.php'); 
+			include('edit-member.php');
 		elseif(isset($_GET['view_member'])) :
-			include('view-member.php'); 
+			include('view-member.php');
 		else : ?>
 			<h2><?php _e('Paid Subscribers', 'rcp'); ?></h2>
 			<?php
-			
+
 			if(isset($_GET['status']) && strlen(trim($_GET['status'])) > 0) {
 				$status = urldecode($_GET['status']);
 			} else {
@@ -30,7 +30,7 @@ function rcp_members_page()
 			} else {
 				$subscription_id = null;
 			}
-			
+
 			// get subscriber count
 			$active_count = rcp_count_members($subscription_id, 'active');
 			$pending_count = rcp_count_members($subscription_id, 'pending');
@@ -38,7 +38,7 @@ function rcp_members_page()
 			$cancelled_count = rcp_count_members($subscription_id, 'cancelled');
 			$free_count = rcp_count_members($subscription_id, 'free');
 			$current_count = rcp_count_members($subscription_id, $status);
-						
+
 			// pagination variables
 			if (isset($_GET['p'])) $page = $_GET['p']; else $page = 1;
 			$user = get_current_user_id();
@@ -51,7 +51,7 @@ function rcp_members_page()
 			$total_pages = 1;
 			$offset = $per_page * ($page-1);
 			$total_pages = ceil($current_count/$per_page);
-			
+
 			?>
 			<ul class="subsubsub">
 				<li><?php _e('Status: ', 'rcp'); ?></li>
@@ -132,8 +132,8 @@ function rcp_members_page()
 					</tr>
 				</tfoot>
 				<tbody>
-				<?php 
-			
+				<?php
+
 				if( isset($_GET['signup_method']) ) {
 					$method = $_GET['signup_method'] == 'live' ? 'live' : 'manual';
 					$members = get_users( array(
@@ -160,8 +160,8 @@ function rcp_members_page()
 							<td><?php echo rcp_get_user_role($member->ID); ?></td>
 							<?php do_action('rcp_members_page_table_column', $member->ID); ?>
 							<td>
-								<a href="<?php echo add_query_arg('view_member', $member->ID, $current_page); ?>"><?php _e('Details', 'rcp'); ?></a> | 
-								<a href="<?php echo add_query_arg('edit_member', $member->ID, $current_page); ?>"><?php _e('Edit', 'rcp'); ?></a> 
+								<a href="<?php echo add_query_arg('view_member', $member->ID, $current_page); ?>"><?php _e('Details', 'rcp'); ?></a> |
+								<a href="<?php echo add_query_arg('edit_member', $member->ID, $current_page); ?>"><?php _e('Edit', 'rcp'); ?></a>
 								<?php if(isset($_GET['status']) && $_GET['status'] == 'cancelled') { ?>
 									| <a href="<?php echo add_query_arg('activate_member', $member->ID, $current_page); ?>" class="rcp_activate"><?php _e('Activate', 'rcp'); ?></a>
 								<?php } elseif( (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status'])) {  ?>
@@ -170,7 +170,7 @@ function rcp_members_page()
 							</td>
 						</tr>
 					<?php $i++;
-					endforeach; 
+					endforeach;
 				else : ?>
 					<tr><td colspan="9"><?php _e('No subscribers found', 'rcp'); ?></td></tr>
 				<?php endif; ?>
@@ -191,7 +191,7 @@ function rcp_members_page()
 								'end_size' => 1,
 								'mid_size' => 5,
 							));
-						?>	
+						?>
 				    </div>
 				</div><!--end .tablenav-->
 			<?php endif; ?>
@@ -235,7 +235,7 @@ function rcp_members_page()
 								<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="datepicker"/>
 								<p class="description"><?php _e('Enter the expiration date for this user in the format of yyyy-mm-dd', 'rcp'); ?></p>
 							</td>
-						</tr>	
+						</tr>
 					</tbody>
 				</table>
 				<p class="submit">
@@ -243,10 +243,10 @@ function rcp_members_page()
 					<input type="submit" value="<?php _e('Add User Subscription', 'rcp'); ?>" class="button-primary"/>
 				</p>
 			</form>
-			
+
 		<?php endif; ?>
-		
+
 	</div><!--end wrap-->
-		
+
 	<?php
 }
