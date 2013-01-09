@@ -18,6 +18,11 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 	global $wpdb;
 
 	$args = array(
+		'offset' => $offset,
+		'number' => $number,
+		'count_total' => false,
+		'orderby' => 'ID',
+		'order' => $order,
 		'meta_query' => array(
 			array(
 				'key' => 'rcp_status',
@@ -27,14 +32,8 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 				'key' => 'rcp_subscription_level',
 				'value' => $subscription
 			)
-		),
-		'offset' => $offset,
-		'number' => $number,
-		'count_total' => false,
-		'orderby' => 'ID',
-		'order' => $order
+		)
 	);
-
 
 	if( ! empty( $recurring ) ) {
 		if( $recurring == 1 ) {
@@ -52,7 +51,7 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 			);
 		}
 	}
-	//echo '<pre>'; print_r( $args ); echo '</pre>'; exit;
+
 	$members = get_users( $args );
 
 	if( !empty( $members ) )
