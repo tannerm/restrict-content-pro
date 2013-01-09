@@ -97,8 +97,8 @@ function rcp_members_page()
 				<?php endif; ?>
 				<select name="recurring" id="rcp-recurring">
 					<option value="0"><?php _e('Either', 'rcp'); ?></option>
-					<option value="1"><?php _e('Not Recurring', 'rcp'); ?></option>
-					<option value="2"><?php _e('Recurring', 'rcp'); ?></option>
+					<option value="1"<?php selected( 1, $recurring ); ?>><?php _e('Not Recurring', 'rcp'); ?></option>
+					<option value="2"<?php selected( 2, $recurring ); ?>><?php _e('Recurring', 'rcp'); ?></option>
 				</select>
 				<select name="order" id="rcp-order">
 					<option value="DESC" <?php selected($order, 'DESC'); ?>><?php _e('Newest First', 'rcp'); ?></option>
