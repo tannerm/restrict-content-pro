@@ -46,6 +46,11 @@ class RCP_Logs_List_Table extends WP_List_Table {
 
         		return  get_post_field( 'post_content', $item->ID );
 
+            case 'user_id' :
+
+                return  get_post_meta( $item->ID, '_wp_log_user_id', true );
+
+
         	case 'date' :
         		$date = strtotime( get_post_field( 'post_date', $item->ID ) );
         		return date_i18n( get_option( 'date_format' ), $date ) . ' ' . __( 'at', 'rcp' ) . ' ' . date_i18n( get_option( 'time_format' ), $date );
@@ -82,6 +87,7 @@ class RCP_Logs_List_Table extends WP_List_Table {
             'cb'      => '<input type="checkbox" />', //Render a checkbox instead of text
             'title'   => __( 'Log Error', 'rcp' ),
             'message' => __( 'Log Message', 'rcp' ),
+            'user_id' => __( 'User', 'rcp' ),
             'date'    => __( 'Date', 'rcp' )
         );
         return $columns;
