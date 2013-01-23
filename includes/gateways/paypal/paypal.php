@@ -233,8 +233,6 @@ function rcp_check_ipn() {
 
 				update_user_meta( $user_id, 'rcp_recurring', 'yes' );
 
-				rcp_increase_member_count( 'active', $subscription_id, '2' );
-
 				do_action( 'rcp_ipn_subscr_signup' );
 
 			break;
