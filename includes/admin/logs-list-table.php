@@ -48,7 +48,10 @@ class RCP_Logs_List_Table extends WP_List_Table {
 
             case 'user_id' :
 
-                return  get_post_meta( $item->ID, '_wp_log_user_id', true );
+                $user_id = get_post_meta( $item->ID, '_wp_log_user_id', true );
+                $user    = get_userdata( $user_id );
+
+                return  '<a href="' . add_query_arg( 'user', $user_id, 'admin.php?page=rcp-logs' ) . '" title="' . __( 'View logs for this user', 'rcp' ) . '">' . $user->display_name . '</a>';
 
 
         	case 'date' :
@@ -157,16 +160,25 @@ class RCP_Logs_List_Table extends WP_List_Table {
 
         $this->process_bulk_action();
 
+        $meta_query = array();
+        if( isset( $_GET['user'] ) ) {
+            $meta_query[] = array(
+                'key'   => '_wp_log_user_id',
+                'value' => absint( $_GET['user_id'] )
+            );
+        }
+
         $this->items = WP_Logging::get_connected_logs( array(
         	'log_type'       => 'gateway_error',
         	'paged'          => $paged,
-        	'posts_per_page' => $per_page
+        	'posts_per_page' => $per_page,
+            'meta_query'     => $meta_query
         ) );
 
 
         $current_page = $this->get_pagenum();
 
-        $total_items = WP_Logging::get_log_count( 0, 'gateway_error' );
+        $total_items = WP_Logging::get_log_count( 0, 'gateway_error', $meta_query );
 
         $this->set_pagination_args( array(
             'total_items' => $total_items,                    //WE have to calculate the total number of items
