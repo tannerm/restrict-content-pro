@@ -32,6 +32,7 @@ function rcp_admin_styles( $hook ) {
 		$rcp_payments_page, 
 		$rcp_settings_page, 
 		$rcp_export_page,
+		$rcp_logs_page,
 		$rcp_help_page,
 		'post.php',
 		'edit.php',
