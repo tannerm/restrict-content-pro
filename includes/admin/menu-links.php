@@ -6,7 +6,7 @@
 
 function rcp_settings_menu() {
 
-	global $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_settings_page, $rcp_export_page, $rcp_help_page;
+	global $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_settings_page, $rcp_export_page, $rcp_logs_page, $rcp_help_page;
 
 	// add settings page
 	add_menu_page( __( 'Restrict Content Pro Settings', 'rcp' ), __( 'Restrict', 'rcp' ), 'manage_options', 'rcp-members', 'rcp_members_page',  plugin_dir_url( RCP_PLUGIN_FILE ) . 'includes/images/lock.png' );
