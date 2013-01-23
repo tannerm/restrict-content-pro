@@ -164,7 +164,7 @@ class RCP_Logs_List_Table extends WP_List_Table {
         if( isset( $_GET['user'] ) ) {
             $meta_query[] = array(
                 'key'   => '_wp_log_user_id',
-                'value' => absint( $_GET['user_id'] )
+                'value' => absint( $_GET['user'] )
             );
         }
 
