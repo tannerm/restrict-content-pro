@@ -16,6 +16,7 @@ function rcp_settings_menu() {
 	$rcp_payments_page 		= add_submenu_page( 'rcp-members', __( 'Payments', 'rcp' ), __( 'Payments', 'rcp' ), 'manage_options', 'rcp-payments', 'rcp_payments_page' );
 	$rcp_settings_page 		= add_submenu_page( 'rcp-members', __( 'Restrict Content Pro Settings', 'rcp' ), __( 'Settings', 'rcp' ),'manage_options', 'rcp-settings', 'rcp_settings_page' );
 	$rcp_export_page 		= add_submenu_page( 'rcp-members', __( 'Export Member Data', 'rcp' ), __( 'Export', 'rcp' ),'manage_options', 'rcp-export', 'rcp_export_page' );
+	$rcp_logs_page 		    = add_submenu_page( 'rcp-members', __( 'Logs', 'rcp' ), __( 'Logs', 'rcp' ),'manage_options', 'rcp-logs', 'rcp_logs_page' );
 	$rcp_help_page 			= add_submenu_page( 'rcp-members', __( 'Help', 'rcp' ), __( 'Help', 'rcp' ), 'manage_options', 'rcp-help', 'rcp_help_page' );
 
 	if ( get_bloginfo('version') >= 3.3 ) {
@@ -33,5 +34,6 @@ function rcp_settings_menu() {
 	add_action( "load-$rcp_payments_page", "rcp_screen_options" );
 	add_action( "load-$rcp_settings_page", "rcp_screen_options" );
 	add_action( "load-$rcp_export_page", "rcp_screen_options" );
+	add_action( "load-$rcp_logs_page", "rcp_screen_options" );
 }
 add_action( 'admin_menu', 'rcp_settings_menu' );
