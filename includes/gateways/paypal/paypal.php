@@ -233,6 +233,8 @@ function rcp_check_ipn() {
 
 				update_user_meta( $user_id, 'rcp_recurring', 'yes' );
 
+				rcp_increase_member_count( 'active', $subscription_id, '2' );
+
 				do_action( 'rcp_ipn_subscr_signup' );
 
 			break;
@@ -324,7 +326,6 @@ function rcp_check_ipn() {
 						rcp_insert_payment( $payment_data );
 
 						rcp_email_subscription_status( $user_id, 'active' );
-
 
 						if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
 							// send welcome email here

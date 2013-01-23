@@ -70,6 +70,7 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 function rcp_count_members( $level = '', $status = 'active', $recurring ) {
 	global $wpdb;
 
+
 	if( $status == 'free' ) {
 
 		if ( ! empty( $level ) ) :
@@ -150,10 +151,8 @@ function rcp_count_members( $level = '', $status = 'active', $recurring ) {
 	}
 
 	$args['fields'] = 'ID';
-
 	$users = new WP_User_Query( $args );
 	return $users->get_total();
-
 }
 
 /*

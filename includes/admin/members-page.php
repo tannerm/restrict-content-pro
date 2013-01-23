@@ -41,17 +41,17 @@ function rcp_members_page()
 			$current_count   = rcp_count_members( $subscription_id, $status, $recurring );
 
 			// pagination variables
-			if (isset($_GET['p'])) $page = $_GET['p']; else $page = 1;
-			$user = get_current_user_id();
-			$screen = get_current_screen();
-			$screen_option = $screen->get_option('per_page', 'option');
-			$per_page = get_user_meta($user, $screen_option, true);
+			$page            = isset( $_GEt['p'] ) ? absint( $_GET['p'] ) : 1;
+			$user            = get_current_user_id();
+			$screen          = get_current_screen();
+			$screen_option   = $screen->get_option( 'per_page', 'option' );
+			$per_page        = get_user_meta( $user, $screen_option, true );
 			if ( empty ( $per_page) || $per_page < 1 ) {
-				$per_page = $screen->get_option( 'per_page', 'default' );
+				$per_page    = $screen->get_option( 'per_page', 'default' );
 			}
-			$total_pages = 1;
-			$offset = $per_page * ($page-1);
-			$total_pages = ceil($current_count/$per_page);
+			$total_pages     = 1;
+			$offset          = $per_page * ( $page - 1 );
+			$total_pages     = ceil( $current_count / $per_page );
 
 			?>
 			<ul class="subsubsub">
