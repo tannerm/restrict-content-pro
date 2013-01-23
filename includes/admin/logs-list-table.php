@@ -44,7 +44,7 @@ class RCP_Logs_List_Table extends WP_List_Table {
 
         	case 'message' :
 
-        		return  json_decode( get_post_field( 'post_content', $item->ID ) );
+        		return  get_post_field( 'post_content', $item->ID );
 
         	case 'date' :
         		$date = strtotime( get_post_field( 'post_date', $item->ID ) );
