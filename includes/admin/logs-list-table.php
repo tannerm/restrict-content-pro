@@ -39,7 +39,7 @@ class RCP_Logs_List_Table extends WP_List_Table {
 
         switch( $column_name ){
 
-        	case 'title' :
+        	case 'log_error' :
         		return get_the_title( $item->ID );
 
         	case 'message' :
@@ -87,11 +87,11 @@ class RCP_Logs_List_Table extends WP_List_Table {
 	*/
     function get_columns() {
         $columns = array(
-            'cb'      => '<input type="checkbox" />', //Render a checkbox instead of text
-            'title'   => __( 'Log Error', 'rcp' ),
-            'message' => __( 'Log Message', 'rcp' ),
-            'user_id' => __( 'User', 'rcp' ),
-            'date'    => __( 'Date', 'rcp' )
+            'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text
+            'log_error' => __( 'Log Error', 'rcp' ),
+            'message'   => __( 'Log Message', 'rcp' ),
+            'user_id'   => __( 'User', 'rcp' ),
+            'date'      => __( 'Date', 'rcp' )
         );
         return $columns;
     }
