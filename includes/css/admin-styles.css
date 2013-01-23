@@ -55,6 +55,9 @@ img.help-image { max-width: 99%; overflow: hidden; border: 1px solid #ccc; }
 .rcp-discounts-uses-left-col { width: 80px; }
 .rcp-discounts-expir-col {  }
 .rcp-discounts-actions-col { }
+/* error logs */
+#rcp-error-logs .column-log_error { width: 15%; }
+#rcp-error-logs .column-message { width: 65%; }
 
 
 /* Optimized for 1280px wide (macbooks) and under */

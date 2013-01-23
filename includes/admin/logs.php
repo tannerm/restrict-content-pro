@@ -9,7 +9,7 @@ function rcp_logs_page() {
         <div id="icon-tools" class="icon32"><br/></div>
         <h2><?php _e( 'RCP Error Logs', 'rcp' ); ?></h2>
 
-       	<form method="get">
+       	<form method="get" id="rcp-error-logs">
        		<input type="hidden" name="page" value="rcp-logs"/>
 	        <?php
 
