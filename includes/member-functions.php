@@ -67,7 +67,7 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 * @param string - the status to count
 * return int - the number of members for the specified subscription level and status
 */
-function rcp_count_members( $level = '', $status = 'active', $recurring ) {
+function rcp_count_members( $level = '', $status = 'active', $recurring = null ) {
 	global $wpdb;
 
 
