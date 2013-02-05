@@ -85,10 +85,12 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 
 function rcp_filter_email_tags($message, $user_id, $display_name) {
 
+	$user = get_userdata( $user_id );
+
 	$site_name = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
 
 	$message = str_replace('%blogname%', $site_name, $message);
-	$message = str_replace('%username%', $display_name, $message);
+	$message = str_replace('%username%', $user->user_login, $message);
 	$message = str_replace('%expiration%', rcp_get_expiration_date($user_id), $message);
 	$message = str_replace('%subscription_name%', rcp_get_subscription($user_id), $message);
 	$message = str_replace('%subscription_key%', rcp_get_subscription_key($user_id), $message);
