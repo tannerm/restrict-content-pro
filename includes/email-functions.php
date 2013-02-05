@@ -91,6 +91,9 @@ function rcp_filter_email_tags($message, $user_id, $display_name) {
 
 	$message = str_replace('%blogname%', $site_name, $message);
 	$message = str_replace('%username%', $user->user_login, $message);
+	$message = str_replace('%firstname%', $user->user_firstname, $message);
+	$message = str_replace('%lastname%', $user->user_lastname, $message);
+	$message = str_replace('%displayname%', $display_name, $message);
 	$message = str_replace('%expiration%', rcp_get_expiration_date($user_id), $message);
 	$message = str_replace('%subscription_name%', rcp_get_subscription($user_id), $message);
 	$message = str_replace('%subscription_key%', rcp_get_subscription_key($user_id), $message);
