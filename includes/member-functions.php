@@ -160,8 +160,6 @@ function rcp_count_members( $level = '', $status = 'active', $recurring = null )
 * return array - an array of counts
 */
 function rcp_count_all_members() {
-	global $wpdb, $rcp_db_name;
-	$count = 0;
 	$counts = array(
 		'active' 	=> rcp_count_members('', 'active'),
 		'pending' 	=> rcp_count_members('', 'pending'),
