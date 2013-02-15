@@ -1,7 +1,7 @@
 <?php
 
 function rcp_get_return_url() {
-	
+
 	global $rcp_options;
 
 	if( isset( $rcp_options['redirect'] ) ) {
