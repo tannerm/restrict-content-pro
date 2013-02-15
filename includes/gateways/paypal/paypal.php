@@ -259,6 +259,8 @@ function rcp_check_ipn() {
 
 				update_user_meta( $user_id, 'rcp_recurring', 'yes' );
 
+				delete_user_meta( $user_id, '_rcp_expired_email_sent' );
+
 				do_action( 'rcp_ipn_subscr_payment' );
 
 			break;
@@ -309,7 +311,7 @@ function rcp_check_ipn() {
 
 		            	if( isset( $_POST['verification_override'] ) ) {
 
-		            		// this signup is coming from amember, so add the expiration
+		            		// this is a method for providing a new expiration if it doesn't exist
 
 			            	$subscription = rcp_get_subscription_details_by_name( $payment_data['subscription'] );
 
@@ -317,6 +319,7 @@ function rcp_check_ipn() {
 							$member_new_expiration = date( 'Y-m-d H:i:s', strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59' ) );
 
 							update_user_meta( $user_id, 'rcp_expiration', $member_new_expiration );
+
 
 						}
 
@@ -332,6 +335,8 @@ function rcp_check_ipn() {
 							wp_new_user_notification( $user_id );
 
 						}
+
+						delete_user_meta( $user_id, '_rcp_expired_email_sent' );
 
 		            break;
 		            case 'denied' :
