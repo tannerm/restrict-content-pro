@@ -22,9 +22,20 @@ class RCP_Payments {
 	private $db_name;
 
 
+	/**
+	 * Holds the version number of our discounts database table
+	 *
+	 * @access  private
+	 * @since   1.5
+	*/
+
+	private $db_version;
+
+
 	function __construct() {
 
-		$this->db_name = rcp_get_payments_db_name();
+		$this->db_name    = rcp_get_payments_db_name();
+		$this->db_version = '1.2';
 
 	}
 
