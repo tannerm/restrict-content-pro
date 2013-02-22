@@ -143,11 +143,12 @@ include( RCP_PLUGIN_DIR . 'includes/member-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/discount-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/subscription-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/email-functions.php' );
-include( RCP_PLUGIN_DIR . 'includes/payments.php' );
 include( RCP_PLUGIN_DIR . 'includes/handle-registration-login.php' );
 include( RCP_PLUGIN_DIR . 'includes/gateway-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/cron-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/ajax-actions.php' );
+include( RCP_PLUGIN_DIR . 'includes/deprecated/functions.php' );
+
 if( !class_exists( 'WP_Logging' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/libraries/class-wp-logging.php' );
 }

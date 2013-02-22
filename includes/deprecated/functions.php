@@ -1,12 +1,19 @@
 <?php
 
-/***************************************************
-* functions used for tracking payments and earnings
-***************************************************/
+/**
+ * Deprecated functions
+ *
+ * These are kept here for backwards compatibility with extensions that might be using them
+ *
+ * @since 1.5
+*/
+
+
 
 /**
  * Retrieve all payments from database
  *
+ * @deprecated  1.5
  * @access      private
  * @param       $offset INT The number to skip
  * @param       $number INT The number to retrieve
@@ -32,6 +39,7 @@ function rcp_get_payments( $offset = 0, $number = 20 ) {
 /**
  * Retrieve the total number of payments in the database
  *
+ * @deprecated  1.5
  * @access      private
  * @return      int
 */
@@ -49,6 +57,7 @@ function rcp_count_payments() {
 /**
  * Retrieve total site earnings
  *
+ * @deprecated  1.5
  * @access      private
  * @return      float
 */
@@ -74,6 +83,7 @@ function rcp_get_earnings() {
 /**
  * Insert a payment into the database
  *
+ * @deprecated  1.5
  * @access      private
  * @param       $payment_data ARRAY The data to store
  * @return      INT the ID of the new payment, or false if insertion fails
@@ -126,6 +136,7 @@ function rcp_insert_payment( $payment_data = array() ) {
 /**
  * Check if a payment already exists
  *
+ * @deprecated  1.5
  * @access      private
  * @param       $type string The type of payment (web_accept, subscr_payment, Credit Card, etc)
  * @param       $date string/date The date of tpaen

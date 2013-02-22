@@ -83,11 +83,13 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 	endswitch;
 }
 
-function rcp_filter_email_tags($message, $user_id, $display_name) {
+function rcp_filter_email_tags( $message, $user_id, $display_name ) {
 
 	$user = get_userdata( $user_id );
 
 	$site_name = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
+
+	$rcp_payments = new RCP_Payments();
 
 	$message = str_replace('%blogname%', $site_name, $message);
 	$message = str_replace('%username%', $user->user_login, $message);
@@ -97,7 +99,7 @@ function rcp_filter_email_tags($message, $user_id, $display_name) {
 	$message = str_replace('%expiration%', rcp_get_expiration_date($user_id), $message);
 	$message = str_replace('%subscription_name%', rcp_get_subscription($user_id), $message);
 	$message = str_replace('%subscription_key%', rcp_get_subscription_key($user_id), $message);
-	$message = str_replace('%amount%', html_entity_decode( rcp_currency_filter( rcp_get_users_last_payment_amount( $user_id ) ), ENT_COMPAT, 'UTF-8' ), $message);
+	$message = str_replace('%amount%', html_entity_decode( rcp_currency_filter( $rcp_payments->last_payment_of_user( $user_id ) ), ENT_COMPAT, 'UTF-8' ), $message);
 
 	return htmlspecialchars($message);
 }

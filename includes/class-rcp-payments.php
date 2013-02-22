@@ -244,4 +244,18 @@ class RCP_Payments {
 
 	}
 
+
+	/**
+	 * Retrieves the last payment made by a user
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
+	public function last_payment_of_user( $user_id = 0 ) {
+		global $wpdb;
+		$query = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $this->db_name . " WHERE `user_id`='%d' ORDER BY id DESC LIMIT 1;", $user_id ) );
+		return $query[0]->amount;
+	}
+
 }
