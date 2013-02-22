@@ -134,6 +134,7 @@ add_action( 'init', 'rcp_load_textdomain' );
 
 
 // global includes
+include( RCP_PLUGIN_DIR . 'includes/class-rcp-payments.php' );
 include( RCP_PLUGIN_DIR . 'includes/gateways/paypal/paypal.php' );
 include( RCP_PLUGIN_DIR . 'includes/misc-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/scripts.php' );
