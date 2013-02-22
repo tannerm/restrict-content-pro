@@ -1,34 +1,39 @@
 <?php
 
-function rcp_payments_page()
-{
-	global $rcp_options, $rcp_db_name, $wpdb;	
-	$current_page = admin_url( '/admin.php?page=rcp-payments' );
-	?>
+/**
+ * Renders the Restrict > Payments page
+ *
+ * @since  1.0
+ * @return void
+*/
+
+function rcp_payments_page() {
+	global $rcp_options;
+	$current_page = admin_url( '/admin.php?page=rcp-payments' ); ?>
 	<div class="wrap">
 		<h2><?php _e( 'Payments', 'rcp' ); ?></h2>
-		
-		<?php do_action('rcp_payments_page_top'); ?>
-		
-		<?php 
-		$page = isset( $_GET['p'] ) ? $_GET['p'] : 1;
-		$per_page = 20;
-		
-		$user = get_current_user_id();
-		$screen = get_current_screen();
-		$screen_option = $screen->get_option('per_page', 'option');
-		$per_page = get_user_meta( $user, $screen_option, true );
+
+		<?php do_action('rcp_payments_page_top');
+
+		$rcp_payments  = new RCP_Payments();
+		$page          = isset( $_GET['p'] ) ? $_GET['p'] : 1;
+		$per_page      = 20;
+
+		$user          = get_current_user_id();
+		$screen        = get_current_screen();
+		$screen_option = $screen->get_option( 'per_page', 'option' );
+		$per_page      = get_user_meta( $user, $screen_option, true );
 		if ( empty ( $per_page) || $per_page < 1 ) {
-			$per_page = $screen->get_option( 'per_page', 'default' );
+			$per_page  = $screen->get_option( 'per_page', 'default' );
 		}
-		$total_pages = 1;
-		$offset = $per_page * ( $page-1 );
-		
-		$payments = rcp_get_payments( $offset, $per_page );
-		$payment_count = rcp_count_payments();
-		$total_pages = ceil( $payment_count / $per_page );
+		$total_pages   = 1;
+		$offset        = $per_page * ( $page-1 );
+
+		$payments      = $rcp_payments->get_payments( array( 'offset' => $offset, 'number' => $per_page ) );
+		$payment_count = $rcp_payments->count();
+		$total_pages   = ceil( $payment_count / $per_page );
 		?>
-		<p class="total"><strong><?php _e( 'Total Earnings', 'rcp' ); ?>: <?php echo rcp_currency_filter( rcp_get_earnings() ); ?></strong></p>
+		<p class="total"><strong><?php _e( 'Total Earnings', 'rcp' ); ?>: <?php echo rcp_currency_filter( $rcp_payments->get_earnings() ); ?></strong></p>
 		<table class="wp-list-table widefat fixed posts rcp-payments">
 			<thead>
 				<tr>
@@ -58,7 +63,7 @@ function rcp_payments_page()
 				<?php
 					if( $payments ) :
 						$i = 0; $total_earnings = 0;
-						foreach( $payments as $payment ) : 
+						foreach( $payments as $payment ) :
 							$user = get_userdata( $payment->user_id );
 							?>
 							<tr class="rcp_payment <?php if( rcp_is_odd( $i ) ) echo 'alternate'; ?>">
@@ -72,7 +77,8 @@ function rcp_payments_page()
 								<?php do_action( 'rcp_payments_page_table_column', $payment->id ); ?>
 							</tr>
 						<?php
-						$i++; $total_earnings = $total_earnings + $payment->amount;
+						$i++;
+						$total_earnings = $total_earnings + $payment->amount;
 						endforeach;
 					else : ?>
 					<tr><td colspan="7"><?php _e( 'No payments recorded yet', 'rcp' ); ?></td></tr>
@@ -97,7 +103,7 @@ function rcp_payments_page()
 								'end_size' 	=> 1,
 								'mid_size' 	=> 5,
 							));
-						?>	
+						?>
 				    </div>
 				</div><!--end .tablenav-->
 			<?php endif; ?>
