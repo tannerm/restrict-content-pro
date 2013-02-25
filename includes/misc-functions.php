@@ -32,15 +32,19 @@ function rcp_is_paid_content( $post_id ) {
 */
 
 function rcp_get_paid_posts() {
-	$paid_ids = array();
-	$paid_posts = get_posts( 'meta_key=_is_paid&meta_value=1&post_status=publish&posts_per_page=-1' );
-	if ( $paid_posts ) {
-		foreach ( $paid_posts as $p ) {
-			$paid_ids[] = $p->ID;
-		}
+	$args = array(
+		'meta_key' => '_is_paid',
+		'meta_value' => 1,
+		'post_status' => 'publish',
+		'posts_per_page' => -1,
+		'fields' => 'ids'
+	);
+	$paid_ids = get_posts( $args );
+	if ( $paid_ids ) {
+		return $paid_ids;
 	}
-	// return an array of paid post IDs
-	return $paid_ids;
+
+	return array();
 }
 
 
