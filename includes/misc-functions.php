@@ -287,3 +287,114 @@ function rcp_no_account_sharing() {
 	global $rcp_options;
 	return (bool) apply_filters( 'rcp_no_account_sharing', isset( $rcp_options['no_loging_sharing'] ) );
 }
+
+
+/**
+ * Stores cookie value in a transient when a user logs in
+ *
+ * Transient IDs are based on the user ID so that we can track the number of
+ * users logged into the same account
+ *
+ * @access      private
+ * @since       1.5
+ * @return      void
+*/
+
+function rcp_set_user_logged_in_status( $logged_in_cookie, $expire, $expiration, $user_id, $status = 'logged_in' ) {
+
+	if ( ! empty( $user_id ) ) :
+
+		$data = get_transient( 'rcp_user_logged_in_' . $user_id );
+
+		if( false === $data )
+			$data = array();
+
+		$data[] = $logged_in_cookie;
+
+		set_transient( 'rcp_user_logged_in_' . $user_id, $data );
+
+	endif;
+}
+add_action( 'set_logged_in_cookie', 'rcp_set_user_logged_in_status', 10, 5 );
+
+
+/**
+ * Removes the current user's auth cookie from the rcp_user_logged_in_# transient when logging out
+ *
+ * @access      private
+ * @since       1.5
+ * @return      void
+*/
+
+function rcp_clear_auth_cookie() {
+
+	$user_id = get_current_user_id();
+
+	$already_logged_in = get_transient( 'rcp_user_logged_in_' . $user_id );
+
+	if( $already_logged_in !== false ) :
+
+		$data = maybe_unserialize( $already_logged_in );
+
+		$key = array_search( $_COOKIE[LOGGED_IN_COOKIE], $data );
+		if( false !== $key ) {
+			unset( $data[$key] );
+			$data = array_values( $data );
+			set_transient( 'rcp_user_logged_in_' . $user_id, $data );
+		}
+		endif;
+
+	endif;
+
+}
+add_action( 'clear_auth_cookie', 'rcp_clear_auth_cookie' );
+
+
+/**
+ * Checks if a user is allowed to be logged-in
+ *
+ * The transient related to the user is retrieved and the first cookie in the transient
+ * is compared to the LOGGED_IN_COOKIE of the current user.
+ *
+ * The first cookie in the transient is the oldest, so it is the one that gets logged out
+ *
+ * We only log a user out if there are more than 2 users logged into the same account
+ *
+ * @access      private
+ * @since       1.5
+ * @return      void
+*/
+
+function rcp_can_user_be_logged_in() {
+	if ( is_user_logged_in() && rcp_no_account_sharing() ) :
+
+		$user_id = get_current_user_id();
+
+		$already_logged_in = get_transient( 'rcp_user_logged_in_' . $user_id );
+
+		if( $already_logged_in !== false ) :
+
+			$data = maybe_unserialize( $already_logged_in );
+
+			if( count( $data ) < 2 )
+				return; // do nothing
+
+			// remove the first key
+			unset( $data[0] );
+			$data = array_values( $data );
+
+			if( ! in_array( $_COOKIE[LOGGED_IN_COOKIE], $data ) ) :
+
+				set_transient( 'rcp_user_logged_in_' . $user_id, $data );
+
+				// Log the user out - this is the oldest user logged into this account
+				wp_logout();
+				wp_safe_redirect( trailingslashit( get_bloginfo( 'wpurl' ) ) . 'wp-login.php?loggedout=true' );
+
+			endif;
+
+		endif;
+
+	endif;
+}
+add_action( 'init', 'rcp_can_user_be_logged_in' );
