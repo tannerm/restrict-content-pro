@@ -522,6 +522,15 @@ function rcp_settings_page() {
 								<div class="description"><?php _e( 'This is the page the default login URL redirects to, if the option above is checked. This should be the page that contains the [login_form] short code.', 'rcp' ); ?></div>
 							</td>
 						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[no_loging_sharing]"><?php _e( 'Prevent Account Sharing', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[no_loging_sharing]" id="rcp_settings[no_loging_sharing]"<?php checked( true, isset( $rcp_options['no_loging_sharing'] ) ); ?>/>
+								<span class="description"><?php _e( 'Check this if you\'d like to prevents multiple users from logging into the same account simultaneously.', 'rcp' ); ?></span>
+							</td>
+						</tr>
 					</table>
 					<?php do_action( 'rcp_misc_settings', $rcp_options ); ?>
 				</div><!--end #misc-->

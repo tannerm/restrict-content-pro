@@ -237,18 +237,18 @@ function rcp_get_current_url() {
 		$current_url = get_permalink( $post->ID );
 
 	else :
-		
+
 		$current_url = 'http';
 		if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) $current_url .= "s";
 
 		$current_url .= "://";
-		
+
 		if ( $_SERVER["SERVER_PORT"] != "80" ) {
 			$current_url .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
-		} else { 
+		} else {
 			$current_url .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
 		}
-		
+
 	endif;
 
 	return apply_filters( 'rcp_current_url', $current_url );
@@ -274,3 +274,16 @@ function rcp_log_types( $types ) {
 
 }
 add_filter( 'wp_log_types', 'rcp_log_types' );
+
+
+/**
+ * Check if "Prevent Account Sharing" is enabled
+ *
+ * @access      private
+ * @since       1.4
+ * @return      bool
+*/
+function rcp_no_account_sharing() {
+	global $rcp_options;
+	return (bool) apply_filters( 'rcp_no_account_sharing', isset( $rcp_options['no_loging_sharing'] ) );
+}
