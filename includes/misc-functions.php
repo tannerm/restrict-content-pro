@@ -342,7 +342,6 @@ function rcp_clear_auth_cookie() {
 			$data = array_values( $data );
 			set_transient( 'rcp_user_logged_in_' . $user_id, $data );
 		}
-		endif;
 
 	endif;
 
