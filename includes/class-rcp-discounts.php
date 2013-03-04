@@ -315,11 +315,11 @@ class RCP_Discounts {
 				sanitize_text_field( $args['name'] ),
 				strip_tags( addslashes( $args['description'] ) ),
 				sanitize_text_field( $args['amount'] ),
-				$unit,
+				$args['unit'],
 				sanitize_text_field( $args['code'] ),
 				sanitize_text_field( $args['status'] ),
 				sanitize_text_field( $args['expiration'] ),
-				sanitize_text_field( $args['max_use'] ),
+				sanitize_text_field( $args['max_uses'] ),
 				absint( $args['id'] )
 			)
 		);

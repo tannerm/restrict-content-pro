@@ -319,15 +319,17 @@ function rcp_process_data() {
 		}
 
 		/* discount processing */
-		if( isset( $_GET['delete_discount'] ) && $_GET['delete_discount'] > 0) {
+		if( ! empty( $_GET['delete_discount'] ) ) {
 			$discounts = new RCP_Discounts();
 			$discounts->delete( $_GET['delete_discount'] );
 		}
-		if( isset( $_GET['activate_discount'] ) && $_GET['activate_discount'] > 0) {
-			$wpdb->update( $rcp_discounts_db_name, array( 'status' => 'active' ), array( 'id' => absint( $_GET['activate_discount'] ) ) );
+		if( ! empty( $_GET['activate_discount'] ) ) {
+			$discounts = new RCP_Discounts();
+			$discounts->update( $_GET['activate_discount'], array( 'status' => 'active' ) );
 		}
-		if( isset( $_GET['deactivate_discount'] ) && $_GET['deactivate_discount'] > 0) {
-			$wpdb->update( $rcp_discounts_db_name, array( 'status' => 'disabled' ), array( 'id' => absint( $_GET['deactivate_discount'] ) ) );
+		if( ! empty( $_GET['deactivate_discount'] ) ) {
+			$discounts = new RCP_Discounts();
+			$discounts->update( $_GET['deactivate_discount'], array( 'status' => 'disabled' ) );
 		}
 	}
 }
