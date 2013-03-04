@@ -75,7 +75,7 @@ function rcp_process_data() {
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-added=0';
 			}
-			header( "Location:" . $url );
+			wp_safe_redirect( $url ); exit;
 		}
 
 		// edit a subscription level
@@ -117,7 +117,7 @@ function rcp_process_data() {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-updated=0';
 			}
 
-			header ("Location:" . $url);
+			wp_safe_redirect( $url ); exit;
 		}
 
 		// add a subscription for an existing member
@@ -200,7 +200,7 @@ function rcp_process_data() {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-added=0';
 			}
 
-			header( "Location:" . $url );
+			wp_safe_redirect( $url ); exit;
 		}
 
 		// edit a discount code
@@ -227,7 +227,8 @@ function rcp_process_data() {
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-updated=0';
 			}
-			header( "Location:" . $url );
+
+			wp_safe_redirect( $url ); exit;
 		}
 
 	}
