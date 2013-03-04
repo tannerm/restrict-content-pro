@@ -32,6 +32,11 @@ class RCP_Discounts {
 	private $db_version;
 
 
+	/**
+	 * Get things started
+	 *
+	 * @since   1.5
+	*/
 
 	function __construct() {
 
@@ -40,6 +45,13 @@ class RCP_Discounts {
 
 	}
 
+
+	/**
+	 * Retrieve discounts from the database
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
 
 	public function get_discounts( $args = array() ) {
 		global $wpdb;
@@ -55,6 +67,13 @@ class RCP_Discounts {
 	}
 
 
+	/**
+	 * Retrieve a specific discount from the database
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
 	public function get_discount( $discount_id = 0 ) {
 		global $wpdb;
 
@@ -63,6 +82,14 @@ class RCP_Discounts {
 		return $discount;
 
 	}
+
+
+	/**
+	 * Retrieve a specific discount from the database by field
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
 
 	public function get_by( $field = 'code', $value = '' ) {
 		global $wpdb;
@@ -74,6 +101,13 @@ class RCP_Discounts {
 	}
 
 
+	/**
+	 * Get the status of a discount
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
 	public function get_status( $discount_id = 0 ) {
 
 		$discount = $this->get_discount( $discount_id );
@@ -83,6 +117,14 @@ class RCP_Discounts {
 		return false;
 
 	}
+
+
+	/**
+	 * Get the amount of a discount
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
 
 	public function get_amount( $discount_id = 0 ) {
 
@@ -95,6 +137,13 @@ class RCP_Discounts {
 	}
 
 
+	/**
+	 * Get the number of times a discount has been used
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
 	public function get_uses( $discount_id = 0 ) {
 
 		$discount = $this->get_discount( $discount_id );
@@ -104,6 +153,14 @@ class RCP_Discounts {
 		return 0;
 
 	}
+
+
+	/**
+	 * Get the maximum number of times a discount can be used
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
 
 	public function get_max_uses( $discount_id = 0 ) {
 
@@ -115,11 +172,27 @@ class RCP_Discounts {
 
 	}
 
+
+	/**
+	 * Increase the use count of a discount by 1
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
 	public function increase_uses( $discount_id = 0 ) {
 
 		$uses = $this->get_uses( $discount_id );
 		$this->update( $discount_id, array( 'uses' => $uses++ ) );
 	}
+
+
+	/**
+	 * Get the expiration date of a discount
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
 
 	public function get_expiration( $discount_id = 0 ) {
 
@@ -131,6 +204,14 @@ class RCP_Discounts {
 
 	}
 
+
+	/**
+	 * Get the discount type
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
 	public function get_type( $discount_id = 0 ) {
 
 		$discount = $this->get_discount( $discount_id );
@@ -141,6 +222,13 @@ class RCP_Discounts {
 
 	}
 
+
+	/**
+	 * Store a discount in the database
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
 
 	public function insert( $args = array() ) {
 
@@ -192,6 +280,14 @@ class RCP_Discounts {
 		return false;
 	}
 
+
+	/**
+	 * Update an existing discount
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
 	public function update( $discount_id = 0, $args = array() ) {
 
 		global $wpdb;
@@ -232,11 +328,27 @@ class RCP_Discounts {
 
 	}
 
+
+	/**
+	 * Delete a discount code
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
 	public function delete( $discount_id = 0 ) {
 		global $wpdb;
 		do_action( 'rcp_delete_discount', $discount_id );
 		$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM {$this->db_name} WHERE `id` = '%d';", absint( $discount_id ) ) );
 	}
+
+
+	/**
+	 * Check if a discount is maxed out
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
 
 	public function is_maxed_out( $discount_id = 0 ) {
 
@@ -253,6 +365,14 @@ class RCP_Discounts {
 		return (bool) apply_filters( 'rcp_is_discount_maxed_out', $ret, $discount_id, $uses, $max );
 
 	}
+
+
+	/**
+	 * Check if a discount is expired
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
 
 	public function is_expired( $discount_id = 0 ) {
 
@@ -271,6 +391,14 @@ class RCP_Discounts {
 
 	}
 
+
+	/**
+	 * Add a discount to a user's history
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
 	public function add_to_user( $user_id = 0, $discount_code = '' ) {
 
 		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
@@ -288,6 +416,14 @@ class RCP_Discounts {
 
 	}
 
+
+	/**
+	 * Check if a user has used a discount
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
 	public function user_has_used( $user_id = 0, $discount_code = '' ) {
 
 		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
@@ -300,6 +436,13 @@ class RCP_Discounts {
 	}
 
 
+	/**
+	 * Format the discount code
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
 	public function format_discount( $amount = '', $type = '' ) {
 
 		if( $type == '%' ) {
@@ -311,6 +454,14 @@ class RCP_Discounts {
 		return $discount;
 
 	}
+
+
+	/**
+	 * Calculate the discounted price
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
 
 	public function calc_discounted_price( $base_price = '', $discount_amount = '', $type = '%' ) {
 
