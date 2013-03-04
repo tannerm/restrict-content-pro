@@ -115,6 +115,12 @@ class RCP_Discounts {
 
 	}
 
+	public function increase_use( $discount_id = 0 ) {
+
+		$uses = $this->get_uses( $discount_id );
+
+	}
+
 	public function get_expiration( $discount_id = 0 ) {
 
 		$discount = $this->get_discount( $discount_id );
@@ -190,20 +196,10 @@ class RCP_Discounts {
 
 		global $wpdb;
 
-		$defaults = array(
-			'id'          => 0,
-			'name'        => '',
-			'description' => '',
-			'amount'      => '0.00',
-			'status'      => 'inactive',
-			'unit'        => '%',
-			'code'        => '',
-			'expiration'  => '',
-			'max_uses' 	  => 0,
-			'use_count'   => '0'
-		);
+		$discount = $this->get_discount( $discount_id );
+		$discount = get_object_vars( $discount );
 
-		$args = wp_parse_args( $payment_data, $defaults );
+		$args     = array_merge( $discount, $args );
 
 		do_action( 'rcp_pre_edit_discount', absint( $args['id'] ), $args );
 
@@ -237,38 +233,95 @@ class RCP_Discounts {
 	}
 
 	public function delete( $discount_id = 0 ) {
-
+		global $wpdb;
+		do_action( 'rcp_delete_discount', $discount_id );
+		$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM {$this->db_name} WHERE `id` = '%d';", absint( $discount_id ) ) );
 	}
 
 	public function is_maxed_out( $discount_id = 0 ) {
+
+		$uses = $this->get_uses( $discount_id );
+		$max  = $this->get_max_uses( $discount_id );
+		$ret  = false;
+
+		if( ! empty( $max ) && $max > 0 ) {
+			if( $uses < $max ) {
+				$ret = true;
+			}
+		}
+
+		return (bool) apply_filters( 'rcp_is_discount_maxed_out', $ret, $discount_id, $uses, $max );
 
 	}
 
 	public function is_expired( $discount_id = 0 ) {
 
+		$ret        = false;
+		$expiration = $this->get_expiration( $discount_id );
+
+		// if no expiration is set, return true
+		if( ! empty( $expiration ) ) {
+
+			if ( strtotime( 'NOW' ) > strtotime( $expiration ) ) {
+				$ret = true;
+			}
+		}
+
+		return (bool) apply_filters( 'rcp_is_discount_expired', $ret, $discount_id, $expiration );
+
 	}
 
 	public function add_to_user( $user_id = 0, $discount_code = '' ) {
+
+		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
+
+		if( ! is_array( $user_discounts ) )
+			$user_discounts = array();
+
+		$user_discounts[] = $discount_code;
+
+		do_action( 'rcp_pre_store_discount_for_user', $discount_code, $user_id );
+
+		update_user_meta( $user_id, 'rcp_user_discounts', $user_discounts );
+
+		do_action( 'rcp_store_discount_for_user', $discount_code, $user_id );
 
 	}
 
 	public function user_has_used( $user_id = 0, $discount_code = '' ) {
 
+		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
+
+		if( is_array( $user_discounts ) && in_array( $discount_code, $user_discounts ) )
+			return true;
+
+		return false;
+
 	}
 
-	public function increase_use( $discount_id = 0 ) {
-
-	}
-
-	public function count_uses( $discount_id = 0 ) {
-
-	}
 
 	public function format_discount( $amount = '', $type = '' ) {
+
+		if( $type == '%' ) {
+			$discount = $amount . '%';
+		} elseif( $type == 'flat' ) {
+			$discount = rcp_currency_filter( $amount );
+		}
+
+		return $discount;
 
 	}
 
 	public function calc_discounted_price( $base_price = '', $discount_amount = '', $type = '%' ) {
+
+		$discounted_price = 0.00;
+		if( $type == '%' ) {
+			$discounted_price = $base_price - ( $base_price * ( $discount_amount / 100 ) );
+		} elseif($type == 'flat') {
+			$discounted_price = $base_price - $discount_amount;
+		}
+
+		return number_format( (float) $discounted_price, 2 );
 
 	}
 
