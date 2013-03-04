@@ -138,9 +138,101 @@ class RCP_Discounts {
 
 	public function insert( $args = array() ) {
 
+		global $wpdb;
+
+		$defaults = array(
+			'name'        => '',
+			'description' => '',
+			'amount'      => '0.00',
+			'status'      => 'inactive',
+			'unit'        => '%',
+			'code'        => '',
+			'expiration'  => '',
+			'max_uses' 	  => 0,
+			'use_count'   => '0'
+		);
+
+		$args = wp_parse_args( $payment_data, $defaults );
+
+		do_action( 'rcp_pre_add_discount', $args );
+
+		$add = $wpdb->query(
+			$wpdb->prepare(
+				"INSERT INTO {$this->db_name} SET
+					`name`        = '%s',
+					`description` = '%s',
+					`amount`      = '%s',
+					`status`      = 'active',
+					`unit`        = '%s',
+					`code`        = '%s',
+					`expiration`  = '%s',
+					`max_uses`    = '%d',
+					`use_count`   = '0'
+				;",
+				anitize_text_field( $args['name'] ),
+				strip_tags( addslashes( $args['description'] ) ),
+				anitize_text_field( $args['amount'] ),
+				$args['unit'],
+				sanitize_text_field( $args['code'] ),
+				anitize_text_field( $args['expiration'] ),
+				absint( $args['max_uses'] )
+			)
+		);
+
+		do_action( 'rcp_add_discount', $args, $wpdb->insert_id );
+
+		if( $add )
+			return $wpdb->insert_id;
+		return false;
 	}
 
 	public function update( $discount_id = 0, $args = array() ) {
+
+		global $wpdb;
+
+		$defaults = array(
+			'id'          => 0,
+			'name'        => '',
+			'description' => '',
+			'amount'      => '0.00',
+			'status'      => 'inactive',
+			'unit'        => '%',
+			'code'        => '',
+			'expiration'  => '',
+			'max_uses' 	  => 0,
+			'use_count'   => '0'
+		);
+
+		$args = wp_parse_args( $payment_data, $defaults );
+
+		do_action( 'rcp_pre_edit_discount', absint( $args['id'] ), $args );
+
+		$update = $wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$this->db_name} SET
+					`name`        = '%s',
+					`description` = '%s',
+					`amount`      = '%s',
+					`unit`        = '%s',
+					`code`        = '%s',
+					`status`      = '%s',
+					`expiration`  = '%s',
+					`max_uses`    = '%s'
+					WHERE `id`    = '%d'
+				;",
+				sanitize_text_field( $args['name'] ),
+				strip_tags( addslashes( $args['description'] ) ),
+				sanitize_text_field( $args['amount'] ),
+				$unit,
+				sanitize_text_field( $args['code'] ),
+				sanitize_text_field( $args['status'] ),
+				sanitize_text_field( $args['expiration'] ),
+				sanitize_text_field( $args['max_use'] ),
+				absint( $args['id'] )
+			)
+		);
+
+		do_action( 'rcp_edit_discount', absint( $args['id'] ), $args );
 
 	}
 
