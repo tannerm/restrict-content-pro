@@ -326,6 +326,10 @@ class RCP_Discounts {
 
 		do_action( 'rcp_edit_discount', absint( $args['id'] ), $args );
 
+		if( $update )
+			return true;
+		return false;
+
 	}
 
 

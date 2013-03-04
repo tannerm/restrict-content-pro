@@ -236,41 +236,23 @@ function rcp_process_data() {
 		// edit a discount code
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-discount' ) {
 
-			if( isset( $_POST['unit'] ) && $_POST['unit'] == '%' )
-				$unit = '%';
-			else
-				$unit = 'flat';
+			$discounts = new RCP_Discounts();
 
-			do_action( 'rcp_pre_edit_discount', absint( $_POST['discount_id'] ) );
-
-			$update = $wpdb->query(
-				$wpdb->prepare(
-					"UPDATE " . $rcp_discounts_db_name . " SET
-						`name`='%s',
-						`description`='%s',
-						`amount`='%s',
-						`unit`='%s',
-						`code`='%s',
-						`status`='%s',
-						`expiration`='%s',
-						`max_uses`='%s'
-						WHERE `id` ='%d'
-					;",
-					sanitize_text_field( $_POST['name'] ),
-					strip_tags( addslashes( $_POST['description'] ) ),
-					sanitize_text_field( $_POST['amount'] ),
-					$unit,
-					sanitize_text_field( $_POST['code'] ),
-					sanitize_text_field( $_POST['status'] ),
-					sanitize_text_field( $_POST['expiration'] ),
-					sanitize_text_field( $_POST['max'] ),
-					absint( $_POST['discount_id'] )
-				)
+			// Setup unsanitized data
+			$data = array(
+				'name'        => $_POST['name'],
+				'description' => $_POST['description'],
+				'amount'      => $_POST['amount'],
+				'unit'        => isset( $_POST['unit'] ) && $_POST['unit'] == '%' ? '%' : 'flat',
+				'code'        => $_POST['code'],
+				'status'      => $_POST['status'],
+				'expiration'  => $_POST['expiration'],
+				'max_uses'    => $_POST['max']
 			);
 
-			do_action( 'rcp_edit_discount', $_POST, $wpdb->insert_id );
+			$update = $discounts->update( $_POST['discount_id'], $data );
 
-			if($update) {
+			if( $update ) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-updated=1';
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-updated=0';
