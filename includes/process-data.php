@@ -320,7 +320,8 @@ function rcp_process_data() {
 
 		/* discount processing */
 		if( isset( $_GET['delete_discount'] ) && $_GET['delete_discount'] > 0) {
-			$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM " . $rcp_discounts_db_name . " WHERE `id`='%d';", urldecode( absint( $_GET['delete_discount'] ) ) ) );
+			$discounts = new RCP_Discounts();
+			$discounts->delete( $_GET['delete_discount'] );
 		}
 		if( isset( $_GET['activate_discount'] ) && $_GET['activate_discount'] > 0) {
 			$wpdb->update( $rcp_discounts_db_name, array( 'status' => 'active' ), array( 'id' => absint( $_GET['activate_discount'] ) ) );
