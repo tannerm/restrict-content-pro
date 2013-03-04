@@ -25,53 +25,12 @@ function rcp_process_data() {
 		// add a new subscription level
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'add-level' ) {
 
-			if( $_POST['duration'] == '' || $_POST['duration'] == 0 ) {
-				$duration = 'unlimited';
-			} else {
-				$duration = $_POST['duration'];
-			}
+			$levels = new RCP_Levels();
 
-			$name = 'no name';
-			if( isset( $_POST['name'] ) && $_POST['name'] != '' ) $name = $_POST['name'];
+			$add = $levels->insert( $_POST );
 
-			$duration_unit = 'm';
-			if( isset( $_POST['duration-unit'] ) ) $duration_unit = $_POST['duration-unit'];
-
-			$price = 0;
-			if( isset( $_POST['price'] ) && $_POST['price'] != '' ) $price = $_POST['price'];
-
-			$level = 0;
-			if( isset( $_POST['level'] ) && $_POST['level'] != '' ) $level = $_POST['level'];
-
-			$description = '';
-			if( isset( $_POST['description'] ) && $_POST['description'] != '' ) $description = $_POST['description'];
-
-			$add = $wpdb->query(
-				$wpdb->prepare(
-					"INSERT INTO `" . $rcp_db_name . "` SET
-						`name`='%s',
-						`description`='%s',
-						`duration`='%d',
-						`duration_unit`='%s',
-						`price`='%s',
-						`list_order`='0',
-						`level`='%d',
-						`status`='%s'
-					;",
-					utf8_encode( $name ),
-					addslashes( utf8_encode( $description ) ),
-					$duration,
-					$duration_unit,
-					$price,
-					$level,
-					$_POST['status']
-				 )
-			);
-			if($add) {
-				// clear the cache
-				delete_transient( 'rcp_subscription_levels' );
+			if( $add ) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-added=1';
-				do_action( 'rcp_add_subscription', $_POST );
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-added=0';
 			}
