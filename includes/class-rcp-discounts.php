@@ -42,37 +42,96 @@ class RCP_Discounts {
 
 
 	public function get_discounts( $args = array() ) {
+		global $wpdb;
+
+		// TODO: Add optional args for limit, order, etc
+
+		$discounts = $wpdb->get_results( "SELECT * FROM {$this->db_name};" );
+
+		if( $discounts )
+			return $discounts;
+		return false;
 
 	}
 
 
 	public function get_discount( $discount_id = 0 ) {
+		global $wpdb;
+
+		$discount = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->db_name} WHERE id='%d';", $discount_id ) );
+
+		return $discount;
 
 	}
 
 	public function get_by( $field = 'code', $value = '' ) {
+		global $wpdb;
+
+		$discount = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->db_name} WHERE {$field}='%s';", $value ) );
+
+		return $discount;
 
 	}
 
 
 	public function get_status( $discount_id = 0 ) {
 
+		$discount = $this->get_discount( $discount_id );
+
+		if( $discount )
+			return $discount->status;
+		return false;
+
 	}
 
 	public function get_amount( $discount_id = 0 ) {
+
+		$discount = $this->get_discount( $discount_id );
+
+		if( $discount )
+			return $discount->amount;
+		return 0;
 
 	}
 
 
 	public function get_uses( $discount_id = 0 ) {
 
+		$discount = $this->get_discount( $discount_id );
+
+		if( $discount )
+			return $discount->use_count;
+		return 0;
+
+	}
+
+	public function get_max_uses( $discount_id = 0 ) {
+
+		$discount = $this->get_discount( $discount_id );
+
+		if( $discount )
+			return $discount->max_uses;
+		return 0;
+
 	}
 
 	public function get_expiration( $discount_id = 0 ) {
 
+		$discount = $this->get_discount( $discount_id );
+
+		if( $discount )
+			return $discount->expiration;
+		return false;
+
 	}
 
 	public function get_type( $discount_id = 0 ) {
+
+		$discount = $this->get_discount( $discount_id );
+
+		if( $discount )
+			return $discount->unit;
+		return false;
 
 	}
 
