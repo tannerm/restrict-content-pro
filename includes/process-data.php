@@ -176,61 +176,31 @@ function rcp_process_data() {
 		****************************************/
 
 		// add a new discount code
-		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'add-discount') {
+		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'add-discount' ) {
 
-			$name = 'no name';
-			if( isset( $_POST['name'] ) && $_POST['name'] != '' ) $name = sanitize_text_field( $_POST['name'] );
+			$discounts = new RCP_Discounts();
 
-			$description = '';
-			if( isset( $_POST['description'] ) && $_POST['description'] != '' ) $description = $_POST['description'];
-
-			$amount = 0;
-			if( isset( $_POST['amount'] ) && $_POST['amount'] != '' ) $amount = sanitize_text_field( $_POST['amount'] );
-
-			if( isset( $_POST['unit'] ) && $_POST['unit'] == '%' )
-				$unit = '%';
-			else
-				$unit = 'flat';
-
-			$expiration = '';
-			if( isset( $_POST['expiration'] ) && $_POST['expiration'] != '' ) $expiration = sanitize_text_field( $_POST['expiration'] );
-
-			$max = '';
-			if( isset( $_POST['max'] ) && $_POST['max'] != '' ) $max = $_POST['max'];
-
-			do_action( 'rcp_pre_add_discount' );
-
-			$add = $wpdb->query(
-				$wpdb->prepare(
-					"INSERT INTO `" . $rcp_discounts_db_name . "` SET
-						`name`='%s',
-						`description`='%s',
-						`amount`='%s',
-						`status`='active',
-						`unit`='%s',
-						`code`='%s',
-						`expiration`='%s',
-						`max_uses`='%d',
-						`use_count`='0'
-					;",
-					$name,
-					strip_tags( addslashes( $description ) ),
-					$amount,
-					$unit,
-					sanitize_text_field( $_POST['code'] ),
-					$expiration,
-					$max
-				)
+			// Setup unsanitized data
+			$data = array(
+				'name'        => $_POST['name'],
+				'description' => $_POST['description'],
+				'amount'      => $_POST['amount'],
+				'unit'        => isset( $_POST['unit'] ) && $_POST['unit'] == '%' ? '%' : 'flat',
+				'code'        => $_POST['code'],
+				'status'      => 'active',
+				'expiration'  => $_POST['expiration'],
+				'max_uses'    => $_POST['max']
 			);
 
- 			do_action( 'rcp_add_discount', $_POST, $wpdb->insert_id );
+			$add = $discounts->insert( $data );
 
-			if($add) {
+			if( $add ) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-added=1';
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-added=0';
 			}
-			header ("Location:" . $url);
+
+			header( "Location:" . $url );
 		}
 
 		// edit a discount code
@@ -257,7 +227,7 @@ function rcp_process_data() {
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-updated=0';
 			}
-			header ("Location:" . $url);
+			header( "Location:" . $url );
 		}
 
 	}

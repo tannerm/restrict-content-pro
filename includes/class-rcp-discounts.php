@@ -246,7 +246,7 @@ class RCP_Discounts {
 			'use_count'   => '0'
 		);
 
-		$args = wp_parse_args( $payment_data, $defaults );
+		$args = wp_parse_args( $args, $defaults );
 
 		do_action( 'rcp_pre_add_discount', $args );
 
@@ -263,12 +263,12 @@ class RCP_Discounts {
 					`max_uses`    = '%d',
 					`use_count`   = '0'
 				;",
-				anitize_text_field( $args['name'] ),
+				sanitize_text_field( $args['name'] ),
 				strip_tags( addslashes( $args['description'] ) ),
-				anitize_text_field( $args['amount'] ),
+				sanitize_text_field( $args['amount'] ),
 				$args['unit'],
 				sanitize_text_field( $args['code'] ),
-				anitize_text_field( $args['expiration'] ),
+				sanitize_text_field( $args['expiration'] ),
 				absint( $args['max_uses'] )
 			)
 		);
