@@ -115,10 +115,10 @@ class RCP_Discounts {
 
 	}
 
-	public function increase_use( $discount_id = 0 ) {
+	public function increase_uses( $discount_id = 0 ) {
 
 		$uses = $this->get_uses( $discount_id );
-
+		$this->update( $discount_id, array( 'uses' => $uses++ ) );
 	}
 
 	public function get_expiration( $discount_id = 0 ) {
@@ -314,7 +314,7 @@ class RCP_Discounts {
 
 	public function calc_discounted_price( $base_price = '', $discount_amount = '', $type = '%' ) {
 
-		$discounted_price = 0.00;
+		$discounted_price = $base_price;
 		if( $type == '%' ) {
 			$discounted_price = $base_price - ( $base_price * ( $discount_amount / 100 ) );
 		} elseif($type == 'flat') {
