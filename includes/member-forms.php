@@ -46,7 +46,7 @@ function rcp_login_form_fields( $args = array() ) {
 			</form>
 			<?php
 		} else {
-			echo __( 'You are logged in.', 'rcp' ) . ' <a href="' . wp_logout_url( home_url() ) . '">' . __( 'Logout', 'rcp' ) . '</a>';
+			echo '<div class="rcp_logged_in">' . __( 'You are logged in.', 'rcp' ) . ' <a href="' . wp_logout_url( home_url() ) . '">' . __( 'Logout', 'rcp' ) . '</a></div>';
 		}
 
 		do_action( 'rcp_after_login_form' );
