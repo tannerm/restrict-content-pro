@@ -140,19 +140,19 @@ function rcp_add_new_member() {
 				// process a paid subscription
 				if( $price > '0' ) {
 
-					if( $code != '' ) {
+					if( ! empty( $code ) ) {
 
-						// get the details of this discount code
-						$discount = rcp_get_discount_details_by_code( $code );
+						$discounts = new RCP_Discounts();
+						$discount = $discounts->get_by( 'code', $code );
 
 						// calculate the after-discount price
-						$price = rcp_get_discounted_price( $price, $discount->amount, $discount->unit );
+						$price = $discounts->calc_discounted_price( $price, $discount->amount, $discount->unit );
 
 						// record the usage of this discount code
-						rcp_store_discount_use_for_user( $code, $user_id, $discount );
+						$discounts->add_to_user( $user_id, $code );
 
 						// incrase the usage count for the code
-						rcp_increase_code_use( $discount->id );
+						$discounts->increase_uses( $discount->id );
 
 						// if the discount is 100%, log the user in and redirect to success page
 						if( $price == '0' ) {
