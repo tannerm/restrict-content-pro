@@ -102,6 +102,25 @@ class RCP_Levels {
 
 
 	/**
+	 * Retrieve a field for a subscription level
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
+	public function get_level_field( $level_id = 0, $field = '' ) {
+
+		global $wpdb;
+
+		$field = $wpdb->get_col( $wpdb->prepare( "SELECT {$field} FROM {$this->db_name} WHERE id='%d';", $level_id ) );
+
+		if( $field )
+			return $field[0];
+		return false;
+	}
+
+
+	/**
 	 * Insert a subscription level into the database
 	 *
 	 * @access  public

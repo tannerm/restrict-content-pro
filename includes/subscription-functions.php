@@ -110,9 +110,10 @@ function rcp_calculate_subscription_expiration( $id ) {
 */
 function rcp_get_subscription_price( $id ) {
 	global $wpdb, $rcp_db_name;
-	$price = $wpdb->get_results( $wpdb->prepare( "SELECT price FROM " . $rcp_db_name . " WHERE id='%d';", $id ) );
+	$levels = new RCP_Levels();
+	$price = $levels->get_level_field( $id, 'price' );
 	if( $price )
-		return $price[0]->price;
+		return $price;
 	return false;
 }
 
