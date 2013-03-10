@@ -397,3 +397,34 @@ function rcp_can_user_be_logged_in() {
 	endif;
 }
 add_action( 'init', 'rcp_can_user_be_logged_in' );
+
+
+/**
+ * Retrieve a list of the allowed HTML tags
+ *
+ * This is used for filtering HTML in subscription level descriptions and other places
+ *
+ * @access  public
+ * @since   1.5
+*/
+function rcp_allowed_html_tags() {
+	$tags = array(
+		'p' => array(),
+		'span' => array(),
+		'a' => array(
+       		'href' => array(),
+        	'title' => array()
+        ),
+		'strong' => array(),
+		'em' => array(),
+		'br' => array(),
+		'img' => array(
+       		'src' => array(),
+        	'title' => array(),
+        	'alt' => array()
+        ),
+		'div'
+	);
+
+	return apply_filters( 'rcp_allowed_html_tags', $tags );
+}
