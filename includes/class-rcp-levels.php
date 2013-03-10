@@ -63,6 +63,45 @@ class RCP_Levels {
 
 
 	/**
+	 * Retrieve all subscription levels from the database
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
+	public function get_levels( $args = array() ) {
+		global $wpdb;
+
+		$defaults = array(
+			'status'  => 'all',
+			'limit'   => null,
+			'orderby' => 'list_order'
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		if( $args['status'] == 'active' ) {
+			$where = "WHERE `status` !='inactive'";
+		} elseif( $args['status'] == 'inactive' ) {
+			$where = "WHERE `status` ='{$status}'";
+		} else {
+			$where = "";
+		}
+
+		if( ! empty( $args['limit'] ) )
+			$limit = " LIMIT={$args['limit']}";
+		else
+			$limit = '';
+
+		$levels = $wpdb->get_results( "SELECT * FROM {$this->db_name} {$where} ORDER BY {$args['orderby']}{$limit};" );
+
+		if( $levels )
+			return $levels;
+		return false;
+	}
+
+
+	/**
 	 * Insert a subscription level into the database
 	 *
 	 * @access  public

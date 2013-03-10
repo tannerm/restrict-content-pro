@@ -15,24 +15,18 @@
 function rcp_get_subscription_levels( $status = 'all', $cache = true ) {
 	global $wpdb, $rcp_db_name;
 
-	if( $status == 'active' ) {
-		$where = "WHERE `status` !='inactive'";
-	} elseif( $status == 'inactive' ) {
-		$where = "WHERE `status` ='{$status}'";
-	} else {
-		$where = "";
-	}
+	$rcp_levels = new RCP_Levels();
 
 	if( $cache ) {
 
 		$levels = get_transient( 'rcp_subscription_levels' );
 		if($levels === false) {
-			$levels = $wpdb->get_results( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" );
+			$levels = $rcp_levels->get_levels( array( 'status' => $status ) );
 			// cache the levels with a 3 hour expiration
 			set_transient( 'rcp_subscription_levels', $levels, 10800 );
 		}
 	} else {
-		$levels = $wpdb->get_results( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" );
+		$levels = $rcp_levels->get_levels( array( 'status' => $status ) );
 	}
 
 	if( $levels )
