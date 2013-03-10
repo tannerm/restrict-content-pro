@@ -109,7 +109,6 @@ function rcp_calculate_subscription_expiration( $id ) {
 * return mixed - price of subscription level, false on failure
 */
 function rcp_get_subscription_price( $id ) {
-	global $wpdb, $rcp_db_name;
 	$levels = new RCP_Levels();
 	$price = $levels->get_level_field( $id, 'price' );
 	if( $price )
@@ -123,11 +122,11 @@ function rcp_get_subscription_price( $id ) {
 * return int - the numerical access level the subscription gives
 */
 function rcp_get_subscription_access_level( $id ) {
-	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results( $wpdb->prepare( "SELECT level FROM " . $rcp_db_name . " WHERE id='%d';", $id ) );
+	$levels = new RCP_Levels();
+	$level = $levels->get_level_field( $id, 'level' );
 	if( $level )
-		return $level[0]->level;
-	return 0;
+		return $level;
+	return false;
 }
 
 
