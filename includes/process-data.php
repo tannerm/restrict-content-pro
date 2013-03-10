@@ -198,11 +198,13 @@ function rcp_process_data() {
 
 		}
 		if( isset( $_GET['activate_subscription'] ) && $_GET['activate_subscription'] > 0) {
-			$wpdb->update($rcp_db_name, array('status' => 'active' ), array('id' => absint( $_GET['activate_subscription'] ) ) );
+			$levels = new RCP_Levels();
+			$update = $levels->update( $_GET['activate_subscription'], array( 'status' => 'active' ) );
 			delete_transient( 'rcp_subscription_levels' );
 		}
 		if( isset( $_GET['deactivate_subscription'] ) && $_GET['deactivate_subscription'] > 0) {
-			$wpdb->update( $rcp_db_name, array( 'status' => 'inactive' ), array('id' => absint( $_GET['deactivate_subscription'] ) ) );
+			$levels = new RCP_Levels();
+			$update = $levels->update( $_GET['deactivate_subscription'], array( 'status' => 'inactive' ) );
 			delete_transient( 'rcp_subscription_levels' );
 		}
 
