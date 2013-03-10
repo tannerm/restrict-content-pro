@@ -41,10 +41,10 @@ function rcp_get_subscription_levels( $status = 'all', $cache = true ) {
 * return mixed - object on success, false otherwise
 */
 function rcp_get_subscription_details( $id ) {
-	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_db_name . " WHERE id='%d';", $id ) );
+	$levels = new RCP_Levels();
+	$level = $levels->get_level( $id );
 	if( $level )
-		return $level[0];
+		return $level;
 	return false;
 }
 
