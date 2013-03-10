@@ -173,4 +173,19 @@ class RCP_Levels {
 
 	}
 
+
+	/**
+	 * Delete a subscription level
+	 *
+	 * @access  public
+	 * @since   1.5
+	*/
+
+	public function remove( $level_id = 0 ) {
+
+		global $wpdb;
+		$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM " . $this->db_name . " WHERE `id`='%d';", absint( $level_id ) ) );
+		delete_transient( 'rcp_subscription_levels' );
+	}
+
 }

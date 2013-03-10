@@ -193,8 +193,9 @@ function rcp_process_data() {
 					rcp_set_status( $member, 'cancelled' );
 				}
 			}
-			$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM " . $rcp_db_name . " WHERE `id`='%d';", urldecode( absint( $_GET['delete_subscription'] ) ) ) );
-			delete_transient( 'rcp_subscription_levels' );
+			$levels = new RCP_Levels();
+			$levels->remove( $_GET['delete_subscription'] );
+
 		}
 		if( isset( $_GET['activate_subscription'] ) && $_GET['activate_subscription'] > 0) {
 			$wpdb->update($rcp_db_name, array('status' => 'active' ), array('id' => absint( $_GET['activate_subscription'] ) ) );
