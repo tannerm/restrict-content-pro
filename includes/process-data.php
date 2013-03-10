@@ -40,38 +40,13 @@ function rcp_process_data() {
 		// edit a subscription level
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-subscription') {
 
-			if($_POST['duration'] == '' || $_POST['duration'] == 0) {
-				$duration = 'unlimited';
-			} else {
-				$duration = $_POST['duration'];
-			}
-			$update = $wpdb->query(
-				$wpdb->prepare(
-					"UPDATE " . $rcp_db_name . " SET
-						`name`='%s',
-						`description`='%s',
-						`duration`='%d',
-						`duration_unit`='%s',
-						`price`='%s',
-						`level`='%d',
-						`status`='%s'
-						WHERE `id`='%d'
-					;",
-					utf8_encode( $_POST['name'] ),
-					addslashes( utf8_encode( $_POST['description'] ) ),
-					$duration,
-					$_POST['duration-unit'],
-					$_POST['price'],
-					$_POST['level'],
-					$_POST['status'],
-					absint( $_POST['subscription_id'] )
-				)
-			);
+			$levels = new RCP_Levels();
+
+			$update = $levels->update( $_POST['subscription_id'], $_POST );
+
 			if($update) {
 				// clear the cache
-				delete_transient( 'rcp_subscription_levels' );
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-updated=1';
-				do_action( 'rcp_edit_subscription', $_POST['subscription_id'], $_POST );
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-updated=0';
 			}
