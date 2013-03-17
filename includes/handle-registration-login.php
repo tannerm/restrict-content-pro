@@ -150,7 +150,7 @@ function rcp_process_registration() {
 					);
 
 					// get the selected payment method/gateway
-					if( !isset( $_POST['rcp_gateway'] ) ) {
+					if( ! isset( $_POST['rcp_gateway'] ) ) {
 						$gateway = 'paypal';
 					} else {
 						$gateway = $_POST['rcp_gateway'];
