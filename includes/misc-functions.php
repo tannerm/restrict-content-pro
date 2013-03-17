@@ -32,15 +32,19 @@ function rcp_is_paid_content( $post_id ) {
 */
 
 function rcp_get_paid_posts() {
-	$paid_ids = array();
-	$paid_posts = get_posts( 'meta_key=_is_paid&meta_value=1&post_status=publish&posts_per_page=-1' );
-	if ( $paid_posts ) {
-		foreach ( $paid_posts as $p ) {
-			$paid_ids[] = $p->ID;
-		}
+	$args = array(
+		'meta_key' => '_is_paid',
+		'meta_value' => 1,
+		'post_status' => 'publish',
+		'posts_per_page' => -1,
+		'fields' => 'ids'
+	);
+	$paid_ids = get_posts( $args );
+	if ( $paid_ids ) {
+		return $paid_ids;
 	}
-	// return an array of paid post IDs
-	return $paid_ids;
+
+	return array();
 }
 
 
@@ -233,18 +237,18 @@ function rcp_get_current_url() {
 		$current_url = get_permalink( $post->ID );
 
 	else :
-		
+
 		$current_url = 'http';
 		if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) $current_url .= "s";
 
 		$current_url .= "://";
-		
+
 		if ( $_SERVER["SERVER_PORT"] != "80" ) {
 			$current_url .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
-		} else { 
+		} else {
 			$current_url .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
 		}
-		
+
 	endif;
 
 	return apply_filters( 'rcp_current_url', $current_url );
@@ -270,3 +274,126 @@ function rcp_log_types( $types ) {
 
 }
 add_filter( 'wp_log_types', 'rcp_log_types' );
+
+
+/**
+ * Check if "Prevent Account Sharing" is enabled
+ *
+ * @access      private
+ * @since       1.4
+ * @return      bool
+*/
+function rcp_no_account_sharing() {
+	global $rcp_options;
+	return (bool) apply_filters( 'rcp_no_account_sharing', isset( $rcp_options['no_loging_sharing'] ) );
+}
+
+
+/**
+ * Stores cookie value in a transient when a user logs in
+ *
+ * Transient IDs are based on the user ID so that we can track the number of
+ * users logged into the same account
+ *
+ * @access      private
+ * @since       1.5
+ * @return      void
+*/
+
+function rcp_set_user_logged_in_status( $logged_in_cookie, $expire, $expiration, $user_id, $status = 'logged_in' ) {
+
+	if ( ! empty( $user_id ) ) :
+
+		$data = get_transient( 'rcp_user_logged_in_' . $user_id );
+
+		if( false === $data )
+			$data = array();
+
+		$data[] = $logged_in_cookie;
+
+		set_transient( 'rcp_user_logged_in_' . $user_id, $data );
+
+	endif;
+}
+add_action( 'set_logged_in_cookie', 'rcp_set_user_logged_in_status', 10, 5 );
+
+
+/**
+ * Removes the current user's auth cookie from the rcp_user_logged_in_# transient when logging out
+ *
+ * @access      private
+ * @since       1.5
+ * @return      void
+*/
+
+function rcp_clear_auth_cookie() {
+
+	$user_id = get_current_user_id();
+
+	$already_logged_in = get_transient( 'rcp_user_logged_in_' . $user_id );
+
+	if( $already_logged_in !== false ) :
+
+		$data = maybe_unserialize( $already_logged_in );
+
+		$key = array_search( $_COOKIE[LOGGED_IN_COOKIE], $data );
+		if( false !== $key ) {
+			unset( $data[$key] );
+			$data = array_values( $data );
+			set_transient( 'rcp_user_logged_in_' . $user_id, $data );
+		}
+
+	endif;
+
+}
+add_action( 'clear_auth_cookie', 'rcp_clear_auth_cookie' );
+
+
+/**
+ * Checks if a user is allowed to be logged-in
+ *
+ * The transient related to the user is retrieved and the first cookie in the transient
+ * is compared to the LOGGED_IN_COOKIE of the current user.
+ *
+ * The first cookie in the transient is the oldest, so it is the one that gets logged out
+ *
+ * We only log a user out if there are more than 2 users logged into the same account
+ *
+ * @access      private
+ * @since       1.5
+ * @return      void
+*/
+
+function rcp_can_user_be_logged_in() {
+	if ( is_user_logged_in() && rcp_no_account_sharing() ) :
+
+		$user_id = get_current_user_id();
+
+		$already_logged_in = get_transient( 'rcp_user_logged_in_' . $user_id );
+
+		if( $already_logged_in !== false ) :
+
+			$data = maybe_unserialize( $already_logged_in );
+
+			if( count( $data ) < 2 )
+				return; // do nothing
+
+			// remove the first key
+			unset( $data[0] );
+			$data = array_values( $data );
+
+			if( ! in_array( $_COOKIE[LOGGED_IN_COOKIE], $data ) ) :
+
+				set_transient( 'rcp_user_logged_in_' . $user_id, $data );
+
+				// Log the user out - this is the oldest user logged into this account
+				wp_logout();
+				wp_safe_redirect( trailingslashit( get_bloginfo( 'wpurl' ) ) . 'wp-login.php?loggedout=true' );
+
+			endif;
+
+		endif;
+
+	endif;
+}
+add_action( 'init', 'rcp_can_user_be_logged_in' );

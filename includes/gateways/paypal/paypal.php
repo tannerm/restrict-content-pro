@@ -107,7 +107,7 @@ function rcp_check_ipn() {
 		if( ! $user_data || ! $subscription_id )
 			return;
 
-		if( ! rcp_get_subscription_details_by_name( $subscription_name ) )
+		if( ! rcp_get_subscription_details( $subscription_id ) )
 			return;
 
 		// setup the payment info in an array for storage

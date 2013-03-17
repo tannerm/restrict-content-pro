@@ -199,7 +199,7 @@ function rcp_change_password_form( $args = array() ) {
 
 	// parse the arguments passed
 	$defaults = array (
- 		'redirect' => $current_url,
+ 		'redirect' => $redirect,
  		'class' => 'rcp_form'
 	);
 	$args = wp_parse_args( $args, $defaults );
@@ -218,7 +218,7 @@ function rcp_change_password_form( $args = array() ) {
 				<span><?php _e( 'Password changed successfully', 'rcp' ); ?></span>
 			</div>
 		<?php } ?>
-		<form id="rcp_password_form"  class="<?php echo esc_attr( $class ); ?>" method="POST" action="<?php echo esc_url( $current_url ); ?>">
+		<form id="rcp_password_form"  class="<?php echo esc_attr( $class ); ?>" method="POST" action="<?php echo esc_url( $redirect ); ?>">
 			<fieldset class="rcp_change_password_fieldset">
 				<p>
 					<label for="rcp_user_pass"><?php echo apply_filters ( 'rcp_registration_new_password_label', __( 'New Password', 'rcp' ) ); ?></label>
