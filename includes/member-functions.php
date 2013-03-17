@@ -13,7 +13,7 @@
 * @param string $order - the order in which to display users: ASC / DESC
 * Return array
 */
-function rcp_get_members( $status = 'active', $subscription = null, $offset = 0, $number = -1, $order = 'DESC', $recurring = null ) {
+function rcp_get_members( $status = 'active', $subscription = null, $offset = 0, $number = 999999, $order = 'DESC', $recurring = null ) {
 
 	global $wpdb;
 
