@@ -428,3 +428,19 @@ function rcp_allowed_html_tags() {
 
 	return apply_filters( 'rcp_allowed_html_tags', $tags );
 }
+
+
+/**
+ * Checks whether function is disabled.
+ *
+ * @access public
+ * @since  1.5
+ *
+ * @param  string $function Name of the function.
+ * @return bool Whether or not function is disabled.
+ */
+function rcp_is_func_disabled( $function ) {
+	$disabled = explode( ',',  ini_get( 'disable_functions' ) );
+
+	return in_array( $function, $disabled );
+}

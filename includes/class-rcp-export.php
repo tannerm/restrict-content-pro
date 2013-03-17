@@ -21,7 +21,7 @@ class RCP_Export {
 	 *
 	 * @access      public
 	 * @var         string
-	 * @since       1.4.4
+	 * @since       1.5
 	 */
 	public $export_type = 'default';
 
@@ -29,7 +29,7 @@ class RCP_Export {
 	 * Can we export?
 	 *
 	 * @access      public
-	 * @since       1.4.4
+	 * @since       1.5
 	 * @return      bool
 	 */
 	public function can_export() {
@@ -40,7 +40,7 @@ class RCP_Export {
 	 * Set the export headers
 	 *
 	 * @access      public
-	 * @since       1.4.4
+	 * @since       1.5
 	 * @return      void
 	 */
 	public function headers() {
@@ -51,7 +51,7 @@ class RCP_Export {
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=edd-export-' . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv' );
+		header( 'Content-Disposition: attachment; filename=rcp-export-' . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv' );
 		header( "Expires: 0" );
 	}
 
@@ -59,7 +59,7 @@ class RCP_Export {
 	 * Set the CSV columns
 	 *
 	 * @access      public
-	 * @since       1.4.4
+	 * @since       1.5
 	 * @return      array
 	 */
 	public function csv_cols() {
@@ -74,7 +74,7 @@ class RCP_Export {
 	 * Retrieve CSV columns
 	 *
 	 * @access      public
-	 * @since       1.4.4
+	 * @since       1.5
 	 * @return      array
 	 */
 	public function get_csv_cols() {
@@ -86,7 +86,7 @@ class RCP_Export {
 	 * Output the CSV columns
 	 *
 	 * @access      public
-	 * @since       1.4.4
+	 * @since       1.5
 	 * @return      void
 	 */
 	public function csv_cols_out() {
@@ -104,7 +104,7 @@ class RCP_Export {
 	 * Get the data being exported
 	 *
 	 * @access      public
-	 * @since       1.4.4
+	 * @since       1.5
 	 * @return      array $data
 	 */
 	public function get_data() {
@@ -130,7 +130,7 @@ class RCP_Export {
 	 * Output the CSV rows
 	 *
 	 * @access      public
-	 * @since       1.4.4
+	 * @since       1.5
 	 * @return      void
 	 */
 	public function csv_rows_out() {
@@ -158,7 +158,7 @@ class RCP_Export {
 	 * Perform the export
 	 *
 	 * @access      public
-	 * @since       1.4.4
+	 * @since       1.5
 	 * @return      void
 	 */
 	public function export() {
