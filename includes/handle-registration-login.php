@@ -70,17 +70,17 @@ function rcp_process_registration() {
 
 			if( $need_new_user ) {
 				$user_id = wp_insert_user( array(
-						'user_login'		=> $user_login,
-						'user_pass'	 		=> $user_pass,
-						'user_email'		=> $user_email,
-						'first_name'		=> $user_first,
-						'last_name'			=> $user_last,
+						'user_login'		=> $user['login'],
+						'user_pass'	 		=> $user['password'],
+						'user_email'		=> $user['email'],
+						'first_name'		=> $user['first_name'],
+						'last_name'			=> $user['last_name'],
 						'user_registered'	=> date( 'Y-m-d H:i:s' ),
 						'role'				=> apply_filters( 'rcp_default_user_level', 'subscriber', $subscription_id )
 					)
 				);
 			}
-			if($user_id) {
+			if( $user_id ) {
 
 				// get the details of this subscription
 				$subscription = rcp_get_subscription_details( $_POST['rcp_level'] );
