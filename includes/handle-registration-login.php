@@ -7,21 +7,6 @@ function rcp_process_registration() {
 
 		global $rcp_options, $user_ID;
 
-		if( !is_user_logged_in() ) {
-			$user_login		= $_POST['rcp_user_login'];
-			$user_email		= $_POST['rcp_user_email'];
-			$user_first 	= $_POST['rcp_user_first'];
-			$user_last	 	= $_POST['rcp_user_last'];
-			$user_pass		= $_POST['rcp_user_pass'];
-			$pass_confirm 	= $_POST['rcp_user_pass_confirm'];
-			$need_new_user 	= true;
-		} else {
-			$user_id 		= $user_ID;
-			$need_new_user 	= false;
-			$userdata 		= get_userdata($user_id);
-			$user_login 	= $userdata->user_login;
-			$user_email 	= $userdata->user_email;
-		}
 		$subscription_id 	= false;
 		if( isset( $_POST['rcp_level'] ) ) {
 			$subscription_id = $_POST['rcp_level'];
@@ -40,36 +25,8 @@ function rcp_process_registration() {
 
 		do_action( 'rcp_before_form_errors', $_POST );
 
-		if( $need_new_user ) {
-			if( username_exists( $user_login ) ) {
-				// Username already registered
-				rcp_errors()->add( 'username_unavailable', __( 'Username already taken', 'rcp' ), 'register' );
-			}
-			if( !validate_username($user_login)) {
-				// invalid username
-				rcp_errors()->add( 'username_invalid', __( 'Invalid username', 'rcp' ), 'register' );
-			}
-			if( $user_login == '') {
-				// empty username
-				rcp_errors()->add( 'username_empty', __( 'Please enter a username', 'rcp' ), 'register' );
-			}
-			if( !is_email($user_email)) {
-				//invalid email
-				rcp_errors()->add( 'email_invalid', __( 'Invalid email', 'rcp' ), 'register' );
-			}
-			if( email_exists($user_email)) {
-				//Email address already registered
-				rcp_errors()->add( 'email_used', __( 'Email already registered', 'rcp' ), 'register' );
-			}
-			if( $user_pass == '') {
-				// passwords do not match
-				rcp_errors()->add( 'password_empty', __( 'Please enter a password', 'rcp' ), 'register' );
-			}
-			if( $user_pass != $pass_confirm) {
-				// passwords do not match
-				rcp_errors()->add( 'password_mismatch', __( 'Passwords do not match', 'rcp' ), 'register' );
-			}
-		}
+		$user_data = rcp_validate_user_data();
+
 		if( ! $subscription_id ) {
 			// no subscription level was chosen
 			rcp_errors()->add( 'no_level', __( 'Please choose a subscription level', 'rcp' ), 'register' );
@@ -353,3 +310,59 @@ function rcp_reset_password() {
 	}
 }
 add_action( 'init', 'rcp_reset_password' );
+
+
+function rcp_validate_user_data() {
+
+	$user = array();
+
+	if( ! is_user_logged_in() ) {
+		$user['login']		      = sanitize_text_field( $_POST['rcp_user_login'] );
+		$user['email']		      = sanitize_text_field( $_POST['rcp_user_email'] );
+		$user['first_name'] 	  = sanitize_text_field( $_POST['rcp_user_first'] );
+		$user['last_name']	 	  = sanitize_text_field( $_POST['rcp_user_last'] );
+		$user['password']		  = sanitize_text_field( $_POST['rcp_user_pass'] );
+		$pass['password_confirm'] = sanitize_text_field( $_POST['rcp_user_pass_confirm'] );
+		$need_new_user 	          = true;
+	} else {
+		$userdata 		= get_userdata( $user_id );
+		$user['id']     = $userdata->ID;
+		$user['login'] 	= $userdata->user_login;
+		$user['email'] 	= $userdata->user_email;
+		$need_new_user 	= false;
+	}
+
+
+	if( $need_new_user ) {
+		if( username_exists( $user['login'] ) ) {
+			// Username already registered
+			rcp_errors()->add( 'username_unavailable', __( 'Username already taken', 'rcp' ), 'register' );
+		}
+		if( ! validate_username( $user['login'] ) ) {
+			// invalid username
+			rcp_errors()->add( 'username_invalid', __( 'Invalid username', 'rcp' ), 'register' );
+		}
+		if( empty( $user['login'] ) ) {
+			// empty username
+			rcp_errors()->add( 'username_empty', __( 'Please enter a username', 'rcp' ), 'register' );
+		}
+		if( ! is_email( $user['email'] ) ) {
+			//invalid email
+			rcp_errors()->add( 'email_invalid', __( 'Invalid email', 'rcp' ), 'register' );
+		}
+		if( email_exists( $user['email'] ) ) {
+			//Email address already registered
+			rcp_errors()->add( 'email_used', __( 'Email already registered', 'rcp' ), 'register' );
+		}
+		if( empty( $user['password'] ) ) {
+			// passwords do not match
+			rcp_errors()->add( 'password_empty', __( 'Please enter a password', 'rcp' ), 'register' );
+		}
+		if( $user['password'] !== $user['password_confirm'] ) {
+			// passwords do not match
+			rcp_errors()->add( 'password_mismatch', __( 'Passwords do not match', 'rcp' ), 'register' );
+		}
+	}
+
+	return apply_filters( 'rcp_user_registration_data', $user );
+}
