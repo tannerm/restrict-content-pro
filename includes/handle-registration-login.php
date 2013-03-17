@@ -1,7 +1,7 @@
 <?php
 
 // register a new user
-function rcp_add_new_member() {
+function rcp_process_registration() {
 
   	if ( isset( $_POST["rcp_register_nonce"] ) && wp_verify_nonce( $_POST['rcp_register_nonce'], 'rcp-register-nonce' ) ) {
 
@@ -253,7 +253,7 @@ function rcp_add_new_member() {
 
 	} // end nonce check
 }
-add_action( 'init', 'rcp_add_new_member', 100 );
+add_action( 'init', 'rcp_process_registration', 100 );
 
 // logs the specified user in
 function rcp_login_user_in( $user_id, $user_login, $user_pass ) {
