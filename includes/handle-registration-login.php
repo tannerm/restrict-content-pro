@@ -322,7 +322,7 @@ function rcp_validate_user_data() {
 		$user['first_name'] 	  = sanitize_text_field( $_POST['rcp_user_first'] );
 		$user['last_name']	 	  = sanitize_text_field( $_POST['rcp_user_last'] );
 		$user['password']		  = sanitize_text_field( $_POST['rcp_user_pass'] );
-		$pass['password_confirm'] = sanitize_text_field( $_POST['rcp_user_pass_confirm'] );
+		$user['password_confirm'] = sanitize_text_field( $_POST['rcp_user_pass_confirm'] );
 		$need_new_user 	          = true;
 	} else {
 		$userdata 		= get_userdata( $user_id );
