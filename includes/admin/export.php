@@ -1,7 +1,7 @@
 <?php
 
 function rcp_export_page() {
-	global $rcp_options, $rcp_db_name, $wpdb;	
+	global $rcp_options, $rcp_db_name, $wpdb;
 	$current_page = admin_url( '/admin.php?page=rcp-export' );
 	?>
 	<div class="wrap">
@@ -11,8 +11,8 @@ function rcp_export_page() {
 		<form id="rcp_export" action="<?php echo $current_page; ?>" method="post">
 			<p>
 				<select name="rcp-subscription" id="rcp-subscription">
-					<option value="all"><?php _e( 'All', 'rcp' ); ?></option>
-					<?php 
+					<option value="0"><?php _e( 'All', 'rcp' ); ?></option>
+					<?php
 					$levels = rcp_get_subscription_levels( 'all', false );
 					if($levels) :
 						foreach( $levels as $key => $level) : ?>
@@ -36,7 +36,7 @@ function rcp_export_page() {
 			<input type="hidden" name="rcp-action" value="export-members"/>
 			<input type="submit" class="button-secondary" value="<?php _e( 'Download Member CSV', 'rcp' ); ?>"/>
 		</form>
-		
+
 		<!-- payments export -->
 		<h3><?php _e( 'Payments Export', 'rcp' ); ?></h3>
 		<p><?php _e( 'Download payment data as a CSV file. Use this file for your own record keeping or tracking.', 'rcp' ); ?></p>
@@ -44,7 +44,7 @@ function rcp_export_page() {
 			<input type="hidden" name="rcp-action" value="export-payments"/>
 			<input type="submit" class="button-secondary" value="<?php _e( 'Download Payments CSV', 'rcp' ); ?>"/>
 		</form>
-		
+
 	</div><!--end wrap-->
 	<?php
 }

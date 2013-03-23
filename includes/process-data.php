@@ -40,38 +40,13 @@ function rcp_process_data() {
 		// edit a subscription level
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-subscription') {
 
-			if($_POST['duration'] == '' || $_POST['duration'] == 0) {
-				$duration = 'unlimited';
-			} else {
-				$duration = $_POST['duration'];
-			}
-			$update = $wpdb->query(
-				$wpdb->prepare(
-					"UPDATE " . $rcp_db_name . " SET
-						`name`='%s',
-						`description`='%s',
-						`duration`='%d',
-						`duration_unit`='%s',
-						`price`='%s',
-						`level`='%d',
-						`status`='%s'
-						WHERE `id`='%d'
-					;",
-					utf8_encode( $_POST['name'] ),
-					addslashes( utf8_encode( $_POST['description'] ) ),
-					$duration,
-					$_POST['duration-unit'],
-					$_POST['price'],
-					$_POST['level'],
-					$_POST['status'],
-					absint( $_POST['subscription_id'] )
-				)
-			);
+			$levels = new RCP_Levels();
+
+			$update = $levels->update( $_POST['subscription_id'], $_POST );
+
 			if($update) {
 				// clear the cache
-				delete_transient( 'rcp_subscription_levels' );
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-updated=1';
-				do_action( 'rcp_edit_subscription', $_POST['subscription_id'], $_POST );
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&level-updated=0';
 			}
@@ -218,15 +193,18 @@ function rcp_process_data() {
 					rcp_set_status( $member, 'cancelled' );
 				}
 			}
-			$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM " . $rcp_db_name . " WHERE `id`='%d';", urldecode( absint( $_GET['delete_subscription'] ) ) ) );
-			delete_transient( 'rcp_subscription_levels' );
+			$levels = new RCP_Levels();
+			$levels->remove( $_GET['delete_subscription'] );
+
 		}
 		if( isset( $_GET['activate_subscription'] ) && $_GET['activate_subscription'] > 0) {
-			$wpdb->update($rcp_db_name, array('status' => 'active' ), array('id' => absint( $_GET['activate_subscription'] ) ) );
+			$levels = new RCP_Levels();
+			$update = $levels->update( $_GET['activate_subscription'], array( 'status' => 'active' ) );
 			delete_transient( 'rcp_subscription_levels' );
 		}
 		if( isset( $_GET['deactivate_subscription'] ) && $_GET['deactivate_subscription'] > 0) {
-			$wpdb->update( $rcp_db_name, array( 'status' => 'inactive' ), array('id' => absint( $_GET['deactivate_subscription'] ) ) );
+			$levels = new RCP_Levels();
+			$update = $levels->update( $_GET['deactivate_subscription'], array( 'status' => 'inactive' ) );
 			delete_transient( 'rcp_subscription_levels' );
 		}
 
