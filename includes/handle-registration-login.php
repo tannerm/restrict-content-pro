@@ -85,7 +85,7 @@ function rcp_process_registration() {
 				update_user_meta( $user_id, 'rcp_status', 'pending' );
 				update_user_meta( $user_id, 'rcp_expiration', $member_expires );
 
-				do_action( 'rcp_form_processing', $_POST, $user_id, $price );
+				do_action( 'rcp_form_processing', $_POST, $user_data['id'], $price );
 
 				// process a paid subscription
 				if( $price > '0' ) {
@@ -99,16 +99,16 @@ function rcp_process_registration() {
 						$price = $discounts->calc_discounted_price( $price, $discount->amount, $discount->unit );
 
 						// record the usage of this discount code
-						$discounts->add_to_user( $user_id, $discount );
+						$discounts->add_to_user( $user_data['id'], $discount );
 
 						// incrase the usage count for the code
 						$discounts->increase_uses( $discount->id );
 
 						// if the discount is 100%, log the user in and redirect to success page
 						if( $price == '0' ) {
-							rcp_set_status( $user_id, 'active' );
-							rcp_email_subscription_status( $user_id, 'active' );
-							rcp_login_user_in( $user_id, $user_login, $user_pass );
+							rcp_set_status( $user_data['id'], 'active' );
+							rcp_email_subscription_status( $user_data['id'], 'active' );
+							rcp_login_user_in( $user_data['id'], $user_login, $user_pass );
 							wp_redirect( rcp_get_return_url() ); exit;
 						}
 
@@ -117,7 +117,7 @@ function rcp_process_registration() {
 					// this is a premium registration
 					if( isset( $_POST['rcp_auto_renew'] ) ) {
 						// set the user to recurring
-						update_user_meta( $user_id, 'rcp_recurring', 'yes' );
+						update_user_meta( $user_data['id'], 'rcp_recurring', 'yes' );
 						$auto_renew = true;
 
 					} else {
@@ -132,7 +132,7 @@ function rcp_process_registration() {
 						'length_unit' 		=> strtolower( $expiration->duration_unit ),
 						'subscription_name' => $subscription->name,
 						'key' 				=> $subscription_key,
-						'user_id' 			=> $user_id,
+						'user_id' 			=> $user_data['id'],
 						'user_name' 		=> $user_data['login'],
 						'user_email' 		=> $user_email,
 						'currency' 			=> $rcp_options['currency'],
@@ -161,35 +161,35 @@ function rcp_process_registration() {
 					if( $member_expires != 'none' ) {
 
 						// this is so that users can only sign up for one trial
-						update_user_meta( $user_id, 'rcp_has_trialed', 'yes' );
+						update_user_meta( $user_data['id'], 'rcp_has_trialed', 'yes' );
 
 						// activate the user's trial subscription
-						rcp_set_status( $user_id, 'active' );
+						rcp_set_status( $user_data['id'], 'active' );
 
-						rcp_email_subscription_status( $user_id, 'trial' );
+						rcp_email_subscription_status( $user_data['id'], 'trial' );
 
 					} else {
 
 						// set the user's status to free
-						rcp_set_status( $user_id, 'free' );
+						rcp_set_status( $user_data['id'], 'free' );
 
-						rcp_email_subscription_status( $user_id, 'free' );
+						rcp_email_subscription_status( $user_data['id'], 'free' );
 					}
 
 					// date for trial / paid users, "none" for free users
-					update_user_meta( $user_id, 'rcp_expiration', $member_expires );
+					update_user_meta( $user_data['id'], 'rcp_expiration', $member_expires );
 
 					if( $user_data['need_new'] ) {
 
 						if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
 
 							// send an email to the admin alerting them of the registration
-							wp_new_user_notification( $user_id) ;
+							wp_new_user_notification( $user_data['id']) ;
 
 						}
 
 						// log the new user in
-						rcp_login_user_in( $user_id, $user_data['login'], $user_data['password'] );
+						rcp_login_user_in( $user_data['id'], $user_data['login'], $user_data['password'] );
 
 					}
 					// send the newly created user to the redirect page after logging them in
