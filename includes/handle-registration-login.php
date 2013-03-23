@@ -39,7 +39,7 @@ function rcp_process_registration() {
 				rcp_errors()->add( 'discount_already_used', __( 'You can only use the discount code once', 'rcp' ), 'register' );
 			}
 		}
-		if( $price == 0 && isset($_POST['rcp_auto_renew'] ) ) {
+		if( $price == 0 && isset( $_POST['rcp_auto_renew'] ) ) {
 			// since free subscriptions do not go through PayPal, they cannot be auto renewed
 			rcp_errors()->add( 'invalid_auto_renew', __( 'Free subscriptions cannot be automatically renewed', 'rcp' ), 'register' );
 		}
