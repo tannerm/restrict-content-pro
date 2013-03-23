@@ -30,7 +30,7 @@ function rcp_process_registration() {
 				rcp_errors()->add( 'free_trial_used', __( 'You may only sign up for a free trial once', 'rcp' ), 'register' );
 			}
 		}
-		if( strlen( trim( $discount ) ) > 0 ) {
+		if( ! empty( $discount ) ) {
 			if( ! rcp_validate_discount( $discount ) ) {
 				// the entered discount code is incorrect
 				rcp_errors()->add( 'invalid_discount', __( 'The discount you entered is invalid', 'rcp' ), 'register' );
