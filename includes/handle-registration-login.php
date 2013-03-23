@@ -7,17 +7,10 @@ function rcp_process_registration() {
 
 		global $rcp_options, $user_ID;
 
-		$subscription_id 	= false;
-		if( isset( $_POST['rcp_level'] ) ) {
-			$subscription_id = $_POST['rcp_level'];
-		}
-		$code = '';
-		if( isset( $_POST['rcp_discount'] ) ) {
-			$code = $_POST['rcp_discount'];
-		}
-
-		$price = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
-		$expiration = rcp_get_subscription_length( $subscription_id );
+		$subscription_id = isset( $_POST['rcp_level'] ) ? absint( $_POST['rcp_level'] ) : false;
+		$code            = isset( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : '';
+		$price           = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
+		$expiration      = rcp_get_subscription_length( $subscription_id );
 
 		/***********************
 		* validate the form
