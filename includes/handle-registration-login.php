@@ -62,7 +62,7 @@ function rcp_process_registration() {
 			}
 
 			if( $user_data['need_new'] ) {
-				$user_id = wp_insert_user( array(
+				$user_data['id'] = wp_insert_user( array(
 						'user_login'		=> $user_data['login'],
 						'user_pass'	 		=> $user_data['password'],
 						'user_email'		=> $user_data['email'],
@@ -73,7 +73,7 @@ function rcp_process_registration() {
 					)
 				);
 			}
-			if( $user_id ) {
+			if( $user_data['id'] ) {
 
 				// get the details of this subscription
 				$subscription = rcp_get_subscription_details( $_POST['rcp_level'] );
