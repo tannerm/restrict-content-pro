@@ -8,7 +8,7 @@ function rcp_process_registration() {
 		global $rcp_options, $user_ID;
 
 		$subscription_id = isset( $_POST['rcp_level'] ) ? absint( $_POST['rcp_level'] ) : false;
-		$code            = isset( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : '';
+		$discount        = isset( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : '';
 		$price           = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
 		$expiration      = rcp_get_subscription_length( $subscription_id );
 
@@ -30,12 +30,12 @@ function rcp_process_registration() {
 				rcp_errors()->add( 'free_trial_used', __( 'You may only sign up for a free trial once', 'rcp' ), 'register' );
 			}
 		}
-		if( strlen( trim( $code ) ) > 0 ) {
-			if( !rcp_validate_discount( $code ) ) {
+		if( strlen( trim( $discount ) ) > 0 ) {
+			if( ! rcp_validate_discount( $discount ) ) {
 				// the entered discount code is incorrect
 				rcp_errors()->add( 'invalid_discount', __( 'The discount you entered is invalid', 'rcp' ), 'register' );
 			}
-			if( ! $user_data['need_new'] && rcp_user_has_used_discount( $user_id, $code ) ) {
+			if( ! $user_data['need_new'] && rcp_user_has_used_discount( $user_data['id'] , $discount ) ) {
 				rcp_errors()->add( 'discount_already_used', __( 'You can only use the discount code once', 'rcp' ), 'register' );
 			}
 		}
@@ -90,16 +90,16 @@ function rcp_process_registration() {
 				// process a paid subscription
 				if( $price > '0' ) {
 
-					if( ! empty( $code ) ) {
+					if( ! empty( $discount ) ) {
 
 						$discounts = new RCP_Discounts();
-						$discount = $discounts->get_by( 'code', $code );
+						$discount = $discounts->get_by( 'code', $discount );
 
 						// calculate the after-discount price
 						$price = $discounts->calc_discounted_price( $price, $discount->amount, $discount->unit );
 
 						// record the usage of this discount code
-						$discounts->add_to_user( $user_id, $code );
+						$discounts->add_to_user( $user_id, $discount );
 
 						// incrase the usage count for the code
 						$discounts->increase_uses( $discount->id );
