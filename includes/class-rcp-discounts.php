@@ -56,9 +56,13 @@ class RCP_Discounts {
 	public function get_discounts( $args = array() ) {
 		global $wpdb;
 
-		// TODO: Add optional args for limit, order, etc
+		$where = '';
 
-		$discounts = $wpdb->get_results( "SELECT * FROM {$this->db_name};" );
+		// TODO: Add optional args for limit, order, etc
+		if( ! empty( $args['status'] ) )
+			$where = " WHERE status='{$args['status']}'";
+
+		$discounts = $wpdb->get_results( "SELECT * FROM {$this->db_name}{$where};" );
 
 		if( $discounts )
 			return $discounts;

@@ -23,6 +23,20 @@ function rcp_get_discounts() {
 
 
 /*
+* Check if we have any discounts
+*
+* return bool
+*/
+
+function rcp_has_discounts() {
+	$discounts = new RCP_Discounts();
+	if( $discounts->get_discounts( array( 'status' => 'active' )) )
+		return true;
+	return false;
+}
+
+
+/*
 * returns the DB object for a discount code
 * @param int $id - the ID number of the discount to retrieve data for
 * return object

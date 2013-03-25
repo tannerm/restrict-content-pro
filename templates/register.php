@@ -1,6 +1,6 @@
 <?php global $rcp_options, $post; ?>
 
-<?php if( !is_user_logged_in() ) { ?>
+<?php if( ! is_user_logged_in() ) { ?>
 	<h3 class="rcp_header">
 		<?php echo apply_filters( 'rcp_registration_header_logged_in', __( 'Register New Account', 'rcp' ) ); ?>
 	</h3>
@@ -15,7 +15,7 @@ rcp_show_error_messages( 'register' ); ?>
 
 <form id="rcp_registration_form" class="rcp_class" method="POST" action="<?php echo esc_url( rcp_get_current_url() ); ?>">
 
-	<?php if( !is_user_logged_in() ) { ?>
+	<?php if( ! is_user_logged_in() ) { ?>
 
 	<?php do_action( 'rcp_before_register_form_fields' ); ?>
 
@@ -48,9 +48,9 @@ rcp_show_error_messages( 'register' ); ?>
 		<?php do_action( 'rcp_after_password_registration_field' ); ?>
 
 	</fieldset>
-	<?php }
+	<?php } ?>
 
-	$levels = rcp_get_subscription_levels( 'active', true );
+	<?php $levels = rcp_get_subscription_levels( 'active', true );
 	if( $levels && count( $levels ) > 1 ) : ?>
 	<fieldset class="rcp_subscription_fieldset">
 		<p class="rcp_subscription_message"><?php echo apply_filters ( 'rcp_registration_choose_subscription', __( 'Choose your subscription level', 'rcp' ) ); ?></p>
@@ -60,7 +60,7 @@ rcp_show_error_messages( 'register' ); ?>
 					<?php if( rcp_show_subscription_level( $level->id ) ) : ?>
 					<li id="rcp_subscription_level_<?php echo $level->id; ?>" class="rcp_subscription_level">
 						<input type="radio" class="required rcp_level" <?php if( $key == 0 || ( isset( $_GET['level']) && $_GET['level'] == $key ) ){ echo 'checked="checked"'; }?> name="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>" value="<?php echo esc_attr( absint( $level->id ) ); ?>" <?php if( $level->duration == 0 ) { echo 'data-duration="forever"'; } ?>/>&nbsp;
-						<span class="rcp_subscription_level_name"><?php echo utf8_decode( stripcslashes( $level->name ) ); ?></span><span class="rcp_separator">&nbsp;-&nbsp;</span><span class="rcp_price" rel="<?php echo esc_attr( $level->price ); ?>"><?php echo $level->price > 0 ? rcp_currency_filter( $level->price ) : __( 'free', 'rcp' ); ?><span class="rcp_separator">&nbsp;-&nbsp;</span></span>
+						<span class="rcp_subscription_level_name"><?php echo utf8_decode( stripslashes( $level->name ) ); ?></span><span class="rcp_separator">&nbsp;-&nbsp;</span><span class="rcp_price" rel="<?php echo esc_attr( $level->price ); ?>"><?php echo $level->price > 0 ? rcp_currency_filter( $level->price ) : __( 'free', 'rcp' ); ?><span class="rcp_separator">&nbsp;-&nbsp;</span></span>
 						<span class="rcp_level_duration"><?php echo $level->duration > 0 ? $level->duration . '&nbsp;' . rcp_filter_duration_unit( $level->duration_unit, $level->duration ) : __( 'unlimited', 'rcp' ); ?></span>
 						<div class="rcp_level_description"> <?php echo stripslashes( utf8_decode( $level->description ) ); ?></div>
 					</li>
@@ -74,8 +74,7 @@ rcp_show_error_messages( 'register' ); ?>
 	<?php endif; ?>
 	</fieldset>
 		<?php
-		$discounts = rcp_get_discounts();
-		if( $discounts ) : ?>
+		if( rcp_has_discounts() ) : ?>
 			<p id="rcp_discount_code_wrap">
 				<label for="rcp_discount_code">
 					<?php _e( 'Discount Code', 'rcp' ); ?>
