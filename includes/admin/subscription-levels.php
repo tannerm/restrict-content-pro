@@ -2,15 +2,15 @@
 
 function rcp_member_levels_page()
 {
-	global $rcp_options, $rcp_db_name, $wpdb;	
+	global $rcp_options, $rcp_db_name, $wpdb;
 	$page = admin_url( '/admin.php?page=rcp-member-levels' );
 	?>
 	<div class="wrap">
 		<?php if(isset($_GET['edit_subscription'])) :
-			include('edit-subscription.php'); 
+			include('edit-subscription.php');
 		else : ?>
 			<h2><?php _e('Subscription Levels', 'rcp'); ?></h2>
-		
+
 			<table class="wp-list-table widefat fixed posts rcp-subscriptions">
 				<thead>
 					<tr>
@@ -42,7 +42,7 @@ function rcp_member_levels_page()
 				</tfoot>
 				<tbody>
 				<?php $levels = rcp_get_subscription_levels('all', false); ?>
-				<?php 
+				<?php
 				if($levels) :
 					$i = 1;
 					foreach( $levels as $key => $level) : ?>
@@ -53,7 +53,7 @@ function rcp_member_levels_page()
 							<td><?php echo stripslashes(utf8_decode($level->description)); ?></td>
 							<td><?php echo $level->level != '' ? $level->level : __('none', 'rcp'); ?></td>
 							<td>
-								<?php 
+								<?php
 									if($level->duration > 0) {
 										echo $level->duration . ' ' . rcp_filter_duration_unit($level->duration_unit, $level->duration);
 									} else {
@@ -61,7 +61,7 @@ function rcp_member_levels_page()
 									}
 								?>
 							</td>
-							<td><?php echo rcp_currency_filter($level->price); ?></td>
+							<td><?php echo rcp_currency_filter( rcp_get_subscription_price( $level->id ) ); ?></td>
 							<td><?php if($level->price > 0 || $level->duration > 0) { echo rcp_count_members($level->id, 'active'); } else { echo rcp_count_members($level->id, 'free'); } ?></td>
 							<?php do_action('rcp_levels_page_table_column', $level->id); ?>
 							<td>
@@ -80,7 +80,7 @@ function rcp_member_levels_page()
 					<tr><td colspan="9"><?php _e('No subscription levels added yet.', 'rcp'); ?></td>
 				<?php endif; ?>
 			</table>
-			<?php do_action('rcp_levels_below_table'); ?>		
+			<?php do_action('rcp_levels_below_table'); ?>
 			<h3><?php _e('Add New Level', 'rcp'); ?></h3>
 			<form id="rcp-member-levels" action="" method="post">
 				<table class="form-table">
@@ -113,7 +113,7 @@ function rcp_member_levels_page()
 									$access_levels = rcp_get_access_levels();
 									foreach( $access_levels as $access ) {
 										echo '<option value="' . $access . ' ' . selected($access, $level->level, false) . '">' . $access . '</option>';
-									}	
+									}
 									?>
 								</select>
 								<p class="description"><?php _e('Level of accesss this subscription gives. Leave at 0 for default or you are unsure what this is.', 'rcp'); ?></p>
@@ -125,7 +125,7 @@ function rcp_member_levels_page()
 							</th>
 							<td>
 								<input type="text" id="rcp-duration" style="width: 40px;" name="duration" value=""/>
-								<select name="duration-unit" id="rcp-duration-unit">
+								<select name="duration_unit" id="rcp-duration-unit">
 									<option value="day"><?php _e('Days(s)', 'rcp'); ?></option>
 									<option value="month"><?php _e('Month(s)', 'rcp'); ?></option>
 									<option value="year"><?php _e('Years(s)', 'rcp'); ?></option>
@@ -167,6 +167,6 @@ function rcp_member_levels_page()
 			</form>
 		<?php endif; ?>
 	</div><!--end wrap-->
-		
+
 	<?php
 }

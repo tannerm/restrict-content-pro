@@ -212,6 +212,8 @@ function rcp_check_ipn() {
 
 		/* now process the kind of subscription/payment */
 
+		$rcp_payments = new RCP_Payments();
+
 		// Subscriptions
 		switch ( $posted['txn_type'] ) :
 
@@ -243,7 +245,7 @@ function rcp_check_ipn() {
 				// when a user makes a recurring payment
 
 				// record this payment in the database
-				rcp_insert_payment( $payment_data );
+				$rcp_payments->insert( $payment_data );
 
 				$subscription = rcp_get_subscription_details( rcp_get_subscription_id( $user_id ) );
 
@@ -326,7 +328,7 @@ function rcp_check_ipn() {
 						// set this user to active
 						rcp_set_status( $user_id, 'active' );
 
-						rcp_insert_payment( $payment_data );
+						$rcp_payments->insert( $payment_data );
 
 						rcp_email_subscription_status( $user_id, 'active' );
 

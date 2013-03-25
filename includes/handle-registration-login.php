@@ -1,38 +1,16 @@
 <?php
 
 // register a new user
-function rcp_add_new_member() {
+function rcp_process_registration() {
 
   	if ( isset( $_POST["rcp_register_nonce"] ) && wp_verify_nonce( $_POST['rcp_register_nonce'], 'rcp-register-nonce' ) ) {
 
 		global $rcp_options, $user_ID;
 
-		if( !is_user_logged_in() ) {
-			$user_login		= $_POST['rcp_user_login'];
-			$user_email		= $_POST['rcp_user_email'];
-			$user_first 	= $_POST['rcp_user_first'];
-			$user_last	 	= $_POST['rcp_user_last'];
-			$user_pass		= $_POST['rcp_user_pass'];
-			$pass_confirm 	= $_POST['rcp_user_pass_confirm'];
-			$need_new_user 	= true;
-		} else {
-			$user_id 		= $user_ID;
-			$need_new_user 	= false;
-			$userdata 		= get_userdata($user_id);
-			$user_login 	= $userdata->user_login;
-			$user_email 	= $userdata->user_email;
-		}
-		$subscription_id 	= false;
-		if( isset( $_POST['rcp_level'] ) ) {
-			$subscription_id = $_POST['rcp_level'];
-		}
-		$code = '';
-		if( isset( $_POST['rcp_discount'] ) ) {
-			$code = $_POST['rcp_discount'];
-		}
-
-		$price = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
-		$expiration = rcp_get_subscription_length( $subscription_id );
+		$subscription_id = isset( $_POST['rcp_level'] ) ? absint( $_POST['rcp_level'] ) : false;
+		$discount        = isset( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : '';
+		$price           = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
+		$expiration      = rcp_get_subscription_length( $subscription_id );
 
 		/***********************
 		* validate the form
@@ -40,36 +18,8 @@ function rcp_add_new_member() {
 
 		do_action( 'rcp_before_form_errors', $_POST );
 
-		if( $need_new_user ) {
-			if( username_exists( $user_login ) ) {
-				// Username already registered
-				rcp_errors()->add( 'username_unavailable', __( 'Username already taken', 'rcp' ), 'register' );
-			}
-			if( !validate_username($user_login)) {
-				// invalid username
-				rcp_errors()->add( 'username_invalid', __( 'Invalid username', 'rcp' ), 'register' );
-			}
-			if( $user_login == '') {
-				// empty username
-				rcp_errors()->add( 'username_empty', __( 'Please enter a username', 'rcp' ), 'register' );
-			}
-			if( !is_email($user_email)) {
-				//invalid email
-				rcp_errors()->add( 'email_invalid', __( 'Invalid email', 'rcp' ), 'register' );
-			}
-			if( email_exists($user_email)) {
-				//Email address already registered
-				rcp_errors()->add( 'email_used', __( 'Email already registered', 'rcp' ), 'register' );
-			}
-			if( $user_pass == '') {
-				// passwords do not match
-				rcp_errors()->add( 'password_empty', __( 'Please enter a password', 'rcp' ), 'register' );
-			}
-			if( $user_pass != $pass_confirm) {
-				// passwords do not match
-				rcp_errors()->add( 'password_mismatch', __( 'Passwords do not match', 'rcp' ), 'register' );
-			}
-		}
+		$user_data = rcp_validate_user_data();
+
 		if( ! $subscription_id ) {
 			// no subscription level was chosen
 			rcp_errors()->add( 'no_level', __( 'Please choose a subscription level', 'rcp' ), 'register' );
@@ -80,16 +30,16 @@ function rcp_add_new_member() {
 				rcp_errors()->add( 'free_trial_used', __( 'You may only sign up for a free trial once', 'rcp' ), 'register' );
 			}
 		}
-		if( strlen( trim( $code ) ) > 0 ) {
-			if( !rcp_validate_discount( $code ) ) {
+		if( ! empty( $discount ) ) {
+			if( ! rcp_validate_discount( $discount ) ) {
 				// the entered discount code is incorrect
 				rcp_errors()->add( 'invalid_discount', __( 'The discount you entered is invalid', 'rcp' ), 'register' );
 			}
-			if( !$need_new_user && rcp_user_has_used_discount( $user_id, $code ) ) {
+			if( ! $user_data['need_new'] && rcp_user_has_used_discount( $user_data['id'] , $discount ) ) {
 				rcp_errors()->add( 'discount_already_used', __( 'You can only use the discount code once', 'rcp' ), 'register' );
 			}
 		}
-		if( $price == 0 && isset($_POST['rcp_auto_renew'] ) ) {
+		if( $price == 0 && isset( $_POST['rcp_auto_renew'] ) ) {
 			// since free subscriptions do not go through PayPal, they cannot be auto renewed
 			rcp_errors()->add( 'invalid_auto_renew', __( 'Free subscriptions cannot be automatically renewed', 'rcp' ), 'register' );
 		}
@@ -111,19 +61,19 @@ function rcp_add_new_member() {
 				$member_expires = 'none';
 			}
 
-			if( $need_new_user ) {
-				$user_id = wp_insert_user( array(
-						'user_login'		=> $user_login,
-						'user_pass'	 		=> $user_pass,
-						'user_email'		=> $user_email,
-						'first_name'		=> $user_first,
-						'last_name'			=> $user_last,
+			if( $user_data['need_new'] ) {
+				$user_data['id'] = wp_insert_user( array(
+						'user_login'		=> $user_data['login'],
+						'user_pass'	 		=> $user_data['password'],
+						'user_email'		=> $user_data['email'],
+						'first_name'		=> $user_data['first_name'],
+						'last_name'			=> $user_data['last_name'],
 						'user_registered'	=> date( 'Y-m-d H:i:s' ),
 						'role'				=> apply_filters( 'rcp_default_user_level', 'subscriber', $subscription_id )
 					)
 				);
 			}
-			if($user_id) {
+			if( $user_data['id'] ) {
 
 				// get the details of this subscription
 				$subscription = rcp_get_subscription_details( $_POST['rcp_level'] );
@@ -135,30 +85,30 @@ function rcp_add_new_member() {
 				update_user_meta( $user_id, 'rcp_status', 'pending' );
 				update_user_meta( $user_id, 'rcp_expiration', $member_expires );
 
-				do_action( 'rcp_form_processing', $_POST, $user_id, $price );
+				do_action( 'rcp_form_processing', $_POST, $user_data['id'], $price );
 
 				// process a paid subscription
 				if( $price > '0' ) {
 
-					if( $code != '' ) {
+					if( ! empty( $discount ) ) {
 
-						// get the details of this discount code
-						$discount = rcp_get_discount_details_by_code( $code );
+						$discounts = new RCP_Discounts();
+						$discount = $discounts->get_by( 'code', $discount );
 
 						// calculate the after-discount price
-						$price = rcp_get_discounted_price( $price, $discount->amount, $discount->unit );
+						$price = $discounts->calc_discounted_price( $price, $discount->amount, $discount->unit );
 
 						// record the usage of this discount code
-						rcp_store_discount_use_for_user( $code, $user_id, $discount );
+						$discounts->add_to_user( $user_data['id'], $discount );
 
 						// incrase the usage count for the code
-						rcp_increase_code_use( $discount->id );
+						$discounts->increase_uses( $discount->id );
 
 						// if the discount is 100%, log the user in and redirect to success page
 						if( $price == '0' ) {
-							rcp_set_status( $user_id, 'active' );
-							rcp_email_subscription_status( $user_id, 'active' );
-							rcp_login_user_in( $user_id, $user_login, $user_pass );
+							rcp_set_status( $user_data['id'], 'active' );
+							rcp_email_subscription_status( $user_data['id'], 'active' );
+							rcp_login_user_in( $user_data['id'], $user_login, $user_pass );
 							wp_redirect( rcp_get_return_url() ); exit;
 						}
 
@@ -167,7 +117,7 @@ function rcp_add_new_member() {
 					// this is a premium registration
 					if( isset( $_POST['rcp_auto_renew'] ) ) {
 						// set the user to recurring
-						update_user_meta( $user_id, 'rcp_recurring', 'yes' );
+						update_user_meta( $user_data['id'], 'rcp_recurring', 'yes' );
 						$auto_renew = true;
 
 					} else {
@@ -182,18 +132,18 @@ function rcp_add_new_member() {
 						'length_unit' 		=> strtolower( $expiration->duration_unit ),
 						'subscription_name' => $subscription->name,
 						'key' 				=> $subscription_key,
-						'user_id' 			=> $user_id,
-						'user_name' 		=> $user_login,
+						'user_id' 			=> $user_data['id'],
+						'user_name' 		=> $user_data['login'],
 						'user_email' 		=> $user_email,
 						'currency' 			=> $rcp_options['currency'],
 						'auto_renew' 		=> $auto_renew,
 						'return_url' 		=> $redirect,
-						'new_user' 			=> $need_new_user,
+						'new_user' 			=> $user_data['need_new'],
 						'post_data' 		=> $_POST
 					);
 
 					// get the selected payment method/gateway
-					if( !isset( $_POST['rcp_gateway'] ) ) {
+					if( ! isset( $_POST['rcp_gateway'] ) ) {
 						$gateway = 'paypal';
 					} else {
 						$gateway = $_POST['rcp_gateway'];
@@ -211,35 +161,35 @@ function rcp_add_new_member() {
 					if( $member_expires != 'none' ) {
 
 						// this is so that users can only sign up for one trial
-						update_user_meta( $user_id, 'rcp_has_trialed', 'yes' );
+						update_user_meta( $user_data['id'], 'rcp_has_trialed', 'yes' );
 
 						// activate the user's trial subscription
-						rcp_set_status( $user_id, 'active' );
+						rcp_set_status( $user_data['id'], 'active' );
 
-						rcp_email_subscription_status( $user_id, 'trial' );
+						rcp_email_subscription_status( $user_data['id'], 'trial' );
 
 					} else {
 
 						// set the user's status to free
-						rcp_set_status( $user_id, 'free' );
+						rcp_set_status( $user_data['id'], 'free' );
 
-						rcp_email_subscription_status( $user_id, 'free' );
+						rcp_email_subscription_status( $user_data['id'], 'free' );
 					}
 
 					// date for trial / paid users, "none" for free users
-					update_user_meta( $user_id, 'rcp_expiration', $member_expires );
+					update_user_meta( $user_data['id'], 'rcp_expiration', $member_expires );
 
-					if( $need_new_user ) {
+					if( $user_data['need_new'] ) {
 
 						if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
 
 							// send an email to the admin alerting them of the registration
-							wp_new_user_notification( $user_id) ;
+							wp_new_user_notification( $user_data['id']) ;
 
 						}
 
 						// log the new user in
-						rcp_login_user_in( $user_id, $user_login, $user_pass );
+						rcp_login_user_in( $user_data['id'], $user_data['login'], $user_data['password'] );
 
 					}
 					// send the newly created user to the redirect page after logging them in
@@ -253,7 +203,7 @@ function rcp_add_new_member() {
 
 	} // end nonce check
 }
-add_action( 'init', 'rcp_add_new_member', 100 );
+add_action( 'init', 'rcp_process_registration', 100 );
 
 // logs the specified user in
 function rcp_login_user_in( $user_id, $user_login, $user_pass ) {
@@ -353,3 +303,59 @@ function rcp_reset_password() {
 	}
 }
 add_action( 'init', 'rcp_reset_password' );
+
+
+function rcp_validate_user_data() {
+
+	$user = array();
+
+	if( ! is_user_logged_in() ) {
+		$user['login']		      = sanitize_text_field( $_POST['rcp_user_login'] );
+		$user['email']		      = sanitize_text_field( $_POST['rcp_user_email'] );
+		$user['first_name'] 	  = sanitize_text_field( $_POST['rcp_user_first'] );
+		$user['last_name']	 	  = sanitize_text_field( $_POST['rcp_user_last'] );
+		$user['password']		  = sanitize_text_field( $_POST['rcp_user_pass'] );
+		$user['password_confirm'] = sanitize_text_field( $_POST['rcp_user_pass_confirm'] );
+		$user['need_new']         = true;
+	} else {
+		$userdata 		  = get_userdata( $user_id );
+		$user['id']       = $userdata->ID;
+		$user['login'] 	  = $userdata->user_login;
+		$user['email'] 	  = $userdata->user_email;
+		$user['need_new'] = false;
+	}
+
+
+	if( $user['need_new'] ) {
+		if( username_exists( $user['login'] ) ) {
+			// Username already registered
+			rcp_errors()->add( 'username_unavailable', __( 'Username already taken', 'rcp' ), 'register' );
+		}
+		if( ! validate_username( $user['login'] ) ) {
+			// invalid username
+			rcp_errors()->add( 'username_invalid', __( 'Invalid username', 'rcp' ), 'register' );
+		}
+		if( empty( $user['login'] ) ) {
+			// empty username
+			rcp_errors()->add( 'username_empty', __( 'Please enter a username', 'rcp' ), 'register' );
+		}
+		if( ! is_email( $user['email'] ) ) {
+			//invalid email
+			rcp_errors()->add( 'email_invalid', __( 'Invalid email', 'rcp' ), 'register' );
+		}
+		if( email_exists( $user['email'] ) ) {
+			//Email address already registered
+			rcp_errors()->add( 'email_used', __( 'Email already registered', 'rcp' ), 'register' );
+		}
+		if( empty( $user['password'] ) ) {
+			// passwords do not match
+			rcp_errors()->add( 'password_empty', __( 'Please enter a password', 'rcp' ), 'register' );
+		}
+		if( $user['password'] !== $user['password_confirm'] ) {
+			// passwords do not match
+			rcp_errors()->add( 'password_mismatch', __( 'Passwords do not match', 'rcp' ), 'register' );
+		}
+	}
+
+	return apply_filters( 'rcp_user_registration_data', $user );
+}

@@ -15,24 +15,18 @@
 function rcp_get_subscription_levels( $status = 'all', $cache = true ) {
 	global $wpdb, $rcp_db_name;
 
-	if( $status == 'active' ) {
-		$where = "WHERE `status` !='inactive'";
-	} elseif( $status == 'inactive' ) {
-		$where = "WHERE `status` ='{$status}'";
-	} else {
-		$where = "";
-	}
+	$rcp_levels = new RCP_Levels();
 
 	if( $cache ) {
 
 		$levels = get_transient( 'rcp_subscription_levels' );
 		if($levels === false) {
-			$levels = $wpdb->get_results( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" );
+			$levels = $rcp_levels->get_levels( array( 'status' => $status ) );
 			// cache the levels with a 3 hour expiration
 			set_transient( 'rcp_subscription_levels', $levels, 10800 );
 		}
 	} else {
-		$levels = $wpdb->get_results( "SELECT * FROM " . $rcp_db_name . " {$where} ORDER BY list_order;" );
+		$levels = $rcp_levels->get_levels( array( 'status' => $status ) );
 	}
 
 	if( $levels )
@@ -47,10 +41,10 @@ function rcp_get_subscription_levels( $status = 'all', $cache = true ) {
 * return mixed - object on success, false otherwise
 */
 function rcp_get_subscription_details( $id ) {
-	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_db_name . " WHERE id='%d';", $id ) );
+	$levels = new RCP_Levels();
+	$level = $levels->get_level( $id );
 	if( $level )
-		return $level[0];
+		return $level;
 	return false;
 }
 
@@ -115,10 +109,10 @@ function rcp_calculate_subscription_expiration( $id ) {
 * return mixed - price of subscription level, false on failure
 */
 function rcp_get_subscription_price( $id ) {
-	global $wpdb, $rcp_db_name;
-	$price = $wpdb->get_results( $wpdb->prepare( "SELECT price FROM " . $rcp_db_name . " WHERE id='%d';", $id ) );
+	$levels = new RCP_Levels();
+	$price = $levels->get_level_field( $id, 'price' );
 	if( $price )
-		return $price[0]->price;
+		return $price;
 	return false;
 }
 
@@ -128,11 +122,11 @@ function rcp_get_subscription_price( $id ) {
 * return int - the numerical access level the subscription gives
 */
 function rcp_get_subscription_access_level( $id ) {
-	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results( $wpdb->prepare( "SELECT level FROM " . $rcp_db_name . " WHERE id='%d';", $id ) );
+	$levels = new RCP_Levels();
+	$level = $levels->get_level_field( $id, 'level' );
 	if( $level )
-		return $level[0]->level;
-	return 0;
+		return $level;
+	return false;
 }
 
 

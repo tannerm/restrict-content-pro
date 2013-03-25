@@ -1,7 +1,7 @@
 <?php
 
 /****************************************
-* Functions for getting non-member 
+* Functions for getting non-member
 * specific info about discount codes
 *****************************************/
 
@@ -68,7 +68,7 @@ function rcp_validate_discount( $code ) {
 */
 function rcp_get_discount_status( $code_id ) {
 	global $wpdb, $rcp_discounts_db_name;
-		
+
 	$code = rcp_get_discount_details( $code_id );
 	if( $code ) {
 		return $code->status;
@@ -83,9 +83,9 @@ function rcp_get_discount_status( $code_id ) {
 */
 function rcp_discount_has_uses_left( $code_id ) {
 	global $wpdb, $rcp_discounts_db_name;
-	
+
 	$usage = $wpdb->get_results( $wpdb->prepare( "SELECT `use_count`, `max_uses` FROM " . $rcp_discounts_db_name . " WHERE id='%d';", $code_id ) );
-	
+
 	if( $usage ) {
 		$use_count = $usage[0]->use_count;
 		$max_uses = $usage[0]->max_uses;
@@ -109,11 +109,11 @@ function rcp_discount_has_uses_left( $code_id ) {
 function rcp_is_discount_not_expired( $code_id ) {
 	global $wpdb, $rcp_discounts_db_name;
 	$expiration = $wpdb->get_results( $wpdb->prepare( "SELECT expiration FROM " . $rcp_discounts_db_name . " WHERE id='%d';", $code_id ) );
-	
+
 	// if no expiration is set, return true
 	if( $expiration[0]->expiration == '' )
 		return true;
-	
+
 	if( $expiration ) {
 		if ( strtotime( 'NOW' ) < strtotime( $expiration[0]->expiration ) ) {
 			return true;
@@ -153,7 +153,7 @@ function rcp_get_discounted_price( $base_price, $amount, $type ) {
 function rcp_store_discount_use_for_user( $code, $user_id, $discount_object ) {
 
 	$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true) ;
-	
+
 	if( !is_array( $user_discounts ) )
 		$user_discounts = array();
 
@@ -162,7 +162,7 @@ function rcp_store_discount_use_for_user( $code, $user_id, $discount_object ) {
 	do_action( 'rcp_pre_store_discount_for_user', $code, $user_id, $discount_object );
 
 	update_user_meta( $user_id, 'rcp_user_discounts', $user_discounts );
-	
+
 	do_action( 'rcp_store_discount_for_user', $code, $user_id, $discount_object );
 
 }
@@ -179,7 +179,7 @@ function rcp_user_has_used_discount( $user_id, $code ) {
 	if( $code == '' ) {
 		return false;
 	}
-	
+
 	$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
 	if( !is_array( $user_discounts ) || $user_discounts == '' ) {
 		return false;
@@ -198,13 +198,13 @@ function rcp_increase_code_use( $code_id ) {
 	global $wpdb, $rcp_discounts_db_name;
 	// add the post ID to the count database if it doesn't already exist
 	if( ! $wpdb->query( $wpdb->prepare( "SELECT `use_count` FROM `" . $rcp_discounts_db_name . "` WHERE id='%d';", $code_id ) ) ) {
-		$increase_count = $wpdb->insert( $rcp_discounts_db_name, 
+		$increase_count = $wpdb->insert( $rcp_discounts_db_name,
 			array(
-				'id' => $code_id, 
-				'use_count' => 1 
+				'id' => $code_id,
+				'use_count' => 1
 			)
 		);
-	} else {	
+	} else {
 		$count = $wpdb->query( $wpdb->prepare( "UPDATE " . $rcp_discounts_db_name . " SET use_count = use_count + 1 WHERE id='%d';", $code_id ) );
 	}
 }
@@ -230,6 +230,7 @@ function rcp_count_discount_code_uses( $code ) {
 }
 
 function rcp_discount_sign_filter( $amount, $type ) {
+	$discount = '';
 	if( $type == '%' ) {
 		$discount = $amount . '%';
 	} elseif( $type == 'flat' ) {
