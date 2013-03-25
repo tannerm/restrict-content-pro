@@ -57,7 +57,7 @@ function rcp_process_data() {
 		// add a subscription for an existing member
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'add-subscription' ) {
 
-			if ( $_POST['expiration'] &&  strtotime( 'NOW' ) > strtotime( $_POST['expiration'] ) ) :
+			if ( isset( $_POST['expiration'] ) &&  strtotime( 'NOW' ) > strtotime( $_POST['expiration'] ) ) :
 
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&user-added=0';
 				header( "Location:" . $url );
@@ -66,8 +66,10 @@ function rcp_process_data() {
 
 				$user = get_user_by( 'login', $_POST['user'] );
 
+				$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
+
 				update_user_meta( $user->ID, 'rcp_status', 'active' );
-				update_user_meta( $user->ID, 'rcp_expiration', $_POST['expiration'] );
+				update_user_meta( $user->ID, 'rcp_expiration', $expiration );
 				update_user_meta( $user->ID, 'rcp_subscription_level', $_POST['level'] );
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
 				if( isset( $_POST['recurring'] ) ) {
@@ -87,11 +89,13 @@ function rcp_process_data() {
 
 			$user_id  = absint( $_POST['user'] );
 			$status   = sanitize_text_field( $_POST['status'] );
-			$expires  = sanitize_text_field( $_POST['expiration'] );
 			$level    = absint( $_POST['level'] );
+			$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 
 			if( isset( $_POST['status'] ) ) update_user_meta($user_id, 'rcp_status', $status );
-			if( isset( $_POST['expiration'] ) && strlen( trim( $expires ) ) > 0 ) update_user_meta( $user_id, 'rcp_expiration', $expires );
+
+			update_user_meta( $user_id, 'rcp_expiration', $expiration );
+
 			if( isset( $_POST['level'] ) ) update_user_meta( $user_id, 'rcp_subscription_level', $level );
 			if( isset( $_POST['recurring'] ) ) {
 				update_user_meta( $user_id, 'rcp_recurring', 'yes' );
