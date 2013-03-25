@@ -186,6 +186,7 @@ if( is_admin() ) {
 
 } else {
 
+	include( RCP_PLUGIN_DIR . 'includes/template-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/error-tracking.php' );
 	include( RCP_PLUGIN_DIR . 'includes/shortcodes.php' );
 	include( RCP_PLUGIN_DIR . 'includes/member-forms.php' );
