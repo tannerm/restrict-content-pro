@@ -3,54 +3,18 @@
 // login form fields
 function rcp_login_form_fields( $args = array() ) {
 
-	global $post;
-
-	$action = rcp_get_current_url();
+	global $rcp_login_form_args;
 
 	// parse the arguments passed
 	$defaults = array (
  		'redirect' => $action,
- 		'class' => 'rcp_form'
 	);
-	$args = wp_parse_args( $args, $defaults );
-	// setup each argument in its own variable
-	extract( $args, EXTR_SKIP );
+	$rcp_login_form_args = wp_parse_args( $args, $defaults );
 
 	ob_start();
-
-		do_action( 'rcp_before_login_form' );
-
-		if( !is_user_logged_in() ) {
-
-			// show any error messages after form submission
-			rcp_show_error_messages( 'login' ); ?>
-
-			<form id="rcp_login_form"  class="<?php echo $class; ?>" method="POST" action="<?php echo esc_url( $action ); ?>">
-				<fieldset class="rcp_login_data">
-					<p>
-						<label for="rcp_user_Login"><?php _e( 'Username', 'rcp' ); ?></label>
-						<input name="rcp_user_login" id="rcp_user_login" class="required" type="text"/>
-					</p>
-					<p>
-						<label for="rcp_user_pass"><?php _e( 'Password', 'rcp' ); ?></label>
-						<input name="rcp_user_pass" id="rcp_user_pass" class="required" type="password"/>
-					</p>
-					<p class="rcp_lost_password"><a href="<?php echo esc_url( wp_lostpassword_url( $action ) ); ?>"><?php _e( 'Lost your password?', 'rcp' ); ?></a></p>
-					<p>
-						<input type="hidden" name="rcp_action" value="login"/>
-						<input type="hidden" name="rcp_redirect" value="<?php echo esc_url( $redirect ); ?>"/>
-						<input type="hidden" name="rcp_login_nonce" value="<?php echo wp_create_nonce( 'rcp-login-nonce' ); ?>"/>
-						<input id="rcp_login_submit" type="submit" value="Login"/>
-					</p>
-				</fieldset>
-			</form>
-			<?php
-		} else {
-			echo '<div class="rcp_logged_in">' . __( 'You are logged in.', 'rcp' ) . ' <a href="' . wp_logout_url( home_url() ) . '">' . __( 'Logout', 'rcp' ) . '</a></div>';
-		}
-
-		do_action( 'rcp_after_login_form' );
-
+	do_action( 'rcp_before_login_form' );
+	rcp_get_template_part( 'login' );
+	do_action( 'rcp_after_login_form' );
 	return ob_get_clean();
 }
 
