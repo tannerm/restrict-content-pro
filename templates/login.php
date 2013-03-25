@@ -1,3 +1,4 @@
+<?php global $rcp_login_form_args; ?>
 <?php if( ! is_user_logged_in() ) : ?>
 
 	<?php rcp_show_error_messages( 'login' ); ?>
@@ -15,7 +16,7 @@
 			<p class="rcp_lost_password"><a href="<?php echo esc_url( wp_lostpassword_url( $action ) ); ?>"><?php _e( 'Lost your password?', 'rcp' ); ?></a></p>
 			<p>
 				<input type="hidden" name="rcp_action" value="login"/>
-				<input type="hidden" name="rcp_redirect" value="<?php echo esc_url( $redirect ); ?>"/>
+				<input type="hidden" name="rcp_redirect" value="<?php echo esc_url( $rcp_login_form_args['redirect'] ); ?>"/>
 				<input type="hidden" name="rcp_login_nonce" value="<?php echo wp_create_nonce( 'rcp-login-nonce' ); ?>"/>
 				<input id="rcp_login_submit" type="submit" value="Login"/>
 			</p>
