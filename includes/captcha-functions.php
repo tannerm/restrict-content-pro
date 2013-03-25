@@ -8,7 +8,7 @@ if( ! function_exists( 'recaptcha_get_html' ) ) {
 function rcp_show_captcha() {
 	global $rcp_options;
 	// reCaptcha
-	if( isset( $rcp_options['enable_recaptcha'] ) ) {
+	if( isset( $rcp_options['enable_recaptcha'] ) && ! empty( $rcp_options['recaptcha_public_key'] ) ) {
 		$publickey = trim( $rcp_options['recaptcha_public_key'] );
 		$ssl = isset( $rcp_options['ssl'] );
 		echo '<script type="text/javascript"> var RecaptchaOptions = { theme : "' . $rcp_options['recaptcha_style'] . '" };</script>';
@@ -20,7 +20,7 @@ add_action( 'rcp_before_registration_submit_field', 'rcp_show_captcha', 100 );
 
 function rcp_validate_captcha() {
 	global $rcp_options;
-	if( isset( $rcp_options['enable_recaptcha'] ) ) {
+	if( isset( $rcp_options['enable_recaptcha'] ) && ! empty( $rcp_options['recaptcha_public_key'] ) ) {
 		/* validate recaptcha, if enabled */
 		$privatekey = trim( $rcp_options['recaptcha_private_key'] );
 		$resp = recaptcha_check_answer(
