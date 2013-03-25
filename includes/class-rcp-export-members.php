@@ -58,10 +58,10 @@ class RCP_Members_Export extends RCP_Export {
 
 		$data = array();
 
-		$subscription = isset( $_POST['rcp-subscription'] ) ? absint( $_POST['rcp-subscription'] ) : null;
-		$status       = isset( $_POST['rcp-status'] )       ? $_POST['rcp-status']                 : 'active';
+		$subscription = isset( $_POST['rcp-subscription'] ) ? absint( $_POST['rcp-subscription'] )        : null;
+		$status       = isset( $_POST['rcp-status'] )       ? sanitize_text_field( $_POST['rcp-status'] ) : 'active';
 
-		$members = rcp_get_members( $status, $subscription );
+		$members      = rcp_get_members( $status, $subscription );
 
 		if( $members ) :
 			foreach ( $members as $member ) {

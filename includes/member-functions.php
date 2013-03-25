@@ -27,13 +27,16 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 			array(
 				'key' => 'rcp_status',
 				'value' => $status
-			),
-			array(
-				'key' => 'rcp_subscription_level',
-				'value' => $subscription
 			)
 		)
 	);
+
+	if( ! empty( $subscription ) ) {
+		$args['meta_query'][] = array(
+			'key'   => 'rcp_subscription_level',
+			'value' => $subscription
+		);
+	}
 
 	if( ! empty( $recurring ) ) {
 		if( $recurring == 1 ) {
