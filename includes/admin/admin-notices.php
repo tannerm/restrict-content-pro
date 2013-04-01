@@ -3,8 +3,12 @@
 function rcp_admin_notices() {
 	global $rcp_options;
 
+	$message = ! empty( $_GET['rcp_message'] ) ? urldecode( $_GET['rcp_message'] ) : false;
+	$class   = 'updated';
+	$text    = '';
+
 	// only show notice if settings have never been saved
-	if( !is_array( $rcp_options ) || $rcp_options == '') {
+	if( ! is_array( $rcp_options ) || empty( $rcp_options ) ) {
 		echo '<div class="updated"><p>' . __( 'You should now configure your Restrict Content Pro settings', 'rcp' ) . '</p></div>';
 	}
 
@@ -18,8 +22,23 @@ function rcp_admin_notices() {
 		echo '<div class="updated fade"><p>' . __( 'Member updated', 'rcp' ) . '</p></div>';
 	}
 
-	if( isset( $_GET['rcp-action'] ) && $_GET['rcp-action'] == 'upgrade-complete' )
-		echo '<div class="updated"><p>' . __( 'Database upgrade complete', 'rcp' ) . '</p></div>';
+
+	switch( $message ) :
+
+		case 'payment_deleted' :
+
+			$text = __( 'Payment deleted', 'rcp' );
+			break;
+
+		case 'upgrade-complete' :
+
+			$text =  __( 'Database upgrade complete', 'rcp' );
+			break;
+
+	endswitch;
+
+	if( $message )
+		echo '<div class="' . $class . '"><p>' . $text . '</p></div>';
 
 }
 add_action( 'admin_notices', 'rcp_admin_notices' );
