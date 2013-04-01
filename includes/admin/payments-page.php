@@ -84,7 +84,7 @@ function rcp_payments_page() {
 						$total_earnings = $total_earnings + $payment->amount;
 						endforeach;
 					else : ?>
-					<tr><td colspan="7"><?php _e( 'No payments recorded yet', 'rcp' ); ?></td></tr>
+					<tr><td colspan="8"><?php _e( 'No payments recorded yet', 'rcp' ); ?></td></tr>
 				<?php endif;?>
 			</table>
 			<?php if ($total_pages > 1) : ?>
