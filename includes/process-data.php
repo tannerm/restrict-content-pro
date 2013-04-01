@@ -225,6 +225,11 @@ function rcp_process_data() {
 			$discounts = new RCP_Discounts();
 			$discounts->update( $_GET['deactivate_discount'], array( 'status' => 'disabled' ) );
 		}
+		if( ! empty( $_GET['rcp-action'] ) && $_GET['rcp-action'] == 'delete_payment' && wp_verify_nonce( $_GET['_wpnonce'], 'rcp_delete_payment_nonce' ) ) {
+			$payments = new RCP_Payments();
+			$payments->delete( absint( $_GET['payment_id'] ) );
+			wp_safe_redirect( admin_url( add_query_arg( 'rcp_message', 'payment_deleted', 'admin.php?page=rcp-payments' ) ) ); exit;
+		}
 	}
 }
 add_action( 'admin_init', 'rcp_process_data' );

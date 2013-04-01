@@ -136,8 +136,9 @@ class RCP_Payments {
 	*/
 
 	public function delete( $payment_id = 0 ) {
-
-		// TODO
+		global $wpdb;
+		do_action( 'rcp_delete_payment', $payment_id );
+		$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM {$this->db_name} WHERE `id` = '%d';", absint( $payment_id ) ) );
 
 	}
 

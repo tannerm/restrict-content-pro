@@ -44,6 +44,7 @@ function rcp_payments_page() {
 					<th style="width: 90px;"><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
 					<th style="width: 90px;"><?php _e( 'User', 'rcp' ); ?></th>
+					<th><?php _e( 'Actions', 'rcp' ); ?></th>
 					<?php do_action('rcp_payments_page_table_header'); ?>
 				</tr>
 			</thead>
@@ -56,6 +57,7 @@ function rcp_payments_page() {
 					<th><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
 					<th><?php _e( 'User', 'rcp' ); ?></th>
+					<th><?php _e( 'Actions', 'rcp' ); ?></th>
 					<?php do_action( 'rcp_payments_page_table_footer' ); ?>
 				</tr>
 			</tfoot>
@@ -74,6 +76,7 @@ function rcp_payments_page() {
 								<td><?php echo rcp_currency_filter( $payment->amount ); ?></td>
 								<td><?php echo esc_html( $payment->payment_type ); ?></td>
 								<td><?php echo isset( $user->display_name ) ? esc_html( $user->display_name ) : ''; ?></td>
+								<td><a href="<?php echo wp_nonce_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ) ), 'rcp_delete_payment_nonce' ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a></td>
 								<?php do_action( 'rcp_payments_page_table_column', $payment->id ); ?>
 							</tr>
 						<?php

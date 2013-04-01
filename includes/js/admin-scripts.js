@@ -45,6 +45,14 @@ jQuery(document).ready(function($) {
 		}
 		return false;
 	});
+	$('.rcp-delete-payment').click(function() {
+		if(confirm("Are you sure you want to delete this payment? This action is irreversible. \n\nProceed?")) {
+			return true;
+		} else {
+			return false;
+		}
+		return false;
+	});
 	$('#rcp-add-new-member').submit(function() {
 		if($('#rcp-user option:selected').val() == 'choose') {
 			alert('You must choose a username');
