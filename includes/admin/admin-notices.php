@@ -48,6 +48,28 @@ function rcp_admin_notices() {
 			$text = __( 'Member updated' );
 			break;
 
+		case 'level_added' :
+
+			$text = __( 'Subscription level added', 'rcp' );
+			break;
+
+		case 'level_updated' :
+
+			$text = __( 'Subscription level updated', 'rcp' );
+			break;
+
+		case 'level_not_added' :
+
+			$text = __( 'Subscription level could not be added', 'rcp' );
+			$class = 'error';
+			break;
+
+		case 'level_not_updated' :
+
+			$text = __( 'Subscription level could not be updated', 'rcp' );
+			$class = 'error';
+			break;
+
 	endswitch;
 
 	if( $message )
