@@ -156,7 +156,7 @@ function rcp_members_page()
 					$i = 1;
 					foreach( $members as $key => $member) : ?>
 						<tr class="rcp_row <?php if(rcp_is_odd($i)) { echo 'alternate'; } ?>">
-							<td><?php echo $member->user_login; ?></td>
+							<td><a href="<?php echo add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php echo $member->user_login; ?></a></td>
 							<td><?php echo $member->ID; ?></td>
 							<td><?php echo $member->user_email; ?></td>
 							<td><?php echo utf8_decode(rcp_get_subscription($member->ID)); ?></td>
