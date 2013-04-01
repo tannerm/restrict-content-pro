@@ -59,7 +59,7 @@ function rcp_process_data() {
 
 			if ( isset( $_POST['expiration'] ) &&  strtotime( 'NOW' ) > strtotime( $_POST['expiration'] ) ) :
 
-				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&user-added=0';
+				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&rcp_message=user_not_added';
 				header( "Location:" . $url );
 
 			else:
@@ -77,7 +77,7 @@ function rcp_process_data() {
 				} else {
 					delete_user_meta( $user->ID, 'rcp_recurring' );
 				}
-				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&user-added=1';
+				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&rcp_message=user_added';
 				header( "Location:" .  $url);
 
 			endif;
@@ -105,7 +105,7 @@ function rcp_process_data() {
 			if( isset( $_POST['signup_method'] ) ) update_user_meta( $user_id, 'rcp_signup_method', $_POST['signup_method'] );
 			if( isset( $_POST['notes'] ) ) update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
 
-			wp_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id . '&updated=true' ) ); exit;
+			wp_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id . '&rcp_message=user_updated' ) ); exit;
 		}
 
 

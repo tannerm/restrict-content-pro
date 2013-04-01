@@ -18,9 +18,6 @@ function rcp_admin_notices() {
 	if( isset( $_GET['rcp-db'] ) && $_GET['rcp-db'] == 'updated' ) {
 		echo '<div class="updated fade"><p>' . __( 'The Restrict Content Pro database has been updated', 'rcp' ) . '</p></div>';
 	}
-	if( isset( $_GET['edit_member'] ) && isset( $_GET['updated'] ) && $_GET['updated'] == 'true' ) {
-		echo '<div class="updated fade"><p>' . __( 'Member updated', 'rcp' ) . '</p></div>';
-	}
 
 
 	switch( $message ) :
@@ -33,6 +30,22 @@ function rcp_admin_notices() {
 		case 'upgrade-complete' :
 
 			$text =  __( 'Database upgrade complete', 'rcp' );
+			break;
+
+		case 'user_added' :
+
+			$text = __( 'The user\'s subscription has been added', 'rcp' );
+			break;
+
+		case 'user_not_added' :
+
+			$text = __( 'The user\'s subscription could not be added', 'rcp' );
+			$class = 'error';
+			break;
+
+		case 'user_updated' :
+
+			$text = __( 'Member updated' );
 			break;
 
 	endswitch;
