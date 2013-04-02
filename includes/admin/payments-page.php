@@ -22,7 +22,7 @@ function rcp_payments_page() {
 		$user          = get_current_user_id();
 		$screen        = get_current_screen();
 		$screen_option = $screen->get_option( 'per_page', 'option' );
-		$per_page      = 2;
+		$per_page      = get_user_meta( $user, $screen_option, true );
 		if ( empty ( $per_page) || $per_page < 1 ) {
 			$per_page  = $screen->get_option( 'per_page', 'default' );
 		}
