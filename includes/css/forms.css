@@ -12,6 +12,7 @@
 .rcp_form input[type="password"]:focus.error,
 .rcp_form input[type="email"]:focus.error { border-color: #ffa5a5; -moz-box-shadow: 0 0 3px #ffbfbf; -webkit-box-shadow: 0 0 3px #ffbfbf; box-shadow: 0 0 3px #ffbfbf; }
 .rcp_form p { margin: 0 0 10px; min-height: 20px; }
+.rcp_form p br { display: none; } /* fix for stupid theme's that mess with wpautop */
 .rcp_form ul { margin: 0 0 15px; padding: 0; }
 .rcp_form li { list-style: none; margin: 0 0 15px; }
 .rcp_message { margin: 0 0 15px; }
