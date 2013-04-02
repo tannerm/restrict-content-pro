@@ -221,15 +221,35 @@ class RCP_Payments {
 	 * @since   1.5
 	*/
 
-	public function count() {
+	public function count( $args = array() ) {
 
 		global $wpdb;
 
-		$count = get_transient( 'rcp_payments_count' );
+		$defaults = array(
+			'user_id' => 0
+		);
+
+		$args  = wp_parse_args( $args, $defaults );
+
+		$where = '';
+
+		if( ! empty( $args['user_id'] ) ) {
+
+			if( is_array( $args['user_id'] ) )
+				$user_ids = implode( ',', $args['user_id'] );
+			else
+				$user_ids = intval( $args['user_id'] );
+
+			$where .= " WHERE `user_id` IN( {$user_ids} ) ";
+
+		}
+
+		$key   = md5( 'rcp_payments_' . serialize( $args ) );
+		$count = get_transient( $key );
 
 		if( $count === false ) {
-			$count = $wpdb->get_var( "SELECT COUNT(*) FROM " . $this->db_name . ";" );
-			set_transient( 'rcp_payments_count', $count, 10800 );
+			$count = $wpdb->get_var( "SELECT COUNT(*) FROM " . $this->db_name . "{$where};" );
+			set_transient( $key, $count, 10800 );
 		}
 
 		return $count;
