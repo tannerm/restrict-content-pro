@@ -173,15 +173,29 @@ class RCP_Payments {
 		global $wpdb;
 
 		$defaults = array(
-			'number' => 20,
-			'offset' => 0,
+			'number'  => 20,
+			'offset'  => 0,
+			'user_id' => 0
 		);
 
-		$args = wp_parse_args( $args, $defaults );
+		$args  = wp_parse_args( $args, $defaults );
+
+		$where = '';
+
+		if( ! empty( $args['user_id'] ) ) {
+
+			if( is_array( $args['user_id'] ) )
+				$user_ids = implode( ',', $args['user_id'] );
+			else
+				$user_ids = intval( $args['user_id'] );
+
+			$where .= "WHERE `user_id` IN( {$user_ids} ) ";
+
+		}
 
 		if( $args['number'] > 0 ) {
 
-			$payments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $this->db_name . " ORDER BY id DESC LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
+			$payments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $this->db_name . " {$where}ORDER BY id DESC LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
 
 		} else {
 
@@ -189,7 +203,7 @@ class RCP_Payments {
 			$payments = get_transient( 'rcp_payments' );
 
 			if( $payments === false ) {
-				$payments = $wpdb->get_results( "SELECT * FROM " . $wpdb->escape( $rcp_payments_db_name ) . " ORDER BY id DESC;" ); // this is to get all payments
+				$payments = $wpdb->get_results( "SELECT * FROM " . $wpdb->escape( $rcp_payments_db_name ) . " {$where}ORDER BY id DESC;" ); // this is to get all payments
 				set_transient( 'rcp_payments', $payments, 10800 );
 			}
 
