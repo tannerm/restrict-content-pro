@@ -29,21 +29,26 @@ function rcp_payments_page() {
 		$total_pages   = 1;
 		$offset        = $per_page * ( $page-1 );
 
-		$payments      = $rcp_payments->get_payments( array( 'offset' => $offset, 'number' => $per_page ) );
+		$user_id       = isset( $_GET['user_id'] ) ? $_GET['user_id'] : 0;
+
+		$payments      = $rcp_payments->get_payments( array( 'offset' => $offset, 'number' => $per_page, 'user_id' => $user_id ) );
 		$payment_count = $rcp_payments->count();
 		$total_pages   = ceil( $payment_count / $per_page );
 		?>
 		<p class="total"><strong><?php _e( 'Total Earnings', 'rcp' ); ?>: <?php echo rcp_currency_filter( $rcp_payments->get_earnings() ); ?></strong></p>
+		<?php if( ! empty( $user_id ) ) : ?>
+		<p><a href="<?php echo admin_url( 'admin.php?page=rcp-payments' ); ?>" class="button-secondary" title="<?php _e( 'View all payments', 'rcp' ); ?>"><?php _e( 'Reset User Filter', 'rcp' ); ?></a></p>
+		<?php endif; ?>
 		<table class="wp-list-table widefat fixed posts rcp-payments">
 			<thead>
 				<tr>
 					<th style="width: 40px;"><?php _e( 'ID', 'rcp' ); ?></th>
+					<th style="width: 90px;"><?php _e( 'User', 'rcp' ); ?></th>
 					<th style="width: 150px;"><?php _e( 'Subscription', 'rcp' ); ?></th>
 					<th style="width: 240px;"><?php _e( 'Subscription Key', 'rcp' ); ?></th>
 					<th><?php _e( 'Date', 'rcp' ); ?></th>
 					<th style="width: 90px;"><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
-					<th style="width: 90px;"><?php _e( 'User', 'rcp' ); ?></th>
 					<th><?php _e( 'Actions', 'rcp' ); ?></th>
 					<?php do_action('rcp_payments_page_table_header'); ?>
 				</tr>
@@ -51,12 +56,12 @@ function rcp_payments_page() {
 			<tfoot>
 				<tr>
 					<th style="width: 40px;"><?php _e( 'ID', 'rcp' ); ?></th>
+					<th><?php _e( 'User', 'rcp' ); ?></th>
 					<th><?php _e( 'Subscription', 'rcp' ); ?></th>
 					<th><?php _e( 'Subscription Key', 'rcp' ); ?></th>
 					<th><?php _e( 'Date', 'rcp' ); ?></th>
 					<th><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
-					<th><?php _e( 'User', 'rcp' ); ?></th>
 					<th><?php _e( 'Actions', 'rcp' ); ?></th>
 					<?php do_action( 'rcp_payments_page_table_footer' ); ?>
 				</tr>
@@ -70,12 +75,16 @@ function rcp_payments_page() {
 							?>
 							<tr class="rcp_payment <?php if( rcp_is_odd( $i ) ) echo 'alternate'; ?>">
 								<td><?php echo absint( $payment->id ); ?></td>
+								<td>
+									<a href="<?php echo add_query_arg( 'user_id', $payment->user_id ); ?>" title="<?php _e( 'View payments by this user', 'rcp' ); ?>">
+										<?php echo isset( $user->display_name ) ? esc_html( $user->display_name ) : ''; ?>
+									</a>
+								</td>
 								<td><?php echo esc_html( $payment->subscription ); ?></td>
 								<td><?php echo esc_html( $payment->subscription_key ); ?></td>
 								<td><?php echo esc_html( $payment->date ); ?></td>
 								<td><?php echo rcp_currency_filter( $payment->amount ); ?></td>
 								<td><?php echo esc_html( $payment->payment_type ); ?></td>
-								<td><?php echo isset( $user->display_name ) ? esc_html( $user->display_name ) : ''; ?></td>
 								<td><a href="<?php echo wp_nonce_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ) ), 'rcp_delete_payment_nonce' ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a></td>
 								<?php do_action( 'rcp_payments_page_table_column', $payment->id ); ?>
 							</tr>

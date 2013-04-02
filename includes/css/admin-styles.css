@@ -17,7 +17,6 @@
 #rcp_user_search_results { position: absolute; }
 #rcp_user_search_results ul { padding: 10px 10px 4px; margin: 0; background: #f0f0f0; border: 1px solid #DFDFDF; width: 300px; max-height: 200px; overflow-y: scroll; }
 #rcp-order { margin-right: 10px; }
-.total { float: left; }
 .rcp_payment_details { border-bottom: 1px solid #f0f0f0; width: 400px; }
 .rcp-help .postbox ul li { list-style: disc outside; margin-left: 20px; }
 .rcp-help .postbox h4 { border-bottom: 1px solid #ccc; margin: 30px 0 0 0; padding: 0 0 10px; }
