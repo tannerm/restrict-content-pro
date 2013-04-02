@@ -22,7 +22,7 @@ function rcp_payments_page() {
 		$user          = get_current_user_id();
 		$screen        = get_current_screen();
 		$screen_option = $screen->get_option( 'per_page', 'option' );
-		$per_page      = get_user_meta( $user, $screen_option, true );
+		$per_page      = 2;
 		if ( empty ( $per_page) || $per_page < 1 ) {
 			$per_page  = $screen->get_option( 'per_page', 'default' );
 		}
@@ -32,7 +32,7 @@ function rcp_payments_page() {
 		$user_id       = isset( $_GET['user_id'] ) ? $_GET['user_id'] : 0;
 
 		$payments      = $rcp_payments->get_payments( array( 'offset' => $offset, 'number' => $per_page, 'user_id' => $user_id ) );
-		$payment_count = $rcp_payments->count();
+		$payment_count = $rcp_payments->count( array( 'user_id' => $user_id ) );
 		$total_pages   = ceil( $payment_count / $per_page );
 		?>
 		<p class="total"><strong><?php _e( 'Total Earnings', 'rcp' ); ?>: <?php echo rcp_currency_filter( $rcp_payments->get_earnings() ); ?></strong></p>
@@ -100,11 +100,9 @@ function rcp_payments_page() {
 				<div class="tablenav">
 					<div class="tablenav-pages alignright">
 						<?php
-							if(isset($_GET['show']) && $_GET['show'] > 0) {
-								$base = 'admin.php?page=rcp-payments&show=' . $_GET['show'] . '%_%';
-							} else {
-								$base = 'admin.php?page=rcp-payments%_%';
-							}
+
+							$base = 'admin.php?' . remove_query_arg( 'p', $_SERVER['QUERY_STRING'] ) . '%_%';
+
 							echo paginate_links( array(
 								'base' 		=> $base,
 								'format' 	=> '&p=%#%',
