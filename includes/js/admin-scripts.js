@@ -31,14 +31,14 @@ jQuery(document).ready(function($) {
 		$('.datepicker').datepicker({dateFormat: dateFormat});
 	}
 	$('.rcp_deactivate').click(function() {
-		if(confirm('Are you sure you wish to cancel this member\'s subscription?')) {
+		if(confirm(rcp_vars.deactivate_user)) {
 			return true;
 		} else {
 			return false;
 		}
 	});
 	$('.rcp_delete_subscription').click(function() {
-		if(confirm("If you delete this subscription, all members registered with this level will be canceled. \n\nProceed?")) {
+		if(confirm(rcp_vars.delete_subscription)) {
 			return true;
 		} else {
 			return false;
@@ -46,7 +46,7 @@ jQuery(document).ready(function($) {
 		return false;
 	});
 	$('.rcp-delete-payment').click(function() {
-		if(confirm("Are you sure you want to delete this payment? This action is irreversible. \n\nProceed?")) {
+		if(confirm(rcp_vars.delete_payment)) {
 			return true;
 		} else {
 			return false;
@@ -54,8 +54,8 @@ jQuery(document).ready(function($) {
 		return false;
 	});
 	$('#rcp-add-new-member').submit(function() {
-		if($('#rcp-user option:selected').val() == 'choose') {
-			alert('You must choose a username');
+		if($('#rcp-user').val() == '') {
+			alert(rcp_vars.missing_username);
 			return false;
 		}
 		return true;
@@ -97,7 +97,7 @@ jQuery(document).ready(function($) {
 		data = {
 			action: 'rcp_search_users',
 			user_name: user_search,
-			rcp_nonce: rcp_member_vars.rcp_member_nonce
+			rcp_nonce: rcp_vars.rcp_member_nonce
 		};
 
 		$.ajax({
