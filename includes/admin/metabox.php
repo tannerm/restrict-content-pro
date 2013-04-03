@@ -9,52 +9,52 @@ function rcp_get_metabox_fields() {
     //custom meta boxes
     $rcp_prefix = 'rcp_';
 
-    $rcp_meta_box = array(
-        'id' => 'rcp_meta_box',
-        'title' => __( 'Restrict this content', 'rcp' ),
-        'context' => 'normal',
+    $rcp_meta_box  = array(
+        'id'       => 'rcp_meta_box',
+        'title'    => __( 'Restrict this content', 'rcp' ),
+        'context'  => 'normal',
         'priority' => apply_filters( 'rcp_metabox_priority', 'high' ),
-        'fields' => array(
+        'fields'   => array(
             array(
             	'name' => __( 'Paid Only?', 'rcp' ),
-            	'id' => '_is_paid',
+            	'id'   => '_is_paid',
             	'type' => 'checkbox',
             	'desc' => __( 'Restrict this entry to active paid users only.', 'rcp' )
          	),
     		array(
             	'name' => __( 'Show Excerpt?', 'rcp' ),
-            	'id' => $rcp_prefix . 'show_excerpt',
+            	'id'   => $rcp_prefix . 'show_excerpt',
             	'type' => 'checkbox',
             	'desc' => __( 'Allow non active users to view the excerpt? If left unchecked, the message defined in settings will be used', 'rcp' )
          	),
     		array(
             	'name' => __( 'Hide from Feed?', 'rcp' ),
-            	'id' => $rcp_prefix . 'hide_from_feed',
+            	'id'   => $rcp_prefix . 'hide_from_feed',
             	'type' => 'checkbox',
             	'desc' => __( 'Hide the excerpt of this post / page from the Feed?', 'rcp' )
          	),
     		array(
                 'name' => __( 'Access Level', 'rcp' ),
-                'id' => $rcp_prefix . 'access_level',
+                'id'   => $rcp_prefix . 'access_level',
                 'type' => 'select',
                 'desc' => __( 'Choose the access level required see this content. The access level is determined by the subscription the member is subscribed to.', 'rcp' ),
                 'options' => rcp_get_access_levels(),
-                'std' => 'All'
+                'std'  => 'All'
             ),
     		array(
                 'name' => __( 'Subscription Level', 'rcp' ),
-                'id' => $rcp_prefix . 'subscription_level',
+                'id'   => $rcp_prefix . 'subscription_level',
                 'type' => 'levels',
                 'desc' => __( 'Choose the subscription level a user must be subscribed to in order to view this content.', 'rcp' ),
-                'std' => 'All'
+                'std'  => 'All'
             ),
     		array(
     			'name' => __( 'User Level', 'rcp' ),
-    			'id' => $rcp_prefix . 'user_level',
+    			'id'   => $rcp_prefix . 'user_level',
     			'type' => 'select',
     			'desc' => __( 'Choose the user level that can see this post / page\'s content. Users of this level and higher will be the only ones able to view the content.', 'rcp' ),
     			'options' => array('All', 'Administrator', 'Editor', 'Author', 'Contributor', 'Subscriber'),
-    			'std' => 'All'
+    			'std'  => 'All'
     		)
         )
     );
@@ -67,11 +67,11 @@ function rcp_get_metabox_fields() {
 
 function rcp_add_meta_boxes() {
     $rcp_meta_box = rcp_get_metabox_fields();
-	$post_types = get_post_types( array( 'public' => true, 'show_ui' => true ), 'objects' );
-	$excluded_post_types = apply_filters( 'rcp_metabox_excluded_post_types', array( 'forum', 'topic', 'reply' ) );
+	$post_types   = get_post_types( array( 'public' => true, 'show_ui' => true ), 'objects' );
+	$exclude      = apply_filters( 'rcp_metabox_excluded_post_types', array( 'forum', 'topic', 'reply' ) );
 
 	foreach ( $post_types as $page )	{
-		if( !in_array( $page->name, $excluded_post_types ) )
+		if( !in_array( $page->name, $exclude ) )
 			add_meta_box( $rcp_meta_box['id'], $rcp_meta_box['title'], 'rcp_render_meta_box', $page->name, $rcp_meta_box['context'], $rcp_meta_box['priority'] );
 	}
 }
