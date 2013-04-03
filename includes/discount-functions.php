@@ -13,8 +13,8 @@
 */
 
 function rcp_get_discounts() {
-	global $wpdb, $rcp_discounts_db_name;
-	$discounts = $wpdb->get_results( "SELECT * FROM " . $rcp_discounts_db_name . ";" );
+	$discounts_db = new RCP_Discounts();
+	$discounts    = $discounts_db->get_discounts();
 	if( $discounts ) {
 		return $discounts;
 	}
