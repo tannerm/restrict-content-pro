@@ -285,7 +285,7 @@ add_filter( 'wp_log_types', 'rcp_log_types' );
 */
 function rcp_no_account_sharing() {
 	global $rcp_options;
-	return (bool) apply_filters( 'rcp_no_account_sharing', isset( $rcp_options['no_loging_sharing'] ) );
+	return (bool) apply_filters( 'rcp_no_account_sharing', isset( $rcp_options['no_login_sharing'] ) );
 }
 
 

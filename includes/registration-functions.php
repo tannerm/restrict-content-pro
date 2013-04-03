@@ -100,10 +100,10 @@ function rcp_process_registration() {
 
 				// setup a unique key for this subscription
 				$subscription_key = rcp_generate_subscription_key();
-				update_user_meta( $user_id, 'rcp_subscription_key', $subscription_key );
-				update_user_meta( $user_id, 'rcp_subscription_level', $subscription_id );
-				update_user_meta( $user_id, 'rcp_status', 'pending' );
-				update_user_meta( $user_id, 'rcp_expiration', $member_expires );
+				update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
+				update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
+				update_user_meta( $user_data['id'], 'rcp_status', 'pending' );
+				update_user_meta( $user_data['id'], 'rcp_expiration', $member_expires );
 
 				do_action( 'rcp_form_processing', $_POST, $user_data['id'], $price );
 
@@ -129,7 +129,7 @@ function rcp_process_registration() {
 							rcp_set_status( $user_data['id'], 'active' );
 							rcp_email_subscription_status( $user_data['id'], 'active' );
 							rcp_login_user_in( $user_data['id'], $user_login, $user_pass );
-							wp_redirect( rcp_get_return_url() ); exit;
+							wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 						}
 
 					}
@@ -144,7 +144,7 @@ function rcp_process_registration() {
 						$auto_renew = false;
 					}
 
-					$redirect = rcp_get_return_url();
+					$redirect = rcp_get_return_url( $user_data['id'] );
 
 					$subscription_data = array(
 						'price' 			=> $price,
@@ -154,7 +154,7 @@ function rcp_process_registration() {
 						'key' 				=> $subscription_key,
 						'user_id' 			=> $user_data['id'],
 						'user_name' 		=> $user_data['login'],
-						'user_email' 		=> $user_email,
+						'user_email' 		=> $user_data['email'],
 						'currency' 			=> $rcp_options['currency'],
 						'auto_renew' 		=> $auto_renew,
 						'return_url' 		=> $redirect,
@@ -213,7 +213,7 @@ function rcp_process_registration() {
 
 					}
 					// send the newly created user to the redirect page after logging them in
-					wp_redirect( rcp_get_return_url() ); exit;
+					wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 
 				} // end price check
 
@@ -226,7 +226,13 @@ function rcp_process_registration() {
 add_action( 'init', 'rcp_process_registration', 100 );
 
 
-
+/**
+ * Validate and setup the user data for registration
+ *
+ * @access      public
+ * @since       1.5
+ * @return      array
+ */
 function rcp_validate_user_data() {
 
 	$user = array();
@@ -240,7 +246,7 @@ function rcp_validate_user_data() {
 		$user['password_confirm'] = sanitize_text_field( $_POST['rcp_user_pass_confirm'] );
 		$user['need_new']         = true;
 	} else {
-		$userdata 		  = get_userdata( $user_id );
+		$userdata 		  = get_userdata( get_current_user_id() );
 		$user['id']       = $userdata->ID;
 		$user['login'] 	  = $userdata->user_login;
 		$user['email'] 	  = $userdata->user_email;
@@ -282,7 +288,16 @@ function rcp_validate_user_data() {
 	return apply_filters( 'rcp_user_registration_data', $user );
 }
 
-function rcp_get_return_url() {
+
+/**
+ * Get the registration success/return URL
+ *
+ * @access      public
+ * @since       1.5
+ * @param       $user_id int The user ID we have just registered
+ * @return      array
+ */
+function rcp_get_return_url( $user_id = 0 ) {
 
 	global $rcp_options;
 
@@ -291,5 +306,5 @@ function rcp_get_return_url() {
 	} else {
 		$redirect = home_url();
 	}
-	return apply_filters( 'rcp_return_url', $redirect );
+	return apply_filters( 'rcp_return_url', $redirect, $user_id );
 }

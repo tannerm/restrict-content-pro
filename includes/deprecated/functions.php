@@ -168,3 +168,18 @@ function rcp_get_users_last_payment_amount( $user_id = 0 ) {
 	$query = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_payments_db_name . " WHERE `user_id`='%d' ORDER BY id DESC LIMIT 1;", $user_id ) );
 	return $query[0]->amount;
 }
+
+
+/**
+ * Retrieve all payments for a specific user
+ *
+ * @deprecated  1.5
+ * @access      private
+ * @return      array
+*/
+// retrieves all recorded payments for a user ID
+function rcp_get_user_payments( $user_id ) {
+	global $wpdb, $rcp_payments_db_name;
+	$payments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_payments_db_name . " WHERE `user_id` = '%d';", $user_id ) );
+	return $payments;
+}

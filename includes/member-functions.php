@@ -262,15 +262,17 @@ function rcp_is_expired( $user_id = null ) {
 */
 function rcp_is_active( $user_id = null ) {
 
+	$ret = false;
+
 	if( $user_id == null && is_user_logged_in() ) {
 		global $user_ID;
 		$user_id = $user_ID;
 	}
 
 	if( !rcp_is_expired( $user_id ) && rcp_get_status( $user_id ) == 'active' && strlen( trim( rcp_get_subscription( $user_id ) ) ) > 0 ) {
-		return true;
+		$ret = true;
 	}
-	return false;
+	return apply_filters( 'rcp_is_active', $ret, $user_id );
 }
 
 /*
@@ -280,15 +282,17 @@ function rcp_is_active( $user_id = null ) {
 */
 function rcp_is_paid_user( $user_id = null) {
 
+	$ret = false;
+
 	if( $user_id == null && is_user_logged_in() ) {
 		global $user_ID;
 		$user_id = $user_ID;
 	}
 
 	if( rcp_is_active( $user_id ) ) {
-		return true;
+		$ret = true;
 	}
-	return false;
+	return apply_filters( 'rcp_is_paid_user', $ret, $user_id );
 }
 
 /*
@@ -421,30 +425,26 @@ function rcp_get_subscription_key( $user_id ) {
 */
 function rcp_has_used_trial( $user_id = null) {
 
+	$ret = false;
+
 	if( $user_id == null && is_user_logged_in() ) {
 		global $user_ID;
 		$user_id = $user_ID;
 	}
 
-	if( get_user_meta( $user_id, 'rcp_has_trialed', true) == 'yes' ) {
-		return true;
+	if( get_user_meta( $user_id, 'rcp_has_trialed', true ) == 'yes' ) {
+		$ret = true;
 	}
-	return false;
-}
-
-// retrieves all recorded payments for a user ID
-function rcp_get_user_payments( $user_id ) {
-	global $wpdb, $rcp_payments_db_name;
-	$payments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_payments_db_name . " WHERE `user_id` = '%d';", $user_id ) );
-	return $payments;
+	return apply_filters( 'rcp_has_used_trial', $ret, $user_id );
 }
 
 // prints payment history for the specified user
 function rcp_print_user_payments( $user_id ) {
-	$payments = rcp_get_user_payments( $user_id );
+	$payments = new RCP_Payments;
+	$user_payments = $payments->get_payments( array( 'user_id' => $user_id ) );
 	$payments_list = '';
-	if( $payments ) :
-		foreach( $payments as $payment ) :
+	if( $user_payments ) :
+		foreach( $user_payments as $payment ) :
 			$payments_list .= '<ul class="rcp_payment_details">';
 				$payments_list .= '<li>' . __( 'Date', 'rcp' ) . ': ' . $payment->date . '</li>';
 				$payments_list .= '<li>' . __( 'Subscription', 'rcp' ) . ': ' . $payment->subscription . '</li>';
