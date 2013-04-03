@@ -504,3 +504,68 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
 
 	return (bool) apply_filters( 'rcp_can_upgrade_subscription', $ret, $user_id );
 }
+
+
+
+/**
+ * Process Profile Updater Form
+ *
+ * Processes the profile updater form by updating the necessary fields
+ *
+ * @access      private
+ * @since       1.5
+*/
+function rcp_process_profile_editor_updates() {
+
+	// Profile field change request
+	if ( empty( $_POST['rcp_action'] ) || $_POST['rcp_action'] !== 'edit_user_profile' || !is_user_logged_in() )
+		return false;
+
+
+	// Nonce security
+	if ( ! wp_verify_nonce( $_POST['rcp_profile_editor_nonce'], 'rcp-profile-editor-nonce' ) )
+		return false;
+
+	$user_id = get_current_user_id();
+
+	$display_name = sanitize_text_field( $_POST['rcp_display_name'] );
+	$first_name   = sanitize_text_field( $_POST['rcp_first_name'] );
+	$last_name    = sanitize_text_field( $_POST['rcp_last_name'] );
+	$email        = sanitize_email( $_POST['rcp_email'] );
+
+	$userdata = array(
+		'ID'           => $user_id,
+		'first_name'   => $first_name,
+		'last_name'    => $last_name,
+		'display_name' => $display_name,
+		'user_email'   => $email
+	);
+
+	// New password
+	if ( ! empty( $_POST['rcp_new_user_pass1'] ) ) {
+		if ( $_POST['rcp_new_user_pass1'] !== $_POST['rcp_new_user_pass2'] ) {
+			rcp_errors()->add( 'password_mismatch', __( 'The passwords you entered do not match. Please try again.', 'rcp' ) );
+		} else {
+			$userdata['user_pass'] = $_POST['rcp_new_user_pass1'];
+		}
+	}
+
+	// retrieve all error messages, if any
+	$errors = rcp_errors()->get_error_messages();
+
+	// only create the user if there are no errors
+	if( empty( $errors ) ) {
+
+		// Update the user
+		$updated = wp_update_user( $userdata );
+
+		if( $updated ) {
+			do_action( 'rcp_user_profile_updated', $user_id, $userdata );
+			wp_redirect( add_query_arg( 'updated', 'true', $_POST['rcp_redirect'] ) );
+			exit;
+		} else {
+			rcp_errors()->add( 'not_updated', __( 'There was an error updating your profile. Please try again.', 'rcp' ) );
+		}
+	}
+}
+add_action( 'init', 'rcp_process_profile_editor_updates' );

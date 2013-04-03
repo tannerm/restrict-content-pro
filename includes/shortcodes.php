@@ -269,3 +269,27 @@ function rcp_user_subscription_details( $atts, $content = null ) {
 add_shortcode( 'subscription_details', 'rcp_user_subscription_details' );
 
 add_filter( 'widget_text', 'do_shortcode' );
+
+
+/**
+ * Profile Editor Shortcode
+ *
+ * Outputs the EDD Profile Editor to allow users to amend their details from the
+ * front-end
+ *
+ * @access      public
+ * @since       1.5
+ */
+function rcp_profile_editor_shortcode( $atts, $content = null ) {
+
+	global $rcp_load_css;
+
+	$rcp_load_css = true;
+
+	ob_start();
+
+	rcp_get_template_part( 'profile', 'editor' );
+
+	return ob_get_clean();
+}
+add_shortcode( 'rcp_profile_editor', 'rcp_profile_editor_shortcode' );
