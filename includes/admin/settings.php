@@ -29,8 +29,8 @@ function rcp_settings_page() {
 
 			<h2 class="nav-tab-wrapper">
 				<?php _e( 'Restrict Content Pro', 'rcp' ); ?>
-				<a href="#messages" class="nav-tab"><?php _e( 'Messages', 'rcp' ); ?></a>
 				<a href="#payments" class="nav-tab"><?php _e( 'Payments', 'rcp' ); ?></a>
+				<a href="#messages" class="nav-tab"><?php _e( 'Messages', 'rcp' ); ?></a>
 				<a href="#forms" class="nav-tab"><?php _e( 'Signup Forms', 'rcp' ); ?></a>
 				<a href="#emails" class="nav-tab"><?php _e( 'Emails', 'rcp' ); ?></a>
 				<a href="#misc" class="nav-tab"><?php _e( 'Misc', 'rcp' ); ?></a>
@@ -524,10 +524,10 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[no_loging_sharing]"><?php _e( 'Prevent Account Sharing', 'rcp' ); ?></label>
+								<label for="rcp_settings[no_login_sharing]"><?php _e( 'Prevent Account Sharing', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<input type="checkbox" value="1" name="rcp_settings[no_loging_sharing]" id="rcp_settings[no_loging_sharing]"<?php checked( true, isset( $rcp_options['no_loging_sharing'] ) ); ?>/>
+								<input type="checkbox" value="1" name="rcp_settings[no_login_sharing]" id="rcp_settings[no_login_sharing]"<?php checked( true, isset( $rcp_options['no_login_sharing'] ) ); ?>/>
 								<span class="description"><?php _e( 'Check this if you\'d like to prevents multiple users from logging into the same account simultaneously.', 'rcp' ); ?></span>
 							</td>
 						</tr>
