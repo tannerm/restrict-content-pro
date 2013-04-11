@@ -1,36 +1,22 @@
 <?php
 
-function rcp_members_page()
-{
+function rcp_members_page() {
 	global $rcp_options, $rcp_db_name, $wpdb;
-	$current_page = admin_url( '/admin.php?page=rcp-members' );
-	?>
+	$current_page = admin_url( '/admin.php?page=rcp-members' ); ?>
 	<div class="wrap">
 
-		<?php if(isset($_GET['edit_member'])) :
-			include('edit-member.php');
-		elseif(isset($_GET['view_member'])) :
-			include('view-member.php');
+		<?php if( isset( $_GET['edit_member'] ) ) :
+			include( 'edit-member.php' );
+		elseif( isset( $_GET['view_member'] ) ) :
+			include( 'view-member.php' );
 		else : ?>
-			<h2><?php _e('Paid Subscribers', 'rcp'); ?></h2>
+			<h2><?php _e(' Paid Subscribers', 'rcp' ); ?></h2>
 			<?php
 
-			if(isset($_GET['status']) && strlen(trim($_GET['status'])) > 0) {
-				$status = urldecode($_GET['status']);
-			} else {
-				$status = 'active';
-			}
-			if(isset($_GET['order'])) {
-				$order = $_GET['order'];
-			} else {
-				$order = 'DESC';
-			}
-			if(isset($_GET['subscription']) && $_GET['subscription'] != 'all') {
-				$subscription_id = urldecode($_GET['subscription']);
-			} else {
-				$subscription_id = null;
-			}
-			$recurring = isset( $_GET['recurring'] ) ? absint( $_GET['recurring'] ) : null;
+			$status          = ! empty( $_GET['status'] ) ? urldecode( $_GET['status'] ) : 'active';
+			$order           = ! empty( $_GET['order']  ) ? urldecode( $_GET['order']  ) : ' DESC';
+			$subscription_id = isset( $_GET['subscription'] ) && $_GET['subscription'] != 'all' ? urldecode( $_GET['subscription'] ) : null;
+			$recurring       = isset( $_GET['recurring'] ) ? absint( $_GET['recurring'] ) : null;
 
 			// get subscriber count
 			$active_count    = rcp_count_members( $subscription_id, 'active', $recurring );
