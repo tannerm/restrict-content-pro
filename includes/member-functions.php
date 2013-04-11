@@ -427,9 +427,8 @@ function rcp_has_used_trial( $user_id = null) {
 
 	$ret = false;
 
-	if( $user_id == null && is_user_logged_in() ) {
-		global $user_ID;
-		$user_id = $user_ID;
+	if( empty( $user_id ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
 	}
 
 	if( get_user_meta( $user_id, 'rcp_has_trialed', true ) == 'yes' ) {
