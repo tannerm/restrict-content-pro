@@ -260,16 +260,17 @@ function rcp_is_expired( $user_id = null ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return bool - TRUE if the user has an active, paid subscription (or is trialing), false otherwise
 */
-function rcp_is_active( $user_id = null ) {
+function rcp_is_active( $user_id = 0 ) {
 
 	$ret = false;
 
-	if( $user_id == null && is_user_logged_in() ) {
-		global $user_ID;
-		$user_id = $user_ID;
+	if( empty( $user_id ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
 	}
 
-	if( !rcp_is_expired( $user_id ) && rcp_get_status( $user_id ) == 'active' && strlen( trim( rcp_get_subscription( $user_id ) ) ) > 0 ) {
+	if( current_user_can( 'manage_options' ) ) {
+		$ret = true;
+	} else if( ! rcp_is_expired( $user_id ) && rcp_get_status( $user_id ) == 'active' && strlen( trim( rcp_get_subscription( $user_id ) ) ) > 0 ) {
 		$ret = true;
 	}
 	return apply_filters( 'rcp_is_active', $ret, $user_id );
@@ -280,13 +281,12 @@ function rcp_is_active( $user_id = null ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return bool - TRUE if the user has an active, paid subscription (or is trialing), false otherwise
 */
-function rcp_is_paid_user( $user_id = null) {
+function rcp_is_paid_user( $user_id = 0) {
 
 	$ret = false;
 
-	if( $user_id == null && is_user_logged_in() ) {
-		global $user_ID;
-		$user_id = $user_ID;
+	if( empty( $user_id ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
 	}
 
 	if( rcp_is_active( $user_id ) ) {
@@ -298,12 +298,12 @@ function rcp_is_paid_user( $user_id = null) {
 /*
 * returns true if the user's subscription gives access to the provided access level
 */
-function rcp_user_has_access( $user_id, $access_level_needed) {
+function rcp_user_has_access( $user_id = 0, $access_level_needed ) {
 
 	$subscription_level = rcp_get_subscription_id( $user_id );
 	$user_access_level = rcp_get_subscription_access_level( $subscription_level );
 
-	if( ( $user_access_level >= $access_level_needed ) || $access_level_needed == 0 ) {
+	if( ( $user_access_level >= $access_level_needed ) || $access_level_needed == 0 || current_user_can( 'manage_options' ) ) {
 		// the user has access
 		return true;
 	}
