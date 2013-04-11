@@ -423,7 +423,7 @@ function rcp_get_subscription_key( $user_id ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return bool - TRUE if the user has trialed, false otherwise
 */
-function rcp_has_used_trial( $user_id = null) {
+function rcp_has_used_trial( $user_id = 0) {
 
 	$ret = false;
 
@@ -436,6 +436,29 @@ function rcp_has_used_trial( $user_id = null) {
 	}
 	return apply_filters( 'rcp_has_used_trial', $ret, $user_id );
 }
+
+
+/**
+ * Checks if a user is currently trialing
+ *
+ * @access      public
+ * @since       1.5
+ * @return      bool
+ */
+function rcp_is_trialiing( $user_id = 0 ) {
+
+	$ret = false;
+
+	if( empty( $user_id ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
+	}
+
+	if( get_user_meta( $user_id, 'rcp_is_trialing', true ) == 'yes' && rcp_is_active( $user_id ) ) {
+		$ret = true;
+	}
+	return apply_filters( 'rcp_is_trailing', $ret, $user_id );
+}
+
 
 // prints payment history for the specified user
 function rcp_print_user_payments( $user_id ) {

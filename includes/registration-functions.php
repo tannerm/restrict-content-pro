@@ -144,6 +144,9 @@ function rcp_process_registration() {
 						$auto_renew = false;
 					}
 
+					// Remove trailing status, if it exists
+					delete_user_meta( $user_data['id'], 'rcp_is_trialing' );
+
 					$redirect = rcp_get_return_url( $user_data['id'] );
 
 					$subscription_data = array(
@@ -182,6 +185,7 @@ function rcp_process_registration() {
 
 						// this is so that users can only sign up for one trial
 						update_user_meta( $user_data['id'], 'rcp_has_trialed', 'yes' );
+						update_user_meta( $user_data['id'], 'rcp_is_trialing', 'yes' );
 
 						// activate the user's trial subscription
 						rcp_set_status( $user_data['id'], 'active' );
