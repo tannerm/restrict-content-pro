@@ -445,7 +445,7 @@ function rcp_has_used_trial( $user_id = 0) {
  * @since       1.5
  * @return      bool
  */
-function rcp_is_trialiing( $user_id = 0 ) {
+function rcp_is_trialing( $user_id = 0 ) {
 
 	$ret = false;
 
