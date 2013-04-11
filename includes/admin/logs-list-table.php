@@ -156,7 +156,7 @@ class RCP_Logs_List_Table extends WP_List_Table {
 
         $hidden = array(); // no hidden columns
 
-        $this->_column_headers = array($columns, $hidden);
+        $this->_column_headers = array( $columns, $hidden, array() ) ;
 
         $this->process_bulk_action();
 
