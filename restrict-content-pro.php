@@ -140,6 +140,7 @@ include( RCP_PLUGIN_DIR . 'includes/class-rcp-discounts.php' );
 include( RCP_PLUGIN_DIR . 'includes/gateways/paypal/paypal.php' );
 include( RCP_PLUGIN_DIR . 'includes/misc-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/scripts.php' );
+include( RCP_PLUGIN_DIR . 'includes/login-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/registration-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/member-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/discount-functions.php' );
