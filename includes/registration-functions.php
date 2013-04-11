@@ -45,7 +45,7 @@ function rcp_process_registration() {
 			rcp_errors()->add( 'no_level', __( 'Please choose a subscription level', 'rcp' ), 'register' );
 		}
 		if( $subscription_id ) {
-			if( $price == 0 && $expiration->duration > 0 && rcp_has_used_trial( $user_id ) ) {
+			if( $price == 0 && $expiration->duration > 0 && rcp_has_used_trial( $user_data['id'] ) ) {
 				// this ensures that users only sign up for a free trial once
 				rcp_errors()->add( 'free_trial_used', __( 'You may only sign up for a free trial once', 'rcp' ), 'register' );
 			}
@@ -238,6 +238,7 @@ function rcp_validate_user_data() {
 	$user = array();
 
 	if( ! is_user_logged_in() ) {
+		$user['id']		          = 0;
 		$user['login']		      = sanitize_text_field( $_POST['rcp_user_login'] );
 		$user['email']		      = sanitize_text_field( $_POST['rcp_user_email'] );
 		$user['first_name'] 	  = sanitize_text_field( $_POST['rcp_user_first'] );
