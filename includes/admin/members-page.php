@@ -3,7 +3,7 @@
 function rcp_members_page() {
 	global $rcp_options, $rcp_db_name, $wpdb;
 	$current_page = admin_url( '/admin.php?page=rcp-members' ); ?>
-	<div class="wrap">
+	<div class="wrap" id="rcp-members-page">
 
 		<?php if( isset( $_GET['edit_member'] ) ) :
 			include( 'edit-member.php' );
@@ -69,6 +69,12 @@ function rcp_members_page() {
 				</li>
 				<?php do_action( 'rcp_members_page_statuses' ); ?>
 			</ul>
+			<form id="rcp-member-search" method="get" action="<?php menu_page_url( 'rcp-members' ); ?>">
+				<label class="screen-reader-text" for="rcp-member-search-input"><?php _e( 'Search Members', 'rcp' ); ?></label>
+				<input type="search" id="rcp-member-search-input" name="s"/>
+				<input type="hidden" name="page" value="rcp-members"/>
+				<input type="submit" name="" id="rcp-member-search-submit" class="button" value="<?php _e( 'Search members', 'rcp' ); ?>"/>
+			</form>
 			<form id="members-filter" action="" method="get">
 				<?php
 				$levels = rcp_get_subscription_levels('all', false);
@@ -127,7 +133,7 @@ function rcp_members_page() {
 				<tbody>
 				<?php
 
-				if( isset($_GET['signup_method']) ) {
+				if( isset( $_GET['signup_method'] ) ) {
 					$method = $_GET['signup_method'] == 'live' ? 'live' : 'manual';
 					$members = get_users( array(
 							'meta_key' => 'rcp_signup_method',
