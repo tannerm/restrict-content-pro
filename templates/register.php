@@ -6,7 +6,7 @@
 	</h3>
 <?php } else { ?>
 	<h3 class="rcp_header">
-		<?php echo apply_filters( 'rcp_registration_header_logged_out', __( 'Add a Subscription', 'rcp' ) ); ?>
+		<?php echo apply_filters( 'rcp_registration_header_logged_out', __( 'Upgrade Your Subscription', 'rcp' ) ); ?>
 	</h3>
 <?php }
 
