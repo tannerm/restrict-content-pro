@@ -52,14 +52,13 @@ jQuery(document).ready(function($) {
 			$('#rcp_discount_code_wrap input').val('');
 			$('#rcp_auto_renew_wrap input').attr('checked', false);
 		} else {
-			$('#rcp_auto_renew_wrap').show();
-			$('#rcp_discount_code_wrap').show();
-		}
-		if( $(this).data('duration') == 'forever' ) {
-			$('#rcp_auto_renew_wrap').hide();
-			$('#rcp_auto_renew_wrap input').attr('checked', false);
-		} else {
-			$('#rcp_auto_renew_wrap').show();
+			if( $(this).data('duration') == 'forever' ) {
+				$('#rcp_auto_renew_wrap').hide();
+				$('#rcp_auto_renew_wrap input').attr('checked', false);
+			} else {
+				$('#rcp_auto_renew_wrap').show();
+				$('#rcp_discount_code_wrap').show();
+			}
 		}
 	});
 
