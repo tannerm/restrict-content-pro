@@ -5,7 +5,7 @@
 
 /**
  * Allows plugins to use their own update API.
- * 
+ *
  * @author Tim Wachsener
  * @version 1.1
  */
@@ -21,7 +21,7 @@ class Custom_Plugin_Updater
 	 *
 	 * @uses plugin_basename()
 	 * @uses hook()
-	 * 
+	 *
 	 * @param string $_api_url The URL pointing to the custom API endpoint.
 	 * @param string $_plugin_file Path to the plugin file.
 	 * @param array $_api_data Optional data to send with API calls.
@@ -36,12 +36,12 @@ class Custom_Plugin_Updater
 		// Set up hooks.
 		$this->hook();
 	}
-	
+
 	/**
 	 * Set up Wordpress filters to hook into WP's update process.
-	 * 
+	 *
 	 * @uses add_filter()
-	 * 
+	 *
 	 * @return void
 	 */
 	private function hook()
@@ -49,7 +49,7 @@ class Custom_Plugin_Updater
 		add_filter( 'pre_set_site_transient_update_plugins', array( &$this, 'pre_set_site_transient_update_plugins_filter' ) );
 		add_filter( 'plugins_api', array( &$this, 'plugins_api_filter' ), 10, 3);
 	}
-	
+
 	/**
 	 * Check for Updates at the defined API endpoint and modify the update array.
 	 *
@@ -74,12 +74,12 @@ class Custom_Plugin_Updater
 
 		return $_transient_data;
 	}
-	
+
 	/**
 	 * Updates information on the "View version x.x details" page with custom data.
-	 * 
+	 *
 	 * @uses api_request()
-	 * 
+	 *
 	 * @param mixed $_data
 	 * @param string $_action
 	 * @param object $_args
@@ -99,11 +99,11 @@ class Custom_Plugin_Updater
 
 	/**
 	 * Calls the API and, if successfull, returns the object delivered by the API.
-	 * 
+	 *
 	 * @uses get_bloginfo()
 	 * @uses wp_remote_post()
 	 * @uses is_wp_error()
-	 * 
+	 *
 	 * @param string $_action The requested action.
 	 * @param array $_data Parameters for the API action.
 	 * @return false||object
