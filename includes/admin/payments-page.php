@@ -76,7 +76,7 @@ function rcp_payments_page() {
 							<tr class="rcp_payment <?php if( rcp_is_odd( $i ) ) echo 'alternate'; ?>">
 								<td><?php echo absint( $payment->id ); ?></td>
 								<td>
-									<a href="<?php echo add_query_arg( 'user_id', $payment->user_id ); ?>" title="<?php _e( 'View payments by this user', 'rcp' ); ?>">
+									<a href="<?php echo add_query_arg( 'user_id', $payment->user_id, menu_page_url( 'rcp-payments', false ) ); ?>" title="<?php _e( 'View payments by this user', 'rcp' ); ?>">
 										<?php echo isset( $user->display_name ) ? esc_html( $user->display_name ) : ''; ?>
 									</a>
 								</td>
