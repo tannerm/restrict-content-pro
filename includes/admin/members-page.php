@@ -67,6 +67,7 @@ function rcp_members_page() {
 						<?php _e('Free', 'rcp'); ?>
 					</a>(<?php echo $free_count; ?>)
 				</li>
+				<?php do_action( 'rcp_members_page_statuses' ); ?>
 			</ul>
 			<form id="members-filter" action="" method="get">
 				<?php
