@@ -13,10 +13,11 @@ function rcp_members_page() {
 			<h2><?php _e(' Paid Subscribers', 'rcp' ); ?></h2>
 			<?php
 
-			$status          = ! empty( $_GET['status'] ) ? urldecode( $_GET['status'] ) : 'active';
-			$order           = ! empty( $_GET['order']  ) ? urldecode( $_GET['order']  ) : ' DESC';
 			$subscription_id = isset( $_GET['subscription'] ) && $_GET['subscription'] != 'all' ? urldecode( $_GET['subscription'] ) : null;
+			$status          = ! empty( $_GET['status'] )  ? urldecode( $_GET['status'] ) : 'active';
+			$order           = ! empty( $_GET['order']  )  ? urldecode( $_GET['order']  ) : 'DESC';
 			$recurring       = isset( $_GET['recurring'] ) ? absint( $_GET['recurring'] ) : null;
+			$search          = ! empty( $_GET['s'] )       ? urldecode( $_GET['s'] )      : '';
 
 			// get subscriber count
 			$active_count    = rcp_count_members( $subscription_id, 'active', $recurring );
@@ -71,7 +72,7 @@ function rcp_members_page() {
 			</ul>
 			<form id="rcp-member-search" method="get" action="<?php menu_page_url( 'rcp-members' ); ?>">
 				<label class="screen-reader-text" for="rcp-member-search-input"><?php _e( 'Search Members', 'rcp' ); ?></label>
-				<input type="search" id="rcp-member-search-input" name="s"/>
+				<input type="search" id="rcp-member-search-input" name="s" value="<?php echo esc_attr( $search ); ?>"/>
 				<input type="hidden" name="page" value="rcp-members"/>
 				<input type="submit" name="" id="rcp-member-search-submit" class="button" value="<?php _e( 'Search members', 'rcp' ); ?>"/>
 			</form>
@@ -143,7 +144,7 @@ function rcp_members_page() {
 					);
 					$per_page = 999999;
 				} else {
-					$members = rcp_get_members( $status, $subscription_id, $offset, $per_page, $order, $recurring );
+					$members = rcp_get_members( $status, $subscription_id, $offset, $per_page, $order, $recurring, $search );
 				}
 				if($members) :
 					$i = 1;

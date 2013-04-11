@@ -11,9 +11,11 @@
 * @param int $offset - the number of users to skip, used for pagination
 * @param int $number - the total users to retrieve, used for pagination
 * @param string $order - the order in which to display users: ASC / DESC
+* @param string $recurring - retrieve recurring (or non recurring) only
+* @param string $search - seach parameter
 * Return array
 */
-function rcp_get_members( $status = 'active', $subscription = null, $offset = 0, $number = 999999, $order = 'DESC', $recurring = null ) {
+function rcp_get_members( $status = 'active', $subscription = null, $offset = 0, $number = 999999, $order = 'DESC', $recurring = null, $search = '' ) {
 
 	global $wpdb;
 
@@ -53,6 +55,10 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 				'value'   => 'yes'
 			);
 		}
+	}
+
+	if( ! empty( $search ) ) {
+		$args['search'] = sanitize_text_field( $search );
 	}
 
 	$members = get_users( $args );
