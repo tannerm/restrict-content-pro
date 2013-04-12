@@ -45,7 +45,7 @@ function rcp_admin_styles( $hook ) {
 
 	if( in_array( $hook, $pages ) ) {
 		wp_enqueue_style( 'datepicker',  RCP_PLUGIN_URL . 'includes/css/datepicker.css' );
-		wp_enqueue_style( 'rcp-admin',  RCP_PLUGIN_URL . 'includes/css/admin-styles.css' );
+		wp_enqueue_style( 'rcp-admin',  RCP_PLUGIN_URL . 'includes/css/admin-styles.css', array(), RCP_PLUGIN_VERSION );
 	}
 }
 add_action( 'admin_enqueue_scripts', 'rcp_admin_styles' );
@@ -59,7 +59,7 @@ add_action('init', 'rcp_register_css');
 
 // register our front end scripts
 function rcp_register_scripts() {
-	wp_register_script( 'rcp-scripts',  RCP_PLUGIN_URL . 'includes/js/front-end-scripts.js', array('jquery') );
+	wp_register_script( 'rcp-scripts',  RCP_PLUGIN_URL . 'includes/js/front-end-scripts.js', array('jquery'), RCP_PLUGIN_VERSION );
 	wp_register_script( 'jquery-validate',  RCP_PLUGIN_URL . 'includes/js/jquery.validate.min.js', array('jquery') );
 }
 add_action( 'init', 'rcp_register_scripts' );
