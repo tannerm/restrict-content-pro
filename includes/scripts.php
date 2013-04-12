@@ -8,7 +8,7 @@ function rcp_admin_scripts($hook) {
 		wp_enqueue_script( 'jquery-ui-sortable' );
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_script( 'bbq',  RCP_PLUGIN_URL . 'includes/js/jquery.ba-bbq.min.js' );
-		wp_enqueue_script( 'rcp-admin-scripts',  RCP_PLUGIN_URL . 'includes/js/admin-scripts.js' );
+		wp_enqueue_script( 'rcp-admin-scripts',  RCP_PLUGIN_URL . 'includes/js/admin-scripts.js', array( 'jquery' ), RCP_PLUGIN_VERSION );
 	}
 	if( $hook == $rcp_help_page ) {
 		wp_enqueue_style( 'jquery-snippet',  RCP_PLUGIN_URL . 'includes/css/jquery.snippet.min.css' );
@@ -53,7 +53,7 @@ add_action( 'admin_enqueue_scripts', 'rcp_admin_styles' );
 
 // register our form css
 function rcp_register_css() {
-	wp_register_style('rcp-form-css',  RCP_PLUGIN_URL . 'includes/css/forms.css', RCP_PLUGIN_VERSION );
+	wp_register_style('rcp-form-css',  RCP_PLUGIN_URL . 'includes/css/forms.css', array(), RCP_PLUGIN_VERSION );
 }
 add_action('init', 'rcp_register_css');
 
