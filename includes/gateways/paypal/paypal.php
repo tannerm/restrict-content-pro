@@ -237,7 +237,7 @@ function rcp_check_ipn() {
 
 				update_user_meta( $user_id, 'rcp_recurring', 'yes' );
 
-				do_action( 'rcp_ipn_subscr_signup' );
+				do_action( 'rcp_ipn_subscr_signup', $user_id );
 
 			break;
 			case "subscr_payment" :
@@ -263,7 +263,7 @@ function rcp_check_ipn() {
 
 				delete_user_meta( $user_id, '_rcp_expired_email_sent' );
 
-				do_action( 'rcp_ipn_subscr_payment' );
+				do_action( 'rcp_ipn_subscr_payment', $user_id );
 
 			break;
 			case "subscr_cancel" :
@@ -277,7 +277,7 @@ function rcp_check_ipn() {
 				// send sub cancelled email
 				rcp_email_subscription_status( $user_id, 'cancelled' );
 
-				do_action( 'rcp_ipn_subscr_cancel' );
+				do_action( 'rcp_ipn_subscr_cancel', $user_id );
 
 			break;
 			case "subscr_failed" :
@@ -296,7 +296,7 @@ function rcp_check_ipn() {
 				// send expired email
 				rcp_email_subscription_status( $user_id, 'expired' );
 
-				do_action('rcp_ipn_subscr_eot' );
+				do_action('rcp_ipn_subscr_eot', $user_id );
 
 			break;
 
