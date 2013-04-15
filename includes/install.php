@@ -1,6 +1,6 @@
 <?php
 
-// function to create the DB / Options / Defaults					
+// function to create the DB / Options / Defaults
 function rcp_options_install() {
    	global $wpdb,$rcp_db_name, $rcp_db_version, $rcp_discounts_db_name, $rcp_discounts_db_version, $rcp_payments_db_name, $rcp_payments_db_version;
 
@@ -18,13 +18,13 @@ function rcp_options_install() {
 		`status` tinytext NOT NULL,
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
-		
+
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
-				
-		add_option( "rcp_db_version", $rcp_db_version );	
+
+		add_option( "rcp_db_version", $rcp_db_version );
 	}
-	
+
 	// create the RCP discounts database table
 	if( $wpdb->get_var( "show tables like '$rcp_discounts_db_name'" ) != $rcp_discounts_db_name ) {
 		$sql = "CREATE TABLE " . $rcp_discounts_db_name . " (
@@ -40,13 +40,13 @@ function rcp_options_install() {
 		`expiration` mediumtext NOT NULL,
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
-		
+
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
-				
-		add_option( "rcp_discounts_db_version", $rcp_discounts_db_version );	
+
+		add_option( "rcp_discounts_db_version", $rcp_discounts_db_version );
 	}
-	
+
 	// create the RCP payments database table
 	if( $wpdb->get_var( "show tables like '$rcp_payments_db_name'" ) != $rcp_payments_db_name ) {
 		$sql = "CREATE TABLE " . $rcp_payments_db_name . " (
@@ -59,11 +59,11 @@ function rcp_options_install() {
 		`subscription_key` mediumtext NOT NULL,
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
-		
+
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
-				
-		add_option( "rcp_payments_db_version", $rcp_payments_db_version );	
+
+		add_option( "rcp_payments_db_version", $rcp_payments_db_version );
 	}
 
 	// and option that allows us to make sure RCP is installed

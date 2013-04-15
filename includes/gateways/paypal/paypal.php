@@ -115,10 +115,8 @@ function rcp_check_ipn() {
 			'date' 				=> date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'] ) ),
 			'subscription' 		=> $posted['item_name'],
 			'payment_type' 		=> $posted['txn_type'],
-			'payer_email'	 	=> $posted['payer_email'],
 			'subscription_key' 	=> $subscription_key,
 			'amount' 			=> $amount,
-			'amount2' 			=> $amount2,
 			'user_id' 			=> $user_id
 		);
 
