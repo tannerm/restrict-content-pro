@@ -56,7 +56,6 @@ class RCP_Payments {
 			'subscription' 		=> 0,
 			'date' 				=> date( 'Y-m-d H:i:s' ),
 			'amount' 			=> 0.00,
-			'amount2' 			=> 0.00,
 			'user_id' 			=> 0,
 			'payment_type' 		=> '',
 			'subscription_key' 	=> ''
