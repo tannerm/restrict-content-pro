@@ -68,7 +68,7 @@ function rcp_process_data() {
 
 				$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 
-				update_user_meta( $user->ID, 'rcp_status', 'active' );
+				rcp_set_status( $user->ID, 'active' );
 				update_user_meta( $user->ID, 'rcp_expiration', $expiration );
 				update_user_meta( $user->ID, 'rcp_subscription_level', $_POST['level'] );
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
@@ -92,7 +92,7 @@ function rcp_process_data() {
 			$level    = absint( $_POST['level'] );
 			$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 
-			if( isset( $_POST['status'] ) ) update_user_meta($user_id, 'rcp_status', $status );
+			if( isset( $_POST['status'] ) ) rcp_set_status( $user_id, $status );
 
 			update_user_meta( $user_id, 'rcp_expiration', $expiration );
 
@@ -181,10 +181,10 @@ function rcp_process_data() {
 
 		/* member processing */
 		if( isset( $_GET['deactivate_member'] ) ) {
-			update_user_meta( urldecode( absint( $_GET['deactivate_member'] ) ), 'rcp_status', 'cancelled' );
+			rcp_set_status( urldecode( absint( $_GET['deactivate_member'] ) ), 'cancelled' );
 		}
 		if( isset( $_GET['activate_member'] ) ) {
-			update_user_meta( urldecode( absint( $_GET['activate_member'] ) ), 'rcp_status', 'active' );
+			rcp_set_status( urldecode( absint( $_GET['activate_member'] ) ), 'active' );
 		}
 
 		/* subscription processing */
