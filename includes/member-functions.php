@@ -364,7 +364,7 @@ function rcp_get_status( $user_id ) {
 
 	// double check that the status and expiration match. Update if needed
 	if( $status == 'active' && rcp_is_expired( $user_id ) ) {
-		update_user_meta( $user_id, 'rcp_status', 'expired' );
+		rcp_set_status( $user_id, 'expired' );
 		$status = 'expired';
 	}
 	if( $status == '' ) $status = __( 'free', 'rcp' );

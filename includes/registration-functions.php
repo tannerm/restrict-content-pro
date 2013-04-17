@@ -102,7 +102,7 @@ function rcp_process_registration() {
 				$subscription_key = rcp_generate_subscription_key();
 				update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
 				update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
-				update_user_meta( $user_data['id'], 'rcp_status', 'pending' );
+				rcp_set_status( $user_data['id'], 'pending' );
 				update_user_meta( $user_data['id'], 'rcp_expiration', $member_expires );
 
 				do_action( 'rcp_form_processing', $_POST, $user_data['id'], $price );
