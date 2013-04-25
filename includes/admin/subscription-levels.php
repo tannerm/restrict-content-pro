@@ -49,8 +49,8 @@ function rcp_member_levels_page()
 						<tr id="recordsArray_<?php echo $level->id; ?>" class="rcp-subscription rcp_row <?php if(rcp_is_odd($i)) { echo 'alternate'; } ?>">
 							<td><a href="#" class="dragHandle"></a></td>
 							<td><?php echo $level->id; ?></td>
-							<td><?php echo stripslashes(utf8_decode($level->name)); ?></td>
-							<td><?php echo stripslashes(utf8_decode($level->description)); ?></td>
+							<td><?php echo stripslashes( $level->name ); ?></td>
+							<td><?php echo stripslashes( $level->description ); ?></td>
 							<td><?php echo $level->level != '' ? $level->level : __('none', 'rcp'); ?></td>
 							<td>
 								<?php
