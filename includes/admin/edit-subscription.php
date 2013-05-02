@@ -2,7 +2,7 @@
 $level = rcp_get_subscription_details( absint( urldecode( $_GET['edit_subscription'] ) ) );
 ?>
 <h2>
-	<?php _e( 'Edit Subscription Level:', 'rcp' ); echo ' ' . utf8_decode( stripslashes( $level->name ) ); ?> -
+	<?php _e( 'Edit Subscription Level:', 'rcp' ); echo ' ' . stripslashes( $level->name ); ?> -
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-member-levels' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
@@ -15,7 +15,7 @@ $level = rcp_get_subscription_details( absint( urldecode( $_GET['edit_subscripti
 					<label for="rcp-name"><?php _e( 'Name', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input name="name" id="rcp-name" type="text" value="<?php echo esc_attr( stripslashes( utf8_decode( $level->name ) ) ); ?>"/>
+					<input name="name" id="rcp-name" type="text" value="<?php echo esc_attr( stripslashes( $level->name ) ); ?>"/>
 					<p class="description"><?php _e( 'The name of this subscription. This is shown on the registration page.', 'rcp' ); ?></p>
 				</td>
 			</tr>
@@ -24,7 +24,7 @@ $level = rcp_get_subscription_details( absint( urldecode( $_GET['edit_subscripti
 					<label for="rcp-description"><?php _e( 'Description', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<textarea name="description" id="rcp-description"><?php echo esc_textarea( stripslashes( utf8_decode( $level->description ) ) ); ?></textarea>
+					<textarea name="description" id="rcp-description"><?php echo esc_textarea( stripslashes( $level->description ) ); ?></textarea>
 					<p class="description"><?php _e( 'The description of this subscription. This is shown on the registration page.', 'rcp' ); ?></p>
 				</td>
 			</tr>
