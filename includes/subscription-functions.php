@@ -67,13 +67,9 @@ function rcp_get_subscription_details_by_name( $name ) {
 * return string - name of subscription, or error message on failure
 */
 function rcp_get_subscription_name( $id ) {
-	global $wpdb, $rcp_db_name;
-	$level = $wpdb->get_results( $wpdb->prepare( "SELECT name FROM " . $rcp_db_name . " WHERE id='%d';", $id ) );
-	if( $level ) {
-		return utf8_decode( $level[0]->name );
-	} else {
-		return __( 'No subscription', 'rcp' );
-	}
+
+	$levels_db = new RCP_Levels;
+	return $levels_db->get_level_field( $id, 'name' );
 }
 
 /*
