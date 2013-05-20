@@ -416,6 +416,7 @@ function rcp_allowed_html_tags() {
         	'title' => array()
         ),
 		'strong' => array(),
+		'strong' => array(),
 		'em' => array(),
 		'br' => array(),
 		'img' => array(
@@ -423,7 +424,9 @@ function rcp_allowed_html_tags() {
         	'title' => array(),
         	'alt' => array()
         ),
-		'div'
+		'div' => array(),
+		'ul' => array(),
+		'li' => array()
 	);
 
 	return apply_filters( 'rcp_allowed_html_tags', $tags );
