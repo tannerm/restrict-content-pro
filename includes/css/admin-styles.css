@@ -7,7 +7,9 @@
 #tab_container .tab_content { position: relative; }
 .dragHandle	{ cursor: move; display: block; height: 20px; width: 20px; background: url('../images/cross-hair.png'); }
 #rcp_email_options { width: 320px; float: left; margin: 0 20px 0 0; }
+.rtl #rcp_email_options { width: 320px; float: right; margin: 0 20px 0 0; }
 #rcp_email_tags { position: absolute; left: 500px; top: 60px; z-index: 0;}
+.rtl #rcp_email_tags { position: absolute; right: 500px; top: 60px; z-index: 0;}
 .wp-list-table th { font-size: 12px; }
 #side-info-column td.rcp_meta_box_desc { display: none!important; }
 #rcp-member-search { text-align: right; margin: 0 0 10px; float: right; }
