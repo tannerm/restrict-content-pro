@@ -84,7 +84,7 @@ function rcp_members_page() {
 						<option value="all"><?php _e('All Subscriptions', 'rcp'); ?></option>
 						<?php
 							foreach($levels as $level) :
-								echo '<option value="' . $level->id . '" ' . selected($subscription_id, $level->id, false) . '>' . utf8_decode($level->name) . '</option>';
+								echo '<option value="' . $level->id . '" ' . selected($subscription_id, $level->id, false) . '>' . $level->name . '</option>';
 							endforeach;
 						?>
 					</select>
@@ -153,7 +153,7 @@ function rcp_members_page() {
 							<td><a href="<?php echo add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php echo $member->user_login; ?></a></td>
 							<td><?php echo $member->ID; ?></td>
 							<td><?php echo $member->user_email; ?></td>
-							<td><?php echo utf8_decode(rcp_get_subscription($member->ID)); ?></td>
+							<td><?php echo rcp_get_subscription($member->ID); ?></td>
 							<td><?php echo rcp_print_status($member->ID); ?></td>
 							<td><?php echo rcp_is_recurring($member->ID) ? __('yes', 'rcp') : __('no', 'rcp'); ?>
 							<td><?php echo rcp_get_expiration_date($member->ID); ?></td>
@@ -220,7 +220,7 @@ function rcp_members_page() {
 									<option value="choose"><?php _e('--choose--', 'rcp'); ?></option>
 									<?php
 										foreach( rcp_get_subscription_levels() as $level) :
-											echo '<option value="' . $level->id . '">' . utf8_decode($level->name) . '</option>';
+											echo '<option value="' . $level->id . '">' . $level->name . '</option>';
 										endforeach;
 									?>
 								</select>
