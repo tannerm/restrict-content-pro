@@ -39,35 +39,6 @@ function rcp_settings_page() {
 
 			<div id="tab_container">
 
-				<div class="tab_content" id="messages">
-					<table class="form-table">
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[free_message]"><?php _e( 'Free Content Message', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<?php
-								$free_message = isset( $rcp_options['free_message'] ) ? $rcp_options['free_message'] : '';
-								wp_editor( $free_message, 'rcp_settings[free_message]', array( 'textarea_name' => 'rcp_settings[free_message]', 'teeny' => true ) ); ?>
-								<div class="description"><?php _e( 'This is the message shown to users that do not have privilege to view free, user only content.', 'rcp' ); ?></div>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[paid_message]"><?php _e( 'Premium Content Message', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<?php
-								$paid_message = isset( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : '';
-								wp_editor( $paid_message, 'rcp_settings[paid_message]', array( 'textarea_name' => 'rcp_settings[paid_message]', 'teeny' => true ) ); ?>
-								<div class="description"><?php _e( 'This is the message shown to users that do not have privilege to view premium content.', 'rcp' ); ?></div>
-							</td>
-						</tr>
-					</table>
-					<?php do_action( 'rcp_messages_settings', $rcp_options ); ?>
-
-				</div><!--end #messages-->
-
 				<div class="tab_content" id="payments">
 					<table class="form-table">
 						<tr valign="top">
@@ -170,6 +141,35 @@ function rcp_settings_page() {
 					<?php do_action( 'rcp_payments_settings', $rcp_options ); ?>
 
 				</div><!--end #payments-->
+
+				<div class="tab_content" id="messages">
+					<table class="form-table">
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[free_message]"><?php _e( 'Free Content Message', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<?php
+								$free_message = isset( $rcp_options['free_message'] ) ? $rcp_options['free_message'] : '';
+								wp_editor( $free_message, 'rcp_settings[free_message]', array( 'textarea_name' => 'rcp_settings[free_message]', 'teeny' => true ) ); ?>
+								<div class="description"><?php _e( 'This is the message shown to users that do not have privilege to view free, user only content.', 'rcp' ); ?></div>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[paid_message]"><?php _e( 'Premium Content Message', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<?php
+								$paid_message = isset( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : '';
+								wp_editor( $paid_message, 'rcp_settings[paid_message]', array( 'textarea_name' => 'rcp_settings[paid_message]', 'teeny' => true ) ); ?>
+								<div class="description"><?php _e( 'This is the message shown to users that do not have privilege to view premium content.', 'rcp' ); ?></div>
+							</td>
+						</tr>
+					</table>
+					<?php do_action( 'rcp_messages_settings', $rcp_options ); ?>
+
+				</div><!--end #messages-->
 
 				<div class="tab_content" id="forms">
 					<table class="form-table">
