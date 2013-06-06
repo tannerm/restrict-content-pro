@@ -240,7 +240,7 @@ function rcp_user_subscription_details( $atts, $content = null ) {
 
 	if( is_user_logged_in() )	{
 
-		if( rcp_is_recurring( $user_ID ) ) {
+		if( rcp_is_recurring( $user_ID ) && ! rcp_is_expired( $user_ID ) ) {
 			$date_text = __( 'Renewal Date', 'rcp' );
 		} else {
 			$date_text = __( 'Expiration Date', 'rcp' );
