@@ -29,7 +29,7 @@ function rcp_settings_page() {
 
 			<h2 class="nav-tab-wrapper">
 				<?php _e( 'Restrict Content Pro', 'rcp' ); ?>
-				<a href="#payments" class="nav-tab"><?php _e( 'Payments', 'rcp' ); ?></a>
+				<a href="#general" class="nav-tab"><?php _e( 'General', 'rcp' ); ?></a>
 				<a href="#messages" class="nav-tab"><?php _e( 'Messages', 'rcp' ); ?></a>
 				<a href="#forms" class="nav-tab"><?php _e( 'Signup Forms', 'rcp' ); ?></a>
 				<a href="#emails" class="nav-tab"><?php _e( 'Emails', 'rcp' ); ?></a>
@@ -39,12 +39,21 @@ function rcp_settings_page() {
 
 			<div id="tab_container">
 
-				<div class="tab_content" id="payments">
+				<div class="tab_content" id="general">
 					<table class="form-table">
 						<tr valign="top">
 							<th colspan=2>
 								<h3><?php _e( 'General', 'rcp' ); ?></h3>
 							</th>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[license_key]"><?php _e( 'License Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[license_key]" style="width: 300px;" name="rcp_settings[license_key]" value="<?php if(isset($rcp_options['paypal_email'])) { echo $rcp_options['paypal_email']; } ?>"/>
+								<div class="description"><?php _e( 'Enter license key for Restrict Content Pro. This is required for automatic updates and support.', 'rcp' ); ?></div>
+							</td>
 						</tr>
 						<tr>
 							<th>

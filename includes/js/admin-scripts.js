@@ -16,8 +16,8 @@ jQuery(document).ready(function($) {
 			jQuery( '.nav-tab-wrapper a[href="#' + url + '"]' ).addClass( 'nav-tab-active' );
 			jQuery("#tab_container #" + url).addClass("selected").fadeIn();
 		} else {
-			jQuery( 'h2.nav-tab-wrapper a[href="#payments"]' ).addClass( 'nav-tab-active' );
-			jQuery("#tab_container #payments").addClass("selected").fadeIn();
+			jQuery( 'h2.nav-tab-wrapper a[href="#general"]' ).addClass( 'nav-tab-active' );
+			jQuery("#tab_container #general").addClass("selected").fadeIn();
 		}
 	});
 
