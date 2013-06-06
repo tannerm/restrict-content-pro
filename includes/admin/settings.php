@@ -2,9 +2,8 @@
 
 // register the plugin settings
 function rcp_register_settings() {
-
 	// create whitelist of options
-	register_setting( 'rcp_settings_group', 'rcp_settings' );
+	register_setting( 'rcp_settings_group', 'rcp_settings', 'rcp_sanitize_settings' );
 }
 //call register settings function
 add_action( 'admin_init', 'rcp_register_settings' );
@@ -51,7 +50,13 @@ function rcp_settings_page() {
 								<label for="rcp_settings[license_key]"><?php _e( 'License Key', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<input class="regular-text" id="rcp_settings[license_key]" style="width: 300px;" name="rcp_settings[license_key]" value="<?php if(isset($rcp_options['paypal_email'])) { echo $rcp_options['paypal_email']; } ?>"/>
+								<input class="regular-text" id="rcp_settings[license_key]" style="width: 300px;" name="rcp_settings[license_key]" value="<?php if(isset($rcp_options['license_key'])) { echo $rcp_options['license_key']; } ?>"/>
+								<?php $status = get_option( 'rcp_license_status' ); ?>
+								<?php if( $status !== false && $status == 'valid' ) { ?>
+									<?php wp_nonce_field( 'rcp_deactivate_license', 'rcp_deactivate_license' ); ?>
+									<input type="submit" class="button-secondary" name="rcp_license_deactivate" value="<?php _e('Deactivate License', 'rcp'); ?>"/>
+									<span style="color:green;"><?php _e('active'); ?></span>
+								<?php } ?>
 								<div class="description"><?php _e( 'Enter license key for Restrict Content Pro. This is required for automatic updates and support.', 'rcp' ); ?></div>
 							</td>
 						</tr>
@@ -571,4 +576,92 @@ function rcp_settings_page() {
 	</div><!--end wrap-->
 
 	<?php
+}
+
+
+function rcp_sanitize_settings( $data ) {
+
+	if( empty( $data['license_key'] ) )
+		delete_option( 'rcp_license_status' );
+
+	if( ! empty( $_POST['rcp_license_deactivate'] ) )
+		rcp_deactivate_license();
+	elseif( ! empty( $data['license_key'] ) )
+		rcp_activate_license();
+
+	return $data;
+}
+
+function rcp_activate_license() {
+	if( ! isset( $_POST['rcp_settings'] ) )
+		return;
+
+	if( ! isset( $_POST['rcp_settings']['license_key'] ) )
+		return;
+
+	// retrieve the license from the database
+	$status  = get_option( 'rcp_license_status' );
+	$license = trim( $_POST['rcp_settings']['license_key'] );
+
+	if( 'valid' == $status )
+		return; // license already activated
+
+	// data to send in our API request
+	$api_params = array(
+		'edd_action'=> 'activate_license',
+		'license' 	=> $license,
+		'item_name' => 'Restrict Content Pro' // the name of our product in EDD
+	);
+
+	// Call the custom API.
+	$response = wp_remote_get( add_query_arg( $api_params, 'http://pippinsplugins.com' ), array( 'timeout' => 15, 'sslverify' => false ) );
+
+	// make sure the response came back okay
+	if ( is_wp_error( $response ) )
+		return false;
+
+	// decode the license data
+	$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+	update_option( 'rcp_license_status', $license_data->license );
+
+}
+
+function rcp_deactivate_license() {
+
+	// listen for our activate button to be clicked
+	if( isset( $_POST['rcp_license_deactivate'] ) ) {
+
+		global $rcp_options;
+
+		// run a quick security check
+	 	if( ! check_admin_referer( 'rcp_deactivate_license', 'rcp_deactivate_license' ) )
+			return; // get out if we didn't click the Activate button
+
+		// retrieve the license from the database
+		$license = trim( $rcp_options['license_key'] );
+
+
+		// data to send in our API request
+		$api_params = array(
+			'edd_action'=> 'deactivate_license',
+			'license' 	=> $license,
+			'item_name' => urlencode( 'Restrict Content Pro' ) // the name of our product in EDD
+		);
+
+		// Call the custom API.
+		$response = wp_remote_get( add_query_arg( $api_params, 'http://pippinsplugins.com' ), array( 'timeout' => 15, 'sslverify' => false ) );
+
+		// make sure the response came back okay
+		if ( is_wp_error( $response ) )
+			return false;
+
+		// decode the license data
+		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		// $license_data->license will be either "deactivated" or "failed"
+		if( $license_data->license == 'deactivated' )
+			delete_option( 'rcp_license_status' );
+
+	}
 }
