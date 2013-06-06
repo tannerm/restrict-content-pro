@@ -177,18 +177,14 @@ if( is_admin() ) {
 	include( RCP_PLUGIN_DIR . 'includes/user-page-columns.php' );
 	include( RCP_PLUGIN_DIR . 'includes/process-data.php' );
 	include( RCP_PLUGIN_DIR . 'includes/export-functions.php' );
-
-	if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
-		// load our custom updater
-		include( RCP_PLUGIN_DIR . 'EDD_SL_Plugin_Updater.php' );
-	}
+	include( RCP_PLUGIN_DIR . 'RCP_Plugin_Updater.php' );
 
 	// retrieve our license key from the DB
 	$license_key = ! empty( $rcp_options['license_key'] ) ? trim( $rcp_options['license_key'] ) : false;
 
 	if( $license_key ) {
 		// setup the updater
-		$rcp_updater = new EDD_SL_Plugin_Updater( 'http://pippinsplugins.com', RCP_PLUGIN_FILE, array(
+		$rcp_updater = new RCP_Plugin_Updater( 'http://pippinsplugins.com', RCP_PLUGIN_FILE, array(
 				'version' 	=> RCP_PLUGIN_VERSION, 				// current version number
 				'license' 	=> $license_key, 		// license key (used get_option above to retrieve from DB)
 				'item_name' => 'Restrict Content Pro', 	// name of this plugin
