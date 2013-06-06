@@ -11,7 +11,7 @@ if ( get_bloginfo('version') < 3.3 ) {
 
 function rcp_render_members_tab_content( $id ) {
 	switch( $id ) :
-	
+
 		case 'general' :
 			ob_start(); ?>
 			<p>This page displays an overview of the registered members on your site, as well as a list of all users, sorted by subscription status.</p>
@@ -29,7 +29,7 @@ function rcp_render_members_tab_content( $id ) {
 			ob_start(); ?>
 			<p>Adding a premium subscription to an existing user (meaning the user exists in the WordPress database) is easy. At the bottom of the screen, simply choose the user you wish to add a subscription for, choose the subscription level to grant them, choose an expiration date, and click <em>Add User Subscription</em>.</p>
 			<p><strong>Note</strong>: when you add a subscription to a user manually, you <em>cannot</em> charge that user for the subscription. This simply allows you to grant access to premium content for special cases, such as when you have given a membership away as a competition prize, or a user has paid with some alternate method.</p>
-			
+
 			<p>Also note, you can also add / modify a user's subscription from the regular WordPress Users page. At the right side of each user entry will be links to Add / Edit Subscriptions.</p>
 			<?php
 			break;
@@ -56,12 +56,12 @@ function rcp_render_members_tab_content( $id ) {
 			</ul>
 			<?php
 			break;
-					
+
 		default;
 			break;
-			
+
 	endswitch;
-	
+
 	return ob_get_clean();
 }
 
@@ -101,18 +101,18 @@ function rcp_render_subscriptions_tab_content( $id ) {
 			<p>If you are going to delete a subscription with active subscribers, it is advised that you first change the subscription level of each of the subscribers before deleting the membership package.</p>
 			<?php
 			break;
-		
+
 		default;
 			break;
-			
+
 	endswitch;
-	
-	return ob_get_clean();	
+
+	return ob_get_clean();
 }
 
 function rcp_render_discounts_tab_content( $id ) {
 	switch( $id ) :
-	
+
 		case 'general' :
 			ob_start(); ?>
 			<p>Discount codes all you to give special offers to new registrations, giving extra incentive for users to sign up for your website's premium content section. Restrict Content Pro's discount codes work just like any other. There are two kinds:</p>
@@ -149,18 +149,18 @@ function rcp_render_discounts_tab_content( $id ) {
 			<p>If you wish to see all the discount codes a particular user has used, click "Details" on the user from the Members page.</p>
 			<?php
 			break;
-					
+
 		default;
 			break;
-			
+
 	endswitch;
-	
+
 	return ob_get_clean();
 }
 
 function rcp_render_payments_tab_content( $id ) {
 	switch( $id ) :
-	
+
 		case 'general' :
 			ob_start(); ?>
 			<p>This page is a log of all payments that have ever been recorded with Restrict Content Pro. Each time a payment is made, whether it is a one-time sign up payment, or a recurring subscription payment, it is logged here.</p>
@@ -169,32 +169,32 @@ function rcp_render_payments_tab_content( $id ) {
 			<p>Payment data is permanent and cannot be manipulated or changed.</p>
 			<p><strong>Note</strong>: this page only lists completed payments. It will not display any payments that are pending, voided, or cancelled.</p>
 			<?php
-			break;	
+			break;
 		default;
 			break;
-			
+
 	endswitch;
-	
+
 	return ob_get_clean();
 }
 
 function rcp_render_settings_tab_content( $id ) {
-	
+
 	switch( $id ) :
-	
+
 		case 'general' :
 			ob_start(); ?>
 			<p>This Settings page lets you configure all of the options available for Restrict Content Pro. You should set each of the options the desired setting and save these options before attempting to use the plugin very much.</p>
 			<p>If you have any trouble with these settings, or anything else with the plugin, you are welcome to request assistance on the <a href="http://pippinsplugins.com/support/forum/restrict-content-pro">support forums</a>.
 			<?php
 			break;
-		
+
 		case 'messages' :
 			ob_start(); ?>
 			<p>These are the messages displayed to a user when they attempt to view content that they do not have access to.</p>
 			<p><strong>Free Content Message</strong> - this message will be displayed to non-logged in users when they attempt to access a post or page that is restricted to registered users only. In this case, registered users refers to members that have an account on the site, not necessarily users that have a paid subscription. So this message will only be displayed to non-logged in users.</p>
 			<p><strong>Premium Content Message</strong> - this message is displayed to users, logged in or not, when they attempt to access premium-members-only content. This message will be displayed even to logged in users, if they do not have an active subscription on the site.</p>
-			
+
 			<p>You may use HTML tags in these messages</p>
 			<?php
 			break;
@@ -235,7 +235,7 @@ function rcp_render_settings_tab_content( $id ) {
 			<p>Each of these template tags will be automatically replaced with their values when the email is sent.</p>
 			<p><strong>Do not</strong> include any HTML tags in these emails.</p>
 			<?php
-			break;			
+			break;
 		case 'misc' :
 			ob_start(); ?>
 			<p><strong>Hide Premium Posts</strong> - this option will cause all premium posts to be completely hidden from users who do not have access to them. This is useful if you wish to have content that is 100% invisible to non-authorized users. What this means is that premium posts won't be listed on blog pages, archives, recent post widgets, search results, RSS feeds, or anywhere else. If, when this setting is enabled, a user tries to access a premium post from a direct URL, they will be automatically redirected to the page you choose below.</p>
@@ -252,8 +252,8 @@ function rcp_render_settings_tab_content( $id ) {
 			break;
 		default;
 			break;
-			
+
 	endswitch;
-	
+
 	return ob_get_clean();
 }
