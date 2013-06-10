@@ -27,7 +27,7 @@ function rcp_filter_restricted_content( $content ) {
 				} else {
 					$has_access = true; // no access level restriction
 				}
-				if ( rcp_get_subscription_id( $user_ID ) != $subscription_level || !$has_access ) {
+				if ( ( rcp_get_subscription_id( $user_ID ) != $subscription_level || !$has_access ) && ! current_user_can( 'manage_options' ) ) {
 					return rcp_format_teaser( $message );
 				}
 			}
