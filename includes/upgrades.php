@@ -3,13 +3,13 @@
 function rcp_check_if_upgrade_needed() {
 	global $rcp_db_version, $rcp_discounts_db_version, $rcp_payments_db_version;
 
-	if( $rcp_db_version != get_option( 'rcp_db_version' ) ) {
+	if( version_compare( $rcp_db_version, get_option( 'rcp_db_version' ), '>' ) ) {
 		return true;
 	}
-	if( $rcp_discounts_db_version != get_option( 'rcp_discounts_db_version' ) ) {
+	if( version_compare( $rcp_discounts_db_version, get_option( 'rcp_discounts_db_version' ), '>' ) ) {
 		return true;
 	}
-	if( $rcp_payments_db_version != get_option( 'rcp_payments_db_version' ) ) {
+	if( version_compare( $rcp_payments_db_version, get_option( 'rcp_payments_db_version' ), '>' ) ) {
 		return true;
 	}
 	return false;
@@ -61,6 +61,11 @@ function rcp_options_upgrade() {
 	if(!$wpdb->query( "SELECT `status` FROM `" . $rcp_db_name . "`") ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_db_name . "` ADD `status` tinytext" );
 		update_option( 'rcp_db_version', $rcp_db_version );
+	}
+
+	if( version_compare( get_option( 'rcp_db_version' ), '1.3', '<' ) ) {
+		$wpdb->query( "ALTER TABLE " . $rcp_db_name . " MODIFY `duration` smallint" );
+		update_option( "rcp_db_version", $rcp_db_version );
 	}
 
 	/****************************************

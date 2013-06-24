@@ -71,19 +71,19 @@ global $rcp_db_name;
 $rcp_db_name = rcp_get_levels_db_name();
 
 global $rcp_db_version;
-$rcp_db_version = 1.2;
+$rcp_db_version = '1.3';
 
 global $rcp_discounts_db_name;
 $rcp_discounts_db_name = rcp_get_discounts_db_name();
 
 global $rcp_discounts_db_version;
-$rcp_discounts_db_version = 1.1;
+$rcp_discounts_db_version = '1.1';
 
 global $rcp_payments_db_name;
 $rcp_payments_db_name = rcp_get_payments_db_name();
 
 global $rcp_payments_db_version;
-$rcp_payments_db_version = 1.1;
+$rcp_payments_db_version = '1.1';
 
 /* settings page globals */
 global $rcp_members_page;

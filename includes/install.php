@@ -10,7 +10,7 @@ function rcp_options_install() {
 		`id` mediumint(9) NOT NULL AUTO_INCREMENT,
 		`name` tinytext NOT NULL,
 		`description` longtext NOT NULL,
-		`duration` tinyint NOT NULL,
+		`duration` smallint NOT NULL,
 		`duration_unit` tinytext NOT NULL,
 		`price` tinytext NOT NULL,
 		`list_order` mediumint NOT NULL,
