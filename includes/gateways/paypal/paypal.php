@@ -15,7 +15,7 @@ function rcp_process_paypal( $subscription_data ) {
 	}
 
 	// recurring paypal payment
-	if( $subscription_data['auto_renew'] ) {
+	if( $subscription_data['auto_renew'] && ! empty( $subscription_data['length'] ) ) {
 		// recurring paypal payment
 		$paypal_redirect .= 'cmd=_xclick-subscriptions&src=1&sra=1';
 		$paypal_redirect .= '&a3=' . $subscription_data['price'];
