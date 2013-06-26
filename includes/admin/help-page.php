@@ -173,7 +173,7 @@ function rcp_help_page()
 							<ul>
 								<li><em>paid</em> - whether content is viewable by paid users only. Options: <em>true/false</em>; default: <em>false</em></li>
 								<li><em>level</em> - the access level (set by the subscription level) required to view this content</li>
-								<li><em>subscription</em> - the subscription users must be subscribed to in order to view this content. You must use the ID of the subscription level.</li>
+								<li><em>subscription</em> - the subscription level(s) users must be subscribed to in order to view this content. You must use the ID of the subscription level(s). To allow multiple subscription levels to view the content, separate IDs by a comma.</li>
 								<li><em>userlevel</em> - the user level(s) that can view this content. Options:
 									<ul>
 										<li><em>none</em> - all user levels - default</li>
