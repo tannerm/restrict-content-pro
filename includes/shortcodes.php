@@ -29,8 +29,9 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 		$has_access = false;
 		if( rcp_is_active( $user_ID ) && rcp_user_has_access( $user_ID, $level ) ) {
 			$has_access = true;
-			if( $subscription != 'all' ) {
-				if( rcp_get_subscription_id( $user_ID ) != $subscription ) {
+			if( $subscription ) {
+				$subscription = explode( ',', $subscription );
+				if( ! in_array( rcp_get_subscription_id( $user_ID ), $subscription ) ) {
 					$has_access = false;
 				}
 			}
