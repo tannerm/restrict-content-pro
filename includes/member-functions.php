@@ -531,7 +531,7 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
 
 	$ret = false;
 
-	if( ! rcp_is_active( $user_id ) && rcp_has_paid_levels() )
+	if( ( ! rcp_is_active( $user_id ) || ! rcp_is_recurring( $user_id ) ) && rcp_has_paid_levels() )
 		$ret = true;
 
 	return (bool) apply_filters( 'rcp_can_upgrade_subscription', $ret, $user_id );
