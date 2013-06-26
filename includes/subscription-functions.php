@@ -230,3 +230,26 @@ function rcp_show_subscription_level( $level_id = 0, $user_id = 0 ) {
 
 	return apply_filters( 'rcp_show_subscription_level', $ret, $level_id, $user_id );
 }
+
+
+/**
+ * Retrieve the subscription levels a post/page is restricted to
+ *
+ * @since       v1.6
+ * @access      public
+ * @param       $post_id INT the ID of the post to retrieve levels for
+ * @return      array
+*/
+function rcp_get_content_subscription_levels( $post_id = 0 ) {
+	$levels = get_post_meta( $post_id, 'rcp_subscription_level', true );
+
+	if( 'all' == $levels ) {
+		// This is for backwards compatibility from when RCP didn't allow content to be restricted to multiple levels
+		return false;
+	}
+
+	if( ! empty( $levels ) && ! is_array( $levels ) ) {
+		$levels = array( $levels );
+	}
+	return apply_filters( 'rcp_get_content_subscription_levels', $levels, $post_id );
+}

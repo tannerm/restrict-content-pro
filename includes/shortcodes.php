@@ -11,7 +11,7 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 		'message' 		=> '',
 		'paid' 			=> false,
 		'level' 		=> 0,
-		'subscription' 	=> 'all'
+		'subscription' 	=> array()
 	), $atts ) );
 
 	global $rcp_options, $user_ID;
@@ -24,13 +24,15 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 		$teaser = $rcp_options['free_message'];
 	}
 
+	$subscription = explode( ',', $subscription );
+
 	if( $paid ) {
 
 		$has_access = false;
 		if( rcp_is_active( $user_ID ) && rcp_user_has_access( $user_ID, $level ) ) {
 			$has_access = true;
-			if( $subscription != 'all' ) {
-				if( rcp_get_subscription_id( $user_ID ) != $subscription ) {
+			if( ! empty( $subscription ) ) {
+				if( ! in_array( rcp_get_subscription_id( $user_ID ), $subscription ) ) {
 					$has_access = false;
 				}
 			}
@@ -62,8 +64,8 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 		$has_access = false;
 		if(rcp_user_has_access($user_ID, $level)) {
 			$has_access = true;
-			if($subscription != 'all' ) {
-				if(rcp_get_subscription_id( $user_ID ) != $subscription) {
+			if( ! empty( $subscription ) ) {
+				if( in_array( rcp_get_subscription_id( $user_ID ), $subscription ) ) {
 					$has_access = false;
 				}
 			}
@@ -154,7 +156,7 @@ function rcp_registration_form( $atts, $content = null ) {
 	global $user_ID;
 
 	// only show the registration form to non-logged-in members
-	if( ! rcp_is_active( $user_ID ) || rcp_is_trialing( $user_ID ) ) {
+	if( ! rcp_is_active( $user_ID ) || rcp_is_trialing( $user_ID ) || rcp_subscription_upgrade_possible( $user_ID ) ) {
 
 		global $rcp_options, $rcp_load_css, $rcp_load_scripts;
 

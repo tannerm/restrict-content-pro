@@ -45,7 +45,7 @@ function rcp_get_metabox_fields() {
                 'name' => __( 'Subscription Level', 'rcp' ),
                 'id'   => $rcp_prefix . 'subscription_level',
                 'type' => 'levels',
-                'desc' => __( 'Choose the subscription level a user must be subscribed to in order to view this content.', 'rcp' ),
+                'desc' => __( 'Choose the subscription levels allowed to view this content.', 'rcp' ),
                 'std'  => 'All'
             ),
     		array(
@@ -104,6 +104,7 @@ function rcp_render_meta_box() {
                 echo '<td class="rcp_meta_box_field">';
 				switch ($field['type']) {
 					case 'select':
+
 						echo '<select name="', $field['id'], '" id="', $field['id'], '">';
 						foreach ( $field['options'] as $option ) {
 							echo '<option', $meta == $option ? ' selected="selected"' : '', '>', $option, '</option>';
@@ -111,14 +112,15 @@ function rcp_render_meta_box() {
 						echo '</select>';
 						break;
 					case 'levels':
-						echo '<select name="', $field['id'] . '" id="' . $field['id'] . '">';
 
-						$levels = rcp_get_subscription_levels( 'all', false );
-						echo '<option value="all">' . __( 'All', 'rcp' ) . '</option>';
-						foreach ($levels as $level) {
-							echo '<option value="' . $level->id . '"', $meta == $level->id ? ' selected="selected"' : '', '>', $level->name, '</option>';
-						}
-						echo '</select>';
+                        $selected = is_array( $meta ) ? $meta : array( $meta );
+
+
+                        $levels = rcp_get_subscription_levels( 'all', false );
+                        foreach ( $levels as $level ) {
+    						echo '<input type="checkbox" value="' . $level->id . '"' . checked( true, in_array( $level->id, $selected ), false ) . ' name="' . $field['id'] . '[]" id="' . $field['id'] . '_' . $level->id . '" />&nbsp;';
+					        echo '<label for="' . $field['id'] . '_' . $level->id . '">' . $level->name . '</label><br/>';
+                        }
 						break;
 					case 'checkbox':
 						echo '<input type="checkbox" value="1" name="', $field['id'], '" id="', $field['id'], '"', $meta ? ' checked="checked"' : '', ' />';
