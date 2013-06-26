@@ -9,11 +9,11 @@
 function rcp_filter_restricted_content( $content ) {
 	global $post, $user_ID, $rcp_options;
 
-	$message = $rcp_options['paid_message']; // message shown for premium content
-	$free_message = $rcp_options['free_message']; // message shown for free content
+	$message             = $rcp_options['paid_message']; // message shown for premium content
+	$free_message        = $rcp_options['free_message']; // message shown for free content
 
-	$subscription_level = get_post_meta( $post->ID, 'rcp_subscription_level', true );
-	$access_level = get_post_meta( $post->ID, 'rcp_access_level', true );
+	$subscription_levels = rcp_get_content_subscription_levels( $post->ID );
+	$access_level        = get_post_meta( $post->ID, 'rcp_access_level', true );
 
 	if ( rcp_is_paid_content( $post->ID ) ) {
 		// this conent is for paid users only
@@ -21,19 +21,19 @@ function rcp_filter_restricted_content( $content ) {
 		if ( !rcp_is_paid_user( $user_ID ) || ( !rcp_user_has_access( $user_ID, $access_level ) && $access_level > 0 ) ) {
 			return rcp_format_teaser( $message );
 		} else {
-			if ( $subscription_level && $subscription_level != 'all' ) {
+			if ( $subscription_levels ) {
 				if ( $access_level > 0 ) {
 					$has_access = rcp_user_has_access( $user_ID, $access_level );
 				} else {
 					$has_access = true; // no access level restriction
 				}
-				if ( ( rcp_get_subscription_id( $user_ID ) != $subscription_level || !$has_access ) && ! current_user_can( 'manage_options' ) ) {
+				if ( ( ! in_array( rcp_get_subscription_id( $user_ID ), $subscription_levels ) || !$has_access ) && ! current_user_can( 'manage_options' ) ) {
 					return rcp_format_teaser( $message );
 				}
 			}
 			return $content;
 		}
-	} elseif ( $subscription_level && $subscription_level != 'all' ) {
+	} elseif ( $subscription_levels && $subscription_levels != 'all' ) {
 
 		// this content is restricted to a subscription level, but is free
 
@@ -42,7 +42,7 @@ function rcp_filter_restricted_content( $content ) {
 		} else {
 			$has_access = true; // no access level restriction
 		}
-		if ( rcp_get_subscription_id( $user_ID ) == $subscription_level && $has_access ) {
+		if ( rcp_get_subscription_id( $user_ID ) == $subscription_levels && $has_access ) {
 			return $content;
 		} else {
 			return rcp_format_teaser( $free_message );
