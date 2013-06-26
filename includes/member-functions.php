@@ -278,7 +278,7 @@ function rcp_is_active( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	if( current_user_can( 'manage_options' ) ) {
+	if( user_can( $user_id, 'manage_options' ) ) {
 		$ret = true;
 	} else if( ! rcp_is_expired( $user_id ) && rcp_get_status( $user_id ) == 'active' && strlen( trim( rcp_get_subscription( $user_id ) ) ) > 0 ) {
 		$ret = true;
