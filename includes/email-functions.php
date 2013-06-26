@@ -83,6 +83,20 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 	endswitch;
 }
 
+function rcp_email_expiring_notice( $user_id = 0 ) {
+
+	global $rcp_options;
+	$user_info = get_userdata( $user_id );
+	$message   = ! empty( $rcp_options['renew_notice_email'] ) ? $rcp_options['renew_notice_email'] : false;
+
+	if( ! $message )
+		return;
+
+	$message   = rcp_filter_email_tags( $message, $user_id, $user_info->display_name );
+
+	wp_mail( $user_info->user_email, $rcp_options['renewal_subject'], $message );
+}
+
 function rcp_filter_email_tags( $message, $user_id, $display_name ) {
 
 	$user = get_userdata( $user_id );
