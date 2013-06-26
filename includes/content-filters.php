@@ -33,7 +33,7 @@ function rcp_filter_restricted_content( $content ) {
 			}
 			return $content;
 		}
-	} elseif ( $subscription_levels && $subscription_levels != 'all' ) {
+	} elseif ( $subscription_levels ) {
 
 		// this content is restricted to a subscription level, but is free
 
@@ -42,7 +42,7 @@ function rcp_filter_restricted_content( $content ) {
 		} else {
 			$has_access = true; // no access level restriction
 		}
-		if ( rcp_get_subscription_id( $user_ID ) == $subscription_levels && $has_access ) {
+		if ( in_array( rcp_get_subscription_id( $user_ID ), $subscription_levels ) && $has_access ) {
 			return $content;
 		} else {
 			return rcp_format_teaser( $free_message );
