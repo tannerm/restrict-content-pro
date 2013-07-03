@@ -50,6 +50,12 @@ add_action( 'rcp_expired_users_check', 'rcp_check_for_expired_users' );
 
 // runs each day and checks for expired members. Each member gets an email on the day of their expiration
 function rcp_check_for_soon_to_expire_users() {
+
+	$renewal_period = rcp_get_renewal_reminder_period();
+
+	if( 'none' == $renewal_period )
+		return; // Don't send renewal reminders
+
 	$args = array(
 		'meta_query'     => array(
 			'relation'   => 'AND',
@@ -61,7 +67,7 @@ function rcp_check_for_soon_to_expire_users() {
 			),
 			array(
 				'key'    => 'rcp_expiration',
-				'value'  => date( 'Y-m-d H:i:s', strtotime( '+1 week' ) ),
+				'value'  => date( 'Y-m-d H:i:s', strtotime( $renewal_period ) ),
 				'type'   => 'DATETIME',
 				'compare'=> '<='
 			)

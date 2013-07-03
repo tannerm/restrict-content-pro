@@ -273,7 +273,7 @@ function rcp_get_renewal_reminder_periods() {
 		'+6 days'   => __( 'Six days before expiration', 'rcp' ),
 		'+1 week'   => __( 'One week before expiration', 'rcp' ),
 		'+2 weeks'  => __( 'Two weeks before expiration', 'rcp' ),
-		'+3 weeks'  => __( 'Two weeks before expiration', 'rcp' ),
+		'+3 weeks'  => __( 'Three weeks before expiration', 'rcp' ),
 		'+1 month'  => __( 'One month before expiration', 'rcp' ),
 		'+2 months' => __( 'Two months before expiration', 'rcp' ),
 		'+3 months' => __( 'Three months before expiration', 'rcp' ),
