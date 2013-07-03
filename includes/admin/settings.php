@@ -413,6 +413,24 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 							<tr valign="top">
+								<th>
+									<label for="rcp_settings[renewal_reminder_period]"><?php _e( 'Reminder Period', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<select id="rcp_settings[renewal_reminder_period]" name="rcp_settings[renewal_reminder_period]">
+										<?php
+										$periods = rcp_get_renewal_reminder_periods();
+										foreach ( $periods as $key => $period ) {
+										  	$option = '<option value="' . $key . '" ' . selected( $key, rcp_get_renewal_reminder_period(), false ) . '>' . $period . '</option>';
+											echo $option;
+										}
+
+										?>
+									</select>
+									<div class="description"><?php _e( 'When should the renewal reminder be sent?', 'rcp' ); ?></div>
+								</td>
+							</tr>
+							<tr valign="top">
 								<th colspan=2>
 									<h3><?php _e( 'Free Subscription Email', 'rcp' ); ?></h3>
 								</th>
