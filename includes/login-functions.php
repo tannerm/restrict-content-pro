@@ -21,11 +21,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @access      public
  * @since       1.0
  */
-function rcp_login_user_in( $user_id, $user_login, $user_pass ) {
+function rcp_login_user_in( $user_id, $user_login, $user_pass, $remember = false ) {
 	$user = get_userdata( $user_id );
 	if( ! $user )
 		return;
-	wp_set_auth_cookie( $user_id );
+	wp_set_auth_cookie( $user_id, $remember );
 	wp_set_current_user( $user_id, $user_login );
 	do_action( 'wp_login', $user_login, $user );
 }
@@ -72,7 +72,9 @@ function rcp_process_login_form() {
 			// only log the user in if there are no errors
 			if( empty( $errors ) ) {
 
-				rcp_login_user_in( $user->ID, $_POST['rcp_user_login'], $_POST['rcp_user_pass'] );
+				$remember = isset( $_POST['rcp_user_remember'] );
+
+				rcp_login_user_in( $user->ID, $_POST['rcp_user_login'], $_POST['rcp_user_pass'], $remember );
 
 				// redirect the user back to the page they were previously on
 				wp_redirect( $_POST['rcp_redirect'] ); exit;

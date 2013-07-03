@@ -13,6 +13,10 @@
 				<label for="rcp_user_pass"><?php _e( 'Password', 'rcp' ); ?></label>
 				<input name="rcp_user_pass" id="rcp_user_pass" class="required" type="password"/>
 			</p>
+			<p>
+				<label for="rcp_user_remember"><?php _e( 'Remember', 'rcp' ); ?></label>
+				<input type="checkbox" name="rcp_user_remember" id="rcp_user_remember" value="1"/>
+			</p>
 			<p class="rcp_lost_password"><a href="<?php echo esc_url( wp_lostpassword_url( $action ) ); ?>"><?php _e( 'Lost your password?', 'rcp' ); ?></a></p>
 			<p>
 				<input type="hidden" name="rcp_action" value="login"/>
