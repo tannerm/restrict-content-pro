@@ -258,7 +258,7 @@ function rcp_get_content_subscription_levels( $post_id = 0 ) {
 /**
  * Retrieve the renewal reminder periods
  *
- * @since       v1.7
+ * @since       v1.6
  * @access      public
  * @return      array
 */
@@ -285,7 +285,7 @@ function rcp_get_renewal_reminder_periods() {
 /**
  * Retrieve the renewal reminder period that is enabled
  *
- * @since       v1.7
+ * @since       v1.6
  * @access      public
  * @return      string
 */
