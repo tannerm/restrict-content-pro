@@ -392,6 +392,45 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 							<tr valign="top">
+								<th colspan=2><h3><?php _e( 'Expiring Soon Email', 'rcp' ); ?></h3></th>
+							</tr>
+							<tr valign="top">
+								<th>
+									<label for="rcp_settings[renewal_subject]"><?php _e( 'Subject', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text" id="rcp_settings[renewal_subject]" style="width: 300px;" name="rcp_settings[renewal_subject]" value="<?php if(isset($rcp_options['renewal_subject'])) { echo $rcp_options['renewal_subject']; } ?>"/>
+									<div class="description"><?php _e( 'The subject line for the email sent to users before their subscription expires.', 'rcp' ); ?></div>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th>
+									<label for="rcp_settings[renew_notice_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<textarea id="rcp_settings[renew_notice_email]" style="width: 300px; height: 100px;" name="rcp_settings[renew_notice_email]"><?php if(isset($rcp_options['renew_notice_email'])) { echo $rcp_options['renew_notice_email']; } ?></textarea>
+									<div class="description"><?php _e( 'This is the email message that is sent to users before their subscription expires to encourage them to renew.', 'rcp' ); ?></div>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th>
+									<label for="rcp_settings[renewal_reminder_period]"><?php _e( 'Reminder Period', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<select id="rcp_settings[renewal_reminder_period]" name="rcp_settings[renewal_reminder_period]">
+										<?php
+										$periods = rcp_get_renewal_reminder_periods();
+										foreach ( $periods as $key => $period ) {
+										  	$option = '<option value="' . $key . '" ' . selected( $key, rcp_get_renewal_reminder_period(), false ) . '>' . $period . '</option>';
+											echo $option;
+										}
+
+										?>
+									</select>
+									<div class="description"><?php _e( 'When should the renewal reminder be sent?', 'rcp' ); ?></div>
+								</td>
+							</tr>
+							<tr valign="top">
 								<th colspan=2>
 									<h3><?php _e( 'Free Subscription Email', 'rcp' ); ?></h3>
 								</th>
