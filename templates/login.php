@@ -17,7 +17,7 @@
 				<label for="rcp_user_remember"><?php _e( 'Remember', 'rcp' ); ?></label>
 				<input type="checkbox" name="rcp_user_remember" id="rcp_user_remember" value="1"/>
 			</p>
-			<p class="rcp_lost_password"><a href="<?php echo esc_url( wp_lostpassword_url( $action ) ); ?>"><?php _e( 'Lost your password?', 'rcp' ); ?></a></p>
+			<p class="rcp_lost_password"><a href="<?php echo esc_url( wp_lostpassword_url( rcp_get_current_url() ) ); ?>"><?php _e( 'Lost your password?', 'rcp' ); ?></a></p>
 			<p>
 				<input type="hidden" name="rcp_action" value="login"/>
 				<input type="hidden" name="rcp_redirect" value="<?php echo esc_url( $rcp_login_form_args['redirect'] ); ?>"/>
