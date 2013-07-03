@@ -75,6 +75,7 @@ function rcp_check_for_soon_to_expire_users() {
 		'number' 		=> 9999,
 		'count_total' 	=> false
 	);
+
 	$expiring_members = get_users( $args );
 
 	if( $expiring_members ) {
@@ -91,4 +92,3 @@ function rcp_check_for_soon_to_expire_users() {
 	}
 }
 add_action( 'rcp_send_expiring_soon_notice', 'rcp_check_for_soon_to_expire_users' );
-add_action( 'template_redirect', 'rcp_check_for_soon_to_expire_users' );
