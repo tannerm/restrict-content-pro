@@ -213,9 +213,11 @@ function rcp_show_subscription_level( $level_id = 0, $user_id = 0 ) {
 	$ret = true;
 
 	$user_level = rcp_get_subscription_id( $user_id );
+	$sub_length = rcp_get_subscription_length( $level_id );
 	$sub_price 	= rcp_get_subscription_price( $level_id );
 
-	if( is_user_logged_in() && $sub_price == '0' )
+	// Don't show free trial if user has already used it. Don't show if sub is free and user is already free
+	if( ( is_user_logged_in() && $sub_price == '0' && $sub_length->duration > 0 && rcp_has_used_trial( $user_id ) ) || ( is_user_logged_in() && $sub_price == '0' && $sub_length->duration == 0 ) )
 		$ret = false;
 
 	return apply_filters( 'rcp_show_subscription_level', $ret, $level_id, $user_id );
