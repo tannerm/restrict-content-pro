@@ -116,7 +116,7 @@ function rcp_render_meta_box() {
                         $selected = is_array( $meta ) ? $meta : array( $meta );
 
 
-                        $levels = rcp_get_subscription_levels( 'all', false );
+                        $levels = rcp_get_subscription_levels( 'all' );
                         foreach ( $levels as $level ) {
     						echo '<input type="checkbox" value="' . $level->id . '"' . checked( true, in_array( $level->id, $selected ), false ) . ' name="' . $field['id'] . '[]" id="' . $field['id'] . '_' . $level->id . '" />&nbsp;';
 					        echo '<label for="' . $field['id'] . '_' . $level->id . '">' . $level->name . '</label><br/>';

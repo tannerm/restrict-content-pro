@@ -13,7 +13,7 @@ function rcp_export_page() {
 				<select name="rcp-subscription" id="rcp-subscription">
 					<option value="0"><?php _e( 'All', 'rcp' ); ?></option>
 					<?php
-					$levels = rcp_get_subscription_levels( 'all', false );
+					$levels = rcp_get_subscription_levels( 'all' );
 					if($levels) :
 						foreach( $levels as $key => $level) : ?>
 						<option value="<?php echo absint( $level->id ); ?>"><?php echo esc_html( $level->name ); ?></option>

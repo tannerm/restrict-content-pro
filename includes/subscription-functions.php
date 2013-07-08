@@ -12,22 +12,12 @@
 * @param $cache bool - whether to pull from a cache or not
 * return mixed - array of objects if levels exist, false otherwise
 */
-function rcp_get_subscription_levels( $status = 'all', $cache = true ) {
+function rcp_get_subscription_levels( $status = 'all' ) {
 	global $wpdb, $rcp_db_name;
 
 	$rcp_levels = new RCP_Levels();
 
-	if( $cache ) {
-
-		$levels = get_transient( 'rcp_subscription_levels' );
-		if($levels === false) {
-			$levels = $rcp_levels->get_levels( array( 'status' => $status ) );
-			// cache the levels with a 3 hour expiration
-			set_transient( 'rcp_subscription_levels', $levels, 10800 );
-		}
-	} else {
-		$levels = $rcp_levels->get_levels( array( 'status' => $status ) );
-	}
+	$levels = $rcp_levels->get_levels( array( 'status' => $status ) );
 
 	if( $levels )
 		return $levels;

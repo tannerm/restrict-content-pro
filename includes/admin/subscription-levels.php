@@ -41,7 +41,7 @@ function rcp_member_levels_page()
 					</tr>
 				</tfoot>
 				<tbody>
-				<?php $levels = rcp_get_subscription_levels('all', false); ?>
+				<?php $levels = rcp_get_subscription_levels( 'all' ); ?>
 				<?php
 				if($levels) :
 					$i = 1;

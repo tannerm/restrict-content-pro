@@ -50,7 +50,7 @@ rcp_show_error_messages( 'register' ); ?>
 	</fieldset>
 	<?php } ?>
 
-	<?php $levels = rcp_get_subscription_levels( 'active', true );
+	<?php $levels = rcp_get_subscription_levels( 'active' );
 	if( $levels && count( $levels ) > 1 ) : ?>
 	<fieldset class="rcp_subscription_fieldset">
 		<p class="rcp_subscription_message"><?php echo apply_filters ( 'rcp_registration_choose_subscription', __( 'Choose your subscription level', 'rcp' ) ); ?></p>
