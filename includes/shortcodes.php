@@ -11,7 +11,7 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 		'message' 		=> '',
 		'paid' 			=> false,
 		'level' 		=> 0,
-		'subscription' 	=> array()
+		'subscription' 	=> ''
 	), $atts ) );
 
 	global $rcp_options, $user_ID;
