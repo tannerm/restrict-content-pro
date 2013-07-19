@@ -149,7 +149,7 @@ function rcp_check_ipn() {
 
 		/* do some quick checks to make sure all necessary data validates */
 
-		if ( $amount < $subscription_price && $amount2 <$subscription_price ) {
+		if ( $amount < $subscription_price && $amount2 < $subscription_price ) {
 			// the subscription price doesn't match, so lets check to see if it matches with a discount code
 			if( ! rcp_check_paypal_return_price_after_discount( $subscription_price, $amount, $amount2, $user_id ) ) {
 
