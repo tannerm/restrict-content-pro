@@ -58,6 +58,26 @@ $code = rcp_get_discount_details( urldecode( $_GET['edit_discount'] ) );
 					<p class="description"><?php _e(' The amount of this discount code.', 'rcp' ); ?></p>
 				</td>
 			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="rcp-subscription"><?php _e( 'Subscription', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<?php
+					$levels = rcp_get_subscription_levels('all', false);
+					if( $levels ) : ?>
+						<select name="subscription" id="rcp-subscription">
+							<option value="0"><?php _e( 'All Levels', 'rcp' ); ?></option>
+							<?php
+								foreach( $levels as $level ) :
+									echo '<option value="' . $level->id . '" ' . selected( $code->subscription_id, $level->id, false ) . '>' . $level->name . '</option>';
+								endforeach;
+							?>
+						</select>
+					<?php endif; ?>
+					<p class="description"><?php _e( 'The subscription levels this discount code can be used for.', 'rcp' ); ?></p>
+				</td>
+			</tr>
 			<tr valign="top">
 				<th scope="row" valign="top">
 					<label for="rcp-expiration"><?php _e(' Expiration date', 'rcp' ); ?></label>

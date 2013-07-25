@@ -2,15 +2,15 @@
 
 function rcp_discounts_page()
 {
-	global $rcp_options, $rcp_discounts_db_name, $wpdb;	
+	global $rcp_options, $rcp_discounts_db_name, $wpdb;
 	$page = admin_url( '/admin.php?page=rcp-discounts' );
 	?>
 	<div class="wrap">
 		<?php if( isset( $_GET['edit_discount'] ) ) :
-			include('edit-discount.php'); 
+			include('edit-discount.php');
 		else : ?>
 			<h2><?php _e( 'Discount Codes', 'rcp' ); ?></h2>
-		
+
 			<table class="wp-list-table widefat fixed posts">
 				<thead>
 					<tr>
@@ -18,6 +18,7 @@ function rcp_discounts_page()
 						<th class="rcp-discounts-name-col" ><?php _e( 'Name', 'rcp' ); ?></th>
 						<th class="rcp-discounts-desc-col"><?php _e( 'Description', 'rcp' ); ?></th>
 						<th class="rcp-discounts-code-col" ><?php _e( 'Code', 'rcp' ); ?></th>
+						<th class="rcp-discounts-subscription-col" ><?php _e( 'Subscription', 'rcp' ); ?></th>
 						<th class="rcp-discounts-amount-col"><?php _e( 'Amount', 'rcp' ); ?></th>
 						<th class="rcp-discounts-type-col"><?php _e( 'Type', 'rcp' ); ?></th>
 						<th class="rcp-discounts-status-col"><?php _e( 'Status', 'rcp' ); ?></th>
@@ -34,6 +35,7 @@ function rcp_discounts_page()
 						<th><?php _e( 'Name', 'rcp' ); ?></th>
 						<th><?php _e( 'Description', 'rcp' ); ?></th>
 						<th><?php _e( 'Code', 'rcp' ); ?></th>
+						<th><?php _e( 'Subscription', 'rcp' ); ?></th>
 						<th><?php _e( 'Amount', 'rcp' ); ?></th>
 						<th><?php _e( 'Type', 'rcp' ); ?></th>
 						<th><?php _e( 'Status', 'rcp' ); ?></th>
@@ -46,7 +48,7 @@ function rcp_discounts_page()
 				</tfoot>
 				<tbody>
 				<?php $codes = rcp_get_discounts(); ?>
-				<?php 
+				<?php
 				if($codes) :
 					$i = 1;
 					foreach( $codes as $key => $code) : ?>
@@ -55,15 +57,24 @@ function rcp_discounts_page()
 							<td><?php echo stripslashes( $code->name ); ?></td>
 							<td><?php echo stripslashes( $code->description ); ?></td>
 							<td><?php echo $code->code; ?></td>
+							<td>
+								<?php
+								if ( $code->subscription_id > 0 ) {
+									echo rcp_get_subscription_name( $code->subscription_id );
+								} else {
+									echo __( 'All Levels', 'rcp' );
+								}
+								?>
+							</td>
 							<td><?php echo rcp_discount_sign_filter( $code->amount, $code->unit ); ?></td>
 							<td><?php echo $code->unit == '%' ? __( 'Percentage', 'rcp' ) : __( 'Flat', 'rcp' ); ?></td>
 							<td>
-								<?php 
+								<?php
 									if(rcp_is_discount_not_expired( $code->id ) ) {
 										echo rcp_get_discount_status( $code->id ) == 'active' ? __( 'active', 'rcp' ) : __( 'disabled', 'rcp' );
 									} else {
 										_e( 'expired', 'rcp' );
-									}								 
+									}
 								?>
 							</td>
 							<td><?php if( $code->max_uses > 0 ) { echo rcp_count_discount_code_uses( $code->code ) . '/' . $code->max_uses; } else { echo rcp_count_discount_code_uses( $code->code ); }?></td>
@@ -80,14 +91,14 @@ function rcp_discounts_page()
 								<a href="<?php echo add_query_arg( 'delete_discount', $code->id, $page ); ?>" class="rcp_delete_discount"><?php _e( 'Delete', 'rcp' ); ?></a>
 							</td>
 						</tr>
-					<?php 
+					<?php
 					$i++;
-					endforeach; 
+					endforeach;
 				else : ?>
 				<tr><td colspan="11"><?php _e( 'No discount codes added yet.', 'rcp' ); ?></td>
 				<?php endif; ?>
 			</table>
-			<?php do_action( 'rcp_discounts_below_table' ); ?>	
+			<?php do_action( 'rcp_discounts_below_table' ); ?>
 			<h3><?php _e( 'Add New Discount', 'rcp' ); ?></h3>
 			<form id="rcp-discounts" action="" method="POST">
 				<table class="form-table">
@@ -142,6 +153,26 @@ function rcp_discounts_page()
 						</tr>
 						<tr class="form-field">
 							<th scope="row" valign="top">
+								<label for="rcp-subscription"><?php _e( 'Subscription', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<?php
+								$levels = rcp_get_subscription_levels('all', false);
+								if( $levels ) : ?>
+									<select name="subscription" id="rcp-subscription">
+										<option value="0"><?php _e( 'All Levels', 'rcp' ); ?></option>
+										<?php
+											foreach( $levels as $level ) :
+												echo '<option value="' . $level->id . '">' . $level->name . '</option>';
+											endforeach;
+										?>
+									</select>
+								<?php endif; ?>
+								<p class="description"><?php _e( 'The subscription levels this discount code can be used for.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr class="form-field">
+							<th scope="row" valign="top">
 								<label for="rcp-expiration"><?php _e( 'Expiration date', 'rcp' ); ?></label>
 							</th>
 							<td>
@@ -168,6 +199,6 @@ function rcp_discounts_page()
 			</form>
 		<?php endif; ?>
 	</div><!--end wrap-->
-		
+
 	<?php
 }
