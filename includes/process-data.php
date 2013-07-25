@@ -120,14 +120,15 @@ function rcp_process_data() {
 
 			// Setup unsanitized data
 			$data = array(
-				'name'        => $_POST['name'],
-				'description' => $_POST['description'],
-				'amount'      => $_POST['amount'],
-				'unit'        => isset( $_POST['unit'] ) && $_POST['unit'] == '%' ? '%' : 'flat',
-				'code'        => $_POST['code'],
-				'status'      => 'active',
-				'expiration'  => $_POST['expiration'],
-				'max_uses'    => $_POST['max']
+				'name'            => $_POST['name'],
+				'description'     => $_POST['description'],
+				'amount'          => $_POST['amount'],
+				'unit'            => isset( $_POST['unit'] ) && $_POST['unit'] == '%' ? '%' : 'flat',
+				'code'            => $_POST['code'],
+				'status'          => 'active',
+				'expiration'      => $_POST['expiration'],
+				'max_uses'        => $_POST['max'],
+				'subscription_id' => $_POST['subscription']
 			);
 
 			$add = $discounts->insert( $data );
@@ -148,14 +149,15 @@ function rcp_process_data() {
 
 			// Setup unsanitized data
 			$data = array(
-				'name'        => $_POST['name'],
-				'description' => $_POST['description'],
-				'amount'      => $_POST['amount'],
-				'unit'        => isset( $_POST['unit'] ) && $_POST['unit'] == '%' ? '%' : 'flat',
-				'code'        => $_POST['code'],
-				'status'      => $_POST['status'],
-				'expiration'  => $_POST['expiration'],
-				'max_uses'    => $_POST['max']
+				'name'            => $_POST['name'],
+				'description'     => $_POST['description'],
+				'amount'          => $_POST['amount'],
+				'unit'            => isset( $_POST['unit'] ) && $_POST['unit'] == '%' ? '%' : 'flat',
+				'code'            => $_POST['code'],
+				'status'          => $_POST['status'],
+				'expiration'      => $_POST['expiration'],
+				'max_uses'        => $_POST['max'],
+				'subscription_id' => $_POST['subscription']
 			);
 
 			$update = $discounts->update( $_POST['discount_id'], $data );

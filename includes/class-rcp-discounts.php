@@ -272,33 +272,35 @@ class RCP_Discounts {
 		global $wpdb;
 
 		$defaults = array(
-			'name'        => '',
-			'description' => '',
-			'amount'      => '0.00',
-			'status'      => 'inactive',
-			'unit'        => '%',
-			'code'        => '',
-			'expiration'  => '',
-			'max_uses' 	  => 0,
-			'use_count'   => '0'
+			'name'           => '',
+			'description'    => '',
+			'amount'         => '0.00',
+			'status'         => 'inactive',
+			'unit'           => '%',
+			'code'           => '',
+			'expiration'     => '',
+			'max_uses' 	     => 0,
+			'use_count'      => '0',
+			'subscription_id'=> 0
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
 		do_action( 'rcp_pre_add_discount', $args );
-
+	//	print_r( $args ); exit;
 		$add = $wpdb->query(
 			$wpdb->prepare(
 				"INSERT INTO {$this->db_name} SET
-					`name`        = '%s',
-					`description` = '%s',
-					`amount`      = '%s',
-					`status`      = 'active',
-					`unit`        = '%s',
-					`code`        = '%s',
-					`expiration`  = '%s',
-					`max_uses`    = '%d',
-					`use_count`   = '0'
+					`name`           = '%s',
+					`description`    = '%s',
+					`amount`         = '%s',
+					`status`         = 'active',
+					`unit`           = '%s',
+					`code`           = '%s',
+					`expiration`     = '%s',
+					`max_uses`       = '%d',
+					`use_count`      = '0',
+					`subscription_id`= '%d'
 				;",
 				sanitize_text_field( $args['name'] ),
 				strip_tags( addslashes( $args['description'] ) ),
@@ -306,7 +308,8 @@ class RCP_Discounts {
 				$args['unit'],
 				sanitize_text_field( $args['code'] ),
 				sanitize_text_field( $args['expiration'] ),
-				absint( $args['max_uses'] )
+				absint( $args['max_uses'] ),
+				absint( $args['subscription_id'] )
 			)
 		);
 
@@ -339,15 +342,16 @@ class RCP_Discounts {
 		$update = $wpdb->query(
 			$wpdb->prepare(
 				"UPDATE {$this->db_name} SET
-					`name`        = '%s',
-					`description` = '%s',
-					`amount`      = '%s',
-					`unit`        = '%s',
-					`code`        = '%s',
-					`status`      = '%s',
-					`expiration`  = '%s',
-					`max_uses`    = '%s'
-					WHERE `id`    = '%d'
+					`name`            = '%s',
+					`description`     = '%s',
+					`amount`          = '%s',
+					`unit`            = '%s',
+					`code`            = '%s',
+					`status`          = '%s',
+					`expiration`      = '%s',
+					`max_uses`        = '%s',
+					`subscription_id` = '%d'
+					WHERE `id`        = '%d'
 				;",
 				sanitize_text_field( $args['name'] ),
 				strip_tags( addslashes( $args['description'] ) ),
@@ -357,6 +361,7 @@ class RCP_Discounts {
 				sanitize_text_field( $args['status'] ),
 				sanitize_text_field( $args['expiration'] ),
 				sanitize_text_field( $args['max_uses'] ),
+				absint( $args['subscription_id'] ),
 				absint( $args['id'] )
 			)
 		);
