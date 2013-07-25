@@ -73,20 +73,20 @@ function rcp_check_for_soon_to_expire_users() {
 			)
 		),
 		'number' 		=> 9999,
-		'count_total' 	=> false
+		'count_total' 	=> false,
+		'fields'        => 'ids'
 	);
 
 	$expiring_members = get_users( $args );
-
 	if( $expiring_members ) {
 
 		foreach( $expiring_members as $member ) {
 
-			if( isset( $member->_rcp_expiring_soon_email_sent ) )
+			if( get_user_meta( $member, '_rcp_expiring_soon_email_sent', true ) )
 				continue;
 
-			rcp_email_expiring_notice( $member->ID );
-			add_user_meta( $member->ID, '_rcp_expiring_soon_email_sent', 'yes' );
+			rcp_email_expiring_notice( $member );
+			add_user_meta( $member, '_rcp_expiring_soon_email_sent', 'yes' );
 
 		}
 	}
