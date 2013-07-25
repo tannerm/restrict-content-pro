@@ -37,9 +37,12 @@ function rcp_options_upgrade() {
 		$wpdb->query( "ALTER TABLE `" . $rcp_discounts_db_name . "` ADD `max_uses` mediumint" );
 		update_option( 'rcp_discounts_db_version', $rcp_discounts_db_version );
 	}
-	if(!$wpdb->query( "SELECT `expiration` FROM `" . $rcp_discounts_db_name . "`" ) )
-	{
+	if( ! $wpdb->query( "SELECT `expiration` FROM `" . $rcp_discounts_db_name . "`" ) ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_discounts_db_name . "` ADD `expiration` mediumtext" );
+		update_option( 'rcp_discounts_db_version', $rcp_discounts_db_version );
+	}
+	if( ! $wpdb->query( "SELECT `subscription_id` FROM `" . $rcp_discounts_db_name . "`" ) ) {
+		$wpdb->query( "ALTER TABLE `" . $rcp_discounts_db_name . "` ADD `subscription_id` mediumint" );
 		update_option( 'rcp_discounts_db_version', $rcp_discounts_db_version );
 	}
 

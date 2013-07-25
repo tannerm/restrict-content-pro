@@ -41,7 +41,7 @@ class RCP_Discounts {
 	function __construct() {
 
 		$this->db_name    = rcp_get_discounts_db_name();
-		$this->db_version = '1.1';
+		$this->db_version = '1.2';
 
 	}
 

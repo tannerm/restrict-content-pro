@@ -77,7 +77,7 @@ global $rcp_discounts_db_name;
 $rcp_discounts_db_name = rcp_get_discounts_db_name();
 
 global $rcp_discounts_db_version;
-$rcp_discounts_db_version = '1.1';
+$rcp_discounts_db_version = '1.2';
 
 global $rcp_payments_db_name;
 $rcp_payments_db_name = rcp_get_payments_db_name();
