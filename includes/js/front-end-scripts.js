@@ -77,10 +77,10 @@ jQuery(document).ready(function($) {
 
 	$('#rcp_discount_code').keyup(function(key) {
 		if(key.which != 13) {
-			var discount = $(this).val();
 			var data = {
 				action: 'validate_discount',
-				code: discount
+				code: $(this).val(),
+				subscription_id: $('#rcp_subscription_levels input:checked').val()
 			};
 			$.post(rcp_script_options.ajaxurl, data, function(response) {
 				if(response == 'invalid') {
