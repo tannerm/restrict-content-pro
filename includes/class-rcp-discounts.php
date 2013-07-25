@@ -178,6 +178,39 @@ class RCP_Discounts {
 
 
 	/**
+	 * Get the associated subscription level for a discount
+	 *
+	 * @access  public
+	 * @since   1.6
+	 */
+
+	public function get_subscription_id( $discount_id = 0 ) {
+
+		$discount = $this->get_discount( $discount_id );
+
+		if( $discount )
+			return $discount->subscription_id;
+		return 0;
+
+	}
+
+
+	/**
+	 * Checks wether a discount code has a subscription associated
+	 *
+	 * @access  public
+	 * @since   1.6
+	 * @return  bool
+	 */
+
+	public function has_subscription_id( $discount_id = 0 ) {
+
+		return $this->get_subscription_id( $discount_id ) > 0;
+
+	}
+
+
+	/**
 	 * Increase the use count of a discount by 1
 	 *
 	 * @access  public
