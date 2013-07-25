@@ -6,7 +6,7 @@
 */
 function rcp_validate_discount_with_ajax() {
 	if( isset( $_POST['code'] ) ) {
-		if( rcp_validate_discount( $_POST['code'] ) ) {
+		if( rcp_validate_discount( $_POST['code'], $_POST['subscription_id'] ) ) {
 			$code_details = rcp_get_discount_details_by_code( $_POST['code'] );
 			if( $code_details && $code_details->amount == 100 && $code_details->unit == '%' ) {
 				// this is a 100% discount

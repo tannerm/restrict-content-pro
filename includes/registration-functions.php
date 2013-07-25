@@ -51,7 +51,7 @@ function rcp_process_registration() {
 			}
 		}
 		if( ! empty( $discount ) ) {
-			if( ! rcp_validate_discount( $discount ) ) {
+			if( ! rcp_validate_discount( $discount, $subscription_id ) ) {
 				// the entered discount code is incorrect
 				rcp_errors()->add( 'invalid_discount', __( 'The discount you entered is invalid', 'rcp' ), 'register' );
 			}

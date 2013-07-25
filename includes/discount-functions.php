@@ -63,15 +63,27 @@ function rcp_get_discount_details_by_code( $code ) {
 * @param - string $code - the discount code to validate
 * return boolean
 */
-function rcp_validate_discount( $code ) {
-	global $wpdb, $rcp_discounts_db_name;
-	$test_code = rcp_get_discount_details_by_code( $code );
-	if( $test_code && rcp_get_discount_status( $test_code->id ) == 'active' ) {
-		if( rcp_is_discount_not_expired( $test_code->id ) && rcp_discount_has_uses_left( $test_code->id ) ) {
-			return true;
+function rcp_validate_discount( $code, $subscription_id = 0 ) {
+
+	$ret       = false;
+	$discounts = new RCP_Discounts();
+	$discount  = $discounts->get_by( 'code', $code );
+
+	if( $discount && $discount->status == 'active' ) {
+
+		// Make sure discount is not expired and not maxed out
+		if( ! $discounts->is_expired( $discount->id ) && ! $discounts->is_maxed_out( $discount->id ) ) {
+			$ret = true;
+		}
+
+		// If the discount is restricted to a level, ensure that's the level being signed up for
+		if( $discounts->has_subscription_id( $discount->id ) ) {
+			if( $subscription_id != $discounts->get_subscription_id( $discount->id ) ) {
+				$ret = false;
+			}
 		}
 	}
-	return false;
+	return apply_filters( 'rcp_is_discount_valid', $ret, $discount, $subscription_id );
 }
 
 
