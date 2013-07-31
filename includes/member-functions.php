@@ -280,7 +280,7 @@ function rcp_is_active( $user_id = 0 ) {
 
 	if( user_can( $user_id, 'manage_options' ) ) {
 		$ret = true;
-	} else if( ! rcp_is_expired( $user_id ) && rcp_get_status( $user_id ) == 'active' && strlen( trim( rcp_get_subscription( $user_id ) ) ) > 0 ) {
+	} else if( ! rcp_is_expired( $user_id ) && rcp_get_status( $user_id ) == 'active' ) {
 		$ret = true;
 	}
 	return apply_filters( 'rcp_is_active', $ret, $user_id );
