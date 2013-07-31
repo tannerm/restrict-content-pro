@@ -92,7 +92,7 @@ function rcp_help_page()
 									<li><em><?php _e('Show Excerpt?', 'rcp'); ?></em> - Check this box to show the post / page excerpt to non-active users (or those without an active paid subscription). If this box is left unchecked, then only the text defined in the Messages section of the Settings page will be shown when a user attempts to view this post / page.</li>
 									<li><em><?php _e('Hide from Feed?', 'rcp'); ?></em> - Check this box to prevent the excerpt of this post / page from being shown in the RSS / Atom feeds. This is a good idea if you wish to completely hide premium posts from non-registered users.</li>
 									<Li><em><?php _e('Access Level', 'rcp'); ?></em> - This option allows you to restrict the content to members with a subscription level that has an access level of the specified number or higher. For exaample, if you set this to "5", then only users that are subscribed to a subscription level with an acccess level of "5" or higher will be able to view this content.</li>
-									<li><em><?php _e('Subscription Level', 'rcp'); ?></em> - This option allows you to restrict the content to only users subscribed to the specified subscription level. For example, if you set this to "Gold", then only users subscribed to the "Gold" subscription level will be able to view this content.</li>
+									<li><em><?php _e('Subscription Level', 'rcp'); ?></em> - This option allows you to restrict the content to only users subscribed to the specified subscription level. For example, if you set this to "Gold", then only users subscribed to the "Gold" subscription level will be able to view this content. Check each of the levels you wish to have access to the content.</li>
 									<li><em><?php _e('User Level', 'rcp'); ?></em> - This option will allow you to set a minimum user level required to view this post / page's content. For example, set this to "Editor" to only permit users with Editor access and great to view this post / page's content. You can also set this to "Subscriber" in order to require users be logged-in to view this content.</li>
 							</ul>
 							<p>The last three options (Access Level, Subscription Level, and User Level) can all be combined to create advanced restrictions. For example, if you set a post to have an access level of 3, a subscription level of "Gold", and a "User Level" of "Contributor", then only users subscribed to the "Gold" level (this level must have an access level of 3 or higher) AND are of the user level "Contributor" or higher will be able to view the content. A user subscribed to "Gold" but with a user level of "Subscriber" will not be able to view the content.</p>
@@ -128,6 +128,10 @@ function rcp_help_page()
 							<p>You can also restrict content to only users of a specific subscription level by using the "subscription" parameter. If your "Gold" subscription level has an ID of "3", you would use this to limit the content to only Gold subscribers:</p>
 
 							<p><strong><em>[restrict subscription=3]This is restricted to gold subscribers[/restrict]</em></strong></p>
+
+							<p>To allow users from multiple subscription levels to see the content, separate IDs by a comman:</p>
+
+							<p><strong><em>[restrict subscription="3,5"]This is restricted to gold and platinum subscribers[/restrict]</em></strong></p>
 
 							<p>It is also possible to restrict content to only users subscribed to a subscription level that provides a certain access level or higher. For example, if you wanted to restrict content to only users with a subscription that provides an access level of 4 or higher, you would use:</p>
 
