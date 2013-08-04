@@ -38,7 +38,7 @@ function rcp_options_install() {
 		`max_uses` mediumint NOT NULL,
 		`status` tinytext NOT NULL,
 		`expiration` mediumtext NOT NULL,
-		`subscription_id` mediumint NOT NULL
+		`subscription_id` mediumint NOT NULL,
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
