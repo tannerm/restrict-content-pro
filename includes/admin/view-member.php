@@ -2,10 +2,10 @@
 $user = get_userdata( absint( urldecode( $_GET['view_member'] ) ) );
 ?>
 <h2>
-	<?php _e( 'View Member Details:', 'rcp' ); echo ' ' . $user->display_name; ?> - 
+	<?php _e( 'View Member Details:', 'rcp' ); echo ' ' . $user->display_name; ?> -
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-members' ); ?>" class="button-secondary">
 		<?php _e( 'Go Back', 'rcp' ); ?>
-	</a>	
+	</a>
 </h2>
 <table class="form-table">
 	<tbody>
@@ -47,7 +47,7 @@ $user = get_userdata( absint( urldecode( $_GET['view_member'] ) ) );
 				<?php _e( 'Signup Method', 'rcp' ); ?>
 			</th>
 			<td>
-				<?php 
+				<?php
 				$method = get_user_meta( $user->ID, 'rcp_signup_method', true );
 				if( $method ) {
 					switch( $method ) {
@@ -58,7 +58,7 @@ $user = get_userdata( absint( urldecode( $_GET['view_member'] ) ) );
 							_e( 'Manually added by an admin', 'rcp' );
 						break;
 					}
-				}				
+				}
 				?>
 			</td>
 		</tr>
