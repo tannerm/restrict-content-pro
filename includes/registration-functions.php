@@ -112,17 +112,17 @@ function rcp_process_registration() {
 
 					if( ! empty( $discount ) ) {
 
-						$discounts = new RCP_Discounts();
-						$discount = $discounts->get_by( 'code', $discount );
+						$discounts    = new RCP_Discounts();
+						$discount_obj = $discounts->get_by( 'code', $discount );
 
 						// calculate the after-discount price
-						$price = $discounts->calc_discounted_price( $price, $discount->amount, $discount->unit );
+						$price = $discounts->calc_discounted_price( $price, $discount_obj->amount, $discount_obj->unit );
 
 						// record the usage of this discount code
 						$discounts->add_to_user( $user_data['id'], $discount );
 
 						// incrase the usage count for the code
-						$discounts->increase_uses( $discount->id );
+						$discounts->increase_uses( $discount_obj->id );
 
 						// if the discount is 100%, log the user in and redirect to success page
 						if( $price == '0' ) {
