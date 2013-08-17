@@ -71,7 +71,9 @@ $user = get_userdata( absint( urldecode( $_GET['view_member'] ) ) );
 				$discounts = get_user_meta( $user->ID, 'rcp_user_discounts', true );
 				if( $discounts ) {
 					foreach( $discounts as $discount ) {
-						echo $discount . '<br/>';
+						if( is_string( $discount ) ) {
+							echo $discount . '<br/>';
+						}
 					}
 				} else {
 					_e( 'None', 'rcp' );
