@@ -70,6 +70,10 @@ function rcp_check_for_soon_to_expire_users() {
 				'value'  => date( 'Y-m-d H:i:s', strtotime( $renewal_period ) ),
 				'type'   => 'DATETIME',
 				'compare'=> '<='
+			),
+			array(
+				'key'    => 'rcp_recurring',
+				'compare'=> 'NOT EXISTS'
 			)
 		),
 		'number' 		=> 9999,
@@ -79,7 +83,6 @@ function rcp_check_for_soon_to_expire_users() {
 
 	$expiring_members = get_users( $args );
 	if( $expiring_members ) {
-
 		foreach( $expiring_members as $member ) {
 
 			if( get_user_meta( $member, '_rcp_expiring_soon_email_sent', true ) )
