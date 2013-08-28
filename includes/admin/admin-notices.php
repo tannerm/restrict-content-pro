@@ -27,6 +27,17 @@ function rcp_admin_notices() {
 			$text = __( 'Payment deleted', 'rcp' );
 			break;
 
+		case 'payment_added' :
+
+			$text = __( 'Payment added', 'rcp' );
+			break;
+
+		case 'payment_not_added' :
+
+			$text = __( 'Payment creation failed', 'rcp' );
+			$class = 'error';
+			break;
+
 		case 'upgrade-complete' :
 
 			$text =  __( 'Database upgrade complete', 'rcp' );

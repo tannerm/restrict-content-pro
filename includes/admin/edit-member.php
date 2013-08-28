@@ -5,7 +5,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $user->display_name; ?> - 
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-members' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
-	</a>	
+	</a>
 </h2>
 <form id="rcp-edit-member" action="" method="post">
 	<table class="form-table">

@@ -11,7 +11,17 @@ function rcp_payments_page() {
 	global $rcp_options;
 	$current_page = admin_url( '/admin.php?page=rcp-payments' ); ?>
 	<div class="wrap">
-		<h2><?php _e( 'Payments', 'rcp' ); ?></h2>
+
+		<?php
+		if( isset( $_GET['view'] ) && 'new-payment' == $_GET['view'] ) :
+			include( 'new-payment.php' );
+		else : ?>
+		<h2>
+			<?php _e( 'Payments', 'rcp' ); ?>
+			<a href="<?php echo admin_url( '/admin.php?page=rcp-payments&view=new-payment' ); ?>" class="add-new-h2">
+				<?php _e( 'Create Payment', 'rcp' ); ?>
+			</a>
+		</h2>
 
 		<?php do_action('rcp_payments_page_top');
 
@@ -118,6 +128,7 @@ function rcp_payments_page() {
 				</div><!--end .tablenav-->
 			<?php endif; ?>
 			<?php do_action( 'rcp_payments_page_bottom' ); ?>
+		<?php endif; ?>
 	</div><!--end wrap-->
 	<?php
 }
