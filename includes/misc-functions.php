@@ -413,13 +413,18 @@ add_action( 'init', 'rcp_can_user_be_logged_in' );
 */
 function rcp_allowed_html_tags() {
 	$tags = array(
-		'p' => array(),
-		'span' => array(),
+		'p' => array(
+			'class' => array()
+		),
+		'span' => array(
+			'class' => array()
+		),
 		'a' => array(
        		'href' => array(),
+        	'title' => array(),
+        	'class' => array(),
         	'title' => array()
         ),
-		'strong' => array(),
 		'strong' => array(),
 		'em' => array(),
 		'br' => array(),
@@ -428,9 +433,15 @@ function rcp_allowed_html_tags() {
         	'title' => array(),
         	'alt' => array()
         ),
-		'div' => array(),
-		'ul' => array(),
-		'li' => array()
+		'div' => array(
+			'class' => array()
+		),
+		'ul' => array(
+			'class' => array()
+		),
+		'li' => array(
+			'class' => array()
+		)
 	);
 
 	return apply_filters( 'rcp_allowed_html_tags', $tags );
