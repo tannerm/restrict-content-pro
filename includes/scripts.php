@@ -1,8 +1,8 @@
 <?php
 
 function rcp_admin_scripts($hook) {
-	global $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_settings_page, $rcp_export_page, $rcp_help_page;
-	$pages = array( $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_settings_page, $rcp_export_page, $rcp_help_page );
+	global $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_help_page;
+	$pages = array( $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_help_page );
 
 	if( in_array( $hook, $pages ) ) {
 		wp_enqueue_script( 'jquery-ui-sortable' );
@@ -10,6 +10,11 @@ function rcp_admin_scripts($hook) {
 		wp_enqueue_script( 'bbq',  RCP_PLUGIN_URL . 'includes/js/jquery.ba-bbq.min.js' );
 		wp_enqueue_script( 'rcp-admin-scripts',  RCP_PLUGIN_URL . 'includes/js/admin-scripts.js', array( 'jquery' ), RCP_PLUGIN_VERSION );
 	}
+
+	if ( $rcp_reports_page == $hook ) {
+		wp_enqueue_script( 'jquery-flot', RCP_PLUGIN_URL . 'includes/js/jquery.flot.min.js' );
+	}
+
 	if( $hook == $rcp_help_page ) {
 		wp_enqueue_style( 'jquery-snippet',  RCP_PLUGIN_URL . 'includes/css/jquery.snippet.min.css' );
 		wp_enqueue_script( 'jquery-snippet',  RCP_PLUGIN_URL . 'includes/js/jquery.snippet.min.js' );
@@ -28,12 +33,13 @@ function rcp_admin_scripts($hook) {
 add_action( 'admin_enqueue_scripts', 'rcp_admin_scripts' );
 
 function rcp_admin_styles( $hook ) {
-	global $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_settings_page, $rcp_export_page, $rcp_logs_page, $rcp_help_page;
+	global $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_logs_page, $rcp_help_page;
 	$pages = array(
 		$rcp_members_page,
 		$rcp_subscriptions_page,
 		$rcp_discounts_page,
 		$rcp_payments_page,
+		$rcp_reports_page,
 		$rcp_settings_page,
 		$rcp_export_page,
 		$rcp_logs_page,

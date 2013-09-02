@@ -170,6 +170,7 @@ if( is_admin() ) {
 	include( RCP_PLUGIN_DIR . 'includes/admin/discount-codes.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/help-menus.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/payments-page.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/reports-page.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/export.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/logs.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/help-page.php' );

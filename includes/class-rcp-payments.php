@@ -176,13 +176,19 @@ class RCP_Payments {
 			'number'  => 20,
 			'offset'  => 0,
 			'user_id' => 0,
-			'date'    => array()
+			'date'    => array(),
+			'fields'  => false
 		);
 
 		$args  = wp_parse_args( $args, $defaults );
 
+		$cache_args = $args;
+		$cache_args['date'] = implode( ',', $args['date'] );
+		$cache_key = md5( implode( ',', $cache_args ) );
+
 		$where = '';
 
+		// payments for specific users
 		if( ! empty( $args['user_id'] ) ) {
 
 			if( is_array( $args['user_id'] ) )
@@ -219,21 +225,20 @@ class RCP_Payments {
 			}
 		}
 
-		if( $args['number'] > 0 ) {
-
-			$payments = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $this->db_name . " {$where}ORDER BY id DESC LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
-
+		// Fields to return
+		if( $args['fields'] ) {
+			$fields = $args['fields'];
 		} else {
-
-			// when retrieving all payments, the query is cached
-			$payments = get_transient( 'rcp_payments' );
-
-			if( $payments === false ) {
-				$payments = $wpdb->get_results( "SELECT * FROM " . $wpdb->escape( $rcp_payments_db_name ) . " {$where}ORDER BY id DESC;" ); // this is to get all payments
-				set_transient( 'rcp_payments', $payments, 10800 );
-			}
-
+			$fields = '*';
 		}
+
+		$payments = get_transient( $cache_key );
+
+		if( $payments === false ) {
+			$payments = $wpdb->get_results( $wpdb->prepare( "SELECT {$fields} FROM " . $this->db_name . " {$where}ORDER BY id DESC LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
+			set_transient( $cache_key, $payments, 10800 );
+		}
+
 
 		return $payments;
 
