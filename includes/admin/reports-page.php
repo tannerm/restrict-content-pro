@@ -86,8 +86,8 @@ function rcp_earnings_graph() {
 	$time_format 	= apply_filters( 'rcp_graph_timeformat', $time_format );
 	$tick_size 		= apply_filters( 'rcp_graph_ticksize', $tick_size );
 	$earnings 		= (float) 0.00; // Total earnings for time period shown
-
-	$payments_db = new RCP_Payments;
+	$subscription   = isset( $_GET['subscription'] ) ? absint( $_GET['subscription'] ) : false;
+	$payments_db    = new RCP_Payments;
 
 	ob_start(); ?>
 	<script type="text/javascript">
@@ -116,7 +116,7 @@ function rcp_earnings_graph() {
 		   							'fields' => 'amount'
 		   						);
 
-								$payments = $payments_db->get_earnings_by_date( $day, $month, $dates['year'] );
+								$payments = $payments_db->get_earnings_by_date( $subscription, $day, $month, $dates['year'] );
 								$earnings += $payments;
 								$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ); ?>
 								[<?php echo $date * 1000; ?>, <?php echo $payments; ?>],
@@ -146,7 +146,7 @@ function rcp_earnings_graph() {
 										$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
 										$d 				= 1;
 										while ( $d <= $num_of_days ) :
-											$payments = $payments_db->get_earnings_by_date( $d, $i, $y );
+											$payments = $payments_db->get_earnings_by_date( $subscription, $d, $i, $y );
 											$earnings += $payments;
 											$date = mktime( 0, 0, 0, $i, $d, $y ); ?>
 											[<?php echo $date * 1000; ?>, <?php echo $payments; ?>],
@@ -154,7 +154,7 @@ function rcp_earnings_graph() {
 										$d++;
 										endwhile;
 									else :
-										$payments = $payments_db->get_earnings_by_date( null, $i, $y );
+										$payments = $payments_db->get_earnings_by_date( $subscription, null, $i, $y );
 										$earnings += $payments;
 										$date = mktime( 0, 0, 0, $i, 1, $y );
 										?>
@@ -428,12 +428,10 @@ function rcp_reports_graph_controls() {
 		'other'			=> __( 'Custom', 'rcp' )
 	) );
 
-	$dates = rcp_get_report_dates();
-
-	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
-
-	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'earnings';
-
+	$dates          = rcp_get_report_dates();
+	$display        = $dates['range'] == 'other' ? '' : 'style="display:none;"';
+	$active_tab     = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'earnings';
+	$selected_level = isset( $_GET['subscription'] ) ? absint( $_GET['subscription'] ) : false;
 	?>
 	<form id="rcp-garphs-filter" method="get">
 		<div class="tablenav top">
@@ -473,6 +471,15 @@ function rcp_reports_graph_controls() {
 				       	<?php endfor; ?>
 			       	</select>
 			    </div>
+
+				<?php if( 'earnings' == $active_tab ) : $levels = rcp_get_subscription_levels(); ?>
+					<select id="rcp-graphs-subscriptions" name="subscription">
+						<option value="0"><?php _e( 'All Subscription Levels', 'rcp' ); ?></option>
+						<?php foreach( $levels as $level ) : ?>
+							<option value="<?php echo $level->id; ?>"<?php selected( $selected_level, $level->id ); ?>><?php echo $level->name; ?></option>
+						<?php endforeach; ?>
+					</select>
+				<?php endif; ?>
 
 			    <input type="hidden" name="rcp_action" value="" />
 			    <input type="hidden" name="tab" value="<?php echo $active_tab ?>" />

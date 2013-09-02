@@ -173,11 +173,12 @@ class RCP_Payments {
 		global $wpdb;
 
 		$defaults = array(
-			'number'  => 20,
-			'offset'  => 0,
-			'user_id' => 0,
-			'date'    => array(),
-			'fields'  => false
+			'number'       => 20,
+			'offset'       => 0,
+			'subscription' => 0,
+			'user_id'      => 0,
+			'date'         => array(),
+			'fields'       => false
 		);
 
 		$args  = wp_parse_args( $args, $defaults );
@@ -188,6 +189,11 @@ class RCP_Payments {
 
 		$where = '';
 
+		// payments for a specific subscription level
+		if( ! empty( $args['subscription'] ) ) {
+			$where .= "WHERE `subscription`= '{$args['subscription']}' ";
+		}
+
 		// payments for specific users
 		if( ! empty( $args['user_id'] ) ) {
 
@@ -196,7 +202,11 @@ class RCP_Payments {
 			else
 				$user_ids = intval( $args['user_id'] );
 
-			$where .= "WHERE `user_id` IN( {$user_ids} ) ";
+			if( ! empty( $args['subscription'] ) ) {
+				$where .= "`user_id` IN( {$user_ids} ) ";
+			} else {
+				$where .= "WHERE `user_id` IN( {$user_ids} ) ";
+			}
 
 		}
 
@@ -218,7 +228,7 @@ class RCP_Payments {
 				$date_where = $day . " = DAY ( date ) AND " . $date_where;
 			}
 
-			if( ! empty( $args['user_id'] ) ) {
+			if( ! empty( $args['user_id'] ) || ! empty( $args['subscription'] ) ) {
 				$where .= "AND (" . $date_where . ")";
 			} else {
 				$where .= "WHERE ( " . $date_where . " ) ";
@@ -322,8 +332,15 @@ class RCP_Payments {
 	}
 
 
-	public function get_earnings_by_date( $day, $month, $year ) {
+	/**
+	 * Calculate the earnings by date
+	 *
+	 * @access  public
+	 * @since   1.7
+	*/
+	public function get_earnings_by_date( $subscription = false, $day, $month, $year ) {
 		$args = array(
+			'subscription' => $subscription,
 			'date' => array(
 				'day'   => $day,
 				'month' => $month,
