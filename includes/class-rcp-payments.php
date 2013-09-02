@@ -244,11 +244,10 @@ class RCP_Payments {
 
 		$payments = get_transient( $cache_key );
 
-		//if( $payments === false ) {
+		if( $payments === false ) {
 			$payments = $wpdb->get_results( $wpdb->prepare( "SELECT {$fields} FROM " . $this->db_name . " {$where}ORDER BY id DESC LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
 			set_transient( $cache_key, $payments, 10800 );
-		//}
-
+		}
 
 		return $payments;
 
@@ -309,55 +308,77 @@ class RCP_Payments {
 
 		global $wpdb;
 
-		$payments = get_transient( 'rcp_earnings' );
+		$defaults = array(
+			'earnings'     => 1, // Just for the cache key
+			'subscription' => 0,
+			'user_id'      => 0,
+			'date'         => array()
+		);
 
-		if( $payments === false ) {
+		$args = wp_parse_args( $args, $defaults );
 
-			$payments = $wpdb->get_results( "SELECT amount FROM " . $this->db_name . ";" );
-			// cache the earnings amoung
-			set_transient( 'rcp_earnings', $payments, 10800 );
+		$cache_args = $args;
+		$cache_args['date'] = implode( ',', $args['date'] );
+		$cache_key = md5( implode( ',', $cache_args ) );
+
+		$where = '';
+
+		// payments for a specific subscription level
+		if( ! empty( $args['subscription'] ) ) {
+			$where .= "WHERE `subscription`= '{$args['subscription']}' ";
+		}
+
+		// payments for specific users
+		if( ! empty( $args['user_id'] ) ) {
+
+			if( is_array( $args['user_id'] ) )
+				$user_ids = implode( ',', $args['user_id'] );
+			else
+				$user_ids = intval( $args['user_id'] );
+
+			if( ! empty( $args['subscription'] ) ) {
+				$where .= "`user_id` IN( {$user_ids} ) ";
+			} else {
+				$where .= "WHERE `user_id` IN( {$user_ids} ) ";
+			}
 
 		}
 
-		$total = (float) 0.00;
+		// Setup the date query
+		if( ! empty( $args['date'] ) && is_array( $args['date'] ) ) {
 
-		if( $payments ) :
-			foreach( $payments as $payment ) :
-				$total = $total + $payment->amount;
-			endforeach;
-		endif;
+			$day   = ! empty( $args['date']['day'] )   ? absint( $args['date']['day'] )   : null;
+			$month = ! empty( $args['date']['month'] ) ? absint( $args['date']['month'] ) : null;
+			$year  = ! empty( $args['date']['year'] )  ? absint( $args['date']['year'] )  : null;
+			$date_where = '';
 
-		return $total;
+			$date_where .= ! is_null( $year )  ? $year . " = YEAR ( date ) " : '';
 
-	}
+			if( ! is_null( $month ) ) {
+				$date_where = $month  . " = MONTH ( date ) AND " . $date_where;
+			}
 
+			if( ! is_null( $day ) ) {
+				$date_where = $day . " = DAY ( date ) AND " . $date_where;
+			}
 
-	/**
-	 * Calculate the earnings by date
-	 *
-	 * @access  public
-	 * @since   1.7
-	*/
-	public function get_earnings_by_date( $subscription = false, $day, $month, $year ) {
-		$args = array(
-			'date' => array(
-				'day'   => $day,
-				'month' => $month,
-				'year'  => $year
-			),
-			'fields' => 'amount'
-		);
-		$payments = $this->get_payments( $args );
-
-		$total = 0.00;
-		if( $payments ) {
-			foreach( $payments as $payment ) {
-				$total += $payment->amount;
+			if( ! empty( $args['user_id'] ) || ! empty( $args['subscription'] ) ) {
+				$where .= "AND (" . $date_where . ")";
+			} else {
+				$where .= "WHERE ( " . $date_where . " ) ";
 			}
 		}
-		return $total;
-	}
 
+		$earnings = get_transient( $cache_key );
+
+		if( $earnings === false ) {
+			$earnings = $wpdb->get_var( "SELECT SUM(amount) FROM " . $this->db_name . " {$where};" );
+			set_transient( $cache_key, $earnings, 10800 );
+		}
+
+		return round( $earnings, 2 );
+
+	}
 
 	/**
 	 * Retrieves the last payment made by a user

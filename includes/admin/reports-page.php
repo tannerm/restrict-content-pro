@@ -89,6 +89,11 @@ function rcp_earnings_graph() {
 	$subscription   = isset( $_GET['subscription'] ) ? absint( $_GET['subscription'] ) : false;
 	$payments_db    = new RCP_Payments;
 
+	$args = array(
+		'subscription' => $subscription,
+		'date' => array()
+	);
+
 	ob_start(); ?>
 	<script type="text/javascript">
 	   jQuery( document ).ready( function($) {
@@ -116,7 +121,8 @@ function rcp_earnings_graph() {
 		   							'fields' => 'amount'
 		   						);
 
-								$payments = $payments_db->get_earnings_by_date( $subscription, $day, $month, $dates['year'] );
+		   						$args['date'] = array( 'day' => $day, 'month' => $month, 'year' => $dates['year'] );
+								$payments = $payments_db->get_earnings( $args );
 								$earnings += $payments;
 								$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ); ?>
 								[<?php echo $date * 1000; ?>, <?php echo $payments; ?>],
@@ -146,7 +152,8 @@ function rcp_earnings_graph() {
 										$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
 										$d 				= 1;
 										while ( $d <= $num_of_days ) :
-											$payments = $payments_db->get_earnings_by_date( $subscription, $d, $i, $y );
+											$args['date'] = array( 'day' => $d, 'month' => $i, 'year' => $y );
+											$payments = $payments_db->get_earnings( $args );
 											$earnings += $payments;
 											$date = mktime( 0, 0, 0, $i, $d, $y ); ?>
 											[<?php echo $date * 1000; ?>, <?php echo $payments; ?>],
@@ -154,7 +161,9 @@ function rcp_earnings_graph() {
 										$d++;
 										endwhile;
 									else :
-										$payments = $payments_db->get_earnings_by_date( $subscription, null, $i, $y );
+
+										$args['date'] = array( 'day' => null, 'month' => $i, 'year' => $y );
+										$payments = $payments_db->get_earnings( $args );
 										$earnings += $payments;
 										$date = mktime( 0, 0, 0, $i, 1, $y );
 										?>
