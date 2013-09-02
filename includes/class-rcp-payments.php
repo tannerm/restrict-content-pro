@@ -175,7 +175,8 @@ class RCP_Payments {
 		$defaults = array(
 			'number'  => 20,
 			'offset'  => 0,
-			'user_id' => 0
+			'user_id' => 0,
+			'date'    => array()
 		);
 
 		$args  = wp_parse_args( $args, $defaults );
@@ -191,6 +192,31 @@ class RCP_Payments {
 
 			$where .= "WHERE `user_id` IN( {$user_ids} ) ";
 
+		}
+
+		// Setup the date query
+		if( ! empty( $args['date'] ) && is_array( $args['date'] ) ) {
+
+			$day   = ! empty( $args['date']['day'] )   ? absint( $args['date']['day'] )   : null;
+			$month = ! empty( $args['date']['month'] ) ? absint( $args['date']['month'] ) : null;
+			$year  = ! empty( $args['date']['year'] )  ? absint( $args['date']['year'] )  : null;
+			$date_where = '';
+
+			$date_where .= ! is_null( $year )  ? $year  . " = YEAR ( date ) "                    : '';
+
+			if( ! is_null( $month ) ) {
+				$date_where = $month  . " = MONTH ( date ) AND " . $date_where;
+			}
+
+			if( ! is_null( $day ) ) {
+				$date_where = $day . " = DAY ( date ) AND " . $date_where;
+			}
+
+			if( ! empty( $args['user_id'] ) ) {
+				$where .= "AND (" . $date_where . ")";
+			} else {
+				$where .= "WHERE ( " . $date_where . " ) ";
+			}
 		}
 
 		if( $args['number'] > 0 ) {

@@ -462,3 +462,21 @@ function rcp_is_func_disabled( $function ) {
 
 	return in_array( $function, $disabled );
 }
+
+
+/**
+ * Converts the month number to the month name
+ *
+ * @access public
+ * @since  1.8
+ *
+ * @param  int $n Month number.
+ * @return string The name of the month.
+ */
+if( ! function_exists( 'rcp_month_num_to_name' ) ) {
+	function rcp_month_num_to_name($n) {
+		$timestamp = mktime(0, 0, 0, $n, 1, 2005);
+
+		return date( "M", $timestamp );
+	}
+}
