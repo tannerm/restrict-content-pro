@@ -218,7 +218,7 @@ function rcp_earnings_graph() {
 			<div class="inside">
 				<?php rcp_reports_graph_controls(); ?>
 				<div id="rcp_earnings_graph" style="height: 300px;"></div>
-				<p class="rcp_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'rcp' ); echo rcp_currency_filter( number_format_i18n( $earnings ) ); ?></strong></p>
+				<p class="rcp_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'rcp' ); echo rcp_currency_filter( number_format_i18n( $earnings, 2 ) ); ?></strong></p>
 			</div>
 		</div>
 	</div>
