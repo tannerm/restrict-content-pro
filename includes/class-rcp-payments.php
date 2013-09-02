@@ -53,7 +53,7 @@ class RCP_Payments {
 		global $wpdb;
 
 		$defaults = array(
-			'subscription' 		=> 0,
+			'subscription' 		=> '',
 			'date' 				=> date( 'Y-m-d H:i:s' ),
 			'amount' 			=> 0.00,
 			'user_id' 			=> 0,
@@ -71,10 +71,10 @@ class RCP_Payments {
 		// if insert was succesful, return the payment ID
 		if( $wpdb->insert_id ) {
 			// clear the payment caches
-			delete_transient( 'rcp_payments' );
+
 			delete_transient( 'rcp_earnings' );
 			delete_transient( 'rcp_payments_count' );
-			do_action( 'rcp_insert_payment', $wpdb->insert_id, $args, $amount );
+			do_action( 'rcp_insert_payment', $wpdb->insert_id, $args, $args['amount'] );
 			return $wpdb->insert_id;
 		}
 
@@ -183,10 +183,6 @@ class RCP_Payments {
 
 		$args  = wp_parse_args( $args, $defaults );
 
-		$cache_args = $args;
-		$cache_args['date'] = implode( ',', $args['date'] );
-		$cache_key = md5( implode( ',', $cache_args ) );
-
 		$where = '';
 
 		// payments for a specific subscription level
@@ -242,12 +238,7 @@ class RCP_Payments {
 			$fields = '*';
 		}
 
-		$payments = get_transient( $cache_key );
-
-		if( $payments === false ) {
-			$payments = $wpdb->get_results( $wpdb->prepare( "SELECT {$fields} FROM " . $this->db_name . " {$where}ORDER BY id DESC LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
-			set_transient( $cache_key, $payments, 10800 );
-		}
+		$payments = $wpdb->get_results( $wpdb->prepare( "SELECT {$fields} FROM " . $this->db_name . " {$where}ORDER BY id DESC LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
 
 		return $payments;
 
