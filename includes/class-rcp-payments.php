@@ -340,7 +340,6 @@ class RCP_Payments {
 	*/
 	public function get_earnings_by_date( $subscription = false, $day, $month, $year ) {
 		$args = array(
-			'subscription' => $subscription,
 			'date' => array(
 				'day'   => $day,
 				'month' => $month,
