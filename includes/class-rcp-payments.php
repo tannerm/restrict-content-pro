@@ -279,7 +279,7 @@ class RCP_Payments {
 		$count = get_transient( $key );
 
 		if( $count === false ) {
-			$count = $wpdb->get_var( "SELECT COUNT(*) FROM " . $this->db_name . "{$where};" );
+			$count = $wpdb->get_var( "SELECT COUNT(ID) FROM " . $this->db_name . "{$where};" );
 			set_transient( $key, $count, 10800 );
 		}
 
