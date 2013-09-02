@@ -1,7 +1,8 @@
 <?php
 
-function rcp_admin_scripts($hook) {
-	global $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_help_page;
+function rcp_admin_scripts( $hook ) {
+
+	global $rcp_options, $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_help_page;
 	$pages = array( $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_help_page );
 
 	if( in_array( $hook, $pages ) ) {
@@ -25,7 +26,9 @@ function rcp_admin_scripts($hook) {
 				'deactivate_user'  => __( 'Are you sure you wish to cancel this member\'s subscription?', 'rcp' ),
 				'delete_subscription' => __( 'If you delete this subscription, all members registered with this level will be canceled. Proceed?', 'rcp' ),
 				'delete_payment'      => __( 'Are you sure you want to delete this payment? This action is irreversible. Proceed?', 'rcp' ),
-				'missing_username'    => __( 'You must choose a username', 'rcp' )
+				'missing_username'    => __( 'You must choose a username', 'rcp' ),
+				'currency_sign'      => rcp_currency_filter(''),
+				'currency_pos'       => isset( $rcp_options['currency_position'] ) ? $rcp_options['currency_position'] : 'before',
 			)
 		);
 	}

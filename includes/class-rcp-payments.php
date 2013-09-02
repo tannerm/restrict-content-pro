@@ -208,7 +208,7 @@ class RCP_Payments {
 			$year  = ! empty( $args['date']['year'] )  ? absint( $args['date']['year'] )  : null;
 			$date_where = '';
 
-			$date_where .= ! is_null( $year )  ? $year  . " = YEAR ( date ) "                    : '';
+			$date_where .= ! is_null( $year )  ? $year . " = YEAR ( date ) " : '';
 
 			if( ! is_null( $month ) ) {
 				$date_where = $month  . " = MONTH ( date ) AND " . $date_where;
@@ -319,6 +319,27 @@ class RCP_Payments {
 
 		return $total;
 
+	}
+
+
+	public function get_earnings_by_date( $day, $month, $year ) {
+		$args = array(
+			'date' => array(
+				'day'   => $day,
+				'month' => $month,
+				'year'  => $year
+			),
+			'fields' => 'amount'
+		);
+		$payments = $this->get_payments( $args );
+
+		$total = 0.00;
+		if( $payments ) {
+			foreach( $payments as $payment ) {
+				$total += $payment->amount;
+			}
+		}
+		return $total;
 	}
 
 

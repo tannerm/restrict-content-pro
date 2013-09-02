@@ -7,17 +7,17 @@ jQuery(document).ready(function($) {
 		var url = jQuery.param.fragment();
 
 		//hide all
-		jQuery( '#tab_container .tab_content' ).hide();
-		jQuery( '#tab_container' ).children(".tab_content").hide();
-		jQuery(".nav-tab-wrapper a").removeClass("nav-tab-active");
+		jQuery( '.rcp_options_form #tab_container .tab_content' ).hide();
+		jQuery( '.rcp_options_form #tab_container' ).children(".tab_content").hide();
+		jQuery( '.rcp_options_form .nav-tab-wrapper a' ).removeClass("nav-tab-active");
 
 		//find a href that matches url
 		if (url) {
-			jQuery( '.nav-tab-wrapper a[href="#' + url + '"]' ).addClass( 'nav-tab-active' );
-			jQuery("#tab_container #" + url).addClass("selected").fadeIn();
+			jQuery( '.rcp_options_form  .nav-tab-wrapper a[href="#' + url + '"]' ).addClass( 'nav-tab-active' );
+			jQuery(".rcp_options_form  #tab_container #" + url).addClass("selected").fadeIn();
 		} else {
-			jQuery( 'h2.nav-tab-wrapper a[href="#general"]' ).addClass( 'nav-tab-active' );
-			jQuery("#tab_container #general").addClass("selected").fadeIn();
+			jQuery( '.rcp_options_form  h2.nav-tab-wrapper a[href="#general"]' ).addClass( 'nav-tab-active' );
+			jQuery(".rcp_options_form  #tab_container #general").addClass("selected").fadeIn();
 		}
 	});
 
@@ -67,14 +67,16 @@ jQuery(document).ready(function($) {
 		}
 	});
 	// make columns sortable via drag and drop
-	$(".rcp-subscriptions tbody").sortable({
-		handle: '.dragHandle', items: '.rcp-subscription', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
-			var order = $(this).sortable("serialize") + '&action=update-subscription-order';
-			$.post(ajaxurl, order, function(response) {
-				// response here
-			});
-		}
-	});
+	if( $('.rcp-subscriptions tbody').length ) {
+		$(".rcp-subscriptions tbody").sortable({
+			handle: '.dragHandle', items: '.rcp-subscription', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
+				var order = $(this).sortable("serialize") + '&action=update-subscription-order';
+				$.post(ajaxurl, order, function(response) {
+					// response here
+				});
+			}
+		});
+	}
 	if($('.rcp-help').length) {
 		// prettify the documentation code samples
 		$("pre.php").snippet("php", {style: 'ide-eclipse'});
@@ -124,6 +126,15 @@ jQuery(document).ready(function($) {
 		var login = $(this).data('login');
 		$('#rcp-user').val(login);
 		$('#rcp_user_search_results').html('');
+	});
+
+	$( '#rcp-graphs-date-options' ).change( function() {
+		var $this = $(this);
+		if( $this.val() == 'other' ) {
+			$( '#rcp-date-range-options' ).show();
+		} else {
+			$( '#rcp-date-range-options' ).hide();
+		}
 	});
 
 });

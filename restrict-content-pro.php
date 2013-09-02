@@ -91,6 +91,7 @@ global $rcp_subscriptions_page;
 global $rcp_discounts_page;
 global $rcp_payments_page;
 global $rcp_settings_page;
+global $rcp_reports_page;
 global $rcp_export_page;
 global $rcp_help_page;
 

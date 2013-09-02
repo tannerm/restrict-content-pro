@@ -1,174 +1,450 @@
 <?php
 
+/**
+ * Renders the reports page
+ *
+ * @access  public
+ * @since   1.8
+*/
 function rcp_reports_page() {
-	global $rcp_options, $rcp_db_name, $wpdb;
-	if(isset($_GET['hide_free'])) $hide_free = $_GET['hide_free']; else $hide_free = NULL;
+	$current_page = admin_url( 'admin.php?page=rcp-reports' );
+	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'earnings';
+	?>
+	<div class="wrap">
+		<h2 class="nav-tab-wrapper">
+			<a href="<?php echo add_query_arg( array( 'tab' => 'earnings' ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'earnings' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Earnings', 'rcp' ); ?></a>
+			<a href="<?php echo add_query_arg( array( 'tab' => 'signups' ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'signups' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Signups', 'rcp' ); ?></a>
+			<?php do_action( 'rcp_reports_tabs' ); ?>
+		</h2>
+
+		<?php
+		do_action( 'rcp_reports_page_top' );
+		do_action( 'rcp_reports_tab_' . $active_tab );
+		do_action( 'rcp_reports_page_bottom' );
+		?>
+	</div><!-- .wrap -->
+	<?php
+}
+
+/**
+ * Displays the earnings graph.
+ *
+ * @access  public
+ * @since   1.8
+*/
+function rcp_earnings_graph() {
+	global $rcp_options, $wpdb;
+
+	// Retrieve the queried dates
+	$dates = rcp_get_report_dates();
+
+	// Determine graph options
+	switch ( $dates['range'] ) :
+		case 'today' :
+			$time_format 	= '%d/%b';
+			$tick_size		= 'hour';
+			$day_by_day		= true;
+			break;
+		case 'last_year' :
+			$time_format 	= '%b';
+			$tick_size		= 'month';
+			$day_by_day		= false;
+			break;
+		case 'this_year' :
+			$time_format 	= '%b';
+			$tick_size		= 'month';
+			$day_by_day		= false;
+			break;
+		case 'last_quarter' :
+			$time_format	= '%b';
+			$tick_size		= 'month';
+			$day_by_day 	= false;
+			break;
+		case 'this_quarter' :
+			$time_format	= '%b';
+			$tick_size		= 'month';
+			$day_by_day 	= false;
+			break;
+		case 'other' :
+			if( ( $dates['m_end'] - $dates['m_start'] ) >= 2 ) {
+				$time_format	= '%b';
+				$tick_size		= 'month';
+				$day_by_day 	= false;
+			} else {
+				$time_format 	= '%d/%b';
+				$tick_size		= 'day';
+				$day_by_day 	= true;
+			}
+			break;
+		default:
+			$time_format 	= '%d/%b'; 	// Show days by default
+			$tick_size		= 'day'; 	// Default graph interval
+			$day_by_day 	= true;
+			break;
+	endswitch;
+
+	$time_format 	= apply_filters( 'rcp_graph_timeformat', $time_format );
+	$tick_size 		= apply_filters( 'rcp_graph_ticksize', $tick_size );
+	$earnings 		= (float) 0.00; // Total earnings for time period shown
+
+	$payments_db = new RCP_Payments;
+
 	ob_start(); ?>
-    <script type="text/javascript">
-	    google.load("visualization", "1", {packages:["corechart"]});
-		// sales chart
-	    google.setOnLoadCallback(drawSalesChart);
-	    function drawSalesChart() {
-	        var data = new google.visualization.DataTable();
-	        data.addColumn('string', '<?php _e("Month", "edd"); ?>');
-	        data.addColumn('number', '<?php _e("Earnings", "edd"); ?>');
-	        data.addRows([
-				<?php
-				$i = 1;
-				while($i <= 12) :?>
-					['<?php echo rcp_month_num_to_name($i) . ' ' . date("Y"); ?>',
-					<?php echo rcp_get_earnings_by_date(null, $i, date('Y') ); ?>,
-					],
-					<?php $i++;
-				endwhile;
-				?>
-	        ]);
-
-	        var options = {
-	          	title: "<?php _e('Earnings per month', 'rcpg'); ?>",
-				colors:['#a3bcd3'],
-				fontSize: 12,
-				backgroundColor: '#ffffff'
-	        };
-
-	        var chart = new google.visualization.ColumnChart(document.getElementById('earnings_chart_div'));
-	        chart.draw(data, options);
-	    }
-    </script>
-	<div id="earnings_chart_div"></div>
-
-	<!--earnings per day -->
 	<script type="text/javascript">
-	    google.load("visualization", "1", {packages:["corechart"]});
-		// sales chart
-	    google.setOnLoadCallback(drawSalesChart);
-	    function drawSalesChart() {
-	        var data = new google.visualization.DataTable();
-	        data.addColumn('string', '<?php _e("Day", "edd"); ?>');
-	        data.addColumn('number', '<?php _e("Earnings", "edd"); ?>');
-	        data.addRows([
-				<?php
-				$day = date('d');
-				$month = date('n');
-				$year = date('Y');
-				$num_of_days = cal_days_in_month(CAL_GREGORIAN, $month, $year );
-				$i = 1;
-				while($i <= $num_of_days) :?>
-					['<?php echo date("d", mktime(0, 0, 0, $month, $i, $year)); ?>',
-					<?php echo rcp_get_earnings_by_date($i, $month, $year ); ?>,
-					],
-					<?php $i++;
-				endwhile;
-				?>
-	        ]);
+	   jQuery( document ).ready( function($) {
+	   		$.plot(
+	   			$("#rcp_earnings_graph"),
+	   			[{
+   					data: [
+	   					<?php
 
-	        var options = {
-	          	title: "<?php _e('Earnings per day', 'rcpg'); ?>",
-				colors:['#a3bcd3'],
-				fontSize: 12,
-				backgroundColor: '#ffffff'
-	        };
+	   					if( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
 
-	        var chart = new google.visualization.ColumnChart(document.getElementById('earnings_per_day_chart_div'));
-	        chart.draw(data, options);
-	    }
-    </script>
-	<div id="earnings_per_day_chart_div"></div>
+							//Day by day
+							$day     = $dates['day'];
+							$day_end = $dates['day_end'];
+	   						$month   = $dates['m_start'];
 
-	<!--signups per day graph-->
-	<script type="text/javascript">
-	    google.load("visualization", "1", {packages:["corechart"]});
-		// sales chart
-	    google.setOnLoadCallback(drawSalesChart);
-	    function drawSalesChart() {
-	        var data = new google.visualization.DataTable();
-	        data.addColumn('string', '<?php _e("Day of the month", "rcpg"); ?>');
-	        data.addColumn('number', '<?php _e("Signups", "rcpg"); ?>');
-	        data.addRows([
-				<?php
+							while ( $day <= $day_end ) :
 
-				$year = date('Y');
-				$month = date('n');
-				$day = 1;
-				$days_in_this_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-				while($day <= $days_in_this_month) {
-					$users = $wpdb->get_results( $wpdb->prepare("SELECT ID FROM $wpdb->users WHERE (%d = MONTH ( user_registered ) AND %d = YEAR ( user_registered ) AND %d = DAY ( user_registered ))", $month, $year, $day ) );?>
-					['<?php echo date( "jS", strtotime( $month . "/" . $day . "/" . $year ) ); ?>',
-						<?php echo count($users); ?>,
-					],
-					<?php
-					$day++;
-				}
-				?>
-	        ]);
+		   						$args = array(
+		   							'date' => array(
+		   								'day'   => $day,
+		   								'month' => $month,
+		   								'year'  => $dates['year']
+		   							),
+		   							'fields' => 'amount'
+		   						);
 
-	        var options = {
-	          	title: "<?php _e( 'Signups per day (for current month)', 'rcpg' ); ?>",
-				colors:['#a3bcd3'],
-				fontSize: 12,
-				backgroundColor: '#ffffff'
-	        };
+								$payments = $payments_db->get_earnings_by_date( $day, $month, $dates['year'] );
+								$earnings += $payments;
+								$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ); ?>
+								[<?php echo $date * 1000; ?>, <?php echo $payments; ?>],
+								<?php
+								$day++;
+							endwhile;
 
-	        var chart = new google.visualization.ColumnChart(document.getElementById('signups_per_day'));
-	        chart.draw(data, options);
-	    }
-    </script>
-	<div id="signups_per_day"></div>
-
-	<script type="text/javascript">
-	    google.load("visualization", "1", {packages:["corechart"]});
-		// sales chart
-	    google.setOnLoadCallback(drawSalesChart);
-	    function drawSalesChart() {
-	        var data = new google.visualization.DataTable();
-	        data.addColumn('string', '<?php _e("Subscription Level", "rcpg"); ?>');
-	        data.addColumn('number', '<?php _e("Users", "rcpg"); ?>');
-	        data.addRows([
-				<?php
-				if(isset($_GET['hide_free']) && $_GET['hide_free'] == 'yes') {
-					$levels = $wpdb->get_results("SELECT * FROM " . $rcp_db_name . " WHERE `price` > 0 OR `duration` > 0 ORDER BY list_order;");
-				} else {
-					$levels = $wpdb->get_results("SELECT * FROM " . $rcp_db_name . " ORDER BY list_order;");
-				}
-				$i = 1;
-				if($levels) :
-					foreach($levels as $level) : ?>
-						['<?php echo rcp_get_subscription_name($level->id); ?>',
-						<?php if($level->price > 0 || $level->duration > 0) {
-							echo rcp_count_members($level->id, 'active');
 						} else {
-							echo rcp_count_members($level->id, 'free');
-						} ?>,
-						],
-						<?php
-					endforeach;
-				endif;
 
-				?>
-	        ]);
+							$y = $dates['year'];
+							while( $y <= $dates['year_end'] ) :
 
-	        var options = {
-	          	title: "<?php _e('Members per subscription level', 'rcpg'); ?>",
-				colors:['#a3bcd3'],
-				fontSize: 12,
-				backgroundColor: '#ffffff'
-	        };
+								if( $dates['year'] == $dates['year_end'] ) {
+									$month_start = $dates['m_start'];
+									$month_end   = $dates['m_end'];
+								} elseif( $y == $dates['year'] ) {
+									$month_start = $dates['m_start'];
+									$month_end   = 12;
+								} else {
+									$month_start = 1;
+									$month_end   = 12;
+								}
 
-	        var chart = new google.visualization.ColumnChart(document.getElementById('members_chart_div'));
-	        chart.draw(data, options);
-	    }
+								$i = $month_start;
+								while ( $i <= $month_end ) :
+									if ( $day_by_day ) :
+										$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
+										$d 				= 1;
+										while ( $d <= $num_of_days ) :
+											$payments = $payments_db->get_earnings_by_date( $d, $i, $y );
+											$earnings += $payments;
+											$date = mktime( 0, 0, 0, $i, $d, $y ); ?>
+											[<?php echo $date * 1000; ?>, <?php echo $payments; ?>],
+										<?php
+										$d++;
+										endwhile;
+									else :
+										$payments = $payments_db->get_earnings_by_date( null, $i, $y );
+										$earnings += $payments;
+										$date = mktime( 0, 0, 0, $i, 1, $y );
+										?>
+										[<?php echo $date * 1000; ?>, <?php echo $payments; ?>],
+									<?php
+									endif;
+									$i++;
+								endwhile;
+
+								$y++;
+							endwhile;
+
+	   					}
+
+	   					?>,
+	   				],
+	   				yaxis: 2,
+   					label: "<?php _e( 'Earnings', 'rcp' ); ?>",
+   					id: 'sales'
+   				}],
+	   		{
+               	series: {
+                   lines: { show: true },
+                   points: { show: true }
+            	},
+            	grid: {
+           			show: true,
+					aboveData: false,
+					color: '#ccc',
+					backgroundColor: '#fff',
+					borderWidth: 2,
+					borderColor: '#ccc',
+					clickable: false,
+					hoverable: true
+           		},
+            	xaxis: {
+	   				mode: "time",
+	   				timeFormat: "<?php echo $time_format; ?>",
+	   				minTickSize: [1, "<?php echo $tick_size; ?>"]
+   				},
+   				yaxis: [
+   					{ min: 0, tickSize: 1, tickDecimals: 2 },
+   					{ min: 0, tickDecimals: 0 }
+   				]
+
+            });
+	   });
     </script>
-	<div id="members_chart_div"></div>
-	<form id="user-type-filter" action="" method="get" style="float: right; margin: 0 30px 0 0;">
-		<input type="hidden" name="page" value="rcp-graphs"/>
-		<label for="rcp_hide_free"><?php _e('Hide Free Subscriptions', 'rcp'); ?></label>
-		<select id="rcp_hide_free" name="hide_free">
-			<option value="no" <?php selected($hide_free, ''); ?>><?php _e('No', 'rcpg'); ?></option>
-			<option value="yes" <?php selected($hide_free, 'yes'); ?>><?php _e('Yes', 'rcpg'); ?></option>
-		</select>
-		<input type="submit" class="button-secondary" value="<?php _e('Filter', 'rcpg'); ?>"/>
-	</form>
-
+	<h2><?php _e( 'Earnings Reports', 'rcp' ); ?></h2>
+	<div class="metabox-holder" style="padding-top: 0;">
+		<div class="postbox">
+			<div class="inside">
+				<?php rcp_reports_graph_controls(); ?>
+				<div id="rcp_earnings_graph" style="height: 300px;"></div>
+				<p class="rcp_graph_totals"><strong><?php _e( 'Total earnings for period shown: ', 'rcp' ); echo rcp_currency_filter( $earnings ); ?></strong></p>
+			</div>
+		</div>
+	</div>
 	<?php
 	echo ob_get_clean();
 }
+add_action( 'rcp_reports_tab_earnings', 'rcp_earnings_graph' );
+
+/**
+ * Show report graph date filters
+ *
+ * @since 1.8
+ * @return void
+*/
+function rcp_reports_graph_controls() {
+	$date_options = apply_filters( 'rcp_report_date_options', array(
+		'this_week' 	=> __( 'This Week', 'rcp' ),
+		'last_week' 	=> __( 'Last Week', 'rcp' ),
+		'this_month' 	=> __( 'This Month', 'rcp' ),
+		'last_month' 	=> __( 'Last Month', 'rcp' ),
+		'this_quarter'	=> __( 'This Quarter', 'rcp' ),
+		'last_quarter'	=> __( 'Last Quarter', 'rcp' ),
+		'this_year'		=> __( 'This Year', 'rcp' ),
+		'last_year'		=> __( 'Last Year', 'rcp' ),
+		'other'			=> __( 'Custom', 'rcp' )
+	) );
+
+	$dates = rcp_get_report_dates();
+
+	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
+
+	?>
+	<form id="rcp-garphs-filter" method="get">
+		<div class="tablenav top">
+			<div class="alignleft actions">
+
+		       	<input type="hidden" name="page" value="rcp-reports"/>
+
+		       	<select id="rcp-graphs-date-options" name="range">
+		       		<?php
+		       		foreach ( $date_options as $key => $option ) {
+		       			echo '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $dates['range'] ) . '>' . esc_html( $option ) . '</option>';
+		       		}
+		       		?>
+		       	</select>
+
+		       	<div id="rcp-date-range-options" <?php echo $display; ?>>
+					<span><?php _e( 'From', 'rcp' ); ?>&nbsp;</span>
+			       	<select id="rcp-graphs-month-start" name="m_start">
+			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
+			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo rcp_month_num_to_name( $i ); ?></option>
+				       	<?php endfor; ?>
+			       	</select>
+			       	<select id="rcp-graphs-year" name="year">
+			       		<?php for ( $i = 2007; $i <= $dates['year_end']; $i++ ) : ?>
+			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
+				       	<?php endfor; ?>
+			       	</select>
+			       	<span><?php _e( 'To', 'rcp' ); ?>&nbsp;</span>
+			       	<select id="rcp-graphs-month-start" name="m_end">
+			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
+			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo rcp_month_num_to_name( $i ); ?></option>
+				       	<?php endfor; ?>
+			       	</select>
+			       	<select id="rcp-graphs-year" name="year_end">
+			       		<?php for ( $i = 2007; $i <= $dates['year_end']; $i++ ) : ?>
+			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year_end'] ); ?>><?php echo $i; ?></option>
+				       	<?php endfor; ?>
+			       	</select>
+			    </div>
+
+			    <input type="hidden" name="rcp_action" value="filter_reports" />
+		       	<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'rcp' ); ?>"/>
+			</div>
+		</div>
+	</form>
+	<?php
+}
+
+/**
+ * Sets up the dates used to filter graph data
+ *
+ * Date sent via $_GET is read first and then modified (if needed) to match the
+ * selected date-range (if any)
+ *
+ * @since 1.8
+ * @return void
+*/
+function rcp_get_report_dates() {
+	$dates = array();
+
+	// Make sure the reports are based off of the correct timezone
+	date_default_timezone_set( rcp_get_timezone_id() );
+
+	$dates['range']      = isset( $_GET['range'] )   ? $_GET['range']   : 'this_month';
+	$dates['day']        = isset( $_GET['day'] )     ? $_GET['day']     : null;
+	$dates['m_start']    = isset( $_GET['m_start'] ) ? $_GET['m_start'] : 1;
+	$dates['m_end']      = isset( $_GET['m_end'] )   ? $_GET['m_end']   : 12;
+	$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
+	$dates['year_end']   = isset( $_GET['y_end'] )   ? $_GET['y_end']   : date( 'Y' );
+
+	// Modify dates based on predefined ranges
+	switch ( $dates['range'] ) :
+
+		case 'this_month' :
+			$dates['m_start'] 	= date( 'n' );
+			$dates['m_end']		= date( 'n' );
+			$dates['year']		= date( 'Y' );
+		break;
+
+		case 'last_month' :
+			if( $dates['m_start'] == 12 ) {
+				$dates['m_start'] = 12;
+				$dates['m_end']	  = 12;
+				$dates['year']    = date( 'Y' ) - 1;
+				$dates['year_end']= date( 'Y' ) - 1;
+			} else {
+				$dates['m_start'] = date( 'n' ) - 1;
+				$dates['m_end']	  = date( 'n' ) - 1;
+				$dates['year']    = date( 'Y' );
+			}
+		break;
+
+		case 'this_week' :
+			$dates['day']       = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 1;
+			$dates['day']      += get_option( 'start_of_week' );
+			$dates['day_end']   = $dates['day'] + 6;
+			$dates['m_start'] 	= date( 'n' );
+			$dates['m_end']		= date( 'n' );
+			$dates['year']		= date( 'Y' );
+		break;
+
+		case 'last_week' :
+			$dates['day']       = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 8;
+			$dates['day']      += get_option( 'start_of_week' );
+			$dates['day_end']   = $dates['day'] + 6;
+			$dates['m_start'] 	= date( 'n' );
+			$dates['m_end']		= date( 'n' );
+			$dates['year']		= date( 'Y' );
+		break;
+
+		case 'this_quarter' :
+			$month_now = date( 'n' );
+
+			if ( $month_now <= 3 ) {
+
+				$dates['m_start'] 	= 1;
+				$dates['m_end']		= 3;
+				$dates['year']		= date( 'Y' );
+
+			} else if ( $month_now <= 6 ) {
+
+				$dates['m_start'] 	= 4;
+				$dates['m_end']		= 6;
+				$dates['year']		= date( 'Y' );
+
+			} else if ( $month_now <= 9 ) {
+
+				$dates['m_start'] 	= 7;
+				$dates['m_end']		= 9;
+				$dates['year']		= date( 'Y' );
+
+			} else {
+
+				$dates['m_start'] 	= 10;
+				$dates['m_end']		= 12;
+				$dates['year']		= date( 'Y' );
+
+			}
+		break;
+
+		case 'last_quarter' :
+			$month_now = date( 'n' );
+
+			if ( $month_now <= 3 ) {
+
+				$dates['m_start'] 	= 10;
+				$dates['m_end']		= 12;
+				$dates['year']		= date( 'Y' ) - 1; // Previous year
+
+			} else if ( $month_now <= 6 ) {
+
+				$dates['m_start'] 	= 1;
+				$dates['m_end']		= 3;
+				$dates['year']		= date( 'Y' );
+
+			} else if ( $month_now <= 9 ) {
+
+				$dates['m_start'] 	= 4;
+				$dates['m_end']		= 6;
+				$dates['year']		= date( 'Y' );
+
+			} else {
+
+				$dates['m_start'] 	= 7;
+				$dates['m_end']		= 9;
+				$dates['year']		= date( 'Y' );
+
+			}
+		break;
+
+		case 'this_year' :
+			$dates['m_start'] 	= 1;
+			$dates['m_end']		= 12;
+			$dates['year']		= date( 'Y' );
+		break;
+
+		case 'last_year' :
+			$dates['m_start'] 	= 1;
+			$dates['m_end']		= 12;
+			$dates['year']		= date( 'Y' ) - 1;
+			$dates['year_end']  = date( 'Y' ) - 1;
+		break;
+
+	endswitch;
+
+	return apply_filters( 'rcp_report_dates', $dates );
+}
+
+/**
+ * Grabs all of the selected date info and then redirects appropriately
+ *
+ * @since 1.8
+ * @return void
+*/
+function rcp_parse_report_dates() {
+
+	if( ! isset( $_GET['rcp_action'] ) )
+		return;
+
+	if( 'filter_reports' != $_GET['rcp_action'] )
+		return;
+
+	$dates = rcp_get_report_dates();
+
+	wp_redirect( add_query_arg( $dates, admin_url( 'admin.php?page=rcp-reports' ) ) ); exit;
+}
+add_action( 'admin_init', 'rcp_parse_report_dates' );

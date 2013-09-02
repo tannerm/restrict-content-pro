@@ -63,7 +63,10 @@ img.help-image { max-width: 99%; overflow: hidden; border: 1px solid #ccc; }
 /* error logs */
 #rcp-error-logs .column-log_error { width: 15%; }
 #rcp-error-logs .column-message { width: 65%; }
-
+/* reports */
+#rcp-graphs-date-options,
+#rcp-date-range-options { float: left; }
+#rcp-date-range-options span { float: left; margin-right: 6px; height: 24px; line-height: 24px; }
 
 /* Optimized for 1280px wide (macbooks) and under */
 @media (max-width: 1280px) {
