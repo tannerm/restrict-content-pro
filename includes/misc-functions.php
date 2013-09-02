@@ -470,8 +470,8 @@ function rcp_is_func_disabled( $function ) {
  * @param  int $n Month number.
  * @return string The name of the month.
  */
-if( ! function_exists( 'rcp_month_num_to_name' ) ) {
-	function rcp_month_num_to_name($n) {
+if( ! function_exists( 'rcp_get_month_name' ) ) {
+	function rcp_get_month_name($n) {
 		$timestamp = mktime(0, 0, 0, $n, 1, 2005);
 
 		return date( "M", $timestamp );

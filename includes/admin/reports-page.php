@@ -451,7 +451,7 @@ function rcp_reports_graph_controls() {
 					<span><?php _e( 'From', 'rcp' ); ?>&nbsp;</span>
 			       	<select id="rcp-graphs-month-start" name="m_start">
 			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo rcp_month_num_to_name( $i ); ?></option>
+			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo rcp_get_month_name( $i ); ?></option>
 				       	<?php endfor; ?>
 			       	</select>
 			       	<select id="rcp-graphs-year" name="year">
@@ -462,7 +462,7 @@ function rcp_reports_graph_controls() {
 			       	<span><?php _e( 'To', 'rcp' ); ?>&nbsp;</span>
 			       	<select id="rcp-graphs-month-start" name="m_end">
 			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo rcp_month_num_to_name( $i ); ?></option>
+			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo rcp_get_month_name( $i ); ?></option>
 				       	<?php endfor; ?>
 			       	</select>
 			       	<select id="rcp-graphs-year" name="year_end">
