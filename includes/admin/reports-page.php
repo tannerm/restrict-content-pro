@@ -90,7 +90,7 @@ function rcp_earnings_graph() {
 	$payments_db    = new RCP_Payments;
 
 	$args = array(
-		'subscription' => $subscription,
+		'subscription' => rcp_get_subscription_name( $subscription ),
 		'date' => array()
 	);
 
