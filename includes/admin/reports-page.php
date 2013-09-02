@@ -203,7 +203,7 @@ function rcp_earnings_graph() {
             });
 	   });
     </script>
-	<h2><?php _e( 'Earnings Reports', 'rcp' ); ?></h2>
+	<h2><?php _e( 'Earnings Report', 'rcp' ); ?></h2>
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
 			<div class="inside">
@@ -217,6 +217,197 @@ function rcp_earnings_graph() {
 	echo ob_get_clean();
 }
 add_action( 'rcp_reports_tab_earnings', 'rcp_earnings_graph' );
+
+/**
+ * Displays the earnings graph.
+ *
+ * @access  public
+ * @since   1.8
+*/
+function rcp_signups_graph() {
+	global $rcp_options, $wpdb;
+
+	// Retrieve the queried dates
+	$dates = rcp_get_report_dates();
+
+	// Determine graph options
+	switch ( $dates['range'] ) :
+		case 'today' :
+			$time_format 	= '%d/%b';
+			$tick_size		= 'hour';
+			$day_by_day		= true;
+			break;
+		case 'last_year' :
+			$time_format 	= '%b';
+			$tick_size		= 'month';
+			$day_by_day		= false;
+			break;
+		case 'this_year' :
+			$time_format 	= '%b';
+			$tick_size		= 'month';
+			$day_by_day		= false;
+			break;
+		case 'last_quarter' :
+			$time_format	= '%b';
+			$tick_size		= 'month';
+			$day_by_day 	= false;
+			break;
+		case 'this_quarter' :
+			$time_format	= '%b';
+			$tick_size		= 'month';
+			$day_by_day 	= false;
+			break;
+		case 'other' :
+			if( ( $dates['m_end'] - $dates['m_start'] ) >= 2 ) {
+				$time_format	= '%b';
+				$tick_size		= 'month';
+				$day_by_day 	= false;
+			} else {
+				$time_format 	= '%d/%b';
+				$tick_size		= 'day';
+				$day_by_day 	= true;
+			}
+			break;
+		default:
+			$time_format 	= '%d/%b'; 	// Show days by default
+			$tick_size		= 'day'; 	// Default graph interval
+			$day_by_day 	= true;
+			break;
+	endswitch;
+
+	$time_format 	= apply_filters( 'rcp_graph_timeformat', $time_format );
+	$tick_size 		= apply_filters( 'rcp_graph_ticksize', $tick_size );
+	$signups 		= 0; // Total signups for time period shown
+
+	$payments_db = new RCP_Payments;
+
+	ob_start(); ?>
+	<script type="text/javascript">
+	   jQuery( document ).ready( function($) {
+	   		$.plot(
+	   			$("#rcp_signups_graph"),
+	   			[{
+   					data: [
+	   					<?php
+
+	   					if( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
+
+							//Day by day
+							$day     = $dates['day'];
+							$day_end = $dates['day_end'];
+	   						$month   = $dates['m_start'];
+
+							while ( $day <= $day_end ) :
+
+		   						$args = array(
+		   							'date' => array(
+		   								'day'   => $day,
+		   								'month' => $month,
+		   								'year'  => $dates['year']
+		   							),
+		   							'fields' => 'amount'
+		   						);
+
+		   						$users = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(ID) FROM $wpdb->users WHERE (%d = MONTH ( user_registered ) AND %d = YEAR ( user_registered ) AND %d = DAY ( user_registered ))", $month, $dates['year'], $day ) );
+								$signups += $users;
+								$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ); ?>
+								[<?php echo $date * 1000; ?>, <?php echo $users; ?>],
+								<?php
+								$day++;
+							endwhile;
+
+						} else {
+
+							$y = $dates['year'];
+							while( $y <= $dates['year_end'] ) :
+
+								if( $dates['year'] == $dates['year_end'] ) {
+									$month_start = $dates['m_start'];
+									$month_end   = $dates['m_end'];
+								} elseif( $y == $dates['year'] ) {
+									$month_start = $dates['m_start'];
+									$month_end   = 12;
+								} else {
+									$month_start = 1;
+									$month_end   = 12;
+								}
+
+								$i = $month_start;
+								while ( $i <= $month_end ) :
+									if ( $day_by_day ) :
+										$num_of_days 	= cal_days_in_month( CAL_GREGORIAN, $i, $y );
+										$d 				= 1;
+										while ( $d <= $num_of_days ) :
+											$users = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(ID) FROM $wpdb->users WHERE (%d = MONTH ( user_registered ) AND %d = YEAR ( user_registered ) AND %d = DAY ( user_registered ))", $i, $y, $d ) );
+											$signups += $users;
+											$date = mktime( 0, 0, 0, $i, $d, $y ); ?>
+											[<?php echo $date * 1000; ?>, <?php echo $users; ?>],
+										<?php
+										$d++;
+										endwhile;
+									else :
+										$users = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(ID) FROM $wpdb->users WHERE (%d = MONTH ( user_registered ) AND %d = YEAR ( user_registered ) )", $i, $y ) );
+										$signups += $users;
+										$date = mktime( 0, 0, 0, $i, 1, $y );
+										?>
+										[<?php echo $date * 1000; ?>, <?php echo $users; ?>],
+									<?php
+									endif;
+									$i++;
+								endwhile;
+
+								$y++;
+							endwhile;
+	   					}
+
+	   					?>,
+	   				],
+	   				yaxis: 2,
+   					label: "<?php _e( 'Earnings', 'rcp' ); ?>",
+   					id: 'sales'
+   				}],
+	   		{
+               	series: {
+                   lines: { show: true },
+                   points: { show: true }
+            	},
+            	grid: {
+           			show: true,
+					aboveData: false,
+					color: '#ccc',
+					backgroundColor: '#fff',
+					borderWidth: 2,
+					borderColor: '#ccc',
+					clickable: false,
+					hoverable: true
+           		},
+            	xaxis: {
+	   				mode: "time",
+	   				timeFormat: "<?php echo $time_format; ?>",
+	   				minTickSize: [1, "<?php echo $tick_size; ?>"]
+   				},
+   				yaxis: [
+   					{ min: 0, tickSize: 1, tickDecimals: 2 },
+   					{ min: 0, tickDecimals: 0 }
+   				]
+
+            });
+	   });
+    </script>
+	<h2><?php _e( 'Signups Report', 'rcp' ); ?></h2>
+	<div class="metabox-holder" style="padding-top: 0;">
+		<div class="postbox">
+			<div class="inside">
+				<?php rcp_reports_graph_controls(); ?>
+				<div id="rcp_signups_graph" style="height: 300px;"></div>
+				<p class="rcp_graph_totals"><strong><?php _e( 'Total signups for period shown: ', 'rcp' ); echo $signups; ?></strong></p>
+			</div>
+		</div>
+	</div>
+	<?php
+	echo ob_get_clean();
+}
+add_action( 'rcp_reports_tab_signups', 'rcp_signups_graph' );
 
 /**
  * Show report graph date filters
@@ -240,6 +431,8 @@ function rcp_reports_graph_controls() {
 	$dates = rcp_get_report_dates();
 
 	$display = $dates['range'] == 'other' ? '' : 'style="display:none;"';
+
+	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'earnings';
 
 	?>
 	<form id="rcp-garphs-filter" method="get">
@@ -281,7 +474,8 @@ function rcp_reports_graph_controls() {
 			       	</select>
 			    </div>
 
-			    <input type="hidden" name="rcp_action" value="filter_reports" />
+			    <input type="hidden" name="rcp_action" value="" />
+			    <input type="hidden" name="tab" value="<?php echo $active_tab ?>" />
 		       	<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'rcp' ); ?>"/>
 			</div>
 		</div>
