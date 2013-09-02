@@ -244,10 +244,10 @@ class RCP_Payments {
 
 		$payments = get_transient( $cache_key );
 
-		if( $payments === false ) {
+		//if( $payments === false ) {
 			$payments = $wpdb->get_results( $wpdb->prepare( "SELECT {$fields} FROM " . $this->db_name . " {$where}ORDER BY id DESC LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
 			set_transient( $cache_key, $payments, 10800 );
-		}
+		//}
 
 
 		return $payments;
