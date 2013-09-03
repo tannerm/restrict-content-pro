@@ -210,6 +210,39 @@ function rcp_earnings_graph() {
    				]
 
             });
+
+			function rcp_flot_tooltip(x, y, contents) {
+		        $('<div id="rcp-flot-tooltip">' + contents + '</div>').css( {
+		            position: 'absolute',
+		            display: 'none',
+		            top: y + 5,
+		            left: x + 5,
+		            border: '1px solid #fdd',
+		            padding: '2px',
+		            'background-color': '#fee',
+		            opacity: 0.80
+		        }).appendTo("body").fadeIn(200);
+		    }
+
+		    var previousPoint = null;
+		    $("#rcp_earnings_graph").bind("plothover", function (event, pos, item) {
+	            if (item) {
+	                if (previousPoint != item.dataIndex) {
+	                    previousPoint = item.dataIndex;
+	                    $("#rcp-flot-tooltip").remove();
+	                    var x = item.datapoint[0].toFixed(2),
+                        y = item.datapoint[1].toFixed(2);
+                    	if( rcp_vars.currency_pos == 'before' ) {
+							rcp_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + rcp_vars.currency_sign + y );
+                    	} else {
+							rcp_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y + rcp_vars.currency_sign );
+                    	}
+	                }
+	            } else {
+	                $("#rcp-flot-tooltip").remove();
+	                previousPoint = null;
+	            }
+		    });
 	   });
     </script>
 	<h2><?php _e( 'Earnings Report', 'rcp' ); ?></h2>
@@ -372,7 +405,7 @@ function rcp_signups_graph() {
 	   					?>,
 	   				],
 	   				yaxis: 2,
-   					label: "<?php _e( 'Earnings', 'rcp' ); ?>",
+   					label: "<?php _e( 'Signups', 'rcp' ); ?>",
    					id: 'sales'
    				}],
 	   		{
@@ -401,6 +434,36 @@ function rcp_signups_graph() {
    				]
 
             });
+
+			function rcp_flot_tooltip(x, y, contents) {
+		        $('<div id="rcp-flot-tooltip">' + contents + '</div>').css( {
+		            position: 'absolute',
+		            display: 'none',
+		            top: y + 5,
+		            left: x + 5,
+		            border: '1px solid #fdd',
+		            padding: '2px',
+		            'background-color': '#fee',
+		            opacity: 0.80
+		        }).appendTo("body").fadeIn(200);
+		    }
+
+		    var previousPoint = null;
+		    $("#rcp_signups_graph").bind("plothover", function (event, pos, item) {
+	            if (item) {
+	                if (previousPoint != item.dataIndex) {
+	                    previousPoint = item.dataIndex;
+	                    $("#rcp-flot-tooltip").remove();
+	                    var x = item.datapoint[0].toFixed(2),
+	                        y = item.datapoint[1].toFixed(2);
+		                rcp_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y.replace( '.00', '' ) );
+	                }
+	            } else {
+	                $("#rcp-flot-tooltip").remove();
+	                previousPoint = null;
+	            }
+		    });
+
 	   });
     </script>
 	<h2><?php _e( 'Signups Report', 'rcp' ); ?></h2>
