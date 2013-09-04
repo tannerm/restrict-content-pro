@@ -18,7 +18,7 @@ function rcp_filter_feed_posts( $content ) {
 			return rcp_format_teaser( $rcp_options['free_message'] );
 		}
 	}
-	return $content;
+	return do_shortcode( $content );
 
 }
 add_action( 'the_excerpt', 'rcp_filter_feed_posts' );
