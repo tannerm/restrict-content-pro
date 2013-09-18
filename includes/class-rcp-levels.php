@@ -161,7 +161,7 @@ class RCP_Levels {
 				sanitize_text_field( $args['name'] ),
 				sanitize_text_field( $args['description'] ),
 				sanitize_text_field( $args['duration'] ),
-				sanitize_text_field( $args['duration_unit'] ),
+				sanitize_text_field( $args['duration-unit'] ),
 				sanitize_text_field( $args['price'] ),
 				absint( $args['level'] ),
 				sanitize_text_field( $args['status'] )
@@ -213,7 +213,7 @@ class RCP_Levels {
 				sanitize_text_field( $args['name'] ),
 				wp_kses( $args['description'], rcp_allowed_html_tags() ),
 				sanitize_text_field( $args['duration'] ),
-				sanitize_text_field( $args['duration_unit'] ),
+				sanitize_text_field( $args['duration-unit'] ),
 				sanitize_text_field( $args['price'] ),
 				absint( $args['level'] ),
 				sanitize_text_field( $args['status'] ),
