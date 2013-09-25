@@ -35,7 +35,7 @@ class RCP_Payments {
 	function __construct() {
 
 		$this->db_name    = rcp_get_payments_db_name();
-		$this->db_version = '1.2';
+		$this->db_version = '1.3';
 
 	}
 
@@ -58,7 +58,8 @@ class RCP_Payments {
 			'amount' 			=> 0.00,
 			'user_id' 			=> 0,
 			'payment_type' 		=> '',
-			'subscription_key' 	=> ''
+			'subscription_key' 	=> '',
+			'transaction_id' 	=> ''
 		);
 
 		$args = wp_parse_args( $payment_data, $defaults );
@@ -66,7 +67,7 @@ class RCP_Payments {
 		if( $this->payment_exists( $args ) )
 			return;
 
-		$wpdb->insert( $this->db_name, $args, array( '%s', '%s', '%s', '%d', '%s', '%s' ) );
+		$wpdb->insert( $this->db_name, $args, array( '%s', '%s', '%s', '%d', '%s', '%s', '%s' ) );
 
 		// if insert was succesful, return the payment ID
 		if( $wpdb->insert_id ) {
@@ -154,7 +155,25 @@ class RCP_Payments {
 
 		global $wpdb;
 
-		$payment = $wpdb->get_row( $wpdb->prepare( "SELECT FROM {$this->db_name} WHERE id = %d", absint( $payment_id ) ) );
+		$payment = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->db_name} WHERE id = %d", absint( $payment_id ) ) );
+
+		return $payment;
+
+	}
+
+
+	/**
+	 * Retrieve a specific payment by a field
+	 *
+	 * @access  public
+	 * @since   1.8.2
+	*/
+
+	public function get_payment_by( $field = 'id', $value = '' ) {
+
+		global $wpdb;
+
+		$payment = $wpdb->get_row( "SELECT * FROM {$this->db_name} WHERE {$field} = {$value}" );
 
 		return $payment;
 
@@ -178,7 +197,8 @@ class RCP_Payments {
 			'subscription' => 0,
 			'user_id'      => 0,
 			'date'         => array(),
-			'fields'       => false
+			'fields'       => false,
+			's'            => ''
 		);
 
 		$args  = wp_parse_args( $args, $defaults );
@@ -236,6 +256,40 @@ class RCP_Payments {
 			$fields = $args['fields'];
 		} else {
 			$fields = '*';
+		}
+
+		if( ! empty( $args['s'] ) ) {
+
+			if( empty( $where ) )
+				$where = "WHERE ";
+			else
+				$where = " AND ";
+
+			// Search by email
+			if( is_email( $args['s'] ) ) {
+
+				$user = get_user_by( 'email', $args['s'] );
+
+				$where .= "`user_id`=$user->ID ";
+
+			} else {
+
+				$levels_db = new RCP_Levels;
+
+				// Search by subscription key
+				if( strlen( $args['s'] ) == 32 ) {
+
+					$where .= "`subscription_key`= '{$args['s']}' ";
+
+				} elseif( $levels_db->get_level_by( 'name', $args['s'] ) ) {
+
+					// Matching subscription level found so search for payments with this level
+					$where .= "`subscription`= '{$args['s']}' ";
+				} else {
+					$where .= "`transaction_id`='{$args['s']}' ";
+				}
+			}
+
 		}
 
 		$payments = $wpdb->get_results( $wpdb->prepare( "SELECT {$fields} FROM " . $this->db_name . " {$where}ORDER BY id DESC LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );

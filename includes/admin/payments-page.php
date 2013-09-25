@@ -28,6 +28,7 @@ function rcp_payments_page() {
 		$rcp_payments  = new RCP_Payments();
 		$page          = isset( $_GET['p'] ) ? $_GET['p'] : 1;
 		$per_page      = 20;
+		$search        = ! empty( $_GET['s'] )       ? urldecode( $_GET['s'] )      : '';
 
 		$user          = get_current_user_id();
 		$screen        = get_current_screen();
@@ -41,10 +42,16 @@ function rcp_payments_page() {
 
 		$user_id       = isset( $_GET['user_id'] ) ? $_GET['user_id'] : 0;
 
-		$payments      = $rcp_payments->get_payments( array( 'offset' => $offset, 'number' => $per_page, 'user_id' => $user_id ) );
+		$payments      = $rcp_payments->get_payments( array( 'offset' => $offset, 'number' => $per_page, 'user_id' => $user_id, 's' => $search ) );
 		$payment_count = $rcp_payments->count( array( 'user_id' => $user_id ) );
 		$total_pages   = ceil( $payment_count / $per_page );
 		?>
+		<form id="rcp-member-search" method="get" action="<?php menu_page_url( 'rcp-payments' ); ?>">
+				<label class="screen-reader-text" for="rcp-member-search-input"><?php _e( 'Search Payments', 'rcp' ); ?></label>
+				<input type="search" id="rcp-member-search-input" name="s" value="<?php echo esc_attr( $search ); ?>"/>
+				<input type="hidden" name="page" value="rcp-payments"/>
+				<input type="submit" name="" id="rcp-member-search-submit" class="button" value="<?php _e( 'Search Payments', 'rcp' ); ?>"/>
+			</form>
 		<p class="total"><strong><?php _e( 'Total Earnings', 'rcp' ); ?>: <?php echo rcp_currency_filter( number_format_i18n( $rcp_payments->get_earnings(), 2 ) ); ?></strong></p>
 		<?php if( ! empty( $user_id ) ) : ?>
 		<p><a href="<?php echo admin_url( 'admin.php?page=rcp-payments' ); ?>" class="button-secondary" title="<?php _e( 'View all payments', 'rcp' ); ?>"><?php _e( 'Reset User Filter', 'rcp' ); ?></a></p>
@@ -59,6 +66,7 @@ function rcp_payments_page() {
 					<th><?php _e( 'Date', 'rcp' ); ?></th>
 					<th style="width: 90px;"><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
+					<th><?php _e( 'Transaction ID', 'rcp' ); ?></th>
 					<th><?php _e( 'Actions', 'rcp' ); ?></th>
 					<?php do_action('rcp_payments_page_table_header'); ?>
 				</tr>
@@ -72,6 +80,7 @@ function rcp_payments_page() {
 					<th><?php _e( 'Date', 'rcp' ); ?></th>
 					<th><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
+					<th><?php _e( 'Transaction ID', 'rcp' ); ?></th>
 					<th><?php _e( 'Actions', 'rcp' ); ?></th>
 					<?php do_action( 'rcp_payments_page_table_footer' ); ?>
 				</tr>
@@ -95,6 +104,7 @@ function rcp_payments_page() {
 								<td><?php echo esc_html( $payment->date ); ?></td>
 								<td><?php echo rcp_currency_filter( $payment->amount ); ?></td>
 								<td><?php echo esc_html( $payment->payment_type ); ?></td>
+								<td><?php echo $payment->transaction_id; ?></td>
 								<td><a href="<?php echo wp_nonce_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ) ), 'rcp_delete_payment_nonce' ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a></td>
 								<?php do_action( 'rcp_payments_page_table_column', $payment->id ); ?>
 							</tr>

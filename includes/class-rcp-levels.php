@@ -61,6 +61,22 @@ class RCP_Levels {
 
 	}
 
+	/**
+	 * Retrieve a specific subscription level from the database
+	 *
+	 * @access  public
+	 * @since   1.8.2
+	*/
+
+	public function get_level_by( $field = 'name', $value = '' ) {
+		global $wpdb;
+
+		$level = $wpdb->get_row( "SELECT * FROM {$this->db_name} WHERE {$field}='{$value}';" );
+
+		return $level;
+
+	}
+
 
 	/**
 	 * Retrieve all subscription levels from the database

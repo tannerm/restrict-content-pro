@@ -112,12 +112,13 @@ function rcp_check_ipn() {
 
 		// setup the payment info in an array for storage
 		$payment_data = array(
-			'date' 				=> date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'] ) ),
-			'subscription' 		=> $posted['item_name'],
-			'payment_type' 		=> $posted['txn_type'],
-			'subscription_key' 	=> $subscription_key,
-			'amount' 			=> $amount,
-			'user_id' 			=> $user_id
+			'date'             => date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'] ) ),
+			'subscription'     => $posted['item_name'],
+			'payment_type'     => $posted['txn_type'],
+			'subscription_key' => $subscription_key,
+			'amount'           => $amount,
+			'user_id'          => $user_id,
+			'transaction_id'   => $posted['txn_id']
 		);
 
 		do_action( 'rcp_valid_ipn', $payment_data, $user_id, $posted );

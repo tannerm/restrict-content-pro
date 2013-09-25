@@ -36,6 +36,15 @@
 					<p class="description"><?php _e( 'Enter the date for this payment in the format of yyyy-mm-dd', 'rcp' ); ?></p>
 				</td>
 			</tr>
+			<tr valign="top">
+				<th scope="row" valign="top">
+					<label for="rcp-date"><?php _e( 'Transaction ID', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<input name="transaction-id" id="rcp-transaction-id" type="text" class="regular-text" value=""/>
+					<p class="description"><?php _e( 'Enter the transaction ID for this payment, if any', 'rcp' ); ?></p>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	<p class="submit">

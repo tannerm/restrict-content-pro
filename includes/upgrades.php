@@ -80,6 +80,11 @@ function rcp_options_upgrade() {
 		update_option( "rcp_payments_db_version", $rcp_payments_db_version );
 	}
 
+	if( ! $wpdb->query( "SELECT `transaction_id` FROM `" . $rcp_payments_db_name . "`" ) ) {
+		$wpdb->query( "ALTER TABLE `" . $rcp_payments_db_name . "` ADD `transaction_id` tinytext" );
+		update_option( 'rcp_payments_db_version', $rcp_payments_db_version );
+	}
+
 }
 register_activation_hook( RCP_PLUGIN_FILE, 'rcp_options_upgrade' );
 

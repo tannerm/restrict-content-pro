@@ -58,6 +58,7 @@ function rcp_options_install() {
 		`user_id` mediumint NOT NULL,
 		`payment_type` tinytext NOT NULL,
 		`subscription_key` mediumtext NOT NULL,
+		`transaction_id` tinytext NOT NULL,
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
