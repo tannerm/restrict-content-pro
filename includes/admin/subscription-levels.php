@@ -61,8 +61,25 @@ function rcp_member_levels_page()
 									}
 								?>
 							</td>
-							<td><?php echo rcp_currency_filter( rcp_get_subscription_price( $level->id ) ); ?></td>
-							<td><?php if($level->price > 0 || $level->duration > 0) { echo rcp_count_members($level->id, 'active'); } else { echo rcp_count_members($level->id, 'free'); } ?></td>
+							<td>
+								<?php
+								$price = rcp_get_subscription_price( $level->id );
+								if( ! $price ) {
+									echo __( 'Free', 'rcp' );
+								} else {
+									echo rcp_currency_filter( $price );
+								}
+								?>
+							</td>
+							<td>
+								<?php
+								if( $price || $level->duration > 0 ) {
+									echo rcp_count_members( $level->id, 'active' );
+								} else {
+									echo rcp_count_members( $level->id, 'free' );
+								}
+								?>
+							</td>
 							<?php do_action('rcp_levels_page_table_column', $level->id); ?>
 							<td>
 								<a href="<?php echo add_query_arg('edit_subscription', $level->id, $page); ?>"><?php _e('Edit', 'rcp'); ?></a> |
