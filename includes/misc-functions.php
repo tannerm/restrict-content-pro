@@ -132,7 +132,9 @@ function rcp_get_currencies() {
 		'CHF' => __( 'Swiss Franc', 'rcp' ),
 		'TWD' => __( 'Taiwan New Dollars', 'rcp' ),
 		'THB' => __( 'Thai Baht', 'rcp' ),
-		'TRY' => __( 'Turkish Lira', 'rcp' )
+		'TRY' => __( 'Turkish Lira', 'rcp' ),
+		'RIAL'=> __( 'Iranian Rial (&#65020;)', 'rcp' ),
+		'RUB' => __( 'Russian Rubles', 'rcp' )
 	);
 	return apply_filters( 'rcp_currencies', $currencies );
 }
