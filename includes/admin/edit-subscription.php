@@ -68,6 +68,15 @@ $level = rcp_get_subscription_details( absint( urldecode( $_GET['edit_subscripti
 			</tr>
 			<tr class="form-field">
 				<th scope="row" valign="top">
+					<label for="rcp-fee"><?php _e( 'Signup Fee', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<input type="text" id="rcp-fee" name="fee" value="<?php echo esc_attr( $level->fee ); ?>" style="width: 40px;"/>
+					<p class="description"><?php _e( 'Optional signup fee to charge subscribers for the first billing cycle.', 'rcp' ); ?></p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
 					<label for="rcp-status"><?php _e( 'Status', 'rcp' ); ?></label>
 				</th>
 				<td>

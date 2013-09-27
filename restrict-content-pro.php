@@ -71,7 +71,7 @@ global $rcp_db_name;
 $rcp_db_name = rcp_get_levels_db_name();
 
 global $rcp_db_version;
-$rcp_db_version = '1.3';
+$rcp_db_version = '1.4';
 
 global $rcp_discounts_db_name;
 $rcp_discounts_db_name = rcp_get_discounts_db_name();

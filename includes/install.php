@@ -13,6 +13,7 @@ function rcp_options_install() {
 		`duration` smallint NOT NULL,
 		`duration_unit` tinytext NOT NULL,
 		`price` tinytext NOT NULL,
+		`fee` tinytext NOT NULL,
 		`list_order` mediumint NOT NULL,
 		`level` mediumint NOT NULL,
 		`status` tinytext NOT NULL,

@@ -19,16 +19,35 @@ function rcp_process_paypal( $subscription_data ) {
 		// recurring paypal payment
 		$paypal_redirect .= 'cmd=_xclick-subscriptions&src=1&sra=1';
 		$paypal_redirect .= '&a3=' . $subscription_data['price'];
+
+		if( ! empty( $subscription_data['fee'] ) ) {
+			$paypal_redirect .= '&a1=' . number_format( $subscription_data['fee'] + $subscription_data['price'], 2 );
+		}
+
 		$paypal_redirect .= '&p3=' . $subscription_data['length'];
+
+		if( ! empty( $subscription_data['fee'] ) ) {
+			$paypal_redirect .= '&p1=' . $subscription_data['length'];
+		}
+
 		switch ( $subscription_data['length_unit'] ) :
 			case "day" :
 				$paypal_redirect .= '&t3=D';
+				if( ! empty( $subscription_data['fee'] ) ) {
+					$paypal_redirect .= '&t1=D';
+				}
 			break;
 			case "month" :
 				$paypal_redirect .= '&t3=M';
+				if( ! empty( $subscription_data['fee'] ) ) {
+					$paypal_redirect .= '&t1=M';
+				}
 			break;
 			case "year" :
 				$paypal_redirect .= '&t3=Y';
+				if( ! empty( $subscription_data['fee'] ) ) {
+					$paypal_redirect .= '&t1=Y';
+				}
 			break;
 		endswitch;
 	} else {

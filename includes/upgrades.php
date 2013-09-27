@@ -61,14 +61,19 @@ function rcp_options_upgrade() {
 		$wpdb->query( "ALTER TABLE `" . $rcp_db_name . "` ADD `status` tinytext" );
 		update_option( 'rcp_db_version', $rcp_db_version );
 	}
-	if(!$wpdb->query( "SELECT `status` FROM `" . $rcp_db_name . "`") ) {
-		$wpdb->query( "ALTER TABLE `" . $rcp_db_name . "` ADD `status` tinytext" );
+	if(!$wpdb->query( "SELECT `fee` FROM `" . $rcp_db_name . "`") ) {
+		$wpdb->query( "ALTER TABLE `" . $rcp_db_name . "` ADD `fee` tinytext" );
 		update_option( 'rcp_db_version', $rcp_db_version );
 	}
 
 	if( version_compare( get_option( 'rcp_db_version' ), '1.3', '<' ) ) {
 		$wpdb->query( "ALTER TABLE " . $rcp_db_name . " MODIFY `duration` smallint" );
 		update_option( "rcp_db_version", $rcp_db_version );
+	}
+
+	if(!$wpdb->query( "SELECT `status` FROM `" . $rcp_db_name . "`") ) {
+		$wpdb->query( "ALTER TABLE `" . $rcp_db_name . "` ADD `status` tinytext" );
+		update_option( 'rcp_db_version', $rcp_db_version );
 	}
 
 	/****************************************

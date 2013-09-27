@@ -59,7 +59,7 @@ function rcp_get_subscription_details_by_name( $name ) {
 function rcp_get_subscription_name( $id ) {
 
 	$levels_db = new RCP_Levels;
-	return $levels_db->get_level_field( $id, 'name' );
+	return stripslashes( $levels_db->get_level_field( $id, 'name' ) );
 }
 
 /*
@@ -100,6 +100,30 @@ function rcp_get_subscription_price( $id ) {
 	if( $price )
 		return $price;
 	return false;
+}
+
+/*
+* Gets the signup fee of a subscription level
+* @param int $id - the ID of the subscription level to retrieve
+* return mixed - signup fee if any, false otherwise
+*/
+function rcp_get_subscription_fee( $id ) {
+	$levels = new RCP_Levels();
+	$fee = $levels->get_level_field( $id, 'fee' );
+	if( $fee )
+		return $fee;
+	return false;
+}
+
+/*
+* Gets the description of a subscription level
+* @param int $id - the ID of the subscription level to retrieve
+* return mixed - description
+*/
+function rcp_get_subscription_description( $id ) {
+	$levels = new RCP_Levels();
+	$desc = $levels->get_level_field( $id, 'description' );
+	return apply_filters( 'rcp_get_subscription_description', stripslashes( $desc ), $id );
 }
 
 /*

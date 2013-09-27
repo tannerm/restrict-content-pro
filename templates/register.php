@@ -60,9 +60,9 @@ rcp_show_error_messages( 'register' ); ?>
 					<?php if( rcp_show_subscription_level( $level->id ) ) : ?>
 					<li id="rcp_subscription_level_<?php echo $level->id; ?>" class="rcp_subscription_level">
 						<input type="radio" class="required rcp_level" <?php if( $key == 0 || ( isset( $_GET['level']) && $_GET['level'] == $key ) ){ echo 'checked="checked"'; }?> name="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>" value="<?php echo esc_attr( absint( $level->id ) ); ?>" <?php if( $level->duration == 0 ) { echo 'data-duration="forever"'; } ?>/>&nbsp;
-						<span class="rcp_subscription_level_name"><?php echo stripslashes( $level->name ); ?></span><span class="rcp_separator">&nbsp;-&nbsp;</span><span class="rcp_price" rel="<?php echo esc_attr( $level->price ); ?>"><?php echo $level->price > 0 ? rcp_currency_filter( $level->price ) : __( 'free', 'rcp' ); ?><span class="rcp_separator">&nbsp;-&nbsp;</span></span>
+						<span class="rcp_subscription_level_name"><?php echo rcp_get_subscription_name( $level->id ); ?></span><span class="rcp_separator">&nbsp;-&nbsp;</span><span class="rcp_price" rel="<?php echo esc_attr( $level->price ); ?>"><?php echo $level->price > 0 ? rcp_currency_filter( $level->price ) : __( 'free', 'rcp' ); ?><span class="rcp_separator">&nbsp;-&nbsp;</span></span>
 						<span class="rcp_level_duration"><?php echo $level->duration > 0 ? $level->duration . '&nbsp;' . rcp_filter_duration_unit( $level->duration_unit, $level->duration ) : __( 'unlimited', 'rcp' ); ?></span>
-						<div class="rcp_level_description"> <?php echo stripslashes( $level->description ); ?></div>
+						<div class="rcp_level_description"> <?php echo rcp_get_subscription_description( $level->id ); ?></div>
 					</li>
 					<?php endif; ?>
 				<?php endforeach; ?>

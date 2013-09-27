@@ -151,6 +151,7 @@ function rcp_process_registration() {
 
 					$subscription_data = array(
 						'price' 			=> $price,
+						'fee' 			    => ! empty( $subscription->fee ) ? number_format( $subscription->fee, 2 ) : 0,
 						'length' 			=> $expiration->duration,
 						'length_unit' 		=> strtolower( $expiration->duration_unit ),
 						'subscription_name' => $subscription->name,

@@ -40,7 +40,7 @@ class RCP_Levels {
 	function __construct() {
 
 		$this->db_name    = rcp_get_levels_db_name();
-		$this->db_version = '1.2';
+		$this->db_version = '1.4';
 
 	}
 
@@ -153,6 +153,7 @@ class RCP_Levels {
 			'duration'      => 'unlimited',
 			'duration_unit' => 'm',
 			'price'         => '0',
+			'fee'           => '0',
 			'list_order'    => '0',
 			'level' 	    => '0',
 			'status'        => 'inactive'
@@ -170,6 +171,7 @@ class RCP_Levels {
 					`duration`      = '%d',
 					`duration_unit` = '%s',
 					`price`         = '%s',
+					`fee`           = '%s',
 					`list_order`    = '0',
 					`level`         = '%d',
 					`status`        = '%s'
@@ -177,8 +179,9 @@ class RCP_Levels {
 				sanitize_text_field( $args['name'] ),
 				sanitize_text_field( $args['description'] ),
 				sanitize_text_field( $args['duration'] ),
-				sanitize_text_field( $args['duration-unit'] ),
+				sanitize_text_field( $args['duration_unit'] ),
 				sanitize_text_field( $args['price'] ),
+				sanitize_text_field( $args['fee'] ),
 				absint( $args['level'] ),
 				sanitize_text_field( $args['status'] )
 			 )
@@ -221,6 +224,7 @@ class RCP_Levels {
 					`duration`      = '%d',
 					`duration_unit` = '%s',
 					`price`         = '%s',
+					`fee`           = '%s',
 					`list_order`    = '0',
 					`level`         = '%d',
 					`status`        = '%s'
@@ -231,6 +235,7 @@ class RCP_Levels {
 				sanitize_text_field( $args['duration'] ),
 				sanitize_text_field( $args['duration-unit'] ),
 				sanitize_text_field( $args['price'] ),
+				sanitize_text_field( $args['fee'] ),
 				absint( $args['level'] ),
 				sanitize_text_field( $args['status'] ),
 				absint( $args['id'] )
