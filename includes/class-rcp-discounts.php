@@ -403,7 +403,7 @@ class RCP_Discounts {
 		$ret  = false;
 
 		if( ! empty( $max ) && $max > 0 ) {
-			if( $uses < $max ) {
+			if( $uses >= $max ) {
 				$ret = true;
 			}
 		}
