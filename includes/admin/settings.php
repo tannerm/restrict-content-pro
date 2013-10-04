@@ -629,6 +629,8 @@ function rcp_sanitize_settings( $data ) {
 	elseif( ! empty( $data['license_key'] ) )
 		rcp_activate_license();
 
+	do_action( 'rcp_save_settings', $data );
+
 	return $data;
 }
 
