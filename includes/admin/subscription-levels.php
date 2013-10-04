@@ -169,7 +169,7 @@ function rcp_member_levels_page()
 							</th>
 							<td>
 								<input type="text" id="rcp-fee" name="fee" value="" style="width: 40px;"/>
-								<p class="description"><?php _e('Optional signup fee to charge subscribers for the first billing cycle.', 'rcp'); ?></p>
+								<p class="description"><?php _e('Optional signup fee to charge subscribers for the first billing cycle. Enter a negative number to give a discount on the first payment.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr class="form-field">
