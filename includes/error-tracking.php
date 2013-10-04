@@ -10,15 +10,15 @@ function rcp_show_error_messages( $error_id = '' ) {
 		   		if( rcp_errors()->get_error_data( $code ) == $error_id ) {
 
 			        $message = rcp_errors()->get_error_message($code);
-			        
+
 			        do_action( 'rcp_error_before' );
-			        echo '<p class="rcp_error"><span><strong>' . __( 'Error', 'rcp' ) . '</strong>: ' . esc_html( $message ) . '</span></p>';
+			        echo '<p class="rcp_error ' . $code . '"><span><strong>' . __( 'Error', 'rcp' ) . '</strong>: ' . esc_html( $message ) . '</span></p>';
 			        do_action( 'rcp_error_after' );
 		    	}
 		    }
 		echo '</div>';
 		do_action( 'rcp_errors_after' );
-	}	
+	}
 }
 
 // used for tracking error messages
