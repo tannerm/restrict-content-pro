@@ -60,7 +60,7 @@ function rcp_settings_page() {
 								<div class="description"><?php printf( __( 'Enter license key for Restrict Content Pro. This is required for automatic updates and <a href="%s">support</a>.', 'rcp' ), 'http://pippinsplugins.com/support/forum/restrict-content-pro' ); ?></div>
 							</td>
 						</tr>
-						<?php do_action( 'rcp_license_settings' ); ?>
+						<?php do_action( 'rcp_license_settings', $rcp_options ); ?>
 						<tr>
 							<th>
 								<label fo="rcp_settings[currency]"><?php _e( 'Currency', 'rcp' ); ?></label>
