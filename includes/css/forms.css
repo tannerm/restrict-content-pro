@@ -2,7 +2,7 @@
 .rcp_form label { display: block; float: left; width: 280px; }
 .rcp_form input[type="text"], .rcp_form input[type="password"],
 .rcp_form input[type="email"] { padding: 4px 8px; margin: 0; }
-.rcp_form input[type="checkbox"], .rcp_form select { float: left; margin: 5px 8px 0 0; }
+.rcp_form input[type="checkbox"] { float: left; margin: 5px 8px 0 0; }
 .rcp_form input[type="text"]:focus,
 .rcp_form input[type="password"]:focus,
 .rcp_form input[type="email"]:focus { border-color: #aaa; }
