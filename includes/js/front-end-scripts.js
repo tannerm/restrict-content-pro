@@ -77,6 +77,10 @@ jQuery(document).ready(function($) {
 
 	$('#rcp_discount_code').keyup(function(key) {
 		if(key.which != 13) {
+
+			if( $(this).val() == '' )
+				return false;
+
 			var data = {
 				action: 'validate_discount',
 				code: $(this).val(),
