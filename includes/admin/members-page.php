@@ -149,7 +149,7 @@ function rcp_members_page() {
 				if($members) :
 					$i = 1;
 					foreach( $members as $key => $member) : ?>
-						<tr class="rcp_row <?php if(rcp_is_odd($i)) { echo 'alternate'; } ?>">
+						<tr class="rcp_row <?php do_action( 'rcp_member_row_class', $member ); if( rcp_is_odd( $i ) ) { echo ' alternate'; } ?>">
 							<td><a href="<?php echo add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php echo $member->user_login; ?></a></td>
 							<td><?php echo $member->ID; ?></td>
 							<td><?php echo $member->user_email; ?></td>
