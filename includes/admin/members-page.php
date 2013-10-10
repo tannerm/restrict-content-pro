@@ -102,6 +102,7 @@ function rcp_members_page() {
 				<input type="hidden" name="status" value="<?php echo isset($_GET['status']) ? $_GET['status'] : 'active'; ?>"/>
 				<input type="submit" class="button-secondary" value="<?php _e('Filter', 'rcp'); ?>"/>
 			</form>
+			<?php do_action('rcp_members_above_table'); ?>
 			<table class="wp-list-table widefat fixed posts">
 				<thead>
 					<tr>
