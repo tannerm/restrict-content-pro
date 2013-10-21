@@ -225,7 +225,6 @@ class RCP_Levels {
 					`duration_unit` = '%s',
 					`price`         = '%s',
 					`fee`           = '%s',
-					`list_order`    = '0',
 					`level`         = '%d',
 					`status`        = '%s'
 					WHERE `id`    = '%d'
