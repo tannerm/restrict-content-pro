@@ -414,12 +414,12 @@ class RCP_Payments {
 			}
 		}
 
-		//$earnings = get_transient( $cache_key );
+		$earnings = get_transient( $cache_key );
 
-		//if( $earnings === false ) {
+		if( $earnings === false ) {
 			$earnings = $wpdb->get_var( "SELECT SUM(amount) FROM " . $this->db_name . " {$where};" );
 			set_transient( $cache_key, $earnings, 3600 );
-		//}
+		}
 
 		return round( $earnings, 2 );
 
