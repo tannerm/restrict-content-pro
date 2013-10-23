@@ -204,10 +204,11 @@ function rcp_earnings_graph() {
 	   				timeFormat: "<?php echo $time_format; ?>",
 	   				minTickSize: [1, "<?php echo $tick_size; ?>"]
    				},
-   				yaxis: [
-   					{ min: 0, tickSize: 1, tickDecimals: 2 },
-   					{ min: 0, tickDecimals: 0 }
-   				]
+   				yaxis: {
+   					min: 0,
+   					minTickSize: 1,
+   					tickDecimals: 0
+   				}
 
             });
 
