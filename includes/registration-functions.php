@@ -30,6 +30,7 @@ function rcp_process_registration() {
 		$subscription_id = isset( $_POST['rcp_level'] ) ? absint( $_POST['rcp_level'] ) : false;
 		$discount        = isset( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : '';
 		$price           = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
+		$price           = str_replace( ',', '', $price );
 		$expiration      = rcp_get_subscription_length( $subscription_id );
 
 		/***********************
