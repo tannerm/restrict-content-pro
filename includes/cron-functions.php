@@ -22,11 +22,15 @@ function rcp_check_for_expired_users() {
 				'key'    => 'rcp_expiration',
 				'value'  => current_time( 'mysql' ),
 				'type'   => 'DATETIME',
-				'compare'=> '<='
+				'compare'=> '<'
 			),
 			array(
 				'key'    => 'rcp_status',
 				'value'  => 'active'
+			),
+			array(
+				'key'    => 'rcp_recurring',
+				'compare'=> 'NOT EXISTS'
 			)
 		),
 		'number' 		=> 9999,
