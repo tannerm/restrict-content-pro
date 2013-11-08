@@ -25,22 +25,28 @@ function rcp_check_for_expired_users() {
 				'compare'=> '<'
 			),
 			array(
+				'key'    => 'rcp_expiration',
+				'value'  => 'none',
+				'compare'=> '!='
+			),
+			array(
 				'key'    => 'rcp_status',
 				'value'  => 'active'
-			),
+			)/*,
 			array(
 				'key'    => 'rcp_recurring',
 				'compare'=> 'NOT EXISTS'
-			)
+			)*/
 		),
 		'number' 		=> 9999,
 		'count_total' 	=> false,
 		'fields'        => 'ids'
 	);
 
-	$expired_members     = get_users( $args );
-	if( $expired_members ) {
-		foreach( $expired_members as $member ) {
+	$expired_members = new WP_User_Query( $args );
+	//echo '<pre>'; print_r( $expired_members ); echo '</pre>'; exit;
+	if( $expired_members->results ) {
+		foreach( $expired_members->results as $member ) {
 
 			$expiration_date = rcp_get_expiration_timestamp( $member );
 			if( $expiration_date ) {
@@ -55,6 +61,7 @@ function rcp_check_for_expired_users() {
 		}
 	}
 }
+//add_action( 'admin_init', 'rcp_check_for_expired_users' );
 add_action( 'rcp_expired_users_check', 'rcp_check_for_expired_users' );
 
 

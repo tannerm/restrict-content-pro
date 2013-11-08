@@ -84,6 +84,9 @@ function rcp_process_registration() {
 			}
 
 			if( $user_data['need_new'] ) {
+
+				$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
+
 				$user_data['id'] = wp_insert_user( array(
 						'user_login'		=> $user_data['login'],
 						'user_pass'	 		=> $user_data['password'],
@@ -91,7 +94,7 @@ function rcp_process_registration() {
 						'first_name'		=> $user_data['first_name'],
 						'last_name'			=> $user_data['last_name'],
 						'user_registered'	=> date( 'Y-m-d H:i:s' ),
-						'role'				=> apply_filters( 'rcp_default_user_level', $subscription->role, $subscription_id )
+						'role'				=> apply_filters( 'rcp_default_user_level', $role, $subscription_id )
 					)
 				);
 			}
