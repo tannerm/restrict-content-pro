@@ -245,7 +245,7 @@ class RCP_Levels {
 
 		delete_transient( 'rcp_subscription_levels' );
 
-		if( $update )
+		if( $update !== false )
 			return true;
 		return false;
 
