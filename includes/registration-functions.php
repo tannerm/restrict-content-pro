@@ -32,6 +32,7 @@ function rcp_process_registration() {
 		$price           = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
 		$price           = str_replace( ',', '', $price );
 		$expiration      = rcp_get_subscription_length( $subscription_id );
+		$subscription    = rcp_get_subscription_details( $subscription_id );
 
 		/***********************
 		* validate the form
@@ -90,14 +91,11 @@ function rcp_process_registration() {
 						'first_name'		=> $user_data['first_name'],
 						'last_name'			=> $user_data['last_name'],
 						'user_registered'	=> date( 'Y-m-d H:i:s' ),
-						'role'				=> apply_filters( 'rcp_default_user_level', 'subscriber', $subscription_id )
+						'role'				=> apply_filters( 'rcp_default_user_level', $subscription->role, $subscription_id )
 					)
 				);
 			}
 			if( $user_data['id'] ) {
-
-				// get the details of this subscription
-				$subscription = rcp_get_subscription_details( $_POST['rcp_level'] );
 
 				// setup a unique key for this subscription
 				$subscription_key = rcp_generate_subscription_key();

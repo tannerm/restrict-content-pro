@@ -17,6 +17,7 @@ function rcp_options_install() {
 		`list_order` mediumint NOT NULL,
 		`level` mediumint NOT NULL,
 		`status` tinytext NOT NULL,
+		`role` tinytext NOT NULL,
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 

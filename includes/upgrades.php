@@ -76,6 +76,11 @@ function rcp_options_upgrade() {
 		update_option( 'rcp_db_version', $rcp_db_version );
 	}
 
+	if(!$wpdb->query( "SELECT `role` FROM `" . $rcp_db_name . "`") ) {
+		$wpdb->query( "ALTER TABLE `" . $rcp_db_name . "` ADD `role` tinytext" );
+		update_option( 'rcp_db_version', $rcp_db_version );
+	}
+
 	/****************************************
 	* upgrade payments DB
 	****************************************/

@@ -87,6 +87,18 @@ $level = rcp_get_subscription_details( absint( urldecode( $_GET['edit_subscripti
 					<p class="description"><?php _e( 'Members may only sign up for active subscription levels.', 'rcp' ); ?></p>
 				</td>
 			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="rcp-role"><?php _e( 'User Role', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<select name="role" id="rcp-role">
+						<?php wp_dropdown_roles( $level->role ); ?>
+					</select>
+					<p class="description"><?php _e( 'The user role given to the member after signing up.', 'rcp' ); ?></p>
+				</td>
+			</tr>
+			<?php do_action( 'rcp_edit_subscription_form', $level ); ?>
 		</tbody>
 	</table>
 	<p class="submit">

@@ -40,7 +40,7 @@ class RCP_Levels {
 	function __construct() {
 
 		$this->db_name    = rcp_get_levels_db_name();
-		$this->db_version = '1.4';
+		$this->db_version = '1.5';
 
 	}
 
@@ -156,12 +156,15 @@ class RCP_Levels {
 			'fee'           => '0',
 			'list_order'    => '0',
 			'level' 	    => '0',
-			'status'        => 'inactive'
+			'status'        => 'inactive',
+			'role'          => 'subscriber'
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
 		do_action( 'rcp_pre_add_subscription', $args );
+
+		$args = apply_filters( 'rcp_add_subscription_args', $args );
 
 		$add = $wpdb->query(
 			$wpdb->prepare(
@@ -183,7 +186,8 @@ class RCP_Levels {
 				sanitize_text_field( $args['price'] ),
 				sanitize_text_field( $args['fee'] ),
 				absint( $args['level'] ),
-				sanitize_text_field( $args['status'] )
+				sanitize_text_field( $args['status'] ),
+				sanitize_text_field( $args['role'] )
 			 )
 		);
 
@@ -226,8 +230,9 @@ class RCP_Levels {
 					`price`         = '%s',
 					`fee`           = '%s',
 					`level`         = '%d',
-					`status`        = '%s'
-					WHERE `id`    = '%d'
+					`status`        = '%s',
+					`role`          = '%s'
+					WHERE `id`      = '%d'
 				;",
 				sanitize_text_field( $args['name'] ),
 				wp_kses( $args['description'], rcp_allowed_html_tags() ),
@@ -237,6 +242,7 @@ class RCP_Levels {
 				sanitize_text_field( $args['fee'] ),
 				absint( $args['level'] ),
 				sanitize_text_field( $args['status'] ),
+				sanitize_text_field( $args['role'] ),
 				absint( $args['id'] )
 			)
 		);
