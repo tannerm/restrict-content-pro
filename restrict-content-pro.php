@@ -206,7 +206,6 @@ if( is_admin() ) {
 	if( isset( $rcp_options['enable_recaptcha'] ) ) {
 		require_once( RCP_PLUGIN_DIR . 'includes/captcha-functions.php' );
 	}
-	include( RCP_PLUGIN_DIR . 'includes/user-checks.php' );
 	include( RCP_PLUGIN_DIR . 'includes/query-filters.php' );
 	include( RCP_PLUGIN_DIR . 'includes/redirects.php' );
 }
