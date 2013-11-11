@@ -5,74 +5,77 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 	global $rcp_options;
 
 	$user_info = get_userdata($user_id);
-	$admin_email = get_option('admin_email');
 	$message = '';
 	$admin_message = '';
+
+	$admin_emails = array();
+	$admin_emails[] = get_option('admin_email');
+	$admin_emails = apply_filters( 'rcp_admin_notice_emails', $admin_emails );
 
 	$site_name = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
 
 	switch ($status) :
 
 		case "active" :
-			$message = $rcp_options['active_email'];
+			$message = apply_filters( 'rcp_subscription_active_email', $rcp_options['active_email'], $user_id, $status );
 			wp_mail( $user_info->user_email, $rcp_options['active_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name) );
 
 			if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_active_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_email, __('New subscription on ', 'rcp') . $site_name, $admin_message );
+				wp_mail( $admin_emails, __('New subscription on ', 'rcp') . $site_name, $admin_message );
 			}
 		break;
 
 		case "cancelled" :
-			$message = $rcp_options['cancelled_email'];
+			$message = apply_filters( 'rcp_subscription_cancelled_email', $rcp_options['cancelled_email'], $user_id, $status );
 			wp_mail( $user_info->user_email, $rcp_options['cancelled_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name) );
 
 			if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' ' . __('has cancelled their subscription to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Their subscription level was', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_cancelled_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_email, __('Cancelled subscription on ', 'rcp') . $site_name, $admin_message );
+				wp_mail( $admin_emails, __('Cancelled subscription on ', 'rcp') . $site_name, $admin_message );
 			}
 
 		break;
 
 		case "expired" :
-			$message = $rcp_options['expired_email'];
+			$message = apply_filters( 'rcp_subscription_expired_email', $rcp_options['expired_email'], $user_id, $status );
 			wp_mail( $user_info->user_email, $rcp_options['expired_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name) );
 
 			if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name . "'s " . __('subscription has expired', 'rcp') . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_expired_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_email, __('Expired subscription on ', 'rcp') . $site_name, $admin_message );
+				wp_mail( $admin_emails, __('Expired subscription on ', 'rcp') . $site_name, $admin_message );
 			}
 
 		break;
 
 		case "free" :
-			$message = $rcp_options['free_email'];
+			$message = apply_filters( 'rcp_subscription_free_email', $rcp_options['free_email'], $user_id, $status );
 			wp_mail( $user_info->user_email, $rcp_options['free_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name) );
 
 			if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_free_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_email, __('New free subscription on ', 'rcp') . $site_name, $admin_message );
+				wp_mail( $admin_emails, __('New free subscription on ', 'rcp') . $site_name, $admin_message );
 			}
 
 		break;
 
 		case "trial" :
-			$message = $rcp_options['trial_email'];
+			$message = apply_filters( 'rcp_subscription_trial_email', $rcp_options['trial_email'], $user_id, $status );
 			wp_mail( $user_info->user_email, $rcp_options['trial_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name) );
 
 			if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_trial_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_email, __('New trial subscription on ', 'rcp') . $site_name, $admin_message );
+				wp_mail( $admin_emails, __('New trial subscription on ', 'rcp') . $site_name, $admin_message );
 			}
 
 		break;
