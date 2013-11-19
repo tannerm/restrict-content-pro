@@ -4,66 +4,80 @@ function rcp_process_paypal( $subscription_data ) {
 
 	global $rcp_options;
 
-	$paypal_redirect = '';
-	$paypal_email = $rcp_options['paypal_email'];
-	$listener_url = home_url( '/' ) . '?listener=IPN';
-
 	if( isset( $rcp_options['sandbox'] ) ) {
 		$paypal_redirect = 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
 	} else {
 		$paypal_redirect = 'https://www.paypal.com/cgi-bin/webscr/?';
 	}
 
+	// Setup PayPal arguments
+	$paypal_args = array(
+		'business'      => trim( $rcp_options['paypal_email'] ),
+		'email'         => $subscription_data['user_email'],
+		'item_number'   => $subscription_data['key'],
+		'item_name'     => $subscription_data['subscription_name'],
+		'no_shipping'   => '1',
+		'shipping'      => '0',
+		'no_note'       => '1',
+		'currency_code' => $subscription_data['currency'],
+		'charset'       => get_bloginfo( 'charset' ),
+		'custom'        => $subscription_data['user_id'],
+		'rm'            => '2',
+		'return'        => $subscription_data['return_url'],
+		'cancel_return' => home_url(),
+		'notify_url'    => home_url( '/' ) . '?listener=IPN',
+		'cbt'			=> get_bloginfo( 'name' ),
+		'tax'           => 0
+	);
+
+
 	// recurring paypal payment
 	if( $subscription_data['auto_renew'] && ! empty( $subscription_data['length'] ) ) {
 		// recurring paypal payment
-		$paypal_redirect .= 'cmd=_xclick-subscriptions&src=1&sra=1';
-		$paypal_redirect .= '&a3=' . $subscription_data['price'];
+		$paypal_args['cmd'] = '_xclick-subscriptions';
+		$paypal_args['src'] = '1';
+		$paypal_args['sra'] = '1';
+		$paypal_args['a3'] = $subscription_data['price'];
 
 		if( ! empty( $subscription_data['fee'] ) ) {
-			$paypal_redirect .= '&a1=' . number_format( $subscription_data['fee'] + $subscription_data['price'], 2 );
+			$paypal_args['a1'] = number_format( $subscription_data['fee'] + $subscription_data['price'], 2 );
 		}
 
-		$paypal_redirect .= '&p3=' . $subscription_data['length'];
+		$paypal_args['p3'] = $subscription_data['length'];
 
 		if( ! empty( $subscription_data['fee'] ) ) {
-			$paypal_redirect .= '&p1=' . $subscription_data['length'];
+			$paypal_args['p1'] = $subscription_data['length'];
 		}
 
 		switch ( $subscription_data['length_unit'] ) :
 			case "day" :
-				$paypal_redirect .= '&t3=D';
+				$paypal_args['t3'] = 'D';
 				if( ! empty( $subscription_data['fee'] ) ) {
-					$paypal_redirect .= '&t1=D';
+					$paypal_args['t1'] = 'D';
 				}
 			break;
 			case "month" :
-				$paypal_redirect .= '&t3=M';
+				$paypal_args['t3'] = 'M';
 				if( ! empty( $subscription_data['fee'] ) ) {
-					$paypal_redirect .= '&t1=M';
+					$paypal_args['t1'] = 'M';
 				}
 			break;
 			case "year" :
-				$paypal_redirect .= '&t3=Y';
+				$paypal_args['t3'] = 'Y';
 				if( ! empty( $subscription_data['fee'] ) ) {
-					$paypal_redirect .= '&t1=Y';
+					$paypal_args['t1'] = 'Y';
 				}
 			break;
 		endswitch;
 	} else {
 		// one time payment
-		$paypal_redirect .= 'cmd=_xclick&amount=' . $subscription_data['price'];
+		$paypal_args['cmd'] = '_xclick';
+		$paypal_args['amount'] = $subscription_data['price'];
 	}
 
-	$paypal_redirect .= '&business=' . $paypal_email;
-	$paypal_redirect .= '&item_name=' . $subscription_data['subscription_name'];
-	$paypal_redirect .= '&email=' . $subscription_data['user_email'];
-	$paypal_redirect .= '&no_shipping=1&no_note=1&item_number=' . $subscription_data['key'];
-	$paypal_redirect .= '&currency_code=' . $subscription_data['currency'];
-	$paypal_redirect .= '&charset=UTF-8&return=' . urlencode( $subscription_data['return_url'] );
-	$paypal_redirect .= '&notify_url=' . urlencode( $listener_url );
-	$paypal_redirect .= '&rm=2&custom=' . $subscription_data['user_id'];
-	$paypal_redirect .= '&tax=0';
+	$paypal_args = apply_filters( 'rcp_paypal_args', $paypal_args, $subscription_data );
+
+	$paypal_redirect .= http_build_query( $paypal_args );
 
 	// Redirect to paypal
 	header( 'Location: ' . $paypal_redirect );
