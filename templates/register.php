@@ -43,7 +43,7 @@ rcp_show_error_messages( 'register' ); ?>
 		<p id="rcp_password_again_wrap">
 			<label for="password_again"><?php echo apply_filters ( 'rcp_registration_password_again_label', __( 'Password Again', 'rcp' ) ); ?></label>
 			<input name="rcp_user_pass_confirm" id="rcp_password_again" class="required" type="password"/>
-		</p id="rcp_user_login_wrap">
+		</p>
 
 		<?php do_action( 'rcp_after_password_registration_field' ); ?>
 
