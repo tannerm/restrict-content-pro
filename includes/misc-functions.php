@@ -305,6 +305,9 @@ function rcp_no_account_sharing() {
 
 function rcp_set_user_logged_in_status( $logged_in_cookie, $expire, $expiration, $user_id, $status = 'logged_in' ) {
 
+	if( ! rcp_no_account_sharing() )
+		return;
+
 	if ( ! empty( $user_id ) ) :
 
 		$data = get_transient( 'rcp_user_logged_in_' . $user_id );
@@ -330,6 +333,9 @@ add_action( 'set_logged_in_cookie', 'rcp_set_user_logged_in_status', 10, 5 );
 */
 
 function rcp_clear_auth_cookie() {
+
+	if( ! rcp_no_account_sharing() )
+		return;
 
 	$user_id = get_current_user_id();
 
