@@ -656,7 +656,7 @@ function rcp_activate_license() {
 	);
 
 	// Call the custom API.
-	$response = wp_remote_get( add_query_arg( $api_params, 'http://pippinsplugins.com' ), array( 'timeout' => 15, 'sslverify' => false ) );
+	$response = wp_remote_post( 'http://pippinsplugins.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
 	// make sure the response came back okay
 	if ( is_wp_error( $response ) )
@@ -692,7 +692,7 @@ function rcp_deactivate_license() {
 		);
 
 		// Call the custom API.
-		$response = wp_remote_get( add_query_arg( $api_params, 'http://pippinsplugins.com' ), array( 'timeout' => 15, 'sslverify' => false ) );
+		$response = wp_remote_post( 'http://pippinsplugins.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
 		// make sure the response came back okay
 		if ( is_wp_error( $response ) )
