@@ -100,6 +100,7 @@ jQuery(document).ready(function($) {
 					$('.rcp_discount_invalid,#rcp_payment_gateways,.rcp_gateway_fields,#rcp_auto_renew_wrap').hide();
 					$('.rcp_discount_valid').show();
 				}
+				$('body').trigger('rcp_discount_applied', [ response ]);
 			});
 		}
 	});
