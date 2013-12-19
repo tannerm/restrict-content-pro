@@ -97,9 +97,8 @@ jQuery(document).ready(function($) {
 					$('.rcp_discount_valid').show();
 				} else if(response == 'valid and full') {
 					// code is valid
-					$('.rcp_discount_invalid').hide();
+					$('.rcp_discount_invalid,#rcp_payment_gateways,.rcp_gateway_fields,#rcp_auto_renew_wrap').hide();
 					$('.rcp_discount_valid').show();
-					$('#rcp_payment_gateways').hide();
 				}
 			});
 		}
