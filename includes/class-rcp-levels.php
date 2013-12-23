@@ -177,7 +177,8 @@ class RCP_Levels {
 					`fee`           = '%s',
 					`list_order`    = '0',
 					`level`         = '%d',
-					`status`        = '%s'
+					`status`        = '%s',
+					`role`          = '%s'
 				;",
 				sanitize_text_field( $args['name'] ),
 				sanitize_text_field( $args['description'] ),
