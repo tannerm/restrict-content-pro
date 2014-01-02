@@ -85,7 +85,7 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 		} elseif ( $userlevel == 'none' && is_user_logged_in() && $has_access ) {
 		 	return do_shortcode( wpautop( $content ) );
 		} else {
-			return '<div class="rcp_restricted">' . wpautop( $teaser ) . '</div>';
+			return '<div class="rcp_restricted">' . do_shortcode( wpautop( $teaser ) ) . '</div>';
 		}
 	}
 }
