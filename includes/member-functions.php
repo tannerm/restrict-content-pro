@@ -561,10 +561,10 @@ function rcp_process_profile_editor_updates() {
 	$user_id      = get_current_user_id();
 	$old_data     = get_userdata( $user_id );
 
-	$display_name = sanitize_text_field( $_POST['rcp_display_name'] );
-	$first_name   = sanitize_text_field( $_POST['rcp_first_name'] );
-	$last_name    = sanitize_text_field( $_POST['rcp_last_name'] );
-	$email        = sanitize_text_field( $_POST['rcp_email'] );
+	$display_name = ! empty( $_POST['rcp_display_name'] ) ? sanitize_text_field( $_POST['rcp_display_name'] ) : '';
+	$first_name   = ! empty( $_POST['rcp_first_name'] )   ? sanitize_text_field( $_POST['rcp_first_name'] )   : '';
+	$last_name    = ! empty( $_POST['rcp_last_name'] )    ? sanitize_text_field( $_POST['rcp_last_name'] )    : '';
+	$email        = ! empty( $_POST['rcp_email'] )        ? sanitize_text_field( $_POST['rcp_email'] )        : '';
 
 	$userdata = array(
 		'ID'           => $user_id,
