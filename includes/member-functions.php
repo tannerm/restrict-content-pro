@@ -558,7 +558,8 @@ function rcp_process_profile_editor_updates() {
 	if ( ! wp_verify_nonce( $_POST['rcp_profile_editor_nonce'], 'rcp-profile-editor-nonce' ) )
 		return false;
 
-	$user_id = get_current_user_id();
+	$user_id      = get_current_user_id();
+	$old_data     = get_userdata( $user_id );
 
 	$display_name = sanitize_text_field( $_POST['rcp_display_name'] );
 	$first_name   = sanitize_text_field( $_POST['rcp_first_name'] );
@@ -576,6 +577,11 @@ function rcp_process_profile_editor_updates() {
 	// Empty email
 	if ( empty( $email ) || ! is_email( $email ) ) {
 		rcp_errors()->add( 'empty_email', __( 'Please enter a valid email address', 'rcp' ) );
+	}
+
+	// Make sure the new email doesn't belong to another user
+	if( $email != $old_data->user_email && email_exists( $email ) ) {
+		rcp_errors()->add( 'email_exists', __( 'The email you entered belongs to another user. Please use another.', 'rcp' ) );
 	}
 
 	// New password
