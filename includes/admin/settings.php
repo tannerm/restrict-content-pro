@@ -30,7 +30,7 @@ function rcp_settings_page() {
 				<?php _e( 'Restrict Content Pro', 'rcp' ); ?>
 				<a href="#general" class="nav-tab"><?php _e( 'General', 'rcp' ); ?></a>
 				<a href="#messages" class="nav-tab"><?php _e( 'Messages', 'rcp' ); ?></a>
-				<a href="#forms" class="nav-tab"><?php _e( 'Signup Forms', 'rcp' ); ?></a>
+				<a href="#forms" class="nav-tab"><?php _e( 'Signup Form', 'rcp' ); ?></a>
 				<a href="#emails" class="nav-tab"><?php _e( 'Emails', 'rcp' ); ?></a>
 				<a href="#misc" class="nav-tab"><?php _e( 'Misc', 'rcp' ); ?></a>
 				<a href="#logging" class="nav-tab"><?php _e( 'Logging', 'rcp' ); ?></a>
