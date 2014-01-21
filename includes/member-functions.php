@@ -564,7 +564,7 @@ function rcp_process_profile_editor_updates() {
 	$display_name = sanitize_text_field( $_POST['rcp_display_name'] );
 	$first_name   = sanitize_text_field( $_POST['rcp_first_name'] );
 	$last_name    = sanitize_text_field( $_POST['rcp_last_name'] );
-	$email        = sanitize_email( $_POST['rcp_email'] );
+	$email        = sanitize_text_field( $_POST['rcp_email'] );
 
 	$userdata = array(
 		'ID'           => $user_id,
