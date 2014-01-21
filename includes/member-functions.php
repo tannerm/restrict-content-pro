@@ -573,6 +573,11 @@ function rcp_process_profile_editor_updates() {
 		'user_email'   => $email
 	);
 
+	// Empty email
+	if ( empty( $email ) || ! is_email( $email ) ) {
+		rcp_errors()->add( 'empty_email', __( 'Please enter a valid email address', 'rcp' ) );
+	}
+
 	// New password
 	if ( ! empty( $_POST['rcp_new_user_pass1'] ) ) {
 		if ( $_POST['rcp_new_user_pass1'] !== $_POST['rcp_new_user_pass2'] ) {
