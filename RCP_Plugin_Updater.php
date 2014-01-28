@@ -127,7 +127,8 @@ class RCP_Plugin_Updater {
 			'license' 		=> $data['license'],
 			'name' 			=> $data['item_name'],
 			'slug' 			=> $this->slug,
-			'author'		=> $data['author']
+			'author'		=> $data['author'],
+			'url'           => home_url()
 		);
 		$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'ssverify' => false, 'body' => $api_params ) );
 		if ( !is_wp_error( $request ) ):
