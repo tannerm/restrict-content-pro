@@ -166,13 +166,13 @@ if( is_admin() ) {
 	include( RCP_PLUGIN_DIR . 'includes/admin/admin-notices.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/admin-ajax-actions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/screen-options.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin/members-page.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/members/members-page.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/settings.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin/subscription-levels.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin/discount-codes.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/subscriptions/subscription-levels.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/help-menus.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin/payments-page.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin/reports-page.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/payments/payments-page.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/reports/reports-page.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/export.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/logs.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/help-page.php' );
