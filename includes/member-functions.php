@@ -514,6 +514,23 @@ function rcp_get_user_role( $user_id ) {
 	}
 }
 
+/**
+ * Inserts a new note for a user
+ *
+ * @access      public
+ * @since       2.0
+ * @return      void
+ */
+function rcp_add_member_note( $user_id = 0, $note = '' ) {
+	$notes = get_user_meta( $user_id, 'rcp_notes', true );
+	if( ! $notes ) {
+		$notes = '';
+	}
+	$notes .= "\n\n" . date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . '&nbsp;&ndash;&nbsp;' . $note;
+
+	update_user_meta( $user_id, 'rcp_notes', wp_kses( $notes, array() ) );
+}
+
 
 /**
  * Determine if it's possible to upgrade a user's subscription
