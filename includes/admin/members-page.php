@@ -206,7 +206,7 @@ function rcp_members_page() {
 								<label for="rcp-username"><?php _e('Username', 'rcp'); ?></label>
 							</th>
 							<td>
-								<input type="text" name="user" id="rcp-user" class="regular-text rcp-user-search" style="width: 120px;"/>
+								<input type="text" name="user" id="rcp-user" autocomplete="off" class="regular-text rcp-user-search" style="width: 120px;"/>
 								<img class="rcp-ajax waiting" src="<?php echo admin_url('images/wpspin_light.gif'); ?>" style="display: none;"/>
 								<div id="rcp_user_search_results"></div>
 								<p class="description"><?php _e('Begin typing the user name to add a subscription to.', 'rcp'); ?></p>
