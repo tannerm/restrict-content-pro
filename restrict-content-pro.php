@@ -170,13 +170,14 @@ if( is_admin() ) {
 	include( RCP_PLUGIN_DIR . 'includes/admin/settings.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/subscriptions/subscription-levels.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin/help-menus.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/help/help-menus.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/help/help-page.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/payments/payments-page.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/reports/reports-page.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/export.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/logs.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin/help-page.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/metabox.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/categories.php' );
 	include( RCP_PLUGIN_DIR . 'includes/user-page-columns.php' );
 	include( RCP_PLUGIN_DIR . 'includes/process-data.php' );
 	include( RCP_PLUGIN_DIR . 'includes/export-functions.php' );
