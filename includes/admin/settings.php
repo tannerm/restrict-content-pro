@@ -30,7 +30,7 @@ function rcp_settings_page() {
 				<?php _e( 'Restrict Content Pro', 'rcp' ); ?>
 				<a href="#general" class="nav-tab"><?php _e( 'General', 'rcp' ); ?></a>
 				<a href="#messages" class="nav-tab"><?php _e( 'Messages', 'rcp' ); ?></a>
-				<a href="#forms" class="nav-tab"><?php _e( 'Signup Forms', 'rcp' ); ?></a>
+				<a href="#forms" class="nav-tab"><?php _e( 'Signup Form', 'rcp' ); ?></a>
 				<a href="#emails" class="nav-tab"><?php _e( 'Emails', 'rcp' ); ?></a>
 				<a href="#misc" class="nav-tab"><?php _e( 'Misc', 'rcp' ); ?></a>
 				<a href="#logging" class="nav-tab"><?php _e( 'Logging', 'rcp' ); ?></a>
@@ -190,20 +190,24 @@ function rcp_settings_page() {
 					<table class="form-table">
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[front_end_validate]"><?php _e( 'jQuery Validation', 'rcp' ); ?></label>
+								<label for="rcp_settings[registration_page]"><?php _e( 'Registration Page', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<input type="checkbox" value="1" name="rcp_settings[front_end_validate]" id="rcp_settings[front_end_validate]" <?php if(isset($rcp_options['front_end_validate'])) checked('1', $rcp_options['front_end_validate']); ?>/>
-								<span class="description"><?php _e( 'Check this to enable live, front end form validation. If this is disabled, all validation will be done server side and will require a page reload.', 'rcp' ); ?></span>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[disable_css]"><?php _e( 'Disable Form CSS', 'rcp' ); ?></label><br/>
-							</th>
-							<td>
-								<input type="checkbox" value="1" name="rcp_settings[disable_css]" id="rcp_settings[disable_css]" <?php if(isset($rcp_options['disable_css'])) checked('1', $rcp_options['disable_css']); ?>/>
-								<span class="description"><?php _e( 'Check this to disable all included form styling.', 'rcp' ); ?></span>
+								<select id="rcp_settings[registration_page]" name="rcp_settings[registration_page]">
+									<?php
+									if($pages) :
+										foreach ( $pages as $page ) {
+										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['registration_page'], false) . '>';
+											$option .= $page->post_title;
+											$option .= '</option>';
+											echo $option;
+										}
+									else :
+										echo '<option>' . __('No pages found', 'rcp' ) . '</option>';
+									endif;
+									?>
+								</select>
+								<div class="description"><?php _e( 'Choose the page that has the [register_form] short code', 'rcp' ); ?></div>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -230,24 +234,20 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[registration_page]"><?php _e( 'Registration Page', 'rcp' ); ?></label>
+								<label for="rcp_settings[front_end_validate]"><?php _e( 'jQuery Validation', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<select id="rcp_settings[registration_page]" name="rcp_settings[registration_page]">
-									<?php
-									if($pages) :
-										foreach ( $pages as $page ) {
-										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['registration_page'], false) . '>';
-											$option .= $page->post_title;
-											$option .= '</option>';
-											echo $option;
-										}
-									else :
-										echo '<option>' . __('No pages found', 'rcp' ) . '</option>';
-									endif;
-									?>
-								</select>
-								<div class="description"><?php _e( 'Choose the page that has the [register_form] short code', 'rcp' ); ?></div>
+								<input type="checkbox" value="1" name="rcp_settings[front_end_validate]" id="rcp_settings[front_end_validate]" <?php if(isset($rcp_options['front_end_validate'])) checked('1', $rcp_options['front_end_validate']); ?>/>
+								<span class="description"><?php _e( 'Check this to enable live, front end form validation. If this is disabled, all validation will be done server side and will require a page reload.', 'rcp' ); ?></span>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[disable_css]"><?php _e( 'Disable Form CSS', 'rcp' ); ?></label><br/>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[disable_css]" id="rcp_settings[disable_css]" <?php if(isset($rcp_options['disable_css'])) checked('1', $rcp_options['disable_css']); ?>/>
+								<span class="description"><?php _e( 'Check this to disable all included form styling.', 'rcp' ); ?></span>
 							</td>
 						</tr>
 						<tr valign="top">
