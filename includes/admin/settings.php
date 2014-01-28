@@ -652,7 +652,7 @@ function rcp_activate_license() {
 	$api_params = array(
 		'edd_action'=> 'activate_license',
 		'license' 	=> $license,
-		'item_name' => 'Restrict Content Pro' // the name of our product in EDD
+		'item_name' => 'Restrict Content Pro', // the name of our product in EDD
 		'url'       => home_url()
 	);
 
