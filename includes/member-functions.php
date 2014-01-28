@@ -526,7 +526,7 @@ function rcp_add_member_note( $user_id = 0, $note = '' ) {
 	if( ! $notes ) {
 		$notes = '';
 	}
-	$notes .= "\n\n" . date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . '&nbsp;&ndash;&nbsp;' . $note;
+	$notes .= "\n\n" . date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . ' - ' . $note;
 
 	update_user_meta( $user_id, 'rcp_notes', wp_kses( $notes, array() ) );
 }
