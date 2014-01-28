@@ -202,6 +202,37 @@ function rcp_process_data() {
 			wp_safe_redirect( $url ); exit;
 		}
 
+		// edit a payment
+		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-payment' ) {
+
+			$payments = new RCP_Payments();
+
+			$payment_id = absint( $_POST['payment-id'] );
+			$user      = get_user_by( 'login', $_POST['user'] );
+
+			if( $user && $payment_id ) {
+
+				$data = array(
+					'amount'           => sanitize_text_field( $_POST['amount'] ),
+					'user_id'          => $user->ID,
+					'date'             => date( 'Y-m-d H:i:s', strtotime( $_POST['date'] ) ),
+					'subscription'     => rcp_get_subscription( $user->ID ),
+					'subscription_key' => rcp_get_subscription_key( $user->ID ),
+					'transaction_id'   => sanitize_text_field( $_POST['transaction-id'] ),
+				);
+
+				$update = $payments->update( $payment_id, $data );
+
+			}
+
+			if( ! empty( $update ) ) {
+				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_updated' );
+			} else {
+				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_not_updated' );
+			}
+			wp_safe_redirect( $url ); exit;
+		}
+
 	}
 
 	/*************************************

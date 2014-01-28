@@ -123,9 +123,8 @@ class RCP_Payments {
 	public function update( $payment_id = 0, $payment_data = array() ) {
 
 		global $wpdb;
-
-		// TODO
-
+		do_action( 'rcp_update_payment', $payment_id, $payment_data );
+		return $wpdb->update( $this->db_name, $payment_data, array( 'id' => $payment_id ) );
 	}
 
 

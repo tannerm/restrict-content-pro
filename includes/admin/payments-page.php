@@ -15,6 +15,8 @@ function rcp_payments_page() {
 		<?php
 		if( isset( $_GET['view'] ) && 'new-payment' == $_GET['view'] ) :
 			include( 'new-payment.php' );
+		elseif( isset( $_GET['view'] ) && 'edit-payment' == $_GET['view'] ) :
+			include( 'edit-payment.php' );
 		else : ?>
 		<h2>
 			<?php _e( 'Payments', 'rcp' ); ?>
@@ -105,7 +107,10 @@ function rcp_payments_page() {
 								<td><?php echo rcp_currency_filter( $payment->amount ); ?></td>
 								<td><?php echo esc_html( $payment->payment_type ); ?></td>
 								<td><?php echo $payment->transaction_id; ?></td>
-								<td><a href="<?php echo wp_nonce_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ) ), 'rcp_delete_payment_nonce' ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a></td>
+								<td>
+									<a href="<?php echo add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment', 'page' => 'rcp-payments' ), admin_url( 'admin.php' ) ); ?>" class="rcp-edit-payment"><?php _e( 'Edit', 'rcp' ); ?></a>&nbsp;|&nbsp;
+									<a href="<?php echo wp_nonce_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ) ), 'rcp_delete_payment_nonce' ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a>
+								</td>
 								<?php do_action( 'rcp_payments_page_table_column', $payment->id ); ?>
 							</tr>
 						<?php
