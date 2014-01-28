@@ -92,7 +92,6 @@ function rcp_process_data() {
 			$level    = absint( $_POST['level'] );
 			$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 
-			if( isset( $_POST['status'] ) ) rcp_set_status( $user_id, $status );
 
 			update_user_meta( $user_id, 'rcp_expiration', $expiration );
 
@@ -104,6 +103,7 @@ function rcp_process_data() {
 			}
 			if( isset( $_POST['signup_method'] ) ) update_user_meta( $user_id, 'rcp_signup_method', $_POST['signup_method'] );
 			if( isset( $_POST['notes'] ) ) update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
+			if( isset( $_POST['status'] ) ) rcp_set_status( $user_id, $status );
 
 			wp_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id . '&rcp_message=user_updated' ) ); exit;
 		}
