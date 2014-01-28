@@ -162,7 +162,7 @@ if( is_admin() ) {
 
 	require( RCP_PLUGIN_DIR . 'includes/install.php' );
 	include( RCP_PLUGIN_DIR . 'includes/upgrades.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin/menu-links.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/admin-pages.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/admin-notices.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/admin-ajax-actions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/screen-options.php' );
