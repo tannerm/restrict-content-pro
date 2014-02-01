@@ -109,9 +109,19 @@ class RCP_Levels {
 		else
 			$limit = '';
 
-		$levels = $wpdb->get_results( "SELECT * FROM {$this->db_name} {$where} ORDER BY {$args['orderby']}{$limit};" );
+		$cache_key = md5( implode( '|', $args ) . $where );
 
-		if( $levels )
+		$levels = wp_cache_get( $cache_key, 'rcp' );
+
+		if( false === $levels ) {
+
+			$levels = $wpdb->get_results( "SELECT * FROM {$this->db_name} {$where} ORDER BY {$args['orderby']}{$limit};" );
+
+			wp_cache_set( $cache_key, $levels, 'rcp' );
+
+		}
+
+		if( ! empty( $levels ) )
 			return $levels;
 		return false;
 	}
