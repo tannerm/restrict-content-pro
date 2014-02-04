@@ -55,7 +55,15 @@ class RCP_Levels {
 	public function get_level( $level_id = 0 ) {
 		global $wpdb;
 
-		$level = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->db_name} WHERE id='%d';", $level_id ) );
+		$level = wp_cache_get( 'level_' . $level_id, 'rcp' );
+
+		if( false === $level ) {
+
+			$level = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->db_name} WHERE id='%d';", $level_id ) );
+
+			wp_cache_set( 'level_' . $level_id, $level, 'rcp' );
+
+		}
 
 		return $level;
 
@@ -71,7 +79,16 @@ class RCP_Levels {
 	public function get_level_by( $field = 'name', $value = '' ) {
 		global $wpdb;
 
-		$level = $wpdb->get_row( "SELECT * FROM {$this->db_name} WHERE {$field}='{$value}';" );
+
+		$level = wp_cache_get( 'level_' . $level_id . '_' . $value, 'rcp' );
+
+		if( false === $level ) {
+
+			$level = $wpdb->get_row( "SELECT * FROM {$this->db_name} WHERE {$field}='{$value}';" );
+	
+			wp_cache_set( 'level_' . $level_id . '_' . $value, $level, 'rcp' );
+
+		}
 
 		return $level;
 
