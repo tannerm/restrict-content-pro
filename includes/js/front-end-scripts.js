@@ -32,7 +32,7 @@ jQuery(document).ready(function($) {
 		// show the Select Payment method option
 		$('.rcp_level').change(function() {
 			var price = parseInt( $(this).attr('rel') );
-			if(price > 0) {
+			if( price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100') ) {
 				$('#rcp_payment_gateways').show(200);
 			} else {
 				$('#rcp_payment_gateways').hide(200);
@@ -41,7 +41,9 @@ jQuery(document).ready(function($) {
 		if( parseInt( $('#rcp_subscription_levels input:checked').attr('rel') ) == 0 ) {
 			$('#rcp_payment_gateways').hide(200);
 		} else {
-			$('#rcp_payment_gateways').show(200);
+			if( ! $('rcp_gateway_fields').hasClass('rcp_discounted_100') ) {
+				$('#rcp_payment_gateways').show(200);
+			}
 		}
 	}
 
@@ -91,14 +93,17 @@ jQuery(document).ready(function($) {
 					// code is invalid
 					$('.rcp_discount_valid').hide();
 					$('.rcp_discount_invalid').show();
+					$('.rcp_gateway_fields').removeClass('rcp_discounted_100');
 				} else if(response == 'valid') {
 					// code is valid
 					$('.rcp_discount_invalid').hide();
 					$('.rcp_discount_valid').show();
+					$('.rcp_gateway_fields').removeClass('rcp_discounted_100');
 				} else if(response == 'valid and full') {
 					// code is valid
 					$('.rcp_discount_invalid,#rcp_payment_gateways,.rcp_gateway_fields,#rcp_auto_renew_wrap').hide();
 					$('.rcp_discount_valid').show();
+					$('.rcp_gateway_fields').addClass('rcp_discounted_100');
 				}
 				$('body').trigger('rcp_discount_applied', [ response ]);
 			});
