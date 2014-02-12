@@ -155,7 +155,7 @@ function rcp_members_page() {
 							<td><?php echo $member->ID; ?></td>
 							<td><?php echo $member->user_email; ?></td>
 							<td><?php echo rcp_get_subscription($member->ID); ?></td>
-							<td><?php echo rcp_print_status($member->ID); ?></td>
+							<td><?php echo rcp_print_status($member->ID, false); ?></td>
 							<td><?php echo rcp_is_recurring($member->ID) ? __('yes', 'rcp') : __('no', 'rcp'); ?>
 							<td><?php echo rcp_get_expiration_date($member->ID); ?></td>
 							<td><?php echo rcp_get_user_role($member->ID); ?></td>

@@ -108,7 +108,8 @@ function rcp_payments_page() {
 								<td><?php echo esc_html( $payment->payment_type ); ?></td>
 								<td><?php echo $payment->transaction_id; ?></td>
 								<td>
-									<a href="<?php echo add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment', 'page' => 'rcp-payments' ), admin_url( 'admin.php' ) ); ?>" class="rcp-edit-payment"><?php _e( 'Edit', 'rcp' ); ?></a>&nbsp;|&nbsp;
+									<a href="<?php echo rcp_get_pdf_download_url( $payment->id ); ?>" class="rcp-payment-invoice"><?php _e( 'Download Invoice', 'rcp' ); ?></a>
+									<span>&nbsp;|&nbsp;</span>
 									<a href="<?php echo wp_nonce_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ) ), 'rcp_delete_payment_nonce' ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a>
 								</td>
 								<?php do_action( 'rcp_payments_page_table_column', $payment->id ); ?>
