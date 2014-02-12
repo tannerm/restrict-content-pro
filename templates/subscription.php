@@ -53,7 +53,7 @@ global $user_ID, $rcp_options;
 			<td><?php echo $payment->subscription; ?></td>
 			<td><?php echo $payment->payment_type; ?></td>
 			<td><?php echo rcp_currency_filter( $payment->amount ); ?></td>
-			<td><?php echo date_i18n( get_option( 'date_format', strtotime( $payment->date ) ) ); ?></td>
+			<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->date ) ); ?></td>
 			<td><a href="<?php echo rcp_get_pdf_download_url( $payment->id ); ?>"><?php _e( 'PDF Receipt', 'rcp' ); ?></td>
 		</tr>
 	<?php endforeach; ?>
