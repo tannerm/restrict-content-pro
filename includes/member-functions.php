@@ -206,7 +206,12 @@ function rcp_get_members_of_subscription( $id = 1, $fields = 'ID') {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return int - the ID of the user's subscription level
 */
-function rcp_get_subscription_id( $user_id ) {
+function rcp_get_subscription_id( $user_id = 0 ) {
+
+	if( empty( $user_id ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
+	}
+
 	$subscription_id = get_user_meta( $user_id, 'rcp_subscription_level', true );
 	return $subscription_id;
 }
@@ -216,7 +221,12 @@ function rcp_get_subscription_id( $user_id ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return string - the name of the user's subscription level
 */
-function rcp_get_subscription( $user_id ) {
+function rcp_get_subscription( $user_id = 0 ) {
+
+	if( empty( $user_id ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
+	}
+
 	$subscription_id = get_user_meta( $user_id, 'rcp_subscription_level', true );
 	$subscription = rcp_get_subscription_name( $subscription_id );
 	return $subscription;
@@ -336,7 +346,12 @@ function rcp_calc_member_expiration( $expiration_object ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return string - The date of the user's expiration, in the format specified in settings
 */
-function rcp_get_expiration_date( $user_id ) {
+function rcp_get_expiration_date( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
 	$expiration = get_user_meta( $user_id, 'rcp_expiration', true);
 	if( $expiration ) {
 		return $expiration != 'none' ? date_i18n( get_option('date_format'), strtotime( $expiration ) ) : __( 'none', 'rcp' );
@@ -376,7 +391,12 @@ function rcp_get_status( $user_id ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return string - The user's subscription status
 */
-function rcp_print_status( $user_id ) {
+function rcp_print_status( $user_id = 0, $echo = true  ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
 	$status = rcp_get_status( $user_id );
 	switch ( $status ) :
 
@@ -397,6 +417,10 @@ function rcp_print_status( $user_id ) {
 		break;
 
 	endswitch;
+
+	if( $echo ) {
+		echo $print_status;
+	}
 
 	return $print_status;
 }
