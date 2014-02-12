@@ -139,18 +139,19 @@ include( RCP_PLUGIN_DIR . 'includes/class-rcp-levels.php' );
 include( RCP_PLUGIN_DIR . 'includes/class-rcp-payments.php' );
 include( RCP_PLUGIN_DIR . 'includes/class-rcp-discounts.php' );
 include( RCP_PLUGIN_DIR . 'includes/gateways/paypal/paypal.php' );
-include( RCP_PLUGIN_DIR . 'includes/misc-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/scripts.php' );
-include( RCP_PLUGIN_DIR . 'includes/login-functions.php' );
-include( RCP_PLUGIN_DIR . 'includes/registration-functions.php' );
-include( RCP_PLUGIN_DIR . 'includes/member-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/ajax-actions.php' );
+include( RCP_PLUGIN_DIR . 'includes/cron-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/deprecated/functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/discount-functions.php' );
-include( RCP_PLUGIN_DIR . 'includes/subscription-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/email-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/gateway-functions.php' );
-include( RCP_PLUGIN_DIR . 'includes/cron-functions.php' );
-include( RCP_PLUGIN_DIR . 'includes/ajax-actions.php' );
-include( RCP_PLUGIN_DIR . 'includes/deprecated/functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/invoice-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/login-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/member-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/misc-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/registration-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/subscription-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/error-tracking.php' );
 
 if( !class_exists( 'WP_Logging' ) ) {
