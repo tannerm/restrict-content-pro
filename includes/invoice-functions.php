@@ -48,7 +48,7 @@ function rcp_generate_pdf_invoice( $payment_id = 0 ) {
 	}
 
 	$userdata     = get_userdata( $payment->user_id );
-	$company_name = isset( $rcp_options['invoice_company_name'] ) ? $rcp_options['invoice_company_name'] : '';
+	$company_name = isset( $rcp_options['invoice_company'] ) ? $rcp_options['invoice_company'] : '';
 	$payment_date = date_i18n( get_option( 'date_format' ), strtotime( $payment->date ) );
 
 	$pdf = new RCP_PDF_Invoice( 'P', 'mm', 'A4', true, 'UTF-8', false );
