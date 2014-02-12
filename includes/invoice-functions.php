@@ -174,7 +174,7 @@ function rcp_generate_pdf_invoice( $payment_id = 0 ) {
 	$pdf->SetX( 61 );
 	$pdf->SetFont( $font, '', 10 );
 	
-	$amount = html_entity_decode( edd_currency_filter( edd_format_amount( $payment->amount ) ) );
+	$amount = html_entity_decode( rcp_currency_filter( $payment->amount ) );
 
 	if ( function_exists( 'iconv' ) ) {
 		// Ensure characters like euro; are properly converted. See GithuB issue #472 and #1570
