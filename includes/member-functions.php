@@ -495,6 +495,24 @@ function rcp_print_user_payments( $user_id ) {
 	return $payments_list;
 }
 
+/**
+ * Retrieve the payments for a specific user
+ *
+ * @since       v1.5
+ * @access      public
+ * @param       $user_id INT the ID of the user to get payments for
+ * @return      array
+*/
+function rcp_get_user_payments( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$payments = new RCP_Payments;
+	return $payments->get_payments( array( 'user_id' => $user_id ) );
+}
+
 
 // returns the role of the specified user
 function rcp_get_user_role( $user_id ) {

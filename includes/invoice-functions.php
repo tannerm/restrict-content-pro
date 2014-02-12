@@ -1,13 +1,29 @@
 <?php
 
 /**
+ * Generate URL to download a PDF invoice
+ *
+ * @since 2.0
+ * @return string
+*/
+function rcp_get_pdf_download_url( $payment_id = 0 ) {
+
+	if ( empty( $payment_id ) )
+		return false;
+
+	$base = is_admin() ? admin_url( 'index.php' ) : home_url();
+
+	return wp_nonce_url( add_query_arg( array( 'payment_id' => $payment_id, 'rcp-action' => 'download_invoice' ), $base ), 'rcp_download_invoice_nonce' );
+}
+
+/**
  * Generate PDF Invoice
  *
  * Loads and stores all of the data for the payment.  The HTML2PDF class is
  * instantiated and do_action() is used to call the invoice template which goes
  * ahead and renders the invoice.
  *
- * @since 1.0
+ * @since 2.0
  * @uses HTML2PDF
  * @uses wp_is_mobile()
 */
@@ -25,6 +41,10 @@ function rcp_generate_pdf_invoice( $payment_id = 0 ) {
 
 	if( ! $payment ) {
 		wp_die( __( 'This payment record does not exist', 'rcp' ) );
+	}
+
+	if( $payment->user_id != get_current_user_id() && ! current_time( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to download this invoice', 'rcp' ) );
 	}
 
 	$userdata     = get_userdata( $payment->user_id );
