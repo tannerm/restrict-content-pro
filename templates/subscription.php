@@ -1,6 +1,6 @@
 <?php
 
-global $user_ID;
+global $user_ID, $rcp_options;
 
 ?>
 <table class="rcp-table" id="rcp-account-overview">
