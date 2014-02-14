@@ -206,7 +206,12 @@ function rcp_get_members_of_subscription( $id = 1, $fields = 'ID') {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return int - the ID of the user's subscription level
 */
-function rcp_get_subscription_id( $user_id ) {
+function rcp_get_subscription_id( $user_id = 0 ) {
+
+	if( empty( $user_id ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
+	}
+
 	$subscription_id = get_user_meta( $user_id, 'rcp_subscription_level', true );
 	return $subscription_id;
 }
@@ -216,7 +221,12 @@ function rcp_get_subscription_id( $user_id ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return string - the name of the user's subscription level
 */
-function rcp_get_subscription( $user_id ) {
+function rcp_get_subscription( $user_id = 0 ) {
+
+	if( empty( $user_id ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
+	}
+
 	$subscription_id = get_user_meta( $user_id, 'rcp_subscription_level', true );
 	$subscription = rcp_get_subscription_name( $subscription_id );
 	return $subscription;
@@ -336,7 +346,12 @@ function rcp_calc_member_expiration( $expiration_object ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return string - The date of the user's expiration, in the format specified in settings
 */
-function rcp_get_expiration_date( $user_id ) {
+function rcp_get_expiration_date( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
 	$expiration = get_user_meta( $user_id, 'rcp_expiration', true);
 	if( $expiration ) {
 		return $expiration != 'none' ? date_i18n( get_option('date_format'), strtotime( $expiration ) ) : __( 'none', 'rcp' );
@@ -376,7 +391,12 @@ function rcp_get_status( $user_id ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return string - The user's subscription status
 */
-function rcp_print_status( $user_id ) {
+function rcp_print_status( $user_id = 0, $echo = true  ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
 	$status = rcp_get_status( $user_id );
 	switch ( $status ) :
 
@@ -398,6 +418,10 @@ function rcp_print_status( $user_id ) {
 
 	endswitch;
 
+	if( $echo ) {
+		echo $print_status;
+	}
+
 	return $print_status;
 }
 
@@ -407,10 +431,20 @@ function rcp_print_status( $user_id ) {
 * @param string $new_status - the status to set the user to
 * return bool - TRUE on a successful status change, false otherwise
 */
-function rcp_set_status( $user_id, $new_status) {
+function rcp_set_status( $user_id, $new_status ) {
+
+	$old_status = get_user_meta( $user_id, 'rcp_status', true );
+	if( ! $old_status ) {
+		$old_status = __( 'Free', 'rcp' );
+	}
+
 	if( update_user_meta( $user_id, 'rcp_status', $new_status ) ) {
 		delete_user_meta( $user_id, '_rcp_expired_email_sent');
 		do_action( 'rcp_set_status', $new_status, $user_id );
+
+		// Record the status change
+		rcp_add_member_note( $user_id, sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
+
 		return true;
 	}
 	return false;
@@ -495,6 +529,24 @@ function rcp_print_user_payments( $user_id ) {
 	return $payments_list;
 }
 
+/**
+ * Retrieve the payments for a specific user
+ *
+ * @since       v1.5
+ * @access      public
+ * @param       $user_id INT the ID of the user to get payments for
+ * @return      array
+*/
+function rcp_get_user_payments( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$payments = new RCP_Payments;
+	return $payments->get_payments( array( 'user_id' => $user_id ) );
+}
+
 
 // returns the role of the specified user
 function rcp_get_user_role( $user_id ) {
@@ -512,6 +564,23 @@ function rcp_get_user_role( $user_id ) {
 	   if ( array_key_exists( $role, $capabilities ) )
 	   return $role;
 	}
+}
+
+/**
+ * Inserts a new note for a user
+ *
+ * @access      public
+ * @since       2.0
+ * @return      void
+ */
+function rcp_add_member_note( $user_id = 0, $note = '' ) {
+	$notes = get_user_meta( $user_id, 'rcp_notes', true );
+	if( ! $notes ) {
+		$notes = '';
+	}
+	$notes .= "\n\n" . date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . ' - ' . $note;
+
+	update_user_meta( $user_id, 'rcp_notes', wp_kses( $notes, array() ) );
 }
 
 

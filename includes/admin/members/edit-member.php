@@ -18,7 +18,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 					<select name="status" id="rcp-status">
 						<?php
 							$statuses = array( 'active', 'expired', 'cancelled', 'pending', 'free' );
-							$current_status = get_user_meta( $user->ID, 'rcp_status', true );
+							$current_status = rcp_get_status( $user->ID );
 							foreach( $statuses as $status ) : 
 								echo '<option value="' . esc_attr( $status ) .  '"' . selected( $status, rcp_get_status( $user->ID ), false ) . '>' . ucwords( $status ) . '</option>';
 							endforeach;

@@ -38,6 +38,16 @@ function rcp_admin_notices() {
 			$class = 'error';
 			break;
 
+		case 'payment_updated' :
+
+			$text = __( 'Payment updated', 'rcp' );
+			break;
+
+		case 'payment_not_updated' :
+
+			$text = __( 'Payment update failed', 'rcp' );
+			break;
+
 		case 'upgrade-complete' :
 
 			$text =  __( 'Database upgrade complete', 'rcp' );

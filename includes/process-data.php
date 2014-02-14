@@ -92,7 +92,6 @@ function rcp_process_data() {
 			$level    = absint( $_POST['level'] );
 			$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 
-			if( isset( $_POST['status'] ) ) rcp_set_status( $user_id, $status );
 
 			update_user_meta( $user_id, 'rcp_expiration', $expiration );
 
@@ -104,6 +103,7 @@ function rcp_process_data() {
 			}
 			if( isset( $_POST['signup_method'] ) ) update_user_meta( $user_id, 'rcp_signup_method', $_POST['signup_method'] );
 			if( isset( $_POST['notes'] ) ) update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
+			if( isset( $_POST['status'] ) ) rcp_set_status( $user_id, $status );
 
 			wp_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id . '&rcp_message=user_updated' ) ); exit;
 		}
@@ -198,6 +198,37 @@ function rcp_process_data() {
 				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_added' );
 			} else {
 				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_not_added' );
+			}
+			wp_safe_redirect( $url ); exit;
+		}
+
+		// edit a payment
+		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-payment' ) {
+
+			$payments = new RCP_Payments();
+
+			$payment_id = absint( $_POST['payment-id'] );
+			$user      = get_user_by( 'login', $_POST['user'] );
+
+			if( $user && $payment_id ) {
+
+				$data = array(
+					'amount'           => sanitize_text_field( $_POST['amount'] ),
+					'user_id'          => $user->ID,
+					'date'             => date( 'Y-m-d H:i:s', strtotime( $_POST['date'] ) ),
+					'subscription'     => rcp_get_subscription( $user->ID ),
+					'subscription_key' => rcp_get_subscription_key( $user->ID ),
+					'transaction_id'   => sanitize_text_field( $_POST['transaction-id'] ),
+				);
+
+				$update = $payments->update( $payment_id, $data );
+
+			}
+
+			if( ! empty( $update ) ) {
+				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_updated' );
+			} else {
+				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_not_updated' );
 			}
 			wp_safe_redirect( $url ); exit;
 		}

@@ -67,11 +67,11 @@ rcp_show_error_messages( 'register' ); ?>
 					<?php endif; ?>
 				<?php endforeach; ?>
 		</ul>
-	<?php elseif($levels) : ?>
-		<input type="hidden" class="rcp_level" name="rcp_level" rel="<?php echo esc_attr( $levels[0]->price ); ?>" value="<?php echo esc_attr( $levels[0]->id ); ?>"/>
-	<?php else : ?>
-		<p><strong><?php _e( 'You have not created any subscription levels yet', 'rcp' ); ?></strong></p>
-	<?php endif; ?>
+		<?php elseif($levels) : ?>
+			<input type="hidden" class="rcp_level" name="rcp_level" rel="<?php echo esc_attr( $levels[0]->price ); ?>" value="<?php echo esc_attr( $levels[0]->id ); ?>"/>
+		<?php else : ?>
+			<p><strong><?php _e( 'You have not created any subscription levels yet', 'rcp' ); ?></strong></p>
+		<?php endif; ?>
 	</fieldset>
 		<?php
 		if( rcp_has_discounts() ) : ?>
@@ -88,21 +88,21 @@ rcp_show_error_messages( 'register' ); ?>
 		do_action( 'rcp_after_register_form_fields', $levels );
 
 		$gateways = rcp_get_enabled_payment_gateways();
-		if( count( $gateways ) > 1 ) :
-			$display = rcp_has_paid_levels() ? '' : ' style="display: none;"';
-			echo '<p id="rcp_payment_gateways"' . $display . '>';
-				echo '<select name="rcp_gateway" id="rcp_gateway">';
-					foreach( $gateways as $key => $gateway ) :
-						echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $gateway ) . '</option>';
-					endforeach;
-				echo '</select>';
-				echo '<label for="rcp_gateway">' . __( 'Choose Your Payment Method', 'rcp' ) . '</label>';
-			echo '</p>';
-		else:
-			foreach( $gateways as $key => $gateway ) :
-				echo '<input type="hidden" name="rcp_gateway" value="' . esc_attr( $key ) . '"/>';
-			endforeach;
-		endif;
+
+		if( count( $gateways ) > 1 ) : $display = rcp_has_paid_levels() ? '' : ' style="display: none;"'; ?>
+			<p id="rcp_payment_gateways"<?php echo $display; ?>>
+				<select name="rcp_gateway" id="rcp_gateway">
+					<?php foreach( $gateways as $key => $gateway ) : ?>
+						<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $gateway ); ?></option>
+					<?php endforeach; ?>
+				</select>
+				<label for="rcp_gateway"><?php _e( 'Choose Your Payment Method', 'rcp' ); ?></label>
+			</p>
+		<?php else: ?>
+			<?php foreach( $gateways as $key => $gateway ) : ?>
+				<input type="hidden" name="rcp_gateway" value="<?php echo esc_attr( $key ); ?>"/>
+			<?php endforeach; ?>
+		<?php endif;
 
 		do_action( 'rcp_before_registration_submit_field', $levels );
 

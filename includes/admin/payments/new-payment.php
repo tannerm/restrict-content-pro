@@ -12,7 +12,7 @@
 					<label for="rcp-user-id"><?php _e( 'User', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input type="text" name="user" id="rcp-user" class="regular-text rcp-user-search"/>
+					<input type="text" name="user" autocomplete="off" id="rcp-user" class="regular-text rcp-user-search"/>
 					<img class="rcp-ajax waiting" src="<?php echo admin_url('images/wpspin_light.gif'); ?>" style="display: none;"/>
 					<div id="rcp_user_search_results"></div>
 					<p class="description"><?php _e('Begin typing the user name to add a payment record for.', 'rcp'); ?></p>

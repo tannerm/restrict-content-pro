@@ -49,15 +49,15 @@ img.help-image { max-width: 99%; overflow: hidden; border: 1px solid #ccc; }
 .rcp-sub-subs-col {}
 .rcp-sub-actions-col {}
 /* discountcodes page columns */
-.rcp-discounts-id-col { width: 40px; }
+.rcp-discounts-id-col { width: 30px; }
 .rcp-discounts-name-col {  }
-.rcp-discounts-desc-col { width: 250px; }
+.rcp-discounts-desc-col { width: 175px; }
 .rcp-discounts-code-col {  }
 .rcp-discounts-amount-col { width: 80px; }
 .rcp-discounts-type-col { width: 90px; }
 .rcp-discounts-status-col { width: 80px; }
-.rcp-discounts-uses-col { width: 80px; }
-.rcp-discounts-uses-left-col { width: 80px; }
+.rcp-discounts-uses-col { width: 40px; }
+.rcp-discounts-uses-left-col { width: 60px; }
 .rcp-discounts-expir-col {  }
 .rcp-discounts-actions-col { }
 /* error logs */
