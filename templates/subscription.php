@@ -1,7 +1,7 @@
 <?php
 
 global $user_ID, $rcp_options;
-
+do_action( 'rcp_subscription_details_top' );
 ?>
 <table class="rcp-table" id="rcp-account-overview">
 	<thead>
@@ -30,7 +30,7 @@ global $user_ID, $rcp_options;
 				} elseif( rcp_is_active( $user_ID ) && get_user_meta( $user_ID, 'rcp_paypal_subscriber', true ) ) {
 					echo '<a href="https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_manage-paylist" target="_blank" title="' . __( 'Cancel your subscription', 'rcp' ) . '">' . __( 'Cancel your subscription', 'rcp' ) . '</a>';
 				}
-				do_action( 'rcp_subscription_action_links' );
+				do_action( 'rcp_subscription_details_action_links' );
 				?>
 			</td>
 		</tr>
@@ -64,3 +64,4 @@ global $user_ID, $rcp_options;
 	<?php endif; ?>
 	</tbody>
 </table>
+<?php do_action( 'rcp_subscription_details_bottom' );
