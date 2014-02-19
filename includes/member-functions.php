@@ -607,6 +607,27 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
 }
 
 
+/**
+ * Determine if a member is a PayPal subscriber
+ *
+ * @since       v2.0
+ * @access      public
+ * @param       $user_id INT the ID of the user to check
+ * @return      bool
+*/
+function rcp_is_paypal_subscriber( $user_id = 0 ) {
+
+	if( empty( $user_id ) )
+		$user_id = get_current_user_id();
+
+	$ret = false;
+
+	$ret = (bool) get_user_meta( $user_id, 'rcp_paypal_subscriber', true );
+
+	return (bool) apply_filters( 'rcp_is_paypal_subscriber', $ret, $user_id );
+}
+
+
 
 /**
  * Process Profile Updater Form

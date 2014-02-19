@@ -27,7 +27,7 @@ do_action( 'rcp_subscription_details_top' );
 					echo '<a href="' . esc_url( get_permalink( $rcp_options['registration_page'] ) ) . '" title="' . __( 'Renew your subscription', 'rcp' ) . '" class="rcp_sub_details_renew">' . __( 'Renew your subscription', 'rcp' ) . '</a>';
 				} elseif( ! rcp_is_active( $user_ID ) && rcp_subscription_upgrade_possible( $user_ID ) ) {
 					echo '<a href="' . esc_url( get_permalink( $rcp_options['registration_page'] ) ) . '" title="' . __( 'Upgrade your subscription', 'rcp' ) . '" class="rcp_sub_details_renew">' . __( 'Upgrade your subscription', 'rcp' ) . '</a>';
-				} elseif( rcp_is_active( $user_ID ) && get_user_meta( $user_ID, 'rcp_paypal_subscriber', true ) ) {
+				} elseif( rcp_is_active( $user_ID ) && rcp_is_paypal_subscriber() ) {
 					echo '<a href="https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_manage-paylist" target="_blank" title="' . __( 'Cancel your subscription', 'rcp' ) . '">' . __( 'Cancel your subscription', 'rcp' ) . '</a>';
 				}
 				do_action( 'rcp_subscription_details_action_links' );
