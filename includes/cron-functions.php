@@ -38,12 +38,10 @@ function rcp_check_for_expired_users() {
 		foreach( $expired_members as $key => $member_id ) {
 
 			$expiration_date = rcp_get_expiration_timestamp( $member_id );
-			if( $expiration_date ) {
-				if( $current_time > $expiration_date ) {
-					rcp_email_subscription_status( $member_id, 'expired' );
-					rcp_set_status( $member_id, 'expired' );
-					add_user_meta( $member_id, '_rcp_expired_email_sent', 'yes' );
-				}
+			if( $expiration_date && strtotime( '-1 day', current_time( 'timestamp' ) ) > $expiration_date ) {
+				rcp_email_subscription_status( $member_id, 'expired' );
+				rcp_set_status( $member_id, 'expired' );
+				add_user_meta( $member_id, '_rcp_expired_email_sent', 'yes' );
 			}
 		}
 	}
