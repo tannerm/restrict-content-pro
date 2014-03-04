@@ -17,7 +17,7 @@ function rcp_check_for_expired_users() {
 	
 	global $wpdb;
 
-	$current_time = current_time( 'mysql' );
+	$current_time = date( 'Y-m-d H:i:s', strtotime( '-1 day' ) );
 
 	$query = "SELECT ID FROM $wpdb->users 
 		INNER JOIN $wpdb->usermeta ON ($wpdb->users.ID = $wpdb->usermeta.user_id)
@@ -39,9 +39,7 @@ function rcp_check_for_expired_users() {
 
 			$expiration_date = rcp_get_expiration_timestamp( $member_id );
 			if( $expiration_date ) {
-				$expiration_date += 86400; // to make sure we have given PayPal enough time to send the IPN
-
-				if( rcp_is_expired( $member_id ) && current_time( 'timestamp' ) > $expiration_date ) {
+				if( rcp_is_expired( $member_id ) && $current_time > $expiration_date ) {
 					rcp_email_subscription_status( $member_id, 'expired' );
 					rcp_set_status( $member_id, 'expired' );
 					add_user_meta( $member_id, '_rcp_expired_email_sent', 'yes' );
