@@ -15,47 +15,36 @@ add_action('wp', 'rcp_setup_cron_jobs');
 // runs each day and checks for expired members. Each member gets an email on the day of their expiration
 function rcp_check_for_expired_users() {
 	
-	$args = array(
-		'meta_query'     => array(
-			'relation'   => 'AND',
-			array(
-				'key'    => 'rcp_expiration',
-				'value'  => current_time( 'mysql' ),
-				'type'   => 'DATETIME',
-				'compare'=> '<'
-			),
-			array(
-				'key'    => 'rcp_expiration',
-				'value'  => 'none',
-				'compare'=> '!='
-			),
-			array(
-				'key'    => 'rcp_status',
-				'value'  => 'active'
-			)/*,
-			array(
-				'key'    => 'rcp_recurring',
-				'compare'=> 'NOT EXISTS'
-			)*/
-		),
-		'number' 		=> 9999,
-		'count_total' 	=> false,
-		'fields'        => 'ids'
-	);
+	global $wpdb;
 
-	$expired_members = new WP_User_Query( $args );
-	//echo '<pre>'; print_r( $expired_members ); echo '</pre>'; exit;
-	if( $expired_members->results ) {
-		foreach( $expired_members->results as $member ) {
+	$current_time = current_time( 'mysql' );
 
-			$expiration_date = rcp_get_expiration_timestamp( $member );
+	$query = "SELECT ID FROM $wpdb->users 
+		INNER JOIN $wpdb->usermeta ON ($wpdb->users.ID = $wpdb->usermeta.user_id)
+		INNER JOIN $wpdb->usermeta AS mt1 ON ($wpdb->users.ID = mt1.user_id)
+		INNER JOIN $wpdb->usermeta AS mt2 ON ($wpdb->users.ID = mt2.user_id)
+		WHERE 1=1 AND ( ($wpdb->usermeta.meta_key = 'rcp_expiration' 
+			AND CAST($wpdb->usermeta.meta_value AS DATETIME) < '$current_time')
+			AND  (mt1.meta_key = 'rcp_expiration' 
+				AND CAST(mt1.meta_value AS CHAR) != 'none')
+			AND  (mt2.meta_key = 'rcp_status' 
+				AND CAST(mt2.meta_value AS CHAR) = 'active') ) 
+		ORDER BY user_login ASC LIMIT 9999";
+
+	$expired_members = $wpdb->get_results( $query );
+	$expired_members = wp_list_pluck( $expired_members, 'ID' );
+
+	if( $expired_members ) {
+		foreach( $expired_members as $key => $member_id ) {
+
+			$expiration_date = rcp_get_expiration_timestamp( $member_id );
 			if( $expiration_date ) {
 				$expiration_date += 86400; // to make sure we have given PayPal enough time to send the IPN
 
-				if( rcp_is_expired( $member ) && current_time( 'timestamp' ) > $expiration_date ) {
-					rcp_email_subscription_status( $member, 'expired' );
-					rcp_set_status( $member, 'expired' );
-					add_user_meta( $member, '_rcp_expired_email_sent', 'yes' );
+				if( rcp_is_expired( $member_id ) && current_time( 'timestamp' ) > $expiration_date ) {
+					rcp_email_subscription_status( $member_id, 'expired' );
+					rcp_set_status( $member_id, 'expired' );
+					add_user_meta( $member_id, '_rcp_expired_email_sent', 'yes' );
 				}
 			}
 		}
