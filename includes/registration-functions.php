@@ -113,7 +113,7 @@ function rcp_process_registration() {
 				if( $price > '0' ) {
 
 					if( ! empty( $discount ) ) {
-
+						print_r( $user_data ); exit;
 						$discounts    = new RCP_Discounts();
 						$discount_obj = $discounts->get_by( 'code', $discount );
 
@@ -130,7 +130,7 @@ function rcp_process_registration() {
 						if( $price == '0' ) {
 							rcp_set_status( $user_data['id'], 'active' );
 							rcp_email_subscription_status( $user_data['id'], 'active' );
-							rcp_login_user_in( $user_data['id'], $user_data['login'], $user_data['password'] );
+							rcp_login_user_in( $user_data['id'], $user_data['login'] );
 							wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 						}
 
@@ -216,7 +216,7 @@ function rcp_process_registration() {
 						}
 
 						// log the new user in
-						rcp_login_user_in( $user_data['id'], $user_data['login'], $user_data['password'] );
+						rcp_login_user_in( $user_data['id'], $user_data['login'] );
 
 					}
 					// send the newly created user to the redirect page after logging them in

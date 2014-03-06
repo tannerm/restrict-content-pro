@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @access      public
  * @since       1.0
  */
-function rcp_login_user_in( $user_id, $user_login, $user_pass, $remember = false ) {
+function rcp_login_user_in( $user_id, $user_login, $remember = false ) {
 	$user = get_userdata( $user_id );
 	if( ! $user )
 		return;
@@ -74,7 +74,7 @@ function rcp_process_login_form() {
 
 				$remember = isset( $_POST['rcp_user_remember'] );
 
-				rcp_login_user_in( $user->ID, $_POST['rcp_user_login'], $_POST['rcp_user_pass'], $remember );
+				rcp_login_user_in( $user->ID, $_POST['rcp_user_login'], $remember );
 
 				// redirect the user back to the page they were previously on
 				wp_redirect( $_POST['rcp_redirect'] ); exit;
