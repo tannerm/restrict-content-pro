@@ -121,7 +121,7 @@ function rcp_process_registration() {
 						$price = $discounts->calc_discounted_price( $price, $discount_obj->amount, $discount_obj->unit );
 
 						// record the usage of this discount code
-						$discounts->add_to_user( $user_data['id'], $discount );
+						//$discounts->add_to_user( $user_data['id'], $discount );
 
 						// incrase the usage count for the code
 						$discounts->increase_uses( $discount_obj->id );

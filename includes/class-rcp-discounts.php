@@ -219,8 +219,9 @@ class RCP_Discounts {
 
 	public function increase_uses( $discount_id = 0 ) {
 
-		$uses = $this->get_uses( $discount_id );
-		$this->update( $discount_id, array( 'uses' => $uses++ ) );
+		$uses = absint( $this->get_uses( $discount_id ) );
+		$uses += 1;
+		$this->update( $discount_id, array( 'use_count' => $uses ) );
 	}
 
 
@@ -337,7 +338,7 @@ class RCP_Discounts {
 
 		$args     = array_merge( $discount, $args );
 
-		do_action( 'rcp_pre_edit_discount', absint( $args['id'] ), $args );
+		do_action( 'rcp_pre_edit_discount', absint( $discount_id ), $args );
 
 		$update = $wpdb->query(
 			$wpdb->prepare(
@@ -349,7 +350,8 @@ class RCP_Discounts {
 					`code`            = '%s',
 					`status`          = '%s',
 					`expiration`      = '%s',
-					`max_uses`        = '%s',
+					`max_uses`        = '%d',
+					`use_count`       = '%d',
 					`subscription_id` = '%d'
 					WHERE `id`        = '%d'
 				;",
@@ -360,13 +362,14 @@ class RCP_Discounts {
 				sanitize_text_field( $args['code'] ),
 				sanitize_text_field( $args['status'] ),
 				sanitize_text_field( $args['expiration'] ),
-				sanitize_text_field( $args['max_uses'] ),
+				absint( $args['max_uses'] ),
+				absint( $args['use_count'] ),
 				absint( $args['subscription_id'] ),
-				absint( $args['id'] )
+				absint( $discount_id )
 			)
 		);
 
-		do_action( 'rcp_edit_discount', absint( $args['id'] ), $args );
+		do_action( 'rcp_edit_discount', absint( $discount_id ), $args );
 
 		if( $update )
 			return true;
