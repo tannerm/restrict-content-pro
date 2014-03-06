@@ -130,7 +130,7 @@ function rcp_process_registration() {
 						if( $price == '0' ) {
 							rcp_set_status( $user_data['id'], 'active' );
 							rcp_email_subscription_status( $user_data['id'], 'active' );
-							rcp_login_user_in( $user_data['id'], $user_login, $user_pass );
+							rcp_login_user_in( $user_data['id'], $user_data['login'], $user_data['password'] );
 							wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 						}
 
