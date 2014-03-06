@@ -113,7 +113,7 @@ function rcp_process_registration() {
 				if( $price > '0' ) {
 
 					if( ! empty( $discount ) ) {
-						print_r( $user_data ); exit;
+
 						$discounts    = new RCP_Discounts();
 						$discount_obj = $discounts->get_by( 'code', $discount );
 
