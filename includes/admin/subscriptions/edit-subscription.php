@@ -49,7 +49,7 @@ $level = rcp_get_subscription_details( absint( urldecode( $_GET['edit_subscripti
 				</th>
 				<td>
 					<input type="text" id="rcp-duration" style="width: 40px;" name="duration" value="<?php echo absint( $level->duration ); ?>"/>
-					<select name="duration-unit" id="rcp-duration-unit">
+					<select name="duration_unit" id="rcp-duration-unit">
 						<option value="day" <?php selected( $level->duration_unit, 'day' ); ?>><?php _e( 'Days(s)', 'rcp' ); ?></option>
 						<option value="month" <?php selected( $level->duration_unit, 'month' ); ?>><?php _e( 'Month(s)', 'rcp' ); ?></option>
 						<option value="year" <?php selected( $level->duration_unit, 'year' ); ?>><?php _e( 'Years(s)', 'rcp' ); ?></option>

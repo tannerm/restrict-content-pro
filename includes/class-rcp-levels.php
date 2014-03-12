@@ -265,7 +265,7 @@ class RCP_Levels {
 				sanitize_text_field( $args['name'] ),
 				wp_kses( $args['description'], rcp_allowed_html_tags() ),
 				sanitize_text_field( $args['duration'] ),
-				sanitize_text_field( $args['duration-unit'] ),
+				sanitize_text_field( $args['duration_unit'] ),
 				sanitize_text_field( $args['price'] ),
 				sanitize_text_field( $args['fee'] ),
 				absint( $args['level'] ),
