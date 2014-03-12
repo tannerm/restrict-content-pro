@@ -332,6 +332,12 @@ function rcp_get_auto_renew_behavior() {
 
 	global $rcp_options;
 
+	if( isset( $rcp_options['disable_auto_renew'] ) ) {
+		$rcp_options['auto_renew'] = '2';
+		unset( $rcp_options['disable_auto_renew'] );
+		update_option( 'rcp_settings', $rcp_options );
+	}
+
 	$behavior = isset( $rcp_options['auto_renew'] ) ? $rcp_options['auto_renew'] : '3';
 
 	return apply_filters( 'rcp_auto_renew_behavior', $behavior );

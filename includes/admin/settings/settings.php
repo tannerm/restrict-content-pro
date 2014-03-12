@@ -238,9 +238,9 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<select name="rcp_settiongs[auto_renew]" id="rcp_settings[auto_renew]">
-									<option value="1"><?php _e( 'Always auto renew', 'rcp' ); ?></option>
-									<option value="2"><?php _e( 'Never auto renew', 'rcp' ); ?></option>
-									<option value="3"><?php _e( 'Let customer choose whether to auto renew', 'rcp' ); ?></option>
+									<option value="1"<?php selected( '1', rcp_get_auto_renew_behavior() ); ?>><?php _e( 'Always auto renew', 'rcp' ); ?></option>
+									<option value="2"<?php selected( '2', rcp_get_auto_renew_behavior() ); ?>><?php _e( 'Never auto renew', 'rcp' ); ?></option>
+									<option value="3"<?php selected( '3', rcp_get_auto_renew_behavior() ); ?>><?php _e( 'Let customer choose whether to auto renew', 'rcp' ); ?></option>
 								</select>
 								<div class="description"><?php _e( 'Select the auto renew behavior you would like subscription levels to have', 'rcp' ); ?></div>
 							</td>
@@ -317,15 +317,6 @@ function rcp_settings_page() {
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[ssl]" id="rcp_settings[ssl]" <?php if( isset( $rcp_options['ssl'] ) ) checked('1', $rcp_options['ssl']); ?>/>
 								<span class="description"><?php _e( 'Check this option if your registration page is using the https:// protocol. This will be the case if you have an SSL certificate installed.', 'rcp' ); ?></span>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[disable_auto_renew]"><?php _e( 'Disable Auto Renew', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<input type="checkbox" value="1" name="rcp_settings[disable_auto_renew]" id="rcp_settings[disable_auto_renew]" <?php if( isset( $rcp_options['disable_auto_renew'] ) ) checked('1', $rcp_options['disable_auto_renew']); ?>/>
-								<span class="description"><?php _e( 'Check this option if you do NOT want to allow recurring subscriptions', 'rcp' ); ?></span>
 							</td>
 						</tr>
 					</table>
