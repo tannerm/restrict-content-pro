@@ -316,3 +316,23 @@ function rcp_get_return_url( $user_id = 0 ) {
 	}
 	return apply_filters( 'rcp_return_url', $redirect, $user_id );
 }
+
+/**
+ * Get the auto renew behavior
+ *
+ * 1 == All subscriptions auto renew
+ * 2 == No subscriptions auto renew
+ * 3 == Customer chooses whether to auto renew
+ *
+ * @access      public
+ * @since       2.0
+ * @return      int
+ */
+function rcp_get_auto_renew_behavior() {
+
+	global $rcp_options;
+
+	$behavior = isset( $rcp_options['auto_renew'] ) ? $rcp_options['auto_renew'] : '3';
+
+	return apply_filters( 'rcp_auto_renew_behavior', $behavior );
+}

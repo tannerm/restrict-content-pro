@@ -234,6 +234,19 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
+								<label for="rcp_settings[auto_renew]"><?php _e( 'Auto Renew', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<select name="rcp_settiongs[auto_renew]" id="rcp_settings[auto_renew]">
+									<option value="1"><?php _e( 'Always auto renew', 'rcp' ); ?></option>
+									<option value="2"><?php _e( 'Never auto renew', 'rcp' ); ?></option>
+									<option value="3"><?php _e( 'Let customer choose whether to auto renew', 'rcp' ); ?></option>
+								</select>
+								<div class="description"><?php _e( 'Select the auto renew behavior you would like subscription levels to have', 'rcp' ); ?></div>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
 								<label for="rcp_settings[front_end_validate]"><?php _e( 'jQuery Validation', 'rcp' ); ?></label>
 							</th>
 							<td>
