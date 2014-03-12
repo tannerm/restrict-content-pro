@@ -46,7 +46,7 @@ function rcp_change_password_form( $args = array() ) {
 
 function rcp_add_auto_renew( $levels ) {
 	global $rcp_options;
-	if( $levels && !isset( $rcp_options['disable_auto_renew'] ) ) : ?>
+	if( $levels && '3' == rcp_get_auto_renew_behavior() ) : ?>
 	<p id="rcp_auto_renew_wrap">
 		<input name="rcp_auto_renew" id="rcp_auto_renew" type="checkbox" checked="checked"/>
 		<label for="rcp_auto_renew"><?php echo apply_filters ( 'rcp_registration_auto_renew', __( 'Auto Renew', 'rcp' ) ); ?></label>

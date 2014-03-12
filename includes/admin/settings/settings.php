@@ -237,7 +237,7 @@ function rcp_settings_page() {
 								<label for="rcp_settings[auto_renew]"><?php _e( 'Auto Renew', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<select name="rcp_settiongs[auto_renew]" id="rcp_settings[auto_renew]">
+								<select name="rcp_settings[auto_renew]" id="rcp_settings[auto_renew]">
 									<option value="1"<?php selected( '1', rcp_get_auto_renew_behavior() ); ?>><?php _e( 'Always auto renew', 'rcp' ); ?></option>
 									<option value="2"<?php selected( '2', rcp_get_auto_renew_behavior() ); ?>><?php _e( 'Never auto renew', 'rcp' ); ?></option>
 									<option value="3"<?php selected( '3', rcp_get_auto_renew_behavior() ); ?>><?php _e( 'Let customer choose whether to auto renew', 'rcp' ); ?></option>
