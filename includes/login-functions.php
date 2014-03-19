@@ -70,6 +70,12 @@ function rcp_process_login_form() {
 		}
 	}
 
+	if( function_exists( 'is_limit_login_ok' ) ) {
+
+		rcp_errors()->add( 'limit_login_failed', limit_login_error_msg(), 'login' );
+
+	}
+
 	do_action( 'rcp_login_form_errors', $_POST );
 
 	// retrieve all error messages
@@ -84,6 +90,12 @@ function rcp_process_login_form() {
 
 		// redirect the user back to the page they were previously on
 		wp_redirect( $_POST['rcp_redirect'] ); exit;
+	} else {
+
+		if( function_exists( 'limit_login_failed' ) ) {
+			limit_login_failed( $_POST['rcp_user_login'] );
+		}
+
 	}
 }
 add_action('init', 'rcp_process_login_form');
