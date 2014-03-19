@@ -12,18 +12,47 @@ function rcp_login_form_fields( $args = array() ) {
 	$rcp_login_form_args = wp_parse_args( $args, $defaults );
 
 	ob_start();
+
 	do_action( 'rcp_before_login_form' );
+
 	rcp_get_template_part( 'login' );
+
 	do_action( 'rcp_after_login_form' );
+
 	return ob_get_clean();
 }
 
 // registration form fields
 function rcp_registration_form_fields( $id = null ) {
+
+	global $rcp_level;
+
+	$rcp_level = $id;
+
 	ob_start();
-	do_action( 'rcp_before_register_form' );
-	rcp_get_template_part( 'register', $id );
-	do_action( 'rcp_after_register_form' );
+
+	do_action( 'rcp_before_register_form', $id );
+
+	if( ! is_null( $id ) ) {
+
+		if( rcp_locate_template( array( 'register-single-' . $id ), false ) ) {
+
+			rcp_get_template_part( 'register', 'single-' . $id );
+
+		} else {
+
+			rcp_get_template_part( 'register', 'single' );
+			
+		}
+
+	} else {
+
+		rcp_get_template_part( 'register' );
+
+	}
+
+	do_action( 'rcp_after_register_form', $id );
+
 	return ob_get_clean();
 }
 
