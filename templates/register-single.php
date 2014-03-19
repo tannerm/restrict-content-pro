@@ -15,9 +15,12 @@ rcp_show_error_messages( 'register' ); ?>
 
 <form id="rcp_registration_form" class="rcp_form" method="POST" action="<?php echo esc_url( rcp_get_current_url() ); ?>">
 
+	<div class="rcp_description"><?php echo wpautop( wptexturize( rcp_get_subscription_description( $rcp_level ) ) ); ?></div>
+	
 	<?php if( ! is_user_logged_in() ) { ?>
 
 	<?php do_action( 'rcp_before_register_form_fields' ); ?>
+
 
 	<fieldset class="rcp_user_fieldset">
 		<p id="rcp_user_login_wrap">
