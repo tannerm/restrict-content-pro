@@ -151,6 +151,7 @@ add_shortcode( 'user_name', 'rcp_user_name' );
 // user registration login form
 function rcp_registration_form( $atts, $content = null ) {
 	extract( shortcode_atts( array(
+		'id' => null,
 		'registered_message' => __( 'You are already registered and have an active subscription.', 'rcp' )
 	), $atts ) );
 
@@ -165,7 +166,7 @@ function rcp_registration_form( $atts, $content = null ) {
 		$rcp_load_css = true;
 		$rcp_load_scripts = true;
 
-		$output = rcp_registration_form_fields();
+		$output = rcp_registration_form_fields( $id );
 
 	} else {
 		$output = $registered_message;

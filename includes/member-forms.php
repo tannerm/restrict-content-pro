@@ -19,10 +19,10 @@ function rcp_login_form_fields( $args = array() ) {
 }
 
 // registration form fields
-function rcp_registration_form_fields( $args = array() ) {
+function rcp_registration_form_fields( $id = null ) {
 	ob_start();
 	do_action( 'rcp_before_register_form' );
-	rcp_get_template_part( 'register' );
+	rcp_get_template_part( 'register', $id );
 	do_action( 'rcp_after_register_form' );
 	return ob_get_clean();
 }
