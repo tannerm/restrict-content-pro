@@ -220,8 +220,19 @@ class RCP_Levels {
 		);
 
 		if( $add ) {
+
+			$args = array(
+				'status'  => 'all',
+				'limit'   => null,
+				'orderby' => 'list_order'
+			);
+
+			$cache_key = md5( implode( '|', $args ) );
+
+			wp_cache_delete( $cache_key, 'rcp' );
+
 			do_action( 'rcp_add_subscription', $wpdb->insert_id, $args );
-			delete_transient( 'rcp_subscription_levels' );
+	
 			return $wpdb->insert_id;
 		}
 
@@ -275,9 +286,17 @@ class RCP_Levels {
 			)
 		);
 
-		do_action( 'rcp_edit_subscription_level', absint( $args['id'] ), $args );
+		$cache_args = array(
+			'status'  => 'all',
+			'limit'   => null,
+			'orderby' => 'list_order'
+		);
 
-		delete_transient( 'rcp_subscription_levels' );
+		$cache_key = md5( implode( '|', $cache_args ) );
+
+		wp_cache_delete( $cache_key, 'rcp' );
+
+		do_action( 'rcp_edit_subscription_level', absint( $args['id'] ), $args );
 
 		if( $update !== false )
 			return true;
@@ -296,8 +315,21 @@ class RCP_Levels {
 	public function remove( $level_id = 0 ) {
 
 		global $wpdb;
+
 		$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM " . $this->db_name . " WHERE `id`='%d';", absint( $level_id ) ) );
-		delete_transient( 'rcp_subscription_levels' );
+	
+		$args = array(
+			'status'  => 'all',
+			'limit'   => null,
+			'orderby' => 'list_order'
+		);
+
+		$cache_key = md5( implode( '|', $args ) );
+
+		wp_cache_delete( $cache_key, 'rcp' );
+
+		do_action( 'rcp_remove_subscription_level', absint( $level_id ) );
+
 	}
 
 }
