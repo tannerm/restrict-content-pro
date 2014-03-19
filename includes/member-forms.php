@@ -35,7 +35,7 @@ function rcp_registration_form_fields( $id = null ) {
 
 	if( ! is_null( $id ) ) {
 
-		if( rcp_locate_template( array( 'register-single-' . $id ), false ) ) {
+		if( rcp_locate_template( array( 'register-single-' . $id . '.php' ), false ) ) {
 
 			rcp_get_template_part( 'register', 'single-' . $id );
 
