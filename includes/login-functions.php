@@ -70,7 +70,7 @@ function rcp_process_login_form() {
 		}
 	}
 
-	if( function_exists( 'is_limit_login_ok' ) ) {
+	if( function_exists( 'is_limit_login_ok' ) && ! is_limit_login_ok() ) {
 
 		rcp_errors()->add( 'limit_login_failed', limit_login_error_msg(), 'login' );
 
