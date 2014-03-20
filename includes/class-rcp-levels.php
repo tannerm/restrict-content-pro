@@ -155,10 +155,19 @@ class RCP_Levels {
 
 		global $wpdb;
 
-		$field = $wpdb->get_col( $wpdb->prepare( "SELECT {$field} FROM {$this->db_name} WHERE id='%d';", $level_id ) );
 
-		if( $field )
-			return $field[0];
+		$value = wp_cache_get( 'level_' . $level_id . '_' . $field, 'rcp' );
+
+		if( false === $value ) {
+
+			$value = $wpdb->get_col( $wpdb->prepare( "SELECT {$field} FROM {$this->db_name} WHERE id='%d';", $level_id ) );
+
+			wp_cache_set( 'level_' . $level_id . '_' . $field, $value, 'rcp', 3600 );
+
+		}
+
+		if( $value )
+			return $value[0];
 		return false;
 	}
 
