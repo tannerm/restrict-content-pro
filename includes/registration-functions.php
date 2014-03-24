@@ -325,6 +325,28 @@ function rcp_get_return_url( $user_id = 0 ) {
 }
 
 /**
+ * Determine if the current page is a registration page
+ *
+ * @access      public
+ * @since       2.0
+ * @return      bool
+ */
+function rcp_is_registration_page() {
+
+	global $rcp_options, $post;
+
+	$ret = false;
+
+	if ( isset( $rcp_options['registration_page'] ) && is_page( $rcp_options['registration_page'] ) ) {
+		$ret = true;
+	} elseif ( has_shortcode( $post->post_content, 'register_form' ) ) {
+		$ret = true;
+	}
+
+	return apply_filters( 'rcp_is_registration_page', $ret );
+}
+
+/**
  * Get the auto renew behavior
  *
  * 1 == All subscriptions auto renew
@@ -350,3 +372,4 @@ function rcp_get_auto_renew_behavior() {
 
 	return apply_filters( 'rcp_auto_renew_behavior', $behavior );
 }
+
