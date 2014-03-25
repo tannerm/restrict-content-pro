@@ -17,6 +17,7 @@ if ( is_user_logged_in() ):
 	<?php rcp_show_error_messages(); ?>
 	<form id="rcp_profile_editor_form" class="rcp_form" action="<?php echo rcp_get_current_url(); ?>" method="post">
 		<fieldset>
+			<?php do_action( 'rcp_profile_editor_before', $current_user->ID ); ?>
 			<legend><?php _e( 'Change your Name', 'rcp' ); ?></legend>
 			<p id="rcp_profile_first_name_wrap">
 				<label for="rcp_first_name"><?php _e( 'First Name', 'rcp' ); ?></label>
@@ -46,6 +47,7 @@ if ( is_user_logged_in() ):
 				<label for="rcp_email"><?php _e( 'Email Address', 'rcp' ); ?></label>
 				<input name="rcp_email" id="rcp_email" class="text rcp-input required" type="email" value="<?php echo $current_user->user_email; ?>" />
 			</p>
+			<?php do_action( 'rcp_profile_editor_after', $current_user->ID ); ?>
 			<legend><?php _e( 'Change your Password', 'rcp' ); ?></legend>
 			<p id="rcp_profile_password_wrap">
 				<label for="rcp_user_pass"><?php _e( 'New Password', 'rcp' ); ?></label>
