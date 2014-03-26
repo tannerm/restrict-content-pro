@@ -137,4 +137,59 @@ jQuery(document).ready(function($) {
 		}
 	});
 
+	// WP 3.5+ uploader
+	var file_frame;
+	$('body').on('click', '.rcp-upload', function(e) {
+
+		e.preventDefault();
+
+		var formfield = $(this).prev();
+
+		// If the media frame already exists, reopen it.
+		if ( file_frame ) {
+			//file_frame.uploader.uploader.param( 'post_id', set_to_post_id );
+			file_frame.open();
+			return;
+		}
+
+		// Create the media frame.
+		file_frame = wp.media.frames.file_frame = wp.media({
+			frame: 'select',
+			title: rcp_vars.choose_logo,
+			multiple: false,
+			library: {
+				type: 'image'
+			},
+			button: {
+				text: rcp_vars.use_as_logo
+			}
+		});
+
+		file_frame.on( 'menu:render:default', function(view) {
+	        // Store our views in an object.
+	        var views = {};
+
+	        // Unset default menu items
+	        view.unset('library-separator');
+	        view.unset('gallery');
+	        view.unset('featured-image');
+	        view.unset('embed');
+
+	        // Initialize the views in our view object.
+	        view.set(views);
+	    });
+
+		// When an image is selected, run a callback.
+		file_frame.on( 'select', function() {
+
+			var attachment = file_frame.state().get('selection').first().toJSON();
+			formfield.val(attachment.url);
+
+		});
+
+		// Finally, open the modal
+		file_frame.open();
+	});
+
+
 });

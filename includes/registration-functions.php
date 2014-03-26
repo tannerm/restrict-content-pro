@@ -121,7 +121,7 @@ function rcp_process_registration() {
 						$price = $discounts->calc_discounted_price( $price, $discount_obj->amount, $discount_obj->unit );
 
 						// record the usage of this discount code
-						$discounts->add_to_user( $user_data['id'], $discount );
+						//$discounts->add_to_user( $user_data['id'], $discount );
 
 						// incrase the usage count for the code
 						$discounts->increase_uses( $discount_obj->id );
@@ -130,20 +130,27 @@ function rcp_process_registration() {
 						if( $price == '0' ) {
 							rcp_set_status( $user_data['id'], 'active' );
 							rcp_email_subscription_status( $user_data['id'], 'active' );
-							rcp_login_user_in( $user_data['id'], $user_login, $user_pass );
+							rcp_login_user_in( $user_data['id'], $user_data['login'] );
 							wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 						}
 
 					}
 
-					// this is a premium registration
-					if( isset( $_POST['rcp_auto_renew'] ) ) {
+					// Determine auto renew behavior
+					if( '3' == rcp_get_auto_renew_behavior() && isset( $_POST['rcp_auto_renew'] ) ) {
+
 						// set the user to recurring
 						update_user_meta( $user_data['id'], 'rcp_recurring', 'yes' );
 						$auto_renew = true;
 
+					} elseif( '1' == rcp_get_auto_renew_behavior() ) {
+
+						$auto_renew = true;
+
 					} else {
+
 						$auto_renew = false;
+
 					}
 
 					// Remove trailing status, if it exists
@@ -216,7 +223,7 @@ function rcp_process_registration() {
 						}
 
 						// log the new user in
-						rcp_login_user_in( $user_data['id'], $user_data['login'], $user_data['password'] );
+						rcp_login_user_in( $user_data['id'], $user_data['login'] );
 
 					}
 					// send the newly created user to the redirect page after logging them in
@@ -316,3 +323,53 @@ function rcp_get_return_url( $user_id = 0 ) {
 	}
 	return apply_filters( 'rcp_return_url', $redirect, $user_id );
 }
+
+/**
+ * Determine if the current page is a registration page
+ *
+ * @access      public
+ * @since       2.0
+ * @return      bool
+ */
+function rcp_is_registration_page() {
+
+	global $rcp_options, $post;
+
+	$ret = false;
+
+	if ( isset( $rcp_options['registration_page'] ) && is_page( $rcp_options['registration_page'] ) ) {
+		$ret = true;
+	} elseif ( has_shortcode( $post->post_content, 'register_form' ) ) {
+		$ret = true;
+	}
+
+	return apply_filters( 'rcp_is_registration_page', $ret );
+}
+
+/**
+ * Get the auto renew behavior
+ *
+ * 1 == All subscriptions auto renew
+ * 2 == No subscriptions auto renew
+ * 3 == Customer chooses whether to auto renew
+ *
+ * @access      public
+ * @since       2.0
+ * @return      int
+ */
+function rcp_get_auto_renew_behavior() {
+
+	global $rcp_options;
+
+	// Check for old disable auto renew option
+	if( isset( $rcp_options['disable_auto_renew'] ) ) {
+		$rcp_options['auto_renew'] = '2';
+		unset( $rcp_options['disable_auto_renew'] );
+		update_option( 'rcp_settings', $rcp_options );
+	}
+
+	$behavior = isset( $rcp_options['auto_renew'] ) ? $rcp_options['auto_renew'] : '3';
+
+	return apply_filters( 'rcp_auto_renew_behavior', $behavior );
+}
+

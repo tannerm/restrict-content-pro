@@ -267,12 +267,12 @@ function rcp_process_data() {
 		}
 		if( isset( $_GET['activate_subscription'] ) && $_GET['activate_subscription'] > 0) {
 			$levels = new RCP_Levels();
-			$update = $levels->update( $_GET['activate_subscription'], array( 'status' => 'active' ) );
+			$update = $levels->update( absint( $_GET['activate_subscription'] ), array( 'status' => 'active' ) );
 			delete_transient( 'rcp_subscription_levels' );
 		}
 		if( isset( $_GET['deactivate_subscription'] ) && $_GET['deactivate_subscription'] > 0) {
 			$levels = new RCP_Levels();
-			$update = $levels->update( $_GET['deactivate_subscription'], array( 'status' => 'inactive' ) );
+			$update = $levels->update( absint( $_GET['deactivate_subscription'] ), array( 'status' => 'inactive' ) );
 			delete_transient( 'rcp_subscription_levels' );
 		}
 

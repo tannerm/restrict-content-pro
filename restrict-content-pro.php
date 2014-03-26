@@ -3,7 +3,7 @@
 Plugin Name: Restrict Content Pro
 Plugin URL: http://pippinsplugins.com/restrict-content-pro-premium-content-plugin
 Description: Setup a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
-Version: 1.9.5
+Version: 1.9.6
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
 Contributors: mordauk
@@ -19,7 +19,7 @@ if ( !defined( 'RCP_PLUGIN_FILE' ) ) {
 	define( 'RCP_PLUGIN_FILE', __FILE__ );
 }
 if ( !defined( 'RCP_PLUGIN_VERSION' ) ) {
-	define( 'RCP_PLUGIN_VERSION', '1.9.5' );
+	define( 'RCP_PLUGIN_VERSION', '1.9.6' );
 }
 
 
@@ -139,18 +139,19 @@ include( RCP_PLUGIN_DIR . 'includes/class-rcp-levels.php' );
 include( RCP_PLUGIN_DIR . 'includes/class-rcp-payments.php' );
 include( RCP_PLUGIN_DIR . 'includes/class-rcp-discounts.php' );
 include( RCP_PLUGIN_DIR . 'includes/gateways/paypal/paypal.php' );
-include( RCP_PLUGIN_DIR . 'includes/misc-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/scripts.php' );
-include( RCP_PLUGIN_DIR . 'includes/login-functions.php' );
-include( RCP_PLUGIN_DIR . 'includes/registration-functions.php' );
-include( RCP_PLUGIN_DIR . 'includes/member-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/ajax-actions.php' );
+include( RCP_PLUGIN_DIR . 'includes/cron-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/deprecated/functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/discount-functions.php' );
-include( RCP_PLUGIN_DIR . 'includes/subscription-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/email-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/gateway-functions.php' );
-include( RCP_PLUGIN_DIR . 'includes/cron-functions.php' );
-include( RCP_PLUGIN_DIR . 'includes/ajax-actions.php' );
-include( RCP_PLUGIN_DIR . 'includes/deprecated/functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/invoice-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/login-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/member-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/misc-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/registration-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/subscription-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/error-tracking.php' );
 
 if( !class_exists( 'WP_Logging' ) ) {
@@ -167,15 +168,15 @@ if( is_admin() ) {
 	include( RCP_PLUGIN_DIR . 'includes/admin/admin-ajax-actions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/screen-options.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/members/members-page.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin/settings.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/settings/settings.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/subscriptions/subscription-levels.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin/help/help-menus.php' );
-	include( RCP_PLUGIN_DIR . 'includes/admin/help/help-page.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/payments/payments-page.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/reports/reports-page.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/export.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/logs.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/help/help-menus.php' );
+	include( RCP_PLUGIN_DIR . 'includes/admin/help/help-page.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/metabox.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/categories.php' );
 	include( RCP_PLUGIN_DIR . 'includes/user-page-columns.php' );

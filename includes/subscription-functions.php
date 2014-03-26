@@ -147,6 +147,7 @@ function rcp_get_subscription_access_level( $id ) {
 * return string - a formatted unit display. Example "days" becomes "Days". Return is localized
 */
 function rcp_filter_duration_unit( $unit, $length ) {
+	$new_unit = '';
 	switch ( $unit ) :
 		case 'day' :
 			if( $length > 1 )
@@ -180,8 +181,9 @@ function rcp_has_paid_levels() {
 	$levels = rcp_get_subscription_levels();
 	if( $levels ) {
 		foreach( $levels as $level ) {
-			if( $level->price > 0 && $level->status == 'active' )
+			if( $level->price > 0 && $level->status == 'active' ) {
 				return true;
+			}
 		}
 	}
 	return false;

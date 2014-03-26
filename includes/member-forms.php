@@ -12,18 +12,47 @@ function rcp_login_form_fields( $args = array() ) {
 	$rcp_login_form_args = wp_parse_args( $args, $defaults );
 
 	ob_start();
+
 	do_action( 'rcp_before_login_form' );
+
 	rcp_get_template_part( 'login' );
+
 	do_action( 'rcp_after_login_form' );
+
 	return ob_get_clean();
 }
 
 // registration form fields
-function rcp_registration_form_fields( $args = array() ) {
+function rcp_registration_form_fields( $id = null ) {
+
+	global $rcp_level;
+
+	$rcp_level = $id;
+
 	ob_start();
-	do_action( 'rcp_before_register_form' );
-	rcp_get_template_part( 'register' );
-	do_action( 'rcp_after_register_form' );
+
+	do_action( 'rcp_before_register_form', $id );
+
+	if( ! is_null( $id ) ) {
+
+		if( rcp_locate_template( array( 'register-single-' . $id . '.php' ), false ) ) {
+
+			rcp_get_template_part( 'register', 'single-' . $id );
+
+		} else {
+
+			rcp_get_template_part( 'register', 'single' );
+			
+		}
+
+	} else {
+
+		rcp_get_template_part( 'register' );
+
+	}
+
+	do_action( 'rcp_after_register_form', $id );
+
 	return ob_get_clean();
 }
 
@@ -46,7 +75,7 @@ function rcp_change_password_form( $args = array() ) {
 
 function rcp_add_auto_renew( $levels ) {
 	global $rcp_options;
-	if( $levels && !isset( $rcp_options['disable_auto_renew'] ) ) : ?>
+	if( $levels && '3' == rcp_get_auto_renew_behavior() ) : ?>
 	<p id="rcp_auto_renew_wrap">
 		<input name="rcp_auto_renew" id="rcp_auto_renew" type="checkbox" checked="checked"/>
 		<label for="rcp_auto_renew"><?php echo apply_filters ( 'rcp_registration_auto_renew', __( 'Auto Renew', 'rcp' ) ); ?></label>
