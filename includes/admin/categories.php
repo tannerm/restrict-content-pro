@@ -14,12 +14,14 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-function rcp_get_category_fields() {
-	$fields = array( 'paid_only' );
-	return apply_filters( 'rcp_category_fields', $fields );
-}
 
-// Edit term page
+/**
+ * Add restriction options to the edit category page
+ *
+ * @access      public
+ * @since       2.0
+ * @return      void
+ */
 function rcp_category_edit_meta_fields( $term ) { 
 	// retrieve the existing value(s) for this meta field. This returns an array
 	$term_meta = get_option( "rcp_category_meta_$term->term_id" );
@@ -57,13 +59,20 @@ function rcp_category_edit_meta_fields( $term ) {
 					<?php echo $level->name; ?>
 				</label><br/>
 			<?php endforeach; ?>
-			<span class="description"><?php _e( 'Subscription levels allowed to view content in this category.', 'rcp' ); ?></span>
+			<span class="description"><?php _e( 'Subscription levels allowed to view content in this category. Leave unchecked for all.', 'rcp' ); ?></span>
 		</td>
 	</tr>
 <?php
 }
 add_action( 'category_edit_form_fields', 'rcp_category_edit_meta_fields', 10, 2 );
 
+/**
+ * Save our custom category meta
+ *
+ * @access      public
+ * @since       2.0
+ * @return      void
+ */
 function rcp_save_category_meta( $term_id ) {
 
 	$fields = ! empty( $_POST['rcp_category_meta'] ) ? $_POST['rcp_category_meta'] : array();
@@ -75,4 +84,3 @@ function rcp_save_category_meta( $term_id ) {
 	update_option( "rcp_category_meta_$term_id", $fields );
 }  
 add_action( 'edited_category', 'rcp_save_category_meta', 10, 2 );  
-add_action( 'create_category', 'save_taxonomy_custom_meta', 10, 2 );
