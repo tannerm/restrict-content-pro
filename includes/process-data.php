@@ -105,6 +105,8 @@ function rcp_process_data() {
 			if( isset( $_POST['notes'] ) ) update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
 			if( isset( $_POST['status'] ) ) rcp_set_status( $user_id, $status );
 
+			do_action( 'rcp_edit_member', $user_id );
+
 			wp_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id . '&rcp_message=user_updated' ) ); exit;
 		}
 
