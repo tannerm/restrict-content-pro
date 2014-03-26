@@ -10,6 +10,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 <form id="rcp-edit-member" action="" method="post">
 	<table class="form-table">
 		<tbody>
+			<?php do_action( 'rcp_edit_member_before', $user->ID ); ?>
 			<tr valign="top">
 				<th scope="row" valign="top">
 					<label for="rcp-status"><?php _e( 'Status', 'rcp' ); ?></label>
@@ -84,6 +85,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 					<p class="description"><?php _e( 'Use this area to record notes about this user if needed', 'rcp' ); ?></p>
 				</td>
 			</tr>
+			<?php do_action( 'rcp_edit_member_after', $user->ID ); ?>
 		</tbody>
 	</table>
 	<p class="submit">

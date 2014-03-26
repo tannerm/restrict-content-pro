@@ -500,7 +500,7 @@ function rcp_is_trialing( $user_id = 0 ) {
 	if( get_user_meta( $user_id, 'rcp_is_trialing', true ) == 'yes' && rcp_is_active( $user_id ) ) {
 		$ret = true;
 	}
-	return apply_filters( 'rcp_is_trailing', $ret, $user_id );
+	return apply_filters( 'rcp_is_trialing', $ret, $user_id );
 }
 
 
