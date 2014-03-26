@@ -24,7 +24,7 @@ function rcp_category_edit_meta_fields( $term ) {
 	// retrieve the existing value(s) for this meta field. This returns an array
 	$term_meta = get_option( "rcp_category_meta_$term->term_id" );
 	$access_level = isset( $term_meta['access_level'] ) ? absint( $term_meta['access_level'] ) : 0;
-	$subscription_levels = isset( $term_meta['subscriptions'] ) ? $term_meta['subscriptions'] : array();
+	$subscription_levels = isset( $term_meta['subscriptions'] ) ? array_map( 'absint', $term_meta['subscriptions'] ) : array();
 	?>
 	<tr>
 		<th scope="row"><?php _e( 'Paid Only?', 'rcp' ); ?></th>
@@ -66,17 +66,13 @@ add_action( 'category_edit_form_fields', 'rcp_category_edit_meta_fields', 10, 2 
 
 function rcp_save_category_meta( $term_id ) {
 
-	$fields    = rcp_get_category_fields();
-	$term_meta = (array) get_option( "rcp_category_meta_$term_id" );
-	foreach ( $fields as $key ) {
-		if ( isset ( $_POST['rcp_category_meta'][ $key ] ) ) {
-			$term_meta[ $key ] = $_POST['rcp_category_meta'][ $key ];
-		} else {
-			unset( $term_meta[ $key ] );
-		}
+	$fields = ! empty( $_POST['rcp_category_meta'] ) ? $_POST['rcp_category_meta'] : array();
+
+	if( ! empty( $_POST['rcp_category_meta']['subscriptions'] ) ) {
+		$fields['subscriptions'] = array_map( 'absint', array_keys( $_POST['rcp_category_meta']['subscriptions'] ) );
 	}
-	// Save the option array.
-	update_option( "rcp_category_meta_$term_id", $term_meta );
+
+	update_option( "rcp_category_meta_$term_id", $fields );
 }  
 add_action( 'edited_category', 'rcp_save_category_meta', 10, 2 );  
 add_action( 'create_category', 'save_taxonomy_custom_meta', 10, 2 );
