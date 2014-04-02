@@ -185,7 +185,7 @@ function rcp_process_data() {
 				$data = array(
 					'amount'           => $_POST['amount'],
 					'user_id'          => $user->ID,
-					'date'             => date( 'Y-m-d H:i:s', strtotime( $_POST['date'] ) ),
+					'date'             => date( 'Y-m-d', strtotime( $_POST['date'] ) ) . ' ' . date( 'H:i:s', current_time( 'timestamp' ) ),
 					'payment_type'     => 'manual',
 					'subscription'     => rcp_get_subscription( $user->ID ),
 					'subscription_key' => rcp_get_subscription_key( $user->ID ),
