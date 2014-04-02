@@ -136,9 +136,9 @@ function rcp_process_data() {
 			$add = $discounts->insert( $data );
 
 			if( $add ) {
-				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-added=1';
+				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&rcp_message=discount_added';
 			} else {
-				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-added=0';
+				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&rcp_message=discount_not_added';
 			}
 
 			wp_safe_redirect( $url ); exit;

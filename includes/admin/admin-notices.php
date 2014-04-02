@@ -91,6 +91,17 @@ function rcp_admin_notices() {
 			$class = 'error';
 			break;
 
+		case 'discount_added' :
+
+			$text = __( 'Discount code created', 'rcp' );
+			break;
+
+		case 'discount_not_added' :
+
+			$text = __( 'The discount code could not be created due to an error', 'rcp' );
+			$class = 'error';
+			break;
+
 	endswitch;
 
 	if( $message )
