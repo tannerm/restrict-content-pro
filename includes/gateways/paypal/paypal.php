@@ -292,7 +292,7 @@ function rcp_check_ipn() {
 				// update the user's expiration to correspond with the new payment
 				$member_new_expiration = date( 'Y-m-d H:i:s', strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59' ) );
 
-				update_user_meta( $user_id, 'rcp_expiration', $member_new_expiration );
+				rcp_set_expiration_date( $user_id, $member_new_expiration );
 
 				update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
@@ -360,8 +360,7 @@ function rcp_check_ipn() {
 			            	// update the user's expiration to correspond with the new payment
 							$member_new_expiration = date( 'Y-m-d H:i:s', strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59' ) );
 
-							update_user_meta( $user_id, 'rcp_expiration', $member_new_expiration );
-
+							rcp_set_expiration_date( $user_id, $member_new_expiration );
 
 						}
 

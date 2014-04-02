@@ -359,6 +359,36 @@ function rcp_get_expiration_date( $user_id = 0 ) {
 	return false;
 }
 
+/**
+ * Sets the users expiration date
+ * @param int $user_id - the ID of the user to return the subscription level of
+ * @param string $date - the expiration date in YYYY-MM-DD H:i:s
+ * @since 2.0
+ * @return string - The date of the user's expiration, in the format specified in settings
+ */
+function rcp_set_expiration_date( $user_id = 0, $new_date = '' ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$old_date = get_user_meta( $user_id, 'rcp_expiration', true);
+
+	if( update_user_meta( $user_id, 'rcp_expiration', $new_date ) ) {
+
+		if( $old_date !== $new_date ) {
+
+			// Record the status change
+			rcp_add_member_note( $user_id, sprintf( __( 'Member\'s expiration changed from %s to %s', 'rcp' ), $old_date, $new_date ) );
+
+		}
+
+		do_action( 'rcp_set_expiration_date', $user_id, $new_date, $old_date );
+	}
+	
+	return false;
+}
+
 /*
 * Gets the date of a user's expiration in a unix time stamp
 * @param int $user_id - the ID of the user to return the subscription level of

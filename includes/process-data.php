@@ -69,7 +69,7 @@ function rcp_process_data() {
 				$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 
 				rcp_set_status( $user->ID, 'active' );
-				update_user_meta( $user->ID, 'rcp_expiration', $expiration );
+				rcp_set_expiration_date( $user->ID, $expiration );
 				update_user_meta( $user->ID, 'rcp_subscription_level', $_POST['level'] );
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
 				if( isset( $_POST['recurring'] ) ) {
@@ -92,8 +92,7 @@ function rcp_process_data() {
 			$level    = absint( $_POST['level'] );
 			$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 
-
-			update_user_meta( $user_id, 'rcp_expiration', $expiration );
+			rcp_set_expiration_date( $user_id, $expiration );
 
 			if( isset( $_POST['level'] ) ) update_user_meta( $user_id, 'rcp_subscription_level', $level );
 			if( isset( $_POST['recurring'] ) ) {
