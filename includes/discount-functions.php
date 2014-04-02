@@ -83,6 +83,12 @@ function rcp_validate_discount( $code, $subscription_id = 0 ) {
 			}
 		}
 	}
+
+	// Ensure codes are identical, including case
+	if( strcmp( $code, $discount->code ) != 0 ) {
+		$ret = false;
+	}
+
 	return apply_filters( 'rcp_is_discount_valid', $ret, $discount, $subscription_id );
 }
 
