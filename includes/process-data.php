@@ -87,9 +87,9 @@ function rcp_process_data() {
 		// edit a member's subscription
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-member' ) {
 
-			$user_id  = absint( $_POST['user'] );
-			$status   = sanitize_text_field( $_POST['status'] );
-			$level    = absint( $_POST['level'] );
+			$user_id    = absint( $_POST['user'] );
+			$status     = sanitize_text_field( $_POST['status'] );
+			$level      = absint( $_POST['level'] );
 			$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 
 			rcp_set_expiration_date( $user_id, $expiration );

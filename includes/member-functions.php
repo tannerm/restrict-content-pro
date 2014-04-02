@@ -379,11 +379,14 @@ function rcp_set_expiration_date( $user_id = 0, $new_date = '' ) {
 		if( $old_date !== $new_date ) {
 
 			// Record the status change
-			rcp_add_member_note( $user_id, sprintf( __( 'Member\'s expiration changed from %s to %s', 'rcp' ), $old_date, $new_date ) );
+			$note = sprintf( __( 'Member\'s expiration changed from %s to %s', 'rcp' ), $old_date, $new_date );
+			rcp_add_member_note( $user_id, $note );
 
 		}
 
 		do_action( 'rcp_set_expiration_date', $user_id, $new_date, $old_date );
+	
+		return true;
 	}
 	
 	return false;
