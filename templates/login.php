@@ -27,5 +27,5 @@
 		</fieldset>
 	</form>
 <?php else : ?>
-	<div class="rcp_logged_in"><?php _e( 'You are logged in.', 'rcp' ); ?> <a href="<?php echo wp_logout_url( home_url() ); ?>"><?php _e( 'Logout', 'rcp' ); ?></a></div>
+	<div class="rcp_logged_in"><a href="<?php echo wp_logout_url( home_url() ); ?>"><?php _e( 'Logout', 'rcp' ); ?></a></div>
 <?php endif; ?>
