@@ -93,19 +93,23 @@ function rcp_process_registration() {
 						'user_email'		=> $user_data['email'],
 						'first_name'		=> $user_data['first_name'],
 						'last_name'			=> $user_data['last_name'],
-						'user_registered'	=> date( 'Y-m-d H:i:s' ),
-						'role'				=> apply_filters( 'rcp_default_user_level', $role, $subscription_id )
+						'user_registered'	=> date( 'Y-m-d H:i:s' )
 					)
 				);
 			}
 			if( $user_data['id'] ) {
 
+				rcp_set_status( $user_data['id'], 'pending' );
+
 				// setup a unique key for this subscription
 				$subscription_key = rcp_generate_subscription_key();
 				update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
 				update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
-				rcp_set_status( $user_data['id'], 'pending' );
 				update_user_meta( $user_data['id'], 'rcp_expiration', $member_expires );
+
+				// Set the user's role
+				$user = new WP_User( $user_data['id'] );
+				$user->add_role( apply_filters( 'rcp_default_user_level', $role, $subscription_id ) );
 
 				do_action( 'rcp_form_processing', $_POST, $user_data['id'], $price );
 
