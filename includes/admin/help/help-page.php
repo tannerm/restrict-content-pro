@@ -97,6 +97,12 @@ function rcp_help_page()
 							</ul>
 							<p>The last three options (Access Level, Subscription Level, and User Level) can all be combined to create advanced restrictions. For example, if you set a post to have an access level of 3, a subscription level of "Gold", and a "User Level" of "Contributor", then only users subscribed to the "Gold" level (this level must have an access level of 3 or higher) AND are of the user level "Contributor" or higher will be able to view the content. A user subscribed to "Gold" but with a user level of "Subscriber" will not be able to view the content.</p>
 
+							<h4>Restricting Content By Categeory</h4>
+
+							<p>You can automatically restrict posts to certain subscription levels, access levels, and paid status based on the category they are filed in.</p>
+
+							<p>To setup category restrictions, go to Posts > Categories and click "Edit" on the category you wish to setup restrictions for. Any post put in a restricted category will be automatically restricted to members that have the proper membership access.</p>
+
 							<h4>Restricting Portions of Content</h4>
 
 							<p>Instead of automatically restricting the entire contents of a post / page with the meta box option, you can also restrict only portions of the content with a short code. This method is more flexible and is best suited for users who want to block of sections of their content to subscribers, while leaving other blocks open to all users.</p>
