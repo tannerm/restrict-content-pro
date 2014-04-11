@@ -511,11 +511,13 @@ function rcp_print_user_payments( $user_id ) {
 	$payments_list = '';
 	if( $user_payments ) :
 		foreach( $user_payments as $payment ) :
+			$transaction_id = ! empty( $payment->transaction_id ) ? $payment->transaction_id : '';
 			$payments_list .= '<ul class="rcp_payment_details">';
 				$payments_list .= '<li>' . __( 'Date', 'rcp' ) . ': ' . $payment->date . '</li>';
 				$payments_list .= '<li>' . __( 'Subscription', 'rcp' ) . ': ' . $payment->subscription . '</li>';
 				$payments_list .= '<li>' . __( 'Payment Type', 'rcp' ) . ': ' . $payment->payment_type . '</li>';
 				$payments_list .= '<li>' . __( 'Subscription Key', 'rcp' ) . ': ' . $payment->subscription_key . '</li>';
+				$payments_list .= '<li>' . __( 'Transaction ID', 'rcp' ) . ': ' . $transaction_id . '</li>';
 				if( $payment->amount != '' ) {
 					$payments_list .= '<li>' . __( 'Amount', 'rcp' ) . ': ' . rcp_currency_filter( $payment->amount ) . '</li>';
 				} else {
