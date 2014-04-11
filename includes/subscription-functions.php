@@ -81,12 +81,8 @@ function rcp_get_subscription_length( $id ) {
 * return string - nicely formatted date of expiration
 */
 function rcp_calculate_subscription_expiration( $id ) {
-	global $wpdb, $rcp_db_name;
-
 	$length = rcp_get_subscription_length( $id );
-	$expiration = date( 'Y-m-d H:i:s', strtotime( '+' . $length->duration . ' ' . $length->duration_unit . ' 23:59:59'  ) );
-
-	return $expiration;
+	return rcp_calc_member_expiration( $length );
 }
 
 /*

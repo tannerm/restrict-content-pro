@@ -3,7 +3,7 @@
 // retrieves the expiration date of a subscription level
 function rcp_ajax_get_subscription_expiration() {
 	if( isset( $_POST['subscription_level'] ) ) {
-		$level_id = $_POST['subscription_level'];
+		$level_id = absint( $_POST['subscription_level'] );
 		$expiration = rcp_calculate_subscription_expiration( $level_id );
 		echo $expiration;
 	}
