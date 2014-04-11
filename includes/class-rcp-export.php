@@ -33,7 +33,7 @@ class RCP_Export {
 	 * @return      bool
 	 */
 	public function can_export() {
-		return (bool) apply_filters( 'rcp_export_capability', current_user_can( 'manage_options' ) );
+		return (bool) apply_filters( 'rcp_export_capability', current_user_can( 'rcp_export_data' ) );
 	}
 
 	/**

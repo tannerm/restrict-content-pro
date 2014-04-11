@@ -822,6 +822,10 @@ function rcp_activate_license() {
 	if( ! isset( $_POST['rcp_settings']['license_key'] ) )
 		return;
 
+	if( ! current_user_can( 'rcp_manage_settings' ) ) {
+		return;
+	}
+
 	// retrieve the license from the database
 	$status  = get_option( 'rcp_license_status' );
 	$license = trim( $_POST['rcp_settings']['license_key'] );
@@ -862,6 +866,10 @@ function rcp_deactivate_license() {
 	 	if( ! check_admin_referer( 'rcp_deactivate_license', 'rcp_deactivate_license' ) )
 			return; // get out if we didn't click the Activate button
 
+		if( ! current_user_can( 'rcp_manage_settings' ) ) {
+			return;
+		}
+
 		// retrieve the license from the database
 		$license = trim( $rcp_options['license_key'] );
 
@@ -890,3 +898,15 @@ function rcp_deactivate_license() {
 
 	}
 }
+
+
+/**
+ * Set rcp_manage_settings as the cap required to save RCP settings pages
+ *
+ * @since 2.0
+ * @return string capability required
+ */
+function rcp_set_settings_cap() {
+	return 'rcp_manage_settings';
+}
+add_filter( 'option_page_capability_rcp_settings_group', 'rcp_set_settings_cap' );

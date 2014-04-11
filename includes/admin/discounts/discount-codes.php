@@ -43,7 +43,9 @@ function rcp_discounts_page()
 						<th><?php _e( 'Uses Left', 'rcp' ); ?></th>
 						<th><?php _e( 'Expiration', 'rcp' ); ?></th>
 						<?php do_action( 'rcp_discounts_page_table_header' ); ?>
+						<?php if( current_user_can( 'rcp_manage_discounts' ) ) : ?>
 						<th><?php _e( 'Actions', 'rcp' ); ?></th>
+						<?php endif; ?>
 					</tr>
 				</tfoot>
 				<tbody>
@@ -81,6 +83,8 @@ function rcp_discounts_page()
 							<td><?php echo rcp_discount_has_uses_left( $code->id ) ? 'yes' : 'no'; ?></td>
 							<td><?php echo $code->expiration == '' ? __( 'none', 'rcp' ) : date_i18n( 'Y-m-d', strtotime( $code->expiration ) ); ?></td>
 							<?php do_action('rcp_discounts_page_table_column', $code->id); ?>
+							
+							<?php if( current_user_can( 'rcp_manage_discounts' ) ) : ?>
 							<td>
 								<a href="<?php echo add_query_arg( 'edit_discount', $code->id, $page ); ?>"><?php _e( 'Edit', 'rcp' ); ?></a> |
 								<?php if(rcp_get_discount_status($code->id) == 'active') { ?>
@@ -90,6 +94,7 @@ function rcp_discounts_page()
 								<?php } ?>
 								<a href="<?php echo add_query_arg( 'delete_discount', $code->id, $page ); ?>" class="rcp_delete_discount"><?php _e( 'Delete', 'rcp' ); ?></a>
 							</td>
+							<?php endif; ?>
 						</tr>
 					<?php
 					$i++;
@@ -99,104 +104,106 @@ function rcp_discounts_page()
 				<?php endif; ?>
 			</table>
 			<?php do_action( 'rcp_discounts_below_table' ); ?>
-			<h3><?php _e( 'Add New Discount', 'rcp' ); ?></h3>
-			<form id="rcp-discounts" action="" method="POST">
-				<table class="form-table">
-					<tbody>
-						<tr class="form-field">
-							<th scope="row" valign="top">
-								<label for="rcp-name"><?php _e( 'Name', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<input name="name" id="rcp-name" type="text" value="" style="width: 300px;"/>
-								<p class="description"><?php _e( 'The name of this discount', 'rcp' ); ?></p>
-							</td>
-						</tr>
-						<tr class="form-field">
-							<th scope="row" valign="top">
-								<label for="rcp-description"><?php _e( 'Description', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<textarea name="description" id="rcp-description" style="width: 300px;"></textarea>
-								<p class="description"><?php _e( 'The description of this discount code', 'rcp' ); ?></p>
-							</td>
-						</tr>
-						<tr class="form-field">
-							<th scope="row" valign="top">
-								<label for="rcp-code"><?php _e( 'Code', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<input type="text" id="rcp-code" name="code" value="" style="width: 300px;"/>
-								<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT', 'rcp' ); ?></p>
-							</td>
-						</tr>
-						<tr class="form-field">
-							<th scope="row" valign="top">
-								<label for="rcp-unit"><?php _e( 'Type', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<select name="unit" id="rcp-duration-unit">
-									<option value="%"><?php _e( 'Percentage', 'rcp' ); ?></option>
-									<option value="flat"><?php _e( 'Flat amount', 'rcp' ); ?></option>
-								</select>
-								<p class="description"><?php _e( 'The kind of discount to apply for this discount.', 'rcp' ); ?></p>
-							</td>
-						</tr>
-						<tr class="form-field">
-							<th scope="row" valign="top">
-								<label for="rcp-amount"><?php _e( 'Amount', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<input type="text" id="rcp-amount" name="amount" value="" style="width: 40px;"/>
-								<p class="description"><?php _e( 'The amount of this discount code.', 'rcp' ); ?></p>
-							</td>
-						</tr>
-						<tr class="form-field">
-							<th scope="row" valign="top">
-								<label for="rcp-subscription"><?php _e( 'Subscription', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<?php
-								$levels = rcp_get_subscription_levels('all', false);
-								if( $levels ) : ?>
-									<select name="subscription" id="rcp-subscription">
-										<option value="0"><?php _e( 'All Levels', 'rcp' ); ?></option>
-										<?php
-											foreach( $levels as $level ) :
-												echo '<option value="' . $level->id . '">' . $level->name . '</option>';
-											endforeach;
-										?>
+			<?php if( current_user_can( 'rcp_manage_levels' ) ) : ?>
+				<h3><?php _e( 'Add New Discount', 'rcp' ); ?></h3>
+				<form id="rcp-discounts" action="" method="POST">
+					<table class="form-table">
+						<tbody>
+							<tr class="form-field">
+								<th scope="row" valign="top">
+									<label for="rcp-name"><?php _e( 'Name', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input name="name" id="rcp-name" type="text" value="" style="width: 300px;"/>
+									<p class="description"><?php _e( 'The name of this discount', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr class="form-field">
+								<th scope="row" valign="top">
+									<label for="rcp-description"><?php _e( 'Description', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<textarea name="description" id="rcp-description" style="width: 300px;"></textarea>
+									<p class="description"><?php _e( 'The description of this discount code', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr class="form-field">
+								<th scope="row" valign="top">
+									<label for="rcp-code"><?php _e( 'Code', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input type="text" id="rcp-code" name="code" value="" style="width: 300px;"/>
+									<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr class="form-field">
+								<th scope="row" valign="top">
+									<label for="rcp-unit"><?php _e( 'Type', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<select name="unit" id="rcp-duration-unit">
+										<option value="%"><?php _e( 'Percentage', 'rcp' ); ?></option>
+										<option value="flat"><?php _e( 'Flat amount', 'rcp' ); ?></option>
 									</select>
-								<?php endif; ?>
-								<p class="description"><?php _e( 'The subscription levels this discount code can be used for.', 'rcp' ); ?></p>
-							</td>
-						</tr>
-						<tr class="form-field">
-							<th scope="row" valign="top">
-								<label for="rcp-expiration"><?php _e( 'Expiration date', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="datepicker"/>
-								<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of yyyy-mm-dd. For no expiration, leave blank', 'rcp' ); ?></p>
-							</td>
-						</tr>
-						<tr class="form-field">
-							<th scope="row" valign="top">
-								<label for="rcp-max-uses"><?php _e( 'Max Uses', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<input type="text" id="rcp-max-uses" name="max" value="" style="width: 40px;"/>
-								<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'rcp' ); ?></p>
-							</td>
-						</tr>
-						<?php do_action( 'rcp_add_discount_form' ); ?>
-					</tbody>
-				</table>
-				<p class="submit">
-					<input type="hidden" name="rcp-action" value="add-discount"/>
-					<input type="submit" value="<?php _e( 'Add Discount Code', 'rcp' ); ?>" class="button-primary"/>
-				</p>
-			</form>
+									<p class="description"><?php _e( 'The kind of discount to apply for this discount.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr class="form-field">
+								<th scope="row" valign="top">
+									<label for="rcp-amount"><?php _e( 'Amount', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input type="text" id="rcp-amount" name="amount" value="" style="width: 40px;"/>
+									<p class="description"><?php _e( 'The amount of this discount code.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr class="form-field">
+								<th scope="row" valign="top">
+									<label for="rcp-subscription"><?php _e( 'Subscription', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<?php
+									$levels = rcp_get_subscription_levels('all', false);
+									if( $levels ) : ?>
+										<select name="subscription" id="rcp-subscription">
+											<option value="0"><?php _e( 'All Levels', 'rcp' ); ?></option>
+											<?php
+												foreach( $levels as $level ) :
+													echo '<option value="' . $level->id . '">' . $level->name . '</option>';
+												endforeach;
+											?>
+										</select>
+									<?php endif; ?>
+									<p class="description"><?php _e( 'The subscription levels this discount code can be used for.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr class="form-field">
+								<th scope="row" valign="top">
+									<label for="rcp-expiration"><?php _e( 'Expiration date', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="datepicker"/>
+									<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of yyyy-mm-dd. For no expiration, leave blank', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr class="form-field">
+								<th scope="row" valign="top">
+									<label for="rcp-max-uses"><?php _e( 'Max Uses', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input type="text" id="rcp-max-uses" name="max" value="" style="width: 40px;"/>
+									<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<?php do_action( 'rcp_add_discount_form' ); ?>
+						</tbody>
+					</table>
+					<p class="submit">
+						<input type="hidden" name="rcp-action" value="add-discount"/>
+						<input type="submit" value="<?php _e( 'Add Discount Code', 'rcp' ); ?>" class="button-primary"/>
+					</p>
+				</form>
+			<?php endif; ?>
 		<?php endif; ?>
 	</div><!--end wrap-->
 
