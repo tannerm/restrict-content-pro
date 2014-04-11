@@ -27,7 +27,8 @@ function rcp_process_paypal( $subscription_data ) {
 		'cancel_return' => home_url(),
 		'notify_url'    => home_url( '/' ) . '?listener=IPN',
 		'cbt'			=> get_bloginfo( 'name' ),
-		'tax'           => 0
+		'tax'           => 0,
+		'page_style'    => ! empty( $rcp_options['paypal_page_style'] ) ? trim( $rcp_options['paypal_page_style'] ) : '',
 	);
 
 
