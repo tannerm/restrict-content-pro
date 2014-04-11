@@ -105,7 +105,8 @@ function rcp_process_registration() {
 				$subscription_key = rcp_generate_subscription_key();
 				update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
 				update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
-				update_user_meta( $user_data['id'], 'rcp_expiration', $member_expires );
+
+				rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 				// Set the user's role
 				$user = new WP_User( $user_data['id'] );
@@ -215,7 +216,7 @@ function rcp_process_registration() {
 					}
 
 					// date for trial / paid users, "none" for free users
-					update_user_meta( $user_data['id'], 'rcp_expiration', $member_expires );
+					rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 					if( $user_data['need_new'] ) {
 

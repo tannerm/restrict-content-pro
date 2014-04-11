@@ -69,7 +69,7 @@ function rcp_process_data() {
 				$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 
 				rcp_set_status( $user->ID, 'active' );
-				update_user_meta( $user->ID, 'rcp_expiration', $expiration );
+				rcp_set_expiration_date( $user->ID, $expiration );
 				update_user_meta( $user->ID, 'rcp_subscription_level', $_POST['level'] );
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
 				if( isset( $_POST['recurring'] ) ) {
@@ -87,12 +87,10 @@ function rcp_process_data() {
 		// edit a member's subscription
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-member' ) {
 
-			$user_id  = absint( $_POST['user'] );
-			$status   = sanitize_text_field( $_POST['status'] );
-			$level    = absint( $_POST['level'] );
+			$user_id    = absint( $_POST['user'] );
+			$status     = sanitize_text_field( $_POST['status'] );
+			$level      = absint( $_POST['level'] );
 			$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
-
-			update_user_meta( $user_id, 'rcp_expiration', $expiration );
 
 			if( isset( $_POST['level'] ) ) update_user_meta( $user_id, 'rcp_subscription_level', $level );
 			if( isset( $_POST['recurring'] ) ) {
@@ -104,9 +102,12 @@ function rcp_process_data() {
 			if( isset( $_POST['notes'] ) ) update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
 			if( isset( $_POST['status'] ) ) rcp_set_status( $user_id, $status );
 
+			rcp_set_expiration_date( $user_id, $expiration );
+			
 			do_action( 'rcp_edit_member', $user_id );
 
 			wp_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id . '&rcp_message=user_updated' ) ); exit;
+
 		}
 
 
@@ -135,9 +136,9 @@ function rcp_process_data() {
 			$add = $discounts->insert( $data );
 
 			if( $add ) {
-				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-added=1';
+				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&rcp_message=discount_added';
 			} else {
-				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-added=0';
+				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&rcp_message=discount_not_added';
 			}
 
 			wp_safe_redirect( $url ); exit;
@@ -184,7 +185,7 @@ function rcp_process_data() {
 				$data = array(
 					'amount'           => $_POST['amount'],
 					'user_id'          => $user->ID,
-					'date'             => date( 'Y-m-d H:i:s', strtotime( $_POST['date'] ) ),
+					'date'             => date( 'Y-m-d', strtotime( $_POST['date'] ) ) . ' ' . date( 'H:i:s', current_time( 'timestamp' ) ),
 					'payment_type'     => 'manual',
 					'subscription'     => rcp_get_subscription( $user->ID ),
 					'subscription_key' => rcp_get_subscription_key( $user->ID ),

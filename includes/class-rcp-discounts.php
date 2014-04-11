@@ -287,8 +287,12 @@ class RCP_Discounts {
 
 		$args = wp_parse_args( $args, $defaults );
 
+		if( $this->get_by( 'code', $args['code'] ) ) {
+			return false; // this code already exists
+		}
+
 		do_action( 'rcp_pre_add_discount', $args );
-	//	print_r( $args ); exit;
+
 		$add = $wpdb->query(
 			$wpdb->prepare(
 				"INSERT INTO {$this->db_name} SET
