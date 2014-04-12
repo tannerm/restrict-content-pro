@@ -108,6 +108,7 @@ $code = rcp_get_discount_details( urldecode( $_GET['edit_discount'] ) );
 					<p class="description"><?php _e(' The maximum number of times this discount can be used. Leave blank for unlimited.', 'rcp' ); ?></p>
 				</td>
 			</tr>
+			<?php do_action( 'rcp_edit_discount_form', $code->id ); ?>
 		</tbody>
 	</table>
 	<p class="submit">
