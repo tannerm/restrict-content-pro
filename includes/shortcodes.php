@@ -250,10 +250,9 @@ function rcp_user_subscription_details( $atts, $content = null ) {
 		
 	} else {
 
-		rcp_get_template_part( 'login' );
+		echo rcp_login_form_fields();
 
 	}
-
 
 	return ob_get_clean();
 }
