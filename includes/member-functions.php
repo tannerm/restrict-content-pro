@@ -596,17 +596,25 @@ function rcp_get_user_role( $user_id ) {
 
 	global $wpdb;
 
-	$user = get_userdata( $user_id );
+	$user = new WP_User( $user_id );
 	$capabilities = $user->{$wpdb->prefix . 'capabilities'};
 
-	if ( !isset( $wp_roles ) )
-	   $wp_roles = new WP_Roles();
-
-	   foreach ( $wp_roles->role_names as $role => $name ) {
-
-	   if ( array_key_exists( $role, $capabilities ) )
-	   return $role;
+	if ( !isset( $wp_roles ) ) {
+		$wp_roles = new WP_Roles();
 	}
+
+	$user_role = '';
+
+	if( ! empty( $capabilities ) ) {
+		foreach ( $wp_roles->role_names as $role => $name ) {
+
+			if ( array_key_exists( $role, $capabilities ) ) {
+				$user_role = $role;
+			}
+		}
+	}
+
+	return $user_role;
 }
 
 /**
