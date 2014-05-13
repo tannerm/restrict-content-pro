@@ -70,7 +70,7 @@ function rcp_settings_page() {
 									<?php
 									$currencies = rcp_get_currencies();
 									foreach($currencies as $key => $currency) {
-										echo '<option value="' . $key . '" ' . selected($key, $rcp_options['currency'], false) . '>' . $currency . '</option>';
+										echo '<option value="' . esc_attr( $key ) . '" ' . selected($key, $rcp_options['currency'], false) . '>' . $currency . '</option>';
 									}
 									?>
 								</select>
