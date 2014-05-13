@@ -175,7 +175,7 @@ function rcp_settings_page() {
 							<td>
 								<?php
 								$free_message = isset( $rcp_options['free_message'] ) ? $rcp_options['free_message'] : '';
-								wp_editor( $free_message, 'rcp_settings[free_message]', array( 'textarea_name' => 'rcp_settings[free_message]', 'teeny' => true ) ); ?>
+								wp_editor( $free_message, 'rcp_settings_free_message', array( 'textarea_name' => 'rcp_settings[free_message]', 'teeny' => true ) ); ?>
 								<div class="description"><?php _e( 'This is the message shown to users that do not have privilege to view free, user only content.', 'rcp' ); ?></div>
 							</td>
 						</tr>
@@ -186,7 +186,7 @@ function rcp_settings_page() {
 							<td>
 								<?php
 								$paid_message = isset( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : '';
-								wp_editor( $paid_message, 'rcp_settings[paid_message]', array( 'textarea_name' => 'rcp_settings[paid_message]', 'teeny' => true ) ); ?>
+								wp_editor( $paid_message, 'rcp_settings_paid_message', array( 'textarea_name' => 'rcp_settings[paid_message]', 'teeny' => true ) ); ?>
 								<div class="description"><?php _e( 'This is the message shown to users that do not have privilege to view premium content.', 'rcp' ); ?></div>
 							</td>
 						</tr>
