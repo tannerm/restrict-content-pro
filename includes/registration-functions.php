@@ -85,7 +85,6 @@ function rcp_process_registration() {
 
 			if( $user_data['need_new'] ) {
 
-				$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
 
 				$user_data['id'] = wp_insert_user( array(
 						'user_login'		=> $user_data['login'],
@@ -109,6 +108,7 @@ function rcp_process_registration() {
 				rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 				// Set the user's role
+				$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
 				$user = new WP_User( $user_data['id'] );
 				$user->add_role( apply_filters( 'rcp_default_user_level', $role, $subscription_id ) );
 
