@@ -1,5 +1,6 @@
 <?php
 $level = rcp_get_subscription_details( absint( urldecode( $_GET['edit_subscription'] ) ) );
+$level->role = empty( $level->role ) ? 'subscriber' : $level->role;
 ?>
 <h2>
 	<?php _e( 'Edit Subscription Level:', 'rcp' ); echo ' ' . stripslashes( $level->name ); ?>

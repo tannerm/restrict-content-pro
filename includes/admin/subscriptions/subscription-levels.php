@@ -197,7 +197,7 @@ function rcp_member_levels_page()
 								</th>
 								<td>
 									<select name="role" id="rcp-role">
-										<?php wp_dropdown_roles(); ?>
+										<?php wp_dropdown_roles( 'subscriber' ); ?>
 									</select>
 									<p class="description"><?php _e( 'The user role given to the member after signing up.', 'rcp' ); ?></p>
 								</td>
