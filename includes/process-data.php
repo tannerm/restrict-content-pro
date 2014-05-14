@@ -108,6 +108,11 @@ function rcp_process_data() {
 			} else {
 				delete_user_meta( $user_id, 'rcp_recurring' );
 			}
+			if( isset( $_POST['trialing'] ) ) {
+				update_user_meta( $user_id, 'rcp_is_trialing', 'yes' );
+			} else {
+				delete_user_meta( $user_id, 'rcp_is_trialing' );
+			}
 			if( isset( $_POST['signup_method'] ) ) update_user_meta( $user_id, 'rcp_signup_method', $_POST['signup_method'] );
 			if( isset( $_POST['notes'] ) ) update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
 			if( isset( $_POST['status'] ) ) rcp_set_status( $user_id, $status );

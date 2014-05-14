@@ -65,6 +65,17 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 			</tr>
 			<tr valign="top">
 				<th scope="row" valign="top">
+					<?php _e( 'Trialing', 'rcp' ); ?>
+				</th>
+				<td>
+					<label for="rcp-trialing">
+						<input name="trialing" id="rcp-trialing" type="checkbox" value="1" <?php checked( 1, rcp_is_trialing( $user->ID ) ); ?>/>
+						<?php _e( 'Does this user have a trial membership?', 'rcp' ); ?>
+					</label>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" valign="top">
 					<?php _e( 'Sign Up Method', 'rcp' ); ?>
 				</th>
 				<td>
