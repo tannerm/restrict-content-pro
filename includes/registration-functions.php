@@ -158,7 +158,7 @@ function rcp_process_registration() {
 
 					}
 
-					// Remove trailing status, if it exists
+					// Remove trialing status, if it exists
 					delete_user_meta( $user_data['id'], 'rcp_is_trialing' );
 
 					$redirect = rcp_get_return_url( $user_data['id'] );
