@@ -47,8 +47,14 @@ function rcp_export_page() {
 		<h3><?php _e( 'Payments Export', 'rcp' ); ?></h3>
 		<p><?php _e( 'Download payment data as a CSV file. Use this file for your own record keeping or tracking.', 'rcp' ); ?></p>
 		<form id="rcp_export" action="<?php echo esc_url( $current_page ); ?>" method="post">
-			<input type="hidden" name="rcp-action" value="export-payments"/>
-			<input type="submit" class="button-secondary" value="<?php _e( 'Download Payments CSV', 'rcp' ); ?>"/>
+			<p>
+				<input type="text" class="rcp-datepicker" name="rcp-start" id="rcp-start" placeholder="<?php _e( 'Start date', 'rcp' ); ?>"/>
+				<input type="text" class="rcp-datepicker" name="rcp-end" id="rcp-end" placeholder="<?php _e( 'End date', 'rcp' ); ?>"/><br/>
+			</p>
+			<p>
+				<input type="submit" class="button-secondary" value="<?php _e( 'Download Payments CSV', 'rcp' ); ?>"/>
+				<input type="hidden" name="rcp-action" value="export-payments"/>
+			</p>
 		</form>
 
 		<?php do_action( 'rcp_export_page_bottom' ); ?>
