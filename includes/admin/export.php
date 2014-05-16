@@ -6,6 +6,9 @@ function rcp_export_page() {
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'Export', 'rcp' ); ?></h2>
+
+		<?php do_action( 'rcp_export_page_top' ); ?>
+
 		<h3><?php _e( 'Members Export', 'rcp' ); ?></h3>
 		<p><?php _e( 'Download member data as a CSV file. This is useful for tasks such as importing batch users into Mail Chimp, or other systems.', 'rcp' ); ?></p>
 		<form id="rcp_export" action="<?php echo $current_page; ?>" method="post">
@@ -44,6 +47,8 @@ function rcp_export_page() {
 			<input type="hidden" name="rcp-action" value="export-payments"/>
 			<input type="submit" class="button-secondary" value="<?php _e( 'Download Payments CSV', 'rcp' ); ?>"/>
 		</form>
+
+		<?php do_action( 'rcp_export_page_bottom' ); ?>
 
 	</div><!--end wrap-->
 	<?php
