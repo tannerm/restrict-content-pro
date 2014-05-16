@@ -57,9 +57,23 @@ class RCP_Payments_Export extends RCP_Export {
 		global $wpdb;
 
 		$data = array();
+		$args = array();
+
+		if( ! empty( $_POST['rcp-year'] ) ) {
+
+			$args['date'] = array();
+			$args['date']['year'] = absint( $_POST['rcp-year'] );
+
+			if( ! empty( $_POST['rcp-month'] ) ) {
+
+				$args['date']['month'] = absint( $_POST['rcp-month'] );
+
+			}
+
+		}
 
 		$rcp_db   = new RCP_Payments;
-		$payments = $rcp_db->get_payments();
+		$payments = $rcp_db->get_payments( $args );
 
 		foreach ( $payments as $payment ) {
 

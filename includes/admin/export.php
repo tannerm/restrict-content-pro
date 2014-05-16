@@ -48,8 +48,24 @@ function rcp_export_page() {
 		<p><?php _e( 'Download payment data as a CSV file. Use this file for your own record keeping or tracking.', 'rcp' ); ?></p>
 		<form id="rcp_export" action="<?php echo esc_url( $current_page ); ?>" method="post">
 			<p>
-				<input type="text" class="rcp-datepicker" name="rcp-start" id="rcp-start" placeholder="<?php _e( 'Start date', 'rcp' ); ?>"/>
-				<input type="text" class="rcp-datepicker" name="rcp-end" id="rcp-end" placeholder="<?php _e( 'End date', 'rcp' ); ?>"/><br/>
+				<select name="rcp-year" id="rcp-year">
+					<option value="0"><?php _e( 'All years', 'rcp' ); ?>
+					<?php 
+					$current = date( 'Y' );
+					$year    = $current;
+					$end     = $current - 5;
+					while( $year >= $end ) : ?>
+						<option value="<?php echo $year; ?>"><?php echo $year; ?></option>
+						<?php
+						$year--;
+					endwhile; ?>
+				</select>
+				<select name="rcp-month" id="rcp-month">
+					<option value="0"><?php _e( 'All months', 'rcp' ); ?>
+					<?php for( $i = 1; $i <= 12; $i++ ) : ?>
+						<option value="<?php echo $i; ?>"><?php echo rcp_get_month_name( $i ); ?></option>
+					<?php endfor; ?>
+				</select>
 			</p>
 			<p>
 				<input type="submit" class="button-secondary" value="<?php _e( 'Download Payments CSV', 'rcp' ); ?>"/>
