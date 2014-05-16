@@ -24,9 +24,7 @@ function rcp_export_page() {
 						endforeach;
 					endif; ?>
 				</select>
-				<label for="rcp-subscription"><?php _e( 'Choose the subscription to export members from', 'rcp' ); ?></label>
-			</p>
-			<p>
+				<label for="rcp-subscription"><?php _e( 'Choose the subscription to export members from', 'rcp' ); ?></label><br/>
 				<select name="rcp-status" id="rcp-status">
 					<option value="active"><?php _e( 'Active', 'rcp' ); ?></option>
 					<option value="pending"><?php _e( 'Pending', 'rcp' ); ?></option>
@@ -34,8 +32,13 @@ function rcp_export_page() {
 					<option value="cancelled"><?php _e( 'Cancelled', 'rcp' ); ?></option>
 					<option value="free"><?php _e( 'Free', 'rcp' ); ?></option>
 				</select>
-				<label for="rcp-status"><?php _e( 'Choose the status to export', 'rcp' ); ?></label>
+				<label for="rcp-status"><?php _e( 'Choose the status to export', 'rcp' ); ?></label><br/>
+				<input type="number" id="rcp-number" name="rcp-number" class="small-text" value="500" />
+				<label for="rcp-number"><?php _e( 'Maximum number of members to export', 'rcp' ); ?><br/>
+				<input type="number" id="rcp-offset" name="rcp-offset" class="small-text" value="0" />
+				<label for="rcp-offset"><?php _e( 'The number of members to skip', 'rcp' ); ?>
 			</p>
+			<p><?php _e( 'If you need to export a large number of members, export them in batches using the max and offset options', 'rcp' ); ?></p>
 			<input type="hidden" name="rcp-action" value="export-members"/>
 			<input type="submit" class="button-secondary" value="<?php _e( 'Download Member CSV', 'rcp' ); ?>"/>
 		</form>
