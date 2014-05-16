@@ -236,7 +236,7 @@ function rcp_members_page() {
 								<label for="rcp-expiration"><?php _e('Expiration date', 'rcp'); ?></label>
 							</th>
 							<td>
-								<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="datepicker"/>
+								<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker"/>
 								<p class="description"><?php _e('Enter the expiration date for this user in the format of yyyy-mm-dd', 'rcp'); ?></p>
 							</td>
 						</tr>

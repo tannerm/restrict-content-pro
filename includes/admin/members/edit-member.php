@@ -48,7 +48,7 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 					<label for="rcp-expiration"><?php _e( 'Expiration date', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="datepicker" value="<?php echo esc_attr( get_user_meta( $user->ID, 'rcp_expiration', true ) ); ?>"/>
+					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker" value="<?php echo esc_attr( get_user_meta( $user->ID, 'rcp_expiration', true ) ); ?>"/>
 					<p class="description"><?php _e( 'Enter the expiration date for this user in the format of yyyy-mm-dd', 'rcp' ); ?></p>
 				</td>
 			</tr>

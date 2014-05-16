@@ -32,7 +32,7 @@
 					<label for="rcp-date"><?php _e( 'Payment Date', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input name="date" id="rcp-date" type="text" class="datepicker" value=""/>
+					<input name="date" id="rcp-date" type="text" class="rcp-datepicker" value=""/>
 					<p class="description"><?php _e( 'Enter the date for this payment in the format of yyyy-mm-dd', 'rcp' ); ?></p>
 				</td>
 			</tr>

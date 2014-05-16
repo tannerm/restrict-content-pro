@@ -182,7 +182,7 @@ function rcp_discounts_page()
 									<label for="rcp-expiration"><?php _e( 'Expiration date', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="datepicker"/>
+									<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker"/>
 									<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of yyyy-mm-dd. For no expiration, leave blank', 'rcp' ); ?></p>
 								</td>
 							</tr>

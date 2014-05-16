@@ -26,9 +26,9 @@ jQuery(document).ready(function($) {
 	jQuery(window).trigger( 'hashchange' );
 
 
-	if($('.form-table .datepicker').length > 0 ) {
+	if($('.rcp-datepicker').length > 0 ) {
 		var dateFormat = 'yy-mm-dd';
-		$('.datepicker').datepicker({dateFormat: dateFormat});
+		$('.rcp-datepicker').datepicker({dateFormat: dateFormat});
 	}
 	$('.rcp_deactivate').click(function() {
 		if(confirm(rcp_vars.deactivate_user)) {
