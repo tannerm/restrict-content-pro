@@ -76,6 +76,11 @@ function rcp_check_for_soon_to_expire_users() {
 			array(
 				'key'    => 'rcp_recurring',
 				'compare'=> 'NOT EXISTS'
+			),
+			array(
+				'key'    => 'rcp_status',
+				'compare'=> '=',
+				'value'  => 'active'
 			)
 		),
 		'number' 		=> 9999,
