@@ -77,7 +77,7 @@ class RCP_Payments {
 			delete_transient( 'rcp_payments_count' );
 
 			// Remove trialing status, if it exists
-			delete_user_meta( $user_data['id'], 'rcp_is_trialing' );
+			delete_user_meta( $args['user_id'], 'rcp_is_trialing' );
 
 			do_action( 'rcp_insert_payment', $wpdb->insert_id, $args, $args['amount'] );
 
