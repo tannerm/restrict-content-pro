@@ -80,13 +80,13 @@ class RCP_Levels {
 		global $wpdb;
 
 
-		$level = wp_cache_get( 'level_' . $level_id . '_' . $value, 'rcp' );
+		$level = wp_cache_get( 'level_' . $field . '_' . $value, 'rcp' );
 
 		if( false === $level ) {
 
 			$level = $wpdb->get_row( "SELECT * FROM {$this->db_name} WHERE {$field}='{$value}';" );
 	
-			wp_cache_set( 'level_' . $level_id . '_' . $value, $level, 'rcp' );
+			wp_cache_set( 'level_' . $field . '_' . $value, $level, 'rcp' );
 
 		}
 
