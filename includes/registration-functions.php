@@ -375,6 +375,10 @@ function rcp_get_auto_renew_behavior() {
 
 	$behavior = isset( $rcp_options['auto_renew'] ) ? $rcp_options['auto_renew'] : '3';
 
+	if( $level->price == '0' ) {
+		$behavior = '2';
+	}
+
 	return apply_filters( 'rcp_auto_renew_behavior', $behavior );
 }
 
