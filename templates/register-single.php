@@ -1,5 +1,7 @@
 <?php global $rcp_options, $rcp_level, $post; ?>
 
+<?php $level = rcp_get_subscription_details( $rcp_level ); ?>
+
 <?php if( ! is_user_logged_in() ) { ?>
 	<h3 class="rcp_header">
 		<?php echo apply_filters( 'rcp_registration_header_logged_in', __( 'Register New Account', 'rcp' ) ); ?>
@@ -53,7 +55,7 @@ rcp_show_error_messages( 'register' ); ?>
 	</fieldset>
 	<?php } ?>
 
-	<?php if( rcp_has_discounts() ) : ?>
+	<?php if( rcp_has_discounts() && $level->price > '0' ) : ?>
 	<fieldset class="rcp_discounts_fieldset">
 		<p id="rcp_discount_code_wrap">
 			<label for="rcp_discount_code">
@@ -89,16 +91,15 @@ rcp_show_error_messages( 'register' ); ?>
 			<?php endforeach; ?>
 		<?php endif; ?>
 
-	<?php endif; ?>
+		<fieldset class="rcp_level_details_fieldset">
+			<p id="rcp_level_details_wrap" class="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>">
+				<span class="rcp_price"><?php echo rcp_currency_filter( $level->price ); ?></span>
+				<span class="rcp_sep">&nbsp;/&nbsp;</span>
+				<span class="rcp_duration"><?php echo $level->duration . ' ' . rcp_filter_duration_unit( $level->duration_unit, $level->duration ); ?></span>
+			</p>
+		</fieldset>
 
-	<fieldset class="rcp_level_details_fieldset">
-		<?php $level = rcp_get_subscription_details( $rcp_level ); ?>
-		<p id="rcp_level_details_wrap" class="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>">
-			<span class="rcp_price"><?php echo rcp_currency_filter( $level->price ); ?></span>
-			<span class="rcp_sep">&nbsp;/&nbsp;</span>
-			<span class="rcp_duration"><?php echo $level->duration . ' ' . rcp_filter_duration_unit( $level->duration_unit, $level->duration ); ?></span>
-		</p>
-	</fieldset>
+	<?php endif; ?>
 
 	<?php do_action( 'rcp_before_registration_submit_field' ); ?>
 

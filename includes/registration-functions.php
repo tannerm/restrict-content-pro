@@ -364,7 +364,9 @@ function rcp_is_registration_page() {
  */
 function rcp_get_auto_renew_behavior() {
 
-	global $rcp_options;
+	global $rcp_options, $rcp_level;
+
+	$level = rcp_get_subscription_details( $rcp_level );
 
 	// Check for old disable auto renew option
 	if( isset( $rcp_options['disable_auto_renew'] ) ) {
