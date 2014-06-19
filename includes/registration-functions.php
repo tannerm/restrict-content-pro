@@ -366,7 +366,6 @@ function rcp_get_auto_renew_behavior() {
 
 	global $rcp_options, $rcp_level;
 
-	$level = rcp_get_subscription_details( $rcp_level );
 
 	// Check for old disable auto renew option
 	if( isset( $rcp_options['disable_auto_renew'] ) ) {
@@ -377,8 +376,11 @@ function rcp_get_auto_renew_behavior() {
 
 	$behavior = isset( $rcp_options['auto_renew'] ) ? $rcp_options['auto_renew'] : '3';
 
-	if( $level->price == '0' ) {
-		$behavior = '2';
+	if( $rcp_level ) {
+		$level = rcp_get_subscription_details( $rcp_level );
+		if( $level->price == '0' ) {
+			$behavior = '2';
+		}
 	}
 
 	return apply_filters( 'rcp_auto_renew_behavior', $behavior );
