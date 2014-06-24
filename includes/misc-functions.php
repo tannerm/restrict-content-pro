@@ -37,6 +37,7 @@ function rcp_get_paid_posts() {
 		'meta_value' => 1,
 		'post_status' => 'publish',
 		'posts_per_page' => -1,
+		'post_type' => 'any',
 		'fields' => 'ids'
 	);
 	$paid_ids = get_posts( $args );

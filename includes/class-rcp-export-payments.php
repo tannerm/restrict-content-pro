@@ -72,6 +72,8 @@ class RCP_Payments_Export extends RCP_Export {
 
 		}
 
+		$args['number'] = 999999;
+
 		$rcp_db   = new RCP_Payments;
 		$payments = $rcp_db->get_payments( $args );
 
