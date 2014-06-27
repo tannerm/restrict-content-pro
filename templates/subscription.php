@@ -1,6 +1,9 @@
 <?php
 
-global $user_ID, $rcp_options;
+global $user_ID, $rcp_options, $rcp_load_css;
+
+$rcp_load_css = true;
+
 do_action( 'rcp_subscription_details_top' );
 ?>
 <table class="rcp-table" id="rcp-account-overview">

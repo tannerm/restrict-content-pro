@@ -2,7 +2,9 @@
 /**
  * This template is used to display the profile editor with [rcp_profile_editor]
  */
-global $current_user;
+global $current_user, $rcp_load_css;
+
+$rcp_load_css = true;
 
 if ( is_user_logged_in() ):
 	$user_id      = get_current_user_id();
