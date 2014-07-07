@@ -102,23 +102,36 @@ function rcp_process_data() {
 			$level      = absint( $_POST['level'] );
 			$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 
-			if( isset( $_POST['level'] ) ) update_user_meta( $user_id, 'rcp_subscription_level', $level );
+			if( isset( $_POST['level'] ) ) {
+				update_user_meta( $user_id, 'rcp_subscription_level', $level );
+			}
+
 			if( isset( $_POST['recurring'] ) ) {
 				update_user_meta( $user_id, 'rcp_recurring', 'yes' );
 			} else {
 				delete_user_meta( $user_id, 'rcp_recurring' );
 			}
+
 			if( isset( $_POST['trialing'] ) ) {
 				update_user_meta( $user_id, 'rcp_is_trialing', 'yes' );
 			} else {
 				delete_user_meta( $user_id, 'rcp_is_trialing' );
 			}
-			if( isset( $_POST['signup_method'] ) ) update_user_meta( $user_id, 'rcp_signup_method', $_POST['signup_method'] );
-			if( isset( $_POST['notes'] ) ) update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
-			if( isset( $_POST['status'] ) ) rcp_set_status( $user_id, $status );
+
+			if( isset( $_POST['signup_method'] ) ) {
+				update_user_meta( $user_id, 'rcp_signup_method', $_POST['signup_method'] );
+			}
+
+			if( isset( $_POST['notes'] ) ) {
+				update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
+			}
+
+			if( isset( $_POST['status'] ) ) {
+				rcp_set_status( $user_id, $status );
+			}
 
 			rcp_set_expiration_date( $user_id, $expiration );
-			
+
 			do_action( 'rcp_edit_member', $user_id );
 
 			wp_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id . '&rcp_message=user_updated' ) ); exit;
@@ -283,7 +296,7 @@ function rcp_process_data() {
 			rcp_set_status( urldecode( absint( $_GET['deactivate_member'] ) ), 'cancelled' );
 		}
 		if( isset( $_GET['activate_member'] ) ) {
-			
+
 			if( ! current_user_can( 'rcp_manage_members' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
@@ -293,7 +306,7 @@ function rcp_process_data() {
 
 		/* subscription processing */
 		if( isset( $_GET['delete_subscription'] ) && $_GET['delete_subscription'] > 0) {
-			
+
 			if( ! current_user_can( 'rcp_manage_levels' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
@@ -311,7 +324,7 @@ function rcp_process_data() {
 
 		}
 		if( isset( $_GET['activate_subscription'] ) && $_GET['activate_subscription'] > 0) {
-			
+
 			if( ! current_user_can( 'rcp_manage_levels' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
@@ -321,7 +334,7 @@ function rcp_process_data() {
 			delete_transient( 'rcp_subscription_levels' );
 		}
 		if( isset( $_GET['deactivate_subscription'] ) && $_GET['deactivate_subscription'] > 0) {
-			
+
 			if( ! current_user_can( 'rcp_manage_levels' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
@@ -360,7 +373,7 @@ function rcp_process_data() {
 			$discounts->update( $_GET['deactivate_discount'], array( 'status' => 'disabled' ) );
 		}
 		if( ! empty( $_GET['rcp-action'] ) && $_GET['rcp-action'] == 'delete_payment' && wp_verify_nonce( $_GET['_wpnonce'], 'rcp_delete_payment_nonce' ) ) {
-			
+
 			if( ! current_user_can( 'rcp_manage_payments' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
