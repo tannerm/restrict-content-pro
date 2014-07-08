@@ -19,6 +19,11 @@ function rcp_members_page() {
 			$recurring       = isset( $_GET['recurring'] ) ? absint( $_GET['recurring'] ) : null;
 			$search          = ! empty( $_GET['s'] )       ? urldecode( $_GET['s'] )      : '';
 
+			$base_url        = admin_url( 'admin.php?page=rcp-members' );
+			if( $search ) {
+				$base_url = add_query_arg( 's', $search, $base_url );
+			}
+
 			// get subscriber count
 			$active_count    = rcp_count_members( $subscription_id, 'active', $recurring, $search );
 			$pending_count   = rcp_count_members( $subscription_id, 'pending', $recurring, $search );
@@ -44,27 +49,27 @@ function rcp_members_page() {
 			<ul class="subsubsub">
 				<li><?php _e('Status: ', 'rcp'); ?></li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'active', admin_url( 'admin.php?page=rcp-members' ) ); ?>" title="<?php _e('View all active subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status']) ? 'class="current"' : ''; ?>>
+					<a href="<?php echo add_query_arg('status', 'active', $base_url ); ?>" title="<?php _e('View all active subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status']) ? 'class="current"' : ''; ?>>
 					<?php _e('Active', 'rcp'); ?>
 					</a>(<?php echo $active_count; ?>)
 				</li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'pending', admin_url( 'admin.php?page=rcp-members' ) ); ?>" title="<?php _e('View all pending subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'pending') ? 'class="current"' : ''; ?>>
+					<a href="<?php echo add_query_arg('status', 'pending', $base_url ); ?>" title="<?php _e('View all pending subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'pending') ? 'class="current"' : ''; ?>>
 						<?php _e('Pending', 'rcp'); ?>
 					</a>(<?php echo $pending_count; ?>)
 				</li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'expired', admin_url( 'admin.php?page=rcp-members' ) ); ?>" title="<?php _e('View all expired subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'expired') ? 'class="current"' : ''; ?>>
+					<a href="<?php echo add_query_arg('status', 'expired', $base_url ); ?>" title="<?php _e('View all expired subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'expired') ? 'class="current"' : ''; ?>>
 						<?php _e('Expired', 'rcp'); ?>
 					</a>(<?php echo $expired_count; ?>)
 				</li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'cancelled', admin_url( 'admin.php?page=rcp-members' ) ); ?>" title="<?php _e('View all cancelled subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'cancelled') ? 'class="current"' : ''; ?>>
+					<a href="<?php echo add_query_arg('status', 'cancelled', $base_url ); ?>" title="<?php _e('View all cancelled subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'cancelled') ? 'class="current"' : ''; ?>>
 						<?php _e('Cancelled', 'rcp'); ?>
 					</a>(<?php echo $cancelled_count; ?>)
 				</li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'free', admin_url( 'admin.php?page=rcp-members' ) ); ?>" title="<?php _e('View all free members', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'free') ? 'class="current"' : ''; ?>>
+					<a href="<?php echo add_query_arg('status', 'free', $base_url ); ?>" title="<?php _e('View all free members', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'free') ? 'class="current"' : ''; ?>>
 						<?php _e('Free', 'rcp'); ?>
 					</a>(<?php echo $free_count; ?>)
 				</li>
@@ -74,6 +79,7 @@ function rcp_members_page() {
 				<label class="screen-reader-text" for="rcp-member-search-input"><?php _e( 'Search Members', 'rcp' ); ?></label>
 				<input type="search" id="rcp-member-search-input" name="s" value="<?php echo esc_attr( $search ); ?>"/>
 				<input type="hidden" name="page" value="rcp-members"/>
+				<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
 				<input type="submit" name="" id="rcp-member-search-submit" class="button" value="<?php _e( 'Search members', 'rcp' ); ?>"/>
 			</form>
 			<form id="members-filter" action="" method="get">
