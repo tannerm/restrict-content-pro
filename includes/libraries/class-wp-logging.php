@@ -88,8 +88,6 @@ class WP_Logging {
 	 * @since       1.0
 	 *
 	 * @uses 		register_taxonomy()
-	 * @uses 		term_exists()
-	 * @uses 		wp_insert_term()
 	 *
 	 * @return     void
 	*/
@@ -98,13 +96,6 @@ class WP_Logging {
 
 		register_taxonomy( 'wp_log_type', 'wp_log' );
 
-		$types = self::log_types();
-
-		foreach ( $types as $type ) {
-			if( ! term_exists( $type, 'wp_log_type' ) ) {
-				wp_insert_term( $type, 'wp_log_type' );
-			}
-		}
 	}
 
 
