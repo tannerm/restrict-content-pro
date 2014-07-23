@@ -339,6 +339,28 @@ function rcp_settings_page() {
 
 						<table class="form-table">
 							<tr>
+								<th colspan=2><h3><?php _e( 'General', 'rcp' ); ?></h3></th>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[from_name]"><?php _e( 'From Name', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text" id="rcp_settings[from_name]" style="width: 300px;" name="rcp_settings[from_name]" value="<?php if( isset( $rcp_options['from_name'] ) ) { echo $rcp_options['from_name']; } else { echo get_bloginfo( 'name' ); } ?>"/>
+									<div class="description"><?php _e( 'The name that emails come from. This is usually the name of your business.', 'rcp' ); ?></div>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[from_email]"><?php _e( 'From Email', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text" id="rcp_settings[from_email]" style="width: 300px;" name="rcp_settings[from_email]" value="<?php if( isset( $rcp_options['from_email'] ) ) { echo $rcp_options['from_email']; } else { echo get_bloginfo( 'admin_email' ); } ?>"/>
+									<div class="description"><?php _e( 'The email address that emails are sent from.', 'rcp' ); ?></div>
+								</td>
+							</tr>
+
+							<tr>
 								<th colspan=2><h3><?php _e( 'Active Subscription Email', 'rcp' ); ?></h3></th>
 							</tr>
 							<tr>

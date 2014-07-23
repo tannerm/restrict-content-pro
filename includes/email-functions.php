@@ -4,15 +4,28 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 
 	global $rcp_options;
 
-	$user_info = get_userdata($user_id);
-	$message = '';
+	$user_info     = get_userdata( $user_id );
+	$message       = '';
 	$admin_message = '';
 
-	$admin_emails = array();
+	$admin_emails   = array();
 	$admin_emails[] = get_option('admin_email');
-	$admin_emails = apply_filters( 'rcp_admin_notice_emails', $admin_emails );
+	$admin_emails   = apply_filters( 'rcp_admin_notice_emails', $admin_emails );
 
-	$site_name = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
+	$site_name      = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
+
+	$from_name      = isset( $rcp_options['from_name'] ) ? $rcp_options['from_name'] : $site_name;
+	$from_name      = apply_filters( 'rcp_emails_from_name', $from_name, $user_id, $status );
+
+	$from_email     = isset( $rcp_options['from_email'] ) ? $rcp_options['from_email'] : get_option( 'admin_email' );
+	$from_email     = apply_filters( 'rcp_emails_from_address', $from_email );
+
+	$headers        = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
+	$headers       .= "Reply-To: ". $from_email . "\r\n";
+	$headers        = apply_filters( 'rcp_email_headers', $headers, $user_id, $status );
+
+	// Allow add-ons to add file attachments
+	$attachments = apply_filters( 'rcp_email_attachments', array(), $user_id, $status );
 
 	switch ($status) :
 
@@ -21,7 +34,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			if( ! isset( $rcp_options['disable_active_email'] ) ) {
 
 				$message = apply_filters( 'rcp_subscription_active_email', $rcp_options['active_email'], $user_id, $status );
-				wp_mail( $user_info->user_email, $rcp_options['active_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name) );
+				wp_mail( $user_info->user_email, $rcp_options['active_subject'], rcp_filter_email_tags( $message, $user_id, $user_info->display_name), $headers, $attachments );
 
 			}
 
@@ -29,7 +42,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_active_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_emails, __('New subscription on ', 'rcp') . $site_name, $admin_message );
+				wp_mail( $admin_emails, __('New subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
 			}
 		break;
 
@@ -38,7 +51,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			if( ! isset( $rcp_options['disable_cancelled_email'] ) ) {
 
 				$message = apply_filters( 'rcp_subscription_cancelled_email', $rcp_options['cancelled_email'], $user_id, $status );
-				wp_mail( $user_info->user_email, $rcp_options['cancelled_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name) );
+				wp_mail( $user_info->user_email, $rcp_options['cancelled_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name), $headers, $attachments );
 
 			}
 
@@ -46,7 +59,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' ' . __('has cancelled their subscription to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Their subscription level was', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_cancelled_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_emails, __('Cancelled subscription on ', 'rcp') . $site_name, $admin_message );
+				wp_mail( $admin_emails, __('Cancelled subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
 			}
 
 		break;
@@ -56,7 +69,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			if( ! isset( $rcp_options['disable_expired_email'] ) ) {
 
 				$message = apply_filters( 'rcp_subscription_expired_email', $rcp_options['expired_email'], $user_id, $status );
-				wp_mail( $user_info->user_email, $rcp_options['expired_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name) );
+				wp_mail( $user_info->user_email, $rcp_options['expired_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name), $headers, $attachments );
 
 			}
 
@@ -64,7 +77,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name . "'s " . __('subscription has expired', 'rcp') . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_expired_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_emails, __('Expired subscription on ', 'rcp') . $site_name, $admin_message );
+				wp_mail( $admin_emails, __('Expired subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
 			}
 
 		break;
@@ -74,7 +87,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			if( ! isset( $rcp_options['disable_free_email'] ) ) {
 
 				$message = apply_filters( 'rcp_subscription_free_email', $rcp_options['free_email'], $user_id, $status );
-				wp_mail( $user_info->user_email, $rcp_options['free_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name) );
+				wp_mail( $user_info->user_email, $rcp_options['free_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name), $headers, $attachments );
 
 			}
 
@@ -82,7 +95,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_free_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_emails, __('New free subscription on ', 'rcp') . $site_name, $admin_message );
+				wp_mail( $admin_emails, __('New free subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
 			}
 
 		break;
@@ -92,7 +105,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			if( ! isset( $rcp_options['disable_trial_email'] ) ) {
 
 				$message = apply_filters( 'rcp_subscription_trial_email', $rcp_options['trial_email'], $user_id, $status );
-				wp_mail( $user_info->user_email, $rcp_options['trial_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name) );
+				wp_mail( $user_info->user_email, $rcp_options['trial_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name), $headers, $attachments );
 
 			}
 
@@ -100,7 +113,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_trial_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				wp_mail( $admin_emails, __('New trial subscription on ', 'rcp') . $site_name, $admin_message );
+				wp_mail( $admin_emails, __('New trial subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
 			}
 
 		break;
