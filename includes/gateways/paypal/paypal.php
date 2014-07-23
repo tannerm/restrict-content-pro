@@ -309,7 +309,8 @@ function rcp_check_ipn() {
 			break;
 			case "subscr_cancel" :
 
-				// user is not canceled until end of term
+				// user is marked as cancelled but retains access until end of term
+				rcp_set_status( $user_id, 'cancelled' );
 
 				// set the use to no longer be recurring
 				delete_user_meta( $user_id, 'rcp_recurring' );
@@ -332,10 +333,14 @@ function rcp_check_ipn() {
 				// set the use to no longer be recurring
 				delete_user_meta( $user_id, 'rcp_recurring' );
 
-				rcp_set_status( $user_id, 'expired' );
+				if( 'cancelled' !== rcp_get_status( $user_id ) ) {
 
-				// send expired email
-				rcp_email_subscription_status( $user_id, 'expired' );
+					rcp_set_status( $user_id, 'expired' );
+
+					// send expired email
+					rcp_email_subscription_status( $user_id, 'expired' );
+			
+				}
 
 				do_action('rcp_ipn_subscr_eot', $user_id );
 
