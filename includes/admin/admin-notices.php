@@ -9,7 +9,7 @@ function rcp_admin_notices() {
 
 	// only show notice if settings have never been saved
 	if( ! is_array( $rcp_options ) || empty( $rcp_options ) ) {
-		echo '<div class="updated"><p>' . __( 'You should now configure your Restrict Content Pro settings', 'rcp' ) . '</p></div>';
+		echo '<div class="updated"><p><a href="' . admin_url( "admin.php?page=rcp-settings" ) . '">' . __( 'You should now configure your Restrict Content Pro settings', 'rcp' ) . '</a></p></div>';
 	}
 
 	if( rcp_check_if_upgrade_needed() ) {
