@@ -655,7 +655,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[invoice_email]" style="width: 300px;" name="rcp_settings[invoice_email]" value="<?php if( isset( $rcp_options['invoice_email'] ) ) { echo $rcp_options['invoice_email']; } ?>"/>
-								<div class="description"><?php _e( 'Enter the city, state and zip/postal code that will appear on the invoice.', 'rcp' ); ?></div>
+								<div class="description"><?php _e( 'Enter the email address that will appear on the invoice.', 'rcp' ); ?></div>
 							</td>
 						</tr>
 						<tr valign="top">
