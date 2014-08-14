@@ -56,6 +56,8 @@ function rcp_settings_page() {
 									<?php wp_nonce_field( 'rcp_deactivate_license', 'rcp_deactivate_license' ); ?>
 									<input type="submit" class="button-secondary" name="rcp_license_deactivate" value="<?php _e('Deactivate License', 'rcp'); ?>"/>
 									<span style="color:green;"><?php _e('active'); ?></span>
+								<?php } elseif( ! empty( $rcp_options['license_key'] ) ) { ?>
+									<input type="submit" class="button-secondary" name="rcp_license_activate" value="<?php _e('Activate License', 'rcp'); ?>"/>
 								<?php } ?>
 								<div class="description"><?php printf( __( 'Enter license key for Restrict Content Pro. This is required for automatic updates and <a href="%s">support</a>.', 'rcp' ), 'http://pippinsplugins.com/support/forum/restrict-content-pro' ); ?></div>
 							</td>
@@ -838,7 +840,7 @@ function rcp_sanitize_settings( $data ) {
 }
 
 function rcp_activate_license() {
-	if( ! isset( $_POST['rcp_settings'] ) )
+	if( ! isset( $_POST['rcp_license_activate'] ) )
 		return;
 
 	if( ! isset( $_POST['rcp_settings']['license_key'] ) )
@@ -864,7 +866,7 @@ function rcp_activate_license() {
 	);
 
 	// Call the custom API.
-	$response = wp_remote_post( 'http://pippinsplugins.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+	$response = wp_remote_post( 'https://pippinsplugins.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
 	// make sure the response came back okay
 	if ( is_wp_error( $response ) )
@@ -905,7 +907,7 @@ function rcp_deactivate_license() {
 		);
 
 		// Call the custom API.
-		$response = wp_remote_post( 'http://pippinsplugins.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+		$response = wp_remote_post( 'https://pippinsplugins.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
 		// make sure the response came back okay
 		if ( is_wp_error( $response ) )
