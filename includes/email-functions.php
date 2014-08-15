@@ -71,6 +71,8 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$message = apply_filters( 'rcp_subscription_expired_email', $rcp_options['expired_email'], $user_id, $status );
 				wp_mail( $user_info->user_email, $rcp_options['expired_subject'], rcp_filter_email_tags($message, $user_id, $user_info->display_name), $headers, $attachments );
 
+				add_user_meta( $user_id, '_rcp_expired_email_sent', 'yes' );
+
 			}
 
 			if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
@@ -79,6 +81,8 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$admin_message .= __('Thank you', 'rcp');
 				wp_mail( $admin_emails, __('Expired subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
 			}
+
+
 
 		break;
 
@@ -158,3 +162,21 @@ function rcp_filter_email_tags( $message, $user_id, $display_name ) {
 
 	return apply_filters( 'rcp_email_tags', htmlspecialchars( $message ), $user_id );
 }
+
+/**
+ * Triggers the expiration notice when an account is marked as expired
+ *
+ * @access  public
+ * @since   2.0.9
+ * @return  void
+ */
+function rcp_email_on_expiration( $status, $user_id ) {
+
+	if( 'expired' == $status ) {
+
+		rcp_email_subscription_status( $user_id, 'expired' );
+
+	}
+
+}
+add_action( 'rcp_set_status', 'rcp_email_on_expiration', 10, 2 );
