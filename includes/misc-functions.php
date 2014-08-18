@@ -522,3 +522,17 @@ function rcp_get_timezone_id() {
     // fallback
     return 'UTC';
 }
+
+/**
+ * Get the number of days in a particular month
+ *
+ * @since 2.0.9
+ * @return string $timezone The timezone ID
+ */
+if ( ! function_exists( 'cal_days_in_month' ) ) {
+	// Fallback in case the calendar extension is not loaded in PHP
+	// Only supports Gregorian calendar
+	function cal_days_in_month( $calendar, $month, $year ) {
+		return date( 't', mktime( 0, 0, 0, $month, 1, $year ) );
+	}
+}
