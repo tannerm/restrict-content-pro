@@ -234,6 +234,9 @@ function rcp_help_page()
 							<p><em>[login_form]</em></p>
 							<p>Upon successful registration, the user will be redirected to the page that you have defined under the "Signup Forms" options in Settings.</p>
 
+							<p>If you would like to redirect members to a specific page after logging in, you can add a <em>redirect</em> parameter to the short code, like this:</p>
+							<p><em>[login_form redirect="http://yoursite.com/page"]</em></p>
+
 							<h4>[password_form]</h4>
 							<p>This short code will display the change password form. This will allow users to change the password to their account. They must be already logged-in.</p>
 							<p>To show the change password form on a post or page, simply use the short code like this:</p>
