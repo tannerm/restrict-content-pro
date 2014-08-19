@@ -57,7 +57,7 @@ function rcp_help_page()
 							<h4>Adding / Modifying Subscription Levels</h4>
 							<p><iframe src="http://www.screenr.com/embed/dVos" width="650" height="396" frameborder="0"></iframe></p>
 
-							<h4>Adding Manuel Subscriptions to Members and Editing Existing Memeber's Subscriptions</h4>
+							<h4>Adding Manual Subscriptions to Members and Editing Existing Memeber's Subscriptions</h4>
 							<p><iframe src="http://www.screenr.com/embed/mVos" width="650" height="396" frameborder="0"></iframe></p>
 
 							<h4>Adding / Editing Discount Codes</h4>
