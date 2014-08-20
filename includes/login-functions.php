@@ -86,10 +86,12 @@ function rcp_process_login_form() {
 
 		$remember = isset( $_POST['rcp_user_remember'] );
 
+		$redirect = ! empty( $_POST['rcp_redirect'] ) ? $_POST['rcp_redirect'] : home_url();
+
 		rcp_login_user_in( $user->ID, $_POST['rcp_user_login'], $remember );
 
 		// redirect the user back to the page they were previously on
-		wp_redirect( $_POST['rcp_redirect'] ); exit;
+		wp_redirect( $redirect ); exit;
 	} else {
 
 		if( function_exists( 'limit_login_failed' ) ) {
