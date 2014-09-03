@@ -70,14 +70,26 @@ function rcp_process_data() {
 
 			else:
 
-				$user = get_user_by( 'login', $_POST['user'] );
+				$user       = get_user_by( 'login', $_POST['user'] );
 
 				$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
+				$level_id   = absint( $_POST['level'] );
 
 				rcp_set_status( $user->ID, 'active' );
 				rcp_set_expiration_date( $user->ID, $expiration );
-				update_user_meta( $user->ID, 'rcp_subscription_level', $_POST['level'] );
+				
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
+
+				// Add a role, if needed, to the user
+				$subscription = $levels->get_level( $level_id );
+
+				update_user_meta( $user_id, 'rcp_subscription_level', $level_id );
+
+				// Add the new user role
+				$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
+				$user->add_role( $role );
+
+
 				if( isset( $_POST['recurring'] ) ) {
 					update_user_meta( $user->ID, 'rcp_recurring', 'yes' );
 				} else {
@@ -97,13 +109,33 @@ function rcp_process_data() {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
 
-			$user_id    = absint( $_POST['user'] );
-			$status     = sanitize_text_field( $_POST['status'] );
-			$level      = absint( $_POST['level'] );
-			$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
+			$levels       = new RCP_Levels();
+			$user_id      = absint( $_POST['user'] );
+			$status       = sanitize_text_field( $_POST['status'] );
+			$level_id     = absint( $_POST['level'] );
+			$expiration   = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
+
 
 			if( isset( $_POST['level'] ) ) {
-				update_user_meta( $user_id, 'rcp_subscription_level', $level );
+
+				$current_id = rcp_get_subscription_id( $user_id );
+				$new_level  = $levels->get_level( $level_id );
+				$old_level  = $levels->get_level( $current_id );
+
+				if( $current_id != $level_id ) {
+
+					update_user_meta( $user_id, 'rcp_subscription_level', $level_id );
+					$user = new WP_User( $user_id );
+
+					// Remove the old user role
+					$role = ! empty( $old_level->role ) ? $old_level->role : 'subscriber';
+					$user->remove_role( $role );
+
+					// Add the new user role
+					$role = ! empty( $new_level->role ) ? $new_level->role : 'subscriber';
+					$user->add_role( $role );
+
+				}
 			}
 
 			if( isset( $_POST['recurring'] ) ) {
