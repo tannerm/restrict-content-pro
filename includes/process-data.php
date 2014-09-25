@@ -70,6 +70,8 @@ function rcp_process_data() {
 
 			else:
 
+				$levels     = new RCP_Levels();
+
 				$user       = get_user_by( 'login', $_POST['user'] );
 
 				$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
