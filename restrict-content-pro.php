@@ -135,6 +135,7 @@ add_action( 'init', 'rcp_load_textdomain' );
 
 
 // global includes
+require( RCP_PLUGIN_DIR . 'includes/install.php' );
 include( RCP_PLUGIN_DIR . 'includes/class-rcp-capabilities.php' );
 include( RCP_PLUGIN_DIR . 'includes/class-rcp-levels.php' );
 include( RCP_PLUGIN_DIR . 'includes/class-rcp-payments.php' );
@@ -162,7 +163,6 @@ if( !class_exists( 'WP_Logging' ) ) {
 // admin only includes
 if( is_admin() ) {
 
-	require( RCP_PLUGIN_DIR . 'includes/install.php' );
 	include( RCP_PLUGIN_DIR . 'includes/upgrades.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/admin-pages.php' );
 	include( RCP_PLUGIN_DIR . 'includes/admin/admin-notices.php' );
