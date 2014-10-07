@@ -29,6 +29,7 @@ function rcp_process_paypal( $subscription_data ) {
 		'cbt'			=> get_bloginfo( 'name' ),
 		'tax'           => 0,
 		'page_style'    => ! empty( $rcp_options['paypal_page_style'] ) ? trim( $rcp_options['paypal_page_style'] ) : '',
+		'bn'            => 'EasyDigitalDownloads_SP'
 	);
 
 
