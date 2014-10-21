@@ -190,7 +190,7 @@ if( is_admin() ) {
 
 	if( $license_key ) {
 		// setup the updater
-		$rcp_updater = new RCP_Plugin_Updater( 'http://pippinsplugins.com', RCP_PLUGIN_FILE, array(
+		$rcp_updater = new RCP_Plugin_Updater( 'https://pippinsplugins.com', RCP_PLUGIN_FILE, array(
 				'version' 	=> RCP_PLUGIN_VERSION, 				// current version number
 				'license' 	=> $license_key, 		// license key (used get_option above to retrieve from DB)
 				'item_name' => 'Restrict Content Pro', 	// name of this plugin
