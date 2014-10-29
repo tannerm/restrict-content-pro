@@ -7,7 +7,7 @@
  * Allows plugins to use their own update API.
  *
  * @author Pippin Williamson
- * @version 1.3
+ * @version 1.4
  */
 class RCP_Plugin_Updater {
     private $api_url   = '';
@@ -48,9 +48,8 @@ class RCP_Plugin_Updater {
      */
     public function init() {
 
-        add_filter( 'pre_site_transient_update_plugins', array( $this, 'check_update' ) );
+        add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
         add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3 );
-        add_filter( 'http_request_args', array( $this, 'http_request_args' ), 10, 2 );
 
         add_action( 'after_plugin_row_' . $this->name, array( $this, 'show_update_notification' ), 10, 2 );
     }
@@ -86,23 +85,14 @@ class RCP_Plugin_Updater {
 
                 $this->did_check = true;
 
-                if ( version_compare( $this->version, $version_info->new_version, '>=' ) ) {
-
-                    unset( $_transient_data->response[ $this->name ] );
-
-                } else {
+                if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
                     $_transient_data->response[ $this->name ] = $version_info;
 
-                    // Small trick to ensure the updates get shown in the network admin
-                    if ( is_multisite() && ! is_main_site() ) {
-
-                        $_transient_data->last_checked = time();
-                        $_transient_data->checked[ $this->name ] = $this->version;
-
-                    }
-
                 }
+
+                $_transient_data->last_checked = time();
+                $_transient_data->checked[ $this->name ] = $this->version;
 
             }
 
@@ -123,33 +113,38 @@ class RCP_Plugin_Updater {
             return;
         }
 
+        if( ! is_multisite() ) {
+            return;
+        }
+
         if ( $this->name != $file ) {
             return;
         }
 
-        // cache API call, to prevent requesting it over and over
+        // Remove our filter on the site transient
+        remove_filter( 'pre_site_transient_update_plugins', array( $this, 'check_update' ), 10 );
+
         $update_cache = get_site_transient( 'update_plugins' );
 
         if ( empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
             $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
-            $update_cache->response[ $this->name ] = $version_info;
 
-            // Small trick to ensure the updates get shown in the network admin
-            if ( is_multisite() && ! is_main_site() ) {
-
-                $update_cache->last_checked = time();
-                $update_cache->checked[ $this->name ] = $this->version;
-
+            if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
+            
+                $update_cache->response[ $this->name ] = $version_info;
+            
             }
+
+            $update_cache->last_checked = time();
+            $update_cache->checked[ $this->name ] = $this->version;
 
             set_site_transient( 'update_plugins', $update_cache );
 
-        } else {
-
-            $version_info = $update_cache->response[ $this->name ];
-
         }
+
+        // Restore our filter
+        add_filter( 'pre_site_transient_update_plugins', array( $this, 'check_update' ) );
 
         if ( ! empty( $update_cache->response[ $this->name ] ) && version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
@@ -157,7 +152,7 @@ class RCP_Plugin_Updater {
             $wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
             echo '<tr class="plugin-update-tr"><td colspan="' . $wp_list_table->get_column_count() . '" class="plugin-update colspanchange"><div class="update-message">';
 
-            $changelog_link = self_admin_url( 'index.php?edd_sl_action=view_plugin_changelog&plugin=' . $this->name . '&TB_iframe=true&width=772&height=911' );
+            $changelog_link = self_admin_url( 'index.php?edd_sl_action=view_plugin_changelog&plugin=' . $this->name . '&slug=' . $this->slug . '&TB_iframe=true&width=772&height=911' );
 
             if ( empty( $version_info->download_link ) ) {
                 printf(
@@ -263,6 +258,10 @@ class RCP_Plugin_Updater {
         if ( empty( $data['license'] ) )
             return;
 
+        if( $this->api_url == home_url() ) {
+            return false; // Don't allow a plugin to ping itself
+        }
+
         $api_params = array(
             'edd_action' => 'get_version',
             'license'    => $data['license'],
@@ -272,21 +271,22 @@ class RCP_Plugin_Updater {
             'author'     => $data['author'],
             'url'        => home_url()
         );
+
         $request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
-        if ( ! is_wp_error( $request ) ):
+        if ( ! is_wp_error( $request ) ) {
             $request = json_decode( wp_remote_retrieve_body( $request ) );
-        if ( $request && isset( $request->sections ) )
+        }
+
+        if ( $request && isset( $request->sections ) ) {
             $request->sections = maybe_unserialize( $request->sections );
+        } else {
+            $request = false;
+        }
+
         return $request;
-        else:
-            return false;
-        endif;
     }
 
-    /**
-     * Displays the changelog in the View Details popup on multisite installs
-     */
     public function show_changelog() {
 
 
@@ -298,7 +298,7 @@ class RCP_Plugin_Updater {
             return;
         }
 
-        if( ! is_multisite() ) {
+        if( empty( $_REQUEST['slug'] ) ) {
             return;
         }
 
@@ -306,11 +306,12 @@ class RCP_Plugin_Updater {
             wp_die( __( 'You do not have permission to install plugin updates' ) );
         }
 
-        $response = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
-        
+        $response = $this->api_request( 'plugin_latest_version', array( 'slug' => $_REQUEST['slug'] ) );
+
         if( $response && isset( $response->sections['changelog'] ) ) {
             echo '<div style="background:#fff;padding:10px;">' . $response->sections['changelog'] . '</div>';
         }
+
 
         exit;
     }
