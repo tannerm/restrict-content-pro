@@ -35,7 +35,7 @@ class RCP_Plugin_Updater {
         $this->version  = $_api_data['version'];
 
         // Set up hooks.
-        add_action( 'admin_init', array( $this, 'init' ) );
+        $this->init();
         add_action( 'admin_init', array( $this, 'show_changelog' ) );
     }
 
@@ -122,7 +122,7 @@ class RCP_Plugin_Updater {
         }
 
         // Remove our filter on the site transient
-        remove_filter( 'pre_site_transient_update_plugins', array( $this, 'check_update' ), 10 );
+        remove_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ), 10 );
 
         $update_cache = get_site_transient( 'update_plugins' );
 
@@ -144,7 +144,7 @@ class RCP_Plugin_Updater {
         }
 
         // Restore our filter
-        add_filter( 'pre_site_transient_update_plugins', array( $this, 'check_update' ) );
+        add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
 
         if ( ! empty( $update_cache->response[ $this->name ] ) && version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
