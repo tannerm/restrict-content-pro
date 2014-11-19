@@ -123,7 +123,7 @@ class RCP_Plugin_Updater {
 
         if ( ! is_object( $update_cache ) || empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
-            $cache_key    = 'rcp_plugin_update'
+            $cache_key    = 'rcp_plugin_update';
             $version_info = get_transient( $cache_key );
 
             if( false === $version_info ) {
