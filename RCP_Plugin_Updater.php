@@ -7,14 +7,13 @@
  * Allows plugins to use their own update API.
  *
  * @author Pippin Williamson
- * @version 1.4
+ * @version 1.5
  */
 class RCP_Plugin_Updater {
     private $api_url   = '';
     private $api_data  = array();
     private $name      = '';
     private $slug      = '';
-    private $did_check = false;
 
     /**
      * Class constructor.
@@ -69,10 +68,6 @@ class RCP_Plugin_Updater {
      */
     function check_update( $_transient_data ) {
 
-        if ( $this->did_check ) {
-            return $_transient_data;
-        }
-
         if( ! is_object( $_transient_data ) ) {
             $_transient_data = new stdClass;
         }
@@ -126,14 +121,27 @@ class RCP_Plugin_Updater {
 
         $update_cache = get_site_transient( 'update_plugins' );
 
-        if ( empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
+        if ( ! is_object( $update_cache ) || empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
-            $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
+            $cache_key    = 'rcp_plugin_update'
+            $version_info = get_transient( $cache_key );
+
+            if( false === $version_info ) {
+
+                $version_info = $this->api_request( 'plugin_latest_version', array( 'slug' => $this->slug ) );
+
+                set_transient( $cache_key, $version_info, 3600 );
+            }
+
+
+            if( ! is_object( $version_info ) ) {
+                return;
+            }
 
             if( version_compare( $this->version, $version_info->new_version, '<' ) ) {
-            
+
                 $update_cache->response[ $this->name ] = $version_info;
-            
+
             }
 
             $update_cache->last_checked = time();
@@ -303,7 +311,7 @@ class RCP_Plugin_Updater {
         }
 
         if( ! current_user_can( 'update_plugins' ) ) {
-            wp_die( __( 'You do not have permission to install plugin updates' ) );
+            wp_die( __( 'You do not have permission to install plugin updates' ), __( 'Error', 'edd' ), array( 'response' => 403 ) );
         }
 
         $response = $this->api_request( 'plugin_latest_version', array( 'slug' => $_REQUEST['slug'] ) );
