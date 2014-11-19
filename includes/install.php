@@ -7,17 +7,17 @@ function rcp_options_install() {
 	// create the RCP subscription level database table
 	if ($wpdb->get_var( "show tables like '$rcp_db_name'" ) != $rcp_db_name ) {
 		$sql = "CREATE TABLE " . $rcp_db_name . " (
-		`id` mediumint(9) NOT NULL AUTO_INCREMENT,
-		`name` tinytext NOT NULL,
-		`description` longtext NOT NULL,
-		`duration` smallint NOT NULL,
-		`duration_unit` tinytext NOT NULL,
-		`price` tinytext NOT NULL,
-		`fee` tinytext NOT NULL,
-		`list_order` mediumint NOT NULL,
-		`level` mediumint NOT NULL,
-		`status` tinytext NOT NULL,
-		`role` tinytext NOT NULL,
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		name tinytext NOT NULL,
+		description longtext NOT NULL,
+		duration smallint NOT NULL,
+		duration_unit tinytext NOT NULL,
+		price tinytext NOT NULL,
+		fee tinytext NOT NULL,
+		list_order mediumint NOT NULL,
+		level mediumint NOT NULL,
+		status tinytext NOT NULL,
+		role tinytext NOT NULL,
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
@@ -30,17 +30,17 @@ function rcp_options_install() {
 	// create the RCP discounts database table
 	if( $wpdb->get_var( "show tables like '$rcp_discounts_db_name'" ) != $rcp_discounts_db_name ) {
 		$sql = "CREATE TABLE " . $rcp_discounts_db_name . " (
-		`id` mediumint(9) NOT NULL AUTO_INCREMENT,
-		`name` tinytext NOT NULL,
-		`description` longtext NOT NULL,
-		`amount` tinytext NOT NULL,
-		`unit` tinytext NOT NULL,
-		`code` tinytext NOT NULL,
-		`use_count` mediumint NOT NULL,
-		`max_uses` mediumint NOT NULL,
-		`status` tinytext NOT NULL,
-		`expiration` mediumtext NOT NULL,
-		`subscription_id` mediumint NOT NULL,
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		name tinytext NOT NULL,
+		description longtext NOT NULL,
+		amount tinytext NOT NULL,
+		unit tinytext NOT NULL,
+		code tinytext NOT NULL,
+		use_count mediumint NOT NULL,
+		max_uses mediumint NOT NULL,
+		status tinytext NOT NULL,
+		expiration mediumtext NOT NULL,
+		subscription_id mediumint NOT NULL,
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
@@ -53,14 +53,14 @@ function rcp_options_install() {
 	// create the RCP payments database table
 	if( $wpdb->get_var( "show tables like '$rcp_payments_db_name'" ) != $rcp_payments_db_name ) {
 		$sql = "CREATE TABLE " . $rcp_payments_db_name . " (
-		`id` mediumint(9) NOT NULL AUTO_INCREMENT,
-		`subscription` mediumtext NOT NULL,
-		`date` datetime NOT NULL,
-		`amount` mediumtext NOT NULL,
-		`user_id` mediumint NOT NULL,
-		`payment_type` tinytext NOT NULL,
-		`subscription_key` mediumtext NOT NULL,
-		`transaction_id` tinytext NOT NULL,
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		subscription mediumtext NOT NULL,
+		date datetime NOT NULL,
+		amount mediumtext NOT NULL,
+		user_id mediumint NOT NULL,
+		payment_type tinytext NOT NULL,
+		subscription_key mediumtext NOT NULL,
+		transaction_id tinytext NOT NULL,
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
