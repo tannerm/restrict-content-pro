@@ -86,7 +86,7 @@ function rcp_process_paypal( $subscription_data ) {
 	exit;
 
 }
-add_action( 'rcp_gateway_paypal', 'rcp_process_paypal' );
+//add_action( 'rcp_gateway_paypal', 'rcp_process_paypal' );
 
 function rcp_check_ipn() {
 
