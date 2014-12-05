@@ -51,53 +51,29 @@ class RCP_Payment_Gateway {
 
 	}
 
-	public function init() {
+	public function init() {}
 
-	}
+	public function get_return_url() {}
 
-	public function get_return_url() {
+	public function get_subscription_details() {}
 
-	}
+	public function get_subscription_amount() {}
 
-	public function get_subscription_details() {
+	public function get_subscription_period() {}
 
-	}
+	public function get_subscription_length() {}
 
-	public function get_subscription_amount() {
+	public function get_subscription_length_unit() {}
 
-	}
+	public function process_payment() {}
 
-	public function get_subscription_period() {
+	public function process_refund() {}
 
-	}
+	public function process_cancellation() {}
 
-	public function get_subscription_length() {
+	public function process_eot() {}
 
-	}
-
-	public function get_subscription_length_unit() {
-
-	}
-
-	public function process_payment() {
-
-	}
-
-	public function process_refund() {
-
-	}
-
-	public function process_cancellation() {
-
-	}
-
-	public function process_eot() {
-
-	}
-
-	public function process_webhooks() {
-
-	}
+	public function process_webhooks() {}
 
 	public function has_fields() {
 		return false;

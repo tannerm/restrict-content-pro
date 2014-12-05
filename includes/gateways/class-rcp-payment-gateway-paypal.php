@@ -166,7 +166,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 		*/
 		if ( $verified || isset( $_POST['verification_override'] ) || ( $this->test_mode || isset( $rcp_options['disable_ipn_verify'] ) ) )  {
 
-			$posted = apply_filters('rcp_ipn_post', $_POST); // allow $_POST to be modified
+			$posted = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
 
 			$user_id 			= $posted['custom'];
 			$subscription_name 	= $posted['item_name'];
