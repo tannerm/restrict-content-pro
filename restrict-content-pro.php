@@ -148,6 +148,8 @@ include( RCP_PLUGIN_DIR . 'includes/deprecated/functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/discount-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/email-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/gateway-functions.php' );
+include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway.php' );
+include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateways.php' );
 include( RCP_PLUGIN_DIR . 'includes/invoice-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/login-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/member-functions.php' );
