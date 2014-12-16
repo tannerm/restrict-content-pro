@@ -31,7 +31,7 @@ class RCP_Member extends WP_User {
 
 		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
 
-		return apply_filters( 'rcp_member_get_expiration_time', $expiration, $this->ID, $this );
+		return apply_filters( 'rcp_member_get_expiration_time', strtotime( $expiration ), $this->ID, $this );
 
 	}
 
