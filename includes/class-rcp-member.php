@@ -29,6 +29,29 @@ class RCP_Member extends WP_User {
 
 	public function set_status( $new_status = '' ) {
 
+		$ret        = false;
+		$old_status = $this->get_status();
+
+		if( $old_status != $new_status ) {
+
+			if( update_user_meta( $this->ID, 'rcp_status', $new_status ) ) {
+
+				if( 'expired' != $new_status ) {
+					delete_user_meta( $this->ID, '_rcp_expired_email_sent');
+				}
+
+				do_action( 'rcp_set_status', $new_status, $this->ID );
+
+				// Record the status change
+				rcp_add_member_note( $this->ID, sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
+
+				$ret = true;
+			}
+
+		}
+
+		return $ret;
+
 	}
 
 	public function get_expiration_date() {
