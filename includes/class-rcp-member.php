@@ -33,6 +33,10 @@ class RCP_Member extends WP_User {
 
 	public function get_subscription_id() {
 
+		$subscription_id = get_user_meta( $this->ID, 'rcp_subscription_level', true );
+
+		return apply_filters( 'rcp_member_get_subscription_id', $subscription_id, $this->ID );
+
 	}
 
 	public function get_subscription_key() {
