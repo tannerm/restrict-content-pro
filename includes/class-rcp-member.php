@@ -78,6 +78,19 @@ class RCP_Member extends WP_User {
 
 	public function is_expired() {
 
+		$ret        = false;
+		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+		
+		if( $expiration && strtotime( 'NOW' ) > strtotime( $expiration ) ) {
+			$ret = true;
+		}
+
+		if( $expiration == 'none' ) {
+			$ret = false;
+		}
+
+		return apply_filters( 'rcp_member_is_expired', $ret, $this->ID, $this );
+
 	}
 
 	public function is_trialing() {
