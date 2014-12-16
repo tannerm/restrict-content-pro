@@ -17,9 +17,21 @@ class RCP_Member extends WP_User {
 
 	public function get_expiration_date() {
 
+		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+
+		if( $expiration ) {
+			$expiration = $expiration != 'none' ? date_i18n( get_option( 'date_format' ), strtotime( $expiration ) ) : 'none';
+		}
+
+		return apply_filters( 'rcp_member_get_expiration_date', $expiration, $this->ID, $this );
+
 	}
 
 	public function get_expiration_time() {
+
+		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+
+		return apply_filters( 'rcp_member_get_expiration_time', $expiration, $this->ID, $this );
 
 	}
 
