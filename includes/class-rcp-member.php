@@ -133,9 +133,29 @@ class RCP_Member extends WP_User {
 
 	public function get_notes() {
 
+		$notes = get_user_meta( $this->ID, 'rcp_notes', true );
+
+		return apply_filters( 'rcp_member_get_notes', $notes, $this->ID, $this );
+
 	}
 
 	public function add_note( $note = '' ) {
+
+		$notes = $this->get_notes();
+
+		if( empty( $notes ) ) {
+			$notes = '';
+		}
+
+		$note = apply_filters( 'rcp_member_pre_add_note', $note, $this->ID, $this );
+
+		$notes .= "\n\n" . date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . ' - ' . $note;
+
+		update_user_meta( $this->ID, 'rcp_notes', wp_kses( $notes, array() ) );
+
+		do_action( 'rcp_member_add_note', $note, $this->ID, $this );
+
+		return true;
 
 	}
 
