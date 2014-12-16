@@ -9,6 +9,22 @@ class RCP_Member extends WP_User {
 
 	public function get_status() {
 
+		$status = get_user_meta( $this->ID, 'rcp_status', true);
+
+		// double check that the status and expiration match. Update if needed
+		if( $status == 'active' && rcp_is_expired( $this->ID ) ) {
+
+			$status = 'expired';
+			$this->set_status( $status );
+
+		}
+
+		if( empty( $status ) ) {
+			$status = 'free';
+		}
+
+		return apply_filters( 'rcp_member_get_status', $status, $this->ID, $this );
+
 	}
 
 	public function set_status( $new_status = '' ) {
