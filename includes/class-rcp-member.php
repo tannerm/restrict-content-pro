@@ -129,6 +129,10 @@ class RCP_Member extends WP_User {
 
 	public function get_payments() {
 
+		$payments = new RCP_Payments;
+		$payments = $payments->get_payments( array( 'user_id' => $this->ID ) );
+
+		return apply_filters( 'rcp_member_get_payments', $payments, $this->ID, $this );
 	}
 
 	public function get_notes() {
