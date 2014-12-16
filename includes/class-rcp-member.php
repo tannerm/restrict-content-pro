@@ -95,6 +95,20 @@ class RCP_Member extends WP_User {
 
 	public function is_trialing() {
 
+		$ret      = false;
+		$trialing = get_user_meta( $this->ID, 'rcp_is_trialing', true );
+
+
+		if( $trialing == 'yes' && rcp_is_active( $this->ID ) ) {
+			$ret = true;
+		}
+
+		// Old filter for backwards compatibility
+		$ret = apply_filters( 'rcp_is_trialing', $ret, $this->ID );
+
+		return apply_filters( 'rcp_member_is_trialing', $ret, $this->ID, $this );
+
+
 	}
 
 }
