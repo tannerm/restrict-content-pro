@@ -76,6 +76,27 @@ class RCP_Member extends WP_User {
 
 	public function set_expiration_date( $date = '' ) {
 
+		$ret      = false;
+		$old_date = $this->get_expiration_date();
+
+		if( $old_date !== $new_date ) {
+			
+			if( update_user_meta( $this->ID, 'rcp_expiration', $new_date ) ) {
+
+
+				// Record the status change
+				$note = sprintf( __( 'Member\'s expiration changed from %s to %s', 'rcp' ), $old_date, $new_date );
+				rcp_add_member_note( $this->ID, $note );
+
+			}
+
+			do_action( 'rcp_set_expiration_date', $this->ID, $new_date, $old_date );
+		
+			$ret = true;
+		}
+
+		return $ret;
+
 	}
 
 	public function renew() {
