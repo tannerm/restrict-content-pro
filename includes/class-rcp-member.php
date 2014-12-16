@@ -35,7 +35,7 @@ class RCP_Member extends WP_User {
 
 		$subscription_id = get_user_meta( $this->ID, 'rcp_subscription_level', true );
 
-		return apply_filters( 'rcp_member_get_subscription_id', $subscription_id, $this->ID );
+		return apply_filters( 'rcp_member_get_subscription_id', $subscription_id, $this->ID, $this );
 
 	}
 
@@ -47,7 +47,7 @@ class RCP_Member extends WP_User {
 
 		$subscription_name = $this->get_subscription_id();
 
-		return apply_filters( 'rcp_member_get_subscription_name', $subscription_name, $this->ID );
+		return apply_filters( 'rcp_member_get_subscription_name', $subscription_name, $this->ID, $this );
 
 	}
 
@@ -64,6 +64,15 @@ class RCP_Member extends WP_User {
 	}
 
 	public function is_recurring() {
+
+		$ret       = false;
+		$recurring = get_user_meta( $this->ID, 'rcp_recurring', true );
+		
+		if( $recurring == 'yes' ) {
+			$ret = true;
+		}
+
+		return apply_filters( 'rcp_member_is_recurring', $ret, $this->ID, $this );
 
 	}
 
