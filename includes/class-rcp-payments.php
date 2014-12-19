@@ -53,13 +53,14 @@ class RCP_Payments {
 		global $wpdb;
 
 		$defaults = array(
-			'subscription' 		=> '',
-			'date' 				=> date( 'Y-m-d H:i:s' ),
-			'amount' 			=> 0.00,
-			'user_id' 			=> 0,
-			'payment_type' 		=> '',
-			'subscription_key' 	=> '',
-			'transaction_id' 	=> ''
+			'subscription'      => '',
+			'date'              => date( 'Y-m-d H:i:s' ),
+			'amount'            => 0.00,
+			'user_id'           => 0,
+			'payment_type'      => '',
+			'subscription_key'  => '',
+			'transaction_id'    => '',
+			'status'            => 'pending'
 		);
 
 		$args = wp_parse_args( $payment_data, $defaults );
