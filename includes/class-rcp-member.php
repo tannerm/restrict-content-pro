@@ -101,6 +101,37 @@ class RCP_Member extends WP_User {
 
 	public function renew() {
 		
+		// Get the member's current expiration date
+		$expires        = $this->get_expiration_time();
+		
+		// Determine what date to use as the start for the new expiration calculation
+		if( $expires > current_time( 'timestamp' ) && rcp_is_active( $this->ID ) ) {
+
+			$base_date  = $expires
+
+		} else {
+
+			$base_date  = current_time( 'timestamp' );
+		
+		}
+
+		$subscription   = rcp_get_subscription_details( $this->get_subscription_id() );
+		$last_day       = cal_days_in_month( CAL_GREGORIAN, date( 'n', $base_date ), date( 'Y', $base_date ) );
+		$expiration     = date( 'Y-m-d H:i:s', strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59' ) );
+
+		if( date( 'j', $base_date ) == $last_day && 'day' != $subscription->duration_unit ) {
+			$expiration = date( 'Y-m-d H:i:s', strtotime( $expiration . ' +2 days' ) );
+		}
+
+		$expiration     = apply_filters( 'rcp_member_renewal_expiration', $expiration, $subscription );
+
+		do_action( 'rcp_member_pre_renew', $this->ID, $expiration, $this );
+
+		$this->set_status( 'active' );
+		$this->set_expiration( $expiration );
+
+		do_action( 'rcp_member_post_renew', $this->ID, $expiration, $this );
+	
 	}
 
 	public function get_subscription_id() {
