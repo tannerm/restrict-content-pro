@@ -7,6 +7,12 @@
 
 class RCP_Member extends WP_User {
 
+	/**
+	 * Retrieves the status of the member
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function get_status() {
 
 		$status = get_user_meta( $this->ID, 'rcp_status', true);
@@ -27,6 +33,12 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Sets the status of a member
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function set_status( $new_status = '' ) {
 
 		$ret        = false;
@@ -54,6 +66,12 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Retrieves the expiration date of the member
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function get_expiration_date() {
 
 		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
@@ -66,6 +84,12 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Retrieves the expiration date of the member as a timestamp
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function get_expiration_time() {
 
 		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
@@ -74,6 +98,14 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Sets the expiration date for a member
+	 *
+	 * Should be passed as a MYSQL date string.
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function set_expiration_date( $date = '' ) {
 
 		$ret      = false;
@@ -99,6 +131,14 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Renews a member's membership by updating status and expiration date
+	 *
+	 * Does NOT handle payment processing for the renewal. This should be called after receiving a renewal payment
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function renew() {
 		
 		// Get the member's current expiration date
@@ -134,6 +174,12 @@ class RCP_Member extends WP_User {
 	
 	}
 
+	/**
+	 * Retrieves the subscription ID of the member
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function get_subscription_id() {
 
 		$subscription_id = get_user_meta( $this->ID, 'rcp_subscription_level', true );
@@ -142,6 +188,12 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Retrieves the subscription key of the member
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function get_subscription_key() {
 
 		$subscription_key = get_user_meta( $this->ID, 'rcp_subscription_key', true );
@@ -150,6 +202,12 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Retrieves the current susbcription name of the member
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function get_subscription_name() {
 
 		$subscription_name = $this->get_subscription_id();
@@ -158,6 +216,12 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Retrieves all payments belonging to the member
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function get_payments() {
 
 		$payments = new RCP_Payments;
@@ -166,6 +230,12 @@ class RCP_Member extends WP_User {
 		return apply_filters( 'rcp_member_get_payments', $payments, $this->ID, $this );
 	}
 
+	/**
+	 * Retrieves the notes on a member
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function get_notes() {
 
 		$notes = get_user_meta( $this->ID, 'rcp_notes', true );
@@ -174,6 +244,12 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Adds a new note to a member
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function add_note( $note = '' ) {
 
 		$notes = $this->get_notes();
@@ -194,6 +270,12 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Determines if a member has a recurring subscription
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function is_recurring() {
 
 		$ret       = false;
@@ -207,6 +289,12 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Determines if the member is expired
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function is_expired() {
 
 		$ret        = false;
@@ -224,6 +312,12 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Determines if the member is currently trailing
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
 	public function is_trialing() {
 
 		$ret      = false;
