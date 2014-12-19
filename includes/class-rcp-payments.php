@@ -334,7 +334,8 @@ class RCP_Payments {
 		global $wpdb;
 
 		$defaults = array(
-			'user_id' => 0
+			'user_id' => 0,
+			'status'  => ''
 		);
 
 		$args  = wp_parse_args( $args, $defaults );
@@ -349,6 +350,22 @@ class RCP_Payments {
 				$user_ids = intval( $args['user_id'] );
 
 			$where .= " WHERE `user_id` IN( {$user_ids} ) ";
+
+		}
+
+		if( ! empty( $args['status'] ) ) {
+
+			if( is_array( $args['status'] ) ) {
+				$statuss = implode( ',', $args['status'] );
+			} else {
+				$statuss = intval( $args['status'] );
+			}
+
+			if( ! empty( $args['user_id'] ) ) {
+				$where .= " AND `status` IN( {$statuss} ) ";
+			} else {
+				$where .= " WHERE `status` IN( {$statuss} ) ";
+			}
 
 		}
 
