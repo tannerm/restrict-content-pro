@@ -204,6 +204,7 @@ class RCP_Payments {
 			'user_id'      => 0,
 			'date'         => array(),
 			'fields'       => false,
+			'status'       => '',
 			's'            => ''
 		);
 
@@ -228,6 +229,22 @@ class RCP_Payments {
 				$where .= "`user_id` IN( {$user_ids} ) ";
 			} else {
 				$where .= "WHERE `user_id` IN( {$user_ids} ) ";
+			}
+
+		}
+
+		// payments for specific statuses
+		if( ! empty( $args['status'] ) ) {
+
+			if( is_array( $args['status'] ) )
+				$statuss = implode( ',', $args['status'] );
+			else
+				$statuss = intval( $args['status'] );
+
+			if( ! empty( $args['subscription'] ) || ! empty( $args['user_id'] ) ) {
+				$where .= "`status` IN( {$statuss} ) ";
+			} else {
+				$where .= "WHERE `status` IN( {$statuss} ) ";
 			}
 
 		}
