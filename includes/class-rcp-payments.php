@@ -185,6 +185,10 @@ class RCP_Payments {
 
 		$payment = $wpdb->get_row( "SELECT * FROM {$this->db_name} WHERE {$field} = {$value}" );
 
+		if( empty( $payment->status ) ) {
+			$payment->status = 'complete';
+		}
+
 		return $payment;
 
 	}
