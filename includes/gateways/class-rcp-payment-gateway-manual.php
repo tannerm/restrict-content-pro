@@ -38,6 +38,8 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 		$rcp_payments = new RCP_Payments();
 		$rcp_payments->insert( $payment_data );
 
+		wp_redirect( $this->return_url ); exit;
+
 	}
 
 }
