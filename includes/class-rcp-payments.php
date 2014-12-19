@@ -454,6 +454,9 @@ class RCP_Payments {
 			}
 		}
 
+		// Exclude refunded payments
+		$where .= "AND `status` != 'refunded' ";
+
 		$earnings = get_transient( $cache_key );
 
 		if( $earnings === false ) {
