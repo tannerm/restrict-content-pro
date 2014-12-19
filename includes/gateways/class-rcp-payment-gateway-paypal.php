@@ -20,6 +20,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 		$this->id          = 'paypal';
 		$this->title       = 'PayPal';
 		$this->description = 'It is PayPal, what else?';
+		$this->supports[]  = 'recurring';
+		$this->supports[]  = 'one-time';
 
 		$this->test_mode   = isset( $rcp_options['sandbox'] );
 

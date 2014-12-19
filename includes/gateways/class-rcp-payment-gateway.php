@@ -14,6 +14,7 @@ class RCP_Payment_Gateway {
 	public $id;
 	public $title;
 	public $description;
+	public $supports = array();
 	public $email;
 	public $user_id;
 	public $user_name;
@@ -81,6 +82,11 @@ class RCP_Payment_Gateway {
 
 	public function vaidate_fields() {
 		return true;
+	}
+
+	public function generate_transaction_id() {
+		$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
+		return strtolower( md5( $this->subscription_key . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'rcp', true ) ) );
 	}
 
 }
