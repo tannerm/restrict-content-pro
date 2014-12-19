@@ -163,6 +163,10 @@ class RCP_Payments {
 
 		$payment = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->db_name} WHERE id = %d", absint( $payment_id ) ) );
 
+		if( empty( $payment->status ) ) {
+			$payment->status = 'complete';
+		}
+
 		return $payment;
 
 	}
