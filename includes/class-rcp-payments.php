@@ -35,7 +35,7 @@ class RCP_Payments {
 	function __construct() {
 
 		$this->db_name    = rcp_get_payments_db_name();
-		$this->db_version = '1.3';
+		$this->db_version = '1.4';
 
 	}
 
