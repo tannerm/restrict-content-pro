@@ -50,6 +50,8 @@ rcp_show_error_messages( 'register' ); ?>
 	</fieldset>
 	<?php } ?>
 
+	<?php do_action( 'rcp_before_subscription_form_fields' ); ?>
+
 	<fieldset class="rcp_subscription_fieldset">
 	<?php $levels = rcp_get_subscription_levels( 'active' );
 	if( $levels ) : ?>
