@@ -2,944 +2,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Restrict Content Pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-07 14:33-0600\n"
-"PO-Revision-Date: 2014-10-07 14:33-0600\n"
+"POT-Creation-Date: 2015-01-06 21:11-0600\n"
+"PO-Revision-Date: 2015-01-06 21:11-0600\n"
 "Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
 "Language-Team: \n"
-"Language: English\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: ../\n"
-"X-Generator: Poedit 1.5.4\n"
-"X-Poedit-SearchPath-0: includes\n"
+"X-Generator: Poedit 1.7.1\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: includes/js\n"
 
-#: includes/member-forms.php:81 includes/admin/settings/settings.php:248
-msgid "Auto Renew"
-msgstr ""
-
-#: includes/class-rcp-export-members.php:37
-#: includes/class-rcp-export-payments.php:40
-msgid "User ID"
-msgstr ""
-
-#: includes/class-rcp-export-members.php:38
-#: includes/class-rcp-export-payments.php:41
-msgid "User Login"
-msgstr ""
-
-#: includes/class-rcp-export-members.php:39
-msgid "User Email"
-msgstr ""
-
-#: includes/class-rcp-export-members.php:40
-msgid "First Name"
-msgstr ""
-
-#: includes/class-rcp-export-members.php:41
-msgid "Last Name"
-msgstr ""
-
-#: includes/class-rcp-export-members.php:42 includes/member-functions.php:567
-#: includes/class-rcp-export-payments.php:38 includes/user-page-columns.php:4
-#: includes/invoice-functions.php:166
-#: includes/admin/members/members-page.php:118
-#: includes/admin/members/members-page.php:132
-#: includes/admin/payments/payments-page.php:66
-#: includes/admin/payments/payments-page.php:82
-#: includes/admin/discounts/discount-codes.php:21
-#: includes/admin/discounts/discount-codes.php:38
-#: includes/admin/discounts/discount-codes.php:162
-#: includes/admin/discounts/edit-discount.php:63
-msgid "Subscription"
-msgstr ""
-
-#: includes/class-rcp-export-members.php:43 includes/member-functions.php:569
-#: includes/class-rcp-export-payments.php:43
-#: includes/invoice-functions.php:134
-#: includes/admin/payments/payments-page.php:67
-#: includes/admin/payments/payments-page.php:83
-msgid "Subscription Key"
-msgstr ""
-
-#: includes/class-rcp-export-members.php:44
-#: includes/admin/members/members-page.php:121
-#: includes/admin/members/members-page.php:135
-#: includes/admin/discounts/discount-codes.php:27
-#: includes/admin/discounts/discount-codes.php:44
-msgid "Expiration"
-msgstr ""
-
-#: includes/shortcodes.php:155
-msgid "You are already registered and have an active subscription."
-msgstr ""
-
-#: includes/registration-functions.php:47
-msgid "Please choose a subscription level"
-msgstr ""
-
-#: includes/registration-functions.php:52
-msgid "You may only sign up for a free trial once"
-msgstr ""
-
-#: includes/registration-functions.php:58
-msgid "The discount you entered is invalid"
-msgstr ""
-
-#: includes/registration-functions.php:61
-msgid "You can only use the discount code once"
-msgstr ""
-
-#: includes/registration-functions.php:66
-msgid "Free subscriptions cannot be automatically renewed"
-msgstr ""
-
-#: includes/registration-functions.php:280
-msgid "Username already taken"
-msgstr ""
-
-#: includes/registration-functions.php:284 includes/login-functions.php:57
-msgid "Invalid username"
-msgstr ""
-
-#: includes/registration-functions.php:288
-msgid "Please enter a username"
-msgstr ""
-
-#: includes/registration-functions.php:292
-msgid "Invalid email"
-msgstr ""
-
-#: includes/registration-functions.php:296
-msgid "Email already registered"
-msgstr ""
-
-#: includes/registration-functions.php:300 includes/login-functions.php:62
-msgid "Please enter a password"
-msgstr ""
-
-#: includes/registration-functions.php:304 includes/member-functions.php:791
-msgid "Passwords do not match"
-msgstr ""
-
-#: includes/captcha-functions.php:34
-msgid "The words/numbers you entered did not match the reCaptcha"
-msgstr ""
-
-#: includes/member-functions.php:365
-#: includes/admin/discounts/discount-codes.php:84
-#: includes/admin/subscriptions/subscription-levels.php:58
-msgid "none"
-msgstr ""
-
-#: includes/member-functions.php:390
+#: RCP_Plugin_Updater.php:167
 #, php-format
-msgid "Member's expiration changed from %s to %s"
+msgid ""
+"There is a new version of %1$s available. <a target=\"_blank\" class="
+"\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
 msgstr ""
 
-#: includes/member-functions.php:426
-msgid "free"
-msgstr ""
-
-#: includes/member-functions.php:445 includes/admin/export.php:29
-#: includes/admin/members/members-page.php:53
-#: includes/admin/subscriptions/subscription-levels.php:188
-#: includes/admin/subscriptions/edit-subscription.php:85
-msgid "Active"
-msgstr ""
-
-#: includes/member-functions.php:448 includes/admin/export.php:31
-#: includes/admin/members/members-page.php:63
-msgid "Expired"
-msgstr ""
-
-#: includes/member-functions.php:451 includes/admin/export.php:30
-#: includes/admin/members/members-page.php:58
-msgid "Pending"
-msgstr ""
-
-#: includes/member-functions.php:454 includes/admin/export.php:32
-#: includes/admin/members/members-page.php:68
-msgid "Cancelled"
-msgstr ""
-
-#: includes/member-functions.php:457 includes/member-functions.php:480
-#: includes/admin/export.php:33 includes/admin/members/members-page.php:73
-#: includes/admin/subscriptions/subscription-levels.php:72
-#: includes/admin/subscriptions/subscription-levels.php:168
-msgid "Free"
-msgstr ""
-
-#: includes/member-functions.php:496
+#: RCP_Plugin_Updater.php:174
 #, php-format
-msgid "Member's status changed from %s to %s"
+msgid ""
+"There is a new version of %1$s available. <a target=\"_blank\" class="
+"\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a href=\"%4$s"
+"\">update now</a>."
 msgstr ""
 
-#: includes/member-functions.php:566 includes/class-rcp-export.php:68
-#: includes/class-rcp-export-payments.php:44
-#: includes/admin/logs-list-table.php:94
-#: includes/admin/payments/payments-page.php:68
-#: includes/admin/payments/payments-page.php:84
-msgid "Date"
+#: RCP_Plugin_Updater.php:314
+msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/member-functions.php:568 includes/class-rcp-export-payments.php:42
-msgid "Payment Type"
-msgstr ""
-
-#: includes/member-functions.php:570 includes/invoice-functions.php:147
-#: includes/admin/payments/payments-page.php:71
-#: includes/admin/payments/payments-page.php:87
-#: includes/admin/payments/edit-payment.php:47
-#: includes/admin/payments/new-payment.php:41
-msgid "Transaction ID"
-msgstr ""
-
-#: includes/member-functions.php:572 includes/member-functions.php:574
-#: includes/class-rcp-export-payments.php:39
-#: includes/invoice-functions.php:167
-#: includes/admin/payments/payments-page.php:69
-#: includes/admin/payments/payments-page.php:85
-#: includes/admin/payments/edit-payment.php:29
-#: includes/admin/payments/new-payment.php:23
-#: includes/admin/discounts/discount-codes.php:22
-#: includes/admin/discounts/discount-codes.php:39
-#: includes/admin/discounts/discount-codes.php:153
-msgid "Amount"
-msgstr ""
-
-#: includes/member-functions.php:579
-msgid "No payments recorded"
-msgstr ""
-
-#: includes/member-functions.php:729
-msgid "Please enter a valid email address"
-msgstr ""
-
-#: includes/member-functions.php:734
-msgid "The email you entered belongs to another user. Please use another."
-msgstr ""
-
-#: includes/member-functions.php:740
-msgid "The passwords you entered do not match. Please try again."
-msgstr ""
-
-#: includes/member-functions.php:760
-msgid "There was an error updating your profile. Please try again."
-msgstr ""
-
-#: includes/member-functions.php:787
-msgid "Please enter a password, and confirm it"
-msgstr ""
-
-#: includes/class-rcp-export.php:67 includes/class-rcp-export-payments.php:37
-#: includes/admin/members/members-page.php:116
-#: includes/admin/members/members-page.php:130
-#: includes/admin/payments/payments-page.php:64
-#: includes/admin/payments/payments-page.php:80
-#: includes/admin/discounts/discount-codes.php:17
-#: includes/admin/discounts/discount-codes.php:34
-#: includes/admin/subscriptions/subscription-levels.php:18
-#: includes/admin/subscriptions/subscription-levels.php:34
-msgid "ID"
-msgstr ""
-
-#: includes/class-rcp-export.php:167
-msgid "You do not have permission to export data."
-msgstr ""
-
-#: includes/class-rcp-export.php:167
+#: RCP_Plugin_Updater.php:314 includes/class-rcp-export.php:167
 msgid "Error"
-msgstr ""
-
-#: includes/discount-functions.php:261
-#: includes/admin/members/view-member.php:83
-msgid "None"
-msgstr ""
-
-#: includes/misc-functions.php:113
-msgid "US Dollars (&#36;)"
-msgstr ""
-
-#: includes/misc-functions.php:114
-msgid "Euros (&euro;)"
-msgstr ""
-
-#: includes/misc-functions.php:115
-msgid "Pounds Sterling (&pound;)"
-msgstr ""
-
-#: includes/misc-functions.php:116
-msgid "Australian Dollars (&#36;)"
-msgstr ""
-
-#: includes/misc-functions.php:117
-msgid "Brazilian Real (&#36;)"
-msgstr ""
-
-#: includes/misc-functions.php:118
-msgid "Canadian Dollars (&#36;)"
-msgstr ""
-
-#: includes/misc-functions.php:119
-msgid "Czech Koruna"
-msgstr ""
-
-#: includes/misc-functions.php:120
-msgid "Danish Krone"
-msgstr ""
-
-#: includes/misc-functions.php:121
-msgid "Hong Kong Dollar (&#36;)"
-msgstr ""
-
-#: includes/misc-functions.php:122
-msgid "Hungarian Forint"
-msgstr ""
-
-#: includes/misc-functions.php:123
-msgid "Israeli Shekel"
-msgstr ""
-
-#: includes/misc-functions.php:124
-msgid "Japanese Yen (&yen;)"
-msgstr ""
-
-#: includes/misc-functions.php:125
-msgid "Malaysian Ringgits"
-msgstr ""
-
-#: includes/misc-functions.php:126
-msgid "Mexican Peso (&#36;)"
-msgstr ""
-
-#: includes/misc-functions.php:127
-msgid "New Zealand Dollar (&#36;)"
-msgstr ""
-
-#: includes/misc-functions.php:128
-msgid "Norwegian Krone"
-msgstr ""
-
-#: includes/misc-functions.php:129
-msgid "Philippine Pesos"
-msgstr ""
-
-#: includes/misc-functions.php:130
-msgid "Polish Zloty"
-msgstr ""
-
-#: includes/misc-functions.php:131
-msgid "Singapore Dollar (&#36;)"
-msgstr ""
-
-#: includes/misc-functions.php:132
-msgid "Swedish Krona"
-msgstr ""
-
-#: includes/misc-functions.php:133
-msgid "Swiss Franc"
-msgstr ""
-
-#: includes/misc-functions.php:134
-msgid "Taiwan New Dollars"
-msgstr ""
-
-#: includes/misc-functions.php:135
-msgid "Thai Baht"
-msgstr ""
-
-#: includes/misc-functions.php:136
-msgid "Turkish Lira"
-msgstr ""
-
-#: includes/misc-functions.php:137
-msgid "Iranian Rial (&#65020;)"
-msgstr ""
-
-#: includes/misc-functions.php:138
-msgid "Russian Rubles"
-msgstr ""
-
-#: includes/scripts.php:26
-msgid "Are you sure you wish to cancel this member's subscription?"
-msgstr ""
-
-#: includes/scripts.php:27
-msgid ""
-"If you delete this subscription, all members registered with this level will "
-"be canceled. Proceed?"
-msgstr ""
-
-#: includes/scripts.php:28
-msgid ""
-"Are you sure you want to delete this payment? This action is irreversible. "
-"Proceed?"
-msgstr ""
-
-#: includes/scripts.php:29
-msgid "You must choose a username"
-msgstr ""
-
-#: includes/scripts.php:32
-msgid "Use as Logo"
-msgstr ""
-
-#: includes/scripts.php:33
-msgid "Choose a Logo"
-msgstr ""
-
-#: includes/email-functions.php:42 includes/email-functions.php:59
-#: includes/email-functions.php:79 includes/email-functions.php:99
-#: includes/email-functions.php:117
-msgid "Hello"
-msgstr ""
-
-#: includes/email-functions.php:42 includes/email-functions.php:99
-#: includes/email-functions.php:117
-msgid "is now subscribed to"
-msgstr ""
-
-#: includes/email-functions.php:42 includes/email-functions.php:99
-#: includes/email-functions.php:117
-msgid "Subscription level"
-msgstr ""
-
-#: includes/email-functions.php:44 includes/email-functions.php:61
-#: includes/email-functions.php:81 includes/email-functions.php:101
-#: includes/email-functions.php:119
-msgid "Thank you"
-msgstr ""
-
-#: includes/email-functions.php:45
-msgid "New subscription on "
-msgstr ""
-
-#: includes/email-functions.php:59
-msgid "has cancelled their subscription to"
-msgstr ""
-
-#: includes/email-functions.php:59
-msgid "Their subscription level was"
-msgstr ""
-
-#: includes/email-functions.php:62
-msgid "Cancelled subscription on "
-msgstr ""
-
-#: includes/email-functions.php:79
-msgid "subscription has expired"
-msgstr ""
-
-#: includes/email-functions.php:82
-msgid "Expired subscription on "
-msgstr ""
-
-#: includes/email-functions.php:102
-msgid "New free subscription on "
-msgstr ""
-
-#: includes/email-functions.php:120
-msgid "New trial subscription on "
-msgstr ""
-
-#: includes/user-page-columns.php:5 includes/admin/members/edit-member.php:16
-#: includes/admin/members/members-page.php:119
-#: includes/admin/members/members-page.php:133
-#: includes/admin/members/view-member.php:19
-#: includes/admin/discounts/discount-codes.php:24
-#: includes/admin/discounts/discount-codes.php:41
-#: includes/admin/subscriptions/subscription-levels.php:184
-#: includes/admin/subscriptions/edit-subscription.php:81
-msgid "Status"
-msgstr ""
-
-#: includes/user-page-columns.php:6
-#: includes/admin/members/members-page.php:124
-#: includes/admin/members/members-page.php:138
-#: includes/admin/payments/payments-page.php:74
-#: includes/admin/payments/payments-page.php:90
-#: includes/admin/discounts/discount-codes.php:29
-#: includes/admin/discounts/discount-codes.php:47
-#: includes/admin/subscriptions/subscription-levels.php:27
-#: includes/admin/subscriptions/subscription-levels.php:43
-msgid "Actions"
-msgstr ""
-
-#: includes/user-page-columns.php:20
-msgid "Edit Subscription"
-msgstr ""
-
-#: includes/user-page-columns.php:22
-msgid "Add Subscription"
-msgstr ""
-
-#: includes/user-page-columns.php:24
-msgid "View Details"
-msgstr ""
-
-#: includes/subscription-functions.php:150
-msgid "Days"
-msgstr ""
-
-#: includes/subscription-functions.php:152
-msgid "Day"
-msgstr ""
-
-#: includes/subscription-functions.php:156
-msgid "Months"
-msgstr ""
-
-#: includes/subscription-functions.php:158
-msgid "Month"
-msgstr ""
-
-#: includes/subscription-functions.php:162
-msgid "Years"
-msgstr ""
-
-#: includes/subscription-functions.php:164
-msgid "Year"
-msgstr ""
-
-#: includes/subscription-functions.php:281
-msgid "None, reminders disabled"
-msgstr ""
-
-#: includes/subscription-functions.php:282
-msgid "One day before expiration"
-msgstr ""
-
-#: includes/subscription-functions.php:283
-msgid "Two days before expiration"
-msgstr ""
-
-#: includes/subscription-functions.php:284
-msgid "Three days before expiration"
-msgstr ""
-
-#: includes/subscription-functions.php:285
-msgid "Four days before expiration"
-msgstr ""
-
-#: includes/subscription-functions.php:286
-msgid "Five days before expiration"
-msgstr ""
-
-#: includes/subscription-functions.php:287
-msgid "Six days before expiration"
-msgstr ""
-
-#: includes/subscription-functions.php:288
-msgid "One week before expiration"
-msgstr ""
-
-#: includes/subscription-functions.php:289
-msgid "Two weeks before expiration"
-msgstr ""
-
-#: includes/subscription-functions.php:290
-msgid "Three weeks before expiration"
-msgstr ""
-
-#: includes/subscription-functions.php:291
-msgid "One month before expiration"
-msgstr ""
-
-#: includes/subscription-functions.php:292
-msgid "Two months before expiration"
-msgstr ""
-
-#: includes/subscription-functions.php:293
-msgid "Three months before expiration"
-msgstr ""
-
-#: includes/invoice-functions.php:43
-msgid "This payment record does not exist"
-msgstr ""
-
-#: includes/invoice-functions.php:47
-msgid "You do not have permission to download this invoice"
-msgstr ""
-
-#: includes/invoice-functions.php:58
-#, php-format
-msgid "Invoice #%d"
-msgstr ""
-
-#: includes/invoice-functions.php:59 includes/admin/settings/settings.php:30
-#: includes/admin/help/help-page.php:15
-msgid "Restrict Content Pro"
-msgstr ""
-
-#: includes/invoice-functions.php:81
-msgid "Invoice"
-msgstr ""
-
-#: includes/invoice-functions.php:85
-#: includes/admin/reports/reports-page.php:524
-msgid "From"
-msgstr ""
-
-#: includes/invoice-functions.php:111
-#: includes/admin/reports/reports-page.php:535
-msgid "To"
-msgstr ""
-
-#: includes/invoice-functions.php:122
-msgid "Invoice Date"
-msgstr ""
-
-#: includes/invoice-functions.php:128
-msgid "Invoice ID"
-msgstr ""
-
-#: includes/invoice-functions.php:141
-msgid "Payment Method"
-msgstr ""
-
-#: includes/invoice-functions.php:157
-msgid "Invoice Items"
-msgstr ""
-
-#: includes/invoice-functions.php:194
-msgid "Invoice Totals"
-msgstr ""
-
-#: includes/invoice-functions.php:203
-msgid "Total"
-msgstr ""
-
-#: includes/invoice-functions.php:212
-msgid "Additional Notes"
-msgstr ""
-
-#: includes/process-data.php:23 includes/process-data.php:42
-#: includes/process-data.php:63 includes/process-data.php:111
-#: includes/process-data.php:184 includes/process-data.php:217
-#: includes/process-data.php:250 includes/process-data.php:285
-#: includes/process-data.php:327 includes/process-data.php:335
-#: includes/process-data.php:345 includes/process-data.php:363
-#: includes/process-data.php:373 includes/process-data.php:385
-#: includes/process-data.php:394 includes/process-data.php:403
-#: includes/process-data.php:412
-msgid "You do not have permission to perform this action."
-msgstr ""
-
-#: includes/login-functions.php:69
-msgid "Incorrect password"
-msgstr ""
-
-#: includes/content-filters.php:129
-msgid "You need to have an active subscription to view this content."
-msgstr ""
-
-#: includes/gateways/paypal/paypal.php:166
-msgid "Duplicate Payment"
-msgstr ""
-
-#: includes/gateways/paypal/paypal.php:167
-msgid ""
-"A duplicate payment was detected. The new payment was still recorded, so you "
-"may want to check into both payments."
-msgstr ""
-
-#: includes/gateways/paypal/paypal.php:213
-msgid "Invalid Currency Code"
-msgstr ""
-
-#: includes/gateways/paypal/paypal.php:214
-#, php-format
-msgid ""
-"The currency code in an IPN request did not match the site currency code. "
-"Payment data: %s"
-msgstr ""
-
-#: includes/gateways/paypal/paypal.php:231
-msgid "IPN report"
-msgstr ""
-
-#: includes/gateways/paypal/paypal.php:239
-msgid "Subscription Key Mismatch"
-msgstr ""
-
-#: includes/gateways/paypal/paypal.php:240
-#, php-format
-msgid ""
-"The subscription key in an IPN request did not match the subscription key "
-"recorded for the user. Payment data: %s"
-msgstr ""
-
-#: includes/gateways/paypal/paypal.php:408
-msgid "Invalid IPN"
-msgstr ""
-
-#: includes/libraries/class-wp-logging.php:69
-#: includes/admin/admin-pages.php:20
-msgid "Logs"
 msgstr ""
 
 #: includes/admin/admin-ajax-actions.php:59
 msgid "No users found"
-msgstr ""
-
-#: includes/admin/export.php:8 includes/admin/admin-pages.php:19
-msgid "Export"
-msgstr ""
-
-#: includes/admin/export.php:12
-msgid "Members Export"
-msgstr ""
-
-#: includes/admin/export.php:13
-msgid ""
-"Download member data as a CSV file. This is useful for tasks such as "
-"importing batch users into Mail Chimp, or other systems."
-msgstr ""
-
-#: includes/admin/export.php:17
-msgid "All"
-msgstr ""
-
-#: includes/admin/export.php:27
-msgid "Choose the subscription to export members from"
-msgstr ""
-
-#: includes/admin/export.php:35
-msgid "Choose the status to export"
-msgstr ""
-
-#: includes/admin/export.php:37
-msgid "Maximum number of members to export"
-msgstr ""
-
-#: includes/admin/export.php:39
-msgid "The number of members to skip"
-msgstr ""
-
-#: includes/admin/export.php:41
-msgid ""
-"If you need to export a large number of members, export them in batches "
-"using the max and offset options"
-msgstr ""
-
-#: includes/admin/export.php:43
-msgid "Download Member CSV"
-msgstr ""
-
-#: includes/admin/export.php:47
-msgid "Payments Export"
-msgstr ""
-
-#: includes/admin/export.php:48
-msgid ""
-"Download payment data as a CSV file. Use this file for your own record "
-"keeping or tracking."
-msgstr ""
-
-#: includes/admin/export.php:52
-msgid "All years"
-msgstr ""
-
-#: includes/admin/export.php:64
-msgid "All months"
-msgstr ""
-
-#: includes/admin/export.php:71
-msgid "Download Payments CSV"
-msgstr ""
-
-#: includes/admin/logs.php:10
-msgid "RCP Error Logs"
-msgstr ""
-
-#: includes/admin/logs-list-table.php:54
-msgid "View logs for this user"
-msgstr ""
-
-#: includes/admin/logs-list-table.php:59
-msgid "at"
-msgstr ""
-
-#: includes/admin/logs-list-table.php:91
-msgid "Log Error"
-msgstr ""
-
-#: includes/admin/logs-list-table.php:92
-msgid "Log Message"
-msgstr ""
-
-#: includes/admin/logs-list-table.php:93
-#: includes/admin/members/members-page.php:115
-#: includes/admin/members/members-page.php:129
-#: includes/admin/payments/payments-page.php:65
-#: includes/admin/payments/payments-page.php:81
-#: includes/admin/payments/edit-payment.php:18
-#: includes/admin/payments/new-payment.php:12
-msgid "User"
-msgstr ""
-
-#: includes/admin/logs-list-table.php:109
-#: includes/admin/payments/payments-page.php:119
-#: includes/admin/discounts/discount-codes.php:95
-#: includes/admin/subscriptions/subscription-levels.php:96
-msgid "Delete"
-msgstr ""
-
-#: includes/admin/metabox.php:14
-msgid "Restrict this content"
-msgstr ""
-
-#: includes/admin/metabox.php:19 includes/admin/categories.php:32
-#: includes/admin/help/help-page.php:91
-msgid "Paid Only?"
-msgstr ""
-
-#: includes/admin/metabox.php:22
-msgid "Restrict this entry to active paid users only."
-msgstr ""
-
-#: includes/admin/metabox.php:25 includes/admin/help/help-page.php:92
-msgid "Show Excerpt?"
-msgstr ""
-
-#: includes/admin/metabox.php:28
-msgid ""
-"Allow non active users to view the excerpt? If left unchecked, the message "
-"defined in settings will be used"
-msgstr ""
-
-#: includes/admin/metabox.php:31 includes/admin/help/help-page.php:93
-msgid "Hide from Feed?"
-msgstr ""
-
-#: includes/admin/metabox.php:34
-msgid "Hide the excerpt of this post / page from the Feed?"
-msgstr ""
-
-#: includes/admin/metabox.php:37 includes/admin/categories.php:41
-#: includes/admin/help/help-page.php:94
-#: includes/admin/subscriptions/subscription-levels.php:21
-#: includes/admin/subscriptions/subscription-levels.php:37
-#: includes/admin/subscriptions/subscription-levels.php:132
-#: includes/admin/subscriptions/edit-subscription.php:34
-msgid "Access Level"
-msgstr ""
-
-#: includes/admin/metabox.php:40
-msgid ""
-"Choose the access level required see this content. The access level is "
-"determined by the subscription the member is subscribed to."
-msgstr ""
-
-#: includes/admin/metabox.php:45 includes/admin/members/edit-member.php:33
-#: includes/admin/members/members-page.php:226
-#: includes/admin/members/view-member.php:27
-#: includes/admin/help/help-page.php:95
-msgid "Subscription Level"
-msgstr ""
-
-#: includes/admin/metabox.php:48
-msgid "Choose the subscription levels allowed to view this content."
-msgstr ""
-
-#: includes/admin/metabox.php:52 includes/admin/help/help-page.php:96
-msgid "User Level"
-msgstr ""
-
-#: includes/admin/metabox.php:55
-msgid ""
-"Choose the user level that can see this post / page's content. Users of this "
-"level and higher will be the only ones able to view the content."
-msgstr ""
-
-#: includes/admin/metabox.php:93
-#, php-format
-msgid ""
-"Use these options to restrict this entire entry, or the [restrict] ... [/"
-"restrict] short code to restrict partial content. %sView documentation%s."
-msgstr ""
-
-#: includes/admin/metabox.php:133
-msgid "Note 1"
-msgstr ""
-
-#: includes/admin/metabox.php:133
-msgid ""
-"To hide this content from logged-out users, but allow free and paid, set the "
-"User Level to \"Subscriber\"."
-msgstr ""
-
-#: includes/admin/metabox.php:134
-msgid "Note 2"
-msgstr ""
-
-#: includes/admin/metabox.php:134
-msgid ""
-"Access level, subscription level, and user level can all be combined to "
-"require the user meet all three specifications."
-msgstr ""
-
-#: includes/admin/admin-pages.php:12 includes/admin/admin-pages.php:18
-msgid "Restrict Content Pro Settings"
-msgstr ""
-
-#: includes/admin/admin-pages.php:12
-msgid "Restrict"
-msgstr ""
-
-#: includes/admin/admin-pages.php:13
-msgid "Members"
-msgstr ""
-
-#: includes/admin/admin-pages.php:14 includes/admin/categories.php:54
-#: includes/admin/subscriptions/subscription-levels.php:12
-msgid "Subscription Levels"
-msgstr ""
-
-#: includes/admin/admin-pages.php:15
-msgid "Discounts"
-msgstr ""
-
-#: includes/admin/admin-pages.php:15
-#: includes/admin/discounts/discount-codes.php:12
-msgid "Discount Codes"
-msgstr ""
-
-#: includes/admin/admin-pages.php:16 includes/admin/members/view-member.php:98
-#: includes/admin/payments/payments-page.php:22
-msgid "Payments"
-msgstr ""
-
-#: includes/admin/admin-pages.php:17
-msgid "Reports"
-msgstr ""
-
-#: includes/admin/admin-pages.php:18
-msgid "Settings"
-msgstr ""
-
-#: includes/admin/admin-pages.php:19
-msgid "Export Member Data"
-msgstr ""
-
-#: includes/admin/admin-pages.php:21
-msgid "Help"
-msgstr ""
-
-#: includes/admin/categories.php:36
-msgid "Restrict items in thie category to paid subscribers only?"
-msgstr ""
-
-#: includes/admin/categories.php:49
-msgid "Access level required to view content in this category."
-msgstr ""
-
-#: includes/admin/categories.php:62
-msgid ""
-"Subscription levels allowed to view content in this category. Leave "
-"unchecked for all."
 msgstr ""
 
 #: includes/admin/admin-notices.php:12
@@ -1018,24 +119,718 @@ msgstr ""
 msgid "The discount code could not be created due to an error"
 msgstr ""
 
-#: includes/admin/screen-options.php:21
-msgid "Members per page"
+#: includes/admin/admin-pages.php:12 includes/admin/admin-pages.php:18
+msgid "Restrict Content Pro Settings"
 msgstr ""
 
-#: includes/admin/screen-options.php:30
-msgid "Payments per page"
+#: includes/admin/admin-pages.php:12
+msgid "Restrict"
+msgstr ""
+
+#: includes/admin/admin-pages.php:13
+msgid "Members"
+msgstr ""
+
+#: includes/admin/admin-pages.php:14 includes/admin/categories.php:54
+#: includes/admin/subscriptions/subscription-levels.php:12
+msgid "Subscription Levels"
+msgstr ""
+
+#: includes/admin/admin-pages.php:15
+msgid "Discounts"
+msgstr ""
+
+#: includes/admin/admin-pages.php:15
+#: includes/admin/discounts/discount-codes.php:12
+msgid "Discount Codes"
+msgstr ""
+
+#: includes/admin/admin-pages.php:16 includes/admin/members/view-member.php:98
+#: includes/admin/payments/payments-page.php:22
+msgid "Payments"
+msgstr ""
+
+#: includes/admin/admin-pages.php:17
+msgid "Reports"
+msgstr ""
+
+#: includes/admin/admin-pages.php:18
+msgid "Settings"
+msgstr ""
+
+#: includes/admin/admin-pages.php:19
+msgid "Export Member Data"
+msgstr ""
+
+#: includes/admin/admin-pages.php:19 includes/admin/export.php:8
+msgid "Export"
+msgstr ""
+
+#: includes/admin/admin-pages.php:20
+#: includes/libraries/class-wp-logging.php:69
+msgid "Logs"
+msgstr ""
+
+#: includes/admin/admin-pages.php:21
+msgid "Help"
+msgstr ""
+
+#: includes/admin/categories.php:32 includes/admin/help/help-page.php:91
+#: includes/admin/metabox.php:19
+msgid "Paid Only?"
+msgstr ""
+
+#: includes/admin/categories.php:36
+msgid "Restrict items in thie category to paid subscribers only?"
+msgstr ""
+
+#: includes/admin/categories.php:41 includes/admin/help/help-page.php:94
+#: includes/admin/metabox.php:37
+#: includes/admin/subscriptions/edit-subscription.php:34
+#: includes/admin/subscriptions/subscription-levels.php:21
+#: includes/admin/subscriptions/subscription-levels.php:37
+#: includes/admin/subscriptions/subscription-levels.php:132
+msgid "Access Level"
+msgstr ""
+
+#: includes/admin/categories.php:49
+msgid "Access level required to view content in this category."
+msgstr ""
+
+#: includes/admin/categories.php:62
+msgid ""
+"Subscription levels allowed to view content in this category. Leave "
+"unchecked for all."
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:17
+#: includes/admin/discounts/discount-codes.php:34
+#: includes/admin/members/members-page.php:116
+#: includes/admin/members/members-page.php:130
+#: includes/admin/payments/payments-page.php:64
+#: includes/admin/payments/payments-page.php:80
+#: includes/admin/subscriptions/subscription-levels.php:18
+#: includes/admin/subscriptions/subscription-levels.php:34
+#: includes/class-rcp-export-payments.php:37 includes/class-rcp-export.php:67
+msgid "ID"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:18
+#: includes/admin/discounts/discount-codes.php:35
+#: includes/admin/discounts/discount-codes.php:114
+#: includes/admin/settings/settings.php:620
+#: includes/admin/subscriptions/edit-subscription.php:16
+#: includes/admin/subscriptions/subscription-levels.php:19
+#: includes/admin/subscriptions/subscription-levels.php:35
+#: includes/admin/subscriptions/subscription-levels.php:114
+msgid "Name"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:19
+#: includes/admin/discounts/discount-codes.php:36
+#: includes/admin/discounts/discount-codes.php:123
+#: includes/admin/subscriptions/edit-subscription.php:25
+#: includes/admin/subscriptions/subscription-levels.php:20
+#: includes/admin/subscriptions/subscription-levels.php:36
+#: includes/admin/subscriptions/subscription-levels.php:123
+msgid "Description"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:20
+#: includes/admin/discounts/discount-codes.php:37
+#: includes/admin/discounts/discount-codes.php:132
+msgid "Code"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:21
+#: includes/admin/discounts/discount-codes.php:38
+#: includes/admin/discounts/discount-codes.php:162
+#: includes/admin/discounts/edit-discount.php:63
+#: includes/admin/members/members-page.php:118
+#: includes/admin/members/members-page.php:132
+#: includes/admin/payments/payments-page.php:66
+#: includes/admin/payments/payments-page.php:82
+#: includes/class-rcp-export-members.php:42
+#: includes/class-rcp-export-payments.php:38
+#: includes/invoice-functions.php:166 includes/member-functions.php:567
+#: includes/user-page-columns.php:4 templates/subscription.php:13
+#: templates/subscription.php:46
+msgid "Subscription"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:22
+#: includes/admin/discounts/discount-codes.php:39
+#: includes/admin/discounts/discount-codes.php:153
+#: includes/admin/payments/edit-payment.php:29
+#: includes/admin/payments/new-payment.php:23
+#: includes/admin/payments/payments-page.php:69
+#: includes/admin/payments/payments-page.php:85
+#: includes/class-rcp-export-payments.php:39
+#: includes/invoice-functions.php:167 includes/member-functions.php:572
+#: includes/member-functions.php:574 templates/subscription.php:48
+msgid "Amount"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:23
+#: includes/admin/discounts/discount-codes.php:40
+#: includes/admin/discounts/discount-codes.php:141
+#: includes/admin/payments/payments-page.php:70
+#: includes/admin/payments/payments-page.php:86
+msgid "Type"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:24
+#: includes/admin/discounts/discount-codes.php:41
+#: includes/admin/members/edit-member.php:16
+#: includes/admin/members/members-page.php:119
+#: includes/admin/members/members-page.php:133
+#: includes/admin/members/view-member.php:19
+#: includes/admin/subscriptions/edit-subscription.php:81
+#: includes/admin/subscriptions/subscription-levels.php:184
+#: includes/user-page-columns.php:5 templates/subscription.php:12
+msgid "Status"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:25
+#: includes/admin/discounts/discount-codes.php:42
+msgid "Uses"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:26
+#: includes/admin/discounts/discount-codes.php:43
+msgid "Uses Left"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:27
+#: includes/admin/discounts/discount-codes.php:44
+#: includes/admin/members/members-page.php:121
+#: includes/admin/members/members-page.php:135
+#: includes/class-rcp-export-members.php:44 templates/subscription.php:17
+msgid "Expiration"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:29
+#: includes/admin/discounts/discount-codes.php:47
+#: includes/admin/members/members-page.php:124
+#: includes/admin/members/members-page.php:138
+#: includes/admin/payments/payments-page.php:74
+#: includes/admin/payments/payments-page.php:90
+#: includes/admin/subscriptions/subscription-levels.php:27
+#: includes/admin/subscriptions/subscription-levels.php:43
+#: includes/user-page-columns.php:6 templates/subscription.php:19
+#: templates/subscription.php:50
+msgid "Actions"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:67
+#: includes/admin/discounts/discount-codes.php:169
+#: includes/admin/discounts/edit-discount.php:70
+msgid "All Levels"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:72
+#: includes/admin/discounts/discount-codes.php:145
+msgid "Percentage"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:72
+msgid "Flat"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:76
+#: includes/admin/settings/settings.php:58
+msgid "active"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:76
+msgid "disabled"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:78
+msgid "expired"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:84
+#: includes/admin/subscriptions/subscription-levels.php:58
+#: includes/member-functions.php:365
+msgid "none"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:89
+#: includes/admin/members/members-page.php:173
+#: includes/admin/subscriptions/subscription-levels.php:90
+msgid "Edit"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:91
+#: includes/admin/members/members-page.php:177
+#: includes/admin/subscriptions/subscription-levels.php:92
+msgid "Deactivate"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:93
+#: includes/admin/members/members-page.php:175
+#: includes/admin/subscriptions/subscription-levels.php:94
+msgid "Activate"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:95
+#: includes/admin/logs-list-table.php:109
+#: includes/admin/payments/payments-page.php:119
+#: includes/admin/subscriptions/subscription-levels.php:96
+msgid "Delete"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:103
+msgid "No discount codes added yet."
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:108
+msgid "Add New Discount"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:118
+msgid "The name of this discount"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:127
+msgid "The description of this discount code"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:136
+msgid "Enter a code for this discount, such as 10PERCENT"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:146
+msgid "Flat amount"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:148
+msgid "The kind of discount to apply for this discount."
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:157
+msgid "The amount of this discount code."
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:177
+#: includes/admin/discounts/edit-discount.php:78
+msgid "The subscription levels this discount code can be used for."
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:182
+#: includes/admin/members/edit-member.php:48
+#: includes/admin/members/members-page.php:242
+#: includes/admin/members/view-member.php:35
+msgid "Expiration date"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:186
+msgid ""
+"Enter the expiration date for this discount code in the format of yyyy-mm-"
+"dd. For no expiration, leave blank"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:191
+msgid "Max Uses"
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:195
+msgid ""
+"The maximum number of times this discount can be used. Leave blank for "
+"unlimited."
+msgstr ""
+
+#: includes/admin/discounts/discount-codes.php:203
+msgid "Add Discount Code"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:5
+msgid "Edit Discount Code:"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:7
+#: includes/admin/members/edit-member.php:7
+#: includes/admin/payments/edit-payment.php:10
+#: includes/admin/payments/new-payment.php:4
+#: includes/admin/subscriptions/edit-subscription.php:8
+msgid "Cancel"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:15
+msgid " Name"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:19
+msgid " The name of this discount"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:24
+msgid " Description"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:28
+msgid " The description of this discount code"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:33
+msgid " Code"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:37
+msgid " Enter a code for this discount, such as 10PERCENT"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:42
+msgid " Type"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:46
+msgid " Percentage"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:47
+msgid " Flat amount"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:49
+msgid " The kind of discount to apply for this discount."
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:54
+msgid " Amount"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:58
+msgid " The amount of this discount code."
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:83
+msgid " Expiration date"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:87
+msgid ""
+" Enter the expiration date for this discount code in the format of yyyy-mm-"
+"dd. Leave blank for no expiration"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:92
+msgid " Status"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:96
+msgid " Active"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:97
+msgid " Disabled"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:99
+msgid " The status of this discount code."
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:104
+msgid " Max Uses"
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:108
+msgid ""
+" The maximum number of times this discount can be used. Leave blank for "
+"unlimited."
+msgstr ""
+
+#: includes/admin/discounts/edit-discount.php:117
+msgid " Update Discount"
+msgstr ""
+
+#: includes/admin/export.php:12
+msgid "Members Export"
+msgstr ""
+
+#: includes/admin/export.php:13
+msgid ""
+"Download member data as a CSV file. This is useful for tasks such as "
+"importing batch users into Mail Chimp, or other systems."
+msgstr ""
+
+#: includes/admin/export.php:17
+msgid "All"
+msgstr ""
+
+#: includes/admin/export.php:27
+msgid "Choose the subscription to export members from"
+msgstr ""
+
+#: includes/admin/export.php:29 includes/admin/members/members-page.php:53
+#: includes/admin/subscriptions/edit-subscription.php:85
+#: includes/admin/subscriptions/subscription-levels.php:188
+#: includes/member-functions.php:445
+msgid "Active"
+msgstr ""
+
+#: includes/admin/export.php:30 includes/admin/members/members-page.php:58
+#: includes/member-functions.php:451
+msgid "Pending"
+msgstr ""
+
+#: includes/admin/export.php:31 includes/admin/members/members-page.php:63
+#: includes/member-functions.php:448
+msgid "Expired"
+msgstr ""
+
+#: includes/admin/export.php:32 includes/admin/members/members-page.php:68
+#: includes/member-functions.php:454
+msgid "Cancelled"
+msgstr ""
+
+#: includes/admin/export.php:33 includes/admin/members/members-page.php:73
+#: includes/admin/subscriptions/subscription-levels.php:72
+#: includes/admin/subscriptions/subscription-levels.php:168
+#: includes/member-functions.php:457 includes/member-functions.php:480
+msgid "Free"
+msgstr ""
+
+#: includes/admin/export.php:35
+msgid "Choose the status to export"
+msgstr ""
+
+#: includes/admin/export.php:37
+msgid "Maximum number of members to export"
+msgstr ""
+
+#: includes/admin/export.php:39
+msgid "The number of members to skip"
+msgstr ""
+
+#: includes/admin/export.php:41
+msgid ""
+"If you need to export a large number of members, export them in batches "
+"using the max and offset options"
+msgstr ""
+
+#: includes/admin/export.php:43
+msgid "Download Member CSV"
+msgstr ""
+
+#: includes/admin/export.php:47
+msgid "Payments Export"
+msgstr ""
+
+#: includes/admin/export.php:48
+msgid ""
+"Download payment data as a CSV file. Use this file for your own record "
+"keeping or tracking."
+msgstr ""
+
+#: includes/admin/export.php:52
+msgid "All years"
+msgstr ""
+
+#: includes/admin/export.php:64
+msgid "All months"
+msgstr ""
+
+#: includes/admin/export.php:71
+msgid "Download Payments CSV"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:17
+#: includes/admin/help/help-menus-setup-old.php:33
+#: includes/admin/help/help-menus-setup-old.php:49
+#: includes/admin/help/help-menus-setup-old.php:65
+#: includes/admin/help/help-menus-setup-old.php:72
+#: includes/admin/help/help-menus-setup.php:22
+#: includes/admin/help/help-menus-setup.php:53
+#: includes/admin/help/help-menus-setup.php:84
+#: includes/admin/help/help-menus-setup.php:115
+#: includes/admin/help/help-menus-setup.php:125
+#: includes/admin/settings/settings.php:31
+#: includes/admin/settings/settings.php:45
+#: includes/admin/settings/settings.php:344
+msgid "General"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:20
+#: includes/admin/help/help-menus-setup-old.php:36
+#: includes/admin/help/help-menus-setup.php:29
+#: includes/admin/help/help-menus-setup.php:60
+msgid "Adding Subscriptions"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:23
+#: includes/admin/help/help-menus-setup.php:36
+msgid "Member Details"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:26
+#: includes/admin/help/help-menus-setup.php:43
+msgid "Editing Members"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:39
+#: includes/admin/help/help-menus-setup.php:67
+msgid "Editing Subscriptions"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:42
+#: includes/admin/help/help-menus-setup.php:74
+msgid "Deleting Subscriptions"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:52
+#: includes/admin/help/help-menus-setup.php:91
+msgid "Adding Discounts"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:55
+#: includes/admin/help/help-menus-setup.php:98
+msgid "Editing Discounts"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:58
+#: includes/admin/help/help-menus-setup.php:105
+msgid "Using Discounts"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:75
+#: includes/admin/help/help-menus-setup.php:132
+#: includes/admin/settings/settings.php:32
+msgid "Messages"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:78
+#: includes/admin/help/help-menus-setup.php:139
+msgid "PayPal"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:81
+#: includes/admin/help/help-menus-setup.php:146
+msgid "Signup Forms"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:84
+#: includes/admin/help/help-menus-setup.php:153
+#: includes/admin/settings/settings.php:34
+msgid "Emails"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:87
+#: includes/admin/help/help-menus-setup.php:160
+#: includes/admin/settings/settings.php:36
+msgid "Misc"
+msgstr ""
+
+#: includes/admin/help/help-menus-setup-old.php:90
+#: includes/admin/help/help-menus-setup.php:167
+msgid "Logging"
+msgstr ""
+
+#: includes/admin/help/help-page.php:9
+msgid "Help Documentation"
+msgstr ""
+
+#: includes/admin/help/help-page.php:15
+#: includes/admin/settings/settings.php:30 includes/invoice-functions.php:59
+msgid "Restrict Content Pro"
+msgstr ""
+
+#: includes/admin/help/help-page.php:23
+msgid "Index"
+msgstr ""
+
+#: includes/admin/help/help-page.php:44
+msgid "Finding Documentation and About this Help Page"
+msgstr ""
+
+#: includes/admin/help/help-page.php:53
+msgid "Quick Video Tutorials"
+msgstr ""
+
+#: includes/admin/help/help-page.php:82
+msgid "Restricting Post/Page Content"
+msgstr ""
+
+#: includes/admin/help/help-page.php:92 includes/admin/metabox.php:25
+msgid "Show Excerpt?"
+msgstr ""
+
+#: includes/admin/help/help-page.php:93 includes/admin/metabox.php:31
+msgid "Hide from Feed?"
+msgstr ""
+
+#: includes/admin/help/help-page.php:95
+#: includes/admin/members/edit-member.php:33
+#: includes/admin/members/members-page.php:226
+#: includes/admin/members/view-member.php:27 includes/admin/metabox.php:45
+msgid "Subscription Level"
+msgstr ""
+
+#: includes/admin/help/help-page.php:96 includes/admin/metabox.php:52
+msgid "User Level"
+msgstr ""
+
+#: includes/admin/help/help-page.php:154
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: includes/admin/help/help-page.php:176
+msgid "Short Code Reference"
+msgstr ""
+
+#: includes/admin/help/help-page.php:268
+msgid "Template Tag Reference"
+msgstr ""
+
+#: includes/admin/help/help-page.php:337
+msgid "Filter Reference"
+msgstr ""
+
+#: includes/admin/help/help-page.php:365
+msgid "Action Reference"
+msgstr ""
+
+#: includes/admin/logs-list-table.php:54
+msgid "View logs for this user"
+msgstr ""
+
+#: includes/admin/logs-list-table.php:59
+msgid "at"
+msgstr ""
+
+#: includes/admin/logs-list-table.php:91
+msgid "Log Error"
+msgstr ""
+
+#: includes/admin/logs-list-table.php:92
+msgid "Log Message"
+msgstr ""
+
+#: includes/admin/logs-list-table.php:93
+#: includes/admin/members/members-page.php:115
+#: includes/admin/members/members-page.php:129
+#: includes/admin/payments/edit-payment.php:18
+#: includes/admin/payments/new-payment.php:12
+#: includes/admin/payments/payments-page.php:65
+#: includes/admin/payments/payments-page.php:81
+msgid "User"
+msgstr ""
+
+#: includes/admin/logs-list-table.php:94
+#: includes/admin/payments/payments-page.php:68
+#: includes/admin/payments/payments-page.php:84
+#: includes/class-rcp-export-payments.php:44 includes/class-rcp-export.php:68
+#: includes/member-functions.php:566 templates/subscription.php:49
+msgid "Date"
+msgstr ""
+
+#: includes/admin/logs.php:10
+msgid "RCP Error Logs"
 msgstr ""
 
 #: includes/admin/members/edit-member.php:5
 msgid "Edit Member:"
-msgstr ""
-
-#: includes/admin/members/edit-member.php:7
-#: includes/admin/payments/edit-payment.php:10
-#: includes/admin/payments/new-payment.php:4
-#: includes/admin/discounts/edit-discount.php:7
-#: includes/admin/subscriptions/edit-subscription.php:8
-msgid "Cancel"
 msgstr ""
 
 #: includes/admin/members/edit-member.php:28
@@ -1045,13 +840,6 @@ msgstr ""
 #: includes/admin/members/edit-member.php:43
 #: includes/admin/members/members-page.php:237
 msgid "Choose the subscription level for this user"
-msgstr ""
-
-#: includes/admin/members/edit-member.php:48
-#: includes/admin/members/members-page.php:242
-#: includes/admin/members/view-member.php:35
-#: includes/admin/discounts/discount-codes.php:182
-msgid "Expiration date"
 msgstr ""
 
 #: includes/admin/members/edit-member.php:52
@@ -1169,14 +957,15 @@ msgstr ""
 
 #: includes/admin/members/members-page.php:117
 #: includes/admin/members/members-page.php:131
-#: includes/admin/settings/settings.php:656
+#: includes/admin/settings/settings.php:656 templates/register-single.php:33
+#: templates/register.php:28
 msgid "Email"
 msgstr ""
 
 #: includes/admin/members/members-page.php:122
 #: includes/admin/members/members-page.php:136
-#: includes/admin/subscriptions/subscription-levels.php:196
 #: includes/admin/subscriptions/edit-subscription.php:93
+#: includes/admin/subscriptions/subscription-levels.php:196
 msgid "User Role"
 msgstr ""
 
@@ -1194,24 +983,6 @@ msgstr ""
 
 #: includes/admin/members/members-page.php:170
 msgid "Details"
-msgstr ""
-
-#: includes/admin/members/members-page.php:173
-#: includes/admin/discounts/discount-codes.php:89
-#: includes/admin/subscriptions/subscription-levels.php:90
-msgid "Edit"
-msgstr ""
-
-#: includes/admin/members/members-page.php:175
-#: includes/admin/discounts/discount-codes.php:93
-#: includes/admin/subscriptions/subscription-levels.php:94
-msgid "Activate"
-msgstr ""
-
-#: includes/admin/members/members-page.php:177
-#: includes/admin/discounts/discount-codes.php:91
-#: includes/admin/subscriptions/subscription-levels.php:92
-msgid "Deactivate"
 msgstr ""
 
 #: includes/admin/members/members-page.php:185
@@ -1232,7 +1003,8 @@ msgstr ""
 msgid "Add New Subscription (for existing user)"
 msgstr ""
 
-#: includes/admin/members/members-page.php:215
+#: includes/admin/members/members-page.php:215 templates/login.php:9
+#: templates/register-single.php:29 templates/register.php:24
 msgid "Username"
 msgstr ""
 
@@ -1280,8 +1052,167 @@ msgstr ""
 msgid "Discount codes used"
 msgstr ""
 
+#: includes/admin/members/view-member.php:83
+#: includes/discount-functions.php:261
+msgid "None"
+msgstr ""
+
 #: includes/admin/members/view-member.php:90
 msgid "Member Notes"
+msgstr ""
+
+#: includes/admin/metabox.php:14
+msgid "Restrict this content"
+msgstr ""
+
+#: includes/admin/metabox.php:22
+msgid "Restrict this entry to active paid users only."
+msgstr ""
+
+#: includes/admin/metabox.php:28
+msgid ""
+"Allow non active users to view the excerpt? If left unchecked, the message "
+"defined in settings will be used"
+msgstr ""
+
+#: includes/admin/metabox.php:34
+msgid "Hide the excerpt of this post / page from the Feed?"
+msgstr ""
+
+#: includes/admin/metabox.php:40
+msgid ""
+"Choose the access level required see this content. The access level is "
+"determined by the subscription the member is subscribed to."
+msgstr ""
+
+#: includes/admin/metabox.php:48
+msgid "Choose the subscription levels allowed to view this content."
+msgstr ""
+
+#: includes/admin/metabox.php:55
+msgid ""
+"Choose the user level that can see this post / page's content. Users of this "
+"level and higher will be the only ones able to view the content."
+msgstr ""
+
+#: includes/admin/metabox.php:93
+#, php-format
+msgid ""
+"Use these options to restrict this entire entry, or the [restrict] ... [/"
+"restrict] short code to restrict partial content. %sView documentation%s."
+msgstr ""
+
+#: includes/admin/metabox.php:133
+msgid "Note 1"
+msgstr ""
+
+#: includes/admin/metabox.php:133
+msgid ""
+"To hide this content from logged-out users, but allow free and paid, set the "
+"User Level to \"Subscriber\"."
+msgstr ""
+
+#: includes/admin/metabox.php:134
+msgid "Note 2"
+msgstr ""
+
+#: includes/admin/metabox.php:134
+msgid ""
+"Access level, subscription level, and user level can all be combined to "
+"require the user meet all three specifications."
+msgstr ""
+
+#: includes/admin/payments/edit-payment.php:8
+msgid "Edit Payment"
+msgstr ""
+
+#: includes/admin/payments/edit-payment.php:24
+msgid "The user name this payment belongs to."
+msgstr ""
+
+#: includes/admin/payments/edit-payment.php:33
+#: includes/admin/payments/new-payment.php:27
+msgid "The amount of this payment"
+msgstr ""
+
+#: includes/admin/payments/edit-payment.php:38
+#: includes/admin/payments/new-payment.php:32
+msgid "Payment Date"
+msgstr ""
+
+#: includes/admin/payments/edit-payment.php:42
+msgid "The date for this payment in the format of yyyy-mm-dd"
+msgstr ""
+
+#: includes/admin/payments/edit-payment.php:47
+#: includes/admin/payments/new-payment.php:41
+#: includes/admin/payments/payments-page.php:71
+#: includes/admin/payments/payments-page.php:87
+#: includes/invoice-functions.php:147 includes/member-functions.php:570
+msgid "Transaction ID"
+msgstr ""
+
+#: includes/admin/payments/edit-payment.php:51
+msgid "The transaction ID for this payment, if any"
+msgstr ""
+
+#: includes/admin/payments/edit-payment.php:59
+msgid "Update Payment"
+msgstr ""
+
+#: includes/admin/payments/new-payment.php:2
+#: includes/admin/payments/new-payment.php:52
+#: includes/admin/payments/payments-page.php:24
+msgid "Create Payment"
+msgstr ""
+
+#: includes/admin/payments/new-payment.php:18
+msgid "Begin typing the user name to add a payment record for."
+msgstr ""
+
+#: includes/admin/payments/new-payment.php:36
+msgid "Enter the date for this payment in the format of yyyy-mm-dd"
+msgstr ""
+
+#: includes/admin/payments/new-payment.php:45
+msgid "Enter the transaction ID for this payment, if any"
+msgstr ""
+
+#: includes/admin/payments/payments-page.php:52
+#: includes/admin/payments/payments-page.php:55
+msgid "Search Payments"
+msgstr ""
+
+#: includes/admin/payments/payments-page.php:57
+msgid "Total Earnings"
+msgstr ""
+
+#: includes/admin/payments/payments-page.php:59
+msgid "View all payments"
+msgstr ""
+
+#: includes/admin/payments/payments-page.php:59
+msgid "Reset User Filter"
+msgstr ""
+
+#: includes/admin/payments/payments-page.php:67
+#: includes/admin/payments/payments-page.php:83
+#: includes/class-rcp-export-members.php:43
+#: includes/class-rcp-export-payments.php:43
+#: includes/invoice-functions.php:134 includes/member-functions.php:569
+msgid "Subscription Key"
+msgstr ""
+
+#: includes/admin/payments/payments-page.php:104
+msgid "View payments by this user"
+msgstr ""
+
+#: includes/admin/payments/payments-page.php:117
+msgid "Download Invoice"
+msgstr ""
+
+#: includes/admin/payments/payments-page.php:128
+msgid "No payments recorded yet"
 msgstr ""
 
 #: includes/admin/reports/reports-page.php:15
@@ -1346,54 +1277,38 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
+#: includes/admin/reports/reports-page.php:524
+#: includes/invoice-functions.php:85
+msgid "From"
+msgstr ""
+
+#: includes/admin/reports/reports-page.php:535
+#: includes/invoice-functions.php:111
+msgid "To"
+msgstr ""
+
 #: includes/admin/reports/reports-page.php:550
 msgid "All Subscription Levels"
+msgstr ""
+
+#: includes/admin/screen-options.php:21
+msgid "Members per page"
+msgstr ""
+
+#: includes/admin/screen-options.php:30
+msgid "Payments per page"
 msgstr ""
 
 #: includes/admin/settings/settings.php:21
 msgid "Options saved"
 msgstr ""
 
-#: includes/admin/settings/settings.php:31
-#: includes/admin/settings/settings.php:45
-#: includes/admin/settings/settings.php:344
-#: includes/admin/help/help-menus-setup.php:22
-#: includes/admin/help/help-menus-setup.php:53
-#: includes/admin/help/help-menus-setup.php:84
-#: includes/admin/help/help-menus-setup.php:115
-#: includes/admin/help/help-menus-setup.php:125
-#: includes/admin/help/help-menus-setup-old.php:17
-#: includes/admin/help/help-menus-setup-old.php:33
-#: includes/admin/help/help-menus-setup-old.php:49
-#: includes/admin/help/help-menus-setup-old.php:65
-#: includes/admin/help/help-menus-setup-old.php:72
-msgid "General"
-msgstr ""
-
-#: includes/admin/settings/settings.php:32
-#: includes/admin/help/help-menus-setup.php:132
-#: includes/admin/help/help-menus-setup-old.php:75
-msgid "Messages"
-msgstr ""
-
 #: includes/admin/settings/settings.php:33
 msgid "Signup Form"
 msgstr ""
 
-#: includes/admin/settings/settings.php:34
-#: includes/admin/help/help-menus-setup.php:153
-#: includes/admin/help/help-menus-setup-old.php:84
-msgid "Emails"
-msgstr ""
-
 #: includes/admin/settings/settings.php:35
 msgid "PDF Invoices"
-msgstr ""
-
-#: includes/admin/settings/settings.php:36
-#: includes/admin/help/help-menus-setup.php:160
-#: includes/admin/help/help-menus-setup-old.php:87
-msgid "Misc"
 msgstr ""
 
 #: includes/admin/settings/settings.php:50
@@ -1402,11 +1317,6 @@ msgstr ""
 
 #: includes/admin/settings/settings.php:57
 msgid "Deactivate License"
-msgstr ""
-
-#: includes/admin/settings/settings.php:58
-#: includes/admin/discounts/discount-codes.php:76
-msgid "active"
 msgstr ""
 
 #: includes/admin/settings/settings.php:60
@@ -1549,6 +1459,10 @@ msgstr ""
 #: includes/admin/settings/settings.php:243
 msgid ""
 "This is the page users are redirected to after a successful registration"
+msgstr ""
+
+#: includes/admin/settings/settings.php:248 includes/member-forms.php:81
+msgid "Auto Renew"
 msgstr ""
 
 #: includes/admin/settings/settings.php:252
@@ -1893,17 +1807,6 @@ msgid ""
 "displayed if no logo image is uploaded above."
 msgstr ""
 
-#: includes/admin/settings/settings.php:620
-#: includes/admin/discounts/discount-codes.php:18
-#: includes/admin/discounts/discount-codes.php:35
-#: includes/admin/discounts/discount-codes.php:114
-#: includes/admin/subscriptions/subscription-levels.php:19
-#: includes/admin/subscriptions/subscription-levels.php:35
-#: includes/admin/subscriptions/subscription-levels.php:114
-#: includes/admin/subscriptions/edit-subscription.php:16
-msgid "Name"
-msgstr ""
-
 #: includes/admin/settings/settings.php:624
 msgid "Enter the personal name that will be shown on the invoice."
 msgstr ""
@@ -2022,7 +1925,7 @@ msgstr ""
 
 #: includes/admin/settings/settings.php:773
 msgid ""
-"Check this if you'd like to prevents multiple users from logging into the "
+"Check this if you'd like to prevent multiple users from logging into the "
 "same account simultaneously."
 msgstr ""
 
@@ -2041,403 +1944,97 @@ msgstr ""
 msgid "Save Options"
 msgstr ""
 
-#: includes/admin/payments/payments-page.php:24
-#: includes/admin/payments/new-payment.php:2
-#: includes/admin/payments/new-payment.php:52
-msgid "Create Payment"
+#: includes/admin/subscriptions/edit-subscription.php:6
+msgid "Edit Subscription Level:"
 msgstr ""
 
-#: includes/admin/payments/payments-page.php:52
-#: includes/admin/payments/payments-page.php:55
-msgid "Search Payments"
+#: includes/admin/subscriptions/edit-subscription.php:20
+msgid "The name of this subscription. This is shown on the registration page."
 msgstr ""
 
-#: includes/admin/payments/payments-page.php:57
-msgid "Total Earnings"
-msgstr ""
-
-#: includes/admin/payments/payments-page.php:59
-msgid "View all payments"
-msgstr ""
-
-#: includes/admin/payments/payments-page.php:59
-msgid "Reset User Filter"
-msgstr ""
-
-#: includes/admin/payments/payments-page.php:70
-#: includes/admin/payments/payments-page.php:86
-#: includes/admin/discounts/discount-codes.php:23
-#: includes/admin/discounts/discount-codes.php:40
-#: includes/admin/discounts/discount-codes.php:141
-msgid "Type"
-msgstr ""
-
-#: includes/admin/payments/payments-page.php:104
-msgid "View payments by this user"
-msgstr ""
-
-#: includes/admin/payments/payments-page.php:117
-msgid "Download Invoice"
-msgstr ""
-
-#: includes/admin/payments/payments-page.php:128
-msgid "No payments recorded yet"
-msgstr ""
-
-#: includes/admin/payments/edit-payment.php:8
-msgid "Edit Payment"
-msgstr ""
-
-#: includes/admin/payments/edit-payment.php:24
-msgid "The user name this payment belongs to."
-msgstr ""
-
-#: includes/admin/payments/edit-payment.php:33
-#: includes/admin/payments/new-payment.php:27
-msgid "The amount of this payment"
-msgstr ""
-
-#: includes/admin/payments/edit-payment.php:38
-#: includes/admin/payments/new-payment.php:32
-msgid "Payment Date"
-msgstr ""
-
-#: includes/admin/payments/edit-payment.php:42
-msgid "The date for this payment in the format of yyyy-mm-dd"
-msgstr ""
-
-#: includes/admin/payments/edit-payment.php:51
-msgid "The transaction ID for this payment, if any"
-msgstr ""
-
-#: includes/admin/payments/edit-payment.php:59
-msgid "Update Payment"
-msgstr ""
-
-#: includes/admin/payments/new-payment.php:18
-msgid "Begin typing the user name to add a payment record for."
-msgstr ""
-
-#: includes/admin/payments/new-payment.php:36
-msgid "Enter the date for this payment in the format of yyyy-mm-dd"
-msgstr ""
-
-#: includes/admin/payments/new-payment.php:45
-msgid "Enter the transaction ID for this payment, if any"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:19
-#: includes/admin/discounts/discount-codes.php:36
-#: includes/admin/discounts/discount-codes.php:123
-#: includes/admin/subscriptions/subscription-levels.php:20
-#: includes/admin/subscriptions/subscription-levels.php:36
-#: includes/admin/subscriptions/subscription-levels.php:123
-#: includes/admin/subscriptions/edit-subscription.php:25
-msgid "Description"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:20
-#: includes/admin/discounts/discount-codes.php:37
-#: includes/admin/discounts/discount-codes.php:132
-msgid "Code"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:25
-#: includes/admin/discounts/discount-codes.php:42
-msgid "Uses"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:26
-#: includes/admin/discounts/discount-codes.php:43
-msgid "Uses Left"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:67
-#: includes/admin/discounts/discount-codes.php:169
-#: includes/admin/discounts/edit-discount.php:70
-msgid "All Levels"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:72
-#: includes/admin/discounts/discount-codes.php:145
-msgid "Percentage"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:72
-msgid "Flat"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:76
-msgid "disabled"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:78
-msgid "expired"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:103
-msgid "No discount codes added yet."
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:108
-msgid "Add New Discount"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:118
-msgid "The name of this discount"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:127
-msgid "The description of this discount code"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:136
-msgid "Enter a code for this discount, such as 10PERCENT"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:146
-msgid "Flat amount"
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:148
-msgid "The kind of discount to apply for this discount."
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:157
-msgid "The amount of this discount code."
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:177
-#: includes/admin/discounts/edit-discount.php:78
-msgid "The subscription levels this discount code can be used for."
-msgstr ""
-
-#: includes/admin/discounts/discount-codes.php:186
+#: includes/admin/subscriptions/edit-subscription.php:29
 msgid ""
-"Enter the expiration date for this discount code in the format of yyyy-mm-"
-"dd. For no expiration, leave blank"
+"The description of this subscription. This is shown on the registration page."
 msgstr ""
 
-#: includes/admin/discounts/discount-codes.php:191
-msgid "Max Uses"
+#: includes/admin/subscriptions/edit-subscription.php:44
+msgid "Level of access this subscription gives."
 msgstr ""
 
-#: includes/admin/discounts/discount-codes.php:195
+#: includes/admin/subscriptions/edit-subscription.php:49
+#: includes/admin/subscriptions/subscription-levels.php:22
+#: includes/admin/subscriptions/subscription-levels.php:38
+#: includes/admin/subscriptions/subscription-levels.php:148
+msgid "Duration"
+msgstr ""
+
+#: includes/admin/subscriptions/edit-subscription.php:54
+#: includes/admin/subscriptions/subscription-levels.php:153
+msgid "Days(s)"
+msgstr ""
+
+#: includes/admin/subscriptions/edit-subscription.php:55
+#: includes/admin/subscriptions/subscription-levels.php:154
+msgid "Month(s)"
+msgstr ""
+
+#: includes/admin/subscriptions/edit-subscription.php:56
+#: includes/admin/subscriptions/subscription-levels.php:155
+msgid "Years(s)"
+msgstr ""
+
+#: includes/admin/subscriptions/edit-subscription.php:58
+#: includes/admin/subscriptions/subscription-levels.php:157
+msgid "Length of time for this membership level. Enter 0 for unlimited."
+msgstr ""
+
+#: includes/admin/subscriptions/edit-subscription.php:63
+#: includes/admin/subscriptions/subscription-levels.php:23
+#: includes/admin/subscriptions/subscription-levels.php:39
+#: includes/admin/subscriptions/subscription-levels.php:162
+msgid "Price"
+msgstr ""
+
+#: includes/admin/subscriptions/edit-subscription.php:67
+#: includes/admin/subscriptions/subscription-levels.php:170
+msgid "The price of this membership level. Enter 0 for free."
+msgstr ""
+
+#: includes/admin/subscriptions/edit-subscription.php:72
+#: includes/admin/subscriptions/subscription-levels.php:175
+msgid "Signup Fee"
+msgstr ""
+
+#: includes/admin/subscriptions/edit-subscription.php:76
+#: includes/admin/subscriptions/subscription-levels.php:179
 msgid ""
-"The maximum number of times this discount can be used. Leave blank for "
-"unlimited."
+"Optional signup fee to charge subscribers for the first billing cycle. Enter "
+"a negative number to give a discount on the first payment. This only applies "
+"to recurring subscriptions."
 msgstr ""
 
-#: includes/admin/discounts/discount-codes.php:203
-msgid "Add Discount Code"
+#: includes/admin/subscriptions/edit-subscription.php:86
+#: includes/admin/subscriptions/subscription-levels.php:189
+msgid "Inactive"
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:5
-msgid "Edit Discount Code:"
+#: includes/admin/subscriptions/edit-subscription.php:88
+#: includes/admin/subscriptions/subscription-levels.php:191
+msgid "Members may only sign up for active subscription levels."
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:15
-msgid " Name"
+#: includes/admin/subscriptions/edit-subscription.php:99
+#: includes/admin/subscriptions/subscription-levels.php:202
+msgid "The user role given to the member after signing up."
 msgstr ""
 
-#: includes/admin/discounts/edit-discount.php:19
-msgid " The name of this discount"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:24
-msgid " Description"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:28
-msgid " The description of this discount code"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:33
-msgid " Code"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:37
-msgid " Enter a code for this discount, such as 10PERCENT"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:42
-msgid " Type"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:46
-msgid " Percentage"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:47
-msgid " Flat amount"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:49
-msgid " The kind of discount to apply for this discount."
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:54
-msgid " Amount"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:58
-msgid " The amount of this discount code."
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:83
-msgid " Expiration date"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:87
-msgid ""
-" Enter the expiration date for this discount code in the format of yyyy-mm-"
-"dd. Leave blank for no expiration"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:92
-msgid " Status"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:96
-msgid " Active"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:97
-msgid " Disabled"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:99
-msgid " The status of this discount code."
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:104
-msgid " Max Uses"
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:108
-msgid ""
-" The maximum number of times this discount can be used. Leave blank for "
-"unlimited."
-msgstr ""
-
-#: includes/admin/discounts/edit-discount.php:117
-msgid " Update Discount"
-msgstr ""
-
-#: includes/admin/help/help-menus-setup.php:29
-#: includes/admin/help/help-menus-setup.php:60
-#: includes/admin/help/help-menus-setup-old.php:20
-#: includes/admin/help/help-menus-setup-old.php:36
-msgid "Adding Subscriptions"
-msgstr ""
-
-#: includes/admin/help/help-menus-setup.php:36
-#: includes/admin/help/help-menus-setup-old.php:23
-msgid "Member Details"
-msgstr ""
-
-#: includes/admin/help/help-menus-setup.php:43
-#: includes/admin/help/help-menus-setup-old.php:26
-msgid "Editing Members"
-msgstr ""
-
-#: includes/admin/help/help-menus-setup.php:67
-#: includes/admin/help/help-menus-setup-old.php:39
-msgid "Editing Subscriptions"
-msgstr ""
-
-#: includes/admin/help/help-menus-setup.php:74
-#: includes/admin/help/help-menus-setup-old.php:42
-msgid "Deleting Subscriptions"
-msgstr ""
-
-#: includes/admin/help/help-menus-setup.php:91
-#: includes/admin/help/help-menus-setup-old.php:52
-msgid "Adding Discounts"
-msgstr ""
-
-#: includes/admin/help/help-menus-setup.php:98
-#: includes/admin/help/help-menus-setup-old.php:55
-msgid "Editing Discounts"
-msgstr ""
-
-#: includes/admin/help/help-menus-setup.php:105
-#: includes/admin/help/help-menus-setup-old.php:58
-msgid "Using Discounts"
-msgstr ""
-
-#: includes/admin/help/help-menus-setup.php:139
-#: includes/admin/help/help-menus-setup-old.php:78
-msgid "PayPal"
-msgstr ""
-
-#: includes/admin/help/help-menus-setup.php:146
-#: includes/admin/help/help-menus-setup-old.php:81
-msgid "Signup Forms"
-msgstr ""
-
-#: includes/admin/help/help-menus-setup.php:167
-#: includes/admin/help/help-menus-setup-old.php:90
-msgid "Logging"
-msgstr ""
-
-#: includes/admin/help/help-page.php:9
-msgid "Help Documentation"
-msgstr ""
-
-#: includes/admin/help/help-page.php:23
-msgid "Index"
-msgstr ""
-
-#: includes/admin/help/help-page.php:44
-msgid "Finding Documentation and About this Help Page"
-msgstr ""
-
-#: includes/admin/help/help-page.php:53
-msgid "Quick Video Tutorials"
-msgstr ""
-
-#: includes/admin/help/help-page.php:82
-msgid "Restricting Post/Page Content"
-msgstr ""
-
-#: includes/admin/help/help-page.php:154
-msgid "Frequently Asked Questions"
-msgstr ""
-
-#: includes/admin/help/help-page.php:176
-msgid "Short Code Reference"
-msgstr ""
-
-#: includes/admin/help/help-page.php:268
-msgid "Template Tag Reference"
-msgstr ""
-
-#: includes/admin/help/help-page.php:337
-msgid "Filter Reference"
-msgstr ""
-
-#: includes/admin/help/help-page.php:365
-msgid "Action Reference"
+#: includes/admin/subscriptions/edit-subscription.php:108
+msgid "Update Subscription"
 msgstr ""
 
 #: includes/admin/subscriptions/subscription-levels.php:17
 #: includes/admin/subscriptions/subscription-levels.php:33
 msgid "Order"
-msgstr ""
-
-#: includes/admin/subscriptions/subscription-levels.php:22
-#: includes/admin/subscriptions/subscription-levels.php:38
-#: includes/admin/subscriptions/subscription-levels.php:148
-#: includes/admin/subscriptions/edit-subscription.php:49
-msgid "Duration"
-msgstr ""
-
-#: includes/admin/subscriptions/subscription-levels.php:23
-#: includes/admin/subscriptions/subscription-levels.php:39
-#: includes/admin/subscriptions/subscription-levels.php:162
-#: includes/admin/subscriptions/edit-subscription.php:63
-msgid "Price"
 msgstr ""
 
 #: includes/admin/subscriptions/subscription-levels.php:24
@@ -2446,6 +2043,7 @@ msgid "Subscribers"
 msgstr ""
 
 #: includes/admin/subscriptions/subscription-levels.php:64
+#: templates/register.php:65
 msgid "unlimited"
 msgstr ""
 
@@ -2471,80 +2069,652 @@ msgid ""
 "unsure what this is."
 msgstr ""
 
-#: includes/admin/subscriptions/subscription-levels.php:153
-#: includes/admin/subscriptions/edit-subscription.php:54
-msgid "Days(s)"
-msgstr ""
-
-#: includes/admin/subscriptions/subscription-levels.php:154
-#: includes/admin/subscriptions/edit-subscription.php:55
-msgid "Month(s)"
-msgstr ""
-
-#: includes/admin/subscriptions/subscription-levels.php:155
-#: includes/admin/subscriptions/edit-subscription.php:56
-msgid "Years(s)"
-msgstr ""
-
-#: includes/admin/subscriptions/subscription-levels.php:157
-#: includes/admin/subscriptions/edit-subscription.php:58
-msgid "Length of time for this membership level. Enter 0 for unlimited."
-msgstr ""
-
-#: includes/admin/subscriptions/subscription-levels.php:170
-#: includes/admin/subscriptions/edit-subscription.php:67
-msgid "The price of this membership level. Enter 0 for free."
-msgstr ""
-
-#: includes/admin/subscriptions/subscription-levels.php:175
-#: includes/admin/subscriptions/edit-subscription.php:72
-msgid "Signup Fee"
-msgstr ""
-
-#: includes/admin/subscriptions/subscription-levels.php:179
-#: includes/admin/subscriptions/edit-subscription.php:76
-msgid ""
-"Optional signup fee to charge subscribers for the first billing cycle. Enter "
-"a negative number to give a discount on the first payment. This only applies "
-"to recurring subscriptions."
-msgstr ""
-
-#: includes/admin/subscriptions/subscription-levels.php:189
-#: includes/admin/subscriptions/edit-subscription.php:86
-msgid "Inactive"
-msgstr ""
-
-#: includes/admin/subscriptions/subscription-levels.php:191
-#: includes/admin/subscriptions/edit-subscription.php:88
-msgid "Members may only sign up for active subscription levels."
-msgstr ""
-
-#: includes/admin/subscriptions/subscription-levels.php:202
-#: includes/admin/subscriptions/edit-subscription.php:99
-msgid "The user role given to the member after signing up."
-msgstr ""
-
 #: includes/admin/subscriptions/subscription-levels.php:210
 msgid "Add Membership Level"
 msgstr ""
 
-#: includes/admin/subscriptions/edit-subscription.php:6
-msgid "Edit Subscription Level:"
+#: includes/captcha-functions.php:34
+msgid "The words/numbers you entered did not match the reCaptcha"
 msgstr ""
 
-#: includes/admin/subscriptions/edit-subscription.php:20
-msgid "The name of this subscription. This is shown on the registration page."
+#: includes/class-rcp-export-members.php:37
+#: includes/class-rcp-export-payments.php:40
+msgid "User ID"
 msgstr ""
 
-#: includes/admin/subscriptions/edit-subscription.php:29
+#: includes/class-rcp-export-members.php:38
+#: includes/class-rcp-export-payments.php:41
+msgid "User Login"
+msgstr ""
+
+#: includes/class-rcp-export-members.php:39
+msgid "User Email"
+msgstr ""
+
+#: includes/class-rcp-export-members.php:40 templates/profile-editor.php:25
+#: templates/register-single.php:37 templates/register.php:32
+msgid "First Name"
+msgstr ""
+
+#: includes/class-rcp-export-members.php:41 templates/profile-editor.php:29
+#: templates/register-single.php:41 templates/register.php:36
+msgid "Last Name"
+msgstr ""
+
+#: includes/class-rcp-export-payments.php:42 includes/member-functions.php:568
+msgid "Payment Type"
+msgstr ""
+
+#: includes/class-rcp-export.php:167
+msgid "You do not have permission to export data."
+msgstr ""
+
+#: includes/content-filters.php:129
+msgid "You need to have an active subscription to view this content."
+msgstr ""
+
+#: includes/email-functions.php:42 includes/email-functions.php:59
+#: includes/email-functions.php:79 includes/email-functions.php:99
+#: includes/email-functions.php:117
+msgid "Hello"
+msgstr ""
+
+#: includes/email-functions.php:42 includes/email-functions.php:99
+#: includes/email-functions.php:117
+msgid "is now subscribed to"
+msgstr ""
+
+#: includes/email-functions.php:42 includes/email-functions.php:99
+#: includes/email-functions.php:117
+msgid "Subscription level"
+msgstr ""
+
+#: includes/email-functions.php:44 includes/email-functions.php:61
+#: includes/email-functions.php:81 includes/email-functions.php:101
+#: includes/email-functions.php:119
+msgid "Thank you"
+msgstr ""
+
+#: includes/email-functions.php:45
+msgid "New subscription on "
+msgstr ""
+
+#: includes/email-functions.php:59
+msgid "has cancelled their subscription to"
+msgstr ""
+
+#: includes/email-functions.php:59
+msgid "Their subscription level was"
+msgstr ""
+
+#: includes/email-functions.php:62
+msgid "Cancelled subscription on "
+msgstr ""
+
+#: includes/email-functions.php:79
+msgid "subscription has expired"
+msgstr ""
+
+#: includes/email-functions.php:82
+msgid "Expired subscription on "
+msgstr ""
+
+#: includes/email-functions.php:102
+msgid "New free subscription on "
+msgstr ""
+
+#: includes/email-functions.php:120
+msgid "New trial subscription on "
+msgstr ""
+
+#: includes/gateways/paypal/paypal.php:166
+msgid "Duplicate Payment"
+msgstr ""
+
+#: includes/gateways/paypal/paypal.php:167
 msgid ""
-"The description of this subscription. This is shown on the registration page."
+"A duplicate payment was detected. The new payment was still recorded, so you "
+"may want to check into both payments."
 msgstr ""
 
-#: includes/admin/subscriptions/edit-subscription.php:44
-msgid "Level of access this subscription gives."
+#: includes/gateways/paypal/paypal.php:213
+msgid "Invalid Currency Code"
 msgstr ""
 
-#: includes/admin/subscriptions/edit-subscription.php:108
-msgid "Update Subscription"
+#: includes/gateways/paypal/paypal.php:214
+#, php-format
+msgid ""
+"The currency code in an IPN request did not match the site currency code. "
+"Payment data: %s"
+msgstr ""
+
+#: includes/gateways/paypal/paypal.php:231
+msgid "IPN report"
+msgstr ""
+
+#: includes/gateways/paypal/paypal.php:239
+msgid "Subscription Key Mismatch"
+msgstr ""
+
+#: includes/gateways/paypal/paypal.php:240
+#, php-format
+msgid ""
+"The subscription key in an IPN request did not match the subscription key "
+"recorded for the user. Payment data: %s"
+msgstr ""
+
+#: includes/gateways/paypal/paypal.php:408
+msgid "Invalid IPN"
+msgstr ""
+
+#: includes/invoice-functions.php:43
+msgid "This payment record does not exist"
+msgstr ""
+
+#: includes/invoice-functions.php:47
+msgid "You do not have permission to download this invoice"
+msgstr ""
+
+#: includes/invoice-functions.php:58
+#, php-format
+msgid "Invoice #%d"
+msgstr ""
+
+#: includes/invoice-functions.php:81
+msgid "Invoice"
+msgstr ""
+
+#: includes/invoice-functions.php:122
+msgid "Invoice Date"
+msgstr ""
+
+#: includes/invoice-functions.php:128
+msgid "Invoice ID"
+msgstr ""
+
+#: includes/invoice-functions.php:141 templates/subscription.php:47
+msgid "Payment Method"
+msgstr ""
+
+#: includes/invoice-functions.php:157
+msgid "Invoice Items"
+msgstr ""
+
+#: includes/invoice-functions.php:194
+msgid "Invoice Totals"
+msgstr ""
+
+#: includes/invoice-functions.php:203
+msgid "Total"
+msgstr ""
+
+#: includes/invoice-functions.php:212
+msgid "Additional Notes"
+msgstr ""
+
+#: includes/login-functions.php:57 includes/registration-functions.php:284
+msgid "Invalid username"
+msgstr ""
+
+#: includes/login-functions.php:62 includes/registration-functions.php:300
+msgid "Please enter a password"
+msgstr ""
+
+#: includes/login-functions.php:69
+msgid "Incorrect password"
+msgstr ""
+
+#: includes/member-functions.php:390
+#, php-format
+msgid "Member's expiration changed from %s to %s"
+msgstr ""
+
+#: includes/member-functions.php:426 templates/register.php:64
+msgid "free"
+msgstr ""
+
+#: includes/member-functions.php:496
+#, php-format
+msgid "Member's status changed from %s to %s"
+msgstr ""
+
+#: includes/member-functions.php:579
+msgid "No payments recorded"
+msgstr ""
+
+#: includes/member-functions.php:729
+msgid "Please enter a valid email address"
+msgstr ""
+
+#: includes/member-functions.php:734
+msgid "The email you entered belongs to another user. Please use another."
+msgstr ""
+
+#: includes/member-functions.php:740
+msgid "The passwords you entered do not match. Please try again."
+msgstr ""
+
+#: includes/member-functions.php:760
+msgid "There was an error updating your profile. Please try again."
+msgstr ""
+
+#: includes/member-functions.php:787
+msgid "Please enter a password, and confirm it"
+msgstr ""
+
+#: includes/member-functions.php:791 includes/registration-functions.php:304
+msgid "Passwords do not match"
+msgstr ""
+
+#: includes/misc-functions.php:113
+msgid "US Dollars (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:114
+msgid "Euros (&euro;)"
+msgstr ""
+
+#: includes/misc-functions.php:115
+msgid "Pounds Sterling (&pound;)"
+msgstr ""
+
+#: includes/misc-functions.php:116
+msgid "Australian Dollars (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:117
+msgid "Brazilian Real (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:118
+msgid "Canadian Dollars (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:119
+msgid "Czech Koruna"
+msgstr ""
+
+#: includes/misc-functions.php:120
+msgid "Danish Krone"
+msgstr ""
+
+#: includes/misc-functions.php:121
+msgid "Hong Kong Dollar (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:122
+msgid "Hungarian Forint"
+msgstr ""
+
+#: includes/misc-functions.php:123
+msgid "Israeli Shekel"
+msgstr ""
+
+#: includes/misc-functions.php:124
+msgid "Japanese Yen (&yen;)"
+msgstr ""
+
+#: includes/misc-functions.php:125
+msgid "Malaysian Ringgits"
+msgstr ""
+
+#: includes/misc-functions.php:126
+msgid "Mexican Peso (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:127
+msgid "New Zealand Dollar (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:128
+msgid "Norwegian Krone"
+msgstr ""
+
+#: includes/misc-functions.php:129
+msgid "Philippine Pesos"
+msgstr ""
+
+#: includes/misc-functions.php:130
+msgid "Polish Zloty"
+msgstr ""
+
+#: includes/misc-functions.php:131
+msgid "Singapore Dollar (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:132
+msgid "Swedish Krona"
+msgstr ""
+
+#: includes/misc-functions.php:133
+msgid "Swiss Franc"
+msgstr ""
+
+#: includes/misc-functions.php:134
+msgid "Taiwan New Dollars"
+msgstr ""
+
+#: includes/misc-functions.php:135
+msgid "Thai Baht"
+msgstr ""
+
+#: includes/misc-functions.php:136
+msgid "Turkish Lira"
+msgstr ""
+
+#: includes/misc-functions.php:137
+msgid "Iranian Rial (&#65020;)"
+msgstr ""
+
+#: includes/misc-functions.php:138
+msgid "Russian Rubles"
+msgstr ""
+
+#: includes/process-data.php:23 includes/process-data.php:42
+#: includes/process-data.php:63 includes/process-data.php:111
+#: includes/process-data.php:184 includes/process-data.php:217
+#: includes/process-data.php:250 includes/process-data.php:285
+#: includes/process-data.php:327 includes/process-data.php:335
+#: includes/process-data.php:345 includes/process-data.php:363
+#: includes/process-data.php:373 includes/process-data.php:385
+#: includes/process-data.php:394 includes/process-data.php:403
+#: includes/process-data.php:412
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: includes/registration-functions.php:47
+msgid "Please choose a subscription level"
+msgstr ""
+
+#: includes/registration-functions.php:52
+msgid "You may only sign up for a free trial once"
+msgstr ""
+
+#: includes/registration-functions.php:58
+msgid "The discount you entered is invalid"
+msgstr ""
+
+#: includes/registration-functions.php:61
+msgid "You can only use the discount code once"
+msgstr ""
+
+#: includes/registration-functions.php:66
+msgid "Free subscriptions cannot be automatically renewed"
+msgstr ""
+
+#: includes/registration-functions.php:280
+msgid "Username already taken"
+msgstr ""
+
+#: includes/registration-functions.php:288
+msgid "Please enter a username"
+msgstr ""
+
+#: includes/registration-functions.php:292
+msgid "Invalid email"
+msgstr ""
+
+#: includes/registration-functions.php:296
+msgid "Email already registered"
+msgstr ""
+
+#: includes/scripts.php:26
+msgid "Are you sure you wish to cancel this member's subscription?"
+msgstr ""
+
+#: includes/scripts.php:27
+msgid ""
+"If you delete this subscription, all members registered with this level will "
+"be canceled. Proceed?"
+msgstr ""
+
+#: includes/scripts.php:28
+msgid ""
+"Are you sure you want to delete this payment? This action is irreversible. "
+"Proceed?"
+msgstr ""
+
+#: includes/scripts.php:29
+msgid "You must choose a username"
+msgstr ""
+
+#: includes/scripts.php:32
+msgid "Use as Logo"
+msgstr ""
+
+#: includes/scripts.php:33
+msgid "Choose a Logo"
+msgstr ""
+
+#: includes/shortcodes.php:155
+msgid "You are already registered and have an active subscription."
+msgstr ""
+
+#: includes/subscription-functions.php:150
+msgid "Days"
+msgstr ""
+
+#: includes/subscription-functions.php:152
+msgid "Day"
+msgstr ""
+
+#: includes/subscription-functions.php:156
+msgid "Months"
+msgstr ""
+
+#: includes/subscription-functions.php:158
+msgid "Month"
+msgstr ""
+
+#: includes/subscription-functions.php:162
+msgid "Years"
+msgstr ""
+
+#: includes/subscription-functions.php:164
+msgid "Year"
+msgstr ""
+
+#: includes/subscription-functions.php:281
+msgid "None, reminders disabled"
+msgstr ""
+
+#: includes/subscription-functions.php:282
+msgid "One day before expiration"
+msgstr ""
+
+#: includes/subscription-functions.php:283
+msgid "Two days before expiration"
+msgstr ""
+
+#: includes/subscription-functions.php:284
+msgid "Three days before expiration"
+msgstr ""
+
+#: includes/subscription-functions.php:285
+msgid "Four days before expiration"
+msgstr ""
+
+#: includes/subscription-functions.php:286
+msgid "Five days before expiration"
+msgstr ""
+
+#: includes/subscription-functions.php:287
+msgid "Six days before expiration"
+msgstr ""
+
+#: includes/subscription-functions.php:288
+msgid "One week before expiration"
+msgstr ""
+
+#: includes/subscription-functions.php:289
+msgid "Two weeks before expiration"
+msgstr ""
+
+#: includes/subscription-functions.php:290
+msgid "Three weeks before expiration"
+msgstr ""
+
+#: includes/subscription-functions.php:291
+msgid "One month before expiration"
+msgstr ""
+
+#: includes/subscription-functions.php:292
+msgid "Two months before expiration"
+msgstr ""
+
+#: includes/subscription-functions.php:293
+msgid "Three months before expiration"
+msgstr ""
+
+#: includes/user-page-columns.php:20
+msgid "Edit Subscription"
+msgstr ""
+
+#: includes/user-page-columns.php:22
+msgid "Add Subscription"
+msgstr ""
+
+#: includes/user-page-columns.php:24
+msgid "View Details"
+msgstr ""
+
+#: templates/change-password.php:7
+msgid "Password changed successfully"
+msgstr ""
+
+#: templates/change-password.php:13 templates/profile-editor.php:55
+msgid "New Password"
+msgstr ""
+
+#: templates/change-password.php:17
+msgid "Password Confirm"
+msgstr ""
+
+#: templates/change-password.php:24
+msgid "Change Password"
+msgstr ""
+
+#: templates/login.php:13 templates/register-single.php:45
+#: templates/register.php:40
+msgid "Password"
+msgstr ""
+
+#: templates/login.php:17
+msgid "Remember"
+msgstr ""
+
+#: templates/login.php:20
+msgid "Lost your password?"
+msgstr ""
+
+#: templates/login.php:30
+msgid "Logout"
+msgstr ""
+
+#: templates/profile-editor.php:16
+msgid "Success"
+msgstr ""
+
+#: templates/profile-editor.php:16
+msgid "Your profile has been updated."
+msgstr ""
+
+#: templates/profile-editor.php:23
+msgid "Change your Name"
+msgstr ""
+
+#: templates/profile-editor.php:33
+msgid "Display Name"
+msgstr ""
+
+#: templates/profile-editor.php:49
+msgid "Email Address"
+msgstr ""
+
+#: templates/profile-editor.php:53
+msgid "Change your Password"
+msgstr ""
+
+#: templates/profile-editor.php:59
+msgid "Re-enter Password"
+msgstr ""
+
+#: templates/profile-editor.php:62
+msgid "Please note after changing your password, you must log back in."
+msgstr ""
+
+#: templates/profile-editor.php:67
+msgid "Save Changes"
+msgstr ""
+
+#: templates/profile-editor.php:73
+msgid "You need to login to edit your profile."
+msgstr ""
+
+#: templates/register-single.php:7 templates/register.php:5
+msgid "Register New Account"
+msgstr ""
+
+#: templates/register-single.php:11 templates/register.php:9
+msgid "Upgrade Your Subscription"
+msgstr ""
+
+#: templates/register-single.php:49 templates/register.php:44
+msgid "Password Again"
+msgstr ""
+
+#: templates/register-single.php:62 templates/register.php:80
+msgid "Discount Code"
+msgstr ""
+
+#: templates/register-single.php:63 templates/register.php:81
+msgid "Valid"
+msgstr ""
+
+#: templates/register-single.php:64 templates/register.php:82
+msgid "Invalid"
+msgstr ""
+
+#: templates/register-single.php:85 templates/register.php:102
+msgid "Choose Your Payment Method"
+msgstr ""
+
+#: templates/register-single.php:109 templates/register.php:116
+msgid "Register"
+msgstr ""
+
+#: templates/register.php:58
+msgid "Choose your subscription level"
+msgstr ""
+
+#: templates/register.php:72
+msgid "You have not created any subscription levels yet"
+msgstr ""
+
+#: templates/subscription.php:15
+msgid "Renewal Date"
+msgstr ""
+
+#: templates/subscription.php:30
+msgid "Renew your subscription"
+msgstr ""
+
+#: templates/subscription.php:32
+msgid "Upgrade your subscription"
+msgstr ""
+
+#: templates/subscription.php:34
+msgid "Cancel your subscription"
+msgstr ""
+
+#: templates/subscription.php:45
+msgid "Invoice #"
+msgstr ""
+
+#: templates/subscription.php:62
+msgid "PDF Receipt"
+msgstr ""
+
+#: templates/subscription.php:66
+msgid "You have not made any payments."
 msgstr ""
