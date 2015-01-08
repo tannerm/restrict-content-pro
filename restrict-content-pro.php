@@ -83,7 +83,7 @@ global $rcp_payments_db_name;
 $rcp_payments_db_name = rcp_get_payments_db_name();
 
 global $rcp_payments_db_version;
-$rcp_payments_db_version = '1.3';
+$rcp_payments_db_version = '1.4';
 
 /* settings page globals */
 global $rcp_members_page;
@@ -138,6 +138,7 @@ add_action( 'init', 'rcp_load_textdomain' );
 require( RCP_PLUGIN_DIR . 'includes/install.php' );
 include( RCP_PLUGIN_DIR . 'includes/class-rcp-capabilities.php' );
 include( RCP_PLUGIN_DIR . 'includes/class-rcp-levels.php' );
+include( RCP_PLUGIN_DIR . 'includes/class-rcp-member.php' );
 include( RCP_PLUGIN_DIR . 'includes/class-rcp-payments.php' );
 include( RCP_PLUGIN_DIR . 'includes/class-rcp-discounts.php' );
 include( RCP_PLUGIN_DIR . 'includes/scripts.php' );
@@ -159,6 +160,7 @@ include( RCP_PLUGIN_DIR . 'includes/misc-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/registration-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/subscription-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/error-tracking.php' );
+include( RCP_PLUGIN_DIR . 'includes/shortcodes.php' );
 
 if( !class_exists( 'WP_Logging' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/libraries/class-wp-logging.php' );
@@ -206,7 +208,6 @@ if( is_admin() ) {
 } else {
 
 	include( RCP_PLUGIN_DIR . 'includes/template-functions.php' );
-	include( RCP_PLUGIN_DIR . 'includes/shortcodes.php' );
 	include( RCP_PLUGIN_DIR . 'includes/member-forms.php' );
 	include( RCP_PLUGIN_DIR . 'includes/content-filters.php' );
 	include( RCP_PLUGIN_DIR . 'includes/feed-functions.php' );

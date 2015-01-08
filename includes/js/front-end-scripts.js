@@ -89,22 +89,37 @@ jQuery(document).ready(function($) {
 				subscription_id: $('#rcp_subscription_levels input:checked').val()
 			};
 			$.post(rcp_script_options.ajaxurl, data, function(response) {
-				if(response == 'invalid') {
+
+				$('.rcp_discount_amount').remove();
+				$('.rcp_discount_valid, .rcp_discount_invalid').hide();
+
+				if( ! response.valid ) {
+
 					// code is invalid
-					$('.rcp_discount_valid').hide();
 					$('.rcp_discount_invalid').show();
 					$('.rcp_gateway_fields').removeClass('rcp_discounted_100');
-				} else if(response == 'valid') {
+					$('#rcp_payment_gateways,.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
+
+				} else if( response.valid ) {
+	
 					// code is valid
-					$('.rcp_discount_invalid').hide();
-					$('.rcp_discount_valid,.rcp_gateway_fields').show();
-					$('.rcp_gateway_fields').removeClass('rcp_discounted_100');
-				} else if(response == 'valid and full') {
-					// code is valid
-					$('.rcp_discount_invalid,#rcp_payment_gateways,.rcp_gateway_fields,#rcp_auto_renew_wrap').hide();
 					$('.rcp_discount_valid').show();
-					$('.rcp_gateway_fields').addClass('rcp_discounted_100');
+					$('#rcp_discount_code_wrap label').append( '<span class="rcp_discount_amount"> - ' + response.amount + '</span>' );
+
+					if( response.full ) {
+
+						$('#rcp_payment_gateways,.rcp_gateway_fields,#rcp_auto_renew_wrap').hide();
+						$('.rcp_gateway_fields').addClass('rcp_discounted_100');
+	
+					} else {
+						
+						$('#rcp_payment_gateways,.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
+						$('.rcp_gateway_fields').removeClass('rcp_discounted_100');
+					
+					}
+
 				}
+
 				$('body').trigger('rcp_discount_applied', [ response ]);
 			});
 		}

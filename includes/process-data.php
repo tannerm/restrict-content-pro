@@ -85,7 +85,7 @@ function rcp_process_data() {
 				// Add a role, if needed, to the user
 				$subscription = $levels->get_level( $level_id );
 
-				update_user_meta( $user_id, 'rcp_subscription_level', $level_id );
+				update_user_meta( $user->ID, 'rcp_subscription_level', $level_id );
 
 				// Add the new user role
 				$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
@@ -264,6 +264,7 @@ function rcp_process_data() {
 					'subscription'     => rcp_get_subscription( $user->ID ),
 					'subscription_key' => rcp_get_subscription_key( $user->ID ),
 					'transaction_id'   => sanitize_text_field( $_POST['transaction-id'] ),
+					'status'           => sanitize_text_field( $_POST['status'] ),
 				);
 
 				$add = $payments->insert( $data );
@@ -299,6 +300,7 @@ function rcp_process_data() {
 					'subscription'     => rcp_get_subscription( $user->ID ),
 					'subscription_key' => rcp_get_subscription_key( $user->ID ),
 					'transaction_id'   => sanitize_text_field( $_POST['transaction-id'] ),
+					'status'           => sanitize_text_field( $_POST['status'] ),
 				);
 
 				$update = $payments->update( $payment_id, $data );
