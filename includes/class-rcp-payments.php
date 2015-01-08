@@ -60,7 +60,7 @@ class RCP_Payments {
 			'payment_type'      => '',
 			'subscription_key'  => '',
 			'transaction_id'    => '',
-			'status'            => 'pending'
+			'status'            => 'complete'
 		);
 
 		$args = wp_parse_args( $payment_data, $defaults );
