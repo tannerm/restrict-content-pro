@@ -438,7 +438,11 @@ function rcp_print_status( $user_id = 0, $echo = true  ) {
 * @param string $new_status - the status to set the user to
 * return bool - TRUE on a successful status change, false otherwise
 */
-function rcp_set_status( $user_id, $new_status ) {
+function rcp_set_status( $user_id = 0, $new_status = '' ) {
+
+	if( empty( $user_id ) || empty( $new_status ) ) {
+		return false;
+	}
 
 	$member = new RCP_Member( $user_id );
 	return $member->set_status( $new_status );
@@ -484,6 +488,8 @@ function rcp_has_used_trial( $user_id = 0) {
  * @return      bool
  */
 function rcp_is_trialing( $user_id = 0 ) {
+
+
 
 	$ret = false;
 
