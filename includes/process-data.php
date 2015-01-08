@@ -300,6 +300,7 @@ function rcp_process_data() {
 					'subscription'     => rcp_get_subscription( $user->ID ),
 					'subscription_key' => rcp_get_subscription_key( $user->ID ),
 					'transaction_id'   => sanitize_text_field( $_POST['transaction-id'] ),
+					'status'           => sanitize_text_field( $_POST['status'] ),
 				);
 
 				$update = $payments->update( $payment_id, $data );
