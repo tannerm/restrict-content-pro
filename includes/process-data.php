@@ -85,7 +85,7 @@ function rcp_process_data() {
 				// Add a role, if needed, to the user
 				$subscription = $levels->get_level( $level_id );
 
-				update_user_meta( $user_id, 'rcp_subscription_level', $level_id );
+				update_user_meta( $user->ID, 'rcp_subscription_level', $level_id );
 
 				// Add the new user role
 				$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
