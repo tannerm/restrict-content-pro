@@ -463,7 +463,15 @@ class RCP_Payments {
 		}
 
 		// Exclude refunded payments
-		$where .= "AND `status` != 'refunded' ";
+		if( false !== strpos( $where, 'WHERE' ) ) {
+
+			$where .= "AND `status` != 'refunded'";
+
+		} else {
+
+			$where .= "WHERE `status` != 'refunded'";
+	
+		}
 
 		$earnings = get_transient( $cache_key );
 
