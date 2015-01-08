@@ -550,6 +550,10 @@ function rcp_get_payment_status_label( $payment ) {
 		$payment  = $payments->get_payment( $payment );
 	}
 
+	if( ! $payment ) {
+		return '';
+	}
+
 	$label  = '';
 	$status = ! empty( $payment->status ) ? $payment->status : 'complete';
 
