@@ -7,19 +7,29 @@
 function rcp_validate_discount_with_ajax() {
 	if( isset( $_POST['code'] ) ) {
 
+		$return          = array();
+		$return['valid'] = false;
+		$return['full']  = false;
 		$subscription_id = isset( $_POST['subscription_id'] ) ? absint( $_POST['subscription_id'] ) : 0;
 
+
 		if( rcp_validate_discount( $_POST['code'], $subscription_id ) ) {
-			$code_details = rcp_get_discount_details_by_code( $_POST['code'] );
+		
+			$code_details = rcp_get_discount_details_by_code( sanitize_text_field( $_POST['code'] ) );
+		
 			if( $code_details && $code_details->amount == 100 && $code_details->unit == '%' ) {
 				// this is a 100% discount
-				echo 'valid and full';
-			} else {
-				echo 'valid';
+				
+				$return['full']   = true;
+	
 			}
-		} else {
-			echo 'invalid';
+
+			$return['valid']  = true;
+			$return['amount'] = rcp_discount_sign_filter( $code_details->amount, $code_details->unit );
+
 		}
+
+		wp_send_json( $return );
 	}
 	die();
 }
