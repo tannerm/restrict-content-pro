@@ -92,10 +92,12 @@ jQuery(document).ready(function($) {
 
 				console.log( response );
 
+				$('.rcp_discount_amount').remove();
+				$('.rcp_discount_valid, .rcp_discount_invalid').hide();
+
 				if( ! response.valid ) {
 
 					// code is invalid
-					$('.rcp_discount_valid').hide();
 					$('.rcp_discount_invalid').show();
 					$('.rcp_gateway_fields').removeClass('rcp_discounted_100');
 					$('#rcp_payment_gateways,.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
@@ -103,8 +105,8 @@ jQuery(document).ready(function($) {
 				} else if( response.valid ) {
 	
 					// code is valid
-					$('.rcp_discount_invalid').hide();
 					$('.rcp_discount_valid').show();
+					$('#rcp_discount_code_wrap label').append( '<span class="rcp_discount_amount"> - ' + response.amount + '</span>' );
 
 					if( response.full ) {
 
