@@ -69,6 +69,7 @@ function rcp_payments_page() {
 					<th style="width: 90px;"><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
 					<th><?php _e( 'Transaction ID', 'rcp' ); ?></th>
+					<th><?php _e( 'Status', 'rcp' ); ?></th>
 					<?php do_action('rcp_payments_page_table_header'); ?>
 					<?php if( current_user_can( 'rcp_manage_payments' ) ) : ?>
 						<th><?php _e( 'Actions', 'rcp' ); ?></th>
@@ -85,6 +86,7 @@ function rcp_payments_page() {
 					<th><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
 					<th><?php _e( 'Transaction ID', 'rcp' ); ?></th>
+					<th><?php _e( 'Status', 'rcp' ); ?></th>
 					<?php do_action( 'rcp_payments_page_table_footer' ); ?>
 					<?php if( current_user_can( 'rcp_manage_payments' ) ) : ?>
 						<th><?php _e( 'Actions', 'rcp' ); ?></th>
@@ -111,10 +113,13 @@ function rcp_payments_page() {
 								<td><?php echo rcp_currency_filter( $payment->amount ); ?></td>
 								<td><?php echo esc_html( $payment->payment_type ); ?></td>
 								<td><?php echo $payment->transaction_id; ?></td>
+								<td><?php echo rcp_get_payment_status_label( $payment ); ?></td>
 								<?php do_action( 'rcp_payments_page_table_column', $payment->id ); ?>
 								<?php if( current_user_can( 'rcp_manage_payments' ) ) : ?>
 									<td>
 										<a href="<?php echo rcp_get_pdf_download_url( $payment->id ); ?>" class="rcp-payment-invoice"><?php _e( 'Download Invoice', 'rcp' ); ?></a>
+										<span>&nbsp;|&nbsp;</span>
+										<a href="<?php echo add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ) ); ?>" class="rcp-edit-payment"><?php _e( 'Edit', 'rcp' ); ?></a>
 										<span>&nbsp;|&nbsp;</span>
 										<a href="<?php echo wp_nonce_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ) ), 'rcp_delete_payment_nonce' ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a>
 									</td>

@@ -12,6 +12,9 @@ function rcp_check_if_upgrade_needed() {
 	if( version_compare( $rcp_payments_db_version, get_option( 'rcp_payments_db_version' ), '>' ) ) {
 		return true;
 	}
+	if( version_compare( $rcp_payments_db_version, get_option( 'rcp_payments_db_version' ), '>' ) ) {
+		return true;
+	}
 	return false;
 }
 add_action( 'admin_init', 'rcp_check_if_upgrade_needed' );
@@ -92,6 +95,11 @@ function rcp_options_upgrade() {
 
 	if( ! $wpdb->query( "SELECT `transaction_id` FROM `" . $rcp_payments_db_name . "`" ) ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_payments_db_name . "` ADD `transaction_id` tinytext" );
+		update_option( 'rcp_payments_db_version', $rcp_payments_db_version );
+	}
+
+	if( ! $wpdb->query( "SELECT `status` FROM `" . $rcp_payments_db_name . "`" ) ) {
+		$wpdb->query( "ALTER TABLE `" . $rcp_payments_db_name . "` ADD `status` varchar(200)" );
 		update_option( 'rcp_payments_db_version', $rcp_payments_db_version );
 	}
 

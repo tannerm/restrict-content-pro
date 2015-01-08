@@ -83,7 +83,7 @@ global $rcp_payments_db_name;
 $rcp_payments_db_name = rcp_get_payments_db_name();
 
 global $rcp_payments_db_version;
-$rcp_payments_db_version = '1.3';
+$rcp_payments_db_version = '1.4';
 
 /* settings page globals */
 global $rcp_members_page;
