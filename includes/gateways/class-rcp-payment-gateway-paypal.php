@@ -289,8 +289,6 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// store the recurring payment ID
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
-					$member->renew( true );
-
 					do_action( 'rcp_ipn_subscr_signup', $user_id );
 
 				break;
@@ -301,21 +299,9 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// record this payment in the database
 					$rcp_payments->insert( $payment_data );
 
-					$subscription = rcp_get_subscription_details( rcp_get_subscription_id( $user_id ) );
-
-					// update the user's expiration to correspond with the new payment
-					$member_new_expiration = date( 'Y-m-d H:i:s', strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59' ) );
-
-					rcp_set_expiration_date( $user_id, $member_new_expiration );
-
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
-
-					// make sure the user's status is active
-					rcp_set_status( $user_id, 'active' );
-
-					update_user_meta( $user_id, 'rcp_recurring', 'yes' );
-
-					delete_user_meta( $user_id, '_rcp_expired_email_sent' );
+					
+					$member->renew( true );
 
 					do_action( 'rcp_ipn_subscr_payment', $user_id );
 
