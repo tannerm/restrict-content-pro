@@ -347,11 +347,8 @@ function rcp_get_expiration_date( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$expiration = get_user_meta( $user_id, 'rcp_expiration', true);
-	if( $expiration ) {
-		return $expiration != 'none' ? date_i18n( get_option('date_format'), strtotime( $expiration ) ) : __( 'none', 'rcp' );
-	}
-	return false;
+	$member = new RCP_Member( $user_id );
+	return $member->get_expiration_date();
 }
 
 /**
