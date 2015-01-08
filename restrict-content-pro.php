@@ -155,6 +155,7 @@ include( RCP_PLUGIN_DIR . 'includes/misc-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/registration-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/subscription-functions.php' );
 include( RCP_PLUGIN_DIR . 'includes/error-tracking.php' );
+include( RCP_PLUGIN_DIR . 'includes/shortcodes.php' );
 
 if( !class_exists( 'WP_Logging' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/libraries/class-wp-logging.php' );
@@ -202,7 +203,6 @@ if( is_admin() ) {
 } else {
 
 	include( RCP_PLUGIN_DIR . 'includes/template-functions.php' );
-	include( RCP_PLUGIN_DIR . 'includes/shortcodes.php' );
 	include( RCP_PLUGIN_DIR . 'includes/member-forms.php' );
 	include( RCP_PLUGIN_DIR . 'includes/content-filters.php' );
 	include( RCP_PLUGIN_DIR . 'includes/feed-functions.php' );
