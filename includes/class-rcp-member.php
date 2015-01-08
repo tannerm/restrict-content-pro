@@ -357,6 +357,25 @@ class RCP_Member extends WP_User {
 
 		return apply_filters( 'rcp_member_is_trialing', $ret, $this->ID, $this );
 
+	}
+
+	/**
+	 * Determines if the member has used a trial
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function has_trialed() {
+
+		$ret = false;
+
+		if( get_user_meta( $this->ID, 'rcp_has_trialed', true ) == 'yes' ) {
+			$ret = true;
+		}
+
+		$ret = apply_filters( 'rcp_has_used_trial', $ret, $this->ID );
+
+		return apply_filters( 'rcp_member_has_trialed', $ret, $this->ID );
 
 	}
 
