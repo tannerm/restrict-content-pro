@@ -147,7 +147,7 @@ class RCP_Member extends WP_User {
 		// Determine what date to use as the start for the new expiration calculation
 		if( $expires > current_time( 'timestamp' ) && rcp_is_active( $this->ID ) ) {
 
-			$base_date  = $expires
+			$base_date  = $expires;
 
 		} else {
 
