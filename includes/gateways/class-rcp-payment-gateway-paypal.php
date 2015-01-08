@@ -275,26 +275,6 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			}
 
 
-			if( rcp_get_subscription_key( $user_id ) != $subscription_key ) {
-				// the subscription key is invalid
-
-				$log_data = array(
-				    'post_title'    => __( 'Subscription Key Mismatch', 'rcp' ),
-				    'post_content'  =>  sprintf( __( 'The subscription key in an IPN request did not match the subscription key recorded for the user. Payment data: %s', 'rcp' ), json_encode( $payment_data ) ),
-				    'post_parent'   => 0,
-				    'log_type'      => 'gateway_error'
-				);
-
-				$log_meta = array(
-				    'user_subscription' => $posted['item_name'],
-				    'user_id'           => $user_id
-				);
-				$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
-
-				return;
-			}
-
-
 			/* now process the kind of subscription/payment */
 
 			$rcp_payments = new RCP_Payments();
