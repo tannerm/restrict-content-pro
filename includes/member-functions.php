@@ -212,8 +212,9 @@ function rcp_get_subscription_id( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$subscription_id = get_user_meta( $user_id, 'rcp_subscription_level', true );
-	return $subscription_id;
+	$member = new RCP_Member( $user_id );
+	return $member->get_subscription_id();
+
 }
 
 /*
@@ -227,9 +228,9 @@ function rcp_get_subscription( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$subscription_id = get_user_meta( $user_id, 'rcp_subscription_level', true );
-	$subscription = rcp_get_subscription_name( $subscription_id );
-	return $subscription;
+	$member = new RCP_Member( $user_id );
+	return $member->get_subscription_name();
+
 }
 
 
@@ -238,18 +239,15 @@ function rcp_get_subscription( $user_id = 0 ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return bool - TRUE if the user is recurring, false otherwise
 */
-function rcp_is_recurring( $user_id = null ) {
+function rcp_is_recurring( $user_id = 0 ) {
 
-	if( $user_id == null && is_user_logged_in() ) {
-		global $user_ID;
-		$user_id = $user_ID;
+	if( empty( $user_id ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
 	}
 
-	$recurring = get_user_meta( $user_id, 'rcp_recurring', true );
-	if( $recurring == 'yes' ) {
-		return true;
-	}
-	return false;
+	$member = new RCP_Member( $user_id );
+	return $member->is_recurring();
+
 }
 
 
@@ -258,21 +256,15 @@ function rcp_is_recurring( $user_id = null ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return bool - TRUE if the user is expired, false otherwise
 */
-function rcp_is_expired( $user_id = null ) {
+function rcp_is_expired( $user_id = 0 ) {
 
-	if( $user_id == null && is_user_logged_in() ) {
-		global $user_ID;
-		$user_id = $user_ID;
+	if( empty( $user_id ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
 	}
 
-	$expiration = get_user_meta( $user_id, 'rcp_expiration', true );
-	if( $expiration == 'none' ) {
-		return false;
-	}
-	if( $expiration && strtotime('NOW') > strtotime( $expiration ) ) {
-		return true;
-	}
-	return false;
+	$member = new RCP_Member( $user_id );
+	return $member->is_expired();
+
 }
 
 /*
@@ -485,10 +477,9 @@ function rcp_set_status( $user_id, $new_status ) {
 * return string/bool - string if the the key is retrieved successfully, false on failure
 */
 function rcp_get_subscription_key( $user_id ) {
-	$key = get_user_meta( $user_id, 'rcp_subscription_key', true );
-	if( $key )
-		return $key;
-	return false;
+
+	$member = new RCP_Member( $user_id );
+	return $member->get_subscription_key();
 }
 
 /*
