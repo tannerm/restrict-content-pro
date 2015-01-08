@@ -212,8 +212,9 @@ function rcp_get_subscription_id( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$subscription_id = get_user_meta( $user_id, 'rcp_subscription_level', true );
-	return $subscription_id;
+	$member = new RCP_Member( $user_id );
+	return $member->get_subscription_id();
+
 }
 
 /*
@@ -227,9 +228,9 @@ function rcp_get_subscription( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$subscription_id = get_user_meta( $user_id, 'rcp_subscription_level', true );
-	$subscription = rcp_get_subscription_name( $subscription_id );
-	return $subscription;
+	$member = new RCP_Member( $user_id );
+	return $member->get_subscription_name();
+
 }
 
 
@@ -238,18 +239,15 @@ function rcp_get_subscription( $user_id = 0 ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return bool - TRUE if the user is recurring, false otherwise
 */
-function rcp_is_recurring( $user_id = null ) {
+function rcp_is_recurring( $user_id = 0 ) {
 
-	if( $user_id == null && is_user_logged_in() ) {
-		global $user_ID;
-		$user_id = $user_ID;
+	if( empty( $user_id ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
 	}
 
-	$recurring = get_user_meta( $user_id, 'rcp_recurring', true );
-	if( $recurring == 'yes' ) {
-		return true;
-	}
-	return false;
+	$member = new RCP_Member( $user_id );
+	return $member->is_recurring();
+
 }
 
 
@@ -258,21 +256,15 @@ function rcp_is_recurring( $user_id = null ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return bool - TRUE if the user is expired, false otherwise
 */
-function rcp_is_expired( $user_id = null ) {
+function rcp_is_expired( $user_id = 0 ) {
 
-	if( $user_id == null && is_user_logged_in() ) {
-		global $user_ID;
-		$user_id = $user_ID;
+	if( empty( $user_id ) && is_user_logged_in() ) {
+		$user_id = get_current_user_id();
 	}
 
-	$expiration = get_user_meta( $user_id, 'rcp_expiration', true );
-	if( $expiration == 'none' ) {
-		return false;
-	}
-	if( $expiration && strtotime('NOW') > strtotime( $expiration ) ) {
-		return true;
-	}
-	return false;
+	$member = new RCP_Member( $user_id );
+	return $member->is_expired();
+
 }
 
 /*
@@ -282,18 +274,13 @@ function rcp_is_expired( $user_id = null ) {
 */
 function rcp_is_active( $user_id = 0 ) {
 
-	$ret = false;
-
 	if( empty( $user_id ) && is_user_logged_in() ) {
 		$user_id = get_current_user_id();
 	}
 
-	if( user_can( $user_id, 'manage_options' ) ) {
-		$ret = true;
-	} else if( ! rcp_is_expired( $user_id ) && ( rcp_get_status( $user_id ) == 'active' || rcp_get_status( $user_id ) == 'cancelled' ) ) {
-		$ret = true;
-	}
-	return apply_filters( 'rcp_is_active', $ret, $user_id );
+	$member = new RCP_Member( $user_id );
+	return $member->is_active();
+
 }
 
 /*
@@ -360,11 +347,8 @@ function rcp_get_expiration_date( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$expiration = get_user_meta( $user_id, 'rcp_expiration', true);
-	if( $expiration ) {
-		return $expiration != 'none' ? date_i18n( get_option('date_format'), strtotime( $expiration ) ) : __( 'none', 'rcp' );
-	}
-	return false;
+	$member = new RCP_Member( $user_id );
+	return $member->get_expiration_date();
 }
 
 /**
@@ -380,24 +364,8 @@ function rcp_set_expiration_date( $user_id = 0, $new_date = '' ) {
 		$user_id = get_current_user_id();
 	}
 
-	$old_date = get_user_meta( $user_id, 'rcp_expiration', true);
-
-	if( update_user_meta( $user_id, 'rcp_expiration', $new_date ) ) {
-
-		if( $old_date !== $new_date ) {
-
-			// Record the status change
-			$note = sprintf( __( 'Member\'s expiration changed from %s to %s', 'rcp' ), $old_date, $new_date );
-			rcp_add_member_note( $user_id, $note );
-
-		}
-
-		do_action( 'rcp_set_expiration_date', $user_id, $new_date, $old_date );
-	
-		return true;
-	}
-	
-	return false;
+	$member = new RCP_Member( $user_id );
+	return $member->set_expiration_date( $new_date );
 }
 
 /*
@@ -415,16 +383,14 @@ function rcp_get_expiration_timestamp( $user_id ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return string - The status of the user's subscription
 */
-function rcp_get_status( $user_id ) {
-	$status = get_user_meta( $user_id, 'rcp_status', true);
+function rcp_get_status( $user_id = 0 ) {
 
-	// double check that the status and expiration match. Update if needed
-	if( $status == 'active' && rcp_is_expired( $user_id ) ) {
-		rcp_set_status( $user_id, 'expired' );
-		$status = 'expired';
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
 	}
-	if( $status == '' ) $status = __( 'free', 'rcp' );
-	return $status;
+
+	$member = new RCP_Member( $user_id );
+	return $member->get_status();
 }
 
 /*
@@ -472,32 +438,15 @@ function rcp_print_status( $user_id = 0, $echo = true  ) {
 * @param string $new_status - the status to set the user to
 * return bool - TRUE on a successful status change, false otherwise
 */
-function rcp_set_status( $user_id, $new_status ) {
+function rcp_set_status( $user_id = 0, $new_status = '' ) {
 
-	$old_status = get_user_meta( $user_id, 'rcp_status', true );
-
-	if( ! $old_status ) {
-		$old_status = __( 'Free', 'rcp' );
-	}
-
-	if( $old_status == $new_status ) {
+	if( empty( $user_id ) || empty( $new_status ) ) {
 		return false;
 	}
 
-	if( update_user_meta( $user_id, 'rcp_status', $new_status ) ) {
+	$member = new RCP_Member( $user_id );
+	return $member->set_status( $new_status );
 
-		if( 'expired' != $new_status ) {
-			delete_user_meta( $user_id, '_rcp_expired_email_sent');
-		}
-
-		do_action( 'rcp_set_status', $new_status, $user_id );
-
-		// Record the status change
-		rcp_add_member_note( $user_id, sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
-
-		return true;
-	}
-	return false;
 }
 
 /*
@@ -505,11 +454,14 @@ function rcp_set_status( $user_id, $new_status ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return string/bool - string if the the key is retrieved successfully, false on failure
 */
-function rcp_get_subscription_key( $user_id ) {
-	$key = get_user_meta( $user_id, 'rcp_subscription_key', true );
-	if( $key )
-		return $key;
-	return false;
+function rcp_get_subscription_key( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$member = new RCP_Member( $user_id );
+	return $member->get_subscription_key();
 }
 
 /*
@@ -519,16 +471,13 @@ function rcp_get_subscription_key( $user_id ) {
 */
 function rcp_has_used_trial( $user_id = 0) {
 
-	$ret = false;
-
-	if( empty( $user_id ) && is_user_logged_in() ) {
+	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
 
-	if( get_user_meta( $user_id, 'rcp_has_trialed', true ) == 'yes' ) {
-		$ret = true;
-	}
-	return apply_filters( 'rcp_has_used_trial', $ret, $user_id );
+	$member = new RCP_Member( $user_id );
+	return $member->has_trialed();
+
 }
 
 
@@ -541,16 +490,13 @@ function rcp_has_used_trial( $user_id = 0) {
  */
 function rcp_is_trialing( $user_id = 0 ) {
 
-	$ret = false;
-
-	if( empty( $user_id ) && is_user_logged_in() ) {
+	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
 
-	if( get_user_meta( $user_id, 'rcp_is_trialing', true ) == 'yes' && rcp_is_active( $user_id ) ) {
-		$ret = true;
-	}
-	return apply_filters( 'rcp_is_trialing', $ret, $user_id );
+	$member = new RCP_Member( $user_id );
+	return $member->is_trialing();
+
 }
 
 
