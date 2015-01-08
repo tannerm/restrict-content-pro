@@ -536,3 +536,45 @@ if ( ! function_exists( 'cal_days_in_month' ) ) {
 		return date( 't', mktime( 0, 0, 0, $month, 1, $year ) );
 	}
 }
+
+/**
+ * Retrieves the payment status label for a payment
+ *
+ * @since 2.1
+ * @return string
+ */
+function rcp_get_payment_status_label( $payment ) {
+
+	if( is_numeric( $payment ) ) {
+		$payments = new RCP_Payments();
+		$payment  = $payments->get_payment( $payment );
+	}
+
+	$label  = '';
+	$status = ! empty( $payment->status ) ? $payment->status : 'complete';
+
+	switch( $status ) {
+
+		case 'pending' :
+
+			$label = __( 'Pending', 'rcp' );
+
+			break;
+
+		case 'refunded' :
+
+			$label = __( 'Refunded', 'rcp' );
+
+			break;
+
+		case 'complete' :
+		default :
+
+			$label = __( 'Complete', 'rcp' );
+
+			break;
+	}
+
+	return apply_filters( 'rcp_payment_status_label', $label, $status, $payment );
+
+}
