@@ -45,6 +45,18 @@
 					<p class="description"><?php _e( 'Enter the transaction ID for this payment, if any', 'rcp' ); ?></p>
 				</td>
 			</tr>
+			<tr valign="top">
+				<th scope="row" valign="top">
+					<label for="rcp-status"><?php _e( 'Status', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<select name="status" id="rcp-status">
+						<option value="complete"><?php _e( 'Complete', 'rcp' ); ?></option>
+						<option value="refunded"><?php _e( 'Refunded', 'rcp' ); ?></option>
+					</select>
+					<p class="description"><?php _e( 'The status of this payment.', 'rcp' ); ?></p>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	<p class="submit">
