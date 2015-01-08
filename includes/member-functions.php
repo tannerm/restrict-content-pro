@@ -383,16 +383,14 @@ function rcp_get_expiration_timestamp( $user_id ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return string - The status of the user's subscription
 */
-function rcp_get_status( $user_id ) {
-	$status = get_user_meta( $user_id, 'rcp_status', true);
+function rcp_get_status( $user_id = 0 ) {
 
-	// double check that the status and expiration match. Update if needed
-	if( $status == 'active' && rcp_is_expired( $user_id ) ) {
-		rcp_set_status( $user_id, 'expired' );
-		$status = 'expired';
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
 	}
-	if( $status == '' ) $status = __( 'free', 'rcp' );
-	return $status;
+
+	$member = new RCP_Member( $user_id );
+	return $member->get_status();
 }
 
 /*
