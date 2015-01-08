@@ -278,6 +278,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			/* now process the kind of subscription/payment */
 
 			$rcp_payments = new RCP_Payments();
+			$member       = new RCP_Member( $user_id );
 
 			// Subscriptions
 			switch ( $posted['txn_type'] ) :
@@ -288,19 +289,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// store the recurring payment ID
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
-					// set the user's status to active
-					rcp_set_status( $user_id, 'active' );
-
-					if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
-
-						wp_new_user_notification( $user_id );
-
-					}
-
-					// send welcome email
-					rcp_email_subscription_status( $user_id, 'active' );
-
-					update_user_meta( $user_id, 'rcp_recurring', 'yes' );
+					$member->renew( true );
 
 					do_action( 'rcp_ipn_subscr_signup', $user_id );
 

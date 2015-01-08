@@ -142,7 +142,7 @@ class RCP_Member extends WP_User {
 	 * @access  public
 	 * @since   2.1
 	*/
-	public function renew() {
+	public function renew( $recurring = false ) {
 		
 		// Get the member's current expiration date
 		$expires        = $this->get_expiration_time();
@@ -172,6 +172,10 @@ class RCP_Member extends WP_User {
 
 		$this->set_status( 'active' );
 		$this->set_expiration( $expiration );
+
+		if( $recurring ) {
+			update_user_meta( $this->ID, 'rcp_recurring', 'yes' );
+		}
 
 		do_action( 'rcp_member_post_renew', $this->ID, $expiration, $this );
 	
