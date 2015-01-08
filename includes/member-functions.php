@@ -493,18 +493,13 @@ function rcp_has_used_trial( $user_id = 0) {
  */
 function rcp_is_trialing( $user_id = 0 ) {
 
-
-
-	$ret = false;
-
-	if( empty( $user_id ) && is_user_logged_in() ) {
+	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
 
-	if( get_user_meta( $user_id, 'rcp_is_trialing', true ) == 'yes' && rcp_is_active( $user_id ) ) {
-		$ret = true;
-	}
-	return apply_filters( 'rcp_is_trialing', $ret, $user_id );
+	$member = new RCP_Member( $user_id );
+	return $member->is_trialing();
+
 }
 
 
