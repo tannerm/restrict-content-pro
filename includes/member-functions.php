@@ -364,24 +364,8 @@ function rcp_set_expiration_date( $user_id = 0, $new_date = '' ) {
 		$user_id = get_current_user_id();
 	}
 
-	$old_date = get_user_meta( $user_id, 'rcp_expiration', true);
-
-	if( update_user_meta( $user_id, 'rcp_expiration', $new_date ) ) {
-
-		if( $old_date !== $new_date ) {
-
-			// Record the status change
-			$note = sprintf( __( 'Member\'s expiration changed from %s to %s', 'rcp' ), $old_date, $new_date );
-			rcp_add_member_note( $user_id, $note );
-
-		}
-
-		do_action( 'rcp_set_expiration_date', $user_id, $new_date, $old_date );
-	
-		return true;
-	}
-	
-	return false;
+	$member = new RCP_Member( $user_id );
+	return $member->set_expiration_date( $new_date );
 }
 
 /*

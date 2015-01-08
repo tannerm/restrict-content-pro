@@ -72,12 +72,16 @@ class RCP_Member extends WP_User {
 	 * @access  public
 	 * @since   2.1
 	*/
-	public function get_expiration_date() {
+	public function get_expiration_date( $formatted = true ) {
 
 		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
 
 		if( $expiration ) {
-			$expiration = $expiration != 'none' ? date_i18n( get_option( 'date_format' ), strtotime( $expiration ) ) : 'none';
+			$expiration = $expiration != 'none' ? $expiration : 'none';
+		}
+
+		if( $formatted ) {
+			$expiration = date_i18n( get_option( 'date_format' ), strtotime( $expiration ) );
 		}
 
 		return apply_filters( 'rcp_member_get_expiration_date', $expiration, $this->ID, $this );
@@ -106,15 +110,14 @@ class RCP_Member extends WP_User {
 	 * @access  public
 	 * @since   2.1
 	*/
-	public function set_expiration_date( $date = '' ) {
+	public function set_expiration_date( $new_date = '' ) {
 
 		$ret      = false;
-		$old_date = $this->get_expiration_date();
+		$old_date = $this->get_expiration_date( false );
 
 		if( $old_date !== $new_date ) {
 			
 			if( update_user_meta( $this->ID, 'rcp_expiration', $new_date ) ) {
-
 
 				// Record the status change
 				$note = sprintf( __( 'Member\'s expiration changed from %s to %s', 'rcp' ), $old_date, $new_date );
