@@ -271,6 +271,27 @@ class RCP_Member extends WP_User {
 	}
 
 	/**
+	 * Determines if a member has an active subscription, or is cancelled but has not reached EOT
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function is_active() {
+
+		$ret       = false;
+		$recurring = get_user_meta( $this->ID, 'rcp_recurring', true );
+		
+		if( user_can( $this->ID, 'manage_options' ) ) {
+			$ret = true;
+		} else if( ! rcp_is_expired( $this->ID ) && ( $this->get_status() == 'active' || $this->get_status() == 'cancelled' ) ) {
+			$ret = true;
+		}
+
+		return apply_filters( 'rcp_is_active', $ret, $this->ID, $this );
+
+	}
+
+	/**
 	 * Determines if a member has a recurring subscription
 	 *
 	 * @access  public

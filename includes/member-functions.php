@@ -274,18 +274,13 @@ function rcp_is_expired( $user_id = 0 ) {
 */
 function rcp_is_active( $user_id = 0 ) {
 
-	$ret = false;
-
 	if( empty( $user_id ) && is_user_logged_in() ) {
 		$user_id = get_current_user_id();
 	}
 
-	if( user_can( $user_id, 'manage_options' ) ) {
-		$ret = true;
-	} else if( ! rcp_is_expired( $user_id ) && ( rcp_get_status( $user_id ) == 'active' || rcp_get_status( $user_id ) == 'cancelled' ) ) {
-		$ret = true;
-	}
-	return apply_filters( 'rcp_is_active', $ret, $user_id );
+	$member = new RCP_Member( $user_id );
+	return $member->is_active();
+
 }
 
 /*
