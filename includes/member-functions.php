@@ -454,7 +454,11 @@ function rcp_set_status( $user_id = 0, $new_status = '' ) {
 * @param int $user_id - the ID of the user to return the subscription level of
 * return string/bool - string if the the key is retrieved successfully, false on failure
 */
-function rcp_get_subscription_key( $user_id ) {
+function rcp_get_subscription_key( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
 
 	$member = new RCP_Member( $user_id );
 	return $member->get_subscription_key();
