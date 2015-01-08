@@ -163,7 +163,7 @@ class RCP_Member extends WP_User {
 			$expiration = date( 'Y-m-d H:i:s', strtotime( $expiration . ' +2 days' ) );
 		}
 
-		$expiration     = apply_filters( 'rcp_member_renewal_expiration', $expiration, $subscription );
+		$expiration     = apply_filters( 'rcp_member_renewal_expiration', $expiration, $subscription, $this->ID );
 
 		do_action( 'rcp_member_pre_renew', $this->ID, $expiration, $this );
 
