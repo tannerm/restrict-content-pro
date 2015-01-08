@@ -90,8 +90,6 @@ jQuery(document).ready(function($) {
 			};
 			$.post(rcp_script_options.ajaxurl, data, function(response) {
 
-				console.log( response );
-
 				$('.rcp_discount_amount').remove();
 				$('.rcp_discount_valid, .rcp_discount_invalid').hide();
 
