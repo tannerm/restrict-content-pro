@@ -1,7 +1,7 @@
 {
    	"name": "pippin/restrict-content-pro",
    	"type": "wordpress-plugin",
-	"description": "Vomplete membership and premium content manager plugin",
+	"description": "Complete membership and premium content manager plugin",
 	"keywords": [ "rcp", "pippin"],
 	"homepage": "https://pippinsplugins.com/products/restrict-content-pro/",
 	"authors": [
