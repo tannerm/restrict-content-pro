@@ -1,0 +1,17 @@
+{
+   	"name": "pippin/restrict-content-pro",
+   	"type": "wordpress-plugin",
+	"description": "Complete membership and premium content manager plugin",
+	"keywords": [ "rcp", "pippin"],
+	"homepage": "https://pippinsplugins.com/products/restrict-content-pro/",
+	"authors": [
+	    {
+	      	"name": "Pippin Williamson",
+	      	"email": "pippin@pippinsplugins.com",
+	      	"homepage": "https://pippinsplugins.com/products/restrict-content-pro/"
+	    }
+	],
+   	"require": {
+     	"composer/installers": "~1.0.6"
+   	}
+}
