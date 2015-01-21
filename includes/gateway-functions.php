@@ -6,16 +6,10 @@
  * @access      private
  * @return      array
 */
-
 function rcp_get_payment_gateways() {
-
-	$gateways = array(
-		'paypal' => 'PayPal'
-	);
-
-	return apply_filters( 'rcp_payment_gateways', $gateways );
+	$gateways = new RCP_Payment_Gateways;
+	return $gateways->available_gateways;
 }
-
 
 /**
  * Return list of active gateways
@@ -23,22 +17,21 @@ function rcp_get_payment_gateways() {
  * @access      private
  * @return      array
 */
-
 function rcp_get_enabled_payment_gateways() {
-	global $rcp_options;
-	$gateways = rcp_get_payment_gateways();
-	$enabled_gateways = isset( $rcp_options['gateways'] ) ? $rcp_options['gateways'] : false;
-	$gateway_list = array();
-	if( $enabled_gateways ) {
-		foreach( $gateways as $key => $gateway ) :
-			if( isset( $enabled_gateways[ $key ] ) && $enabled_gateways[ $key ] == 1 ) :
-				$gateway_list[ $key ] = $gateway;
-			endif;
-		endforeach;
-	} else {
-		$gateway_list['paypal'] = 'PayPal';
+
+	$gateways = new RCP_Payment_Gateways;
+
+	foreach( $gateways->enabled_gateways  as $key => $gateway ) {
+
+		if( is_array( $gateway ) ) {
+
+			$gateways->enabled_gateways[ $key ] = $gateway['label'];
+
+		}
+
 	}
-	return $gateway_list;
+
+	return $gateways->enabled_gateways;
 }
 
 
@@ -48,7 +41,44 @@ function rcp_get_enabled_payment_gateways() {
  * @access      private
  * @return      array
 */
-
 function rcp_send_to_gateway( $gateway, $subscription_data ) {
-	do_action( 'rcp_gateway_' . $gateway, $subscription_data );
+
+	if( has_action( 'rcp_gateway_' . $gateway ) ) {
+
+		do_action( 'rcp_gateway_' . $gateway, $subscription_data );
+	
+	} else {
+	
+		$gateways = new RCP_Payment_Gateways;
+		$gateway  = $gateways->get_gateway( $gateway );
+		$gateway  = new $gateway['class']( $subscription_data );
+
+		$gateway->process_signup();
+
+	}
+
+}
+
+/**
+ * Determines if a gateway supports recurring payments
+ *
+ * @access      public
+ * @since      2.1
+ * @return      bool
+*/
+function rcp_gateway_supports( $gateway = 'paypal', $item = 'recurring' ) {
+
+	$ret      = true;
+	$gateways = new RCP_Payment_Gateways;
+	$gateway  = $gateways->get_gateway( $gateway );
+	
+	if( is_array( $gateway ) && isset( $gateway['class'] ) ) {
+
+		$gateway = new $gateway['class'];
+		$ret     = $gateway->supports( 'recurring' );
+
+	}
+
+	return $ret;
+
 }

@@ -106,10 +106,17 @@ function rcp_settings_page() {
 							<td>
 								<?php
 									$gateways = rcp_get_payment_gateways();
-									foreach($gateways as $key => $gateway) :
-										if( isset( $rcp_options['gateways'] [ $key])) { $enabled = '1'; } else { $enabled = NULL; }
-										echo '<input name="rcp_settings[gateways][' . $key . ']" id="rcp_settings[gateways][' . $key . ']" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
-										echo '<label for="rcp_settings[gateways][' . $key . ']">' . $gateway . '</label><br/>';
+
+									foreach( $gateways as $key => $gateway ) :
+
+										$label = $gateway;
+
+										if( is_array( $gateway ) ) {
+											$label = $gateway['label'];
+										}
+
+										echo '<input name="rcp_settings[gateways][' . $key . ']" id="rcp_settings[gateways][' . $key . ']" type="checkbox" value="1" ' . checked( true, isset( $rcp_options['gateways'][ $key ] ), false) . '/>&nbsp;';
+										echo '<label for="rcp_settings[gateways][' . $key . ']">' . $label . '</label><br/>';
 									endforeach;
 								?>
 							</td>

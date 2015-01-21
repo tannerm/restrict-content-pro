@@ -180,3 +180,22 @@ function rcp_email_on_expiration( $status, $user_id ) {
 
 }
 add_action( 'rcp_set_status', 'rcp_email_on_expiration', 10, 2 );
+
+/**
+ * Triggers the activation notice when an account is marked as active
+ *
+ * @access  public
+ * @since   2.1
+ * @return  void
+ */
+function rcp_email_on_activation( $status, $user_id ) {
+
+	if( 'active' == $status ) {
+
+		// send welcome email
+		rcp_email_subscription_status( $user_id, 'active' );
+
+	}
+
+}
+add_action( 'rcp_set_status', 'rcp_email_on_activation', 10, 2 );
