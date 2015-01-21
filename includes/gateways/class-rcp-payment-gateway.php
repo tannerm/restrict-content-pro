@@ -96,9 +96,9 @@ class RCP_Payment_Gateway {
 		return strtolower( md5( $this->subscription_key . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'rcp', true ) ) );
 	}
 
-	public function renew_member( $recurring = false ) {
+	public function renew_member( $recurring = false, $status = 'active' ) {
 		$member = new RCP_Member( $this->user_id );
-		$member->renew( $recurring );
+		$member->renew( $recurring, $status );
 	}
 
 }
