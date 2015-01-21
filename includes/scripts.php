@@ -70,8 +70,14 @@ add_action('init', 'rcp_register_css');
 
 // register our front end scripts
 function rcp_register_scripts() {
+	
+	global $rcp_options;
 	wp_register_script( 'rcp-scripts',  RCP_PLUGIN_URL . 'includes/js/front-end-scripts.js', array('jquery'), RCP_PLUGIN_VERSION );
-	wp_register_script( 'jquery-validate',  RCP_PLUGIN_URL . 'includes/js/jquery.validate.min.js', array('jquery') );
+	wp_register_script( 'rcp-register',  RCP_PLUGIN_URL . 'includes/js/register.js', array('jquery'), RCP_PLUGIN_VERSION );
+	
+	if( isset( $rcp_options['front_end_validate'] ) ) {
+		wp_register_script( 'jquery-validate',  RCP_PLUGIN_URL . 'includes/js/jquery.validate.min.js', array('jquery') );
+	}
 }
 add_action( 'init', 'rcp_register_scripts' );
 
@@ -95,18 +101,29 @@ function rcp_print_scripts() {
 	if ( ! $rcp_load_scripts )
 		return; // this means that neither short code is present, so we get out of here
 
-	if( isset( $rcp_options['front_end_validate'] ) )
+	if( isset( $rcp_options['front_end_validate'] ) ) {
+
 		$validate = 'true';
-	else
+	
+	} else {
+
 		$validate = 'false';
 
-	wp_localize_script('rcp-scripts', 'rcp_script_options',
+	}
+
+	wp_localize_script('rcp-register', 'rcp_script_options',
 		array(
 			'validate' 	=> $validate,
 			'ajaxurl' 	=> admin_url( 'admin-ajax.php' )
 		)
 	);
-	wp_print_scripts( 'rcp-scripts' );
-	wp_print_scripts( 'jquery-validate' );
+
+	wp_print_scripts( 'rcp-register' );
+
+	if( isset( $rcp_options['front_end_validate'] ) ) {
+
+		wp_print_scripts( 'jquery-validate' );
+	
+	}
 }
 add_action( 'wp_footer', 'rcp_print_scripts' );
