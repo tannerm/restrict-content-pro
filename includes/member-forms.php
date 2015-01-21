@@ -6,10 +6,15 @@ function rcp_login_form_fields( $args = array() ) {
 	global $rcp_login_form_args;
 
 	// parse the arguments passed
-	$defaults = array (
+	$defaults = array(
  		'redirect' => rcp_get_current_url(),
 	);
+
 	$rcp_login_form_args = wp_parse_args( $args, $defaults );
+
+	if( ! empty( $_GET['redirect'] ) ) {
+		$rcp_login_form_args['redirect'] = urldecode( $_GET['redirect'] );
+	}
 
 	ob_start();
 
