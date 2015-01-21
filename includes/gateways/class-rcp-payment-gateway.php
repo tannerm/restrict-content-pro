@@ -31,24 +31,27 @@ class RCP_Payment_Gateway {
 	public $test_mode;
 
 
-	public function __construct( $subscription_data ) {
+	public function __construct( $subscription_data = array() ) {
 
 		$this->init();
 
-		$this->email               = $subscription_data['user_email'];
-		$this->user_id             = $subscription_data['user_id'];
-		$this->user_name           = $subscription_data['user_name'];
-		$this->currency            = $subscription_data['currency'];
-		$this->amount              = $subscription_data['price'];
-		$this->length              = $subscription_data['length'];
-		$this->length_unit         = $subscription_data['length_unit'];
-		$this->signup_fee          = $this->supports( 'fees' ) ? $subscription_data['fee'] : 0;
-		$this->subscription_key    = $subscription_data['key'];
-		$this->subscription_id     = $subscription_data['subscription_id'];
-		$this->subscription_name   = $subscription_data['subscription_name'];
-		$this->auto_renew          = $this->supports( 'recurring' ) ? $subscription_data['auto_renew'] : false;;
-		$this->return_url          = $subscription_data['return_url'];
+		if( ! empty( $subscription_data ) ) {
 
+			$this->email               = $subscription_data['user_email'];
+			$this->user_id             = $subscription_data['user_id'];
+			$this->user_name           = $subscription_data['user_name'];
+			$this->currency            = $subscription_data['currency'];
+			$this->amount              = $subscription_data['price'];
+			$this->length              = $subscription_data['length'];
+			$this->length_unit         = $subscription_data['length_unit'];
+			$this->signup_fee          = $this->supports( 'fees' ) ? $subscription_data['fee'] : 0;
+			$this->subscription_key    = $subscription_data['key'];
+			$this->subscription_id     = $subscription_data['subscription_id'];
+			$this->subscription_name   = $subscription_data['subscription_name'];
+			$this->auto_renew          = $this->supports( 'recurring' ) ? $subscription_data['auto_renew'] : false;;
+			$this->return_url          = $subscription_data['return_url'];
+
+		}
 
 	}
 
