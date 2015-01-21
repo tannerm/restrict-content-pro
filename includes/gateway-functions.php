@@ -58,3 +58,27 @@ function rcp_send_to_gateway( $gateway, $subscription_data ) {
 	}
 
 }
+
+/**
+ * Determines if a gateway supports recurring payments
+ *
+ * @access      public
+ * @since      2.1
+ * @return      bool
+*/
+function rcp_gateway_supports( $gateway = 'paypal', $item = 'recurring' ) {
+
+	$ret      = true;
+	$gateways = new RCP_Payment_Gateways;
+	$gateway  = $gateways->get_gateway( $gateway );
+	
+	if( is_array( $gateway ) && isset( $gateway['class'] ) ) {
+
+		$gateway = new $gateway['class'];
+		$ret     = $gateway->supports( 'recurring' );
+
+	}
+
+	return $ret;
+
+}
