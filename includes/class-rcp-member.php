@@ -52,6 +52,10 @@ class RCP_Member extends WP_User {
 					delete_user_meta( $this->ID, '_rcp_expired_email_sent');
 				}
 
+				if( 'expired' == $new_status || 'cancelled' == $new_status ) {
+					$this->set_recurring( false );
+				}
+
 				do_action( 'rcp_set_status', $new_status, $this->ID );
 
 				// Record the status change
@@ -172,10 +176,7 @@ class RCP_Member extends WP_User {
 
 		$this->set_status( 'active' );
 		$this->set_expiration( $expiration );
-
-		if( $recurring ) {
-			update_user_meta( $this->ID, 'rcp_recurring', 'yes' );
-		}
+		$this->set_recurring( $recurring );
 
 		delete_user_meta( $this->ID, '_rcp_expired_email_sent' );
 
@@ -316,6 +317,24 @@ class RCP_Member extends WP_User {
 		}
 
 		return apply_filters( 'rcp_member_is_recurring', $ret, $this->ID, $this );
+
+	}
+
+	/**
+	 * Sets whether a member is recurring
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function set_recurring( $yes = true ) {
+
+		if( $yes ) {
+			update_user_meta( $this->ID, 'rcp_recurring', 'yes' );
+		} else {
+			delete_user_meta( $this->ID, 'rcp_recurring' );
+		}
+
+		do_action( 'rcp_member_set_recurring', $yes, $this->ID, $this );
 
 	}
 

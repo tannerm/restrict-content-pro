@@ -53,7 +53,7 @@ function rcp_send_to_gateway( $gateway, $subscription_data ) {
 		$gateway  = $gateways->get_gateway( $gateway );
 		$gateway  = new $gateway['class']( $subscription_data );
 
-		$gateway->process_payment();
+		$gateway->process_signup();
 
 	}
 

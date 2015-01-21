@@ -42,11 +42,11 @@ class RCP_Payment_Gateway {
 		$this->amount              = $subscription_data['price'];
 		$this->length              = $subscription_data['length'];
 		$this->length_unit         = $subscription_data['length_unit'];
-		$this->signup_fee          = $subscription_data['fee'];
+		$this->signup_fee          = $this->supports( 'fees' ) ? $subscription_data['fee'] : 0;
 		$this->subscription_key    = $subscription_data['key'];
 		$this->subscription_id     = $subscription_data['subscription_id'];
 		$this->subscription_name   = $subscription_data['subscription_name'];
-		$this->auto_renew          = $subscription_data['auto_renew'];
+		$this->auto_renew          = $this->supports( 'recurring' ) ? $subscription_data['auto_renew'] : false;;
 		$this->return_url          = $subscription_data['return_url'];
 
 
@@ -66,7 +66,7 @@ class RCP_Payment_Gateway {
 
 	public function get_subscription_length_unit() {}
 
-	public function process_payment() {}
+	public function process_signup() {}
 
 	public function process_refund() {}
 
@@ -84,9 +84,18 @@ class RCP_Payment_Gateway {
 		return true;
 	}
 
+	public function supports( $item = '' ) {
+		return in_array( $item, $this->supports );
+	}
+
 	public function generate_transaction_id() {
 		$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 		return strtolower( md5( $this->subscription_key . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'rcp', true ) ) );
+	}
+
+	public function renew_member( $recurring = false ) {
+		$member = new RCP_Member( $this->user_id );
+		$member->renew( $recurring );
 	}
 
 }
