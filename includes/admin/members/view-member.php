@@ -16,10 +16,18 @@ $user = get_userdata( $member_id );
 		<?php do_action( 'rcp_view_member_before', $user->ID ); ?>
 		<tr class="form-field">
 			<th scope="row" valign="top">
+				<?php _e( 'Email', 'rcp' ); ?>
+			</th>
+			<td>
+				<?php echo $user->user_email; ?>
+			</td>
+		</tr>
+		<tr class="form-field">
+			<th scope="row" valign="top">
 				<?php _e( 'Status', 'rcp' ); ?>
 			</th>
 			<td>
-				<?php echo rcp_get_status( $user->ID) ; ?>
+				<?php echo rcp_get_status( $user->ID ); ?>
 			</td>
 		</tr>
 		<tr class="form-field">
