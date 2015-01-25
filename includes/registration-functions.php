@@ -40,6 +40,8 @@ function rcp_process_registration() {
 
 		do_action( 'rcp_before_form_errors', $_POST );
 
+		$is_ajax   = isset( $_POST['rcp_ajax'] );
+
 		$user_data = rcp_validate_user_data();
 
 		if( ! $subscription_id ) {
@@ -70,6 +72,12 @@ function rcp_process_registration() {
 
 		// retrieve all error messages, if any
 		$errors = rcp_errors()->get_error_messages();
+
+		if ( ! empty( $errors ) && $is_ajax ) {
+			wp_send_json_error( array( 'success' => false, 'errors' => rcp_get_error_messages_html( 'register' ), 'nonce' => wp_create_nonce( 'rcp-register-nonce' ) ) );
+		} elseif( $is_ajax ) {
+			wp_send_json_success( array( 'success' => true ) );
+		}
 
 		// only create the user if there are no errors
 		if( empty( $errors ) ) {
@@ -244,6 +252,8 @@ function rcp_process_registration() {
 	} // end nonce check
 }
 add_action( 'init', 'rcp_process_registration', 100 );
+add_action( 'wp_ajax_rcp_process_register_form', 'rcp_process_registration', 100 );
+add_action( 'wp_ajax_nopriv_rcp_process_register_form', 'rcp_process_registration', 100 );
 
 
 /**
