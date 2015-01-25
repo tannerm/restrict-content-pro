@@ -287,7 +287,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[enable_recaptcha]" id="rcp_settings[enable_recaptcha]" <?php if( isset( $rcp_options['enable_recaptcha'] ) ) checked('1', $rcp_options['enable_recaptcha']); ?>/>
-								<div class="description"><?php _e( 'Check this to enable reCaptcha on the registration form.', 'rcp' ); ?></div>
+								<span class="description"><?php _e( 'Check this to enable reCaptcha on the registration form.', 'rcp' ); ?></span>
 							</td>
 						</tr>
 						<tr valign="top">
