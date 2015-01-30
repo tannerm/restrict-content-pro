@@ -32,7 +32,6 @@ function rcp_process_paypal( $subscription_data ) {
 		'bn'            => 'EasyDigitalDownloads_SP'
 	);
 
-
 	// recurring paypal payment
 	if( $subscription_data['auto_renew'] && ! empty( $subscription_data['length'] ) ) {
 		// recurring paypal payment
