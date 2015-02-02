@@ -43,6 +43,10 @@ class RCP_Payment_Gateways {
 			'paypal' => array(
 				'label' => __( 'PayPal', 'rcp' ),
 				'class' => 'RCP_Payment_Gateway_PayPal'
+			),
+			'stripe' => array(
+				'label' => __( 'Credit / Debit Card', 'rcp' ),
+				'class' => 'RCP_Payment_Gateway_Stripe'
 			)
 		);
 
@@ -72,6 +76,25 @@ class RCP_Payment_Gateways {
 
 		return apply_filters( 'rcp_enabled_payment_gateways', $enabled, $this->available_gateways );
 
+	}
+
+	public function load_fields() {
+
+		if( ! empty( $_POST['rcp_gateway'] ) ) {
+
+			$gateway = $this->get_gateway( sanitize_text_field( $_POST['rcp_gateway'] ) );
+	
+			if( isset( $gateway['class'] ) ) {
+				$gateway = new $gateway['class'];
+			}
+
+			if ( is_object( $gateway ) ) {
+				wp_send_json_success( array( 'success' => true, 'fields' => $gateway->fields() ) );
+			} else {
+				wp_send_json_error( array( 'success' => false ) );
+			}
+
+		}
 	}
 	
 }
