@@ -415,9 +415,91 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			return;
 		}
 
-		global $rcp_options;
+		// Ensure listener URL is not cached by W3TC
+		define( 'DONOTCACHEPAGE', true );
+
+		Stripe::setApiKey( $this->secret_key );
+
+		// retrieve the request's body and parse it as JSON
+		$body          = @file_get_contents( 'php://input' );
+		$event_json_id = json_decode( $body );
+
+		// for extra security, retrieve from the Stripe API
+		if ( isset( $event_json_id->id ) ) {
+
+			$rcp_payments = new RCP_Payments();
+
+			$event_id = $event_json_id->id;
+
+			try {
+
+				$event = Stripe_Event::retrieve( $event_id );
+
+				$invoice = $event->data->object;
+
+				// retrieve the customer who made this payment (only for subscriptions)
+				$user   = rcp_stripe_get_user_id( $invoice->customer );
+				$member = new RCP_Member( $user );
+				
+				// check to confirm this is a stripe subscriber
+				if ( $member ) {
+
+					// successful payment
+					if ( $event->type == 'charge.succeeded' ) {
+
+						if( ! $member->get_subscription_id() )
+							return;
+
+						$payment_data = array(
+							'date'              => date( 'Y-m-d g:i:s', $event->created ),
+							'subscription'      => $member->get_subscription_name(),
+							'payment_type' 		=> 'Credit Card',
+							'subscription_key' 	=> $member->get_subscription_key()),
+							'amount' 			=> $invoice->amount / 100,
+							'user_id' 			=> $member->ID,
+							'transaction_id'    => $invoice->id
+						);
+
+						if( ! rcp_check_for_existing_payment( $payment_data['payment_type'], $payment_data['date'], $payment_data['subscription_key'] ) ) {
+
+							// record this payment if it hasn't been recorded yet
+							$rcp_payments->insert( $payment_data );
+
+							$member->renew();
+
+							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
+
+						}
+
+					}
+
+					// failed payment
+					if ( $event->type == 'charge.failed' ) {
+
+						// send email alerting the user of the failed payment
+						rcp_email_failed_payment_notice( $invoice );
+
+						do_action( 'rcp_stripe_charge_failed', $invoice );
+
+					}
+
+					// Cancelled / failed subscription
+					if( $event->type == 'customer.subscription.deleted' ) {
+
+						$member->set_status( 'cancelled' );
+
+					}
+
+					do_action( 'rcp_stripe_' . $event->type, $invoice );
+
+				}
 
 
+			} catch ( Exception $e ) {
+				// something failed
+			}
+		}
+		exit;
 
 	}
 
