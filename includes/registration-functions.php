@@ -131,7 +131,8 @@ function rcp_process_registration() {
 						$discount_obj = $discounts->get_by( 'code', $discount );
 
 						// calculate the after-discount price
-						$price = $discounts->calc_discounted_price( $price, $discount_obj->amount, $discount_obj->unit );
+						$base_price = $price;
+						$price = $discounts->calc_discounted_price( $base_price, $discount_obj->amount, $discount_obj->unit );
 
 						// record the usage of this discount code
 						$discounts->add_to_user( $user_data['id'], $discount );
@@ -172,7 +173,9 @@ function rcp_process_registration() {
 					$redirect = rcp_get_return_url( $user_data['id'] );
 
 					$subscription_data = array(
-						'price' 			=> $price,
+						'price'             => $price,
+						'discount'          => $base_price - $price,
+						'discount_code'     => $discount,
 						'fee' 			    => ! empty( $subscription->fee ) ? number_format( $subscription->fee, 2 ) : 0,
 						'length' 			=> $expiration->duration,
 						'length_unit' 		=> strtolower( $expiration->duration_unit ),

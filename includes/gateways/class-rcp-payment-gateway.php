@@ -20,6 +20,7 @@ class RCP_Payment_Gateway {
 	public $user_name;
 	public $currency;
 	public $amount;
+	public $discount;
 	public $length;
 	public $length_unit;
 	public $signup_fee;
@@ -42,6 +43,8 @@ class RCP_Payment_Gateway {
 			$this->user_name           = $subscription_data['user_name'];
 			$this->currency            = $subscription_data['currency'];
 			$this->amount              = $subscription_data['price'];
+			$this->discount            = $subscription_data['discount'];
+			$this->discount_code       = $subscription_data['discount_code'];
 			$this->length              = $subscription_data['length'];
 			$this->length_unit         = $subscription_data['length_unit'];
 			$this->signup_fee          = $this->supports( 'fees' ) ? $subscription_data['fee'] : 0;
