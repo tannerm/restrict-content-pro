@@ -79,9 +79,7 @@ class RCP_Payment_Gateway {
 
 	public function process_webhooks() {}
 
-	public function has_fields() {
-		return false;
-	}
+	public function fields() {}
 
 	public function vaidate_fields() {
 		return true;

@@ -182,6 +182,15 @@ function rcp_validate_gateways() {
 
  	}
 
+ 	var data = { action: 'rcp_load_gateway_fields', rcp_gateway: gateway.val() };
+
+	$.post( rcp_script_options.ajaxurl, data, function(response) {
+		console.log( response );
+		if( response.data.fields ) {
+			$( response.data.fields ).insertAfter('.rcp_gateway_fields');
+		}
+	});
+
 }
 
 function rcp_validate_subscription_level() {
