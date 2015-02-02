@@ -133,7 +133,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						$customer = Stripe_Customer::create( array(
 								'card' 			=> $_POST['stripeToken'],
 								'plan' 			=> $plan_id,
-								'email' 		=> $this->email
+								'email' 		=> $this->email,
 								'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name
 							)
 						);
@@ -454,7 +454,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							'date'              => date( 'Y-m-d g:i:s', $event->created ),
 							'subscription'      => $member->get_subscription_name(),
 							'payment_type' 		=> 'Credit Card',
-							'subscription_key' 	=> $member->get_subscription_key()),
+							'subscription_key' 	=> $member->get_subscription_key(),
 							'amount' 			=> $invoice->amount / 100,
 							'user_id' 			=> $member->ID,
 							'transaction_id'    => $invoice->id
