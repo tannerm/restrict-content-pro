@@ -773,7 +773,6 @@ function rcp_backfill_payment_profile_id( $profile_id, $user_id, $member_Object 
 
 		if( ! empty( $profile_id ) ) {
 
-			delete_user_meta( $user_id, '_rcp_stripe_user_id' );
 			$member_object->set_payment_profile_id( $profile_id );
 
 		}
