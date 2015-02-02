@@ -48,7 +48,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		Stripe::setApiKey( $this->secret_key );
 
-		$paid = false;
+		$paid   = false;
+		$member = new RCP_Member( $this->user_id );
 
 		if ( $this->auto_renew ) {
 
@@ -63,7 +64,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			try {
 
-				$customer_id = rcp_get_stripe_customer_id( $this->user_id );
+				$customer_id = $member->get_payment_profile_id();
 
 				if ( $customer_id ) {
 
@@ -165,7 +166,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				}
 
-				rcp_stripe_set_as_customer( $this->user_id, $customer );
+				$member->set_payment_profile_id( $customer->id );
 
 				// subscription payments are recorded via webhook
 
@@ -386,17 +387,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		if ( $paid ) {
 
 			// set this user to active
-			$member = new RCP_Member( $this->user_id );
 			$member->renew();
 
-			if ( $data['new_user'] ) {
+			if ( ! is_user_logged_in() ) {
 
 				// log the new user in
 				rcp_login_user_in( $this->user_id, $this->user_name, $_POST['rcp_user_pass'] );
-
-			} else {
-
-				delete_user_meta( $this->user_id, '_rcp_stripe_sub_cancelled' );
 
 			}
 
