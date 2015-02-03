@@ -639,7 +639,12 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 	function rcp_stripe_add_discount() {
 		global $rcp_options;
 
-		if ( isset( $rcp_options['stripe_test_mode'] ) ) {
+
+		if( ! class_exists( 'Stripe' ) ) {
+			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+		}
+
+		if ( isset( $rcp_options['sandbox'] ) ) {
 			$secret_key = trim( $rcp_options['stripe_test_secret'] );
 		} else {
 			$secret_key = trim( $rcp_options['stripe_live_secret'] );
@@ -678,6 +683,10 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 if( ! function_exists( 'rcp_stripe_edit_discount' ) ) {
 	function rcp_stripe_edit_discount() {
 		global $rcp_options;
+
+		if( ! class_exists( 'Stripe' ) ) {
+			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+		}
 
 		if ( isset( $rcp_options['sandbox'] ) ) {
 			$secret_key = trim( $rcp_options['stripe_test_secret'] );
@@ -756,7 +765,11 @@ if( ! function_exists( 'rcp_stripe_coupon_exists' ) ) {
 	function rcp_stripe_coupon_exists( $code ) {
 		global $rcp_options;
 
-		if ( isset( $rcp_options['stripe_test_mode'] ) ) {
+		if( ! class_exists( 'Stripe' ) ) {
+			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+		}
+
+		if ( isset( $rcp_options['sandbox'] ) ) {
 			$secret_key = trim( $rcp_options['stripe_test_secret'] );
 		} else {
 			$secret_key = trim( $rcp_options['stripe_live_secret'] );
