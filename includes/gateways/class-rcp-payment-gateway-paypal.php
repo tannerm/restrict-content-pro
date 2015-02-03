@@ -26,8 +26,6 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 		$this->test_mode   = isset( $rcp_options['sandbox'] );
 
-		add_action( 'init', array( $this, 'process_webhooks' ) );
-
 	}
 
 	public function process_signup() {

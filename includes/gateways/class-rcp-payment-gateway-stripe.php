@@ -40,8 +40,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		}
 
-		add_action( 'init', array( $this, 'process_webhooks' ) );
-
 	}
 
 	public function process_signup() {
