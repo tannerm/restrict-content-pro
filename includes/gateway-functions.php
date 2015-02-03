@@ -117,6 +117,12 @@ add_action( 'init', 'rcp_process_gateway_webooks', -99999 );
 */
 function rcp_load_gateway_scripts() {
 
+	global $rcp_options;
+
+	if( ! is_page( $rcp_options['registration_page'] ) && ! rcp_is_registration_page() ) {
+		return;
+	}
+
 	$gateways = new RCP_Payment_Gateways;
 
 	foreach( $gateways->enabled_gateways  as $key => $gateway ) {
