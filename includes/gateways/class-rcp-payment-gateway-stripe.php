@@ -633,3 +633,142 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	}
 
 }
+
+
+if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
+	function rcp_stripe_add_discount() {
+		global $rcp_options;
+
+		if ( isset( $rcp_options['stripe_test_mode'] ) ) {
+			$secret_key = trim( $rcp_options['stripe_test_secret'] );
+		} else {
+			$secret_key = trim( $rcp_options['stripe_live_secret'] );
+		}
+
+		Stripe::setApiKey( $secret_key );
+
+		try {
+
+			if ( $_POST['unit'] == '%' ) {
+				Stripe_Coupon::create( array(
+						"percent_off" => sanitize_text_field( $_POST['amount'] ),
+						"duration"    => "forever",
+						"id"          => sanitize_text_field( $_POST['code'] ),
+						"currency"   => strtolower( $rcp_options['currency'] )
+					)
+				);
+			} else {
+				Stripe_Coupon::create( array(
+						"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
+						"duration"   => "forever",
+						"id"         => sanitize_text_field( $_POST['code'] ),
+						"currency"   => strtolower( $rcp_options['currency'] )
+					)
+				);
+			}
+
+		} catch ( Exception $e ) {
+			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
+		}
+
+	}
+	add_action( 'rcp_pre_add_discount', 'rcp_stripe_add_discount' );
+}
+
+if( ! function_exists( 'rcp_stripe_edit_discount' ) ) {
+	function rcp_stripe_edit_discount() {
+		global $rcp_options;
+
+		if ( isset( $rcp_options['sandbox'] ) ) {
+			$secret_key = trim( $rcp_options['stripe_test_secret'] );
+		} else {
+			$secret_key = trim( $rcp_options['stripe_live_secret'] );
+		}
+
+		Stripe::setApiKey( $secret_key );
+
+		if ( ! rcp_stripe_coupon_exists( $_POST['code'] ) ) {
+
+			try {
+
+				if ( $_POST['unit'] == '%' ) {
+					Stripe_Coupon::create( array(
+							"percent_off" => sanitize_text_field( $_POST['amount'] ),
+							"duration"    => "forever",
+							"id"          => sanitize_text_field( $_POST['code'] ),
+							"currency"    => strtolower( $rcp_options['currency'] )
+						)
+					);
+				} else {
+					Stripe_Coupon::create( array(
+							"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
+							"duration"   => "forever",
+							"id"         => sanitize_text_field( $_POST['code'] ),
+							"currency"   => strtolower( $rcp_options['currency'] )
+						)
+					);
+				}
+
+			} catch ( Exception $e ) {
+				wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
+			}
+
+		} else {
+
+			// first delete the discount in Stripe
+			try {
+				$cpn = Stripe_Coupon::retrieve( $_POST['code'] );
+				$cpn->delete();
+			} catch ( Exception $e ) {
+				wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
+			}
+
+			// now add a new one. This is a fake "update"
+			try {
+
+				if ( $_POST['unit'] == '%' ) {
+					Stripe_Coupon::create( array(
+							"percent_off" => sanitize_text_field( $_POST['amount'] ),
+							"duration"    => "forever",
+							"id"          => sanitize_text_field( $_POST['code'] ),
+							"currency"    => strtolower( $rcp_options['currency'] )
+						)
+					);
+				} else {
+					Stripe_Coupon::create( array(
+							"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
+							"duration"   => "forever",
+							"id"         => sanitize_text_field( $_POST['code'] ),
+							"currency"   => strtolower( $rcp_options['currency'] )
+						)
+					);
+				}
+
+			} catch ( Exception $e ) {
+				wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
+			}
+		}
+	}
+	add_action( 'rcp_edit_discount', 'rcp_stripe_edit_discount' );
+}
+
+if( ! function_exists( 'rcp_stripe_coupon_exists' ) ) {
+	function rcp_stripe_coupon_exists( $code ) {
+		global $rcp_options;
+
+		if ( isset( $rcp_options['stripe_test_mode'] ) ) {
+			$secret_key = trim( $rcp_options['stripe_test_secret'] );
+		} else {
+			$secret_key = trim( $rcp_options['stripe_live_secret'] );
+		}
+
+		Stripe::setApiKey( $secret_key );
+		try {
+			Stripe_Coupon::retrieve( $code );
+			$exists = true;
+		} catch ( Exception $e ) {
+			$exists = false;
+		}
+		return $exists;
+	}
+}
