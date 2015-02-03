@@ -52,6 +52,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		$paid   = false;
 		$member = new RCP_Member( $this->user_id );
+		$customer_exists = false;
 
 		if ( $this->auto_renew ) {
 

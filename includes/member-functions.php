@@ -781,4 +781,4 @@ function rcp_backfill_payment_profile_ids( $profile_id, $user_id, $member_Object
 
 	return $profile_id;
 }
-add_filter( 'rcp_member_get_payment_profile_id', 'rcp_backfill_payment_profile_ids' );
+add_filter( 'rcp_member_get_payment_profile_id', 'rcp_backfill_payment_profile_ids', 10, 3 );
