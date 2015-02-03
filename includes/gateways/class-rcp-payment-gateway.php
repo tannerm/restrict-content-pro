@@ -6,7 +6,7 @@
  * @subpackage  Classes/Roles
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0
+ * @since       2.1
 */
 
 class RCP_Payment_Gateway {
