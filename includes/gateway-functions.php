@@ -94,7 +94,7 @@ function rcp_process_gateway_webooks() {
 
 	$gateways = new RCP_Payment_Gateways;
 
-	foreach( $gateways->enabled_gateways  as $key => $gateway ) {
+	foreach( $gateways->available_gateways  as $key => $gateway ) {
 
 		if( is_array( $gateway ) && isset( $gateway['class'] ) ) {
 
