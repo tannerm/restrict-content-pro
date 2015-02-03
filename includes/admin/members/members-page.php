@@ -239,6 +239,10 @@ function rcp_members_page() {
 							</th>
 							<td>
 								<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker"/>
+								<label for="rcp-unlimited">
+									<input name="unlimited" id="rcp-unlimited" type="checkbox"/>
+									<span class="description"><?php _e( 'Never expires?', 'rcp' ); ?></span>
+								</label>
 								<p class="description"><?php _e('Enter the expiration date for this user in the format of yyyy-mm-dd', 'rcp'); ?></p>
 							</td>
 						</tr>
