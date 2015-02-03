@@ -82,3 +82,28 @@ function rcp_gateway_supports( $gateway = 'paypal', $item = 'recurring' ) {
 	return $ret;
 
 }
+
+/**
+ * Load webhook processor for all gateways
+ *
+ * @access      public
+ * @since       2.1
+ * @return      void
+*/
+function rcp_process_gateway_webooks() {
+
+	$gateways = new RCP_Payment_Gateways;
+
+	foreach( $gateways->enabled_gateways  as $key => $gateway ) {
+
+		if( is_array( $gateway ) && isset( $gateway['class'] ) ) {
+
+			$gateway = new $gateway['class'];
+			$gateway->process_webhooks();
+
+		}
+
+	}
+
+}
+add_action( 'init', 'rcp_process_gateway_webooks', -99999 );
