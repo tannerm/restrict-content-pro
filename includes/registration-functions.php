@@ -31,6 +31,7 @@ function rcp_process_registration() {
 		$discount        = isset( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : '';
 		$price           = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
 		$price           = str_replace( ',', '', $price );
+		$base_price      = $price; // Used for discount calculations later
 		$expiration      = rcp_get_subscription_length( $subscription_id );
 		$subscription    = rcp_get_subscription_details( $subscription_id );
 
@@ -131,7 +132,6 @@ function rcp_process_registration() {
 						$discount_obj = $discounts->get_by( 'code', $discount );
 
 						// calculate the after-discount price
-						$base_price = $price;
 						$price = $discounts->calc_discounted_price( $base_price, $discount_obj->amount, $discount_obj->unit );
 
 						// record the usage of this discount code
