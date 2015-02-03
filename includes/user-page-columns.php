@@ -21,7 +21,6 @@ function rcp_show_user_columns( $value, $column_name, $user_id ) {
 		} else {
 			$links = '<a href="' . esc_url( $page ) . '&edit_member=' . esc_attr( absint( $user_id ) ) . '">' . __( 'Add Subscription', 'rcp' ) . '</a>';
 		}
-		$links .= ' | <a href="' . esc_url( $page ) . '&view_member=' . esc_attr( absint( $user_id ) ) . '">' . __( 'View Details','rcp' ) . '</a>';
 		
 		return $links;
 	}

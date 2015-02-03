@@ -5,10 +5,8 @@ function rcp_members_page() {
 	$current_page = admin_url( '/admin.php?page=rcp-members' ); ?>
 	<div class="wrap" id="rcp-members-page">
 
-		<?php if( isset( $_GET['edit_member'] ) ) :
+		<?php if( isset( $_GET['edit_member'] ) || isset( $_GET['view_member'] ) ) :
 			include( 'edit-member.php' );
-		elseif( isset( $_GET['view_member'] ) ) :
-			include( 'view-member.php' );
 		else : ?>
 			<h2><?php _e(' Paid Subscribers', 'rcp' ); ?></h2>
 			<?php
@@ -166,9 +164,7 @@ function rcp_members_page() {
 							<td><?php echo rcp_get_expiration_date($member->ID); ?></td>
 							<td><?php echo rcp_get_user_role($member->ID); ?></td>
 							<?php do_action('rcp_members_page_table_column', $member->ID); ?>
-							<td>
-								<a href="<?php echo add_query_arg('view_member', $member->ID, $current_page); ?>"><?php _e('Details', 'rcp'); ?></a> |
-								
+							<td>								
 								<?php if( current_user_can( 'rcp_manage_members' ) ) : ?>
 									<a href="<?php echo add_query_arg('edit_member', $member->ID, $current_page); ?>"><?php _e('Edit', 'rcp'); ?></a>
 									<?php if(isset($_GET['status']) && $_GET['status'] == 'cancelled') { ?>
@@ -243,6 +239,10 @@ function rcp_members_page() {
 							</th>
 							<td>
 								<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker"/>
+								<label for="rcp-unlimited">
+									<input name="unlimited" id="rcp-unlimited" type="checkbox"/>
+									<span class="description"><?php _e( 'Never expires?', 'rcp' ); ?></span>
+								</label>
 								<p class="description"><?php _e('Enter the expiration date for this user in the format of yyyy-mm-dd', 'rcp'); ?></p>
 							</td>
 						</tr>

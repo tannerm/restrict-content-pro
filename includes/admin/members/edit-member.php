@@ -1,5 +1,10 @@
 <?php
-$user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
+if( isset( $_GET['edit_member'] ) ) {
+	$member_id = absint( $_GET['edit_member'] );
+} elseif( isset( $_GET['view_member'] ) ) {
+	$member_id = absint( $_GET['view_member'] );
+}
+$user = get_userdata( $member_id );
 ?>
 <h2>
 	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $user->display_name; ?> - 
@@ -49,6 +54,10 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 				</th>
 				<td>
 					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker" value="<?php echo esc_attr( get_user_meta( $user->ID, 'rcp_expiration', true ) ); ?>"/>
+					<label for="rcp-unlimited">
+						<input name="unlimited" id="rcp-unlimited" type="checkbox"<?php checked( get_user_meta( $user->ID, 'rcp_expiration', true ), 'none' ); ?>/>
+						<span class="description"><?php _e( 'Never expires?', 'rcp' ); ?></span>
+					</label>
 					<p class="description"><?php _e( 'Enter the expiration date for this user in the format of yyyy-mm-dd', 'rcp' ); ?></p>
 				</td>
 			</tr>
@@ -94,6 +103,33 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 				<td>
 					<textarea name="notes" id="rcp-notes" class="large-text" rows="10" cols="50"><?php echo esc_textarea( get_user_meta( $user->ID, 'rcp_notes', true ) ); ?></textarea>
 					<p class="description"><?php _e( 'Use this area to record notes about this user if needed', 'rcp' ); ?></p>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<?php _e( 'Discount codes used', 'rcp' ); ?>
+				</th>
+				<td>
+					<?php
+					$discounts = get_user_meta( $user->ID, 'rcp_user_discounts', true );
+					if( $discounts ) {
+						foreach( $discounts as $discount ) {
+							if( is_string( $discount ) ) {
+								echo $discount . '<br/>';
+							}
+						}
+					} else {
+						_e( 'None', 'rcp' );
+					}
+					?>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<?php _e( 'Payments', 'rcp' ); ?>
+				</th>
+				<td>
+					<?php echo rcp_print_user_payments( $user->ID ); ?>
 				</td>
 			</tr>
 			<?php do_action( 'rcp_edit_member_after', $user->ID ); ?>
