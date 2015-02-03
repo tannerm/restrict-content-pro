@@ -49,6 +49,10 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 				</th>
 				<td>
 					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker" value="<?php echo esc_attr( get_user_meta( $user->ID, 'rcp_expiration', true ) ); ?>"/>
+					<label for="rcp-unlimited">
+						<input name="unlimited" id="rcp-unlimited" type="checkbox"<?php checked( get_user_meta( $user->ID, 'rcp_expiration', true ), 'none' ); ?>/>
+						<span class="description"><?php _e( 'Never expires?', 'rcp' ); ?></span>
+					</label>
 					<p class="description"><?php _e( 'Enter the expiration date for this user in the format of yyyy-mm-dd', 'rcp' ); ?></p>
 				</td>
 			</tr>
