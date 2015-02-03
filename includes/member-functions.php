@@ -764,7 +764,7 @@ add_action( 'init', 'rcp_change_password' );
  * @access      public
  * @since       2.1
  */
-function rcp_backfill_payment_profile_id( $profile_id, $user_id, $member_Object ) {
+function rcp_backfill_payment_profile_ids( $profile_id, $user_id, $member_Object ) {
 
 	if( empty( $profile_id ) ) {
 
