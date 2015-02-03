@@ -137,6 +137,15 @@ jQuery(document).ready(function($) {
 		}
 	});
 
+	$( '#rcp-unlimited' ).change( function() {
+		var $this = $(this);
+		if( $this.attr( 'checked' ) ) {
+			$( '#rcp-expiration' ).val('none');
+		} else if( 'none' == $( '#rcp-expiration' ).val() ) {
+			$( '#rcp-expiration' ).val('').trigger('focus');
+		}
+	});
+
 	// WP 3.5+ uploader
 	var file_frame;
 	$('body').on('click', '.rcp-upload', function(e) {
