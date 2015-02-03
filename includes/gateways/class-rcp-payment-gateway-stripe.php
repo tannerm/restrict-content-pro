@@ -40,6 +40,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		}
 
+		if( ! class_exists( 'Stripe' ) ) {
+			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+		}
+
 	}
 
 	public function process_signup() {
