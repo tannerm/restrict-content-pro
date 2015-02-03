@@ -107,3 +107,28 @@ function rcp_process_gateway_webooks() {
 
 }
 add_action( 'init', 'rcp_process_gateway_webooks', -99999 );
+
+/**
+ * Load webhook processor for all gateways
+ *
+ * @access      public
+ * @since       2.1
+ * @return      void
+*/
+function rcp_load_gateway_scripts() {
+
+	$gateways = new RCP_Payment_Gateways;
+
+	foreach( $gateways->enabled_gateways  as $key => $gateway ) {
+
+		if( is_array( $gateway ) && isset( $gateway['class'] ) ) {
+
+			$gateway = new $gateway['class'];
+			$gateway->scripts();
+
+		}
+
+	}
+
+}
+add_action( 'wp_enqueue_scripts', 'rcp_load_gateway_scripts', 100 );

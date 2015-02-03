@@ -82,6 +82,8 @@ class RCP_Payment_Gateway {
 
 	public function process_webhooks() {}
 
+	public function scripts() {}
+
 	public function fields() {}
 
 	public function vaidate_fields() {
