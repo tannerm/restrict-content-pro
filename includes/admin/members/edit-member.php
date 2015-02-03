@@ -1,5 +1,10 @@
 <?php
-$user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
+if( isset( $_GET['edit_member'] ) ) {
+	$member_id = absint( $_GET['edit_member'] );
+} elseif( isset( $_GET['view_member'] ) ) {
+	$member_id = absint( $_GET['view_member'] );
+}
+$user = get_userdata( $member_id );
 ?>
 <h2>
 	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $user->display_name; ?> - 
