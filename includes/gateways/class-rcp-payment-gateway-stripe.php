@@ -76,9 +76,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					try {
 
 						// Update the customer to ensure their card data is up to date
-						$cu = Stripe_Customer::retrieve( $customer_id );
+						$customer = Stripe_Customer::retrieve( $customer_id );
 
-						if( isset( $cu->deleted ) && $cu->deleted ) {
+						if( isset( $customer->deleted ) && $customer->deleted ) {
 
 							// This customer was deleted
 							$customer_exists = false;
@@ -100,12 +100,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					if( $customer_exists ) {
 
-						$cu->card   = $_POST['stripeToken'];
-						$cu->coupon = $this->discount_code;
-						$cu->save();
+						$customer->card   = $_POST['stripeToken'];
+						$customer->coupon = $this->discount_code;
+						$customer->save();
 
 						// Update the customer's subscription in Stripe
-						$customer_response = $cu->updateSubscription( array( 'plan' => $plan_id ) );
+						$customer_response = $customer->updateSubscription( array( 'plan' => $plan_id ) );
 
 					} else {
 
@@ -125,11 +125,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					if( $customer_exists ) {
 
-						$cu->card   = $_POST['stripeToken'];
-						$cu->save();
+						$customer->card   = $_POST['stripeToken'];
+						$customer->save();
 
 						// Update the customer's subscription in Stripe
-						$customer_response = $cu->updateSubscription( array( 'plan' => $plan_id ) );
+						$customer_response = $customer->updateSubscription( array( 'plan' => $plan_id ) );
 
 					} else {
 
