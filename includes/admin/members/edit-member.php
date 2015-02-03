@@ -100,6 +100,33 @@ $user = get_userdata( absint( urldecode( $_GET['edit_member'] ) ) );
 					<p class="description"><?php _e( 'Use this area to record notes about this user if needed', 'rcp' ); ?></p>
 				</td>
 			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<?php _e( 'Discount codes used', 'rcp' ); ?>
+				</th>
+				<td>
+					<?php
+					$discounts = get_user_meta( $user->ID, 'rcp_user_discounts', true );
+					if( $discounts ) {
+						foreach( $discounts as $discount ) {
+							if( is_string( $discount ) ) {
+								echo $discount . '<br/>';
+							}
+						}
+					} else {
+						_e( 'None', 'rcp' );
+					}
+					?>
+				</td>
+			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<?php _e( 'Payments', 'rcp' ); ?>
+				</th>
+				<td>
+					<?php echo rcp_print_user_payments( $user->ID ); ?>
+				</td>
+			</tr>
 			<?php do_action( 'rcp_edit_member_after', $user->ID ); ?>
 		</tbody>
 	</table>
