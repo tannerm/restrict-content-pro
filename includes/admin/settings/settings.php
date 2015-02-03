@@ -121,6 +121,15 @@ function rcp_settings_page() {
 								?>
 							</td>
 						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[sandbox]"><?php _e( 'Sandbox Mode', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[sandbox]" id="rcp_settings[sandbox]" <?php if( isset( $rcp_options['sandbox'] ) ) checked('1', $rcp_options['sandbox']); ?>/>
+								<span class="description"><?php _e( 'Use Restrict Content Pro in Sandbox mode. This allows you to test the plugin with test accounts from your payment processor.', 'rcp' ); ?></span>
+							</td>
+						</tr>
 						<?php endif; ?>
 						<tr valign="top">
 							<th colspan=2><h3><?php _e( 'PayPal Settings', 'rcp' ); ?></h3></th>
@@ -145,15 +154,6 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[sandbox]"><?php _e( 'Sandbox Mode', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<input type="checkbox" value="1" name="rcp_settings[sandbox]" id="rcp_settings[sandbox]" <?php if( isset( $rcp_options['sandbox'] ) ) checked('1', $rcp_options['sandbox']); ?>/>
-								<span class="description"><?php _e( 'Use PayPal in Sandbox mode. This allows you to test the plugin with the <a href="http://developer.paypal.com">PayPal test account</a>', 'rcp' ); ?></span>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th>
 								<label for="rcp_settings[disable_curl]"><?php _e( 'Disable CURL', 'rcp' ); ?></label>
 							</th>
 							<td>
@@ -169,6 +169,53 @@ function rcp_settings_page() {
 								<input type="checkbox" value="1" name="rcp_settings[disable_ipn_verify]" id="rcp_settings[disable_ipn_verify]" <?php if( isset( $rcp_options['disable_ipn_verify'] ) ) checked('1', $rcp_options['disable_ipn_verify']); ?>/>
 								<span class="description"><?php _e( 'Only check this option if your members statuses are not getting changed to "active"', 'rcp' ); ?></span>
 							</td>
+						</tr>
+						<tr valign="top">
+							<th colspan=2>
+								<h3><?php _e('Stripe Settings', 'rcp'); ?></h3>
+							</th>
+						</tr>
+						<tr>
+							<th>
+								<label for="rcp_settings[stripe_test_secret]"><?php _e( 'Test Secret Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[stripe_test_secret]" style="width: 300px;" name="rcp_settings[stripe_test_secret]" value="<?php if(isset($rcp_options['stripe_test_secret'])) { echo $rcp_options['stripe_test_secret']; } ?>"/>
+								<div class="description"><?php _e('Enter your test secret key. Your API keys can be obtained from your <a href="https://dashboard.stripe.com/account/apikeys" target="_blank">Stripe account settings</a>.', 'rcp'); ?></div>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="rcp_settings[stripe_test_publishable]"><?php _e( 'Test Publishable Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[stripe_test_publishable]" style="width: 300px;" name="rcp_settings[stripe_test_publishable]" value="<?php if(isset($rcp_options['stripe_test_publishable'])) { echo $rcp_options['stripe_test_publishable']; } ?>"/>
+								<div class="description"><?php _e('Enter your test publishable key', 'rcp'); ?></div>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="rcp_settings[stripe_live_secret]"><?php _e( 'Live Secret Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[stripe_live_secret]" style="width: 300px;" name="rcp_settings[stripe_live_secret]" value="<?php if(isset($rcp_options['stripe_live_secret'])) { echo $rcp_options['stripe_live_secret']; } ?>"/>
+								<div class="description"><?php _e('Enter your live secret key', 'rcp'); ?></div>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="rcp_settings[stripe_live_publishable]"><?php _e( 'Live Publishable Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[stripe_live_publishable]" style="width: 300px;" name="rcp_settings[stripe_live_publishable]" value="<?php if(isset($rcp_options['stripe_live_publishable'])) { echo $rcp_options['stripe_live_publishable']; } ?>"/>
+								<div class="description"><?php _e('Enter your live publishable key', 'rcp'); ?></div>
+							</td>
+						</tr>
+						<tr>
+							<th colspan=2>
+								<p><strong><?php _e('Note', 'rcp'); ?></strong>: <?php _e('in order for subscription payments made through Stripe to be tracked, you must enter the following URL to your <a href="https://dashboard.stripe.com/account/webhooks" target="_blank">Stripe Webhooks</a> under Account Settings:', 'rcp'); ?></p>
+								<p><strong><?php echo add_query_arg( 'listener', 'stripe', home_url() ); ?></strong></p>
+							</th>
 						</tr>
 					</table>
 					<?php do_action( 'rcp_payments_settings', $rcp_options ); ?>

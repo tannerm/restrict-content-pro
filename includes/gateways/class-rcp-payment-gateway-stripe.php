@@ -504,8 +504,79 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	public function fields() {
 
 		ob_start();
+?>
+		<script type="text/javascript">
+			// this identifies your website in the createToken call below
+			Stripe.setPublishableKey('<?php echo $this->publishable_key; ?>');
+
+			function stripeResponseHandler(status, response) {
+
+				if (response.error) {
+					// re-enable the submit button
+					jQuery('#rcp_registration_form #rcp_submit').attr("disabled", false);
+
+					jQuery('#rcp_ajax_loading').hide();
+
+					// show the errors on the form
+					jQuery(".payment-errors").html(response.error.message);
+
+				} else {
+					var form$ = jQuery("#rcp_registration_form");
+					// token contains id, last4, and card type
+					var token = response['id'];
+					// insert the token into the form so it gets submitted to the server
+					form$.append("<input type='hidden' name='stripeToken' value='" + token + "' />");
+
+					// and submit
+					form$.get(0).submit();
+
+				}
+			}
+
+			jQuery(document).ready(function($) {
+
+				$("#rcp_submit").on('click', function(event) {
+					// get the subscription price
+
+					if( $('.rcp_level:checked').length ) {
+						var price = $('.rcp_level:checked').closest('li').find('span.rcp_price').attr('rel') * 100;
+					} else {
+						var price = $('.rcp_level').attr('rel') * 100;
+					}
+
+					if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]').val() == 'stripe') && price > 0) {
+						if( ! $('.rcp_gateway_fields').is(':visible') ) {
+							return true;
+						}
+
+						event.preventDefault();
+
+						// disable the submit button to prevent repeated clicks
+						$('#rcp_registration_form #rcp_submit').attr("disabled", "disabled");
+						$('#rcp_ajax_loading').show();
+
+						// createToken returns immediately - the supplied callback submits the form if there are no errors
+						Stripe.createToken({
+							number: $('.card-number').val(),
+							name: $('.card-name').val(),
+							cvc: $('.card-cvc').val(),
+							exp_month: $('.card-expiry-month').val(),
+							exp_year: $('.card-expiry-year').val(),
+							address_zip: $('.card-zip').val()
+						}, stripeResponseHandler);
+
+						return false;
+					}
+				});
+			});
+		</script>
+<?php
 		rcp_get_template_part( 'card-form' );
 		return ob_get_clean();
+	}
+
+	public function scripts() {
+		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v2/', array( 'jquery' ) );
 	}
 
 	private function create_plan( $plan_id = '' ) {
