@@ -183,10 +183,10 @@ function rcp_validate_gateways() {
  	}
 
  	var data = { action: 'rcp_load_gateway_fields', rcp_gateway: gateway.val() };
-	$('.rcp_gateway_' + gateway.val() + '_fields').remove();
 
 	$.post( rcp_script_options.ajaxurl, data, function(response) {
 		if( response.data.fields ) {
+			$('.rcp_gateway_' + gateway.val() + '_fields').remove();
 			$( '<div class="rcp_gateway_' + gateway.val() + '_fields">' + response.data.fields + '</div>' ).insertAfter('.rcp_gateway_fields');
 		}
 	});
