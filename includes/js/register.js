@@ -160,11 +160,21 @@ function rcp_validate_gateways() {
  		$('.rcp_gateway_fields').hide();
  		$('#rcp_auto_renew_wrap').hide();
 		$('#rcp_auto_renew_wrap input').attr('checked', false);
+		$('.rcp_gateway_' + gateway.val() + '_fields').remove();
 
  	} else {
 
  		if( ! full ) {
+
 	 		$('.rcp_gateway_fields').show();
+	 		var data = { action: 'rcp_load_gateway_fields', rcp_gateway: gateway.val() };
+
+			$.post( rcp_script_options.ajaxurl, data, function(response) {
+				if( response.data.fields ) {
+					$('.rcp_gateway_' + gateway.val() + '_fields').remove();
+					$( '<div class="rcp_gateway_' + gateway.val() + '_fields">' + response.data.fields + '</div>' ).insertAfter('.rcp_gateway_fields');
+				}
+			});
 	 	}
 
  		if( 'yes' == gateway.data( 'supports-recurring' ) && ! full ) {
@@ -181,15 +191,6 @@ function rcp_validate_gateways() {
 		$('#rcp_discount_code_wrap').show();
 
  	}
-
- 	var data = { action: 'rcp_load_gateway_fields', rcp_gateway: gateway.val() };
-
-	$.post( rcp_script_options.ajaxurl, data, function(response) {
-		if( response.data.fields ) {
-			$('.rcp_gateway_' + gateway.val() + '_fields').remove();
-			$( '<div class="rcp_gateway_' + gateway.val() + '_fields">' + response.data.fields + '</div>' ).insertAfter('.rcp_gateway_fields');
-		}
-	});
 
 }
 
