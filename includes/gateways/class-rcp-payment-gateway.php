@@ -6,7 +6,7 @@
  * @subpackage  Classes/Roles
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0
+ * @since       2.1
 */
 
 class RCP_Payment_Gateway {
@@ -20,6 +20,7 @@ class RCP_Payment_Gateway {
 	public $user_name;
 	public $currency;
 	public $amount;
+	public $discount;
 	public $length;
 	public $length_unit;
 	public $signup_fee;
@@ -42,6 +43,8 @@ class RCP_Payment_Gateway {
 			$this->user_name           = $subscription_data['user_name'];
 			$this->currency            = $subscription_data['currency'];
 			$this->amount              = $subscription_data['price'];
+			$this->discount            = $subscription_data['discount'];
+			$this->discount_code       = $subscription_data['discount_code'];
 			$this->length              = $subscription_data['length'];
 			$this->length_unit         = $subscription_data['length_unit'];
 			$this->signup_fee          = $this->supports( 'fees' ) ? $subscription_data['fee'] : 0;
@@ -79,9 +82,9 @@ class RCP_Payment_Gateway {
 
 	public function process_webhooks() {}
 
-	public function has_fields() {
-		return false;
-	}
+	public function scripts() {}
+
+	public function fields() {}
 
 	public function vaidate_fields() {
 		return true;

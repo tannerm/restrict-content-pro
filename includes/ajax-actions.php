@@ -35,3 +35,18 @@ function rcp_validate_discount_with_ajax() {
 }
 add_action( 'wp_ajax_validate_discount', 'rcp_validate_discount_with_ajax' );
 add_action( 'wp_ajax_nopriv_validate_discount', 'rcp_validate_discount_with_ajax' );
+
+/**
+ * Calls the load_fields() method for gateways when a gateway selection is made
+ *
+ * @access      public
+ * @since       2.1
+ */
+function rcp_load_gateway_fields() {
+
+	$gateways = new RCP_Payment_Gateways;
+	$gateways->load_fields();
+	die();
+}
+add_action( 'wp_ajax_rcp_load_gateway_fields', 'rcp_load_gateway_fields' );
+add_action( 'wp_ajax_nopriv_rcp_load_gateway_fields', 'rcp_load_gateway_fields' );

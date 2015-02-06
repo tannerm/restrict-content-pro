@@ -185,6 +185,40 @@ class RCP_Member extends WP_User {
 	}
 
 	/**
+	 * Retrieves the profile ID of the member.
+	 *
+	 * This is used by payment gateways to store customer IDs and other identifiers for payment profiles
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function get_payment_profile_id() {
+
+		$profile_id = get_user_meta( $this->ID, 'rcp_payment_profile_id', true );
+
+		return apply_filters( 'rcp_member_get_payment_profile_id', $profile_id, $this->ID, $this );
+
+	}
+
+	/**
+	 * Sets the payment profile ID for a member
+	 *
+	 * This is used by payment gateways to store customer IDs and other identifiers for payment profiles
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function set_payment_profile_id( $profile_id = '' ) {
+
+		do_action( 'rcp_member_pre_set_profile_payment_id', $this->ID, $profile_id, $this );
+
+		update_user_meta( $this->ID, 'rcp_payment_profile_id', $profile_id );
+
+		do_action( 'rcp_member_post_set_profile_payment_id', $this->ID, $profile_id, $this );
+
+	}
+
+	/**
 	 * Retrieves the subscription ID of the member
 	 *
 	 * @access  public

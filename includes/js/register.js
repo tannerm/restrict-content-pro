@@ -53,47 +53,7 @@ jQuery(document).ready(function($) {
 				return false;
 			}
 
-			var data = {
-				action: 'validate_discount',
-				code: $(this).val(),
-				subscription_id: $('#rcp_subscription_levels input:checked').val()
-			};
-
-			$.post(rcp_script_options.ajaxurl, data, function(response) {
-
-				$('.rcp_discount_amount').remove();
-				$('.rcp_discount_valid, .rcp_discount_invalid').hide();
-
-				if( ! response.valid ) {
-
-					// code is invalid
-					$('.rcp_discount_invalid').show();
-					$('.rcp_gateway_fields').removeClass('rcp_discounted_100');
-					$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
-
-				} else if( response.valid ) {
-	
-					// code is valid
-					$('.rcp_discount_valid').show();
-					$('#rcp_discount_code_wrap label').append( '<span class="rcp_discount_amount"> - ' + response.amount + '</span>' );
-
-					if( response.full ) {
-
-						$('.rcp_gateway_fields,#rcp_auto_renew_wrap').hide();
-						$('.rcp_gateway_fields').addClass('rcp_discounted_100');
-	
-					} else {
-						
-						$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
-						$('.rcp_gateway_fields').removeClass('rcp_discounted_100');
-					
-					}
-
-				}
-
-				$('body').trigger('rcp_discount_applied', [ response ] );
-
-			});
+			rcp_validate_discount( $(this).val() );
 
 		}
 
@@ -160,11 +120,25 @@ function rcp_validate_gateways() {
  		$('.rcp_gateway_fields').hide();
  		$('#rcp_auto_renew_wrap').hide();
 		$('#rcp_auto_renew_wrap input').attr('checked', false);
+		$('#rcp_gateway_extra_fields').remove();
 
  	} else {
 
- 		if( ! full ) {
+ 		if( full ) {
+
+ 			$('#rcp_gateway_extra_fields').remove();
+
+ 		} else {
+
 	 		$('.rcp_gateway_fields').show();
+	 		var data = { action: 'rcp_load_gateway_fields', rcp_gateway: gateway.val() };
+
+			$.post( rcp_script_options.ajaxurl, data, function(response) {
+				if( response.data.fields ) {
+					$('#rcp_gateway_extra_fields').remove();
+					$( '<div class="rcp_gateway_' + gateway.val() + '_fields" id="rcp_gateway_extra_fields">' + response.data.fields + '</div>' ).insertAfter('.rcp_gateway_fields');
+				}
+			});
 	 	}
 
  		if( 'yes' == gateway.data( 'supports-recurring' ) && ! full ) {
@@ -207,7 +181,9 @@ function rcp_validate_subscription_level() {
 
  	} else {
 
- 		if( ! full ) {
+ 		if( full ) {
+ 			$('#rcp_gateway_extra_fields').remove();
+ 		} else {
 			$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
 		}
 
@@ -215,4 +191,52 @@ function rcp_validate_subscription_level() {
 
  	}
 
+}
+
+function rcp_validate_discount( discount_code ) {
+
+	var $ = jQuery;
+
+	var data = {
+		action: 'validate_discount',
+		code: discount_code,
+		subscription_id: $('#rcp_subscription_levels input:checked').val()
+	};
+
+	$.post(rcp_script_options.ajaxurl, data, function(response) {
+
+		$('.rcp_discount_amount').remove();
+		$('.rcp_discount_valid, .rcp_discount_invalid').hide();
+
+		if( ! response.valid ) {
+
+			// code is invalid
+			$('.rcp_discount_invalid').show();
+			$('.rcp_gateway_fields').removeClass('rcp_discounted_100');
+			$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
+
+		} else if( response.valid ) {
+
+			// code is valid
+			$('.rcp_discount_valid').show();
+			$('#rcp_discount_code_wrap label').append( '<span class="rcp_discount_amount"> - ' + response.amount + '</span>' );
+
+			if( response.full ) {
+
+				$('.rcp_gateway_fields,#rcp_auto_renew_wrap').hide();
+				$('.rcp_gateway_fields').addClass('rcp_discounted_100');
+				$('#rcp_gateway_extra_fields').remove();
+
+			} else {
+				
+				$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
+				$('.rcp_gateway_fields').removeClass('rcp_discounted_100');
+			
+			}
+
+		}
+
+		$('body').trigger('rcp_discount_applied', [ response ] );
+
+	});
 }

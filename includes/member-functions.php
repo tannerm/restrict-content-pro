@@ -757,3 +757,28 @@ function rcp_change_password() {
 	}
 }
 add_action( 'init', 'rcp_change_password' );
+
+/**
+ * Updates member payment profile ID meta keys with old versions from pre 2.1 gateways
+ *
+ * @access      public
+ * @since       2.1
+ */
+function rcp_backfill_payment_profile_ids( $profile_id, $user_id, $member_Object ) {
+
+	if( empty( $profile_id ) ) {
+
+		// Check for Stripe
+		$profile_id = get_user_meta( $user_id, '_rcp_stripe_user_id', true );
+
+		if( ! empty( $profile_id ) ) {
+
+			$member_object->set_payment_profile_id( $profile_id );
+
+		}
+
+	}
+
+	return $profile_id;
+}
+add_filter( 'rcp_member_get_payment_profile_id', 'rcp_backfill_payment_profile_ids', 10, 3 );
