@@ -584,7 +584,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v2/', array( 'jquery' ) );
 	}
 
-	private function create_plan( $plan_id = '' ) {
+	private function create_plan( $plan_name = '' ) {
 
 		// get all subscription level info for this plan
 		$plan           = rcp_get_subscription_details_by_name( $plan_name );

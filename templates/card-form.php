@@ -7,6 +7,10 @@
 		<label><?php _e( 'Card CVC', 'rcp' ); ?></label>
 		<input type="text" size="4" name="rcp_card_cvc" class="rcp_card_cvc card-cvc" />
 	</p>
+	<p id="rcp_card_zip_wrap">
+		<label><?php _e( 'Card ZIP or Postal Code', 'rcp' ); ?></label>
+		<input type="text" size="4" name="rcp_card_cip" class="rcp_card_zip card-zip" />
+	</p>
 	<p id="rcp_card_name_wrap">
 		<label><?php _e( 'Name on Card', 'rcp' ); ?></label>
 		<input type="text" size="20" name="rcp_card_name" class="rcp_card_name card-name" />
@@ -26,9 +30,5 @@
 				<option value="<?php echo $i; ?>"><?php echo $i; ?></option>
 			<?php endfor; ?>
 		</select>
-	</p>
-	<p id="rcp_card_zip_wrap">
-		<label><?php _e( 'Card ZIP or Postal Code', 'rcp' ); ?></label>
-		<input type="text" size="4" name="rcp_card_cip" class="rcp_card_zip card-zip" />
 	</p>
 </fieldset>
