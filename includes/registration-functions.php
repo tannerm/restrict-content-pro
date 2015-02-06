@@ -155,8 +155,6 @@ function rcp_process_registration() {
 				// Determine auto renew behavior
 				if( '3' == rcp_get_auto_renew_behavior() && isset( $_POST['rcp_auto_renew'] ) ) {
 
-					// set the user to recurring
-					update_user_meta( $user_data['id'], 'rcp_recurring', 'yes' );
 					$auto_renew = true;
 
 				} elseif( '1' == rcp_get_auto_renew_behavior() ) {
