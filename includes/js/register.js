@@ -134,7 +134,7 @@ function rcp_validate_gateways() {
 	 		var data = { action: 'rcp_load_gateway_fields', rcp_gateway: gateway.val() };
 
 			$.post( rcp_script_options.ajaxurl, data, function(response) {
-				if( response.data.fields ) {
+				if( response.success && response.data.fields ) {
 					$('#rcp_gateway_extra_fields').remove();
 					$( '<div class="rcp_gateway_' + gateway.val() + '_fields" id="rcp_gateway_extra_fields">' + response.data.fields + '</div>' ).insertAfter('.rcp_gateway_fields');
 				}
