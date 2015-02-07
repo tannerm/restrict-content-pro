@@ -254,9 +254,10 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_subscription_name() {
 
-		$subscription_name = $this->get_subscription_id();
+		$subscription = $this->get_subscription_id();
+		$sub_name     = rcp_get_subscription_name( $subscription );
 
-		return apply_filters( 'rcp_member_get_subscription_name', $subscription_name, $this->ID, $this );
+		return apply_filters( 'rcp_member_get_subscription_name', $sub_name, $this->ID, $this );
 
 	}
 
