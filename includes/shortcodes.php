@@ -283,3 +283,31 @@ function rcp_profile_editor_shortcode( $atts, $content = null ) {
 	return ob_get_clean();
 }
 add_shortcode( 'rcp_profile_editor', 'rcp_profile_editor_shortcode' );
+
+
+/**
+ * Update card form short code
+ *
+ * Displays a form to update the billing credit / debit card
+ *
+ * @access      public
+ * @since       2.1
+ */
+function rcp_update_billing_card_shortcode( $atts, $content = null ) {
+	global $rcp_load_css, $rcp_load_scripts;
+
+	$rcp_load_css = true;
+	$rcp_load_scripts = true;
+
+	ob_start();
+
+	if( rcp_member_can_update_billing_card() ) {
+
+		rcp_get_template_part( 'card', 'form' );
+
+	}
+
+	return ob_get_clean();
+}
+add_shortcode( 'card_details', 'rcp_update_billing_card_shortcode' ); // Old version
+add_shortcode( 'rcp_update_card', 'rcp_update_billing_card_shortcode' );
