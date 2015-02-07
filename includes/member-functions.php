@@ -782,3 +782,34 @@ function rcp_backfill_payment_profile_ids( $profile_id, $user_id, $member_Object
 	return $profile_id;
 }
 add_filter( 'rcp_member_get_payment_profile_id', 'rcp_backfill_payment_profile_ids', 10, 3 );
+
+/**
+ * Determines if a member can update the credit / debit card attached to their account
+ *
+ * @access      public
+ * @since       2.1
+ */
+function rcp_member_can_update_billing_card( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$ret    = false;
+	$member = new RCP_Member( $user_id );
+
+	if( $member->is_recurring() ) {
+
+		$profile_id = $member->get_payment_profile_id();
+
+		// Check if the member is a Stripe customer
+		if( false !=== strpos( $profile_id, 'cus_'  ) {
+
+			$ret = true;
+
+		}
+
+	}
+
+	return apply_filters( 'rcp_member_can_update_billing_card', $ret, $user_id );
+}
