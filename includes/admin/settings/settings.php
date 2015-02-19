@@ -11,6 +11,12 @@ add_action( 'admin_init', 'rcp_register_settings' );
 function rcp_settings_page() {
 	global $rcp_options;
 
+	$defaults = array(
+		'currency_position' => 'before'
+	);
+
+	$rcp_options = wp_parse_args( $rcp_options, $defaults );
+
 	?>
 	<div class="wrap">
 		<?php
