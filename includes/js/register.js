@@ -5,7 +5,7 @@ jQuery(document).ready(function($) {
 	rcp_validate_gateways();
 
 	// Trigger gateway change event when gateway option changes
-	$('#rcp_payment_gateways select, #rcp_payment_gateways radio').change( function() {
+	$('#rcp_payment_gateways select, #rcp_payment_gateways input').change( function() {
 
 		$('body').trigger( 'rcp_gateway_change' );
 
@@ -108,6 +108,13 @@ function rcp_validate_gateways() {
 	if( $('#rcp_payment_gateways').length > 0 ) {
 
 		gateway = $( '#rcp_payment_gateways select option:selected' );
+
+		if( gateway.length < 1 ) {
+
+			// Support radio input fields
+			gateway = $( 'input[name="rcp_gateway"]:checked' );
+
+		}
 
 	} else {
 
