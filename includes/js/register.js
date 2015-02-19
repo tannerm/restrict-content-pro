@@ -111,7 +111,7 @@ function rcp_validate_gateways() {
 
 	} else {
 
-		gateway = $( 'input[name="rcp_gateway"' );
+		gateway = $( 'input[name="rcp_gateway"]' );
 
 	}
 
