@@ -72,6 +72,9 @@ class RCP_Payment_Gateways {
 				}
 			}
 
+		} else {
+
+			$enabled[ 'paypal'] = __( 'PayPal', 'rcp' );
 		}
 
 		return apply_filters( 'rcp_enabled_payment_gateways', $enabled, $this->available_gateways );
