@@ -1,8 +1,7 @@
 jQuery(document).ready(function($) {
 
 	// Initial validation of subscription level and gateway options
-	rcp_validate_subscription_level();
-	rcp_validate_gateways();
+	rcp_validate_form();
 
 	// Trigger gateway change event when gateway option changes
 	$('#rcp_payment_gateways select, #rcp_payment_gateways input').change( function() {
@@ -14,33 +13,21 @@ jQuery(document).ready(function($) {
 	// Trigger subscription level change event when level selection changes
 	$('.rcp_level').change(function() {
 
-		var data = [];
-
-		data.price = parseInt( $(this).attr('rel') );
-		data.id    = $(this).val();
-
 		$('body').trigger( 'rcp_level_change' );
 
 	});
 
 	$('body').on( 'rcp_gateway_change', function() {
 
-		rcp_validate_subscription_level();
-		rcp_validate_gateways();
+		rcp_validate_form();
 
-	});
+	}).on( 'rcp_level_change', function() {
 
-	$('body').on( 'rcp_level_change', function() {
+		rcp_validate_form();
 
-		rcp_validate_subscription_level();
-		rcp_validate_gateways();
+	}).on( 'rcp_discount_applied', function() {
 
-	});
-
-	$('body').on( 'rcp_discount_applied', function() {
-
-		rcp_validate_subscription_level();
-		rcp_validate_gateways();
+		rcp_validate_form();
 
 	});
 
@@ -91,10 +78,59 @@ jQuery(document).ready(function($) {
 
 });
 
+function rcp_validate_form() {
+
+	// First validate the field values
+
+
+	// Second validate the subscription level
+	rcp_validate_subscription_level();
+
+	// Second validate the discount selected gateway
+	rcp_validate_gateways();
+	
+}
+
+function rcp_validate_subscription_level() {
+
+	var $       = jQuery;
+	var is_free = false;
+	var options = [];
+	var level   = jQuery( '#rcp_subscription_levels input:checked' );
+	var full    = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
+
+	if( level.attr('rel') == 0 ) {
+		is_free = true;
+	}
+
+	if( is_free ) {
+
+		$('.rcp_gateway_fields,#rcp_auto_renew_wrap,#rcp_discount_code_wrap').hide();
+		$('.rcp_gateway_fields').removeClass( 'rcp_discounted_100' );
+		$('#rcp_discount_code_wrap input').val('');
+		$('.rcp_discount_amount').remove();
+		$('.rcp_discount_valid, .rcp_discount_invalid').hide();
+		$('#rcp_auto_renew_wrap input').attr('checked', false);
+
+ 	} else {
+
+ 		if( full ) {
+ 			$('#rcp_gateway_extra_fields').remove();
+ 		} else {
+			$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
+		}
+
+ 		$('#rcp_discount_code_wrap').show();
+
+ 	}
+
+}
+
 
 function rcp_validate_gateways() {
 
 	var $       = jQuery;
+	var form    = $('#rcp_registration_form');
 	var is_free = false;
 	var options = [];
 	var level   = jQuery( '#rcp_subscription_levels input:checked' );
@@ -160,41 +196,6 @@ function rcp_validate_gateways() {
  		}
 		
 		$('#rcp_discount_code_wrap').show();
-
- 	}
-
-}
-
-function rcp_validate_subscription_level() {
-
-	var $       = jQuery;
-	var is_free = false;
-	var options = [];
-	var level   = jQuery( '#rcp_subscription_levels input:checked' );
-	var full    = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
-
-	if( level.attr('rel') == 0 ) {
-		is_free = true;
-	}
-
-	if( is_free ) {
-
-		$('.rcp_gateway_fields,#rcp_auto_renew_wrap,#rcp_discount_code_wrap').hide();
-		$('.rcp_gateway_fields').removeClass( 'rcp_discounted_100' );
-		$('#rcp_discount_code_wrap input').val('');
-		$('.rcp_discount_amount').remove();
-		$('.rcp_discount_valid, .rcp_discount_invalid').hide();
-		$('#rcp_auto_renew_wrap input').attr('checked', false);
-
- 	} else {
-
- 		if( full ) {
- 			$('#rcp_gateway_extra_fields').remove();
- 		} else {
-			$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
-		}
-
- 		$('#rcp_discount_code_wrap').show();
 
  	}
 
