@@ -49,6 +49,7 @@ jQuery(document).ready(function($) {
 	$(document).on('click', '#rcp_registration_form #rcp_submit', function(e) {
 
 		var submission_form = document.getElementById('rcp_registration_form');
+		var form = $('#rcp_registration_form');
 
 		if( typeof submission_form.checkValidity === "function" && false === submission_form.checkValidity() ) {
 			return;
@@ -58,19 +59,22 @@ jQuery(document).ready(function($) {
 
 		var submit_register_text = $(this).val();
 
-		$('#rcp_submit').val( rcp_script_options.pleasewait );
-		$(this).after('<span class="rcp-submit-ajax"><i class="rcp-icon-spinner rcp-icon-spin"></i></span>');
+		form.block({
+			message: rcp_script_options.pleasewait
+		});
 
-		$.post( rcp_script_options.ajaxurl, $('#rcp_registration_form').serialize() + '&action=rcp_process_register_form&rcp_ajax=true', function(response) {
+		$('#rcp_submit', form).val( rcp_script_options.pleasewait );
 
-			$('.rcp-submit-ajax').remove();
-			$('.rcp_message.error').remove();
+		$.post( rcp_script_options.ajaxurl, form.serialize() + '&action=rcp_process_register_form&rcp_ajax=true', function(response) {
+
+			$('.rcp-submit-ajax', form).remove();
+			$('.rcp_message.error', form).remove();
 			if ( response.success ) {
 				$(submission_form).submit();
 			} else {
-				$('#rcp_submit').val( submit_register_text );
-				$('#rcp_submit').before( response.data.errors );
-				$('#rcp_register_nonce').val( response.data.nonce );
+				$('#rcp_submit', form).val( submit_register_text );
+				$('#rcp_submit', form).before( response.data.errors );
+				$('#rcp_register_nonce', form).val( response.data.nonce );
 			}
 		});
 
@@ -81,14 +85,20 @@ jQuery(document).ready(function($) {
 function rcp_validate_form() {
 
 	// First validate the field values
+	jQuery('#rcp_registration_form').block({
+		message: rcp_script_options.pleasewait,
+		timeout: 2000,
+		onBlock : function() {
 
+			// Second validate the subscription level
+			rcp_validate_subscription_level();
 
-	// Second validate the subscription level
-	rcp_validate_subscription_level();
+			// Second validate the discount selected gateway
+			rcp_validate_gateways();
 
-	// Second validate the discount selected gateway
-	rcp_validate_gateways();
-	
+		}
+	});
+
 }
 
 function rcp_validate_subscription_level() {
