@@ -22,15 +22,15 @@ jQuery(document).ready(function($) {
 
 	$('body').on( 'rcp_gateway_change', function() {
 
-		rcp_validate_form();
+		rcp_validate_form( true );
 
 	}).on( 'rcp_level_change', function() {
 
-		rcp_validate_form();
+		rcp_validate_form( false );
 
 	}).on( 'rcp_discount_applied', function() {
 
-		rcp_validate_form();
+		rcp_validate_form( true );
 
 	});
 
@@ -90,8 +90,10 @@ function rcp_validate_form( validate_gateways ) {
 	// Validate the subscription level
 	rcp_validate_subscription_level();
 
-	// Validate the discount selected gateway
-	rcp_validate_gateways();
+	if( validate_gateways ) {
+		// Validate the discount selected gateway
+		rcp_validate_gateways();
+	}
 
 }
 
@@ -118,7 +120,7 @@ function rcp_validate_subscription_level() {
 		$('.rcp_gateway_fields,#rcp_auto_renew_wrap,#rcp_discount_code_wrap').hide();
 		$('.rcp_gateway_fields').removeClass( 'rcp_discounted_100' );
 		$('#rcp_discount_code_wrap input').val('');
-		$('.rcp_discount_amount').remove();
+		$('.rcp_discount_amount,#rcp_gateway_extra_fields').remove();
 		$('.rcp_discount_valid, .rcp_discount_invalid').hide();
 		$('#rcp_auto_renew_wrap input').attr('checked', false);
 
