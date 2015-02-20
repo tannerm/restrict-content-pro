@@ -1,3 +1,6 @@
+var rcp_validating_discount = false;
+var rcp_validating_gateway  = false;
+var rcp_validating_level    = false;
 jQuery(document).ready(function($) {
 
 	// Initial validation of subscription level and gateway options
@@ -112,11 +115,17 @@ function rcp_validate_form() {
 
 function rcp_validate_subscription_level() {
 
+	if( rcp_validating_level ) {
+		return;
+	}
+
 	var $       = jQuery;
 	var is_free = false;
 	var options = [];
 	var level   = jQuery( '#rcp_subscription_levels input:checked' );
 	var full    = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
+
+	rcp_validating_level = true;
 
 	if( level.attr('rel') == 0 ) {
 		is_free = true;
@@ -143,10 +152,16 @@ function rcp_validate_subscription_level() {
 
  	}
 
+ 	rcp_validating_level = false;
+
 }
 
 
 function rcp_validate_gateways() {
+
+	if( rcp_validating_gateway ) {
+		return;
+	}
 
 	var $       = jQuery;
 	var form    = $('#rcp_registration_form');
@@ -155,6 +170,8 @@ function rcp_validate_gateways() {
 	var level   = jQuery( '#rcp_subscription_levels input:checked' );
 	var full    = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
 	var gateway;
+
+	rcp_validating_gateway = true;
 
 	if( level.attr('rel') == 0 ) {
 		is_free = true;
@@ -218,9 +235,15 @@ function rcp_validate_gateways() {
 
  	}
 
+ 	rcp_validating_gateway = false;
+
 }
 
 function rcp_validate_discount( discount_code ) {
+
+	if( rcp_validating_discount ) {
+		return;
+	}
 
 	var $ = jQuery;
 
@@ -229,6 +252,8 @@ function rcp_validate_discount( discount_code ) {
 		code: discount_code,
 		subscription_id: $('#rcp_subscription_levels input:checked').val()
 	};
+
+	rcp_validating_discount = true;
 
 	$.post(rcp_script_options.ajaxurl, data, function(response) {
 
@@ -263,6 +288,7 @@ function rcp_validate_discount( discount_code ) {
 
 		}
 
+		rcp_validating_discount = false;
 		$('body').trigger('rcp_discount_applied', [ response ] );
 
 	});
