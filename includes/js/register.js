@@ -89,7 +89,13 @@ function rcp_validate_form() {
 		message: rcp_script_options.pleasewait,
 		timeout: 2000,
 		css: {
-			padding: '10px' 
+			border: 'none', 
+			padding: '15px', 
+			backgroundColor: '#000', 
+			'-webkit-border-radius': '10px', 
+			'-moz-border-radius': '10px', 
+			opacity: .5, 
+			color: '#fff' 
 		},
 		onBlock : function() {
 
