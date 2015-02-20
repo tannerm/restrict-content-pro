@@ -88,6 +88,9 @@ function rcp_validate_form() {
 	jQuery('#rcp_registration_form').block({
 		message: rcp_script_options.pleasewait,
 		timeout: 2000,
+		css: {
+			padding: '10px' 
+		},
 		onBlock : function() {
 
 			// Second validate the subscription level

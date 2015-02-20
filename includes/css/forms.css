@@ -14,6 +14,7 @@
 .rcp-icon-spinner:before {
   content: "\71";
 }
+#rcp_registration_form { padding: 5px; }
 .rcp_form fieldset { border: none; margin: 0; padding: 0; }
 .rcp_form label { display: block; float: left; width: 280px; }
 .rcp_form input[type="text"], .rcp_form input[type="password"],
