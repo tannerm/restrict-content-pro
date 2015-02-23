@@ -244,7 +244,7 @@ function rcp_validate_discount( discount_code ) {
 	}
 
 	var $ = jQuery;
-
+	var gateway_fields = $('.rcp_gateway_fields');
 	var data = {
 		action: 'validate_discount',
 		code: discount_code,
@@ -262,7 +262,7 @@ function rcp_validate_discount( discount_code ) {
 
 			// code is invalid
 			$('.rcp_discount_invalid').show();
-			$('.rcp_gateway_fields').removeClass('rcp_discounted_100');
+			gateway_fields.removeClass('rcp_discounted_100');
 			$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
 
 		} else if( response.valid ) {
@@ -273,14 +273,14 @@ function rcp_validate_discount( discount_code ) {
 
 			if( response.full ) {
 
-				$('.rcp_gateway_fields,#rcp_auto_renew_wrap').hide();
-				$('.rcp_gateway_fields').addClass('rcp_discounted_100');
+				$('#rcp_auto_renew_wrap').hide();
+				gateway_fields.hide().addClass('rcp_discounted_100');
 				$('#rcp_gateway_extra_fields').remove();
 
 			} else {
 				
-				$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
-				$('.rcp_gateway_fields').removeClass('rcp_discounted_100');
+				$('#rcp_auto_renew_wrap').show();
+				gateway_fields.show().removeClass('rcp_discounted_100');
 			
 			}
 
