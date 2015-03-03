@@ -39,10 +39,6 @@ jQuery(document).ready(function($) {
 		
 		if( key.which != 13 ) {
 
-			if( $(this).val() == '' ) {
-				return false;
-			}
-
 			rcp_validate_discount( $(this).val() );
 
 		}
