@@ -4,7 +4,7 @@ var rcp_validating_level    = false;
 jQuery(document).ready(function($) {
 
 	// Initial validation of subscription level and gateway options
-	rcp_validate_form();
+	rcp_validate_form( true );
 
 	// Trigger gateway change event when gateway option changes
 	$('#rcp_payment_gateways select, #rcp_payment_gateways input').change( function() {
