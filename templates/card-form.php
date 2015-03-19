@@ -22,7 +22,7 @@
 				<option value="<?php echo $i; ?>"><?php echo $i . ' - ' . rcp_get_month_name( $i ); ?></option>
 			<?php endfor; ?>
 		</select>
-		<span> / </span>
+		<span class="rcp_expiry_separator"> / </span>
 		<select name="rcp_card_exp_year" class="rcp_card_exp_year card-expiry-year">
 			<?php
 			$year = date( 'Y' );
