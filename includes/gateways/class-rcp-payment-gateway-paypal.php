@@ -126,7 +126,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 	}
 
 	public function process_webhooks() {
-		
+
 		if( ! isset( $_GET['listener'] ) || strtoupper( $_GET['listener'] ) != 'IPN' ) {
 			return;
 		}
@@ -175,7 +175,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			if( ! $member || ! $member->get_subscription_id() ) {
 				return;
 			}
-			
+
 			if( ! rcp_get_subscription_details( $member->get_subscription_id() ) ) {
 				return;
 			}
@@ -202,7 +202,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			do_action( 'rcp_valid_ipn', $payment_data, $this->user_id, $posted );
 
 			if( $posted['txn_type'] == 'web_accept' || $posted['txn_type'] == 'subscr_payment' ) {
-				
+
 				// only check for an existing payment if this is a payment IPD request
 				if( rcp_check_for_existing_payment( $posted['txn_type'], $posted['payment_date'], $subscription_key ) ) {
 
@@ -260,10 +260,12 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// store the recurring payment ID
 					update_user_meta( $this->user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
+					$member->set_payment_profile_id( $posted['payer_id'] );
+
 					do_action( 'rcp_ipn_subscr_signup', $this->user_id );
 
 					break;
-				
+
 				case "subscr_payment" :
 
 					// when a user makes a recurring payment
@@ -272,13 +274,15 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					$rcp_payments->insert( $payment_data );
 
 					update_user_meta( $this->user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
-					
+
+					$member->set_payment_profile_id( $posted['payer_id'] );
+
 					$this->renew_member( true );
 
 					do_action( 'rcp_ipn_subscr_payment', $this->user_id );
 
 					break;
-				
+
 				case "subscr_cancel" :
 
 					// user is marked as cancelled but retains access until end of term
@@ -290,9 +294,9 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					do_action( 'rcp_ipn_subscr_cancel', $this->user_id );
 
 					break;
-				
+
 				case "subscr_failed" :
-				
+
 					do_action( 'rcp_ipn_subscr_failed' );
 					break;
 
@@ -303,7 +307,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					if( 'cancelled' !== $member->get_status( $this->user_id ) ) {
 
 						$member->set_status( 'expired' );
-				
+
 					}
 
 					do_action('rcp_ipn_subscr_eot', $this->user_id );
@@ -322,22 +326,22 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 							$rcp_payments->insert( $payment_data );
 
 			           		break;
-			            
+
 			            case 'denied' :
 			            case 'expired' :
 			            case 'failed' :
 			            case 'voided' :
 							$member->set_status( 'cancelled' );
 			            	break;
-			        
+
 			        endswitch;
 
 				break;
-			
+
 			case "cart" :
 			case "express_checkout" :
 			default :
-			
+
 				break;
 
 			endswitch;
