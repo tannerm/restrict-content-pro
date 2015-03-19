@@ -847,6 +847,17 @@ function rcp_backfill_payment_profile_ids( $profile_id, $user_id, $member_Object
 
 			$member_object->set_payment_profile_id( $profile_id );
 
+		} else {
+
+			// Check for PayPal
+			$profile_id = get_user_meta( $user_id, 'rcp_paypal_subscriber', true );
+
+			if( ! empty( $profile_id ) ) {
+
+				$member_object->set_payment_profile_id( $profile_id );
+
+			}
+
 		}
 
 	}
