@@ -788,6 +788,49 @@ function rcp_change_password() {
 add_action( 'init', 'rcp_change_password' );
 
 /**
+ * Process a member cancellation request
+ *
+ * @access      public
+ * @since       2.1
+ */
+function rcp_process_member_cancellation() {
+
+	if( ! isset( $_GET['rcp-action'] ) || $_GET['rcp-action'] !== 'cancel' ) {
+		return;
+	}
+
+	if( ! is_user_logged_in() ) {
+		return;
+	}
+
+	if( ! rcp_can_member_cancel() ) {
+		return;
+	}
+
+	if( wp_verify_nonce( $_GET['_wpnonce'], 'rcp-cancel-nonce' ) ) {
+
+		$redirect = remove_query_arg( array( 'rcp-action', '_wpnonce', 'member-id' ), rcp_get_current_url() );
+
+		if( rcp_is_stripe_subscriber() ) {
+
+		} elseif( rcp_is_paypal_subscriber() ) {
+
+			$redirect = 'https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_manage-paylist';
+
+		} else {
+
+
+		}
+
+		do_action( 'rcp_process_member_cancellation', get_current_user_id() );
+
+		wp_redirect( $redirect ); exit;
+
+	}
+}
+add_action( 'init', 'rcp_process_member_cancellation' );
+
+/**
  * Updates member payment profile ID meta keys with old versions from pre 2.1 gateways
  *
  * @access      public
@@ -811,6 +854,65 @@ function rcp_backfill_payment_profile_ids( $profile_id, $user_id, $member_Object
 	return $profile_id;
 }
 add_filter( 'rcp_member_get_payment_profile_id', 'rcp_backfill_payment_profile_ids', 10, 3 );
+
+/**
+ * Determines if a member can cancel their subscription on site
+ *
+ * @access      public
+ * @since       2.1
+ */
+function rcp_can_member_cancel( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$ret    = false;
+	$member = new RCP_Member( $user_id );
+
+	if( $member->is_recurring() && $member->is_active() && 'cancelled' !== $member->get_status() ) {
+
+		$profile_id = $member->get_payment_profile_id();
+
+		// Check if the member is a Stripe customer
+		if( false !== strpos( $profile_id, 'cus_' ) ) {
+
+			$ret = true;
+
+		} elseif ( rcp_is_paypal_subscriber( $user_id ) ) {
+
+			$ret = true;
+
+		}
+
+	}
+
+	return apply_filters( 'rcp_member_can_cancel', $ret, $user_id );
+}
+
+/**
+ * Gets the cancellation URL for a member
+ *
+ * @access      public
+ * @since       2.1
+ */
+function rcp_get_member_cancel_url( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$url    = '';
+	$member = new RCP_Member( $user_id );
+
+	if( $member->is_recurring() ) {
+
+		$url = wp_nonce_url( add_query_arg( array( 'rcp-action' => 'cancel', 'member-id' => $user_id ) ), 'rcp-cancel-nonce' );
+
+	}
+
+	return apply_filters( 'rcp_member_cancel_url', $url, $user_id );
+}
 
 /**
  * Determines if a member can update the credit / debit card attached to their account
