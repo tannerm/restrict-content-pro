@@ -809,9 +809,107 @@ function rcp_process_member_cancellation() {
 
 	if( wp_verify_nonce( $_GET['_wpnonce'], 'rcp-cancel-nonce' ) ) {
 
+		global $rcp_options;
+
 		$redirect = remove_query_arg( array( 'rcp-action', '_wpnonce', 'member-id' ), rcp_get_current_url() );
 
 		if( rcp_is_stripe_subscriber() ) {
+
+			$member = new RCP_Member( get_current_user_id() );
+
+			if( ! class_exists( 'Stripe' ) ) {
+				require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+			}
+
+			if ( isset( $rcp_options['sandbox'] ) ) {
+				$secret_key = trim( $rcp_options['stripe_test_secret'] );
+			} else {
+				$secret_key = trim( $rcp_options['stripe_live_secret'] );
+			}
+
+			Stripe::setApiKey( $secret_key );
+
+			try {
+
+				$cu = Stripe_Customer::retrieve( $member->get_payment_profile_id() );
+				$cu->cancelSubscription( array( 'at_period_end' => false ) );
+
+				$member->cancel();
+
+			} catch (Stripe_InvalidRequestError $e) {
+
+				// Invalid parameters were supplied to Stripe's API
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error );
+
+			} catch (Stripe_AuthenticationError $e) {
+
+				// Authentication with Stripe's API failed
+				// (maybe you changed API keys recently)
+
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error );
+
+			} catch (Stripe_ApiConnectionError $e) {
+
+				// Network communication with Stripe failed
+
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error );
+
+			} catch (Stripe_Error $e) {
+
+				// Display a very generic error to the user
+
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error );
+
+			} catch (Exception $e) {
+
+				// Something else happened, completely unrelated to Stripe
+
+				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+				$error .= print_r( $e, true );
+
+				wp_die( $error );
+
+			}
 
 		} elseif( rcp_is_paypal_subscriber() ) {
 

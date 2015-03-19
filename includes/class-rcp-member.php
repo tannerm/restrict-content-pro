@@ -120,7 +120,7 @@ class RCP_Member extends WP_User {
 		$old_date = $this->get_expiration_date( false );
 
 		if( $old_date !== $new_date ) {
-			
+
 			if( update_user_meta( $this->ID, 'rcp_expiration', $new_date ) ) {
 
 				// Record the status change
@@ -130,7 +130,7 @@ class RCP_Member extends WP_User {
 			}
 
 			do_action( 'rcp_set_expiration_date', $this->ID, $new_date, $old_date );
-		
+
 			$ret = true;
 		}
 
@@ -147,10 +147,10 @@ class RCP_Member extends WP_User {
 	 * @since   2.1
 	*/
 	public function renew( $recurring = false, $status = 'active' ) {
-		
+
 		// Get the member's current expiration date
 		$expires        = $this->get_expiration_time();
-		
+
 		// Determine what date to use as the start for the new expiration calculation
 		if( $expires > current_time( 'timestamp' ) && rcp_is_active( $this->ID ) ) {
 
@@ -159,7 +159,7 @@ class RCP_Member extends WP_User {
 		} else {
 
 			$base_date  = current_time( 'timestamp' );
-		
+
 		}
 
 		$subscription   = rcp_get_subscription_details( $this->get_subscription_id() );
@@ -181,7 +181,25 @@ class RCP_Member extends WP_User {
 		delete_user_meta( $this->ID, '_rcp_expired_email_sent' );
 
 		do_action( 'rcp_member_post_renew', $this->ID, $expiration, $this );
-	
+
+	}
+
+	/**
+	 * Sets a member's membership as cancelled by updating status and expiration date
+	 *
+	 * Does NOT handle actual cancellation of subscription payments, that is done in rcp_process_member_cancellation(). This should be called after a member is successfully cancelled.
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function cancel() {
+
+		do_action( 'rcp_member_pre_cancel', $this->ID, $expiration, $this );
+
+		$this->set_status( 'cancelled' );
+
+		do_action( 'rcp_member_post_cancel', $this->ID, $expiration, $this );
+
 	}
 
 	/**
@@ -325,7 +343,7 @@ class RCP_Member extends WP_User {
 
 		$ret       = false;
 		$recurring = get_user_meta( $this->ID, 'rcp_recurring', true );
-		
+
 		if( user_can( $this->ID, 'manage_options' ) ) {
 			$ret = true;
 		} else if( ! rcp_is_expired( $this->ID ) && ( $this->get_status() == 'active' || $this->get_status() == 'cancelled' ) ) {
@@ -346,7 +364,7 @@ class RCP_Member extends WP_User {
 
 		$ret       = false;
 		$recurring = get_user_meta( $this->ID, 'rcp_recurring', true );
-		
+
 		if( $recurring == 'yes' ) {
 			$ret = true;
 		}
@@ -383,7 +401,7 @@ class RCP_Member extends WP_User {
 
 		$ret        = false;
 		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
-		
+
 		if( $expiration && strtotime( 'NOW' ) > strtotime( $expiration ) ) {
 			$ret = true;
 		}
