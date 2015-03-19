@@ -633,6 +633,35 @@ function rcp_is_paypal_subscriber( $user_id = 0 ) {
 	return (bool) apply_filters( 'rcp_is_paypal_subscriber', $ret, $user_id );
 }
 
+/**
+ * Determine if a member is a Stripe subscriber
+ *
+ * @since       v2.1
+ * @access      public
+ * @param       $user_id INT the ID of the user to check
+ * @return      bool
+*/
+function rcp_is_stripe_subscriber( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$ret = false;
+
+	$member = new RCP_Member( $user_id );
+
+	$profile_id = $member->get_payment_profile_id();
+
+	// Check if the member is a Stripe customer
+	if( false !== strpos( $profile_id, 'cus_' ) ) {
+
+		$ret = true;
+
+	} 
+
+	return (bool) apply_filters( 'rcp_is_stripe_subscriber', $ret, $user_id );
+}
 
 
 /**
