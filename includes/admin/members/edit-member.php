@@ -4,10 +4,10 @@ if( isset( $_GET['edit_member'] ) ) {
 } elseif( isset( $_GET['view_member'] ) ) {
 	$member_id = absint( $_GET['view_member'] );
 }
-$user = get_userdata( $member_id );
+$member = new RCP_Member( $member_id );
 ?>
 <h2>
-	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $user->display_name; ?> - 
+	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $member->display_name; ?> - 
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-members' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
@@ -15,7 +15,7 @@ $user = get_userdata( $member_id );
 <form id="rcp-edit-member" action="" method="post">
 	<table class="form-table">
 		<tbody>
-			<?php do_action( 'rcp_edit_member_before', $user->ID ); ?>
+			<?php do_action( 'rcp_edit_member_before', $member->ID ); ?>
 			<tr valign="top">
 				<th scope="row" valign="top">
 					<label for="rcp-status"><?php _e( 'Status', 'rcp' ); ?></label>
@@ -24,9 +24,9 @@ $user = get_userdata( $member_id );
 					<select name="status" id="rcp-status">
 						<?php
 							$statuses = array( 'active', 'expired', 'cancelled', 'pending', 'free' );
-							$current_status = rcp_get_status( $user->ID );
+							$current_status = rcp_get_status( $member->ID );
 							foreach( $statuses as $status ) : 
-								echo '<option value="' . esc_attr( $status ) .  '"' . selected( $status, rcp_get_status( $user->ID ), false ) . '>' . ucwords( $status ) . '</option>';
+								echo '<option value="' . esc_attr( $status ) .  '"' . selected( $status, rcp_get_status( $member->ID ), false ) . '>' . ucwords( $status ) . '</option>';
 							endforeach;
 						?>
 					</select>
@@ -41,7 +41,7 @@ $user = get_userdata( $member_id );
 					<select name="level" id="rcp-level">
 						<?php
 							foreach( rcp_get_subscription_levels( 'all' ) as $key => $level) :
-								echo '<option value="' . esc_attr( absint( $level->id ) ) . '"' . selected( $level->name, rcp_get_subscription( $user->ID ), false ) . '>' . esc_html( $level->name ) . '</option>';
+								echo '<option value="' . esc_attr( absint( $level->id ) ) . '"' . selected( $level->name, rcp_get_subscription( $member->ID ), false ) . '>' . esc_html( $level->name ) . '</option>';
 							endforeach;
 						?>
 					</select>
@@ -53,9 +53,9 @@ $user = get_userdata( $member_id );
 					<label for="rcp-expiration"><?php _e( 'Expiration date', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker" value="<?php echo esc_attr( get_user_meta( $user->ID, 'rcp_expiration', true ) ); ?>"/>
+					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker" value="<?php echo esc_attr( get_user_meta( $member->ID, 'rcp_expiration', true ) ); ?>"/>
 					<label for="rcp-unlimited">
-						<input name="unlimited" id="rcp-unlimited" type="checkbox"<?php checked( get_user_meta( $user->ID, 'rcp_expiration', true ), 'none' ); ?>/>
+						<input name="unlimited" id="rcp-unlimited" type="checkbox"<?php checked( get_user_meta( $member->ID, 'rcp_expiration', true ), 'none' ); ?>/>
 						<span class="description"><?php _e( 'Never expires?', 'rcp' ); ?></span>
 					</label>
 					<p class="description"><?php _e( 'Enter the expiration date for this user in the format of yyyy-mm-dd', 'rcp' ); ?></p>
@@ -67,7 +67,7 @@ $user = get_userdata( $member_id );
 				</th>
 				<td>
 					<label for="rcp-recurring">
-						<input name="recurring" id="rcp-recurring" type="checkbox" value="1" <?php checked( 1, rcp_is_recurring( $user->ID ) ); ?>/>
+						<input name="recurring" id="rcp-recurring" type="checkbox" value="1" <?php checked( 1, rcp_is_recurring( $member->ID ) ); ?>/>
 						<?php _e( 'Is this user\'s subscription recurring?', 'rcp' ); ?>
 					</label>
 				</td>
@@ -78,7 +78,7 @@ $user = get_userdata( $member_id );
 				</th>
 				<td>
 					<label for="rcp-trialing">
-						<input name="trialing" id="rcp-trialing" type="checkbox" value="1" <?php checked( 1, rcp_is_trialing( $user->ID ) ); ?>/>
+						<input name="trialing" id="rcp-trialing" type="checkbox" value="1" <?php checked( 1, rcp_is_trialing( $member->ID ) ); ?>/>
 						<?php _e( 'Does this user have a trial membership?', 'rcp' ); ?>
 					</label>
 				</td>
@@ -88,7 +88,7 @@ $user = get_userdata( $member_id );
 					<?php _e( 'Sign Up Method', 'rcp' ); ?>
 				</th>
 				<td>
-					<?php $method = get_user_meta( $user->ID, 'rcp_signup_method', true ) ? get_user_meta( $user->ID, 'rcp_signup_method', true ) : 'live';?>
+					<?php $method = get_user_meta( $member->ID, 'rcp_signup_method', true ) ? get_user_meta( $member->ID, 'rcp_signup_method', true ) : 'live';?>
 					<select name="signup_method" id="rcp-signup-method">
 						<option value="live" <?php selected( $method, 'live' ); ?>><?php _e( 'User Signup', 'rcp' ); ?>
 						<option value="manual" <?php selected( $method, 'manual' ); ?>><?php _e( 'Added by admin manually', 'rcp' ); ?>
@@ -101,7 +101,7 @@ $user = get_userdata( $member_id );
 					<label for="rcp-notes"><?php _e( 'User Notes', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<textarea name="notes" id="rcp-notes" class="large-text" rows="10" cols="50"><?php echo esc_textarea( get_user_meta( $user->ID, 'rcp_notes', true ) ); ?></textarea>
+					<textarea name="notes" id="rcp-notes" class="large-text" rows="10" cols="50"><?php echo esc_textarea( get_user_meta( $member->ID, 'rcp_notes', true ) ); ?></textarea>
 					<p class="description"><?php _e( 'Use this area to record notes about this user if needed', 'rcp' ); ?></p>
 				</td>
 			</tr>
@@ -111,7 +111,7 @@ $user = get_userdata( $member_id );
 				</th>
 				<td>
 					<?php
-					$discounts = get_user_meta( $user->ID, 'rcp_user_discounts', true );
+					$discounts = get_user_meta( $member->ID, 'rcp_user_discounts', true );
 					if( $discounts ) {
 						foreach( $discounts as $discount ) {
 							if( is_string( $discount ) ) {
@@ -129,10 +129,10 @@ $user = get_userdata( $member_id );
 					<?php _e( 'Payments', 'rcp' ); ?>
 				</th>
 				<td>
-					<?php echo rcp_print_user_payments( $user->ID ); ?>
+					<?php echo rcp_print_user_payments( $member->ID ); ?>
 				</td>
 			</tr>
-			<?php do_action( 'rcp_edit_member_after', $user->ID ); ?>
+			<?php do_action( 'rcp_edit_member_after', $member->ID ); ?>
 		</tbody>
 	</table>
 	<p class="submit">

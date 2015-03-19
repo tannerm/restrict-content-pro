@@ -672,8 +672,95 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 				);
 			}
 
-		} catch ( Exception $e ) {
-			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
+		} catch ( Stripe_CardError $e ) {
+
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>An error occurred</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>Error code: " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error );
+
+				exit;
+
+		} catch (Stripe_InvalidRequestError $e) {
+
+			// Invalid parameters were supplied to Stripe's API
+			$body = $e->getJsonBody();
+			$err  = $body['error'];
+
+			$error = "<h4>An error occurred</h4>";
+			if( isset( $err['code'] ) ) {
+				$error .= "<p>Error code: " . $err['code'] ."</p>";
+			}
+			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+			$error .= "<p>Message: " . $err['message'] . "</p>";
+
+			wp_die( $error );
+
+		} catch (Stripe_AuthenticationError $e) {
+
+			// Authentication with Stripe's API failed
+			// (maybe you changed API keys recently)
+
+			$body = $e->getJsonBody();
+			$err  = $body['error'];
+
+			$error = "<h4>An error occurred</h4>";
+			if( isset( $err['code'] ) ) {
+				$error .= "<p>Error code: " . $err['code'] ."</p>";
+			}
+			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+			$error .= "<p>Message: " . $err['message'] . "</p>";
+
+			wp_die( $error );
+
+		} catch (Stripe_ApiConnectionError $e) {
+
+			// Network communication with Stripe failed
+
+			$body = $e->getJsonBody();
+			$err  = $body['error'];
+
+			$error = "<h4>An error occurred</h4>";
+			if( isset( $err['code'] ) ) {
+				$error .= "<p>Error code: " . $err['code'] ."</p>";
+			}
+			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+			$error .= "<p>Message: " . $err['message'] . "</p>";
+
+			wp_die( $error );
+
+		} catch (Stripe_Error $e) {
+
+			// Display a very generic error to the user
+
+			$body = $e->getJsonBody();
+			$err  = $body['error'];
+
+			$error = "<h4>An error occurred</h4>";
+			if( isset( $err['code'] ) ) {
+				$error .= "<p>Error code: " . $err['code'] ."</p>";
+			}
+			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+			$error .= "<p>Message: " . $err['message'] . "</p>";
+
+			wp_die( $error );
+
+		} catch (Exception $e) {
+
+			// Something else happened, completely unrelated to Stripe
+
+			$error = "<p>An unidentified error occurred.</p>";
+			$error .= print_r( $e, true );
+
+			wp_die( $error );
+
 		}
 
 	}
@@ -682,6 +769,7 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 
 if( ! function_exists( 'rcp_stripe_edit_discount' ) ) {
 	function rcp_stripe_edit_discount() {
+
 		global $rcp_options;
 
 		if( ! class_exists( 'Stripe' ) ) {
@@ -753,8 +841,79 @@ if( ! function_exists( 'rcp_stripe_edit_discount' ) ) {
 					);
 				}
 
-			} catch ( Exception $e ) {
-				wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
+			} catch (Stripe_InvalidRequestError $e) {
+
+				// Invalid parameters were supplied to Stripe's API
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>An error occurred</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>Error code: " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error );
+
+			} catch (Stripe_AuthenticationError $e) {
+
+				// Authentication with Stripe's API failed
+				// (maybe you changed API keys recently)
+
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>An error occurred</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>Error code: " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error );
+
+			} catch (Stripe_ApiConnectionError $e) {
+
+				// Network communication with Stripe failed
+
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>An error occurred</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>Error code: " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error );
+
+			} catch (Stripe_Error $e) {
+
+				// Display a very generic error to the user
+
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>An error occurred</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>Error code: " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error );
+
+			} catch (Exception $e) {
+
+				// Something else happened, completely unrelated to Stripe
+
+				$error = "<p>An unidentified error occurred.</p>";
+				$error .= print_r( $e, true );
+
+				wp_die( $error );
+
 			}
 		}
 	}
