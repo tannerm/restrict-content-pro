@@ -128,23 +128,22 @@ function rcp_process_data() {
 				if( $current_id != $level_id ) {
 
 					update_user_meta( $user_id, 'rcp_subscription_level', $level_id );
-					$user = new WP_User( $user_id );
 
 					// Remove the old user role
 					$role = ! empty( $old_level->role ) ? $old_level->role : 'subscriber';
-					$user->remove_role( $role );
+					$member->remove_role( $role );
 
 					// Add the new user role
 					$role = ! empty( $new_level->role ) ? $new_level->role : 'subscriber';
-					$user->add_role( $role );
+					$member->add_role( $role );
 
 				}
 			}
 
 			if( isset( $_POST['recurring'] ) ) {
-				update_user_meta( $user_id, 'rcp_recurring', 'yes' );
+				$member->set_recurring( true );
 			} else {
-				delete_user_meta( $user_id, 'rcp_recurring' );
+				$member->set_recurring( false );
 			}
 
 			if( isset( $_POST['trialing'] ) ) {
