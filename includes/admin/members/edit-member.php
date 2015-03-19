@@ -63,6 +63,15 @@ $member = new RCP_Member( $member_id );
 			</tr>
 			<tr valign="top">
 				<th scope="row" valign="top">
+					<label for="rcp-payment-profile-id"><?php _e( 'Payment Profile ID', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<input name="payment-profile-id" id="rcp-payment-profile-id" type="text" style="width: 200px;" value="<?php echo esc_attr( $member->get_payment_profile_id() ); ?>"/>
+					<p class="description"><?php _e( 'This is the customer\'s payment profile ID in the payment processor', 'rcp' ); ?></p>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" valign="top">
 					<?php _e( 'Recurring', 'rcp' ); ?>
 				</th>
 				<td>
