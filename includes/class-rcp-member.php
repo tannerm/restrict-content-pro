@@ -513,7 +513,7 @@ class RCP_Member extends WP_User {
 			$ret = true;
 		}
 
-		return apply_filters( 'rcp_member_can_access', $ret, $this->ID );
+		return apply_filters( 'rcp_member_can_access', $ret, $this->ID, $this );
 
 	}
 }
