@@ -463,15 +463,14 @@ class RCP_Member extends WP_User {
 	 * @access  public
 	 * @since   2.1
 	*/
-	public function can_access() {
-		global $post;
+	public function can_access( $post_id ) {
 
-		$subscription_levels = rcp_get_content_subscription_levels( $post->ID );
-		$access_level        = get_post_meta( $post->ID, 'rcp_access_level', true );
+		$subscription_levels = rcp_get_content_subscription_levels( $post_id );
+		$access_level        = get_post_meta( $post_id, 'rcp_access_level', true );
 
 		$ret = false;
 
-		if ( rcp_is_paid_content( $post->ID ) ) {
+		if ( rcp_is_paid_content( $post_id ) ) {
 			// this content is for paid users only
 
 			if ( ! rcp_is_paid_user( $this->ID ) || ( !rcp_user_has_access( $this->ID, $access_level ) && $access_level > 0 ) ) {
