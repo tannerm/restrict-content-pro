@@ -1062,7 +1062,9 @@ function rcp_member_can_update_billing_card( $user_id = 0 ) {
  */
 function rcp_get_switch_to_url( $user_id = 0 ) {
 
-	if( empty( $user_id ) ) return;
+	if( empty( $user_id ) ) {
+		return;
+	}
 
 	$member = new RCP_Member( $user_id );
 	return $member->get_switch_to_url();

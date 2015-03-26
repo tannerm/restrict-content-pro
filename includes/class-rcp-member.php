@@ -466,14 +466,15 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_switch_to_url() {
 
-		if( !class_exists( 'user_switching' ) ) return false;
+		if( !class_exists( 'user_switching' ) ) {
+		   	return false;
+		}
 
 		$link = user_switching::maybe_switch_url( $this );
 		if ( $link ) {
 			$link = add_query_arg( 'redirect_to', urlencode( home_url() ), $link );
 			return $link;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
