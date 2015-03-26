@@ -1053,3 +1053,18 @@ function rcp_member_can_update_billing_card( $user_id = 0 ) {
 
 	return apply_filters( 'rcp_member_can_update_billing_card', $ret, $user_id );
 }
+
+/**
+ * Wrapper for RCP_Member->get_switch_to_url()
+ *
+ * @access public
+ * @since 2.1
+ */
+function rcp_get_switch_to_url( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) return;
+
+	$member = new RCP_Member( $user_id );
+	return $member->get_switch_to_url();
+
+}
