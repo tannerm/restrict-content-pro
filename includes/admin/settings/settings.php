@@ -118,7 +118,7 @@ function rcp_settings_page() {
 										$label = $gateway;
 
 										if( is_array( $gateway ) ) {
-											$label = $gateway['label'];
+											$label = $gateway['desc'];
 										}
 
 										echo '<input name="rcp_settings[gateways][' . $key . ']" id="rcp_settings[gateways][' . $key . ']" type="checkbox" value="1" ' . checked( true, isset( $rcp_options['gateways'][ $key ] ), false) . '/>&nbsp;';
