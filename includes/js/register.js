@@ -74,6 +74,7 @@ jQuery(document).ready(function($) {
 				$('#rcp_submit', form).val( submit_register_text );
 				$('#rcp_submit', form).before( response.data.errors );
 				$('#rcp_register_nonce', form).val( response.data.nonce );
+				form.unblock();
 			}
 		});
 

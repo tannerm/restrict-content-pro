@@ -511,8 +511,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		ob_start();
 ?>
 		<script type="text/javascript">
+
 			// this identifies your website in the createToken call below
-			
+			Stripe.setPublishableKey('<?php echo $this->publishable_key; ?>');
+
 			function stripeResponseHandler(status, response) {
 				console.log( status );
 				console.log( response );
