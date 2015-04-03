@@ -149,7 +149,7 @@ function rcp_has_paypal_api_access() {
 	global $rcp_options;
 
 	$ret    = false;
-	$prefix = '';
+	$prefix = 'live_';
 
 	if( isset( $rcp_options['sandbox'] ) ) {
 		$prefix = 'test_';
