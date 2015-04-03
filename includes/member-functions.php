@@ -623,12 +623,25 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
 */
 function rcp_is_paypal_subscriber( $user_id = 0 ) {
 
-	if( empty( $user_id ) )
+	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
+	}
 
-	$ret = false;
+	$ret        = false;
+	$member     = new RCP_Member( $user_id );
+	$profile_id = $member->get_payment_profile_id();
 
-	$ret = (bool) get_user_meta( $user_id, 'rcp_paypal_subscriber', true );
+	// Check if the member is a PayPal customer
+	if( false !== strpos( $profile_id, 'I-' ) ) {
+
+		$ret = true;
+
+	} else {
+
+		// The old way of identifying PayPal subscribers
+		$ret = (bool) get_user_meta( $user_id, 'rcp_paypal_subscriber', true );
+
+	}
 
 	return (bool) apply_filters( 'rcp_is_paypal_subscriber', $ret, $user_id );
 }
