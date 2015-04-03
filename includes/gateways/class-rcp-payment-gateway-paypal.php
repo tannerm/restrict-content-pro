@@ -1,14 +1,15 @@
 <?php
 /**
- * PayPal Express Gateway class
+ * Payment Gateway Base Class
  *
  * @package     Restrict Content Pro
+ * @subpackage  Classes/Roles
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
 */
 
-class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
+class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 	public $id;
 
@@ -16,8 +17,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		global $rcp_options;
 
-		$this->id          = 'paypal_express';
-		$this->title       = 'PayPal Express';
+		$this->id          = 'paypal';
+		$this->title       = 'PayPal';
 		$this->description = 'It is PayPal, what else?';
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'recurring';
@@ -29,13 +30,104 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 	public function process_signup() {
 
-		
+		global $rcp_options;
+
+		if( $this->test_mode ) {
+			$paypal_redirect = 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
+		} else {
+			$paypal_redirect = 'https://www.paypal.com/cgi-bin/webscr/?';
+		}
+
+		// Setup PayPal arguments
+		$paypal_args = array(
+			'business'      => trim( $rcp_options['paypal_email'] ),
+			'email'         => $this->email,
+			'item_number'   => $this->subscription_key,
+			'item_name'     => $this->subscription_name,
+			'no_shipping'   => '1',
+			'shipping'      => '0',
+			'no_note'       => '1',
+			'currency_code' => $this->currency,
+			'charset'       => get_bloginfo( 'charset' ),
+			'custom'        => $this->user_id,
+			'rm'            => '2',
+			'return'        => $this->return_url,
+			'cancel_return' => home_url(),
+			'notify_url'    => home_url( '/' ) . '?listener=IPN',
+			'cbt'			=> get_bloginfo( 'name' ),
+			'tax'           => 0,
+			'page_style'    => ! empty( $rcp_options['paypal_page_style'] ) ? trim( $rcp_options['paypal_page_style'] ) : '',
+			'bn'            => 'EasyDigitalDownloads_SP'
+		);
+
+		// recurring paypal payment
+		if( $this->auto_renew && ! empty( $this->length ) ) {
+
+			// recurring paypal payment
+			$paypal_args['cmd'] = '_xclick-subscriptions';
+			$paypal_args['src'] = '1';
+			$paypal_args['sra'] = '1';
+			$paypal_args['a3'] = $this->amount;
+
+			if( ! empty( $this->signup_fee ) ) {
+				$paypal_args['a1'] = number_format( $this->signup_fee + $this->amount, 2 );
+			}
+
+			$paypal_args['p3'] = $this->length;
+
+			if( ! empty( $this->signup_fee ) ) {
+				$paypal_args['p1'] = $this->length;
+			}
+
+			switch ( $this->length_unit ) {
+
+				case "day" :
+
+					$paypal_args['t3'] = 'D';
+					if( ! empty( $this->signup_fee ) ) {
+						$paypal_args['t1'] = 'D';
+					}
+					break;
+
+				case "month" :
+
+					$paypal_args['t3'] = 'M';
+					if( ! empty( $this->signup_fee ) ) {
+						$paypal_args['t1'] = 'M';
+					}
+					break;
+
+				case "year" :
+
+					$paypal_args['t3'] = 'Y';
+					if( ! empty( $this->signup_fee ) ) {
+						$paypal_args['t1'] = 'Y';
+					}
+					break;
+
+			}
+
+		} else {
+
+			// one time payment
+			$paypal_args['cmd'] = '_xclick';
+			$paypal_args['amount'] = $this->amount;
+
+		}
+
+		$paypal_args = apply_filters( 'rcp_paypal_args', $paypal_args, $this );
+
+		$paypal_redirect .= http_build_query( $paypal_args );
+
+		// Redirect to paypal
+		header( 'Location: ' . $paypal_redirect );
+		exit;
 
 	}
 
 	public function process_webhooks() {
 
-		if( ! isset( $_GET['listener'] ) || strtoupper( $_GET['listener'] ) != 'EIPN' ) {
+		if( ! isset( $_GET['listener'] ) || strtoupper( $_GET['listener'] ) != 'IPN' ) {
 			return;
 		}
 
@@ -43,7 +135,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		if( ! class_exists( 'IpnListener' ) ) {
 			// instantiate the IpnListener class
-			include( RCP_PLUGIN_DIR . 'includes/gateways/paypal-ipnlistener.php' );
+			include( RCP_PLUGIN_DIR . 'includes/gateways/paypal/ipnlistener.php' );
 		}
 
 		$listener = new IpnListener();
