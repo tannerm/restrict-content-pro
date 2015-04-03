@@ -929,9 +929,9 @@ function rcp_process_member_cancellation() {
 			if( rcp_has_paypal_api_access() && $member->get_payment_profile_id() ) {
 
 				// Set PayPal API key credentials.
-				$api_username  = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_username' : 'paypal_api_username';
-				$api_password  = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_password' : 'paypal_api_password';
-				$api_signature = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_signature' : 'paypal_api_signature';
+				$api_username  = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_username' : 'live_paypal_api_username';
+				$api_password  = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_password' : 'live_paypal_api_password';
+				$api_signature = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_signature' : 'live_paypal_api_signature';
 				$api_endpoint  = isset( $rcp_options['sandbox'] ) ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp';
 
                 $args = array(
