@@ -988,7 +988,7 @@ function rcp_can_member_cancel( $user_id = 0 ) {
 
 			$ret = true;
 
-		} elseif ( rcp_is_paypal_subscriber( $user_id ) ) {
+		} elseif ( rcp_is_paypal_subscriber( $user_id ) && rcp_has_paypal_api_access() ) {
 
 			$ret = true;
 
