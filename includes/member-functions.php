@@ -971,7 +971,9 @@ function rcp_process_member_cancellation() {
 						$success = false;
 					}
 
-					if( ! isset( $body['ACK'] ) || 'success' !== strtolower( $body['ACK'] ) ) {
+					if( isset( $body['ACK'] ) && 'success' === strtolower( $body['ACK'] ) ) {
+						$success = true;
+					} else {
 						$success = false;
 						if( isset( $body['L_LONGMESSAGE0'] ) ) {
 							$error_msg = $body['L_LONGMESSAGE0'];
