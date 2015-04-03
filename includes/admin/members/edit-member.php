@@ -12,6 +12,9 @@ $member = new RCP_Member( $member_id );
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
 </h2>
+<?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
+	<a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
+<?php } ?>
 <form id="rcp-edit-member" action="" method="post">
 	<table class="form-table">
 		<tbody>

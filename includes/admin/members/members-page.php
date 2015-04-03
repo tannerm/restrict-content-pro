@@ -172,6 +172,9 @@ function rcp_members_page() {
 									<?php } elseif( (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status'])) {  ?>
 										| <a href="<?php echo add_query_arg('deactivate_member', $member->ID, $current_page); ?>" class="rcp_deactivate"><?php _e('Deactivate', 'rcp'); ?></a>
 									<?php } ?>
+									<?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
+										| <a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
+									<?php } ?>
 								<?php endif; ?>
 							</td>
 						</tr>
