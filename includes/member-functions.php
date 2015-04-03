@@ -623,12 +623,25 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
 */
 function rcp_is_paypal_subscriber( $user_id = 0 ) {
 
-	if( empty( $user_id ) )
+	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
+	}
 
-	$ret = false;
+	$ret        = false;
+	$member     = new RCP_Member( $user_id );
+	$profile_id = $member->get_payment_profile_id();
 
-	$ret = (bool) get_user_meta( $user_id, 'rcp_paypal_subscriber', true );
+	// Check if the member is a PayPal customer
+	if( false !== strpos( $profile_id, 'I-' ) ) {
+
+		$ret = true;
+
+	} else {
+
+		// The old way of identifying PayPal subscribers
+		$ret = (bool) get_user_meta( $user_id, 'rcp_paypal_subscriber', true );
+
+	}
 
 	return (bool) apply_filters( 'rcp_is_paypal_subscriber', $ret, $user_id );
 }
@@ -811,11 +824,11 @@ function rcp_process_member_cancellation() {
 
 		global $rcp_options;
 
+		$success  = false;
 		$redirect = remove_query_arg( array( 'rcp-action', '_wpnonce', 'member-id' ), rcp_get_current_url() );
+		$member   = new RCP_Member( get_current_user_id() );
 
 		if( rcp_is_stripe_subscriber() ) {
-
-			$member = new RCP_Member( get_current_user_id() );
 
 			if( ! class_exists( 'Stripe' ) ) {
 				require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
@@ -834,7 +847,7 @@ function rcp_process_member_cancellation() {
 				$cu = Stripe_Customer::retrieve( $member->get_payment_profile_id() );
 				$cu->cancelSubscription( array( 'at_period_end' => false ) );
 
-				$member->cancel();
+				$success = true;
 
 			} catch (Stripe_InvalidRequestError $e) {
 
@@ -913,15 +926,85 @@ function rcp_process_member_cancellation() {
 
 		} elseif( rcp_is_paypal_subscriber() ) {
 
-			$redirect = 'https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_manage-paylist';
+			if( rcp_has_paypal_api_access() && $member->get_payment_profile_id() ) {
 
-		} else {
+				// Set PayPal API key credentials.
+				$api_username  = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_username' : 'live_paypal_api_username';
+				$api_password  = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_password' : 'live_paypal_api_password';
+				$api_signature = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_signature' : 'live_paypal_api_signature';
+				$api_endpoint  = isset( $rcp_options['sandbox'] ) ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp';
 
+                $args = array(
+                	'USER'      => $rcp_options[ $api_username ],
+                	'PWD'       => $rcp_options[ $api_password ],
+                	'SIGNATURE' => $rcp_options[ $api_signature ],
+                	'VERSION'   => '76.0',
+                	'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
+                	'PROFILEID' => $member->get_payment_profile_id(),
+                	'ACTION'    => 'Cancel'
+                );
+
+                $error_msg = '';
+                $request   = wp_remote_post( $api_endpoint, array( 'body' => $args, 'timeout' => 30 ) );
+
+                if ( is_wp_error( $request ) ) {
+
+                	$success   = false;
+                	$error_msg = $request->get_error_message();
+
+				} else {
+
+					$body = wp_remote_retrieve_body( $request );
+					if( is_string( $body ) ) {
+						wp_parse_str( $body, $body );
+					}
+
+					if( empty( $request['response'] ) ) {
+						$success = false;
+					}
+
+					if( empty( $request['response']['code'] ) || 200 !== (int) $request['response']['code'] ) {
+						$success = false;
+					}
+
+					if( empty( $request['response']['message'] ) || 'OK' !== $request['response']['message'] ) {
+						$success = false;
+					}
+
+					if( isset( $body['ACK'] ) && 'success' === strtolower( $body['ACK'] ) ) {
+						$success = true;
+					} else {
+						$success = false;
+						if( isset( $body['L_LONGMESSAGE0'] ) ) {
+							$error_msg = $body['L_LONGMESSAGE0'];
+						}
+					}
+
+				}
+
+				if( ! $success ) {
+					wp_die( sprintf( __( 'There was a problem cancelling your subscription, please contact customer support. Error: %s', 'rcp' ), $error_msg ), array( 'response' => 400 ) );
+				}
+
+			} else {
+
+				// No profile ID stored, so redirect to PayPal to cancel manually
+				$redirect = 'https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_manage-paylist';
+	
+			}
 
 		}
 
-		do_action( 'rcp_process_member_cancellation', get_current_user_id() );
+		if( $success ) {
 
+			$member->cancel();
+
+			do_action( 'rcp_process_member_cancellation', get_current_user_id(), $member );
+
+			$redirect = add_query_arg( 'profile', 'cancelled', $redirect );
+
+		}
+	
 		wp_redirect( $redirect ); exit;
 
 	}
@@ -934,7 +1017,7 @@ add_action( 'init', 'rcp_process_member_cancellation' );
  * @access      public
  * @since       2.1
  */
-function rcp_backfill_payment_profile_ids( $profile_id, $user_id, $member_Object ) {
+function rcp_backfill_payment_profile_ids( $profile_id, $user_id, $member_object ) {
 
 	if( empty( $profile_id ) ) {
 
@@ -948,7 +1031,7 @@ function rcp_backfill_payment_profile_ids( $profile_id, $user_id, $member_Object
 		} else {
 
 			// Check for PayPal
-			$profile_id = get_user_meta( $user_id, 'rcp_paypal_subscriber', true );
+			$profile_id = get_user_meta( $user_id, 'rcp_recurring_payment_id', true );
 
 			if( ! empty( $profile_id ) ) {
 
@@ -988,7 +1071,7 @@ function rcp_can_member_cancel( $user_id = 0 ) {
 
 			$ret = true;
 
-		} elseif ( rcp_is_paypal_subscriber( $user_id ) ) {
+		} elseif ( rcp_is_paypal_subscriber( $user_id ) && rcp_has_paypal_api_access() ) {
 
 			$ret = true;
 
