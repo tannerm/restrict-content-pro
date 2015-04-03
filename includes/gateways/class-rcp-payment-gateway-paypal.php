@@ -260,7 +260,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// store the recurring payment ID
 					update_user_meta( $this->user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
-					$member->set_payment_profile_id( $posted['payer_id'] );
+					$member->set_payment_profile_id( $posted['subscr_id'] );
 
 					do_action( 'rcp_ipn_subscr_signup', $this->user_id );
 
@@ -275,7 +275,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					update_user_meta( $this->user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
-					$member->set_payment_profile_id( $posted['payer_id'] );
+					$member->set_payment_profile_id( $posted['subscr_id'] );
 
 					$this->renew_member( true );
 
