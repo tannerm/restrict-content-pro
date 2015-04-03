@@ -78,11 +78,10 @@ function rcp_process_registration() {
 		// Validate extra fields in gateways with the 2.1+ gateway API
 		if( ! has_action( 'rcp_gateway_' . $gateway ) ) {
 		
-			$gateways = new RCP_Payment_Gateways;
-			$gateway  = $gateways->get_gateway( $gateway );
-			$gateway  = new $gateway['class'];
-
-			$gateway->validate_fields();
+			$gateways    = new RCP_Payment_Gateways;
+			$gateway_var = $gateways->get_gateway( $gateway );
+			$gateway_obj = new $gateway_var['class'];
+			$gateway_obj->validate_fields();
 		}
 
 		do_action( 'rcp_form_errors', $_POST );

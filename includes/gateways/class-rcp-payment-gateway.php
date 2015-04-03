@@ -86,7 +86,7 @@ class RCP_Payment_Gateway {
 
 	public function fields() {}
 
-	public function vaidate_fields() {}
+	public function validate_fields() {}
 
 	public function supports( $item = '' ) {
 		return in_array( $item, $this->supports );

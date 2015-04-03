@@ -71,6 +71,7 @@ jQuery(document).ready(function($) {
 			if ( response.success ) {
 				$(submission_form).submit();
 			} else {
+				console.log( response );
 				$('#rcp_submit', form).val( submit_register_text );
 				$('#rcp_submit', form).before( response.data.errors );
 				$('#rcp_register_nonce', form).val( response.data.nonce );
