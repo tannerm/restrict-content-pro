@@ -118,7 +118,7 @@ function rcp_settings_page() {
 										$label = $gateway;
 
 										if( is_array( $gateway ) ) {
-											$label = $gateway['label'];
+											$label = $gateway['admin_label'];
 										}
 
 										echo '<input name="rcp_settings[gateways][' . $key . ']" id="rcp_settings[gateways][' . $key . ']" type="checkbox" value="1" ' . checked( true, isset( $rcp_options['gateways'][ $key ] ), false) . '/>&nbsp;';
@@ -149,12 +149,72 @@ function rcp_settings_page() {
 								<div class="description"><?php _e( 'Enter your PayPal email address.', 'rcp' ); ?></div>
 							</td>
 						</tr>
+						<tr>
+							<th><?php _e( 'PayPal API Credentials', 'rcp' ); ?></th>
+							<td>
+								<p><?php _e( 'The PayPal API credentials are required in order to use PayPal Express, PayPal Pro, and to support advanced subscription cancellation options in PayPal Standard. Test API credentials can be obtained at <a href="https://developer.paypal.com" target="_blank">developer.paypal.com</a>.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="rcp_settings[test_paypal_api_username]"><?php _e( 'Test API Username', 'rcp_paypal' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[test_paypal_api_username]" style="width: 300px;" name="rcp_settings[test_paypal_api_username]" value="<?php if(isset($rcp_options['test_paypal_api_username'])) { echo trim( $rcp_options['test_paypal_api_username'] ); } ?>"/>
+								<div class="description"><?php _e('Enter your test API username', 'rcp_paypal'); ?></div>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="rcp_settings[test_paypal_api_password]"><?php _e( 'Test API Password', 'rcp_paypal' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[test_paypal_api_password]" style="width: 300px;" name="rcp_settings[test_paypal_api_password]" value="<?php if(isset($rcp_options['test_paypal_api_password'])) { echo trim( $rcp_options['test_paypal_api_password'] ); } ?>"/>
+								<div class="description"><?php _e('Enter your test API password', 'rcp_paypal'); ?></div>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="rcp_settings[test_paypal_api_signature]"><?php _e( 'Test API Signature', 'rcp_paypal' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[test_paypal_api_signature]" style="width: 300px;" name="rcp_settings[test_paypal_api_signature]" value="<?php if(isset($rcp_options['test_paypal_api_signature'])) { echo trim( $rcp_options['test_paypal_api_signature'] ); } ?>"/>
+								<div class="description"><?php _e('Enter your test API signature', 'rcp_paypal'); ?></div>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="rcp_settings[live_paypal_api_username]"><?php _e( 'Live API Username', 'rcp_paypal' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[live_paypal_api_username]" style="width: 300px;" name="rcp_settings[live_paypal_api_username]" value="<?php if(isset($rcp_options['live_paypal_api_username'])) { echo trim( $rcp_options['live_paypal_api_username'] ); } ?>"/>
+								<div class="description"><?php _e('Enter your live API username', 'rcp_paypal'); ?></div>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="rcp_settings[live_paypal_api_password]"><?php _e( 'Live API Password', 'rcp_paypal' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[live_paypal_api_password]" style="width: 300px;" name="rcp_settings[live_paypal_api_password]" value="<?php if(isset($rcp_options['live_paypal_api_password'])) { echo trim( $rcp_options['live_paypal_api_password'] ); } ?>"/>
+								<div class="description"><?php _e('Enter your live API password', 'rcp_paypal'); ?></div>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="rcp_settings[live_paypal_api_signature]"><?php _e( 'Live API Signature', 'rcp_paypal' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[live_paypal_api_signature]" style="width: 300px;" name="rcp_settings[live_paypal_api_signature]" value="<?php if(isset($rcp_options['live_paypal_api_signature'])) { echo trim( $rcp_options['live_paypal_api_signature'] ); } ?>"/>
+								<div class="description"><?php _e('Enter your live API signature', 'rcp_paypal'); ?></div>
+							</td>
+						</tr>
 						<tr valign="top">
 							<th>
 								<label for="rcp_settings[paypal_page_style]"><?php _e( 'PayPal Page Style', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<input class="regular-text" id="rcp_settings[paypal_page_style]" style="width: 300px;" name="rcp_settings[paypal_page_style]" value="<?php if( isset( $rcp_options['paypal_page_style'] ) ) { echo $rcp_options['paypal_page_style']; } ?>"/>
+								<input class="regular-text" id="rcp_settings[paypal_page_style]" style="width: 300px;" name="rcp_settings[paypal_page_style]" value="<?php if( isset( $rcp_options['paypal_page_style'] ) ) { echo trim( $rcp_options['paypal_page_style'] ); } ?>"/>
 								<div class="description"><?php _e( 'Enter the PayPal page style name you wish to use, or leave blank for default.', 'rcp' ); ?></div>
 							</td>
 						</tr>

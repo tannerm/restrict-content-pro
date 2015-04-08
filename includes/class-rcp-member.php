@@ -15,7 +15,7 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_status() {
 
-		$status = get_user_meta( $this->ID, 'rcp_status', true);
+		$status = get_user_meta( $this->ID, 'rcp_status', true );
 
 		// double check that the status and expiration match. Update if needed
 		if( $status == 'active' && rcp_is_expired( $this->ID ) ) {
@@ -42,7 +42,7 @@ class RCP_Member extends WP_User {
 	public function set_status( $new_status = '' ) {
 
 		$ret        = false;
-		$old_status = $this->get_status();
+		$old_status = get_user_meta( $this->ID, 'rcp_status', true );
 
 		if( $old_status != $new_status ) {
 
@@ -516,4 +516,27 @@ class RCP_Member extends WP_User {
 		return apply_filters( 'rcp_member_can_access', $ret, $this->ID, $this );
 
 	}
+
+	/**
+	 * Gets the URL to switch to the user
+	 * if the User Switching plugin is active
+	 *
+	 * @access public
+	 * @since 2.1
+	*/
+	public function get_switch_to_url() {
+
+		if( !class_exists( 'user_switching' ) ) {
+		   	return false;
+		}
+
+		$link = user_switching::maybe_switch_url( $this );
+		if ( $link ) {
+			$link = add_query_arg( 'redirect_to', urlencode( home_url() ), $link );
+			return $link;
+		} else {
+			return false;
+		}
+	}
+
 }

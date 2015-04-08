@@ -37,16 +37,19 @@ class RCP_Payment_Gateways {
 
 		$gateways = array(
 			'manual' => array(
-				'label' => __( 'Manual Payment', 'rcp' ),
-				'class' => 'RCP_Payment_Gateway_Manual'
+				'label'        => __( 'Manual Payment', 'rcp' ),
+				'admin_label'  => __( 'Manual Payment', 'rcp' ),
+				'class'        => 'RCP_Payment_Gateway_Manual'
 			),
 			'paypal' => array(
-				'label' => __( 'PayPal', 'rcp' ),
-				'class' => 'RCP_Payment_Gateway_PayPal'
+				'label'        => __( 'PayPal', 'rcp' ),
+				'admin_label'  => __( 'PayPal', 'rcp' ),
+				'class'        => 'RCP_Payment_Gateway_PayPal'
 			),
 			'stripe' => array(
-				'label' => __( 'Credit / Debit Card', 'rcp' ),
-				'class' => 'RCP_Payment_Gateway_Stripe'
+				'label'        => __( 'Credit / Debit Card', 'rcp' ),
+				'admin_label'  => __( 'Stripe', 'rcp' ),
+				'class'        => 'RCP_Payment_Gateway_Stripe'
 			)
 		);
 

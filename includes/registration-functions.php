@@ -34,6 +34,12 @@ function rcp_process_registration() {
 		$base_price      = $price; // Used for discount calculations later
 		$expiration      = rcp_get_subscription_length( $subscription_id );
 		$subscription    = rcp_get_subscription_details( $subscription_id );
+		// get the selected payment method/gateway
+		if( ! isset( $_POST['rcp_gateway'] ) ) {
+			$gateway = 'paypal';
+		} else {
+			$gateway = sanitize_text_field( $_POST['rcp_gateway'] );
+		}
 
 		/***********************
 		* validate the form
@@ -67,6 +73,15 @@ function rcp_process_registration() {
 		if( $price == 0 && isset( $_POST['rcp_auto_renew'] ) ) {
 			// since free subscriptions do not go through PayPal, they cannot be auto renewed
 			rcp_errors()->add( 'invalid_auto_renew', __( 'Free subscriptions cannot be automatically renewed', 'rcp' ), 'register' );
+		}
+
+		// Validate extra fields in gateways with the 2.1+ gateway API
+		if( ! has_action( 'rcp_gateway_' . $gateway ) ) {
+		
+			$gateways    = new RCP_Payment_Gateways;
+			$gateway_var = $gateways->get_gateway( $gateway );
+			$gateway_obj = new $gateway_var['class'];
+			$gateway_obj->validate_fields();
 		}
 
 		do_action( 'rcp_form_errors', $_POST );
@@ -191,13 +206,6 @@ function rcp_process_registration() {
 					'new_user' 			=> $user_data['need_new'],
 					'post_data' 		=> $_POST
 				);
-
-				// get the selected payment method/gateway
-				if( ! isset( $_POST['rcp_gateway'] ) ) {
-					$gateway = 'paypal';
-				} else {
-					$gateway = $_POST['rcp_gateway'];
-				}
 
 				// send all of the subscription data off for processing by the gateway
 				rcp_send_to_gateway( $gateway, apply_filters( 'rcp_subscription_data', $subscription_data ) );

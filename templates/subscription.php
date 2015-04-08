@@ -5,7 +5,10 @@ global $user_ID, $rcp_options, $rcp_load_css;
 $rcp_load_css = true;
 
 do_action( 'rcp_subscription_details_top' );
-?>
+
+if( isset( $_GET['profile'] ) && 'cancelled' == $_GET['profile'] ) : ?>
+<p class="rcp_success"><span><?php _e( 'Your profile has been successfully cancelled.', 'rcp' ); ?></span></p>
+<?php endif; ?>
 <table class="rcp-table" id="rcp-account-overview">
 	<thead>
 		<tr>
