@@ -463,7 +463,7 @@ class RCP_Member extends WP_User {
 	 * @access  public
 	 * @since   2.1
 	*/
-	public function can_access( $post_id ) {
+	public function can_access( $post_id = 0 ) {
 
 		$subscription_levels = rcp_get_content_subscription_levels( $post_id );
 		$access_level        = get_post_meta( $post_id, 'rcp_access_level', true );
@@ -513,7 +513,7 @@ class RCP_Member extends WP_User {
 			$ret = true;
 		}
 
-		return apply_filters( 'rcp_member_can_access', $ret, $this->ID, $this );
+		return apply_filters( 'rcp_member_can_access', $ret, $this->ID, $post_id, $this );
 
 	}
 
