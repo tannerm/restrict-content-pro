@@ -466,7 +466,7 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_switch_to_url() {
 
-		if( !class_exists( 'user_switching' ) ) {
+		if( ! class_exists( 'user_switching' ) ) {
 		   	return false;
 		}
 
