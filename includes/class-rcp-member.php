@@ -194,11 +194,11 @@ class RCP_Member extends WP_User {
 	*/
 	public function cancel() {
 
-		do_action( 'rcp_member_pre_cancel', $this->ID, $expiration, $this );
+		do_action( 'rcp_member_pre_cancel', $this->ID, $this );
 
 		$this->set_status( 'cancelled' );
 
-		do_action( 'rcp_member_post_cancel', $this->ID, $expiration, $this );
+		do_action( 'rcp_member_post_cancel', $this->ID, $this );
 
 	}
 
