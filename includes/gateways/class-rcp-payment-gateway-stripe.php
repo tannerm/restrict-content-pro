@@ -523,8 +523,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			Stripe.setPublishableKey('<?php echo $this->publishable_key; ?>');
 
 			function stripeResponseHandler(status, response) {
-				console.log( status );
-				console.log( response );
 				if (response.error) {
 					// re-enable the submit button
 					jQuery('#rcp_registration_form #rcp_submit').attr("disabled", false);
