@@ -170,8 +170,12 @@ function rcp_has_paypal_api_access() {
 
 if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 	function rcp_stripe_add_discount() {
-		global $rcp_options;
+		
+		if( ! is_admin() ) {
+			return;
+		}
 
+		global $rcp_options;
 
 		if( ! class_exists( 'Stripe' ) ) {
 			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
@@ -303,6 +307,10 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 if( ! function_exists( 'rcp_stripe_edit_discount' ) ) {
 	function rcp_stripe_edit_discount() {
 
+		if( ! is_admin() ) {
+			return;
+		}
+
 		global $rcp_options;
 
 		if( ! class_exists( 'Stripe' ) ) {
@@ -317,7 +325,7 @@ if( ! function_exists( 'rcp_stripe_edit_discount' ) ) {
 
 		Stripe::setApiKey( $secret_key );
 
-		if ( ! rcp_stripe_coupon_exists( $_POST['code'] ) ) {
+		if ( ! rcp_stripe_coupon_exists( $_POST['rcp_discount'] ) ) {
 
 			try {
 
