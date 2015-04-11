@@ -458,6 +458,66 @@ class RCP_Member extends WP_User {
 	}
 
 	/**
+	 * Determines if the member can access current content
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function can_access( $post_id ) {
+
+		$subscription_levels = rcp_get_content_subscription_levels( $post_id );
+		$access_level        = get_post_meta( $post_id, 'rcp_access_level', true );
+
+		$ret = false;
+
+		if ( rcp_is_paid_content( $post_id ) ) {
+			// this content is for paid users only
+
+			if ( ! rcp_is_paid_user( $this->ID ) || ( !rcp_user_has_access( $this->ID, $access_level ) && $access_level > 0 ) ) {
+				$ret = false;
+			} else {
+				if ( $subscription_levels ) {
+					if ( $access_level > 0 ) {
+						$has_access = rcp_user_has_access( $this->ID, $access_level );
+					} else {
+						$has_access = true; // no access level restriction
+					}
+					if ( ( ! in_array( rcp_get_subscription_id( $this->ID ), $subscription_levels ) || ! $has_access ) && ! current_user_can( 'manage_options' ) ) {
+						$ret = false;
+					}
+				}
+				$ret = true;
+			}
+		} elseif ( $subscription_levels ) {
+			// this content is restricted to a subscription level, but is free
+
+			if ( $access_level > 0 ) {
+				$has_access = rcp_user_has_access( $this->ID, $access_level );
+			} else {
+				$has_access = true; // no access level restriction
+			}
+			if ( in_array( rcp_get_subscription_id( $this->ID ), $subscription_levels ) && $has_access ) {
+				$ret = true;
+			} else {
+				$ret = false;
+			}
+
+		} elseif ( $access_level > 0 ) {
+
+			if ( rcp_user_has_access( $this->ID, $access_level ) ) {
+				$ret = true;
+			} else {
+				$ret = false;
+			}
+		} else {
+			$ret = true;
+		}
+
+		return apply_filters( 'rcp_member_can_access', $ret, $this->ID, $this );
+
+	}
+
+	/**
 	 * Gets the URL to switch to the user
 	 * if the User Switching plugin is active
 	 *

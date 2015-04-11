@@ -319,6 +319,25 @@ function rcp_user_has_access( $user_id = 0, $access_level_needed ) {
 	return false;
 }
 
+/*
+ * Wrapper function for RCP_Member->can_access()
+ * Returns true if user can access the current content
+*/
+function rcp_user_can_access( $user_id = 0, $post_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	if( empty( $post_id ) ) {
+		global $post;
+		$post_id = $post->ID;
+	}
+
+	$member = new RCP_Member( $user_id );
+	return $member->can_access( $post_id );
+}
+
 function rcp_calc_member_expiration( $expiration_object ) {
 
 	$current_time       = current_time( 'timestamp' );
