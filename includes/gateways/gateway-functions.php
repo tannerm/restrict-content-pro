@@ -214,9 +214,9 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
@@ -231,9 +231,9 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
 
-			$error = "<h4>An error occurred</h4>";
+			$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 			if( isset( $err['code'] ) ) {
-				$error .= "<p>Error code: " . $err['code'] ."</p>";
+				$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 			}
 			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 			$error .= "<p>Message: " . $err['message'] . "</p>";
@@ -248,9 +248,9 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
 
-			$error = "<h4>An error occurred</h4>";
+			$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 			if( isset( $err['code'] ) ) {
-				$error .= "<p>Error code: " . $err['code'] ."</p>";
+				$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 			}
 			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 			$error .= "<p>Message: " . $err['message'] . "</p>";
@@ -264,9 +264,9 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
 
-			$error = "<h4>An error occurred</h4>";
+			$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 			if( isset( $err['code'] ) ) {
-				$error .= "<p>Error code: " . $err['code'] ."</p>";
+				$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 			}
 			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 			$error .= "<p>Message: " . $err['message'] . "</p>";
@@ -280,9 +280,9 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
 
-			$error = "<h4>An error occurred</h4>";
+			$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 			if( isset( $err['code'] ) ) {
-				$error .= "<p>Error code: " . $err['code'] ."</p>";
+				$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 			}
 			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 			$error .= "<p>Message: " . $err['message'] . "</p>";
@@ -388,9 +388,9 @@ if( ! function_exists( 'rcp_stripe_edit_discount' ) ) {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
@@ -405,9 +405,9 @@ if( ! function_exists( 'rcp_stripe_edit_discount' ) ) {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
@@ -421,9 +421,9 @@ if( ! function_exists( 'rcp_stripe_edit_discount' ) ) {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
@@ -437,9 +437,9 @@ if( ! function_exists( 'rcp_stripe_edit_discount' ) ) {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
