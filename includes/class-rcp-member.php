@@ -346,7 +346,7 @@ class RCP_Member extends WP_User {
 
 		if( user_can( $this->ID, 'manage_options' ) ) {
 			$ret = true;
-		} else if( ! rcp_is_expired( $this->ID ) && ( $this->get_status() == 'active' || $this->get_status() == 'cancelled' ) ) {
+		} else if( ! $this->is_expired() && ( $this->get_status() == 'active' || $this->get_status() == 'cancelled' ) ) {
 			$ret = true;
 		}
 
@@ -468,49 +468,29 @@ class RCP_Member extends WP_User {
 		$subscription_levels = rcp_get_content_subscription_levels( $post_id );
 		$access_level        = get_post_meta( $post_id, 'rcp_access_level', true );
 
-		$ret = false;
+		// Assume the user can until proven false
+		$ret = true;
 
-		if ( rcp_is_paid_content( $post_id ) ) {
-			// this content is for paid users only
+		if ( rcp_is_paid_content( $post_id ) && ! $this->is_active() ) {
 
-			if ( ! rcp_is_paid_user( $this->ID ) || ( !rcp_user_has_access( $this->ID, $access_level ) && $access_level > 0 ) ) {
+			$ret = false;
+
+		}
+
+		if( ! rcp_user_has_access( $this->ID, $access_level ) && $access_level > 0 ) {
+
+			$ret = false;
+
+		}
+
+		if ( ! empty( $subscription_levels ) ) {
+
+			if ( ! in_array( $this->get_subscription_id(), $subscription_levels ) && ! user_can( $this->ID, 'manage_options' ) ) {
+
 				$ret = false;
-			} else {
-				if ( $subscription_levels ) {
-					if ( $access_level > 0 ) {
-						$has_access = rcp_user_has_access( $this->ID, $access_level );
-					} else {
-						$has_access = true; // no access level restriction
-					}
-					if ( ( ! in_array( rcp_get_subscription_id( $this->ID ), $subscription_levels ) || ! $has_access ) && ! current_user_can( 'manage_options' ) ) {
-						$ret = false;
-					}
-				}
-				$ret = true;
-			}
-		} elseif ( $subscription_levels ) {
-			// this content is restricted to a subscription level, but is free
 
-			if ( $access_level > 0 ) {
-				$has_access = rcp_user_has_access( $this->ID, $access_level );
-			} else {
-				$has_access = true; // no access level restriction
-			}
-			if ( in_array( rcp_get_subscription_id( $this->ID ), $subscription_levels ) && $has_access ) {
-				$ret = true;
-			} else {
-				$ret = false;
 			}
 
-		} elseif ( $access_level > 0 ) {
-
-			if ( rcp_user_has_access( $this->ID, $access_level ) ) {
-				$ret = true;
-			} else {
-				$ret = false;
-			}
-		} else {
-			$ret = true;
 		}
 
 		return apply_filters( 'rcp_member_can_access', $ret, $this->ID, $post_id, $this );
