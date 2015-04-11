@@ -159,6 +159,8 @@ function rcp_validate_gateways() {
 		is_free = true;
 	}
 
+	$('.rcp_message.error', form).remove();
+
 	if( $('#rcp_payment_gateways').length > 0 ) {
 
 		gateway = $( '#rcp_payment_gateways select option:selected' );
