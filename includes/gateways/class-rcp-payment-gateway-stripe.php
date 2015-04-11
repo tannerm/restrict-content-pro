@@ -276,7 +276,14 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						'amount' 		=> $this->amount * 100, // amount in cents
 						'currency' 		=> strtolower( $this->currency ),
 						'card' 			=> $_POST['stripeToken'],
-						'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name
+						'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
+						'metadata'      => array(
+							'email'     => $this->email,
+							'user_id'   => $this->user_id,
+							'level_id'  => $this->subscription_id,
+							'level'     => $this->subscription_name,
+							'key'       => $this->subscription_key
+						)
 					)
 				);
 
