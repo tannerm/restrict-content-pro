@@ -88,6 +88,10 @@ class RCP_Payment_Gateways {
 
 	}
 
+	public function is_gateway_enabled( $id = '' ) {
+		return isset( $this->enabled_gateways[ $id ] );
+	}
+
 	public function load_fields() {
 
 		if( ! empty( $_POST['rcp_gateway'] ) ) {

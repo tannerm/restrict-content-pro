@@ -303,7 +303,9 @@ function rcp_update_billing_card_shortcode( $atts, $content = null ) {
 
 	if( rcp_member_can_update_billing_card() ) {
 
+		do_action( 'rcp_before_update_billing_card_form' );
 		rcp_get_template_part( 'card-update', 'form' );
+		do_action( 'rcp_after_update_billing_card_form' );
 
 	}
 

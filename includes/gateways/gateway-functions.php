@@ -44,6 +44,16 @@ function rcp_get_enabled_payment_gateways() {
 	return $gateways->enabled_gateways;
 }
 
+/**
+ * Determine if a gateway is enabled
+ *
+ * @access      public
+ * @return      bool
+*/
+function rcp_is_gateway_enabled( $id = '' ) {
+	$gateways = new RCP_Payment_Gateways;
+	return $gateways->is_gateway_enabled( $id );
+}
 
 /**
  * Send payment / subscription data to gateway
@@ -148,3 +158,39 @@ function rcp_load_gateway_scripts() {
 
 }
 add_action( 'wp_enqueue_scripts', 'rcp_load_gateway_scripts', 100 );
+
+
+/**
+ * Process an update card form request
+ *
+ * @access      private
+ * @since       2.1
+ */
+function rcp_process_update_card_form_post() {
+
+	if( ! is_user_logged_in() ) {
+		return;
+	}
+
+	if( is_admin() ) {
+		return;
+	}
+
+	if ( ! isset( $_POST['rcp_update_card_nonce'] ) || ! wp_verify_nonce( $_POST['rcp_update_card_nonce'], 'rcp-update-card-nonce' ) ) {
+		return;
+	}
+
+	if( ! rcp_member_can_update_billing_card() ) {
+		wp_die( __( 'Your account does not support updating your billing card', 'rcp' ), __( 'Error', 'rcp' ), array( 'response' => 403 ) );
+	}
+
+	$member = new RCP_Member( get_current_user_id() );
+
+	if( $member ) {
+
+		do_action( 'rcp_update_billing_card', $member->ID, $member );
+	
+	}
+
+}
+add_action( 'init', 'rcp_process_update_card_form_post' );

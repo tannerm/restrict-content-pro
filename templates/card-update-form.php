@@ -33,6 +33,8 @@
 			</select>
 		</p>
 	</fieldset>
+	<div class="rcp_message error">
+	</div>
 	<p id="rcp_submit_wrap">
 		<input type="hidden" name="rcp_update_card_nonce" value="<?php echo wp_create_nonce( 'rcp-update-card-nonce' ); ?>"/>
 		<input type="submit" name="rcp_submit_card_update" id="rcp_submit" value="<?php _e( 'Update Card', 'rcp' ); ?>"/>
