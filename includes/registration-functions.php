@@ -111,7 +111,6 @@ function rcp_process_registration() {
 
 		if( $user_data['need_new'] ) {
 
-
 			$user_data['id'] = wp_insert_user( array(
 					'user_login'		=> $user_data['login'],
 					'user_pass'	 		=> $user_data['password'],
@@ -122,6 +121,7 @@ function rcp_process_registration() {
 				)
 			);
 		}
+
 		if( $user_data['id'] ) {
 
 			rcp_set_status( $user_data['id'], 'pending' );
