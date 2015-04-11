@@ -11,9 +11,10 @@ function rcp_hide_premium_posts( $query ) {
 	if( isset( $rcp_options['hide_premium'] ) && ! is_singular() && false == $suppress_filters ) {
 		if( ! rcp_is_active( $user_ID ) ) {
 			$premium_ids = rcp_get_paid_posts();
-			if( $premium_ids )
+			if( $premium_ids ) {
 				$query->set( 'post__not_in', $premium_ids );
+			}
 		}
 	}
 }
-add_action( 'pre_get_posts', 'rcp_hide_premium_posts' );
+add_action( 'pre_get_posts', 'rcp_hide_premium_posts', 99999 );

@@ -330,6 +330,7 @@ function rcp_settings_page() {
 										foreach ( $pages as $page ) {
 										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['registration_page'], false) . '>';
 											$option .= $page->post_title;
+											$option .= ' (ID: ' . $page->ID . ')';
 											$option .= '</option>';
 											echo $option;
 										}
@@ -352,6 +353,7 @@ function rcp_settings_page() {
 										foreach ( $pages as $page ) {
 										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['redirect'], false) . '>';
 											$option .= $page->post_title;
+											$option .= ' (ID: ' . $page->ID . ')';
 											$option .= '</option>';
 											echo $option;
 										}
