@@ -95,7 +95,6 @@ rcp_show_error_messages( 'register' ); ?>
 	<div class="rcp_gateway_fields">
 		<?php
 		$gateways = rcp_get_enabled_payment_gateways();
-
 		if( count( $gateways ) > 1 ) : $display = rcp_has_paid_levels() ? '' : ' style="display: none;"'; ?>
 			<fieldset class="rcp_gateways_fieldset">
 				<p id="rcp_payment_gateways"<?php echo $display; ?>>

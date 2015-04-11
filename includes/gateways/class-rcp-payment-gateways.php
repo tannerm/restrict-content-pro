@@ -64,7 +64,7 @@ class RCP_Payment_Gateways {
 		$enabled = array();
 		$saved   = isset( $rcp_options['gateways'] ) ? array_map( 'trim', $rcp_options['gateways'] ) : array();
 
-		if( $saved ) {
+		if( ! empty( $saved ) ) {
 
 			foreach( $this->available_gateways as $key => $gateway ) {
 
@@ -75,10 +75,14 @@ class RCP_Payment_Gateways {
 				}
 			}
 
-		} else {
+		}
+
+		if( empty( $enabled ) ) {
 
 			$enabled[ 'paypal'] = __( 'PayPal', 'rcp' );
+
 		}
+
 
 		return apply_filters( 'rcp_enabled_payment_gateways', $enabled, $this->available_gateways );
 
