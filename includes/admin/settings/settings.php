@@ -998,6 +998,11 @@ function rcp_activate_license() {
 	$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 	update_option( 'rcp_license_status', $license_data->license );
+	delete_transient( 'rcp_license_check' );
+
+	if( 'valid' !== $license_data->license ) {
+		wp_die( sprintf( __( 'Your license key could not be activated. Error: %s', 'rcp' ), $license_data->error ), __( 'Error', 'rcp' ), array( 'response' => 401, 'back_link' => true ) );		
+	}
 
 }
 
@@ -1019,7 +1024,6 @@ function rcp_deactivate_license() {
 		// retrieve the license from the database
 		$license = trim( $rcp_options['license_key'] );
 
-
 		// data to send in our API request
 		$api_params = array(
 			'edd_action'=> 'deactivate_license',
@@ -1039,11 +1043,62 @@ function rcp_deactivate_license() {
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 		// $license_data->license will be either "deactivated" or "failed"
-		if( $license_data->license == 'deactivated' )
+		if( $license_data->license == 'deactivated' ) {
 			delete_option( 'rcp_license_status' );
+			delete_transient( 'rcp_license_check' );
+		}
 
 	}
 }
+
+function rcp_check_license() {
+
+	if( ! empty( $_POST['rcp_settings'] ) ) {
+		return; // Don't fire when saving settings
+	}
+
+	global $rcp_options;
+
+	$status = get_transient( 'rcp_license_check' );
+
+	// Run the license check a maximum of once per day
+	if( false === $status ) {
+
+		// data to send in our API request
+		$api_params = array(
+			'edd_action'=> 'check_license',
+			'license' 	=> trim( $rcp_options['license_key'] ),
+			'item_name' => urlencode( 'Restrict Content Pro' ), // the name of our product in EDD
+			'url'       => home_url()
+		);
+
+		// Call the custom API.
+		$response = wp_remote_post( 'https://pippinsplugins.com', array( 'timeout' => 35, 'sslverify' => false, 'body' => $api_params ) );
+
+		// make sure the response came back okay
+		if ( is_wp_error( $response ) )
+			return false;
+
+		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		$rcp_options['license_status'] = $license_data->license;
+
+		update_option( 'rcp_settings', $rcp_options );
+
+		set_transient( 'rcp_license_check', $license_data->license, DAY_IN_SECONDS );
+
+		$status = $license_data->license;
+
+		if( 'valid' !== $status ) {
+			delete_option( 'rcp_license_status' );
+		}
+
+	}
+
+	return $status;
+
+}
+add_action( 'admin_init', 'rcp_check_license' );
 
 
 /**

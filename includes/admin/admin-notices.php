@@ -9,16 +9,22 @@ function rcp_admin_notices() {
 
 	// only show notice if settings have never been saved
 	if( ! is_array( $rcp_options ) || empty( $rcp_options ) ) {
-		echo '<div class="updated"><p><a href="' . admin_url( "admin.php?page=rcp-settings" ) . '">' . __( 'You should now configure your Restrict Content Pro settings', 'rcp' ) . '</a></p></div>';
+		echo '<div class="notice notice-info"><p><a href="' . admin_url( "admin.php?page=rcp-settings" ) . '">' . __( 'You should now configure your Restrict Content Pro settings', 'rcp' ) . '</a></p></div>';
 	}
 
 	if( rcp_check_if_upgrade_needed() ) {
 		echo '<div class="error"><p>' . __( 'The Restrict Content Pro database needs updated: ', 'rcp' ) . ' ' . '<a href="' . esc_url( add_query_arg( 'rcp-action', 'upgrade', admin_url() ) ) . '">' . __( 'upgrade now', 'rcp' ) . '</a></p></div>';
 	}
+
 	if( isset( $_GET['rcp-db'] ) && $_GET['rcp-db'] == 'updated' ) {
 		echo '<div class="updated fade"><p>' . __( 'The Restrict Content Pro database has been updated', 'rcp' ) . '</p></div>';
 	}
 
+	if ( 'expired' === rcp_check_license() ) {
+		echo '<div class="error info"><p>' . __( 'Your license key for Restrict Content Pro has expired. Please renew your license to re-enable automatic updates.', 'rcp' ) . '</p></div>';
+	} elseif ( 'valid' !== rcp_check_license() ) {
+		echo '<div class="notice notice-info"><p>' . sprintf( __( 'Please <a href="%s">enter and activate</a> your license key for Restrict Content Pro to enable automatic updates.', 'rcp' ), admin_url( 'admin.php?page=rcp-settings' ) ) . '</p></div>';
+	}
 
 	switch( $message ) :
 
