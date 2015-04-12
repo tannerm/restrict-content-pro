@@ -84,7 +84,7 @@ class RCP_Member extends WP_User {
 			$expiration = $expiration != 'none' ? $expiration : 'none';
 		}
 
-		if( $formatted ) {
+		if( $formatted && 'none' != $expiration ) {
 			$expiration = date_i18n( get_option( 'date_format' ), strtotime( $expiration ) );
 		}
 
