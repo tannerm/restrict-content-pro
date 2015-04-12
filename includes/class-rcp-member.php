@@ -148,6 +148,10 @@ class RCP_Member extends WP_User {
 	*/
 	public function renew( $recurring = false, $status = 'active' ) {
 
+		if( ! $this->get_subscription_id() ) {
+			return false;
+		}
+
 		// Get the member's current expiration date
 		$expires        = $this->get_expiration_time();
 
