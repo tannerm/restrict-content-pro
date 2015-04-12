@@ -185,7 +185,7 @@ class RCP_Member extends WP_User {
 	}
 
 	/**
-	 * Sets a member's membership as cancelled by updating status and expiration date
+	 * Sets a member's membership as cancelled by updating status
 	 *
 	 * Does NOT handle actual cancellation of subscription payments, that is done in rcp_process_member_cancellation(). This should be called after a member is successfully cancelled.
 	 *
