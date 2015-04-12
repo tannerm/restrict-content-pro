@@ -7,7 +7,15 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->member = new RCP_Member( 1 );
+
+		$user = wp_insert_user( array(
+			'user_login' => 'test',
+			'user_pass'       => 'pass',
+			'first_name' => 'Tester',
+			'user_email' => 'test@test.com'
+		) );
+
+		$this->member = new RCP_Member( $user );
 
 		$levels = new RCP_Levels;
 		$this->level_id = $levels->insert( array(
@@ -104,6 +112,33 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 
 	}
 
+	function test_is_recurring() {
+
+		$this->assertFalse( $this->member->is_recurring() );
+
+		$this->member->set_recurring( true );
+
+		$this->assertTrue( $this->member->is_recurring() );
+
+		$this->member->set_recurring( false );
+
+		$this->assertFalse( $this->member->is_recurring() );
+
+		$this->member->set_recurring( 1 );
+
+		$this->assertTrue( $this->member->is_recurring() );
+
+		$this->member->set_recurring( 0 );
+
+		$this->assertFalse( $this->member->is_recurring() );
+
+		$this->member->set_recurring( 1 );
+		$this->member->cancel();
+
+		$this->assertFalse( $this->member->is_recurring() );
+
+	}
+
 	function test_renew() {
 
 		$this->member->set_expiration_date( '2014-01-01 00:00:00' );
@@ -125,8 +160,9 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 
 	function test_cancel() {
 
-		$this->assertTrue( $this->member->is_active() );
+		$this->assertFalse( $this->member->is_active() );
 
+		$this->member->set_status( 'active' );
 		$this->member->set_recurring( true );
 
 		$this->member->cancel();
@@ -135,6 +171,22 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 		$this->assertTrue( $this->member->is_active() );
 		$this->assertFalse( $this->member->is_recurring() );
 		$this->assertEquals( 'cancelled', $this->member->get_status() );
+	}
+
+	function test_is_trialing() {
+
+		$this->assertFalse( $this->member->is_trialing() );
+
+		$this->member->set_status( 'active' );
+
+		update_user_meta( $this->member->ID, 'rcp_is_trialing', 'yes' );
+
+		$this->assertTrue( $this->member->is_trialing() );
+
+		$this->member->set_status( 'free' );
+		$this->assertFalse( $this->member->is_trialing() );
+
+
 	}
 }
 

@@ -18,7 +18,7 @@ class RCP_Member extends WP_User {
 		$status = get_user_meta( $this->ID, 'rcp_status', true );
 
 		// double check that the status and expiration match. Update if needed
-		if( $status == 'active' && rcp_is_expired( $this->ID ) ) {
+		if( $status == 'active' && $this->is_expired() ) {
 
 			$status = 'expired';
 			$this->set_status( $status );
@@ -429,8 +429,7 @@ class RCP_Member extends WP_User {
 		$ret      = false;
 		$trialing = get_user_meta( $this->ID, 'rcp_is_trialing', true );
 
-
-		if( $trialing == 'yes' && rcp_is_active( $this->ID ) ) {
+		if( $trialing == 'yes' && $this->is_active() ) {
 			$ret = true;
 		}
 
