@@ -2,13 +2,18 @@
 
 /**
  * Load additional gateway include files
- */
-
-foreach( rcp_get_payment_gateways() as $key => $gateway ) {
-	if( file_exists( RCP_PLUGIN_DIR . 'includes/gateways/' . $key . '/functions.php' ) ) {
-		require_once RCP_PLUGIN_DIR . 'includes/gateways/' . $key . '/functions.php';
+ *
+ * @access      private
+ * @since       2.1
+*/
+function rcp_load_gateway_files() {
+	foreach( rcp_get_payment_gateways() as $key => $gateway ) {
+		if( file_exists( RCP_PLUGIN_DIR . 'includes/gateways/' . $key . '/functions.php' ) ) {
+			require_once RCP_PLUGIN_DIR . 'includes/gateways/' . $key . '/functions.php';
+		}
 	}
 }
+add_action( 'plugins_loaded', 'rcp_load_gateway_files', 9999 );
 
 /**
  * Register default payment gateways
@@ -66,9 +71,9 @@ function rcp_send_to_gateway( $gateway, $subscription_data ) {
 	if( has_action( 'rcp_gateway_' . $gateway ) ) {
 
 		do_action( 'rcp_gateway_' . $gateway, $subscription_data );
-	
+
 	} else {
-	
+
 		$gateways = new RCP_Payment_Gateways;
 		$gateway  = $gateways->get_gateway( $gateway );
 		$gateway  = new $gateway['class']( $subscription_data );
@@ -91,7 +96,7 @@ function rcp_gateway_supports( $gateway = 'paypal', $item = 'recurring' ) {
 	$ret      = true;
 	$gateways = new RCP_Payment_Gateways;
 	$gateway  = $gateways->get_gateway( $gateway );
-	
+
 	if( is_array( $gateway ) && isset( $gateway['class'] ) ) {
 
 		$gateway = new $gateway['class'];
@@ -189,7 +194,7 @@ function rcp_process_update_card_form_post() {
 	if( $member ) {
 
 		do_action( 'rcp_update_billing_card', $member->ID, $member );
-	
+
 	}
 
 }

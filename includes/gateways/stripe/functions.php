@@ -130,26 +130,181 @@ function rcp_stripe_update_billing_card( $member_id = 0, $member_obj ) {
 }
 add_action( 'rcp_update_billing_card', 'rcp_stripe_update_billing_card', 10, 2 );
 
-if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
-	function rcp_stripe_add_discount() {
-		
-		if( ! is_admin() ) {
-			return;
-		}
+/**
+ * Create discount code in Stripe when one is created in RCP
+ *
+ * @access      private
+ * @since       2.1
+ */
+function rcp_stripe_create_discount() {
+	
+	if( ! is_admin() ) {
+		return;
+	}
 
-		global $rcp_options;
+	if( function_exists( 'rcp_stripe_add_discount' ) ) {
+		return; // Old Stripe gateway is active
+	}
 
-		if( ! class_exists( 'Stripe' ) ) {
-			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
-		}
+	global $rcp_options;
 
-		if ( isset( $rcp_options['sandbox'] ) ) {
-			$secret_key = trim( $rcp_options['stripe_test_secret'] );
+	if( ! class_exists( 'Stripe' ) ) {
+		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+	}
+
+	if ( isset( $rcp_options['sandbox'] ) ) {
+		$secret_key = trim( $rcp_options['stripe_test_secret'] );
+	} else {
+		$secret_key = trim( $rcp_options['stripe_live_secret'] );
+	}
+
+	Stripe::setApiKey( $secret_key );
+
+	try {
+
+		if ( $_POST['unit'] == '%' ) {
+			Stripe_Coupon::create( array(
+					"percent_off" => sanitize_text_field( $_POST['amount'] ),
+					"duration"    => "forever",
+					"id"          => sanitize_text_field( $_POST['code'] ),
+					"currency"   => strtolower( $rcp_options['currency'] )
+				)
+			);
 		} else {
-			$secret_key = trim( $rcp_options['stripe_live_secret'] );
+			Stripe_Coupon::create( array(
+					"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
+					"duration"   => "forever",
+					"id"         => sanitize_text_field( $_POST['code'] ),
+					"currency"   => strtolower( $rcp_options['currency'] )
+				)
+			);
 		}
 
-		Stripe::setApiKey( $secret_key );
+	} catch ( Stripe_CardError $e ) {
+
+			$body = $e->getJsonBody();
+			$err  = $body['error'];
+
+			$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
+			if( isset( $err['code'] ) ) {
+				$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
+			}
+			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+			$error .= "<p>Message: " . $err['message'] . "</p>";
+
+			wp_die( $error );
+
+			exit;
+
+	} catch (Stripe_InvalidRequestError $e) {
+
+		// Invalid parameters were supplied to Stripe's API
+		$body = $e->getJsonBody();
+		$err  = $body['error'];
+
+		$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
+		if( isset( $err['code'] ) ) {
+			$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
+		}
+		$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+		$error .= "<p>Message: " . $err['message'] . "</p>";
+
+		wp_die( $error );
+
+	} catch (Stripe_AuthenticationError $e) {
+
+		// Authentication with Stripe's API failed
+		// (maybe you changed API keys recently)
+
+		$body = $e->getJsonBody();
+		$err  = $body['error'];
+
+		$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
+		if( isset( $err['code'] ) ) {
+			$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
+		}
+		$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+		$error .= "<p>Message: " . $err['message'] . "</p>";
+
+		wp_die( $error );
+
+	} catch (Stripe_ApiConnectionError $e) {
+
+		// Network communication with Stripe failed
+
+		$body = $e->getJsonBody();
+		$err  = $body['error'];
+
+		$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
+		if( isset( $err['code'] ) ) {
+			$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
+		}
+		$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+		$error .= "<p>Message: " . $err['message'] . "</p>";
+
+		wp_die( $error );
+
+	} catch (Stripe_Error $e) {
+
+		// Display a very generic error to the user
+
+		$body = $e->getJsonBody();
+		$err  = $body['error'];
+
+		$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
+		if( isset( $err['code'] ) ) {
+			$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
+		}
+		$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+		$error .= "<p>Message: " . $err['message'] . "</p>";
+
+		wp_die( $error );
+
+	} catch (Exception $e) {
+
+		// Something else happened, completely unrelated to Stripe
+
+		$error = "<p>An unidentified error occurred.</p>";
+		$error .= print_r( $e, true );
+
+		wp_die( $error );
+
+	}
+
+}
+add_action( 'rcp_pre_add_discount', 'rcp_stripe_add_discount' );
+
+/**
+ * Update a discount in Stripe when a local code is updated
+ *
+ * @access      private
+ * @since       2.1
+ */
+function rcp_stripe_update_discount() {
+
+	if( ! is_admin() ) {
+		return;
+	}
+
+	if( function_exists( 'rcp_stripe_add_discount' ) ) {
+		return; // Old Stripe gateway is active
+	}
+
+	global $rcp_options;
+
+	if( ! class_exists( 'Stripe' ) ) {
+		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+	}
+
+	if ( isset( $rcp_options['sandbox'] ) ) {
+		$secret_key = trim( $rcp_options['stripe_test_secret'] );
+	} else {
+		$secret_key = trim( $rcp_options['stripe_live_secret'] );
+	}
+
+	Stripe::setApiKey( $secret_key );
+
+	if ( ! rcp_stripe_does_coupon_exists( $_POST['rcp_discount'] ) ) {
 
 		try {
 
@@ -158,7 +313,7 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 						"percent_off" => sanitize_text_field( $_POST['amount'] ),
 						"duration"    => "forever",
 						"id"          => sanitize_text_field( $_POST['code'] ),
-						"currency"   => strtolower( $rcp_options['currency'] )
+						"currency"    => strtolower( $rcp_options['currency'] )
 					)
 				);
 			} else {
@@ -171,21 +326,40 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 				);
 			}
 
-		} catch ( Stripe_CardError $e ) {
+		} catch ( Exception $e ) {
+			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
+		}
 
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
+	} else {
 
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
+		// first delete the discount in Stripe
+		try {
+			$cpn = Stripe_Coupon::retrieve( $_POST['code'] );
+			$cpn->delete();
+		} catch ( Exception $e ) {
+			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
+		}
 
-				wp_die( $error );
+		// now add a new one. This is a fake "update"
+		try {
 
-				exit;
+			if ( $_POST['unit'] == '%' ) {
+				Stripe_Coupon::create( array(
+						"percent_off" => sanitize_text_field( $_POST['amount'] ),
+						"duration"    => "forever",
+						"id"          => sanitize_text_field( $_POST['code'] ),
+						"currency"    => strtolower( $rcp_options['currency'] )
+					)
+				);
+			} else {
+				Stripe_Coupon::create( array(
+						"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
+						"duration"   => "forever",
+						"id"         => sanitize_text_field( $_POST['code'] ),
+						"currency"   => strtolower( $rcp_options['currency'] )
+					)
+				);
+			}
 
 		} catch (Stripe_InvalidRequestError $e) {
 
@@ -261,189 +435,35 @@ if( ! function_exists( 'rcp_stripe_add_discount' ) ) {
 			wp_die( $error );
 
 		}
-
 	}
-	add_action( 'rcp_pre_add_discount', 'rcp_stripe_add_discount' );
 }
+add_action( 'rcp_edit_discount', 'rcp_stripe_update_discount' );
 
-if( ! function_exists( 'rcp_stripe_edit_discount' ) ) {
-	function rcp_stripe_edit_discount() {
+/**
+ * Check if a coupone exists in Stripe
+ *
+ * @access      private
+ * @since       2.1
+ */
+function rcp_stripe_does_coupon_exists( $code ) {
+	global $rcp_options;
 
-		if( ! is_admin() ) {
-			return;
-		}
-
-		global $rcp_options;
-
-		if( ! class_exists( 'Stripe' ) ) {
-			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
-		}
-
-		if ( isset( $rcp_options['sandbox'] ) ) {
-			$secret_key = trim( $rcp_options['stripe_test_secret'] );
-		} else {
-			$secret_key = trim( $rcp_options['stripe_live_secret'] );
-		}
-
-		Stripe::setApiKey( $secret_key );
-
-		if ( ! rcp_stripe_coupon_exists( $_POST['rcp_discount'] ) ) {
-
-			try {
-
-				if ( $_POST['unit'] == '%' ) {
-					Stripe_Coupon::create( array(
-							"percent_off" => sanitize_text_field( $_POST['amount'] ),
-							"duration"    => "forever",
-							"id"          => sanitize_text_field( $_POST['code'] ),
-							"currency"    => strtolower( $rcp_options['currency'] )
-						)
-					);
-				} else {
-					Stripe_Coupon::create( array(
-							"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
-							"duration"   => "forever",
-							"id"         => sanitize_text_field( $_POST['code'] ),
-							"currency"   => strtolower( $rcp_options['currency'] )
-						)
-					);
-				}
-
-			} catch ( Exception $e ) {
-				wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
-			}
-
-		} else {
-
-			// first delete the discount in Stripe
-			try {
-				$cpn = Stripe_Coupon::retrieve( $_POST['code'] );
-				$cpn->delete();
-			} catch ( Exception $e ) {
-				wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
-			}
-
-			// now add a new one. This is a fake "update"
-			try {
-
-				if ( $_POST['unit'] == '%' ) {
-					Stripe_Coupon::create( array(
-							"percent_off" => sanitize_text_field( $_POST['amount'] ),
-							"duration"    => "forever",
-							"id"          => sanitize_text_field( $_POST['code'] ),
-							"currency"    => strtolower( $rcp_options['currency'] )
-						)
-					);
-				} else {
-					Stripe_Coupon::create( array(
-							"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
-							"duration"   => "forever",
-							"id"         => sanitize_text_field( $_POST['code'] ),
-							"currency"   => strtolower( $rcp_options['currency'] )
-						)
-					);
-				}
-
-			} catch (Stripe_InvalidRequestError $e) {
-
-				// Invalid parameters were supplied to Stripe's API
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error );
-
-			} catch (Stripe_AuthenticationError $e) {
-
-				// Authentication with Stripe's API failed
-				// (maybe you changed API keys recently)
-
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error );
-
-			} catch (Stripe_ApiConnectionError $e) {
-
-				// Network communication with Stripe failed
-
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error );
-
-			} catch (Stripe_Error $e) {
-
-				// Display a very generic error to the user
-
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error );
-
-			} catch (Exception $e) {
-
-				// Something else happened, completely unrelated to Stripe
-
-				$error = "<p>An unidentified error occurred.</p>";
-				$error .= print_r( $e, true );
-
-				wp_die( $error );
-
-			}
-		}
+	if( ! class_exists( 'Stripe' ) ) {
+		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
 	}
-	add_action( 'rcp_edit_discount', 'rcp_stripe_edit_discount' );
-}
 
-if( ! function_exists( 'rcp_stripe_coupon_exists' ) ) {
-	function rcp_stripe_coupon_exists( $code ) {
-		global $rcp_options;
-
-		if( ! class_exists( 'Stripe' ) ) {
-			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
-		}
-
-		if ( isset( $rcp_options['sandbox'] ) ) {
-			$secret_key = trim( $rcp_options['stripe_test_secret'] );
-		} else {
-			$secret_key = trim( $rcp_options['stripe_live_secret'] );
-		}
-
-		Stripe::setApiKey( $secret_key );
-		try {
-			Stripe_Coupon::retrieve( $code );
-			$exists = true;
-		} catch ( Exception $e ) {
-			$exists = false;
-		}
-		return $exists;
+	if ( isset( $rcp_options['sandbox'] ) ) {
+		$secret_key = trim( $rcp_options['stripe_test_secret'] );
+	} else {
+		$secret_key = trim( $rcp_options['stripe_live_secret'] );
 	}
+
+	Stripe::setApiKey( $secret_key );
+	try {
+		Stripe_Coupon::retrieve( $code );
+		$exists = true;
+	} catch ( Exception $e ) {
+		$exists = false;
+	}
+	return $exists;
 }
