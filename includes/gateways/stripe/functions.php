@@ -272,7 +272,7 @@ function rcp_stripe_create_discount() {
 	}
 
 }
-add_action( 'rcp_pre_add_discount', 'rcp_stripe_add_discount' );
+add_action( 'rcp_pre_add_discount', 'rcp_stripe_create_discount' );
 
 /**
  * Update a discount in Stripe when a local code is updated
