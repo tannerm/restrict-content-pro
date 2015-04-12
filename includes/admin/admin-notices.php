@@ -26,6 +26,11 @@ function rcp_admin_notices() {
 		echo '<div class="notice notice-info"><p>' . sprintf( __( 'Please <a href="%s">enter and activate</a> your license key for Restrict Content Pro to enable automatic updates.', 'rcp' ), admin_url( 'admin.php?page=rcp-settings' ) ) . '</p></div>';
 	}
 
+	if( function_exists( 'rcp_register_stripe_gateway' ) ) {
+		$deactivate_url = add_query_arg( array( 's' => 'restrict+content+pro+-+stripe' ), admin_url( 'plugins.php' ) );
+		echo '<div class="error"><p>' . sprintf( __( 'You are using an outdated version of the Stripe integration for Restrict Content Pro. Please <a href="%s">deactivate</a> the add-on version to configure the new version.', 'rcp' ), $deactivate_url ) . '</p></div>';
+	}
+
 	switch( $message ) :
 
 		case 'payment_deleted' :
