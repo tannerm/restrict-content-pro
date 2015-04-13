@@ -212,7 +212,16 @@ function rcp_validate_gateways() {
 			$.post( rcp_script_options.ajaxurl, data, function(response) {
 				$('#rcp_gateway_extra_fields').remove();
 				if( response.success && response.data.fields ) {
-					$( '<div class="rcp_gateway_' + gateway.val() + '_fields" id="rcp_gateway_extra_fields">' + response.data.fields + '</div>' ).insertAfter('.rcp_gateway_fields');
+					if( $('.rcp_gateway_fields' ).length ) {
+
+						$( '<div class="rcp_gateway_' + gateway.val() + '_fields" id="rcp_gateway_extra_fields">' + response.data.fields + '</div>' ).insertAfter('.rcp_gateway_fields');
+					
+					} else {
+
+						// Pre 2.1 template files
+						$( '<div class="rcp_gateway_' + gateway.val() + '_fields" id="rcp_gateway_extra_fields">' + response.data.fields + '</div>' ).insertAfter('.rcp_gateways_fieldset');
+
+					}
 				}
 				form.unblock();
 			});
