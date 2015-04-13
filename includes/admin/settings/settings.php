@@ -236,6 +236,7 @@ function rcp_settings_page() {
 								<span class="description"><?php _e( 'Only check this option if your members statuses are not getting changed to "active"', 'rcp' ); ?></span>
 							</td>
 						</tr>
+						<?php if( ! function_exists( 'rcp_register_stripe_gateway' ) ) : ?>
 						<tr valign="top">
 							<th colspan=2>
 								<h3><?php _e('Stripe Settings', 'rcp'); ?></h3>
@@ -283,6 +284,7 @@ function rcp_settings_page() {
 								<p><strong><?php echo add_query_arg( 'listener', 'stripe', home_url() ); ?></strong></p>
 							</th>
 						</tr>
+						<?php endif; ?>
 					</table>
 					<?php do_action( 'rcp_payments_settings', $rcp_options ); ?>
 
