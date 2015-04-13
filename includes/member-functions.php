@@ -885,7 +885,7 @@ function rcp_process_member_cancellation() {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
 			} catch (Stripe_AuthenticationError $e) {
 
@@ -902,7 +902,7 @@ function rcp_process_member_cancellation() {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
 			} catch (Stripe_ApiConnectionError $e) {
 
@@ -918,7 +918,7 @@ function rcp_process_member_cancellation() {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
 			} catch (Stripe_Error $e) {
 
@@ -934,7 +934,7 @@ function rcp_process_member_cancellation() {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
 			} catch (Exception $e) {
 
@@ -943,7 +943,7 @@ function rcp_process_member_cancellation() {
 				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
 				$error .= print_r( $e, true );
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
 			}
 
