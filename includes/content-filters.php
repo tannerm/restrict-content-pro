@@ -11,12 +11,16 @@ function rcp_filter_restricted_content( $content ) {
 
 	if ( rcp_is_paid_content( $post->ID ) ) {
 
-		$message = $rcp_options['paid_message']; // message shown for premium content
+		$message = ! empty( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : false; // message shown for premium content
 	
 	} else {
 		
-		$message = $rcp_options['free_message']; // message shown for free content
+		$message = ! empty( $rcp_options['free_message'] ) ? $rcp_options['free_message'] : false; // message shown for free content
 		
+	}
+
+	if( empty( $message ) ) {
+		$message = __( 'This content is restricted to subscribers', 'rcp' );
 	}
 
 	if ( ! rcp_user_can_access( $user_ID, $post->ID ) ) {
