@@ -54,6 +54,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		$member = new RCP_Member( $this->user_id );
 		$customer_exists = false;
 
+		if( empty( $_POST['stripeToken'] ) ) {
+			wp_die( __( 'Missing Stripe token, please try again or contact support if the issue persists.', 'rcp' ), __( 'Error', 'rcp' ), array( 'response' => 400 ) );
+		}
+
 		if ( $this->auto_renew ) {
 
 			// process a subscription sign up
