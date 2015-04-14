@@ -470,8 +470,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// successful payment
 					if ( $event->type == 'charge.succeeded' ) {
 
-						if( ! $member->get_subscription_id() )
-							return;
+						if( ! $member->get_subscription_id() ) {
+							die( 'no subscription ID for member' );
+						}
 
 						$payment_data = array(
 							'date'              => date( 'Y-m-d g:i:s', $event->created ),
@@ -492,6 +493,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
 
+							die( 'rcp_stripe_charge_succeeded action fired successfully' );
+
+						} else {
+
+							die( 'duplicate payment found' );
+
 						}
 
 					}
@@ -504,12 +511,16 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						do_action( 'rcp_stripe_charge_failed', $invoice );
 
+						die( 'rcp_stripe_charge_failed action fired successfully' );
+
 					}
 
 					// Cancelled / failed subscription
 					if( $event->type == 'customer.subscription.deleted' ) {
 
 						$member->set_status( 'cancelled' );
+
+						die( 'member cancelled successfully' );
 
 					}
 
@@ -520,9 +531,14 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			} catch ( Exception $e ) {
 				// something failed
+				die( 'PHP exception: ' . $e->getMessage() );
 			}
+
+			die( '1' );
+
 		}
-		exit;
+		
+		die( 'no event ID found' );
 
 	}
 
