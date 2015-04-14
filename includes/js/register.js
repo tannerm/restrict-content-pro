@@ -86,6 +86,10 @@ jQuery(document).ready(function($) {
 				$('#rcp_register_nonce', form).val( response.data.nonce );
 				form.unblock();
 			}
+		}).done(function( response ) {
+		}).fail(function( response ) {
+			console.log( response );
+		}).always(function( response ) {
 		});
 
 	});
