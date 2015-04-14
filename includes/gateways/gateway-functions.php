@@ -144,7 +144,7 @@ function rcp_load_gateway_scripts() {
 
 	global $rcp_options;
 
-	if( ! is_page( $rcp_options['registration_page'] ) && ! rcp_is_registration_page() ) {
+	if( ! rcp_is_registration_page() ) {
 		return;
 	}
 
