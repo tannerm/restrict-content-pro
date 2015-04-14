@@ -78,6 +78,7 @@ jQuery(document).ready(function($) {
 			$('.rcp-submit-ajax', form).remove();
 			$('.rcp_message.error', form).remove();
 			if ( response.success ) {
+				$('body').trigger( 'rcp_register_form_submission' );
 				$(submission_form).submit();
 			} else {
 				console.log( response );

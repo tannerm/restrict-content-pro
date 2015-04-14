@@ -561,9 +561,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					}
 
 					if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]').val() == 'stripe') && price > 0) {
-						if( ! $('.rcp_gateway_fields').is(':visible') ) {
-							return true;
-						}
 
 						event.preventDefault();
 
