@@ -479,7 +479,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							// record this payment if it hasn't been recorded yet
 							$rcp_payments->insert( $payment_data );
 
-							$member->renew();
+							$member->renew( $member->is_recurring() );
 
 							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
 
