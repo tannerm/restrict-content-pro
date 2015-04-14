@@ -456,7 +456,7 @@ class RCP_Payments {
 			}
 
 			if( ! empty( $args['user_id'] ) || ! empty( $args['subscription'] ) ) {
-				$where .= "AND (" . $date_where . ")";
+				$where .= "AND (" . $date_where . ") ";
 			} else {
 				$where .= "WHERE ( " . $date_where . " ) ";
 			}
