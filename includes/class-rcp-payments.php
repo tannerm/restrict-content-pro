@@ -465,11 +465,11 @@ class RCP_Payments {
 		// Exclude refunded payments
 		if( false !== strpos( $where, 'WHERE' ) ) {
 
-			$where .= "AND `status` != 'refunded'";
+			$where .= "AND ( `status` = 'complete' OR `status` IS NULL )";
 
 		} else {
 
-			$where .= "WHERE `status` != 'refunded'";
+			$where .= "WHERE ( `status` = 'complete' OR `status` IS NULL )";
 	
 		}
 
