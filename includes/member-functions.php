@@ -1081,7 +1081,7 @@ function rcp_get_member_id_from_profile_id( $profile_id = '' ) {
 
 	global $wpdb;
 
-	$user_id = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'rcp_recurring_payment_id' AND meta_value = %s LIMIT 1", $profile_id ) );
+	$user_id = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'rcp_payment_profile_id' AND meta_value = %s LIMIT 1", $profile_id ) );
 
 	if ( $user_id != NULL ) {
 		return $user_id;
