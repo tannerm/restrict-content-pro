@@ -59,7 +59,16 @@ jQuery(document).ready(function($) {
 		var submit_register_text = $(this).val();
 
 		form.block({
-			message: rcp_script_options.pleasewait
+			message: rcp_script_options.pleasewait,
+			css: {
+				border: 'none',
+				padding: '15px',
+				backgroundColor: '#000',
+				'-webkit-border-radius': '10px',
+				'-moz-border-radius': '10px',
+				opacity: .5,
+				color: '#fff'
+			}
 		});
 
 		$('#rcp_submit', form).val( rcp_script_options.pleasewait );
