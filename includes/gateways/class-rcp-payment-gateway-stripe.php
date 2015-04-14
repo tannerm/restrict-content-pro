@@ -425,7 +425,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 	public function process_webhooks() {
 
-		if( ! isset( $_GET['listener'] ) || strtoupper( $_GET['listener'] ) != 'stripe' ) {
+		if( ! isset( $_GET['listener'] ) || strtolower( $_GET['listener'] ) != 'stripe' ) {
 			return;
 		}
 
