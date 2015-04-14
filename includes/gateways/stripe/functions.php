@@ -467,3 +467,17 @@ function rcp_stripe_does_coupon_exists( $code ) {
 	}
 	return $exists;
 }
+
+if( ! function_exists( 'rcp_stripe_get_user_id' ) ) {
+	function rcp_stripe_get_user_id( $customer_id ) {
+
+		global $wpdb;
+
+		$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = '_rcp_stripe_user_id' AND meta_value = %s LIMIT 1", $customer_id ) );
+
+		if ( $user != NULL )
+			return $user;
+
+		return false;
+	}
+}

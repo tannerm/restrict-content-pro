@@ -452,7 +452,16 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$invoice = $event->data->object;
 
 				// retrieve the customer who made this payment (only for subscriptions)
-				$user   = rcp_stripe_get_user_id( $invoice->customer );
+				$user = rcp_get_member_id_from_profile_id( $invoice->customer );
+
+				if( empty( $user ) ) {
+					$user = rcp_stripe_get_user_id( $invoice->customer );
+				}
+
+				if( empty( $user ) ) {
+					die( 'no user ID found' );
+				}
+
 				$member = new RCP_Member( $user );
 				
 				// check to confirm this is a stripe subscriber
