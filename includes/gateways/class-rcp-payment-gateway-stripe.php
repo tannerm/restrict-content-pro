@@ -458,7 +458,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					// Grab the customer ID from the old meta keys
 					global $wpdb;
-					$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = '_rcp_stripe_user_id' AND meta_value = %s LIMIT 1", $customer_id ) );
+					$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = '_rcp_stripe_user_id' AND meta_value = %s LIMIT 1", $invoice->customer ) );
 
 				}
 
