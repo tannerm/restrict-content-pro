@@ -1064,7 +1064,7 @@ function rcp_check_license() {
 	$status = get_transient( 'rcp_license_check' );
 
 	// Run the license check a maximum of once per day
-	if( false === $status ) {
+	if( false === $status && ! empty( $rcp_options['license_key'] ) ) {
 
 		// data to send in our API request
 		$api_params = array(
