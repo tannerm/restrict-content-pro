@@ -371,7 +371,9 @@ function rcp_is_registration_page() {
 
 	if ( isset( $rcp_options['registration_page'] ) ) {
 		$ret = is_page( $rcp_options['registration_page'] );
-	} elseif ( ! empty( $post ) && has_shortcode( $post->post_content, 'register_form' ) ) {
+	}
+
+	if ( ! empty( $post ) && has_shortcode( $post->post_content, 'register_form' ) ) {
 		$ret = true;
 	}
 
