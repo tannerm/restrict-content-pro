@@ -86,13 +86,13 @@ function rcp_discounts_page()
 							
 							<?php if( current_user_can( 'rcp_manage_discounts' ) ) : ?>
 							<td>
-								<a href="<?php echo add_query_arg( 'edit_discount', $code->id, $page ); ?>"><?php _e( 'Edit', 'rcp' ); ?></a> |
+								<a href="<?php echo esc_url( add_query_arg( 'edit_discount', $code->id, $page ) ); ?>"><?php _e( 'Edit', 'rcp' ); ?></a> |
 								<?php if(rcp_get_discount_status($code->id) == 'active') { ?>
-									<a href="<?php echo add_query_arg( 'deactivate_discount', $code->id, $page ); ?>"><?php _e( 'Deactivate', 'rcp' ); ?></a> |
+									<a href="<?php echo esc_url( add_query_arg( 'deactivate_discount', $code->id, $page ) ); ?>"><?php _e( 'Deactivate', 'rcp' ); ?></a> |
 								<?php } else { ?>
-									<a href="<?php echo add_query_arg( 'activate_discount', $code->id, $page ); ?>"><?php _e( 'Activate', 'rcp' ); ?></a> |
+									<a href="<?php echo esc_url( add_query_arg( 'activate_discount', $code->id, $page ) ); ?>"><?php _e( 'Activate', 'rcp' ); ?></a> |
 								<?php } ?>
-								<a href="<?php echo add_query_arg( 'delete_discount', $code->id, $page ); ?>" class="rcp_delete_discount"><?php _e( 'Delete', 'rcp' ); ?></a>
+								<a href="<?php echo esc_url( add_query_arg( 'delete_discount', $code->id, $page ) ); ?>" class="rcp_delete_discount"><?php _e( 'Delete', 'rcp' ); ?></a>
 							</td>
 							<?php endif; ?>
 						</tr>

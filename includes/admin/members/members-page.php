@@ -47,27 +47,27 @@ function rcp_members_page() {
 			<ul class="subsubsub">
 				<li><?php _e('Status: ', 'rcp'); ?></li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'active', $base_url ); ?>" title="<?php _e('View all active subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status']) ? 'class="current"' : ''; ?>>
+					<a href="<?php echo esc_url( add_query_arg('status', 'active', $base_url ) ); ?>" title="<?php _e('View all active subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status']) ? 'class="current"' : ''; ?>>
 					<?php _e('Active', 'rcp'); ?>
 					</a>(<?php echo $active_count; ?>)
 				</li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'pending', $base_url ); ?>" title="<?php _e('View all pending subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'pending') ? 'class="current"' : ''; ?>>
+					<a href="<?php echo esc_url( add_query_arg('status', 'pending', $base_url ) ); ?>" title="<?php _e('View all pending subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'pending') ? 'class="current"' : ''; ?>>
 						<?php _e('Pending', 'rcp'); ?>
 					</a>(<?php echo $pending_count; ?>)
 				</li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'expired', $base_url ); ?>" title="<?php _e('View all expired subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'expired') ? 'class="current"' : ''; ?>>
+					<a href="<?php echo esc_url( add_query_arg('status', 'expired', $base_url ) ); ?>" title="<?php _e('View all expired subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'expired') ? 'class="current"' : ''; ?>>
 						<?php _e('Expired', 'rcp'); ?>
 					</a>(<?php echo $expired_count; ?>)
 				</li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'cancelled', $base_url ); ?>" title="<?php _e('View all cancelled subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'cancelled') ? 'class="current"' : ''; ?>>
+					<a href="<?php echo esc_url( add_query_arg('status', 'cancelled', $base_url ) ); ?>" title="<?php _e('View all cancelled subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'cancelled') ? 'class="current"' : ''; ?>>
 						<?php _e('Cancelled', 'rcp'); ?>
 					</a>(<?php echo $cancelled_count; ?>)
 				</li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'free', $base_url ); ?>" title="<?php _e('View all free members', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'free') ? 'class="current"' : ''; ?>>
+					<a href="<?php echo esc_url( add_query_arg('status', 'free', $base_url ) ); ?>" title="<?php _e('View all free members', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'free') ? 'class="current"' : ''; ?>>
 						<?php _e('Free', 'rcp'); ?>
 					</a>(<?php echo $free_count; ?>)
 				</li>
@@ -166,11 +166,11 @@ function rcp_members_page() {
 							<?php do_action('rcp_members_page_table_column', $member->ID); ?>
 							<td>								
 								<?php if( current_user_can( 'rcp_manage_members' ) ) : ?>
-									<a href="<?php echo add_query_arg('edit_member', $member->ID, $current_page); ?>"><?php _e('Edit', 'rcp'); ?></a>
+									<a href="<?php echo esc_url( add_query_arg('edit_member', $member->ID, $current_page) ); ?>"><?php _e('Edit', 'rcp'); ?></a>
 									<?php if(isset($_GET['status']) && $_GET['status'] == 'cancelled') { ?>
-										| <a href="<?php echo add_query_arg('activate_member', $member->ID, $current_page); ?>" class="rcp_activate"><?php _e('Activate', 'rcp'); ?></a>
+										| <a href="<?php echo esc_url( add_query_arg('activate_member', $member->ID, $current_page) ); ?>" class="rcp_activate"><?php _e('Activate', 'rcp'); ?></a>
 									<?php } elseif( (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status'])) {  ?>
-										| <a href="<?php echo add_query_arg('deactivate_member', $member->ID, $current_page); ?>" class="rcp_deactivate"><?php _e('Deactivate', 'rcp'); ?></a>
+										| <a href="<?php echo esc_url( add_query_arg('deactivate_member', $member->ID, $current_page) ); ?>" class="rcp_deactivate"><?php _e('Deactivate', 'rcp'); ?></a>
 									<?php } ?>
 									<?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
 										| <a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
@@ -189,7 +189,7 @@ function rcp_members_page() {
 					<div class="tablenav-pages alignright">
 						<?php
 							$query_string = $_SERVER['QUERY_STRING'];
-							$base = 'admin.php?' . remove_query_arg('p', $query_string) . '%_%';
+							$base = 'admin.php?' . esc_url( remove_query_arg('p', $query_string) ) . '%_%';
 							echo paginate_links( array(
 								'base' => $base,
 								'format' => '&p=%#%',

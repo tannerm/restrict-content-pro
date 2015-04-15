@@ -281,7 +281,7 @@ function rcp_settings_page() {
 						<tr>
 							<th colspan=2>
 								<p><strong><?php _e('Note', 'rcp'); ?></strong>: <?php _e('in order for subscription payments made through Stripe to be tracked, you must enter the following URL to your <a href="https://dashboard.stripe.com/account/webhooks" target="_blank">Stripe Webhooks</a> under Account Settings:', 'rcp'); ?></p>
-								<p><strong><?php echo add_query_arg( 'listener', 'stripe', home_url() ); ?></strong></p>
+								<p><strong><?php echo esc_url( add_query_arg( 'listener', 'stripe', home_url() ) ); ?></strong></p>
 							</th>
 						</tr>
 						<?php endif; ?>

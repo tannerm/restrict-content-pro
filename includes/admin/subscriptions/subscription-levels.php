@@ -87,13 +87,13 @@ function rcp_member_levels_page()
 							<?php do_action('rcp_levels_page_table_column', $level->id); ?>
 							<?php if( current_user_can( 'rcp_manage_levels' ) ) : ?>
 								<td>
-									<a href="<?php echo add_query_arg('edit_subscription', $level->id, $page); ?>"><?php _e('Edit', 'rcp'); ?></a> |
+									<a href="<?php echo esc_url( add_query_arg('edit_subscription', $level->id, $page) ); ?>"><?php _e('Edit', 'rcp'); ?></a> |
 									<?php if($level->status != 'inactive') { ?>
-										<a href="<?php echo add_query_arg('deactivate_subscription', $level->id, $page); ?>"><?php _e('Deactivate', 'rcp'); ?></a> |
+										<a href="<?php echo esc_url( add_query_arg('deactivate_subscription', $level->id, $page) ); ?>"><?php _e('Deactivate', 'rcp'); ?></a> |
 									<?php } else { ?>
-										<a href="<?php echo add_query_arg('activate_subscription', $level->id, $page); ?>"><?php _e('Activate', 'rcp'); ?></a> |
+										<a href="<?php echo esc_url( add_query_arg('activate_subscription', $level->id, $page) ); ?>"><?php _e('Activate', 'rcp'); ?></a> |
 									<?php } ?>
-									<a href="<?php echo add_query_arg('delete_subscription', $level->id, $page); ?>" class="rcp_delete_subscription"><?php _e('Delete', 'rcp'); ?></a>
+									<a href="<?php echo esc_url( add_query_arg('delete_subscription', $level->id, $page) ); ?>" class="rcp_delete_subscription"><?php _e('Delete', 'rcp'); ?></a>
 								</td>
 							<?php endif; ?>
 						</tr>

@@ -51,7 +51,7 @@ class RCP_Logs_List_Table extends WP_List_Table {
                 $user_id = get_post_meta( $item->ID, '_wp_log_user_id', true );
                 $user    = get_userdata( $user_id );
 
-                return  '<a href="' . add_query_arg( 'user', $user_id, 'admin.php?page=rcp-logs' ) . '" title="' . __( 'View logs for this user', 'rcp' ) . '">' . $user->display_name . '</a>';
+                return  '<a href="' . esc_url( add_query_arg( 'user', $user_id, 'admin.php?page=rcp-logs' ) ) . '" title="' . esc_attr( __( 'View logs for this user', 'rcp' ) ) . '">' . $user->display_name . '</a>';
 
 
         	case 'date' :
