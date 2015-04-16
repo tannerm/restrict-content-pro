@@ -106,7 +106,7 @@ function rcp_upgrade_table_collation() {
 		$wpdb->query( "alter table `" . $rcp_db_name . "` convert to character set utf8 collate utf8_unicode_ci" );
 		$wpdb->query( "alter table `" . $rcp_discounts_db_name . "` convert to character set utf8 collate utf8_unicode_ci" );
 		$wpdb->query( "alter table `" . $rcp_payments_db_name . "` convert to character set utf8 collate utf8_unicode_ci" );
-		wp_redirect( add_query_arg('rcp-db', 'updated', admin_url() ) ); exit;
+		wp_safe_redirect( add_query_arg('rcp-db', 'updated', admin_url() ) ); exit;
 	}
 }
 add_action( 'admin_init', 'rcp_upgrade_table_collation' );

@@ -49,27 +49,27 @@ function rcp_members_page() {
 			<ul class="subsubsub">
 				<li><?php _e('Status: ', 'rcp'); ?></li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'active', $base_url ); ?>" title="<?php _e('View all active subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status']) ? 'class="current"' : ''; ?>>
+					<a href="<?php echo esc_url( add_query_arg('status', 'active', $base_url ) ); ?>" title="<?php _e('View all active subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status']) ? 'class="current"' : ''; ?>>
 					<?php _e('Active', 'rcp'); ?>
 					</a>(<?php echo $active_count; ?>)
 				</li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'pending', $base_url ); ?>" title="<?php _e('View all pending subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'pending') ? 'class="current"' : ''; ?>>
+					<a href="<?php echo esc_url( add_query_arg('status', 'pending', $base_url ) ); ?>" title="<?php _e('View all pending subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'pending') ? 'class="current"' : ''; ?>>
 						<?php _e('Pending', 'rcp'); ?>
 					</a>(<?php echo $pending_count; ?>)
 				</li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'expired', $base_url ); ?>" title="<?php _e('View all expired subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'expired') ? 'class="current"' : ''; ?>>
+					<a href="<?php echo esc_url( add_query_arg('status', 'expired', $base_url ) ); ?>" title="<?php _e('View all expired subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'expired') ? 'class="current"' : ''; ?>>
 						<?php _e('Expired', 'rcp'); ?>
 					</a>(<?php echo $expired_count; ?>)
 				</li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'cancelled', $base_url ); ?>" title="<?php _e('View all cancelled subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'cancelled') ? 'class="current"' : ''; ?>>
+					<a href="<?php echo esc_url( add_query_arg('status', 'cancelled', $base_url ) ); ?>" title="<?php _e('View all cancelled subscribers', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'cancelled') ? 'class="current"' : ''; ?>>
 						<?php _e('Cancelled', 'rcp'); ?>
 					</a>(<?php echo $cancelled_count; ?>)
 				</li>
 				<li>
-					<a href="<?php echo add_query_arg('status', 'free', $base_url ); ?>" title="<?php _e('View all free members', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'free') ? 'class="current"' : ''; ?>>
+					<a href="<?php echo esc_url( add_query_arg('status', 'free', $base_url ) ); ?>" title="<?php _e('View all free members', 'rcp'); ?>" <?php echo (isset($_GET['status']) && $_GET['status'] == 'free') ? 'class="current"' : ''; ?>>
 						<?php _e('Free', 'rcp'); ?>
 					</a>(<?php echo $free_count; ?>)
 				</li>

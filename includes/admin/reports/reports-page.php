@@ -12,8 +12,8 @@ function rcp_reports_page() {
 	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
-			<a href="<?php echo add_query_arg( array( 'tab' => 'earnings' ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'earnings' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Earnings', 'rcp' ); ?></a>
-			<a href="<?php echo add_query_arg( array( 'tab' => 'signups' ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'signups' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Signups', 'rcp' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'earnings' ), $current_page ) ); ?>" class="nav-tab <?php echo $active_tab == 'earnings' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Earnings', 'rcp' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'signups' ), $current_page ) ); ?>" class="nav-tab <?php echo $active_tab == 'signups' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Signups', 'rcp' ); ?></a>
 			<?php do_action( 'rcp_reports_tabs' ); ?>
 		</h2>
 
@@ -719,6 +719,6 @@ function rcp_parse_report_dates() {
 
 	$dates = rcp_get_report_dates();
 
-	wp_redirect( add_query_arg( $dates, admin_url( 'admin.php?page=rcp-reports' ) ) ); exit;
+	wp_safe_redirect( add_query_arg( $dates, admin_url( 'admin.php?page=rcp-reports' ) ) ); exit;
 }
 add_action( 'admin_init', 'rcp_parse_report_dates' );
