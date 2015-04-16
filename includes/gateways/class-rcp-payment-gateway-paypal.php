@@ -135,7 +135,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 		if( ! class_exists( 'IpnListener' ) ) {
 			// instantiate the IpnListener class
-			include( RCP_PLUGIN_DIR . 'includes/gateways/paypal/ipnlistener.php' );
+			include( RCP_PLUGIN_DIR . 'includes/gateways/paypal/paypal-ipnlistener.php' );
 		}
 
 		$listener = new IpnListener();
