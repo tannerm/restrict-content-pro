@@ -765,7 +765,7 @@ function rcp_process_profile_editor_updates() {
 
 		if( $updated ) {
 			do_action( 'rcp_user_profile_updated', $user_id, $userdata );
-			wp_redirect( add_query_arg( 'updated', 'true', sanitize_text_field( $_POST['rcp_redirect'] ) ) );
+			wp_safe_redirect( add_query_arg( 'updated', 'true', sanitize_text_field( $_POST['rcp_redirect'] ) ) );
 			exit;
 		} else {
 			rcp_errors()->add( 'not_updated', __( 'There was an error updating your profile. Please try again.', 'rcp' ) );
@@ -815,7 +815,7 @@ function rcp_change_password() {
 				);
 				wp_update_user( $user_data );
 				// send password change email here (if WP doesn't)
-				wp_redirect( add_query_arg( 'password-reset', 'true', $_POST['rcp_redirect'] ) );
+				wp_safe_redirect( add_query_arg( 'password-reset', 'true', $_POST['rcp_redirect'] ) );
 				exit;
 			}
 		}
@@ -1028,7 +1028,7 @@ function rcp_process_member_cancellation() {
 
 		}
 	
-		wp_redirect( $redirect ); exit;
+		wp_safe_redirect( $redirect ); exit;
 
 	}
 }
