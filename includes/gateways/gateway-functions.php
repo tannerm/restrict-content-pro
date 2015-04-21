@@ -134,6 +134,48 @@ function rcp_process_gateway_webooks() {
 add_action( 'init', 'rcp_process_gateway_webooks', -99999 );
 
 /**
+ * Process gateway confirmaions
+ *
+ * @access      public
+ * @since       2.1
+ * @return      void
+*/
+function rcp_process_gateway_confirmations() {
+
+	global $rcp_options;
+
+	if( empty( $rcp_options['registration_page'] ) ) {
+		return;
+	}
+
+	if( empty( $_GET['rcp-confirm'] ) ) {
+		return;
+	}
+
+	if( ! rcp_is_registration_page() ) {
+		return;
+	}
+
+	$gateways = new RCP_Payment_Gateways;
+	$gateway  = sanitize_text_field( $_GET['rcp-confirm'] );
+
+	if( ! $gateways->is_gateway_enabled( $gateway ) ) {
+		return;
+	}
+
+	$gateway = $gateways->get_gateway( $gateway );
+
+	if( is_array( $gateway ) && isset( $gateway['class'] ) ) {
+
+		$gateway = new $gateway['class'];
+		$gateway->process_confirmation();
+
+	}
+
+}
+add_action( 'template_redirect', 'rcp_process_gateway_confirmations', -99999 );
+
+/**
  * Load webhook processor for all gateways
  *
  * @access      public

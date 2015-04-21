@@ -264,7 +264,7 @@ function rcp_stripe_create_discount() {
 
 		// Something else happened, completely unrelated to Stripe
 
-		$error = "<p>An unidentified error occurred.</p>";
+		$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
 		$error .= print_r( $e, true );
 
 		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
@@ -429,7 +429,7 @@ function rcp_stripe_update_discount() {
 
 			// Something else happened, completely unrelated to Stripe
 
-			$error = "<p>An unidentified error occurred.</p>";
+			$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
 			$error .= print_r( $e, true );
 
 			wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );

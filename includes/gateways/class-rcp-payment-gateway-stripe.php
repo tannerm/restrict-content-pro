@@ -191,7 +191,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 				exit;
 
@@ -208,7 +208,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			} catch (\Stripe\Error\Authentication $e) {
 
@@ -225,7 +225,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			} catch (\Stripe\Error\ApiConnection $e) {
 
@@ -241,7 +241,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			} catch (\Stripe\Error\Base $e) {
 
@@ -257,16 +257,16 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			} catch (Exception $e) {
 
 				// Something else happened, completely unrelated to Stripe
 
-				$error = "<p>An unidentified error occurred.</p>";
+				$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
 				$error .= print_r( $e, true );
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			}
 
@@ -319,7 +319,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 				exit;
 
@@ -336,7 +336,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			} catch (\Stripe\Error\Authentication $e) {
 
@@ -353,7 +353,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			} catch (\Stripe\Error\ApiConnection $e) {
 
@@ -369,7 +369,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			} catch (\Stripe\Error\Base $e) {
 
@@ -385,16 +385,16 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			} catch (Exception $e) {
 
 				// Something else happened, completely unrelated to Stripe
 
-				$error = "<p>An unidentified error occurred.</p>";
+				$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
 				$error .= print_r( $e, true );
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			}
 		}
@@ -415,7 +415,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		} else {
 
-			wp_die( __( 'An error occurred, please contact the site administrator: ', 'rcp_stripe' ) . get_bloginfo( 'admin_email' ), __( 'Error', 'rcp' ), array( '401' ) );
+			wp_die( __( 'An error occurred, please contact the site administrator: ', 'rcp_stripe' ) . get_bloginfo( 'admin_email' ), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 		}
 
