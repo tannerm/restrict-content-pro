@@ -64,7 +64,6 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'SIGNATURE'          => $this->signature,
 			'VERSION'            => '121',
 			'METHOD'             => 'CreateRecurringPaymentsProfile',
-			'PAYMENTACTION'      => 'Sale',
 			'AMT'                => $this->amount,
 			'INITAMT'            => 0,
 			'CURRENCYCODE'       => strtoupper( $this->currency ),
