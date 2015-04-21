@@ -854,7 +854,7 @@ function rcp_process_member_cancellation() {
 		if( rcp_is_stripe_subscriber() ) {
 
 			if( ! class_exists( 'Stripe' ) ) {
-				require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+				require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
 			}
 
 			if ( isset( $rcp_options['sandbox'] ) ) {
@@ -863,7 +863,7 @@ function rcp_process_member_cancellation() {
 				$secret_key = trim( $rcp_options['stripe_live_secret'] );
 			}
 
-			Stripe::setApiKey( $secret_key );
+			\Stripe\Stripe::setApiKey( $secret_key );
 
 			try {
 
@@ -872,7 +872,7 @@ function rcp_process_member_cancellation() {
 
 				$success = true;
 
-			} catch (Stripe_InvalidRequestError $e) {
+			} catch (\Stripe\Error\InvalidRequest $e) {
 
 				// Invalid parameters were supplied to Stripe's API
 				$body = $e->getJsonBody();
@@ -887,7 +887,7 @@ function rcp_process_member_cancellation() {
 
 				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
-			} catch (Stripe_AuthenticationError $e) {
+			} catch (\Stripe\Error\Authentication $e) {
 
 				// Authentication with Stripe's API failed
 				// (maybe you changed API keys recently)
@@ -904,7 +904,7 @@ function rcp_process_member_cancellation() {
 
 				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
-			} catch (Stripe_ApiConnectionError $e) {
+			} catch (\Stripe\Error\ApiConnection $e) {
 
 				// Network communication with Stripe failed
 
@@ -920,7 +920,7 @@ function rcp_process_member_cancellation() {
 
 				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
-			} catch (Stripe_Error $e) {
+			} catch (\Stripe\Error\Base $e) {
 
 				// Display a very generic error to the user
 

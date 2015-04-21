@@ -116,10 +116,10 @@ function rcp_stripe_update_billing_card( $member_id = 0, $member_obj ) {
 	}
 
 	if( ! class_exists( 'Stripe' ) ) {
-		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
 	}
 
-	Stripe::setApiKey( $secret_key );
+	\Stripe\Stripe::setApiKey( $secret_key );
 	$customer = Stripe_Customer::retrieve( $customer_id );
 
 	$customer->card = $_POST['stripeToken']; // obtained with stripe.js
@@ -149,7 +149,7 @@ function rcp_stripe_create_discount() {
 	global $rcp_options;
 
 	if( ! class_exists( 'Stripe' ) ) {
-		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
 	}
 
 	if ( isset( $rcp_options['sandbox'] ) ) {
@@ -158,7 +158,7 @@ function rcp_stripe_create_discount() {
 		$secret_key = trim( $rcp_options['stripe_live_secret'] );
 	}
 
-	Stripe::setApiKey( $secret_key );
+	\Stripe\Stripe::setApiKey( $secret_key );
 
 	try {
 
@@ -180,7 +180,7 @@ function rcp_stripe_create_discount() {
 			);
 		}
 
-	} catch ( Stripe_CardError $e ) {
+	} catch ( \Stripe\Error\Card $e ) {
 
 			$body = $e->getJsonBody();
 			$err  = $body['error'];
@@ -196,7 +196,7 @@ function rcp_stripe_create_discount() {
 
 			exit;
 
-	} catch (Stripe_InvalidRequestError $e) {
+	} catch (\Stripe\Error\InvalidRequest $e) {
 
 		// Invalid parameters were supplied to Stripe's API
 		$body = $e->getJsonBody();
@@ -211,7 +211,7 @@ function rcp_stripe_create_discount() {
 
 		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
-	} catch (Stripe_AuthenticationError $e) {
+	} catch (\Stripe\Error\Authentication $e) {
 
 		// Authentication with Stripe's API failed
 		// (maybe you changed API keys recently)
@@ -228,7 +228,7 @@ function rcp_stripe_create_discount() {
 
 		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
-	} catch (Stripe_ApiConnectionError $e) {
+	} catch (\Stripe\Error\ApiConnection $e) {
 
 		// Network communication with Stripe failed
 
@@ -244,7 +244,7 @@ function rcp_stripe_create_discount() {
 
 		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
-	} catch (Stripe_Error $e) {
+	} catch (\Stripe\Error\Base $e) {
 
 		// Display a very generic error to the user
 
@@ -293,7 +293,7 @@ function rcp_stripe_update_discount() {
 	global $rcp_options;
 
 	if( ! class_exists( 'Stripe' ) ) {
-		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
 	}
 
 	if ( isset( $rcp_options['sandbox'] ) ) {
@@ -302,7 +302,7 @@ function rcp_stripe_update_discount() {
 		$secret_key = trim( $rcp_options['stripe_live_secret'] );
 	}
 
-	Stripe::setApiKey( $secret_key );
+	\Stripe\Stripe::setApiKey( $secret_key );
 
 	if ( ! rcp_stripe_does_coupon_exists( $_POST['rcp_discount'] ) ) {
 
@@ -361,7 +361,7 @@ function rcp_stripe_update_discount() {
 				);
 			}
 
-		} catch (Stripe_InvalidRequestError $e) {
+		} catch (\Stripe\Error\InvalidRequest $e) {
 
 			// Invalid parameters were supplied to Stripe's API
 			$body = $e->getJsonBody();
@@ -376,7 +376,7 @@ function rcp_stripe_update_discount() {
 
 			wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
-		} catch (Stripe_AuthenticationError $e) {
+		} catch (\Stripe\Error\Authentication $e) {
 
 			// Authentication with Stripe's API failed
 			// (maybe you changed API keys recently)
@@ -393,7 +393,7 @@ function rcp_stripe_update_discount() {
 
 			wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
-		} catch (Stripe_ApiConnectionError $e) {
+		} catch (\Stripe\Error\ApiConnection $e) {
 
 			// Network communication with Stripe failed
 
@@ -409,7 +409,7 @@ function rcp_stripe_update_discount() {
 
 			wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
-		} catch (Stripe_Error $e) {
+		} catch (\Stripe\Error\Base $e) {
 
 			// Display a very generic error to the user
 
@@ -449,7 +449,7 @@ function rcp_stripe_does_coupon_exists( $code ) {
 	global $rcp_options;
 
 	if( ! class_exists( 'Stripe' ) ) {
-		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
 	}
 
 	if ( isset( $rcp_options['sandbox'] ) ) {
@@ -458,7 +458,7 @@ function rcp_stripe_does_coupon_exists( $code ) {
 		$secret_key = trim( $rcp_options['stripe_live_secret'] );
 	}
 
-	Stripe::setApiKey( $secret_key );
+	\Stripe\Stripe::setApiKey( $secret_key );
 	try {
 		Stripe_Coupon::retrieve( $code );
 		$exists = true;
