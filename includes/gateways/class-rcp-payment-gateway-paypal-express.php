@@ -88,6 +88,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		if( $this->auto_renew && ! empty( $this->length ) ) {
 			$args['L_BILLINGAGREEMENTDESCRIPTION0'] = $this->subscription_name;
 			$args['L_BILLINGTYPE0']                 = 'RecurringPayments';
+			$args['RETURNURL']                      = add_query_arg( array( 'rcp-recurring' => '1' ), $args['RETURNURL'] );
 		}
 
 		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'body' => $args ) );
@@ -141,119 +142,122 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			$details = $this->get_checkout_details( $_POST['token'] );
 
-			$args = array(
-				'USER'                           => $this->username,
-				'PWD'                            => $this->password,
-				'SIGNATURE'                      => $this->signature,
-				'VERSION'                        => '121',
-				'METHOD'                         => 'DoExpressCheckoutPayment',
-				'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
-				'TOKEN'                          => $_POST['token'],
-				'PAYERID'                        => $_POST['payer_id'],
-				'PAYMENTREQUEST_0_AMT'           => $details['AMT'],
-				'PAYMENTREQUEST_0_ITEMAMT'       => $details['AMT'],
-				'PAYMENTREQUEST_0_SHIPPINGAMT'   => 0,
-				'PAYMENTREQUEST_0_TAXAMT'        => 0,
-				'PAYMENTREQUEST_0_CURRENCYCODE'  => $details['CURRENCYCODE'],
-				'BUTTONSOURCE'                   => 'EasyDigitalDownloads_SP'
-			);
+			if( ! empty( $_GET['rcp-recurring'] ) ) {
 
-			$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'body' => $args ) );
+				// Successful payment, now create the recurring profile
 
-			if( is_wp_error( $request ) ) {
+				$args = array(
+					'USER'                => $this->username,
+					'PWD'                 => $this->password,
+					'SIGNATURE'           => $this->signature,
+					'VERSION'             => '121',
+					'TOKEN'               => $_POST['token'],
+					'METHOD'              => 'CreateRecurringPaymentsProfile',
+					'PROFILESTARTDATE'    => date( 'Y-m-d\Tg:i:s', strtotime( '+' . $details['subscription']['duration'] . ' ' . $details['subscription']['duration_unit'], time() ) ),
+					'BILLINGPERIOD'       => ucwords( $details['subscription']['duration_unit'] ),
+					'BILLINGFREQUENCY'    => $details['subscription']['duration'],
+					'AMT'                 => $details['AMT'],
+					'INITAMT'             => $details['AMT'],
+					'CURRENCYCODE'        => $details['CURRENCYCODE'],
+					'FAILEDINITAMTACTION' => 'CancelOnFailure',
+					'L_BILLINGTYPE0'      => 'RecurringPayments',
+					'DESC'                => $details['subscription']['name'],
+				);
 
-				$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
-				$error .= '<p>' . $request->get_error_message() . '</p>';
+				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'body' => $args ) );
 
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+				if( is_wp_error( $request ) ) {
 
-			} elseif ( 200 == $request['response']['code'] && 'OK' == $request['response']['message'] ) {
-
-				parse_str( $request['body'], $data );
-
-				if( 'failure' === strtolower( $data['ACK'] ) ) {
-
-					$error = '<p>' . __( 'PayPal payment processing failed.', 'rcp' ) . '</p>';
-					$error .= '<p>' . __( 'Error message:', 'rcp' ) . ' ' . $data['L_LONGMESSAGE0'] . '</p>';
-					$error .= '<p>' . __( 'Error code:', 'rcp' ) . ' ' . $data['L_ERRORCODE0'] . '</p>';
+					$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
+					$error .= '<p>' . $request->get_error_message() . '</p>';
 
 					wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
-				} elseif ( ! empty( $data['BILLINGAGREEMENTACCEPTEDSTATUS'] ) ) {
+				} elseif ( 200 == $request['response']['code'] && 'OK' == $request['response']['message'] ) {
 
-					// Successful payment, now create the recurring profile
-					
-					$args = array(
-						'USER'                => $this->username,
-						'PWD'                 => $this->password,
-						'SIGNATURE'           => $this->signature,
-						'VERSION'             => '121',
-						'TOKEN'               => $_POST['token'],
-						'METHOD'              => 'CreateRecurringPaymentsProfile',
-						'PROFILESTARTDATE'    => date( 'Y-m-d\Tg:i:s', strtotime( '+' . $details['subscription']['duration'] . ' ' . $details['subscription']['duration_unit'], time() ) ),
-						'BILLINGPERIOD'       => ucwords( $details['subscription']['duration_unit'] ),
-						'BILLINGFREQUENCY'    => $details['subscription']['duration'],
-						'AMT'                 => $details['AMT'],
-						'INITAMT'             => 0,
-						'CURRENCYCODE'        => $details['CURRENCYCODE'],
-						'FAILEDINITAMTACTION' => 'CancelOnFailure',
-						'L_BILLINGTYPE0'      => 'RecurringPayments',
-						'DESC'                => $details['subscription']['name'],
-					);
+					parse_str( $request['body'], $data );
 
-					$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'body' => $args ) );
+					if( 'failure' === strtolower( $data['ACK'] ) ) {
 
-					if( is_wp_error( $request ) ) {
-
-						$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
-						$error .= '<p>' . $request->get_error_message() . '</p>';
+						$error = '<p>' . __( 'PayPal payment processing failed.', 'rcp' ) . '</p>';
+						$error .= '<p>' . __( 'Error message:', 'rcp' ) . ' ' . $data['L_LONGMESSAGE0'] . '</p>';
+						$error .= '<p>' . __( 'Error code:', 'rcp' ) . ' ' . $data['L_ERRORCODE0'] . '</p>';
 
 						wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
-					} elseif ( 200 == $request['response']['code'] && 'OK' == $request['response']['message'] ) {
-
-						parse_str( $request['body'], $data );
-
-						if( 'failure' === strtolower( $data['ACK'] ) ) {
-
-							$error = '<p>' . __( 'PayPal payment processing failed.', 'rcp' ) . '</p>';
-							$error .= '<p>' . __( 'Error message:', 'rcp' ) . ' ' . $data['L_LONGMESSAGE0'] . '</p>';
-							$error .= '<p>' . __( 'Error code:', 'rcp' ) . ' ' . $data['L_ERRORCODE0'] . '</p>';
-
-							wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
-
-						} else {
-
-							$member = new RCP_Member( $details['PAYMENTREQUEST_0_CUSTOM'] );
-
-							$member->renew( true );
-							$member->set_payment_profile_id( $data['PROFILEID'] );
-
-							wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
-
-						}
-
 					} else {
 
-						wp_die( __( 'Something has gone wrong, please try again', 'rcp' ), __( 'Error', 'rcp' ), array( 'back_link' => true, 'response' => '401' ) );
+						$member = new RCP_Member( $details['PAYMENTREQUEST_0_CUSTOM'] );
+
+						$member->renew( true );
+						$member->set_payment_profile_id( $data['PROFILEID'] );
+
+						wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
 
 					}
 
 				} else {
 
-					// Confirm a one-time payment
-					$member = new RCP_Member( $details['CUSTOM'] );
-
-					$member->renew( false );
-					$member->set_payment_profile_id( $data['PROFILEID'] );
-
-					wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
+					wp_die( __( 'Something has gone wrong, please try again', 'rcp' ), __( 'Error', 'rcp' ), array( 'back_link' => true, 'response' => '401' ) );
 
 				}
 
 			} else {
 
-				wp_die( __( 'Something has gone wrong, please try again', 'rcp' ), __( 'Error', 'rcp' ), array( 'back_link' => true, 'response' => '401' ) );
+				$args = array(
+					'USER'                           => $this->username,
+					'PWD'                            => $this->password,
+					'SIGNATURE'                      => $this->signature,
+					'VERSION'                        => '121',
+					'METHOD'                         => 'DoExpressCheckoutPayment',
+					'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
+					'TOKEN'                          => $_POST['token'],
+					'PAYERID'                        => $_POST['payer_id'],
+					'PAYMENTREQUEST_0_AMT'           => $details['AMT'],
+					'PAYMENTREQUEST_0_ITEMAMT'       => $details['AMT'],
+					'PAYMENTREQUEST_0_SHIPPINGAMT'   => 0,
+					'PAYMENTREQUEST_0_TAXAMT'        => 0,
+					'PAYMENTREQUEST_0_CURRENCYCODE'  => $details['CURRENCYCODE'],
+					'BUTTONSOURCE'                   => 'EasyDigitalDownloads_SP'
+				);
+
+				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'body' => $args ) );
+
+				if( is_wp_error( $request ) ) {
+
+					$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
+					$error .= '<p>' . $request->get_error_message() . '</p>';
+
+					wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+
+				} elseif ( 200 == $request['response']['code'] && 'OK' == $request['response']['message'] ) {
+
+					parse_str( $request['body'], $data );
+
+					if( 'failure' === strtolower( $data['ACK'] ) ) {
+
+						$error = '<p>' . __( 'PayPal payment processing failed.', 'rcp' ) . '</p>';
+						$error .= '<p>' . __( 'Error message:', 'rcp' ) . ' ' . $data['L_LONGMESSAGE0'] . '</p>';
+						$error .= '<p>' . __( 'Error code:', 'rcp' ) . ' ' . $data['L_ERRORCODE0'] . '</p>';
+
+						wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+
+					} else {
+
+						// Confirm a one-time payment
+						$member = new RCP_Member( $details['CUSTOM'] );
+
+						$member->renew( false );
+
+						wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
+
+					}
+
+				} else {
+
+					wp_die( __( 'Something has gone wrong, please try again', 'rcp' ), __( 'Error', 'rcp' ), array( 'back_link' => true, 'response' => '401' ) );
+
+				}
 
 			}
 
