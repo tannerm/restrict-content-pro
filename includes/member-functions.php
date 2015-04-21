@@ -867,7 +867,7 @@ function rcp_process_member_cancellation() {
 
 			try {
 
-				$cu = Stripe_Customer::retrieve( $member->get_payment_profile_id() );
+				$cu = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
 				$cu->cancelSubscription( array( 'at_period_end' => false ) );
 
 				$success = true;
