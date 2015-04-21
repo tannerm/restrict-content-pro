@@ -51,6 +51,11 @@ class RCP_Payment_Gateways {
 				'admin_label'  => __( 'PayPal Express', 'rcp' ),
 				'class'        => 'RCP_Payment_Gateway_PayPal_Express'
 			),
+			'paypal_pro' => array(
+				'label'        => __( 'Credit / Debit Card', 'rcp' ),
+				'admin_label'  => __( 'PayPal Pro', 'rcp' ),
+				'class'        => 'RCP_Payment_Gateway_PayPal_Pro'
+			),
 			'stripe' => array(
 				'label'        => __( 'Credit / Debit Card', 'rcp' ),
 				'admin_label'  => __( 'Stripe', 'rcp' ),
