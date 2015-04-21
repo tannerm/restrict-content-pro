@@ -204,6 +204,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			} else {
 
+				// One time payment
+
 				$args = array(
 					'USER'                           => $this->username,
 					'PWD'                            => $this->password,
@@ -249,6 +251,20 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 						$member->renew( false );
 
+						$payment_data = array(
+							'date'             => date( 'Y-m-d g:i:s', strtotime( $data['PAYMENTINFO_0_ORDERTIME'] ) ),
+							'subscription'     => $member->get_subscription_name(),
+							'payment_type'     => 'PayPal Express One Time',
+							'subscription_key' => $member->get_subscription_key(),
+							'amount'           => $data['PAYMENTINFO_0_AMT'],
+							'user_id'          => $member->ID,
+							'transaction_id'   => $data['PAYMENTINFO_0_TRANSACTIONID']
+						);
+
+						$rcp_payments = new RCP_Payments;
+						$rcp_payments->insert( $payment_data );
+
+
 						wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
 
 					}
@@ -289,7 +305,6 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		}
 
 		$posted        = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
-
 		$this->user_id = absint( $posted['custom'] );
 		$member        = new RCP_Member( $this->user_id );
 
@@ -301,20 +316,14 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			die( 'no subscription level found' );
 		}
 
-		$subscription_name 	= $posted['item_name'];
-		$subscription_key 	= $posted['item_number'];
-		$amount 			= number_format( (float) $posted['mc_gross'], 2 );
-		$amount2 			= number_format( (float) $posted['mc_amount3'], 2 );
-		$payment_status 	= $posted['payment_status'];
-		$currency_code		= $posted['mc_currency'];
-		$subscription_price = number_format( (float) rcp_get_subscription_price( $member->get_subscription_id() ), 2 );
+		$amount = number_format( (float) $posted['mc_gross'], 2 );
 
 		// setup the payment info in an array for storage
 		$payment_data = array(
 			'date'             => date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'] ) ),
-			'subscription'     => $posted['item_name'],
+			'subscription'     => $member->get_subscription_name(),
 			'payment_type'     => $posted['txn_type'],
-			'subscription_key' => $subscription_key,
+			'subscription_key' => $member->get_subscription_key(),
 			'amount'           => $amount,
 			'user_id'          => $this->user_id,
 			'transaction_id'   => $posted['txn_id']
@@ -333,21 +342,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		// Subscriptions
 		switch ( $posted['txn_type'] ) :
 
-			case "subscr_signup" :
-				// when a new user signs up
-
-				// store the recurring payment ID
-				update_user_meta( $this->user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
-
-				$member->set_payment_profile_id( $posted['subscr_id'] );
-
-				do_action( 'rcp_ipn_subscr_signup', $this->user_id );
-
-				die( 'successful subscr_signup' );
-
-				break;
-
-			case "subscr_payment" :
+			case "recurring_payment" :
 
 				// when a user makes a recurring payment
 
@@ -356,17 +351,17 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 				update_user_meta( $this->user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
-				$member->set_payment_profile_id( $posted['subscr_id'] );
+				$member->set_payment_profile_id( $posted['recurring_payment_id'] );
 
 				$this->renew_member( true );
 
 				do_action( 'rcp_ipn_subscr_payment', $this->user_id );
 
-				die( 'successful subscr_payment' );
+				die( 'successful recurring_payment' );
 
 				break;
 
-			case "subscr_cancel" :
+			case "recurring_payment_profile_cancel" :
 
 				// user is marked as cancelled but retains access until end of term
 				$member->set_status( 'cancelled' );
@@ -376,20 +371,12 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 				do_action( 'rcp_ipn_subscr_cancel', $this->user_id );
 
-				die( 'successful subscr_cancel' );
+				die( 'successful recurring_payment_profile_cancel' );
 
 				break;
 
-			case "subscr_failed" :
-
-				do_action( 'rcp_ipn_subscr_failed' );
-				die( 'successful subscr_failed' );
-
-				break;
-
-			case "subscr_eot" :
-
-				// user's subscription has reached the end of its term
+			case "recurring_payment_failed" :
+			case "recurring_payment_suspended_due_to_max_failed_payment" :
 
 				if( 'cancelled' !== $member->get_status( $this->user_id ) ) {
 
@@ -397,43 +384,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 				}
 
-				do_action('rcp_ipn_subscr_eot', $this->user_id );
-
-				die( 'successful subscr_eot' );
+				do_action( 'rcp_ipn_subscr_failed' );
+				die( 'successful recurring_payment_failed or recurring_payment_suspended_due_to_max_failed_payment' );
 
 				break;
 
-			case "web_accept" :
-
-				switch ( strtolower( $payment_status ) ) :
-
-		            case 'completed' :
-
-						// set this user to active
-						$this->renew_member();
-
-						$rcp_payments->insert( $payment_data );
-
-		           		break;
-
-		            case 'denied' :
-		            case 'expired' :
-		            case 'failed' :
-		            case 'voided' :
-						$member->set_status( 'cancelled' );
-		            	break;
-
-		        endswitch;
-
-		        die( 'successful web_accept' );
-
-			break;
-
-		case "cart" :
-		case "express_checkout" :
-		default :
-
-			break;
 
 		endswitch;
 
