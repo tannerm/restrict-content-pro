@@ -105,7 +105,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 			if( 'failure' === strtolower( $data['ACK'] ) ) {
 
-				$error = '<p>' . __( 'PayPal token creation failed.', 'rcp' ) . '</p>';
+				$error = '<p>' . __( 'PayPal subscription creation failed.', 'rcp' ) . '</p>';
 				$error .= '<p>' . __( 'Error message:', 'rcp' ) . ' ' . $data['L_LONGMESSAGE0'] . '</p>';
 				$error .= '<p>' . __( 'Error code:', 'rcp' ) . ' ' . $data['L_ERRORCODE0'] . '</p>';
 
