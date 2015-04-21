@@ -236,6 +236,7 @@ function rcp_settings_page() {
 								<span class="description"><?php _e( 'Only check this option if your members statuses are not getting changed to "active"', 'rcp' ); ?></span>
 							</td>
 						</tr>
+						<?php if( ! function_exists( 'rcp_register_stripe_gateway' ) ) : ?>
 						<tr valign="top">
 							<th colspan=2>
 								<h3><?php _e('Stripe Settings', 'rcp'); ?></h3>
@@ -280,9 +281,10 @@ function rcp_settings_page() {
 						<tr>
 							<th colspan=2>
 								<p><strong><?php _e('Note', 'rcp'); ?></strong>: <?php _e('in order for subscription payments made through Stripe to be tracked, you must enter the following URL to your <a href="https://dashboard.stripe.com/account/webhooks" target="_blank">Stripe Webhooks</a> under Account Settings:', 'rcp'); ?></p>
-								<p><strong><?php echo add_query_arg( 'listener', 'stripe', home_url() ); ?></strong></p>
+								<p><strong><?php echo esc_url( add_query_arg( 'listener', 'stripe', home_url() ) ); ?></strong></p>
 							</th>
 						</tr>
+						<?php endif; ?>
 					</table>
 					<?php do_action( 'rcp_payments_settings', $rcp_options ); ?>
 
@@ -330,6 +332,7 @@ function rcp_settings_page() {
 										foreach ( $pages as $page ) {
 										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['registration_page'], false) . '>';
 											$option .= $page->post_title;
+											$option .= ' (ID: ' . $page->ID . ')';
 											$option .= '</option>';
 											echo $option;
 										}
@@ -352,6 +355,7 @@ function rcp_settings_page() {
 										foreach ( $pages as $page ) {
 										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['redirect'], false) . '>';
 											$option .= $page->post_title;
+											$option .= ' (ID: ' . $page->ID . ')';
 											$option .= '</option>';
 											echo $option;
 										}
@@ -996,6 +1000,11 @@ function rcp_activate_license() {
 	$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 	update_option( 'rcp_license_status', $license_data->license );
+	delete_transient( 'rcp_license_check' );
+
+	if( 'valid' !== $license_data->license ) {
+		wp_die( sprintf( __( 'Your license key could not be activated. Error: %s', 'rcp' ), $license_data->error ), __( 'Error', 'rcp' ), array( 'response' => 401, 'back_link' => true ) );		
+	}
 
 }
 
@@ -1017,7 +1026,6 @@ function rcp_deactivate_license() {
 		// retrieve the license from the database
 		$license = trim( $rcp_options['license_key'] );
 
-
 		// data to send in our API request
 		$api_params = array(
 			'edd_action'=> 'deactivate_license',
@@ -1037,11 +1045,62 @@ function rcp_deactivate_license() {
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 		// $license_data->license will be either "deactivated" or "failed"
-		if( $license_data->license == 'deactivated' )
+		if( $license_data->license == 'deactivated' ) {
 			delete_option( 'rcp_license_status' );
+			delete_transient( 'rcp_license_check' );
+		}
 
 	}
 }
+
+function rcp_check_license() {
+
+	if( ! empty( $_POST['rcp_settings'] ) ) {
+		return; // Don't fire when saving settings
+	}
+
+	global $rcp_options;
+
+	$status = get_transient( 'rcp_license_check' );
+
+	// Run the license check a maximum of once per day
+	if( false === $status && ! empty( $rcp_options['license_key'] ) ) {
+
+		// data to send in our API request
+		$api_params = array(
+			'edd_action'=> 'check_license',
+			'license' 	=> trim( $rcp_options['license_key'] ),
+			'item_name' => urlencode( 'Restrict Content Pro' ), // the name of our product in EDD
+			'url'       => home_url()
+		);
+
+		// Call the custom API.
+		$response = wp_remote_post( 'https://pippinsplugins.com', array( 'timeout' => 35, 'sslverify' => false, 'body' => $api_params ) );
+
+		// make sure the response came back okay
+		if ( is_wp_error( $response ) )
+			return false;
+
+		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		$rcp_options['license_status'] = $license_data->license;
+
+		update_option( 'rcp_settings', $rcp_options );
+
+		set_transient( 'rcp_license_check', $license_data->license, DAY_IN_SECONDS );
+
+		$status = $license_data->license;
+
+		if( 'valid' !== $status ) {
+			delete_option( 'rcp_license_status' );
+		}
+
+	}
+
+	return $status;
+
+}
+add_action( 'admin_init', 'rcp_check_license' );
 
 
 /**

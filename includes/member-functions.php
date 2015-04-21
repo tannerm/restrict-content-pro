@@ -319,6 +319,29 @@ function rcp_user_has_access( $user_id = 0, $access_level_needed ) {
 	return false;
 }
 
+/**
+ * Wrapper function for RCP_Member->can_access()
+ *
+ * Returns true if user can access the current content
+ *
+ * @access      public
+ * @since       2.1
+ */
+function rcp_user_can_access( $user_id = 0, $post_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	if( empty( $post_id ) ) {
+		global $post;
+		$post_id = $post->ID;
+	}
+
+	$member = new RCP_Member( $user_id );
+	return $member->can_access( $post_id );
+}
+
 function rcp_calc_member_expiration( $expiration_object ) {
 
 	$current_time       = current_time( 'timestamp' );
@@ -742,7 +765,7 @@ function rcp_process_profile_editor_updates() {
 
 		if( $updated ) {
 			do_action( 'rcp_user_profile_updated', $user_id, $userdata );
-			wp_redirect( add_query_arg( 'updated', 'true', $_POST['rcp_redirect'] ) );
+			wp_safe_redirect( add_query_arg( 'updated', 'true', sanitize_text_field( $_POST['rcp_redirect'] ) ) );
 			exit;
 		} else {
 			rcp_errors()->add( 'not_updated', __( 'There was an error updating your profile. Please try again.', 'rcp' ) );
@@ -792,7 +815,7 @@ function rcp_change_password() {
 				);
 				wp_update_user( $user_data );
 				// send password change email here (if WP doesn't)
-				wp_redirect( add_query_arg( 'password-reset', 'true', $_POST['rcp_redirect'] ) );
+				wp_safe_redirect( add_query_arg( 'password-reset', 'true', $_POST['rcp_redirect'] ) );
 				exit;
 			}
 		}
@@ -831,7 +854,7 @@ function rcp_process_member_cancellation() {
 		if( rcp_is_stripe_subscriber() ) {
 
 			if( ! class_exists( 'Stripe' ) ) {
-				require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+				require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
 			}
 
 			if ( isset( $rcp_options['sandbox'] ) ) {
@@ -840,7 +863,7 @@ function rcp_process_member_cancellation() {
 				$secret_key = trim( $rcp_options['stripe_live_secret'] );
 			}
 
-			Stripe::setApiKey( $secret_key );
+			\Stripe\Stripe::setApiKey( $secret_key );
 
 			try {
 
@@ -849,7 +872,7 @@ function rcp_process_member_cancellation() {
 
 				$success = true;
 
-			} catch (Stripe_InvalidRequestError $e) {
+			} catch (\Stripe\Error\InvalidRequest $e) {
 
 				// Invalid parameters were supplied to Stripe's API
 				$body = $e->getJsonBody();
@@ -862,9 +885,9 @@ function rcp_process_member_cancellation() {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
-			} catch (Stripe_AuthenticationError $e) {
+			} catch (\Stripe\Error\Authentication $e) {
 
 				// Authentication with Stripe's API failed
 				// (maybe you changed API keys recently)
@@ -879,9 +902,9 @@ function rcp_process_member_cancellation() {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
-			} catch (Stripe_ApiConnectionError $e) {
+			} catch (\Stripe\Error\ApiConnection $e) {
 
 				// Network communication with Stripe failed
 
@@ -895,9 +918,9 @@ function rcp_process_member_cancellation() {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
-			} catch (Stripe_Error $e) {
+			} catch (\Stripe\Error\Base $e) {
 
 				// Display a very generic error to the user
 
@@ -911,7 +934,7 @@ function rcp_process_member_cancellation() {
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
 			} catch (Exception $e) {
 
@@ -920,7 +943,7 @@ function rcp_process_member_cancellation() {
 				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
 				$error .= print_r( $e, true );
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
 			}
 
@@ -1005,7 +1028,7 @@ function rcp_process_member_cancellation() {
 
 		}
 	
-		wp_redirect( $redirect ); exit;
+		wp_safe_redirect( $redirect ); exit;
 
 	}
 }
@@ -1046,6 +1069,26 @@ function rcp_backfill_payment_profile_ids( $profile_id, $user_id, $member_object
 	return $profile_id;
 }
 add_filter( 'rcp_member_get_payment_profile_id', 'rcp_backfill_payment_profile_ids', 10, 3 );
+
+/**
+ * Retrieves the member's ID from their payment profile ID
+ *
+ * @access      public
+ * @since       2.1
+ * @return      int
+ */
+function rcp_get_member_id_from_profile_id( $profile_id = '' ) {
+
+	global $wpdb;
+
+	$user_id = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'rcp_payment_profile_id' AND meta_value = %s LIMIT 1", $profile_id ) );
+
+	if ( $user_id != NULL ) {
+		return $user_id;
+	}
+
+	return false;
+}
 
 /**
  * Determines if a member can cancel their subscription on site

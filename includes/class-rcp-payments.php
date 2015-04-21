@@ -456,7 +456,7 @@ class RCP_Payments {
 			}
 
 			if( ! empty( $args['user_id'] ) || ! empty( $args['subscription'] ) ) {
-				$where .= "AND (" . $date_where . ")";
+				$where .= "AND (" . $date_where . ") ";
 			} else {
 				$where .= "WHERE ( " . $date_where . " ) ";
 			}
@@ -465,11 +465,11 @@ class RCP_Payments {
 		// Exclude refunded payments
 		if( false !== strpos( $where, 'WHERE' ) ) {
 
-			$where .= "AND `status` != 'refunded'";
+			$where .= "AND ( `status` = 'complete' OR `status` IS NULL )";
 
 		} else {
 
-			$where .= "WHERE `status` != 'refunded'";
+			$where .= "WHERE ( `status` = 'complete' OR `status` IS NULL )";
 	
 		}
 

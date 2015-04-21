@@ -34,6 +34,7 @@ function rcp_process_registration() {
 		$base_price      = $price; // Used for discount calculations later
 		$expiration      = rcp_get_subscription_length( $subscription_id );
 		$subscription    = rcp_get_subscription_details( $subscription_id );
+
 		// get the selected payment method/gateway
 		if( ! isset( $_POST['rcp_gateway'] ) ) {
 			$gateway = 'paypal';
@@ -55,28 +56,41 @@ function rcp_process_registration() {
 			// no subscription level was chosen
 			rcp_errors()->add( 'no_level', __( 'Please choose a subscription level', 'rcp' ), 'register' );
 		}
+
 		if( $subscription_id ) {
 			if( $price == 0 && $expiration->duration > 0 && rcp_has_used_trial( $user_data['id'] ) ) {
 				// this ensures that users only sign up for a free trial once
 				rcp_errors()->add( 'free_trial_used', __( 'You may only sign up for a free trial once', 'rcp' ), 'register' );
 			}
 		}
+
 		if( ! empty( $discount ) ) {
 			if( ! rcp_validate_discount( $discount, $subscription_id ) ) {
 				// the entered discount code is incorrect
 				rcp_errors()->add( 'invalid_discount', __( 'The discount you entered is invalid', 'rcp' ), 'register' );
 			}
-			if( ! $user_data['need_new'] && rcp_user_has_used_discount( $user_data['id'] , $discount ) ) {
-				rcp_errors()->add( 'discount_already_used', __( 'You can only use the discount code once', 'rcp' ), 'register' );
+			if( ! $user_data['need_new'] && rcp_user_has_used_discount( $user_data['id'] , $discount ) && apply_filters( 'rcp_discounts_once_per_user', true ) ) {
+				//rcp_errors()->add( 'discount_already_used', __( 'You can only use the discount code once', 'rcp' ), 'register' );
 			}
 		}
+
+		if( $price > 0 && ! empty( $discount ) ) {
+
+			$discounts    = new RCP_Discounts();
+			$discount_obj = $discounts->get_by( 'code', $discount );
+
+			// calculate the after-discount price
+			$price = $discounts->calc_discounted_price( $base_price, $discount_obj->amount, $discount_obj->unit );
+
+		}
+
 		if( $price == 0 && isset( $_POST['rcp_auto_renew'] ) ) {
 			// since free subscriptions do not go through PayPal, they cannot be auto renewed
 			rcp_errors()->add( 'invalid_auto_renew', __( 'Free subscriptions cannot be automatically renewed', 'rcp' ), 'register' );
 		}
 
 		// Validate extra fields in gateways with the 2.1+ gateway API
-		if( ! has_action( 'rcp_gateway_' . $gateway ) ) {
+		if( ! has_action( 'rcp_gateway_' . $gateway ) && $price > 0 ) {
 		
 			$gateways    = new RCP_Payment_Gateways;
 			$gateway_var = $gateways->get_gateway( $gateway );
@@ -106,11 +120,12 @@ function rcp_process_registration() {
 			$member_expires = rcp_calc_member_expiration( $expiration );
 
 		} else {
+
 			$member_expires = 'none';
+
 		}
 
 		if( $user_data['need_new'] ) {
-
 
 			$user_data['id'] = wp_insert_user( array(
 					'user_login'		=> $user_data['login'],
@@ -122,6 +137,7 @@ function rcp_process_registration() {
 				)
 			);
 		}
+
 		if( $user_data['id'] ) {
 
 			rcp_set_status( $user_data['id'], 'pending' );
@@ -144,12 +160,6 @@ function rcp_process_registration() {
 			if( $price > '0' ) {
 
 				if( ! empty( $discount ) ) {
-
-					$discounts    = new RCP_Discounts();
-					$discount_obj = $discounts->get_by( 'code', $discount );
-
-					// calculate the after-discount price
-					$price = $discounts->calc_discounted_price( $base_price, $discount_obj->amount, $discount_obj->unit );
 
 					// record the usage of this discount code
 					$discounts->add_to_user( $user_data['id'], $discount );
@@ -359,9 +369,11 @@ function rcp_is_registration_page() {
 
 	$ret = false;
 
-	if ( isset( $rcp_options['registration_page'] ) && is_page( $rcp_options['registration_page'] ) ) {
-		$ret = true;
-	} elseif ( has_shortcode( $post->post_content, 'register_form' ) ) {
+	if ( isset( $rcp_options['registration_page'] ) ) {
+		$ret = is_page( $rcp_options['registration_page'] );
+	}
+
+	if ( ! empty( $post ) && has_shortcode( $post->post_content, 'register_form' ) ) {
 		$ret = true;
 	}
 

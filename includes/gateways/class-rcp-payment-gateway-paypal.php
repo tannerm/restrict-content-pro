@@ -135,10 +135,11 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 		if( ! class_exists( 'IpnListener' ) ) {
 			// instantiate the IpnListener class
-			include( RCP_PLUGIN_DIR . 'includes/gateways/paypal/ipnlistener.php' );
+			include( RCP_PLUGIN_DIR . 'includes/gateways/paypal/paypal-ipnlistener.php' );
 		}
 
 		$listener = new IpnListener();
+		$verified = false;
 
 		if( $this->test_mode ) {
 			$listener->use_sandbox = true;
@@ -173,11 +174,11 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			$member        = new RCP_Member( $this->user_id );
 
 			if( ! $member || ! $member->get_subscription_id() ) {
-				return;
+				die( 'no member found' );
 			}
 
 			if( ! rcp_get_subscription_details( $member->get_subscription_id() ) ) {
-				return;
+				die( 'no subscription level found' );
 			}
 
 			$subscription_name 	= $posted['item_name'];
@@ -219,7 +220,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					);
 					$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
 
-					return; // this IPN request has already been processed
+					die( 'duplicate IPN detected' );
 				}
 
 				if( strtolower( $currency_code ) != strtolower( $rcp_options['currency'] ) ) {
@@ -238,7 +239,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					);
 					$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
 
-					return;
+					die( 'invalid currency code' );
 				}
 
 			}
@@ -264,6 +265,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					do_action( 'rcp_ipn_subscr_signup', $this->user_id );
 
+					die( 'successful subscr_signup' );
+
 					break;
 
 				case "subscr_payment" :
@@ -281,6 +284,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					do_action( 'rcp_ipn_subscr_payment', $this->user_id );
 
+					die( 'successful subscr_payment' );
+
 					break;
 
 				case "subscr_cancel" :
@@ -293,11 +298,15 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					do_action( 'rcp_ipn_subscr_cancel', $this->user_id );
 
+					die( 'successful subscr_cancel' );
+
 					break;
 
 				case "subscr_failed" :
 
 					do_action( 'rcp_ipn_subscr_failed' );
+					die( 'successful subscr_failed' );
+
 					break;
 
 				case "subscr_eot" :
@@ -311,6 +320,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					}
 
 					do_action('rcp_ipn_subscr_eot', $this->user_id );
+
+					die( 'successful subscr_eot' );
 
 					break;
 
@@ -336,6 +347,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			        endswitch;
 
+			        die( 'successful web_accept' );
+
 				break;
 
 			case "cart" :
@@ -352,6 +365,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				// an invalid IPN attempt was made. Send an email to the admin account to investigate
 				wp_mail( get_bloginfo( 'admin_email' ), __( 'Invalid IPN', 'rcp' ), $listener->getTextReport() );
 			}
+
+			die( 'invalid IPN' );
 
 		}
 

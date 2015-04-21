@@ -9,55 +9,26 @@
 function rcp_filter_restricted_content( $content ) {
 	global $post, $user_ID, $rcp_options;
 
-	$message             = $rcp_options['paid_message']; // message shown for premium content
-	$free_message        = $rcp_options['free_message']; // message shown for free content
-
-	$subscription_levels = rcp_get_content_subscription_levels( $post->ID );
-	$access_level        = get_post_meta( $post->ID, 'rcp_access_level', true );
-
 	if ( rcp_is_paid_content( $post->ID ) ) {
-		// this conent is for paid users only
 
-		if ( ! rcp_is_paid_user( $user_ID ) || ( !rcp_user_has_access( $user_ID, $access_level ) && $access_level > 0 ) ) {
-			return rcp_format_teaser( $message );
-		} else {
-			if ( $subscription_levels ) {
-				if ( $access_level > 0 ) {
-					$has_access = rcp_user_has_access( $user_ID, $access_level );
-				} else {
-					$has_access = true; // no access level restriction
-				}
-				if ( ( ! in_array( rcp_get_subscription_id( $user_ID ), $subscription_levels ) || ! $has_access ) && ! current_user_can( 'manage_options' ) ) {
-					return rcp_format_teaser( $message );
-				}
-			}
-			return $content;
-		}
-	} elseif ( $subscription_levels ) {
-
-		// this content is restricted to a subscription level, but is free
-
-		if ( $access_level > 0 ) {
-			$has_access = rcp_user_has_access( $user_ID, $access_level );
-		} else {
-			$has_access = true; // no access level restriction
-		}
-		if ( in_array( rcp_get_subscription_id( $user_ID ), $subscription_levels ) && $has_access ) {
-			return $content;
-		} else {
-			return rcp_format_teaser( $free_message );
-		}
-
-	} elseif ( $access_level > 0 ) {
-
-		if ( rcp_user_has_access( $user_ID, $access_level ) ) {
-			return $content;
-		} else {
-			return rcp_format_teaser( $free_message );
-		}
+		$message = ! empty( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : false; // message shown for premium content
+	
 	} else {
-		return $content;
+		
+		$message = ! empty( $rcp_options['free_message'] ) ? $rcp_options['free_message'] : false; // message shown for free content
+		
 	}
+
+	if( empty( $message ) ) {
+		$message = __( 'This content is restricted to subscribers', 'rcp' );
+	}
+
+	if ( ! rcp_user_can_access( $user_ID, $post->ID ) ) {
+		return rcp_format_teaser( $message );
+	}
+
+	return $content;
+
 }
 add_filter( 'the_content', 'rcp_filter_restricted_content', 100 );
 

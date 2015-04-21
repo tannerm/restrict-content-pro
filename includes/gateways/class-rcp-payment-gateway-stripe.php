@@ -41,18 +41,22 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		}
 
 		if( ! class_exists( 'Stripe' ) ) {
-			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/Stripe.php';
+			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
 		}
 
 	}
 
 	public function process_signup() {
 
-		Stripe::setApiKey( $this->secret_key );
+		\Stripe\Stripe::setApiKey( $this->secret_key );
 
 		$paid   = false;
 		$member = new RCP_Member( $this->user_id );
 		$customer_exists = false;
+
+		if( empty( $_POST['stripeToken'] ) ) {
+			wp_die( __( 'Missing Stripe token, please try again or contact support if the issue persists.', 'rcp' ), __( 'Error', 'rcp' ), array( 'response' => 400 ) );
+		}
 
 		if ( $this->auto_renew ) {
 
@@ -76,7 +80,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					try {
 
 						// Update the customer to ensure their card data is up to date
-						$customer = Stripe_Customer::retrieve( $customer_id );
+						$customer = \Stripe\Customer::retrieve( $customer_id );
 
 						if( isset( $customer->deleted ) && $customer->deleted ) {
 
@@ -109,7 +113,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					} else {
 
-						$customer = Stripe_Customer::create( array(
+						$customer = \Stripe\Customer::create( array(
 								'card' 			=> $_POST['stripeToken'],
 								'plan' 			=> $plan_id,
 								'email' 		=> $this->email,
@@ -133,7 +137,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					} else {
 
-						$customer = Stripe_Customer::create( array(
+						$customer = \Stripe\Customer::create( array(
 								'card' 			=> $_POST['stripeToken'],
 								'plan' 			=> $plan_id,
 								'email' 		=> $this->email,
@@ -153,7 +157,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						$description = sprintf( __( 'Signup Discount for %s', 'rcp_stripe' ), $this->subscription_name );
 					}
 
-					Stripe_InvoiceItem::create( array(
+					\Stripe\InvoiceItem::create( array(
 							'customer'    => $customer->id,
 							'amount'      => $this->fee * 100,
 							'currency'    => strtolower( $this->currency ),
@@ -162,7 +166,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					);
 
 					// Create the invoice containing taxes / discounts / fees
-					$invoice = Stripe_Invoice::create( array(
+					$invoice = \Stripe\Invoice::create( array(
 						'customer' => $customer->id, // the customer to apply the fee to
 					) );
 					$invoice->pay();
@@ -175,38 +179,38 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$paid = true;
 
-			} catch ( Stripe_CardError $e ) {
+			} catch ( \Stripe\Error\Card $e ) {
 
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
 
 				exit;
 
-			} catch (Stripe_InvalidRequestError $e) {
+			} catch (\Stripe\Error\InvalidRequest $e) {
 
 				// Invalid parameters were supplied to Stripe's API
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
 
-			} catch (Stripe_AuthenticationError $e) {
+			} catch (\Stripe\Error\Authentication $e) {
 
 				// Authentication with Stripe's API failed
 				// (maybe you changed API keys recently)
@@ -214,46 +218,46 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
 
-			} catch (Stripe_ApiConnectionError $e) {
+			} catch (\Stripe\Error\ApiConnection $e) {
 
 				// Network communication with Stripe failed
 
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
 
-			} catch (Stripe_Error $e) {
+			} catch (\Stripe\Error\Base $e) {
 
 				// Display a very generic error to the user
 
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
 
 			} catch (Exception $e) {
 
@@ -262,7 +266,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$error = "<p>An unidentified error occurred.</p>";
 				$error .= print_r( $e, true );
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
 
 			}
 
@@ -272,11 +276,19 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			try {
 
-				$charge = Stripe_Charge::create( array(
-						'amount' 		=> $this->amount * 100, // amount in cents
-						'currency' 		=> strtolower( $this->currency ),
-						'card' 			=> $_POST['stripeToken'],
-						'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name
+				$charge = \Stripe\Charge::create( array(
+						'amount' 		 => $this->amount * 100, // amount in cents
+						'currency' 		 => strtolower( $this->currency ),
+						'card' 			 => $_POST['stripeToken'],
+						'description' 	 => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
+						'receipt_email'  => $this->email,
+						'metadata'       => array(
+							'email'      => $this->email,
+							'user_id'    => $this->user_id,
+							'level_id'   => $this->subscription_id,
+							'level'      => $this->subscription_name,
+							'key'        => $this->subscription_key
+						)
 					)
 				);
 
@@ -295,38 +307,38 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$paid = true;
 
-			} catch ( Stripe_CardError $e ) {
+			} catch ( \Stripe\Error\Card $e ) {
 
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
 
 				exit;
 
-			} catch (Stripe_InvalidRequestError $e) {
+			} catch (\Stripe\Error\InvalidRequest $e) {
 
 				// Invalid parameters were supplied to Stripe's API
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
 
-			} catch (Stripe_AuthenticationError $e) {
+			} catch (\Stripe\Error\Authentication $e) {
 
 				// Authentication with Stripe's API failed
 				// (maybe you changed API keys recently)
@@ -334,46 +346,46 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
 
-			} catch (Stripe_ApiConnectionError $e) {
+			} catch (\Stripe\Error\ApiConnection $e) {
 
 				// Network communication with Stripe failed
 
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
 
-			} catch (Stripe_Error $e) {
+			} catch (\Stripe\Error\Base $e) {
 
 				// Display a very generic error to the user
 
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
-				$error = "<h4>An error occurred</h4>";
+				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
-					$error .= "<p>Error code: " . $err['code'] ."</p>";
+					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
 				}
 				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
 				$error .= "<p>Message: " . $err['message'] . "</p>";
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
 
 			} catch (Exception $e) {
 
@@ -382,7 +394,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$error = "<p>An unidentified error occurred.</p>";
 				$error .= print_r( $e, true );
 
-				wp_die( $error );
+				wp_die( $error, __( 'Error', 'rcp' ), array( '401' ) );
 
 			}
 		}
@@ -390,7 +402,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		if ( $paid ) {
 
 			// set this user to active
-			$member->renew();
+			$member->renew( $this->auto_renew );
 
 			if ( ! is_user_logged_in() ) {
 
@@ -414,14 +426,14 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 	public function process_webhooks() {
 
-		if( ! isset( $_GET['listener'] ) || strtoupper( $_GET['listener'] ) != 'stripe' ) {
+		if( ! isset( $_GET['listener'] ) || strtolower( $_GET['listener'] ) != 'stripe' ) {
 			return;
 		}
 
 		// Ensure listener URL is not cached by W3TC
 		define( 'DONOTCACHEPAGE', true );
 
-		Stripe::setApiKey( $this->secret_key );
+		\Stripe\Stripe::setApiKey( $this->secret_key );
 
 		// retrieve the request's body and parse it as JSON
 		$body          = @file_get_contents( 'php://input' );
@@ -436,12 +448,25 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			try {
 
-				$event = Stripe_Event::retrieve( $event_id );
+				$event = \Stripe\Event::retrieve( $event_id );
 
 				$invoice = $event->data->object;
 
 				// retrieve the customer who made this payment (only for subscriptions)
-				$user   = rcp_stripe_get_user_id( $invoice->customer );
+				$user = rcp_get_member_id_from_profile_id( $invoice->customer );
+
+				if( empty( $user ) ) {
+
+					// Grab the customer ID from the old meta keys
+					global $wpdb;
+					$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = '_rcp_stripe_user_id' AND meta_value = %s LIMIT 1", $invoice->customer ) );
+
+				}
+
+				if( empty( $user ) ) {
+					die( 'no user ID found' );
+				}
+
 				$member = new RCP_Member( $user );
 				
 				// check to confirm this is a stripe subscriber
@@ -450,8 +475,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// successful payment
 					if ( $event->type == 'charge.succeeded' ) {
 
-						if( ! $member->get_subscription_id() )
-							return;
+						if( ! $member->get_subscription_id() ) {
+							die( 'no subscription ID for member' );
+						}
 
 						$payment_data = array(
 							'date'              => date( 'Y-m-d g:i:s', $event->created ),
@@ -468,9 +494,15 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							// record this payment if it hasn't been recorded yet
 							$rcp_payments->insert( $payment_data );
 
-							$member->renew();
+							$member->renew( $member->is_recurring() );
 
 							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
+
+							die( 'rcp_stripe_charge_succeeded action fired successfully' );
+
+						} else {
+
+							die( 'duplicate payment found' );
 
 						}
 
@@ -484,12 +516,16 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						do_action( 'rcp_stripe_charge_failed', $invoice );
 
+						die( 'rcp_stripe_charge_failed action fired successfully' );
+
 					}
 
 					// Cancelled / failed subscription
 					if( $event->type == 'customer.subscription.deleted' ) {
 
 						$member->set_status( 'cancelled' );
+
+						die( 'member cancelled successfully' );
 
 					}
 
@@ -500,9 +536,14 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			} catch ( Exception $e ) {
 				// something failed
+				die( 'PHP exception: ' . $e->getMessage() );
 			}
+
+			die( '1' );
+
 		}
-		exit;
+		
+		die( 'no event ID found' );
 
 	}
 
@@ -516,8 +557,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			Stripe.setPublishableKey('<?php echo $this->publishable_key; ?>');
 
 			function stripeResponseHandler(status, response) {
-				console.log( status );
-				console.log( response );
 				if (response.error) {
 					// re-enable the submit button
 					jQuery('#rcp_registration_form #rcp_submit').attr("disabled", false);
@@ -552,9 +591,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					}
 
 					if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]').val() == 'stripe') && price > 0) {
-						if( ! $('.rcp_gateway_fields').is(':visible') ) {
-							return true;
-						}
 
 						event.preventDefault();
 
@@ -625,11 +661,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		$plan_id        = strtolower( str_replace( ' ', '', $plan_name ) );
 		$currency       = strtolower( $rcp_options['currency'] );
 
-		Stripe::setApiKey( $this->secret_key );
+		\Stripe\Stripe::setApiKey( $this->secret_key );
 
 		try {
 
-			Stripe_Plan::create( array(
+			\Stripe\Plan::create( array(
 				"amount"         => $price,
 				"interval"       => $interval,
 				"interval_count" => $interval_count,
@@ -652,10 +688,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		$plan_id = strtolower( str_replace( ' ', '', $plan_id ) );
 
-		Stripe::setApiKey( $this->secret_key );
+		\Stripe\Stripe::setApiKey( $this->secret_key );
 
 		try {
-			$plan = Stripe_Plan::retrieve( $plan_id );
+			$plan = \Stripe\Plan::retrieve( $plan_id );
 			return true;
 		} catch ( Exception $e ) {
 			return false;

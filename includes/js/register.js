@@ -59,7 +59,16 @@ jQuery(document).ready(function($) {
 		var submit_register_text = $(this).val();
 
 		form.block({
-			message: rcp_script_options.pleasewait
+			message: rcp_script_options.pleasewait,
+			css: {
+				border: 'none',
+				padding: '15px',
+				backgroundColor: '#000',
+				'-webkit-border-radius': '10px',
+				'-moz-border-radius': '10px',
+				opacity: .5,
+				color: '#fff'
+			}
 		});
 
 		$('#rcp_submit', form).val( rcp_script_options.pleasewait );
@@ -69,6 +78,7 @@ jQuery(document).ready(function($) {
 			$('.rcp-submit-ajax', form).remove();
 			$('.rcp_message.error', form).remove();
 			if ( response.success ) {
+				$('body').trigger( 'rcp_register_form_submission' );
 				$(submission_form).submit();
 			} else {
 				console.log( response );
@@ -77,6 +87,10 @@ jQuery(document).ready(function($) {
 				$('#rcp_register_nonce', form).val( response.data.nonce );
 				form.unblock();
 			}
+		}).done(function( response ) {
+		}).fail(function( response ) {
+			console.log( response );
+		}).always(function( response ) {
 		});
 
 	});
@@ -159,6 +173,8 @@ function rcp_validate_gateways() {
 		is_free = true;
 	}
 
+	$('.rcp_message.error', form).remove();
+
 	if( $('#rcp_payment_gateways').length > 0 ) {
 
 		gateway = $( '#rcp_payment_gateways select option:selected' );
@@ -210,7 +226,16 @@ function rcp_validate_gateways() {
 			$.post( rcp_script_options.ajaxurl, data, function(response) {
 				$('#rcp_gateway_extra_fields').remove();
 				if( response.success && response.data.fields ) {
-					$( '<div class="rcp_gateway_' + gateway.val() + '_fields" id="rcp_gateway_extra_fields">' + response.data.fields + '</div>' ).insertAfter('.rcp_gateway_fields');
+					if( $('.rcp_gateway_fields' ).length ) {
+
+						$( '<div class="rcp_gateway_' + gateway.val() + '_fields" id="rcp_gateway_extra_fields">' + response.data.fields + '</div>' ).insertAfter('.rcp_gateway_fields');
+					
+					} else {
+
+						// Pre 2.1 template files
+						$( '<div class="rcp_gateway_' + gateway.val() + '_fields" id="rcp_gateway_extra_fields">' + response.data.fields + '</div>' ).insertAfter('.rcp_gateways_fieldset');
+
+					}
 				}
 				form.unblock();
 			});

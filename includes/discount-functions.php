@@ -208,18 +208,21 @@ function rcp_store_discount_use_for_user( $code, $user_id, $discount_object ) {
 * return boolean
 */
 function rcp_user_has_used_discount( $user_id, $code ) {
-	if( $code == '' ) {
-		return false;
+	
+	$ret = false;
+
+	if( ! empty( $code ) ) {
+
+		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
+		
+		if( ! empty( $user_discounts ) ) {
+			if( in_array( $code, $user_discounts ) ) {
+				$ret = true;
+			}
+		}
 	}
 
-	$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
-	if( !is_array( $user_discounts ) || $user_discounts == '' ) {
-		return false;
-	}
-	if( in_array( $code, $user_discounts ) ) {
-		return true;
-	}
-	return false;
+	return apply_filters( 'rcp_user_has_used_discount', $ret, $user_id, $code );
 }
 
 /*

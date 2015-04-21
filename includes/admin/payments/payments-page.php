@@ -103,7 +103,7 @@ function rcp_payments_page() {
 							<tr class="rcp_payment <?php if( rcp_is_odd( $i ) ) echo 'alternate'; ?>">
 								<td><?php echo absint( $payment->id ); ?></td>
 								<td>
-									<a href="<?php echo add_query_arg( 'user_id', $payment->user_id, menu_page_url( 'rcp-payments', false ) ); ?>" title="<?php _e( 'View payments by this user', 'rcp' ); ?>">
+									<a href="<?php echo esc_url( add_query_arg( 'user_id', $payment->user_id, menu_page_url( 'rcp-payments', false ) ) ); ?>" title="<?php _e( 'View payments by this user', 'rcp' ); ?>">
 										<?php echo isset( $user->display_name ) ? esc_html( $user->display_name ) : ''; ?>
 									</a>
 								</td>
@@ -119,9 +119,9 @@ function rcp_payments_page() {
 									<td>
 										<a href="<?php echo rcp_get_pdf_download_url( $payment->id ); ?>" class="rcp-payment-invoice"><?php _e( 'Download Invoice', 'rcp' ); ?></a>
 										<span>&nbsp;|&nbsp;</span>
-										<a href="<?php echo add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ) ); ?>" class="rcp-edit-payment"><?php _e( 'Edit', 'rcp' ); ?></a>
+										<a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ) ) ); ?>" class="rcp-edit-payment"><?php _e( 'Edit', 'rcp' ); ?></a>
 										<span>&nbsp;|&nbsp;</span>
-										<a href="<?php echo wp_nonce_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ) ), 'rcp_delete_payment_nonce' ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a>
+										<a href="<?php echo wp_nonce_url( esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ) ) ), 'rcp_delete_payment_nonce' ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a>
 									</td>
 								<?php endif; ?>
 							</tr>
@@ -138,7 +138,7 @@ function rcp_payments_page() {
 					<div class="tablenav-pages alignright">
 						<?php
 
-							$base = 'admin.php?' . remove_query_arg( 'p', $_SERVER['QUERY_STRING'] ) . '%_%';
+							$base = 'admin.php?' . esc_url( remove_query_arg( 'p', $_SERVER['QUERY_STRING'] ) ) . '%_%';
 
 							echo paginate_links( array(
 								'base' 		=> $base,

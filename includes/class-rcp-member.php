@@ -18,7 +18,7 @@ class RCP_Member extends WP_User {
 		$status = get_user_meta( $this->ID, 'rcp_status', true );
 
 		// double check that the status and expiration match. Update if needed
-		if( $status == 'active' && rcp_is_expired( $this->ID ) ) {
+		if( $status == 'active' && $this->is_expired() ) {
 
 			$status = 'expired';
 			$this->set_status( $status );
@@ -84,7 +84,7 @@ class RCP_Member extends WP_User {
 			$expiration = $expiration != 'none' ? $expiration : 'none';
 		}
 
-		if( $formatted ) {
+		if( $formatted && 'none' != $expiration ) {
 			$expiration = date_i18n( get_option( 'date_format' ), strtotime( $expiration ) );
 		}
 
@@ -148,6 +148,10 @@ class RCP_Member extends WP_User {
 	*/
 	public function renew( $recurring = false, $status = 'active' ) {
 
+		if( ! $this->get_subscription_id() ) {
+			return false;
+		}
+
 		// Get the member's current expiration date
 		$expires        = $this->get_expiration_time();
 
@@ -185,7 +189,7 @@ class RCP_Member extends WP_User {
 	}
 
 	/**
-	 * Sets a member's membership as cancelled by updating status and expiration date
+	 * Sets a member's membership as cancelled by updating status
 	 *
 	 * Does NOT handle actual cancellation of subscription payments, that is done in rcp_process_member_cancellation(). This should be called after a member is successfully cancelled.
 	 *
@@ -194,11 +198,11 @@ class RCP_Member extends WP_User {
 	*/
 	public function cancel() {
 
-		do_action( 'rcp_member_pre_cancel', $this->ID, $expiration, $this );
+		do_action( 'rcp_member_pre_cancel', $this->ID, $this );
 
 		$this->set_status( 'cancelled' );
 
-		do_action( 'rcp_member_post_cancel', $this->ID, $expiration, $this );
+		do_action( 'rcp_member_post_cancel', $this->ID, $this );
 
 	}
 
@@ -346,7 +350,7 @@ class RCP_Member extends WP_User {
 
 		if( user_can( $this->ID, 'manage_options' ) ) {
 			$ret = true;
-		} else if( ! rcp_is_expired( $this->ID ) && ( $this->get_status() == 'active' || $this->get_status() == 'cancelled' ) ) {
+		} else if( ! $this->is_expired() && ( $this->get_status() == 'active' || $this->get_status() == 'cancelled' ) ) {
 			$ret = true;
 		}
 
@@ -425,8 +429,7 @@ class RCP_Member extends WP_User {
 		$ret      = false;
 		$trialing = get_user_meta( $this->ID, 'rcp_is_trialing', true );
 
-
-		if( $trialing == 'yes' && rcp_is_active( $this->ID ) ) {
+		if( $trialing == 'yes' && $this->is_active() ) {
 			$ret = true;
 		}
 
@@ -458,6 +461,46 @@ class RCP_Member extends WP_User {
 	}
 
 	/**
+	 * Determines if the member can access current content
+	 *
+	 * @access  public
+	 * @since   2.1
+	*/
+	public function can_access( $post_id = 0 ) {
+
+		$subscription_levels = rcp_get_content_subscription_levels( $post_id );
+		$access_level        = get_post_meta( $post_id, 'rcp_access_level', true );
+
+		// Assume the user can until proven false
+		$ret = true;
+
+		if ( rcp_is_paid_content( $post_id ) && ! $this->is_active() ) {
+
+			$ret = false;
+
+		}
+
+		if( ! rcp_user_has_access( $this->ID, $access_level ) && $access_level > 0 ) {
+
+			$ret = false;
+
+		}
+
+		if ( ! empty( $subscription_levels ) ) {
+
+			if ( ! in_array( $this->get_subscription_id(), $subscription_levels ) && ! user_can( $this->ID, 'manage_options' ) ) {
+
+				$ret = false;
+
+			}
+
+		}
+
+		return apply_filters( 'rcp_member_can_access', $ret, $this->ID, $post_id, $this );
+
+	}
+
+	/**
 	 * Gets the URL to switch to the user
 	 * if the User Switching plugin is active
 	 *
@@ -466,7 +509,7 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_switch_to_url() {
 
-		if( !class_exists( 'user_switching' ) ) {
+		if( ! class_exists( 'user_switching' ) ) {
 		   	return false;
 		}
 
