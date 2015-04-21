@@ -162,6 +162,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'FAILEDINITAMTACTION' => 'CancelOnFailure',
 					'L_BILLINGTYPE0'      => 'RecurringPayments',
 					'DESC'                => $details['subscription']['name'],
+					'BUTTONSOURCE'        => 'EasyDigitalDownloads_SP'
 				);
 
 				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'body' => $args ) );
