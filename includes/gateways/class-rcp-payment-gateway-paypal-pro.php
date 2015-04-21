@@ -12,7 +12,6 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 	public $id;
 	private $api_endpoint;
-	private $checkout_url;
 	protected $username;
 	protected $password;
 	protected $signature;
@@ -33,12 +32,10 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 		if( $this->test_mode ) {
 
 			$this->api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
-			$this->checkout_url = 'https://www.sandbox.paypal.com/webscr&cmd=_express-checkout&token=';
 
 		} else {
 
 			$this->api_endpoint = 'https://api-3t.paypal.com/nvp';
-			$this->checkout_url = 'https://www.paypal.com/webscr&cmd=_express-checkout&token=';
 
 		}
 
