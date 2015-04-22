@@ -17,6 +17,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 	protected $password;
 	protected $signature;
 
+	/**
+	 * Get things going
+	 *
+	 * @since 2.1
+	 */
 	public function init() {
 
 		global $rcp_options;
@@ -51,6 +56,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Process registration
+	 *
+	 * @since 2.1
+	 */
 	public function process_signup() {
 
 		global $rcp_options;
@@ -125,6 +135,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Validate additional fields during registration submission
+	 *
+	 * @since 2.1
+	 */
 	public function validate_fields() {
 
 		if( ! rcp_has_paypal_api_access() ) {
@@ -133,6 +148,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Process payment confirmation after returning from PayPal
+	 *
+	 * @since 2.1
+	 */
 	public function process_confirmation() {
 
 		if ( isset( $_POST['rcp_ppe_confirm_nonce'] ) && wp_verify_nonce( $_POST['rcp_ppe_confirm_nonce'], 'rcp-ppe-confirm-nonce' ) ) {
@@ -284,6 +304,12 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Display the confirmation form
+	 *
+	 * @since 2.1
+	 * @return string
+	 */
 	public function confirmation_form() {
 
 		global $rcp_checkout_details;
@@ -296,6 +322,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		return ob_get_clean();
 	}
 
+	/**
+	 * Process PayPal IPN
+	 *
+	 * @since 2.1
+	 */
 	public function process_webhooks() {
 
 		if( ! isset( $_GET['listener'] ) || strtoupper( $_GET['listener'] ) != 'EIPN' ) {

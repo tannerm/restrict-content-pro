@@ -13,6 +13,11 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 	public $id;
 
+	/**
+	 * Get things going
+	 *
+	 * @since 2.1
+	 */
 	public function init() {
 
 		global $rcp_options;
@@ -25,6 +30,11 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Process registration
+	 *
+	 * @since 2.1
+	 */
 	public function process_signup() {
 
 		global $rcp_options;
@@ -122,6 +132,11 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Process PayPal IPN
+	 *
+	 * @since 2.1
+	 */
 	public function process_webhooks() {
 
 		if( ! isset( $_GET['listener'] ) || strtoupper( $_GET['listener'] ) != 'IPN' ) {

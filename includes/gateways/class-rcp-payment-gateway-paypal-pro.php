@@ -16,6 +16,11 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 	protected $password;
 	protected $signature;
 
+	/**
+	 * Get things going
+	 *
+	 * @since 2.1
+	 */
 	public function init() {
 
 		global $rcp_options;
@@ -48,6 +53,11 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Process registration
+	 *
+	 * @since 2.1
+	 */
 	public function process_signup() {
 
 		global $rcp_options;
@@ -131,6 +141,12 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Add credit card form
+	 *
+	 * @since 2.1
+	 * @return string
+	 */
 	public function fields() {
 
 		ob_start();
@@ -138,6 +154,11 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 		return ob_get_clean();
 	}
 
+	/**
+	 * Validate additional fields during registration submission
+	 *
+	 * @since 2.1
+	 */
 	public function validate_fields() {
 
 		if( ! rcp_has_paypal_api_access() ) {
@@ -170,6 +191,11 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Process webhooks
+	 *
+	 * @since 2.1
+	 */
 	public function process_webhooks() {
 
 		// These are processed through PayPal Express gateway

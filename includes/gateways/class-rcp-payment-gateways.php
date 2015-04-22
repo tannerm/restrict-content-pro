@@ -15,6 +15,11 @@ class RCP_Payment_Gateways {
 
 	public $enabled_gateways; 
 
+	/**
+	 * Get things going
+	 *
+	 * @since 2.1
+	 */
 	public function __construct() {
 
 		$this->available_gateways = $this->get_gateways();
@@ -22,6 +27,12 @@ class RCP_Payment_Gateways {
 
 	}
 
+	/**
+	 * Retrieve a gateway by ID
+	 *
+	 * @since 2.1
+	 * @return object|false
+	 */
 	public function get_gateway( $id = '' ) {
 
 		if( isset( $this->available_gateways[ $id ] ) ) {
@@ -33,6 +44,12 @@ class RCP_Payment_Gateways {
 		return false;
 	}
 
+	/**
+	 * Retrieve all registered gateways
+	 *
+	 * @since 2.1
+	 * @return array
+	 */
 	private function get_gateways() {
 
 		$gateways = array(
@@ -67,6 +84,12 @@ class RCP_Payment_Gateways {
 
 	}
 
+	/**
+	 * Retrieve all enabled gateways
+	 *
+	 * @since 2.1
+	 * @return array
+	 */
 	private function get_enabled_gateways() {
 
 		global $rcp_options;
@@ -98,10 +121,22 @@ class RCP_Payment_Gateways {
 
 	}
 
+	/**
+	 * Determine if a gateway is enabled
+	 *
+	 * @since 2.1
+	 * @return bool
+	 */
 	public function is_gateway_enabled( $id = '' ) {
 		return isset( $this->enabled_gateways[ $id ] );
 	}
 
+	/**
+	 * Load the fields for a gateway
+	 *
+	 * @since 2.1
+	 * @return void
+	 */
 	public function load_fields() {
 
 		if( ! empty( $_POST['rcp_gateway'] ) ) {

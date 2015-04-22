@@ -10,6 +10,11 @@
 
 class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 
+	/**
+	 * Get things going
+	 *
+	 * @since 2.1
+	 */
 	public function init() {
 
 		global $rcp_options;
@@ -21,6 +26,11 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Process registration
+	 *
+	 * @since 2.1
+	 */
 	public function process_signup() {
 
 		// setup the payment info in an array for storage

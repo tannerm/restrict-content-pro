@@ -15,6 +15,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	private $secret_key;
 	private $publishable_key;
 
+	/**
+	 * Get things going
+	 *
+	 * @since 2.1
+	 */
 	public function init() {
 
 		global $rcp_options;
@@ -43,6 +48,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Process registration
+	 *
+	 * @since 2.1
+	 */
 	public function process_signup() {
 
 		\Stripe\Stripe::setApiKey( $this->secret_key );
@@ -544,6 +554,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Add credit card fields
+	 *
+	 * @since 2.1
+	 * @return string
+	 */
 	public function fields() {
 
 		ob_start();
@@ -615,6 +631,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		return ob_get_clean();
 	}
 
+	/**
+	 * Validate additional fields during registration submission
+	 *
+	 * @since 2.1
+	 */
 	public function validate_fields() {
 
 		if( empty( $_POST['rcp_card_number'] ) ) {
@@ -643,10 +664,21 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Load Stripe JS
+	 *
+	 * @since 2.1
+	 */
 	public function scripts() {
 		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v2/', array( 'jquery' ) );
 	}
 
+	/**
+	 * Create plan in Stripe
+	 *
+	 * @since 2.1
+	 * @return bool
+	 */
 	private function create_plan( $plan_name = '' ) {
 
 		// get all subscription level info for this plan
@@ -681,6 +713,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Determine if a plan exists
+	 *
+	 * @since 2.1
+	 * @return bool
+	 */
 	private function plan_exists( $plan_id = '' ) {
 
 		$plan_id = strtolower( str_replace( ' ', '', $plan_id ) );
