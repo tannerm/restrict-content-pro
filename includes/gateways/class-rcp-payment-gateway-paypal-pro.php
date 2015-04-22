@@ -10,7 +10,6 @@
 
 class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
-	public $id;
 	private $api_endpoint;
 	protected $username;
 	protected $password;

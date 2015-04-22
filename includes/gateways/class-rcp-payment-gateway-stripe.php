@@ -11,7 +11,6 @@
 
 class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
-	public $id;
 	private $secret_key;
 	private $publishable_key;
 

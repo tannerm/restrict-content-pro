@@ -10,7 +10,6 @@
 
 class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
-	public $id;
 	private $api_endpoint;
 	private $checkout_url;
 	protected $username;

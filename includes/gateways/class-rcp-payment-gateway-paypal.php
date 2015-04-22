@@ -11,8 +11,6 @@
 
 class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
-	public $id;
-
 	/**
 	 * Get things going
 	 *
