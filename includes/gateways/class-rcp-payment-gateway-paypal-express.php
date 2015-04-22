@@ -21,9 +21,6 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		global $rcp_options;
 
-		$this->id          = 'paypal_express';
-		$this->title       = 'PayPal Express';
-		$this->description = 'It is PayPal, what else?';
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';

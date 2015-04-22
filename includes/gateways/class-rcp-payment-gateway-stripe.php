@@ -19,9 +19,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		global $rcp_options;
 
-		$this->id          = 'stripe';
-		$this->title       = 'Stripe';
-		$this->description = __( 'Pay with a credit or debit card', 'rcp' );
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';

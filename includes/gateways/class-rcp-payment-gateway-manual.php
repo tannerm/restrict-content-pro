@@ -14,9 +14,6 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 
 		global $rcp_options;
 
-		$this->id          = 'manual';
-		$this->title       = __( 'Manual Payment', 'rcp' );
-		$this->description = __( 'Pay by check, money order, cash, or bank transfer', 'rcp' );
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'fees';
 

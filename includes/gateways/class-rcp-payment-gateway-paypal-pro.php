@@ -20,9 +20,6 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		global $rcp_options;
 
-		$this->id          = 'paypal_pro';
-		$this->title       = 'PayPal Pro';
-		$this->description = 'It is PayPal, what else?';
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
