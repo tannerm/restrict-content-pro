@@ -165,27 +165,27 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 		}
 
 		if( empty( $_POST['rcp_card_number'] ) ) {
-			rcp_errors()->add( 'missing_card_number', __( 'The card number you have entered is invalid', 'rcp' ), 'register' );
+			$this->add_error( 'missing_card_number', __( 'The card number you have entered is invalid', 'rcp' ) );
 		}
 
 		if( empty( $_POST['rcp_card_cvc'] ) ) {
-			rcp_errors()->add( 'missing_card_code', __( 'The security code you have entered is invalid', 'rcp' ), 'register' );
+			$this->add_error( 'missing_card_code', __( 'The security code you have entered is invalid', 'rcp' ) );
 		}
 
 		if( empty( $_POST['rcp_card_zip'] ) ) {
-			rcp_errors()->add( 'missing_card_zip', __( 'The zip / postal code you have entered is invalid', 'rcp' ), 'register' );
+			$this->add_error( 'missing_card_zip', __( 'The zip / postal code you have entered is invalid', 'rcp' ) );
 		}
 
 		if( empty( $_POST['rcp_card_name'] ) ) {
-			rcp_errors()->add( 'missing_card_name', __( 'The card holder name you have entered is invalid', 'rcp' ), 'register' );
+			$this->add_error( 'missing_card_name', __( 'The card holder name you have entered is invalid', 'rcp' ) );
 		}
 
 		if( empty( $_POST['rcp_card_exp_month'] ) ) {
-			rcp_errors()->add( 'missing_card_exp_month', __( 'The card expiration month you have entered is invalid', 'rcp' ), 'register' );
+			$this->add_error( 'missing_card_exp_month', __( 'The card expiration month you have entered is invalid', 'rcp' ) );
 		}
 
 		if( empty( $_POST['rcp_card_exp_year'] ) ) {
-			rcp_errors()->add( 'missing_card_exp_year', __( 'The card expiration year you have entered is invalid', 'rcp' ), 'register' );
+			$this->add_error( 'missing_card_exp_year', __( 'The card expiration year you have entered is invalid', 'rcp' ) );
 		}
 
 	}
