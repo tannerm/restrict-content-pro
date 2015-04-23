@@ -64,7 +64,6 @@ function rcp_payments_page() {
 					<th style="width: 40px;"><?php _e( 'ID', 'rcp' ); ?></th>
 					<th style="width: 90px;"><?php _e( 'User', 'rcp' ); ?></th>
 					<th style="width: 150px;"><?php _e( 'Subscription', 'rcp' ); ?></th>
-					<th style="width: 240px;"><?php _e( 'Subscription Key', 'rcp' ); ?></th>
 					<th><?php _e( 'Date', 'rcp' ); ?></th>
 					<th style="width: 90px;"><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
@@ -81,7 +80,6 @@ function rcp_payments_page() {
 					<th style="width: 40px;"><?php _e( 'ID', 'rcp' ); ?></th>
 					<th><?php _e( 'User', 'rcp' ); ?></th>
 					<th><?php _e( 'Subscription', 'rcp' ); ?></th>
-					<th><?php _e( 'Subscription Key', 'rcp' ); ?></th>
 					<th><?php _e( 'Date', 'rcp' ); ?></th>
 					<th><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
@@ -108,7 +106,6 @@ function rcp_payments_page() {
 									</a>
 								</td>
 								<td><?php echo esc_html( $payment->subscription ); ?></td>
-								<td><?php echo esc_html( $payment->subscription_key ); ?></td>
 								<td><?php echo esc_html( $payment->date ); ?></td>
 								<td><?php echo rcp_currency_filter( $payment->amount ); ?></td>
 								<td><?php echo esc_html( $payment->payment_type ); ?></td>
