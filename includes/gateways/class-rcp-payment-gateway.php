@@ -28,7 +28,6 @@ class RCP_Payment_Gateway {
 	public $return_url;
 	public $test_mode;
 
-
 	public function __construct( $subscription_data = array() ) {
 
 		$this->init();
@@ -79,6 +78,10 @@ class RCP_Payment_Gateway {
 	public function renew_member( $recurring = false, $status = 'active' ) {
 		$member = new RCP_Member( $this->user_id );
 		$member->renew( $recurring, $status );
+	}
+
+	private function add_error( $code = '', $message = '' ) {
+		rcp_errors()->add( $code, $message, 'register' );
 	}
 
 }

@@ -161,7 +161,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 	public function validate_fields() {
 
 		if( ! rcp_has_paypal_api_access() ) {
-			rcp_errors()->add( 'no_paypal_api', __( 'You have not configured PayPal API access. Please configure it in Restrict &rarr; Settings', 'rcp' ), 'register' );
+			$this->add_error( 'no_paypal_api', __( 'You have not configured PayPal API access. Please configure it in Restrict &rarr; Settings', 'rcp' ) );
 		}
 
 		if( empty( $_POST['rcp_card_number'] ) ) {
