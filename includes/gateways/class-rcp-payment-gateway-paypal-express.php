@@ -64,16 +64,22 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		global $rcp_options;
 
+		if( $this->auto_renew ) {
+			$amount = $this->amount;
+		} else {
+			$amount = round( $this->amount + $this->signup_fee, 2 );
+		}
+
 		$args = array(
 			'USER'                           => $this->username,
 			'PWD'                            => $this->password,
 			'SIGNATURE'                      => $this->signature,
 			'VERSION'                        => '121',
 			'METHOD'                         => 'SetExpressCheckout',
-			'PAYMENTREQUEST_0_AMT'           => round( $this->amount + $this->signup_fee, 2 ),
+			'PAYMENTREQUEST_0_AMT'           => $amount,
 			'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
 			'PAYMENTREQUEST_0_CURRENCYCODE'  => strtoupper( $this->currency ),
-			'PAYMENTREQUEST_0_ITEMAMT'       => round( $this->amount + $this->signup_fee, 2 ),
+			'PAYMENTREQUEST_0_ITEMAMT'       => $amount,
 			'PAYMENTREQUEST_0_SHIPPINGAMT'   => 0,
 			'PAYMENTREQUEST_0_TAXAMT'        => 0,
 			'PAYMENTREQUEST_0_DESC'          => $this->subscription_name,
@@ -232,8 +238,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
 					'TOKEN'                          => $_POST['token'],
 					'PAYERID'                        => $_POST['payer_id'],
-					'PAYMENTREQUEST_0_AMT'           => round( $details['AMT'], 2 ),
-					'PAYMENTREQUEST_0_ITEMAMT'       => round( $details['AMT'], 2 ),
+					'PAYMENTREQUEST_0_AMT'           => $details['AMT'],
+					'PAYMENTREQUEST_0_ITEMAMT'       => $details['AMT'],
 					'PAYMENTREQUEST_0_SHIPPINGAMT'   => 0,
 					'PAYMENTREQUEST_0_TAXAMT'        => 0,
 					'PAYMENTREQUEST_0_CURRENCYCODE'  => $details['CURRENCYCODE'],
