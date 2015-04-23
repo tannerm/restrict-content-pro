@@ -70,7 +70,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'AMT'                => $this->amount,
 			'INITAMT'            => 0,
 			'CURRENCYCODE'       => strtoupper( $this->currency ),
-			'ITEMAMT'            => $this->amount,
+			'ITEMAMT'            => round( $this->amount + $this->signup_fee, 2 ),
 			'SHIPPINGAMT'        => 0,
 			'TAXAMT'             => 0,
 			'DESC'               => $this->subscription_name,
