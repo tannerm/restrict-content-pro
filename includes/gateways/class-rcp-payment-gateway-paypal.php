@@ -58,7 +58,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			'rm'            => '2',
 			'return'        => $this->return_url,
 			'cancel_return' => home_url(),
-			'notify_url'    => home_url( '/' ) . '?listener=IPN',
+			'notify_url'    => add_query_arg( 'listener', 'IPN', home_url() ),
 			'cbt'			=> get_bloginfo( 'name' ),
 			'tax'           => 0,
 			'page_style'    => ! empty( $rcp_options['paypal_page_style'] ) ? trim( $rcp_options['paypal_page_style'] ) : '',
