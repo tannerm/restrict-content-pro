@@ -11,9 +11,6 @@
 
 class RCP_Payment_Gateway {
 	
-	public $id;
-	public $title;
-	public $description;
 	public $supports = array();
 	public $email;
 	public $user_id;
