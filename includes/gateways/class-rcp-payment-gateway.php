@@ -74,12 +74,6 @@ class RCP_Payment_Gateway {
 
 	public function process_signup() {}
 
-	public function process_refund() {}
-
-	public function process_cancellation() {}
-
-	public function process_eot() {}
-
 	public function process_webhooks() {}
 
 	public function scripts() {}
