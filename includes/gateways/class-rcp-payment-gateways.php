@@ -60,7 +60,7 @@ class RCP_Payment_Gateways {
 			),
 			'paypal' => array(
 				'label'        => __( 'PayPal', 'rcp' ),
-				'admin_label'  => __( 'PayPal', 'rcp' ),
+				'admin_label'  => __( 'PayPal Standard', 'rcp' ),
 				'class'        => 'RCP_Payment_Gateway_PayPal'
 			),
 			'paypal_express' => array(
