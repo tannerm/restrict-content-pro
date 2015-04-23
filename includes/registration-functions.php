@@ -140,7 +140,11 @@ function rcp_process_registration() {
 
 		if( $user_data['id'] ) {
 
-			rcp_set_status( $user_data['id'], 'pending' );
+			if( ! rcp_is_active( $user_data['id'] ) ) {
+
+				rcp_set_status( $user_data['id'], 'pending' );
+	
+			}
 
 			// setup a unique key for this subscription
 			$subscription_key = rcp_generate_subscription_key();
