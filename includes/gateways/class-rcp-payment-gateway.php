@@ -60,18 +60,6 @@ class RCP_Payment_Gateway {
 
 	public function init() {}
 
-	public function get_return_url() {}
-
-	public function get_subscription_details() {}
-
-	public function get_subscription_amount() {}
-
-	public function get_subscription_period() {}
-
-	public function get_subscription_length() {}
-
-	public function get_subscription_length_unit() {}
-
 	public function process_signup() {}
 
 	public function process_webhooks() {}
