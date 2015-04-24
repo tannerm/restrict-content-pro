@@ -36,7 +36,6 @@ function rcp_settings_page() {
 				<?php _e( 'Restrict Content Pro', 'rcp' ); ?>
 				<a href="#general" class="nav-tab"><?php _e( 'General', 'rcp' ); ?></a>
 				<a href="#payments" class="nav-tab"><?php _e( 'Payments', 'rcp' ); ?></a>
-				<a href="#forms" class="nav-tab"><?php _e( 'Signup Form', 'rcp' ); ?></a>
 				<a href="#emails" class="nav-tab"><?php _e( 'Emails', 'rcp' ); ?></a>
 				<a href="#invoices" class="nav-tab"><?php _e( 'PDF Invoices', 'rcp' ); ?></a>
 				<a href="#misc" class="nav-tab"><?php _e( 'Misc', 'rcp' ); ?></a>
@@ -380,80 +379,6 @@ function rcp_settings_page() {
 					<?php do_action( 'rcp_payments_settings', $rcp_options ); ?>
 
 				</div><!--end #payments-->
-
-				<div class="tab_content" id="forms">
-					<table class="form-table">d>
-						</tr>
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[disable_css]"><?php _e( 'Disable Form CSS', 'rcp' ); ?></label><br/>
-							</th>
-							<td>
-								<input type="checkbox" value="1" name="rcp_settings[disable_css]" id="rcp_settings[disable_css]" <?php if( isset( $rcp_options['disable_css'] ) ) checked('1', $rcp_options['disable_css']); ?>/>
-								<span class="description"><?php _e( 'Check this to disable all included form styling.', 'rcp' ); ?></span>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[enable_recaptcha]"><?php _e( 'Enable reCaptcha', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<input type="checkbox" value="1" name="rcp_settings[enable_recaptcha]" id="rcp_settings[enable_recaptcha]" <?php if( isset( $rcp_options['enable_recaptcha'] ) ) checked('1', $rcp_options['enable_recaptcha']); ?>/>
-								<span class="description"><?php _e( 'Check this to enable reCaptcha on the registration form.', 'rcp' ); ?></span>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[recaptcha_public_key]"><?php _e( 'reCaptcha Public Key' ); ?></label>
-							</th>
-							<td>
-								<input id="rcp_settings[recaptcha_public_key]" style="width: 300px;" name="rcp_settings[recaptcha_public_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_public_key'] ) ) echo $rcp_options['recaptcha_public_key']; ?>" />
-								<p class="description"><?php _e( 'This your own personal reCaptcha Public key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/admin/list"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your public key.', 'rcp' ); ?></p>
-							<td>
-						</tr>
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[recaptcha_private_key]"><?php _e( 'reCaptcha Private Key' ); ?></label>
-							</th>
-							<td>
-								<input id="rcp_settings[recaptcha_private_key]" style="width: 300px;" name="rcp_settings[recaptcha_private_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_private_key'] ) ) echo $rcp_options['recaptcha_private_key']; ?>" />
-								<p class="description"><?php _e( 'This your own personal reCaptcha Private key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/admin/list"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your private key.', 'rcp' ); ?></p>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[recaptcha_style]"><?php _e( 'reCaptcha Style', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<select id="rcp_settings[recaptcha_style]" name="rcp_settings[recaptcha_style]">
-									<?php
-									$styles = array('red', 'white', 'blackglass', 'clean');
-									foreach ( $styles as $style ) {
-									  	$option = '<option value="' . $style . '" ' . selected($style, $rcp_options['recaptcha_style'], false) . '>';
-										$option .= ucwords($style);
-										$option .= '</option>';
-										echo $option;
-									}
-
-									?>
-								</select>
-								<div class="description"><?php _e( 'Choose the style you wish to use for your reCaptcha form', 'rcp' ); ?></div>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[ssl]"><?php _e( 'SSL', 'rcp' ); ?></label><br/>
-							</th>
-							<td>
-								<input type="checkbox" value="1" name="rcp_settings[ssl]" id="rcp_settings[ssl]" <?php if( isset( $rcp_options['ssl'] ) ) checked('1', $rcp_options['ssl']); ?>/>
-								<span class="description"><?php _e( 'Check this option if your registration page is using the https:// protocol. This will be the case if you have an SSL certificate installed.', 'rcp' ); ?></span>
-							</td>
-						</tr>
-					</table>
-
-					<?php do_action( 'rcp_forms_settings', $rcp_options ); ?>
-
-				</div><!--end #forms-->
 
 				<div class="tab_content" id="emails">
 					<div id="rcp_email_options">
@@ -899,6 +824,62 @@ function rcp_settings_page() {
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[email_ipn_reports]" id="rcp_settings[email_ipn_reports]" <?php if( isset( $rcp_options['email_ipn_reports'] ) ) checked('1', $rcp_options['email_ipn_reports']); ?>/>
 								<span class="description"><?php _e( 'Check this to send an email each time an IPN request is made with PayPal. The email will contain a list of all data sent. This is useful for debugging in the case that something is not working with the PayPal integration.', 'rcp' ); ?></span>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[disable_css]"><?php _e( 'Disable Form CSS', 'rcp' ); ?></label><br/>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[disable_css]" id="rcp_settings[disable_css]" <?php if( isset( $rcp_options['disable_css'] ) ) checked('1', $rcp_options['disable_css']); ?>/>
+								<span class="description"><?php _e( 'Check this to disable all included form styling.', 'rcp' ); ?></span>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[enable_recaptcha]"><?php _e( 'Enable reCaptcha', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[enable_recaptcha]" id="rcp_settings[enable_recaptcha]" <?php if( isset( $rcp_options['enable_recaptcha'] ) ) checked('1', $rcp_options['enable_recaptcha']); ?>/>
+								<span class="description"><?php _e( 'Check this to enable reCaptcha on the registration form.', 'rcp' ); ?></span>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[recaptcha_public_key]"><?php _e( 'reCaptcha Public Key' ); ?></label>
+							</th>
+							<td>
+								<input id="rcp_settings[recaptcha_public_key]" style="width: 300px;" name="rcp_settings[recaptcha_public_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_public_key'] ) ) echo $rcp_options['recaptcha_public_key']; ?>" />
+								<p class="description"><?php _e( 'This your own personal reCaptcha Public key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/admin/list"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your public key.', 'rcp' ); ?></p>
+							<td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[recaptcha_private_key]"><?php _e( 'reCaptcha Private Key' ); ?></label>
+							</th>
+							<td>
+								<input id="rcp_settings[recaptcha_private_key]" style="width: 300px;" name="rcp_settings[recaptcha_private_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_private_key'] ) ) echo $rcp_options['recaptcha_private_key']; ?>" />
+								<p class="description"><?php _e( 'This your own personal reCaptcha Private key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/admin/list"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your private key.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[recaptcha_style]"><?php _e( 'reCaptcha Style', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<select id="rcp_settings[recaptcha_style]" name="rcp_settings[recaptcha_style]">
+									<?php
+									$styles = array('red', 'white', 'blackglass', 'clean');
+									foreach ( $styles as $style ) {
+									  	$option = '<option value="' . $style . '" ' . selected($style, $rcp_options['recaptcha_style'], false) . '>';
+										$option .= ucwords($style);
+										$option .= '</option>';
+										echo $option;
+									}
+
+									?>
+								</select>
+								<div class="description"><?php _e( 'Choose the style you wish to use for your reCaptcha form', 'rcp' ); ?></div>
 							</td>
 						</tr>
 					</table>
