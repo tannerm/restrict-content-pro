@@ -29,6 +29,7 @@ function rcp_process_registration() {
 
 		$subscription_id = isset( $_POST['rcp_level'] ) ? absint( $_POST['rcp_level'] ) : false;
 		$discount        = isset( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : '';
+		$discount_valid  = false;
 		$price           = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
 		$price           = str_replace( ',', '', $price );
 		$base_price      = $price; // Used for discount calculations later
@@ -58,6 +59,7 @@ function rcp_process_registration() {
 		}
 
 		if( $subscription_id ) {
+
 			if( $price == 0 && $expiration->duration > 0 && rcp_has_used_trial( $user_data['id'] ) ) {
 				// this ensures that users only sign up for a free trial once
 				rcp_errors()->add( 'free_trial_used', __( 'You may only sign up for a free trial once', 'rcp' ), 'register' );
@@ -65,22 +67,39 @@ function rcp_process_registration() {
 		}
 
 		if( ! empty( $discount ) ) {
-			if( ! rcp_validate_discount( $discount, $subscription_id ) ) {
+
+			if( rcp_validate_discount( $discount, $subscription_id ) ) {
+
+				$discount_valid = true;
+
+			} else {
+
 				// the entered discount code is incorrect
 				rcp_errors()->add( 'invalid_discount', __( 'The discount you entered is invalid', 'rcp' ), 'register' );
+
 			}
-			if( ! $user_data['need_new'] && rcp_user_has_used_discount( $user_data['id'] , $discount ) && apply_filters( 'rcp_discounts_once_per_user', true ) ) {
-				rcp_errors()->add( 'discount_already_used', __( 'You can only use the discount code once', 'rcp' ), 'register' );
+
+			if( $discount_valid && $price > 0 ) {
+
+				if( ! $user_data['need_new'] && rcp_user_has_used_discount( $user_data['id'] , $discount ) && apply_filters( 'rcp_discounts_once_per_user', true ) ) {
+
+					$discount_valid = false;
+					rcp_errors()->add( 'discount_already_used', __( 'You can only use the discount code once', 'rcp' ), 'register' );
+				}
+
+				if( $discount_valid ) {
+
+					$discounts    = new RCP_Discounts();
+					$discount_obj = $discounts->get_by( 'code', $discount );
+
+					if( is_object( $discount_obj ) ) {
+						// calculate the after-discount price
+						$price = $discounts->calc_discounted_price( $base_price, $discount_obj->amount, $discount_obj->unit );
+					}
+
+				}
+			
 			}
-		}
-
-		if( $price > 0 && ! empty( $discount ) ) {
-
-			$discounts    = new RCP_Discounts();
-			$discount_obj = $discounts->get_by( 'code', $discount );
-
-			// calculate the after-discount price
-			$price = $discounts->calc_discounted_price( $base_price, $discount_obj->amount, $discount_obj->unit );
 
 		}
 

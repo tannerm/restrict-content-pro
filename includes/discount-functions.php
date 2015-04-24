@@ -69,7 +69,7 @@ function rcp_validate_discount( $code, $subscription_id = 0 ) {
 	$discounts = new RCP_Discounts();
 	$discount  = $discounts->get_by( 'code', $code );
 
-	if( $discount && $discount->status == 'active' ) {
+	if( ! empty( $discount ) && $discount->status == 'active' ) {
 
 		// Make sure discount is not expired and not maxed out
 		if( ! $discounts->is_expired( $discount->id ) && ! $discounts->is_maxed_out( $discount->id ) ) {
@@ -82,11 +82,12 @@ function rcp_validate_discount( $code, $subscription_id = 0 ) {
 				$ret = false;
 			}
 		}
-	}
 
-	// Ensure codes are identical, including case
-	if( strcmp( $code, $discount->code ) != 0 ) {
-		$ret = false;
+		// Ensure codes are identical, including case
+		if( strcmp( $code, $discount->code ) != 0 ) {
+			$ret = false;
+		}
+
 	}
 
 	return apply_filters( 'rcp_is_discount_valid', $ret, $discount, $subscription_id );
