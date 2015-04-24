@@ -152,7 +152,7 @@ function rcp_settings_page() {
 						<tr>
 							<th><?php _e( 'PayPal API Credentials', 'rcp' ); ?></th>
 							<td>
-								<p><?php _e( 'The PayPal API credentials are required in order to use PayPal Express, PayPal Pro, and to support advanced subscription cancellation options in PayPal Standard. Test API credentials can be obtained at <a href="https://developer.paypal.com" target="_blank">developer.paypal.com</a> and utilize the "Classic APIs".', 'rcp' ); ?></p>
+								<p><?php _e( 'The PayPal API credentials are required in order to use PayPal Express, PayPal Pro, and to support advanced subscription cancellation options in PayPal Standard. Test API credentials can be obtained at <a href="http://docs.pippinsplugins.com/article/826-setting-up-paypal-sandbox-accounts" target="_blank">developer.paypal.com</a>', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr>
