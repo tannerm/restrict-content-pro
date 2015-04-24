@@ -679,6 +679,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	 * @return bool
 	 */
 	private function create_plan( $plan_name = '' ) {
+		global $rcp_options;
 
 		// get all subscription level info for this plan
 		$plan           = rcp_get_subscription_details_by_name( $plan_name );
@@ -688,7 +689,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		$name           = $plan->name;
 		$plan_id        = strtolower( str_replace( ' ', '', $plan_name ) );
 		$currency       = strtolower( $rcp_options['currency'] );
-
+		
 		\Stripe\Stripe::setApiKey( $this->secret_key );
 
 		try {
