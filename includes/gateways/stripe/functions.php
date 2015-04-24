@@ -163,7 +163,7 @@ function rcp_stripe_create_discount() {
 	try {
 
 		if ( $_POST['unit'] == '%' ) {
-			Stripe_Coupon::create( array(
+			\Stripe\Coupon::create( array(
 					"percent_off" => sanitize_text_field( $_POST['amount'] ),
 					"duration"    => "forever",
 					"id"          => sanitize_text_field( $_POST['code'] ),
@@ -171,7 +171,7 @@ function rcp_stripe_create_discount() {
 				)
 			);
 		} else {
-			Stripe_Coupon::create( array(
+			\Stripe\Coupon::create( array(
 					"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
 					"duration"   => "forever",
 					"id"         => sanitize_text_field( $_POST['code'] ),
@@ -309,7 +309,7 @@ function rcp_stripe_update_discount() {
 		try {
 
 			if ( $_POST['unit'] == '%' ) {
-				Stripe_Coupon::create( array(
+				\Stripe\Coupon::create( array(
 						"percent_off" => sanitize_text_field( $_POST['amount'] ),
 						"duration"    => "forever",
 						"id"          => sanitize_text_field( $_POST['code'] ),
@@ -317,7 +317,7 @@ function rcp_stripe_update_discount() {
 					)
 				);
 			} else {
-				Stripe_Coupon::create( array(
+				\Stripe\Coupon::create( array(
 						"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
 						"duration"   => "forever",
 						"id"         => sanitize_text_field( $_POST['code'] ),
@@ -334,7 +334,7 @@ function rcp_stripe_update_discount() {
 
 		// first delete the discount in Stripe
 		try {
-			$cpn = Stripe_Coupon::retrieve( $_POST['code'] );
+			$cpn = \Stripe\Coupon::retrieve( $_POST['code'] );
 			$cpn->delete();
 		} catch ( Exception $e ) {
 			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
@@ -344,7 +344,7 @@ function rcp_stripe_update_discount() {
 		try {
 
 			if ( $_POST['unit'] == '%' ) {
-				Stripe_Coupon::create( array(
+				\Stripe\Coupon::create( array(
 						"percent_off" => sanitize_text_field( $_POST['amount'] ),
 						"duration"    => "forever",
 						"id"          => sanitize_text_field( $_POST['code'] ),
@@ -352,7 +352,7 @@ function rcp_stripe_update_discount() {
 					)
 				);
 			} else {
-				Stripe_Coupon::create( array(
+				\Stripe\Coupon::create( array(
 						"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
 						"duration"   => "forever",
 						"id"         => sanitize_text_field( $_POST['code'] ),
@@ -460,7 +460,7 @@ function rcp_stripe_does_coupon_exists( $code ) {
 
 	\Stripe\Stripe::setApiKey( $secret_key );
 	try {
-		Stripe_Coupon::retrieve( $code );
+		\Stripe\Coupon::retrieve( $code );
 		$exists = true;
 	} catch ( Exception $e ) {
 		$exists = false;
