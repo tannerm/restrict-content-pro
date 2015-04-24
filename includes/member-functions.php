@@ -853,7 +853,7 @@ function rcp_process_member_cancellation() {
 
 		if( $success ) {
 
-			do_action( 'rcp_process_member_cancellation', get_current_user_id(), $member );
+			do_action( 'rcp_process_member_cancellation', get_current_user_id() );
 
 			$redirect = add_query_arg( 'profile', 'cancelled', $redirect );
 
