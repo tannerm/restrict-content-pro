@@ -85,6 +85,11 @@ function rcp_admin_notices() {
 			$text = __( 'Member updated' );
 			break;
 
+		case 'member_cancelled' :
+
+			$text = __( 'Member\'s payment profile cancelled successfully', 'rcp' );
+			break;
+
 		case 'level_added' :
 
 			$text = __( 'Subscription level added', 'rcp' );

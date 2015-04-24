@@ -839,183 +839,16 @@ function rcp_process_member_cancellation() {
 		return;
 	}
 
-	if( ! rcp_can_member_cancel() ) {
-		return;
-	}
-
 	if( wp_verify_nonce( $_GET['_wpnonce'], 'rcp-cancel-nonce' ) ) {
 
 		global $rcp_options;
 
-		$success  = false;
+		$success  = rcp_cancel_member_payment_profile( get_current_user_id() );
 		$redirect = remove_query_arg( array( 'rcp-action', '_wpnonce', 'member-id' ), rcp_get_current_url() );
-		$member   = new RCP_Member( get_current_user_id() );
 
-		if( rcp_is_stripe_subscriber() ) {
-
-			if( ! class_exists( 'Stripe' ) ) {
-				require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
-			}
-
-			if ( isset( $rcp_options['sandbox'] ) ) {
-				$secret_key = trim( $rcp_options['stripe_test_secret'] );
-			} else {
-				$secret_key = trim( $rcp_options['stripe_live_secret'] );
-			}
-
-			\Stripe\Stripe::setApiKey( $secret_key );
-
-			try {
-
-				$cu = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
-				$cu->cancelSubscription( array( 'at_period_end' => false ) );
-
-				$success = true;
-
-			} catch (\Stripe\Error\InvalidRequest $e) {
-
-				// Invalid parameters were supplied to Stripe's API
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
-				if( isset( $err['code'] ) ) {
-					$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
-
-			} catch (\Stripe\Error\Authentication $e) {
-
-				// Authentication with Stripe's API failed
-				// (maybe you changed API keys recently)
-
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
-				if( isset( $err['code'] ) ) {
-					$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
-
-			} catch (\Stripe\Error\ApiConnection $e) {
-
-				// Network communication with Stripe failed
-
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
-				if( isset( $err['code'] ) ) {
-					$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
-
-			} catch (\Stripe\Error\Base $e) {
-
-				// Display a very generic error to the user
-
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
-				if( isset( $err['code'] ) ) {
-					$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
-
-			} catch (Exception $e) {
-
-				// Something else happened, completely unrelated to Stripe
-
-				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
-				$error .= print_r( $e, true );
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
-
-			}
-
-		} elseif( rcp_is_paypal_subscriber() ) {
-
-			if( rcp_has_paypal_api_access() && $member->get_payment_profile_id() ) {
-
-				// Set PayPal API key credentials.
-				$api_username  = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_username' : 'live_paypal_api_username';
-				$api_password  = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_password' : 'live_paypal_api_password';
-				$api_signature = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_signature' : 'live_paypal_api_signature';
-				$api_endpoint  = isset( $rcp_options['sandbox'] ) ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp';
-
-                $args = array(
-                	'USER'      => $rcp_options[ $api_username ],
-                	'PWD'       => $rcp_options[ $api_password ],
-                	'SIGNATURE' => $rcp_options[ $api_signature ],
-                	'VERSION'   => '76.0',
-                	'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
-                	'PROFILEID' => $member->get_payment_profile_id(),
-                	'ACTION'    => 'Cancel'
-                );
-
-                $error_msg = '';
-                $request   = wp_remote_post( $api_endpoint, array( 'body' => $args, 'timeout' => 30 ) );
-
-                if ( is_wp_error( $request ) ) {
-
-                	$success   = false;
-                	$error_msg = $request->get_error_message();
-
-				} else {
-
-					$body = wp_remote_retrieve_body( $request );
-					if( is_string( $body ) ) {
-						wp_parse_str( $body, $body );
-					}
-
-					if( empty( $request['response'] ) ) {
-						$success = false;
-					}
-
-					if( empty( $request['response']['code'] ) || 200 !== (int) $request['response']['code'] ) {
-						$success = false;
-					}
-
-					if( empty( $request['response']['message'] ) || 'OK' !== $request['response']['message'] ) {
-						$success = false;
-					}
-
-					if( isset( $body['ACK'] ) && 'success' === strtolower( $body['ACK'] ) ) {
-						$success = true;
-					} else {
-						$success = false;
-						if( isset( $body['L_LONGMESSAGE0'] ) ) {
-							$error_msg = $body['L_LONGMESSAGE0'];
-						}
-					}
-
-				}
-
-				if( ! $success ) {
-					wp_die( sprintf( __( 'There was a problem cancelling your subscription, please contact customer support. Error: %s', 'rcp' ), $error_msg ), array( 'response' => 400 ) );
-				}
-
-			} else {
-
-				// No profile ID stored, so redirect to PayPal to cancel manually
-				$redirect = 'https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_manage-paylist';
-	
-			}
-
+		if( ! $success && rcp_is_paypal_subscriber() ) {
+			// No profile ID stored, so redirect to PayPal to cancel manually
+			$redirect = 'https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_manage-paylist';
 		}
 
 		if( $success ) {
@@ -1033,6 +866,188 @@ function rcp_process_member_cancellation() {
 	}
 }
 add_action( 'init', 'rcp_process_member_cancellation' );
+
+/**
+ * Cancel a member's payment profile
+ *
+ * @access      public
+ * @since       2.1
+ */
+function rcp_cancel_member_payment_profile( $member_id = 0 ) {
+
+	global $rcp_options;
+
+	$success  = false;
+	$member   = new RCP_Member( $member_id );
+
+	if( ! rcp_can_member_cancel( $member_id ) ) {
+		return $success;
+	}
+
+	if( rcp_is_stripe_subscriber( $member_id ) ) {
+
+		if( ! class_exists( 'Stripe' ) ) {
+			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
+		}
+
+		if ( isset( $rcp_options['sandbox'] ) ) {
+			$secret_key = trim( $rcp_options['stripe_test_secret'] );
+		} else {
+			$secret_key = trim( $rcp_options['stripe_live_secret'] );
+		}
+
+		\Stripe\Stripe::setApiKey( $secret_key );
+
+		try {
+
+			$cu = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
+			$cu->cancelSubscription( array( 'at_period_end' => false ) );
+
+			$success = true;
+
+		} catch (\Stripe\Error\InvalidRequest $e) {
+
+			// Invalid parameters were supplied to Stripe's API
+			$body = $e->getJsonBody();
+			$err  = $body['error'];
+
+			$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+			if( isset( $err['code'] ) ) {
+				$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
+			}
+			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+			$error .= "<p>Message: " . $err['message'] . "</p>";
+
+			wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+		} catch (\Stripe\Error\Authentication $e) {
+
+			// Authentication with Stripe's API failed
+			// (maybe you changed API keys recently)
+
+			$body = $e->getJsonBody();
+			$err  = $body['error'];
+
+			$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+			if( isset( $err['code'] ) ) {
+				$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
+			}
+			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+			$error .= "<p>Message: " . $err['message'] . "</p>";
+
+			wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+		} catch (\Stripe\Error\ApiConnection $e) {
+
+			// Network communication with Stripe failed
+
+			$body = $e->getJsonBody();
+			$err  = $body['error'];
+
+			$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+			if( isset( $err['code'] ) ) {
+				$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
+			}
+			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+			$error .= "<p>Message: " . $err['message'] . "</p>";
+
+			wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+		} catch (\Stripe\Error\Base $e) {
+
+			// Display a very generic error to the user
+
+			$body = $e->getJsonBody();
+			$err  = $body['error'];
+
+			$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+			if( isset( $err['code'] ) ) {
+				$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
+			}
+			$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+			$error .= "<p>Message: " . $err['message'] . "</p>";
+
+			wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+		} catch (Exception $e) {
+
+			// Something else happened, completely unrelated to Stripe
+
+			$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+			$error .= print_r( $e, true );
+
+			wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+		}
+
+	} elseif( rcp_is_paypal_subscriber( $member_id ) ) {
+
+		if( rcp_has_paypal_api_access() && $member->get_payment_profile_id() ) {
+
+			// Set PayPal API key credentials.
+			$api_username  = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_username' : 'live_paypal_api_username';
+			$api_password  = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_password' : 'live_paypal_api_password';
+			$api_signature = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_signature' : 'live_paypal_api_signature';
+			$api_endpoint  = isset( $rcp_options['sandbox'] ) ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp';
+
+            $args = array(
+            	'USER'      => $rcp_options[ $api_username ],
+            	'PWD'       => $rcp_options[ $api_password ],
+            	'SIGNATURE' => $rcp_options[ $api_signature ],
+            	'VERSION'   => '76.0',
+            	'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
+            	'PROFILEID' => $member->get_payment_profile_id(),
+            	'ACTION'    => 'Cancel'
+            );
+
+            $error_msg = '';
+            $request   = wp_remote_post( $api_endpoint, array( 'body' => $args, 'timeout' => 30 ) );
+
+            if ( is_wp_error( $request ) ) {
+
+            	$success   = false;
+            	$error_msg = $request->get_error_message();
+
+			} else {
+
+				$body = wp_remote_retrieve_body( $request );
+				if( is_string( $body ) ) {
+					wp_parse_str( $body, $body );
+				}
+
+				if( empty( $request['response'] ) ) {
+					$success = false;
+				}
+
+				if( empty( $request['response']['code'] ) || 200 !== (int) $request['response']['code'] ) {
+					$success = false;
+				}
+
+				if( empty( $request['response']['message'] ) || 'OK' !== $request['response']['message'] ) {
+					$success = false;
+				}
+
+				if( isset( $body['ACK'] ) && 'success' === strtolower( $body['ACK'] ) ) {
+					$success = true;
+				} else {
+					$success = false;
+					if( isset( $body['L_LONGMESSAGE0'] ) ) {
+						$error_msg = $body['L_LONGMESSAGE0'];
+					}
+				}
+
+			}
+
+			if( ! $success ) {
+				wp_die( sprintf( __( 'There was a problem cancelling the subscription, please contact customer support. Error: %s', 'rcp' ), $error_msg ), array( 'response' => 400 ) );
+			}
+
+		}
+
+	}
+
+	return $success;
+}
 
 /**
  * Updates member payment profile ID meta keys with old versions from pre 2.1 gateways

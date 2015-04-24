@@ -168,9 +168,12 @@ function rcp_members_page() {
 								<?php if( current_user_can( 'rcp_manage_members' ) ) : ?>
 									<a href="<?php echo esc_url( add_query_arg('edit_member', $member->ID, $current_page) ); ?>"><?php _e('Edit', 'rcp'); ?></a>
 									<?php if(isset($_GET['status']) && $_GET['status'] == 'cancelled') { ?>
-										| <a href="<?php echo esc_url( add_query_arg('activate_member', $member->ID, $current_page) ); ?>" class="rcp_activate"><?php _e('Activate', 'rcp'); ?></a>
+										| <a href="<?php echo esc_url( add_query_arg('activate_member', $member->ID, $current_page) ); ?>" class="rcp_activate"><?php _e('Enable Access', 'rcp'); ?></a>
 									<?php } elseif( (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status'])) {  ?>
-										| <a href="<?php echo esc_url( add_query_arg('deactivate_member', $member->ID, $current_page) ); ?>" class="rcp_deactivate"><?php _e('Deactivate', 'rcp'); ?></a>
+										| <a href="<?php echo esc_url( add_query_arg('revoke_access', $member->ID, $current_page) ); ?>" class="rcp_revoke"><?php _e('Reoke Access', 'rcp'); ?></a>
+									<?php } ?>
+									<?php if( rcp_can_member_cancel( $member->ID ) ) { ?>
+										| <a href="<?php echo wp_nonce_url( add_query_arg('cancel_member', $member->ID, $current_page ), 'rcp-cancel-nonce' ); ?>" class="rcp_cancel"><?php _e('Cancel', 'rcp'); ?></a>
 									<?php } ?>
 									<?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
 										| <a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
