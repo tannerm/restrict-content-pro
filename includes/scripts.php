@@ -72,7 +72,9 @@ add_action('init', 'rcp_register_css');
 function rcp_register_scripts() {
 	
 	global $rcp_options;
-	wp_register_script( 'rcp-register',  RCP_PLUGIN_URL . 'includes/js/register.js', array('jquery'), RCP_PLUGIN_VERSION );
+	
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	wp_register_script( 'rcp-register',  RCP_PLUGIN_URL . 'includes/js/register' . $suffix . '.js', array('jquery'), RCP_PLUGIN_VERSION );
 	wp_register_script( 'jquery-blockui',  RCP_PLUGIN_URL . 'includes/js/jquery.blockUI.js', array('jquery'), RCP_PLUGIN_VERSION );
 
 }
