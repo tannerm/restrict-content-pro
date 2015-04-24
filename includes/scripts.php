@@ -74,10 +74,7 @@ function rcp_register_scripts() {
 	global $rcp_options;
 	wp_register_script( 'rcp-register',  RCP_PLUGIN_URL . 'includes/js/register.js', array('jquery'), RCP_PLUGIN_VERSION );
 	wp_register_script( 'jquery-blockui',  RCP_PLUGIN_URL . 'includes/js/jquery.blockUI.js', array('jquery'), RCP_PLUGIN_VERSION );
-	
-	if( isset( $rcp_options['front_end_validate'] ) ) {
-		wp_register_script( 'jquery-validate',  RCP_PLUGIN_URL . 'includes/js/jquery.validate.min.js', array('jquery') );
-	}
+
 }
 add_action( 'init', 'rcp_register_scripts' );
 

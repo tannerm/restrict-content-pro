@@ -382,15 +382,7 @@ function rcp_settings_page() {
 				</div><!--end #payments-->
 
 				<div class="tab_content" id="forms">
-					<table class="form-table">
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[front_end_validate]"><?php _e( 'jQuery Validation', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<input type="checkbox" value="1" name="rcp_settings[front_end_validate]" id="rcp_settings[front_end_validate]" <?php if( isset( $rcp_options['front_end_validate'] ) ) checked('1', $rcp_options['front_end_validate']); ?>/>
-								<span class="description"><?php _e( 'Check this to enable live, front end form validation. If this is disabled, all validation will be done server side and will require a page reload.', 'rcp' ); ?></span>
-							</td>
+					<table class="form-table">d>
 						</tr>
 						<tr valign="top">
 							<th>
