@@ -689,7 +689,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		$name           = $plan->name;
 		$plan_id        = strtolower( str_replace( ' ', '', $plan_name ) );
 		$currency       = strtolower( $rcp_options['currency'] );
-	
+
 		\Stripe\Stripe::setApiKey( $this->secret_key );
 
 		try {
