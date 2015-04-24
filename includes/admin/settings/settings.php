@@ -64,7 +64,7 @@ function rcp_settings_page() {
 								<?php } elseif( ! empty( $rcp_options['license_key'] ) ) { ?>
 									<input type="submit" class="button-secondary" name="rcp_license_activate" value="<?php _e('Activate License', 'rcp'); ?>"/>
 								<?php } ?>
-								<div class="description"><?php printf( __( 'Enter license key for Restrict Content Pro. This is required for automatic updates and <a href="%s">support</a>.', 'rcp' ), 'http://pippinsplugins.com/support/forum/restrict-content-pro' ); ?></div>
+								<div class="description"><?php printf( __( 'Enter license key for Restrict Content Pro. This is required for automatic updates and <a href="%s">support</a>.', 'rcp' ), 'http://pippinsplugins.com/plugin-support' ); ?></div>
 							</td>
 						</tr>
 						<?php do_action( 'rcp_license_settings', $rcp_options ); ?>
