@@ -81,7 +81,6 @@ jQuery(document).ready(function($) {
 				$('body').trigger( 'rcp_register_form_submission' );
 				$(submission_form).submit();
 			} else {
-				console.log( response );
 				$('#rcp_submit', form).val( submit_register_text );
 				$('#rcp_submit', form).before( response.data.errors );
 				$('#rcp_register_nonce', form).val( response.data.nonce );
