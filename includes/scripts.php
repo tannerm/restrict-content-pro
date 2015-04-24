@@ -100,19 +100,8 @@ function rcp_print_scripts() {
 	if ( ! $rcp_load_scripts )
 		return; // this means that neither short code is present, so we get out of here
 
-	if( isset( $rcp_options['front_end_validate'] ) ) {
-
-		$validate = 'true';
-	
-	} else {
-
-		$validate = 'false';
-
-	}
-
 	wp_localize_script('rcp-register', 'rcp_script_options',
 		array(
-			'validate'   => $validate,
 			'ajaxurl'    => admin_url( 'admin-ajax.php' ),
 			'pleasewait' => __( 'Please Wait . . . ', 'rcp' )
 		)
@@ -121,10 +110,5 @@ function rcp_print_scripts() {
 	wp_print_scripts( 'rcp-register' );
 	wp_print_scripts( 'jquery-blockui' );
 
-	if( isset( $rcp_options['front_end_validate'] ) ) {
-
-		wp_print_scripts( 'jquery-validate' );
-	
-	}
 }
 add_action( 'wp_footer', 'rcp_print_scripts' );
