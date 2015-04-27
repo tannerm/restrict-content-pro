@@ -186,10 +186,10 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			status_header( 200 );
 
-			$posted        = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
+			$posted  = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
 
-			$this->user_id = absint( $posted['custom'] );
-			$member        = new RCP_Member( $this->user_id );
+			$user_id = absint( $posted['custom'] );
+			$member  = new RCP_Member( $user_id );
 
 			if( ! $member || ! $member->get_subscription_id() ) {
 				die( 'no member found' );
@@ -214,11 +214,11 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				'payment_type'     => $posted['txn_type'],
 				'subscription_key' => $subscription_key,
 				'amount'           => $amount,
-				'user_id'          => $this->user_id,
+				'user_id'          => $user_id,
 				'transaction_id'   => $posted['txn_id']
 			);
 
-			do_action( 'rcp_valid_ipn', $payment_data, $this->user_id, $posted );
+			do_action( 'rcp_valid_ipn', $payment_data, $user_id, $posted );
 
 			if( $posted['txn_type'] == 'web_accept' || $posted['txn_type'] == 'subscr_payment' ) {
 
@@ -234,7 +234,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					$log_meta = array(
 					    'user_subscription' => $posted['item_name'],
-					    'user_id'           => $this->user_id
+					    'user_id'           => $user_id
 					);
 					$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
 
@@ -254,7 +254,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					$log_meta = array(
 					    'user_subscription' => $posted['item_name'],
-					    'user_id'           => $this->user_id
+					    'user_id'           => $user_id
 					);
 					$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
 
@@ -279,11 +279,11 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// when a new user signs up
 
 					// store the recurring payment ID
-					update_user_meta( $this->user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
+					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
 
-					do_action( 'rcp_ipn_subscr_signup', $this->user_id );
+					do_action( 'rcp_ipn_subscr_signup', $user_id );
 
 
 					die( 'successful subscr_signup' );
@@ -297,13 +297,13 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// record this payment in the database
 					$rcp_payments->insert( $payment_data );
 
-					update_user_meta( $this->user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
+					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
 
 					$this->renew_member( true );
 
-					do_action( 'rcp_ipn_subscr_payment', $this->user_id );
+					do_action( 'rcp_ipn_subscr_payment', $user_id );
 
 
 					die( 'successful subscr_payment' );
@@ -316,9 +316,9 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					$member->set_status( 'cancelled' );
 
 					// set the use to no longer be recurring
-					delete_user_meta( $this->user_id, 'rcp_paypal_subscriber' );
+					delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
 
-					do_action( 'rcp_ipn_subscr_cancel', $this->user_id );
+					do_action( 'rcp_ipn_subscr_cancel', $user_id );
 
 
 					die( 'successful subscr_cancel' );
@@ -337,13 +337,13 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					// user's subscription has reached the end of its term
 
-					if( 'cancelled' !== $member->get_status( $this->user_id ) ) {
+					if( 'cancelled' !== $member->get_status( $user_id ) ) {
 
 						$member->set_status( 'expired' );
 
 					}
 
-					do_action('rcp_ipn_subscr_eot', $this->user_id );
+					do_action('rcp_ipn_subscr_eot', $user_id );
 
 
 					die( 'successful subscr_eot' );
