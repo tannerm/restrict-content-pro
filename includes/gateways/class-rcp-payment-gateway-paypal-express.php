@@ -222,7 +222,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 							'subscription_key' => $member->get_subscription_key(),
 							'amount'           => round( $details['AMT'] + $details['subscription']['fee'], 2 ),
 							'user_id'          => $member->ID,
-							'transaction_id'   => $data['TRANSACTIONID']
+							'transaction_id'   => $data['PROFILEID']
 						);
 
 						$rcp_payments = new RCP_Payments;
