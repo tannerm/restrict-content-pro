@@ -157,15 +157,18 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			$listener->use_sandbox = true;
 		}
 
+		/*
 		if( isset( $rcp_options['ssl'] ) ) {
 			$listener->use_ssl = true;
 		} else {
 			$listener->use_ssl = false;
 		}
+		*/
 
 		//To post using the fsockopen() function rather than cURL, use:
-		if( isset( $rcp_options['disable_curl'] ) )
+		if( isset( $rcp_options['disable_curl'] ) ) {
 			$listener->use_curl = false;
+		}
 
 		try {
 			$listener->requirePostMethod();
