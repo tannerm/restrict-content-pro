@@ -184,18 +184,18 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 		*/
 		if ( $verified || isset( $_POST['verification_override'] ) || ( $this->test_mode || isset( $rcp_options['disable_ipn_verify'] ) ) )  {
 
+			status_header( 200 );
+
 			$posted        = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
 
 			$this->user_id = absint( $posted['custom'] );
 			$member        = new RCP_Member( $this->user_id );
 
 			if( ! $member || ! $member->get_subscription_id() ) {
-				status_header( 200 );
 				die( 'no member found' );
 			}
 
 			if( ! rcp_get_subscription_details( $member->get_subscription_id() ) ) {
-				status_header( 200 );
 				die( 'no subscription level found' );
 			}
 
@@ -238,7 +238,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					);
 					$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
 
-					status_header( 200 );
+
 					die( 'duplicate IPN detected' );
 				}
 
@@ -258,7 +258,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					);
 					$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
 
-					status_header( 200 );
+
 					die( 'invalid currency code' );
 				}
 
@@ -285,7 +285,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					do_action( 'rcp_ipn_subscr_signup', $this->user_id );
 
-					status_header( 200 );
+
 					die( 'successful subscr_signup' );
 
 					break;
@@ -305,7 +305,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					do_action( 'rcp_ipn_subscr_payment', $this->user_id );
 
-					status_header( 200 );
+
 					die( 'successful subscr_payment' );
 
 					break;
@@ -320,7 +320,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					do_action( 'rcp_ipn_subscr_cancel', $this->user_id );
 
-					status_header( 200 );
+
 					die( 'successful subscr_cancel' );
 
 					break;
@@ -328,7 +328,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				case "subscr_failed" :
 
 					do_action( 'rcp_ipn_subscr_failed' );
-					status_header( 200 );
+
 					die( 'successful subscr_failed' );
 
 					break;
@@ -345,7 +345,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					do_action('rcp_ipn_subscr_eot', $this->user_id );
 
-					status_header( 200 );
+
 					die( 'successful subscr_eot' );
 
 					break;
@@ -372,7 +372,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			        endswitch;
 
-			        status_header( 200 );
+			   
 			        die( 'successful web_accept' );
 
 				break;
