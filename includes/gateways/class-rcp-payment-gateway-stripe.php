@@ -679,6 +679,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	 * @return bool
 	 */
 	private function create_plan( $plan_name = '' ) {
+		global $rcp_options;
 
 		// get all subscription level info for this plan
 		$plan           = rcp_get_subscription_details_by_name( $plan_name );
