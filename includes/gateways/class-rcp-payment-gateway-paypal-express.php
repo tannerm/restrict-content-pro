@@ -215,6 +215,19 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 						$member->renew( true );
 						$member->set_payment_profile_id( $data['PROFILEID'] );
 
+						$payment_data = array(
+							'date'             => date( 'Y-m-d g:i:s', strtotime( $data['PAYMENTINFO_0_ORDERTIME'] ) ),
+							'subscription'     => $member->get_subscription_name(),
+							'payment_type'     => 'PayPal Express',
+							'subscription_key' => $member->get_subscription_key(),
+							'amount'           => $data['PAYMENTINFO_0_AMT'],
+							'user_id'          => $member->ID,
+							'transaction_id'   => $data['PAYMENTINFO_0_TRANSACTIONID']
+						);
+
+						$rcp_payments = new RCP_Payments;
+						$rcp_payments->insert( $payment_data );
+
 						wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
 
 					}
