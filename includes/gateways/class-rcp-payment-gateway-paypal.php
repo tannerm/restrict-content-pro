@@ -172,7 +172,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			$verified = $listener->processIpn();
 		} catch ( Exception $e ) {
 			status_header( 402 );
-			die( 'IPN exception: ' . $e->getMessage() );
+			//die( 'IPN exception: ' . $e->getMessage() );
 		}
 
 		/*
