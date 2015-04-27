@@ -338,9 +338,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			return;
 		}
 
-		$posted        = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
-		$this->user_id = absint( $posted['custom'] );
-		$member        = new RCP_Member( $this->user_id );
+		$posted  = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
+		$user_id = absint( $posted['custom'] );
+		$member  = new RCP_Member( $user_id );
 
 		if( ! $member || ! $member->get_subscription_id() ) {
 			die( 'no member found' );
@@ -359,11 +359,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			'payment_type'     => $posted['txn_type'],
 			'subscription_key' => $member->get_subscription_key(),
 			'amount'           => $amount,
-			'user_id'          => $this->user_id,
+			'user_id'          => $user_id,
 			'transaction_id'   => $posted['txn_id']
 		);
 
-		do_action( 'rcp_valid_ipn', $payment_data, $this->user_id, $posted );
+		do_action( 'rcp_valid_ipn', $payment_data, $user_id, $posted );
 
 		if( isset( $rcp_options['email_ipn_reports'] ) ) {
 			wp_mail( get_bloginfo('admin_email'), __( 'IPN report', 'rcp' ), $listener->getTextReport() );
@@ -383,13 +383,13 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				// record this payment in the database
 				$rcp_payments->insert( $payment_data );
 
-				update_user_meta( $this->user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
+				update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
 				$member->set_payment_profile_id( $posted['recurring_payment_id'] );
 
 				$this->renew_member( true );
 
-				do_action( 'rcp_ipn_subscr_payment', $this->user_id );
+				do_action( 'rcp_ipn_subscr_payment', $user_id );
 
 				die( 'successful recurring_payment' );
 
@@ -401,9 +401,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				$member->set_status( 'cancelled' );
 
 				// set the use to no longer be recurring
-				delete_user_meta( $this->user_id, 'rcp_paypal_subscriber' );
+				delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
 
-				do_action( 'rcp_ipn_subscr_cancel', $this->user_id );
+				do_action( 'rcp_ipn_subscr_cancel', $user_id );
 
 				die( 'successful recurring_payment_profile_cancel' );
 
@@ -412,7 +412,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			case "recurring_payment_failed" :
 			case "recurring_payment_suspended_due_to_max_failed_payment" :
 
-				if( 'cancelled' !== $member->get_status( $this->user_id ) ) {
+				if( 'cancelled' !== $member->get_status( $user_id ) ) {
 
 					$member->set_status( 'expired' );
 
