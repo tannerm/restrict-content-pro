@@ -859,7 +859,7 @@ function rcp_process_member_cancellation() {
 
 		}
 	
-		wp_safe_redirect( $redirect ); exit;
+		wp_redirect( $redirect ); exit;
 
 	}
 }
