@@ -12,7 +12,14 @@ function rcp_settings_page() {
 	global $rcp_options;
 
 	$defaults = array(
-		'currency_position' => 'before'
+		'currency_position'     => 'before',
+		'currency'              => 'USD',
+		'registration_page'     => 0,
+		'redirect'              => 0,
+		'redirect_from_premium' => 0,
+		'login_redirect'        => 0,
+		'recaptcha_style'       => '',
+
 	);
 
 	$rcp_options = wp_parse_args( $rcp_options, $defaults );
