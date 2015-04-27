@@ -53,6 +53,15 @@ $member = new RCP_Member( $member_id );
 			</tr>
 			<tr valign="top">
 				<th scope="row" valign="top">
+					<label for="rcp-key"><?php _e( 'Subscription Key', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<input id="rcp-key" type="text" style="width: 200px;" value="<?php echo esc_attr( $member->get_subscription_key() ); ?>" disabled="disabled"/>
+					<p class="description"><?php _e( 'The member\'s subscription key. This cannot be changed.', 'rcp' ); ?></p>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" valign="top">
 					<label for="rcp-expiration"><?php _e( 'Expiration date', 'rcp' ); ?></label>
 				</th>
 				<td>
