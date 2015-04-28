@@ -112,8 +112,8 @@ function rcp_options_install() {
 		);
 
 		// Store our page IDs
-		$options['purchase_page'] = $register;
-		$options['success_page']  = $success;
+		$options['registration_page'] = $register;
+		$options['redirect']  = $success;
 
 	}
 
