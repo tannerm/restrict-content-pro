@@ -14,6 +14,29 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * Retrieves the login URl with an optional redirect
+ *
+ * @access      public
+ * @since       2.1
+ */
+function rcp_get_login_url( $redirect = '' ) {
+
+	global $rcp_options;
+
+	if( isset( $rcp_options['hijack_login_url'] ) && ! empty( $rcp_options['login_redirect'] ) ) {
+
+		$url = add_query_arg( 'redirect', $redirect, get_permalink( absint( $rcp_options['login_redirect'] ) ) );
+
+	} else {
+
+		$url = wp_login_url( $redirect );
+
+	}
+
+	return apply_filters( 'rcp_login_url', $url, $redirect );
+
+}
 
 /**
  * Log a user in

@@ -23,7 +23,8 @@ function rcp_admin_scripts( $hook ) {
 	if( in_array( $hook, $pages ) ) {
 		wp_localize_script( 'rcp-admin-scripts', 'rcp_vars', array(
 				'rcp_member_nonce'    => wp_create_nonce( 'rcp_member_nonce' ),
-				'deactivate_user'     => __( 'Are you sure you wish to cancel this member\'s subscription?', 'rcp' ),
+				'revoke_access'       => __( 'Are you sure you wish to revoke this member\'s access? This will not cancel their payment plan.', 'rcp' ),
+				'cancel_user'         => __( 'Are you sure you wish to cancel this member\'s subscription?', 'rcp' ),
 				'delete_subscription' => __( 'If you delete this subscription, all members registered with this level will be canceled. Proceed?', 'rcp' ),
 				'delete_payment'      => __( 'Are you sure you want to delete this payment? This action is irreversible. Proceed?', 'rcp' ),
 				'missing_username'    => __( 'You must choose a username', 'rcp' ),
@@ -70,8 +71,13 @@ add_action('init', 'rcp_register_css');
 
 // register our front end scripts
 function rcp_register_scripts() {
-	wp_register_script( 'rcp-scripts',  RCP_PLUGIN_URL . 'includes/js/front-end-scripts.js', array('jquery'), RCP_PLUGIN_VERSION );
-	wp_register_script( 'jquery-validate',  RCP_PLUGIN_URL . 'includes/js/jquery.validate.min.js', array('jquery') );
+	
+	global $rcp_options;
+	
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	wp_register_script( 'rcp-register',  RCP_PLUGIN_URL . 'includes/js/register' . $suffix . '.js', array('jquery'), RCP_PLUGIN_VERSION );
+	wp_register_script( 'jquery-blockui',  RCP_PLUGIN_URL . 'includes/js/jquery.blockUI.js', array('jquery'), RCP_PLUGIN_VERSION );
+
 }
 add_action( 'init', 'rcp_register_scripts' );
 
@@ -95,18 +101,15 @@ function rcp_print_scripts() {
 	if ( ! $rcp_load_scripts )
 		return; // this means that neither short code is present, so we get out of here
 
-	if( isset( $rcp_options['front_end_validate'] ) )
-		$validate = 'true';
-	else
-		$validate = 'false';
-
-	wp_localize_script('rcp-scripts', 'rcp_script_options',
+	wp_localize_script('rcp-register', 'rcp_script_options',
 		array(
-			'validate' 	=> $validate,
-			'ajaxurl' 	=> admin_url( 'admin-ajax.php' )
+			'ajaxurl'    => admin_url( 'admin-ajax.php' ),
+			'pleasewait' => __( 'Please Wait . . . ', 'rcp' )
 		)
 	);
-	wp_print_scripts( 'rcp-scripts' );
-	wp_print_scripts( 'jquery-validate' );
+
+	wp_print_scripts( 'rcp-register' );
+	wp_print_scripts( 'jquery-blockui' );
+
 }
 add_action( 'wp_footer', 'rcp_print_scripts' );

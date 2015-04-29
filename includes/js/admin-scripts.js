@@ -30,8 +30,15 @@ jQuery(document).ready(function($) {
 		var dateFormat = 'yy-mm-dd';
 		$('.rcp-datepicker').datepicker({dateFormat: dateFormat});
 	}
-	$('.rcp_deactivate').click(function() {
-		if(confirm(rcp_vars.deactivate_user)) {
+	$('.rcp_revoke').click(function() {
+		if(confirm(rcp_vars.revoke_access)) {
+			return true;
+		} else {
+			return false;
+		}
+	});
+	$('.rcp_cancel').click(function() {
+		if(confirm(rcp_vars.cancel_user)) {
 			return true;
 		} else {
 			return false;
@@ -137,6 +144,15 @@ jQuery(document).ready(function($) {
 		}
 	});
 
+	$( '#rcp-unlimited' ).change( function() {
+		var $this = $(this);
+		if( $this.attr( 'checked' ) ) {
+			$( '#rcp-expiration' ).val('none');
+		} else if( 'none' == $( '#rcp-expiration' ).val() ) {
+			$( '#rcp-expiration' ).val('').trigger('focus');
+		}
+	});
+
 	// WP 3.5+ uploader
 	var file_frame;
 	$('body').on('click', '.rcp-upload', function(e) {
@@ -191,5 +207,6 @@ jQuery(document).ready(function($) {
 		file_frame.open();
 	});
 
+	$('#adminmenu .toplevel_page_rcp-members .wp-submenu-wrap a[href="admin.php?page=rcp-help"]').prop('href', 'http://docs.pippinsplugins.com').prop('target', '_blank');
 
 });

@@ -5,10 +5,8 @@ function rcp_members_page() {
 	$current_page = admin_url( '/admin.php?page=rcp-members' ); ?>
 	<div class="wrap" id="rcp-members-page">
 
-		<?php if( isset( $_GET['edit_member'] ) ) :
+		<?php if( isset( $_GET['edit_member'] ) || isset( $_GET['view_member'] ) ) :
 			include( 'edit-member.php' );
-		elseif( isset( $_GET['view_member'] ) ) :
-			include( 'view-member.php' );
 		else : ?>
 			<h2><?php _e(' Paid Subscribers', 'rcp' ); ?></h2>
 			<?php
@@ -166,15 +164,19 @@ function rcp_members_page() {
 							<td><?php echo rcp_get_expiration_date($member->ID); ?></td>
 							<td><?php echo rcp_get_user_role($member->ID); ?></td>
 							<?php do_action('rcp_members_page_table_column', $member->ID); ?>
-							<td>
-								<a href="<?php echo add_query_arg('view_member', $member->ID, $current_page); ?>"><?php _e('Details', 'rcp'); ?></a> |
-								
+							<td>								
 								<?php if( current_user_can( 'rcp_manage_members' ) ) : ?>
-									<a href="<?php echo add_query_arg('edit_member', $member->ID, $current_page); ?>"><?php _e('Edit', 'rcp'); ?></a>
+									<a href="<?php echo esc_url( add_query_arg('edit_member', $member->ID, $current_page) ); ?>"><?php _e('Edit', 'rcp'); ?></a>
 									<?php if(isset($_GET['status']) && $_GET['status'] == 'cancelled') { ?>
-										| <a href="<?php echo add_query_arg('activate_member', $member->ID, $current_page); ?>" class="rcp_activate"><?php _e('Activate', 'rcp'); ?></a>
+										| <a href="<?php echo esc_url( add_query_arg('activate_member', $member->ID, $current_page) ); ?>" class="rcp_activate"><?php _e('Enable Access', 'rcp'); ?></a>
 									<?php } elseif( (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status'])) {  ?>
-										| <a href="<?php echo add_query_arg('deactivate_member', $member->ID, $current_page); ?>" class="rcp_deactivate"><?php _e('Deactivate', 'rcp'); ?></a>
+										| <a href="<?php echo esc_url( add_query_arg('revoke_access', $member->ID, $current_page) ); ?>" class="rcp_revoke"><?php _e('Reoke Access', 'rcp'); ?></a>
+									<?php } ?>
+									<?php if( rcp_can_member_cancel( $member->ID ) ) { ?>
+										| <a href="<?php echo wp_nonce_url( add_query_arg('cancel_member', $member->ID, $current_page ), 'rcp-cancel-nonce' ); ?>" class="rcp_cancel"><?php _e('Cancel', 'rcp'); ?></a>
+									<?php } ?>
+									<?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
+										| <a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
 									<?php } ?>
 								<?php endif; ?>
 							</td>
@@ -190,7 +192,7 @@ function rcp_members_page() {
 					<div class="tablenav-pages alignright">
 						<?php
 							$query_string = $_SERVER['QUERY_STRING'];
-							$base = 'admin.php?' . remove_query_arg('p', $query_string) . '%_%';
+							$base = 'admin.php?' . esc_url( remove_query_arg('p', $query_string) ) . '%_%';
 							echo paginate_links( array(
 								'base' => $base,
 								'format' => '&p=%#%',
@@ -243,6 +245,10 @@ function rcp_members_page() {
 							</th>
 							<td>
 								<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker"/>
+								<label for="rcp-unlimited">
+									<input name="unlimited" id="rcp-unlimited" type="checkbox"/>
+									<span class="description"><?php _e( 'Never expires?', 'rcp' ); ?></span>
+								</label>
 								<p class="description"><?php _e('Enter the expiration date for this user in the format of yyyy-mm-dd', 'rcp'); ?></p>
 							</td>
 						</tr>

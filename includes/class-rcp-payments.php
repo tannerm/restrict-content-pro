@@ -35,7 +35,7 @@ class RCP_Payments {
 	function __construct() {
 
 		$this->db_name    = rcp_get_payments_db_name();
-		$this->db_version = '1.3';
+		$this->db_version = '1.4';
 
 	}
 
@@ -53,13 +53,14 @@ class RCP_Payments {
 		global $wpdb;
 
 		$defaults = array(
-			'subscription' 		=> '',
-			'date' 				=> date( 'Y-m-d H:i:s' ),
-			'amount' 			=> 0.00,
-			'user_id' 			=> 0,
-			'payment_type' 		=> '',
-			'subscription_key' 	=> '',
-			'transaction_id' 	=> ''
+			'subscription'      => '',
+			'date'              => date( 'Y-m-d H:i:s' ),
+			'amount'            => 0.00,
+			'user_id'           => 0,
+			'payment_type'      => '',
+			'subscription_key'  => '',
+			'transaction_id'    => '',
+			'status'            => 'complete'
 		);
 
 		$args = wp_parse_args( $payment_data, $defaults );
@@ -162,6 +163,10 @@ class RCP_Payments {
 
 		$payment = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->db_name} WHERE id = %d", absint( $payment_id ) ) );
 
+		if( empty( $payment->status ) ) {
+			$payment->status = 'complete';
+		}
+
 		return $payment;
 
 	}
@@ -179,6 +184,10 @@ class RCP_Payments {
 		global $wpdb;
 
 		$payment = $wpdb->get_row( "SELECT * FROM {$this->db_name} WHERE {$field} = {$value}" );
+
+		if( empty( $payment->status ) ) {
+			$payment->status = 'complete';
+		}
 
 		return $payment;
 
@@ -203,6 +212,7 @@ class RCP_Payments {
 			'user_id'      => 0,
 			'date'         => array(),
 			'fields'       => false,
+			'status'       => '',
 			's'            => ''
 		);
 
@@ -227,6 +237,22 @@ class RCP_Payments {
 				$where .= "`user_id` IN( {$user_ids} ) ";
 			} else {
 				$where .= "WHERE `user_id` IN( {$user_ids} ) ";
+			}
+
+		}
+
+		// payments for specific statuses
+		if( ! empty( $args['status'] ) ) {
+
+			if( is_array( $args['status'] ) )
+				$statuss = implode( ',', $args['status'] );
+			else
+				$statuss = intval( $args['status'] );
+
+			if( ! empty( $args['subscription'] ) || ! empty( $args['user_id'] ) ) {
+				$where .= "`status` IN( {$statuss} ) ";
+			} else {
+				$where .= "WHERE `status` IN( {$statuss} ) ";
 			}
 
 		}
@@ -316,7 +342,8 @@ class RCP_Payments {
 		global $wpdb;
 
 		$defaults = array(
-			'user_id' => 0
+			'user_id' => 0,
+			'status'  => ''
 		);
 
 		$args  = wp_parse_args( $args, $defaults );
@@ -331,6 +358,22 @@ class RCP_Payments {
 				$user_ids = intval( $args['user_id'] );
 
 			$where .= " WHERE `user_id` IN( {$user_ids} ) ";
+
+		}
+
+		if( ! empty( $args['status'] ) ) {
+
+			if( is_array( $args['status'] ) ) {
+				$statuss = implode( ',', $args['status'] );
+			} else {
+				$statuss = intval( $args['status'] );
+			}
+
+			if( ! empty( $args['user_id'] ) ) {
+				$where .= " AND `status` IN( {$statuss} ) ";
+			} else {
+				$where .= " WHERE `status` IN( {$statuss} ) ";
+			}
 
 		}
 
@@ -413,10 +456,21 @@ class RCP_Payments {
 			}
 
 			if( ! empty( $args['user_id'] ) || ! empty( $args['subscription'] ) ) {
-				$where .= "AND (" . $date_where . ")";
+				$where .= "AND (" . $date_where . ") ";
 			} else {
 				$where .= "WHERE ( " . $date_where . " ) ";
 			}
+		}
+
+		// Exclude refunded payments
+		if( false !== strpos( $where, 'WHERE' ) ) {
+
+			$where .= "AND ( `status` = 'complete' OR `status` IS NULL )";
+
+		} else {
+
+			$where .= "WHERE ( `status` = 'complete' OR `status` IS NULL )";
+	
 		}
 
 		$earnings = get_transient( $cache_key );

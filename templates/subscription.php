@@ -5,7 +5,10 @@ global $user_ID, $rcp_options, $rcp_load_css;
 $rcp_load_css = true;
 
 do_action( 'rcp_subscription_details_top' );
-?>
+
+if( isset( $_GET['profile'] ) && 'cancelled' == $_GET['profile'] ) : ?>
+<p class="rcp_success"><span><?php _e( 'Your profile has been successfully cancelled.', 'rcp' ); ?></span></p>
+<?php endif; ?>
 <table class="rcp-table" id="rcp-account-overview">
 	<thead>
 		<tr>
@@ -30,8 +33,8 @@ do_action( 'rcp_subscription_details_top' );
 					echo '<a href="' . esc_url( get_permalink( $rcp_options['registration_page'] ) ) . '" title="' . __( 'Renew your subscription', 'rcp' ) . '" class="rcp_sub_details_renew">' . __( 'Renew your subscription', 'rcp' ) . '</a>';
 				} elseif( ! rcp_is_active( $user_ID ) && rcp_subscription_upgrade_possible( $user_ID ) ) {
 					echo '<a href="' . esc_url( get_permalink( $rcp_options['registration_page'] ) ) . '" title="' . __( 'Upgrade your subscription', 'rcp' ) . '" class="rcp_sub_details_renew">' . __( 'Upgrade your subscription', 'rcp' ) . '</a>';
-				} elseif( rcp_is_active( $user_ID ) && rcp_is_paypal_subscriber() ) {
-					echo '<a href="https://www.paypal.com/cgi-bin/customerprofileweb?cmd=_manage-paylist" target="_blank" title="' . __( 'Cancel your subscription', 'rcp' ) . '">' . __( 'Cancel your subscription', 'rcp' ) . '</a>';
+				} elseif( rcp_is_active( $user_ID ) && rcp_can_member_cancel( $user_ID ) ) {
+					echo '<a href="' . rcp_get_member_cancel_url( $user_ID ) . '" title="' . __( 'Cancel your subscription', 'rcp' ) . '">' . __( 'Cancel your subscription', 'rcp' ) . '</a>';
 				}
 				do_action( 'rcp_subscription_details_action_links' );
 				?>

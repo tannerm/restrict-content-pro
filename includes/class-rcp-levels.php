@@ -187,7 +187,7 @@ class RCP_Levels {
 			'name'          => '',
 			'description'   => '',
 			'duration'      => 'unlimited',
-			'duration_unit' => 'm',
+			'duration_unit' => 'month',
 			'price'         => '0',
 			'fee'           => '0',
 			'list_order'    => '0',

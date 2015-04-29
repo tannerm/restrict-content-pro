@@ -64,11 +64,11 @@ function rcp_payments_page() {
 					<th style="width: 40px;"><?php _e( 'ID', 'rcp' ); ?></th>
 					<th style="width: 90px;"><?php _e( 'User', 'rcp' ); ?></th>
 					<th style="width: 150px;"><?php _e( 'Subscription', 'rcp' ); ?></th>
-					<th style="width: 240px;"><?php _e( 'Subscription Key', 'rcp' ); ?></th>
 					<th><?php _e( 'Date', 'rcp' ); ?></th>
 					<th style="width: 90px;"><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
 					<th><?php _e( 'Transaction ID', 'rcp' ); ?></th>
+					<th><?php _e( 'Status', 'rcp' ); ?></th>
 					<?php do_action('rcp_payments_page_table_header'); ?>
 					<?php if( current_user_can( 'rcp_manage_payments' ) ) : ?>
 						<th><?php _e( 'Actions', 'rcp' ); ?></th>
@@ -80,11 +80,11 @@ function rcp_payments_page() {
 					<th style="width: 40px;"><?php _e( 'ID', 'rcp' ); ?></th>
 					<th><?php _e( 'User', 'rcp' ); ?></th>
 					<th><?php _e( 'Subscription', 'rcp' ); ?></th>
-					<th><?php _e( 'Subscription Key', 'rcp' ); ?></th>
 					<th><?php _e( 'Date', 'rcp' ); ?></th>
 					<th><?php _e( 'Amount', 'rcp' ); ?></th>
 					<th><?php _e( 'Type', 'rcp' ); ?></th>
 					<th><?php _e( 'Transaction ID', 'rcp' ); ?></th>
+					<th><?php _e( 'Status', 'rcp' ); ?></th>
 					<?php do_action( 'rcp_payments_page_table_footer' ); ?>
 					<?php if( current_user_can( 'rcp_manage_payments' ) ) : ?>
 						<th><?php _e( 'Actions', 'rcp' ); ?></th>
@@ -106,17 +106,19 @@ function rcp_payments_page() {
 									</a>
 								</td>
 								<td><?php echo esc_html( $payment->subscription ); ?></td>
-								<td><?php echo esc_html( $payment->subscription_key ); ?></td>
 								<td><?php echo esc_html( $payment->date ); ?></td>
 								<td><?php echo rcp_currency_filter( $payment->amount ); ?></td>
 								<td><?php echo esc_html( $payment->payment_type ); ?></td>
 								<td><?php echo $payment->transaction_id; ?></td>
+								<td><?php echo rcp_get_payment_status_label( $payment ); ?></td>
 								<?php do_action( 'rcp_payments_page_table_column', $payment->id ); ?>
 								<?php if( current_user_can( 'rcp_manage_payments' ) ) : ?>
 									<td>
 										<a href="<?php echo rcp_get_pdf_download_url( $payment->id ); ?>" class="rcp-payment-invoice"><?php _e( 'Download Invoice', 'rcp' ); ?></a>
 										<span>&nbsp;|&nbsp;</span>
-										<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ) ), 'rcp_delete_payment_nonce' ) ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a>
+										<a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ) ) ); ?>" class="rcp-edit-payment"><?php _e( 'Edit', 'rcp' ); ?></a>
+										<span>&nbsp;|&nbsp;</span>
+										<a href="<?php echo wp_nonce_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ) ), 'rcp_delete_payment_nonce' ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a>
 									</td>
 								<?php endif; ?>
 							</tr>
@@ -133,7 +135,7 @@ function rcp_payments_page() {
 					<div class="tablenav-pages alignright">
 						<?php
 
-							$base = 'admin.php?' . remove_query_arg( 'p', $_SERVER['QUERY_STRING'] ) . '%_%';
+							$base = 'admin.php?' . esc_url( remove_query_arg( 'p', $_SERVER['QUERY_STRING'] ) ) . '%_%';
 
 							echo paginate_links( array(
 								'base' 		=> $base,

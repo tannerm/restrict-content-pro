@@ -17,6 +17,10 @@ rcp_show_error_messages( 'register' ); ?>
 
 	<?php if( ! is_user_logged_in() ) { ?>
 
+	<div class="rcp_login_link">
+		<p><?php _e( sprintf( '<a href="%s">Log in</a> if you wish to renew an existing subscription.', rcp_get_login_url( rcp_get_current_url() ) ), 'rcp' ); ?></p>
+	</div>
+
 	<?php do_action( 'rcp_before_register_form_fields' ); ?>
 
 	<fieldset class="rcp_user_fieldset">
@@ -60,7 +64,7 @@ rcp_show_error_messages( 'register' ); ?>
 			<?php foreach( $levels as $key => $level ) : ?>
 				<?php if( rcp_show_subscription_level( $level->id ) ) : ?>
 				<li id="rcp_subscription_level_<?php echo $level->id; ?>" class="rcp_subscription_level">
-					<input type="radio" class="required rcp_level" <?php if( $key == 0 || ( isset( $_GET['level']) && $_GET['level'] == $key ) ){ echo 'checked="checked"'; }?> name="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>" value="<?php echo esc_attr( absint( $level->id ) ); ?>" <?php if( $level->duration == 0 ) { echo 'data-duration="forever"'; } ?>/>&nbsp;
+					<input type="radio" class="required rcp_level" <?php if( $key == 0 || ( isset( $_GET['level'] ) && $_GET['level'] == $key ) ) { echo 'checked="checked"'; } ?> name="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>" value="<?php echo esc_attr( absint( $level->id ) ); ?>" <?php if( $level->duration == 0 ) { echo 'data-duration="forever"'; } ?>/>&nbsp;
 					<span class="rcp_subscription_level_name"><?php echo rcp_get_subscription_name( $level->id ); ?></span><span class="rcp_separator">&nbsp;-&nbsp;</span><span class="rcp_price" rel="<?php echo esc_attr( $level->price ); ?>"><?php echo $level->price > 0 ? rcp_currency_filter( $level->price ) : __( 'free', 'rcp' ); ?><span class="rcp_separator">&nbsp;-&nbsp;</span></span>
 					<span class="rcp_level_duration"><?php echo $level->duration > 0 ? $level->duration . '&nbsp;' . rcp_filter_duration_unit( $level->duration_unit, $level->duration ) : __( 'unlimited', 'rcp' ); ?></span>
 					<div class="rcp_level_description"> <?php echo rcp_get_subscription_description( $level->id ); ?></div>
@@ -88,26 +92,26 @@ rcp_show_error_messages( 'register' ); ?>
 
 	<?php do_action( 'rcp_after_register_form_fields', $levels ); ?>
 
-	<?php
-	$gateways = rcp_get_enabled_payment_gateways();
-
-	if( count( $gateways ) > 1 ) : $display = rcp_has_paid_levels() ? '' : ' style="display: none;"'; ?>
-		<fieldset class="rcp_gateways_fieldset">
-			<p id="rcp_payment_gateways"<?php echo $display; ?>>
-				<select name="rcp_gateway" id="rcp_gateway">
-					<?php foreach( $gateways as $key => $gateway ) : ?>
-						<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $gateway ); ?></option>
-					<?php endforeach; ?>
-				</select>
-				<label for="rcp_gateway"><?php _e( 'Choose Your Payment Method', 'rcp' ); ?></label>
-			</p>
-		</fieldset>
-	<?php else: ?>
-		<?php foreach( $gateways as $key => $gateway ) : ?>
-			<input type="hidden" name="rcp_gateway" value="<?php echo esc_attr( $key ); ?>"/>
-		<?php endforeach; ?>
-	<?php endif; ?>
-
+	<div class="rcp_gateway_fields">
+		<?php
+		$gateways = rcp_get_enabled_payment_gateways();
+		if( count( $gateways ) > 1 ) : $display = rcp_has_paid_levels() ? '' : ' style="display: none;"'; ?>
+			<fieldset class="rcp_gateways_fieldset">
+				<p id="rcp_payment_gateways"<?php echo $display; ?>>
+					<select name="rcp_gateway" id="rcp_gateway">
+						<?php foreach( $gateways as $key => $gateway ) : $recurring = rcp_gateway_supports( $key, 'recurring' ) ? 'yes' : 'no'; ?>
+							<option value="<?php echo esc_attr( $key ); ?>" data-supports-recurring="<?php echo esc_attr( $recurring ); ?>"><?php echo esc_html( $gateway ); ?></option>
+						<?php endforeach; ?>
+					</select>
+					<label for="rcp_gateway"><?php _e( 'Choose Your Payment Method', 'rcp' ); ?></label>
+				</p>
+			</fieldset>
+		<?php else: ?>
+			<?php foreach( $gateways as $key => $gateway ) : $recurring = rcp_gateway_supports( $key, 'recurring' ) ? 'yes' : 'no'; ?>
+				<input type="hidden" name="rcp_gateway" value="<?php echo esc_attr( $key ); ?>" data-supports-recurring="<?php echo esc_attr( $recurring ); ?>"/>
+			<?php endforeach; ?>
+		<?php endif; ?>
+	</div>
 
 	<?php do_action( 'rcp_before_registration_submit_field', $levels ); ?>
 

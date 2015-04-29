@@ -41,7 +41,8 @@ class RCP_Members_Export extends RCP_Export {
 			'last_name'        => __( 'Last Name', 'rcp' ),
 			'subscription'     => __( 'Subscription', 'rcp' ),
 			'subscription_key' => __( 'Subscription Key', 'rcp' ),
-			'expiration'       => __( 'Expiration', 'rcp' )
+			'expiration'       => __( 'Expiration', 'rcp' ),
+			'discount_codes'   => __( 'Discount Codes', 'rcp' )
 		);
 		return $cols;
 	}
@@ -75,7 +76,8 @@ class RCP_Members_Export extends RCP_Export {
 					'last_name'        => $member->last_name,
 					'subscription'     => rcp_get_subscription( $member->ID ),
 					'subscription_key' => rcp_get_subscription_key( $member->ID ),
-					'expiration'       => rcp_get_expiration_date( $member->ID )
+					'expiration'       => rcp_get_expiration_date( $member->ID ),
+					'discount_codes'   => implode( ' ', (array) get_user_meta( $member->ID, 'rcp_user_discounts', true ) )
 				);
 
 			}

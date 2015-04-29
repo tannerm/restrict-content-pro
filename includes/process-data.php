@@ -113,6 +113,7 @@ function rcp_process_data() {
 
 			$levels       = new RCP_Levels();
 			$user_id      = absint( $_POST['user'] );
+			$member       = new RCP_Member( $user_id );
 			$status       = sanitize_text_field( $_POST['status'] );
 			$level_id     = absint( $_POST['level'] );
 			$expiration   = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
@@ -127,23 +128,22 @@ function rcp_process_data() {
 				if( $current_id != $level_id ) {
 
 					update_user_meta( $user_id, 'rcp_subscription_level', $level_id );
-					$user = new WP_User( $user_id );
 
 					// Remove the old user role
 					$role = ! empty( $old_level->role ) ? $old_level->role : 'subscriber';
-					$user->remove_role( $role );
+					$member->remove_role( $role );
 
 					// Add the new user role
 					$role = ! empty( $new_level->role ) ? $new_level->role : 'subscriber';
-					$user->add_role( $role );
+					$member->add_role( $role );
 
 				}
 			}
 
 			if( isset( $_POST['recurring'] ) ) {
-				update_user_meta( $user_id, 'rcp_recurring', 'yes' );
+				$member->set_recurring( true );
 			} else {
-				delete_user_meta( $user_id, 'rcp_recurring' );
+				$member->set_recurring( false );
 			}
 
 			if( isset( $_POST['trialing'] ) ) {
@@ -164,6 +164,10 @@ function rcp_process_data() {
 				rcp_set_status( $user_id, $status );
 			}
 
+			if( isset( $_POST['payment-profile-id'] ) ) {
+				$member->set_payment_profile_id( $_POST['payment-profile-id'] );
+			}
+
 			rcp_set_expiration_date( $user_id, $expiration );
 
 			do_action( 'rcp_edit_member', $user_id );
@@ -171,7 +175,6 @@ function rcp_process_data() {
 			wp_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id . '&rcp_message=user_updated' ) ); exit;
 
 		}
-
 
 		/****************************************
 		* discount codes
@@ -264,6 +267,7 @@ function rcp_process_data() {
 					'subscription'     => rcp_get_subscription( $user->ID ),
 					'subscription_key' => rcp_get_subscription_key( $user->ID ),
 					'transaction_id'   => sanitize_text_field( $_POST['transaction-id'] ),
+					'status'           => sanitize_text_field( $_POST['status'] ),
 				);
 
 				$add = $payments->insert( $data );
@@ -299,6 +303,7 @@ function rcp_process_data() {
 					'subscription'     => rcp_get_subscription( $user->ID ),
 					'subscription_key' => rcp_get_subscription_key( $user->ID ),
 					'transaction_id'   => sanitize_text_field( $_POST['transaction-id'] ),
+					'status'           => sanitize_text_field( $_POST['status'] ),
 				);
 
 				$update = $payments->update( $payment_id, $data );
@@ -321,13 +326,13 @@ function rcp_process_data() {
 	if( ! empty( $_GET ) ) {
 
 		/* member processing */
-		if( isset( $_GET['deactivate_member'] ) ) {
+		if( isset( $_GET['revoke_access'] ) ) {
 
 			if( ! current_user_can( 'rcp_manage_members' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
 
-			rcp_set_status( urldecode( absint( $_GET['deactivate_member'] ) ), 'cancelled' );
+			rcp_set_status( urldecode( absint( $_GET['revoke_access'] ) ), 'cancelled' );
 		}
 		if( isset( $_GET['activate_member'] ) ) {
 
@@ -336,6 +341,15 @@ function rcp_process_data() {
 			}
 
 			rcp_set_status( urldecode( absint( $_GET['activate_member'] ) ), 'active' );
+		}
+		if( isset( $_GET['cancel_member'] ) ) {
+
+			if( ! current_user_can( 'rcp_manage_members' ) ) {
+				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
+			}
+
+			rcp_cancel_member_payment_profile( urldecode( absint( $_GET['cancel_member'] ) ) );
+			wp_safe_redirect( admin_url( add_query_arg( 'rcp_message', 'member_cancelled', 'admin.php?page=rcp-members' ) ) ); exit;
 		}
 
 		/* subscription processing */

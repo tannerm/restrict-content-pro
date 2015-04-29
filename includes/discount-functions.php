@@ -69,7 +69,7 @@ function rcp_validate_discount( $code, $subscription_id = 0 ) {
 	$discounts = new RCP_Discounts();
 	$discount  = $discounts->get_by( 'code', $code );
 
-	if( $discount && $discount->status == 'active' ) {
+	if( ! empty( $discount ) && $discount->status == 'active' ) {
 
 		// Make sure discount is not expired and not maxed out
 		if( ! $discounts->is_expired( $discount->id ) && ! $discounts->is_maxed_out( $discount->id ) ) {
@@ -82,11 +82,12 @@ function rcp_validate_discount( $code, $subscription_id = 0 ) {
 				$ret = false;
 			}
 		}
-	}
 
-	// Ensure codes are identical, including case
-	if( strcmp( $code, $discount->code ) != 0 ) {
-		$ret = false;
+		// Ensure codes are identical, including case
+		if( strcmp( $code, $discount->code ) != 0 ) {
+			$ret = false;
+		}
+
 	}
 
 	return apply_filters( 'rcp_is_discount_valid', $ret, $discount, $subscription_id );
@@ -208,18 +209,21 @@ function rcp_store_discount_use_for_user( $code, $user_id, $discount_object ) {
 * return boolean
 */
 function rcp_user_has_used_discount( $user_id, $code ) {
-	if( $code == '' ) {
-		return false;
+	
+	$ret = false;
+
+	if( ! empty( $code ) ) {
+
+		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
+		
+		if( ! empty( $user_discounts ) ) {
+			if( in_array( $code, $user_discounts ) ) {
+				$ret = true;
+			}
+		}
 	}
 
-	$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
-	if( !is_array( $user_discounts ) || $user_discounts == '' ) {
-		return false;
-	}
-	if( in_array( $code, $user_discounts ) ) {
-		return true;
-	}
-	return false;
+	return apply_filters( 'rcp_user_has_used_discount', $ret, $user_id, $code );
 }
 
 /*

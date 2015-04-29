@@ -2,7 +2,12 @@
 
 // function to create the DB / Options / Defaults
 function rcp_options_install() {
-   	global $wpdb,$rcp_db_name, $rcp_db_version, $rcp_discounts_db_name, $rcp_discounts_db_version, $rcp_payments_db_name, $rcp_payments_db_version;
+   	global $wpdb,$rcp_db_name, $rcp_db_version, $rcp_discounts_db_name, $rcp_discounts_db_version, 
+   	$rcp_payments_db_name, $rcp_payments_db_version, $rcp_options;
+
+   	if( ! is_array( $rcp_options ) ) {
+   		$rcp_options = array();
+   	}
 
 	// create the RCP subscription level database table
 	if ($wpdb->get_var( "show tables like '$rcp_db_name'" ) != $rcp_db_name ) {
@@ -61,6 +66,7 @@ function rcp_options_install() {
 		payment_type tinytext NOT NULL,
 		subscription_key mediumtext NOT NULL,
 		transaction_id tinytext NOT NULL,
+		status varchar(200) NOT NULL,
 		UNIQUE KEY id (id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
@@ -73,6 +79,45 @@ function rcp_options_install() {
 	// Create RCP caps
 	$caps = new RCP_Capabilities;
 	$caps->add_caps();
+
+	// Setup some default options
+	$options = array();
+
+	// Checks if the purchase page option exists
+	if ( ! isset( $rcp_options['registration_page'] ) ) {
+
+		// Register Page
+		$register = wp_insert_post(
+			array(
+				'post_title'     => __( 'Register', 'edd' ),
+				'post_content'   => '[register_form]',
+				'post_status'    => 'publish',
+				'post_author'    => 1,
+				'post_type'      => 'page',
+				'comment_status' => 'closed'
+			)
+		);
+
+		// Welcome (Success) Page
+		$success = wp_insert_post(
+			array(
+				'post_title'     => __( 'Welcome', 'edd' ),
+				'post_content'   => __( 'Welcome! This is your success page where members are redirected after completing their registration.', 'edd' ),
+				'post_status'    => 'publish',
+				'post_author'    => 1,
+				'post_parent'    => $register,
+				'post_type'      => 'page',
+				'comment_status' => 'closed'
+			)
+		);
+
+		// Store our page IDs
+		$options['registration_page'] = $register;
+		$options['redirect']  = $success;
+
+	}
+
+	update_option( 'rcp_settings', array_merge( $rcp_options, $options ) );
 
 	// and option that allows us to make sure RCP is installed
 	add_option( 'rcp_is_installed', '1' );
