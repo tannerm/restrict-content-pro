@@ -53,7 +53,6 @@ class RCP_Logs_List_Table extends WP_List_Table {
 
                 return  '<a href="' . esc_url( add_query_arg( 'user', $user_id, 'admin.php?page=rcp-logs' ) ) . '" title="' . esc_attr( __( 'View logs for this user', 'rcp' ) ) . '">' . $user->display_name . '</a>';
 
-
         	case 'date' :
         		$date = strtotime( get_post_field( 'post_date', $item->ID ) );
         		return date_i18n( get_option( 'date_format' ), $date ) . ' ' . __( 'at', 'rcp' ) . ' ' . date_i18n( get_option( 'time_format' ), $date );

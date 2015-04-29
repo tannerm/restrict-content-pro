@@ -719,6 +719,6 @@ function rcp_parse_report_dates() {
 
 	$dates = rcp_get_report_dates();
 
-	wp_redirect( add_query_arg( $dates, admin_url( 'admin.php?page=rcp-reports' ) ) ); exit;
+	wp_safe_redirect( add_query_arg( $dates, admin_url( 'admin.php?page=rcp-reports' ) ) ); exit;
 }
 add_action( 'admin_init', 'rcp_parse_report_dates' );
