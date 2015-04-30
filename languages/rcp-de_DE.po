@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sz\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-06 21:11-0600\n"
-"PO-Revision-Date: 2015-04-01 17:44+0100\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2015-04-30 09:37-0600\n"
+"PO-Revision-Date: 2015-04-30 09:37-0600\n"
+"Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
 "Language-Team: sz\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.1\n"
+"X-Generator: Poedit 1.7.6\n"
 "X-Poedit-Basepath: ../\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -18,31 +18,75 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPath-1: includes\n"
 
-#: RCP_Plugin_Updater.php:167
+#: RCP_Plugin_Updater.php:177
 #, php-format
 msgid ""
-"There is a new version of %1$s available. <a target=\"_blank\" class=\"thickbox"
-"\" href=\"%2$s\">View version %3$s details</a>."
+"There is a new version of %1$s available. <a target=\"_blank\" class="
+"\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
 msgstr ""
 "Es steht eine neue Version von%1$s zur verfügung. <a target=\"_blank\" class="
 "\"thickbox\" href=\"%2$s\">Version ansehen %3$s Details</a>."
 
-#: RCP_Plugin_Updater.php:174
+#: RCP_Plugin_Updater.php:184
 #, php-format
 msgid ""
-"There is a new version of %1$s available. <a target=\"_blank\" class=\"thickbox"
-"\" href=\"%2$s\">View version %3$s details</a> or <a href=\"%4$s\">update now</"
-"a>."
+"There is a new version of %1$s available. <a target=\"_blank\" class="
+"\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a href=\"%4$s"
+"\">update now</a>."
 msgstr ""
 "﻿Es steht eine neue Version von%1$s zur verfügung. <a target=\"_blank\" class="
 "\"thickbox\" href=\"%2$s\">Version ansehen %3$s Details</a> or <a href=\"%4$s"
 "\">jetzt updaten</a>."
 
-#: RCP_Plugin_Updater.php:314
+#: RCP_Plugin_Updater.php:324
 msgid "You do not have permission to install plugin updates"
 msgstr "﻿Sie haben keine Berechtigung um Plugin-Updates zu installieren"
 
-#: RCP_Plugin_Updater.php:314 includes/class-rcp-export.php:167
+#: RCP_Plugin_Updater.php:324 includes/admin/settings/settings.php:989
+#: includes/class-rcp-export.php:167
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:113
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:125
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:137
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:197
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:209
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:237
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:269
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:281
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:310
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:102
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:114
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:137
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:64
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:200
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:217
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:234
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:250
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:266
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:275
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:328
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:345
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:362
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:378
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:394
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:403
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:424
+#: includes/gateways/gateway-functions.php:231
+#: includes/gateways/stripe/functions.php:105
+#: includes/gateways/stripe/functions.php:195
+#: includes/gateways/stripe/functions.php:212
+#: includes/gateways/stripe/functions.php:229
+#: includes/gateways/stripe/functions.php:245
+#: includes/gateways/stripe/functions.php:261
+#: includes/gateways/stripe/functions.php:270
+#: includes/gateways/stripe/functions.php:330
+#: includes/gateways/stripe/functions.php:340
+#: includes/gateways/stripe/functions.php:377
+#: includes/gateways/stripe/functions.php:394
+#: includes/gateways/stripe/functions.php:410
+#: includes/gateways/stripe/functions.php:426
+#: includes/gateways/stripe/functions.php:435 includes/member-functions.php:921
+#: includes/member-functions.php:938 includes/member-functions.php:954
+#: includes/member-functions.php:970 includes/member-functions.php:979
 msgid "Error"
 msgstr "﻿Fehler"
 
@@ -62,67 +106,100 @@ msgstr "﻿Die Restrict Content Pro Datenbank sollte aktualisiert werden:"
 msgid "upgrade now"
 msgstr "Jetzt erweitern"
 
-#: includes/admin/admin-notices.php:19
+#: includes/admin/admin-notices.php:20
 msgid "The Restrict Content Pro database has been updated"
 msgstr "Die Restrict Content Pro Datenbank wurde erfolgreich aktualisiert."
 
-#: includes/admin/admin-notices.php:27
+#: includes/admin/admin-notices.php:24
+msgid ""
+"Your license key for Restrict Content Pro has expired. Please renew your "
+"license to re-enable automatic updates."
+msgstr ""
+
+#: includes/admin/admin-notices.php:26
+#, php-format
+msgid ""
+"Please <a href=\"%s\">enter and activate</a> your license key for Restrict "
+"Content Pro to enable automatic updates."
+msgstr ""
+
+#: includes/admin/admin-notices.php:31
+#, php-format
+msgid ""
+"You are using an outdated version of the Stripe integration for Restrict "
+"Content Pro. Please <a href=\"%s\">deactivate</a> the add-on version to "
+"configure the new version."
+msgstr ""
+
+#: includes/admin/admin-notices.php:36
+#, php-format
+msgid ""
+"You are using an outdated version of the PayPal Pro / Express integration for "
+"Restrict Content Pro. Please <a href=\"%s\">deactivate</a> the add-on version "
+"to configure the new version."
+msgstr ""
+
+#: includes/admin/admin-notices.php:43
 msgid "Payment deleted"
 msgstr "﻿Zahlung gestrichen"
 
-#: includes/admin/admin-notices.php:32
+#: includes/admin/admin-notices.php:48
 msgid "Payment added"
 msgstr "﻿Zahlung hinzugefügt"
 
-#: includes/admin/admin-notices.php:37
+#: includes/admin/admin-notices.php:53
 msgid "Payment creation failed"
 msgstr "﻿Zahlung fehlgeschlagen"
 
-#: includes/admin/admin-notices.php:43
+#: includes/admin/admin-notices.php:59
 msgid "Payment updated"
 msgstr "﻿Zahlung aktualisiert"
 
-#: includes/admin/admin-notices.php:48
+#: includes/admin/admin-notices.php:64
 msgid "Payment update failed"
 msgstr "﻿Zahlungs aktualisierung fehlgeschlagen"
 
-#: includes/admin/admin-notices.php:53
+#: includes/admin/admin-notices.php:69
 msgid "Database upgrade complete"
 msgstr "Datenbank-upgrade abgeschlossen"
 
-#: includes/admin/admin-notices.php:58
+#: includes/admin/admin-notices.php:74
 msgid "The user's subscription has been added"
 msgstr "Abonnement des Benutzers wurde hinzugefügt"
 
-#: includes/admin/admin-notices.php:63
+#: includes/admin/admin-notices.php:79
 msgid "The user's subscription could not be added"
 msgstr "﻿Abonnement des Benutzers konnte nicht hinzugefügt werden"
 
-#: includes/admin/admin-notices.php:69
+#: includes/admin/admin-notices.php:85
 msgid "Member updated"
 msgstr "﻿Mitglied aktualisiert"
 
-#: includes/admin/admin-notices.php:74
+#: includes/admin/admin-notices.php:90
+msgid "Member's payment profile cancelled successfully"
+msgstr ""
+
+#: includes/admin/admin-notices.php:95
 msgid "Subscription level added"
 msgstr "Mitgliedschaftsstufe wurde hinzugefügt"
 
-#: includes/admin/admin-notices.php:79
+#: includes/admin/admin-notices.php:100
 msgid "Subscription level updated"
 msgstr "Mitgliedschaftsstufe aktualisiert"
 
-#: includes/admin/admin-notices.php:84
+#: includes/admin/admin-notices.php:105
 msgid "Subscription level could not be added"
 msgstr "Mitgliedschaftsstufe konnte nicht hinzugefügt werden"
 
-#: includes/admin/admin-notices.php:90
+#: includes/admin/admin-notices.php:111
 msgid "Subscription level could not be updated"
 msgstr "Mitgliedschaftsstufe konnte nicht aktualisiert werden"
 
-#: includes/admin/admin-notices.php:96
+#: includes/admin/admin-notices.php:117
 msgid "Discount code created"
 msgstr "Rabattcode erstellt"
 
-#: includes/admin/admin-notices.php:101
+#: includes/admin/admin-notices.php:122
 msgid "The discount code could not be created due to an error"
 msgstr "Der Rabattcode konnte aufgrund eines Fehlers nicht erstellt werden."
 
@@ -149,11 +226,13 @@ msgstr "﻿Rabatte"
 
 #: includes/admin/admin-pages.php:15
 #: includes/admin/discounts/discount-codes.php:12
+#: includes/class-rcp-export-members.php:45
 msgid "Discount Codes"
 msgstr "Rabattcodes"
 
-#: includes/admin/admin-pages.php:16 includes/admin/members/view-member.php:98
+#: includes/admin/admin-pages.php:16 includes/admin/members/edit-member.php:150
 #: includes/admin/payments/payments-page.php:22
+#: includes/admin/settings/settings.php:45
 msgid "Payments"
 msgstr "﻿Zahlungen"
 
@@ -181,8 +260,7 @@ msgstr "Logs"
 msgid "Help"
 msgstr "﻿Hilfe"
 
-#: includes/admin/categories.php:32 includes/admin/help/help-page.php:91
-#: includes/admin/metabox.php:19
+#: includes/admin/categories.php:32 includes/admin/metabox.php:19
 msgid "Paid Only?"
 msgstr "Kostenpflichtig?"
 
@@ -190,8 +268,7 @@ msgstr "Kostenpflichtig?"
 msgid "Restrict items in thie category to paid subscribers only?"
 msgstr "Produkte in dieser Kategorie nur auf zahlenden Abonnenten beschränken?"
 
-#: includes/admin/categories.php:41 includes/admin/help/help-page.php:94
-#: includes/admin/metabox.php:37
+#: includes/admin/categories.php:41 includes/admin/metabox.php:37
 #: includes/admin/subscriptions/edit-subscription.php:34
 #: includes/admin/subscriptions/subscription-levels.php:21
 #: includes/admin/subscriptions/subscription-levels.php:37
@@ -213,8 +290,8 @@ msgstr ""
 
 #: includes/admin/discounts/discount-codes.php:17
 #: includes/admin/discounts/discount-codes.php:34
-#: includes/admin/members/members-page.php:116
-#: includes/admin/members/members-page.php:130
+#: includes/admin/members/members-page.php:114
+#: includes/admin/members/members-page.php:128
 #: includes/admin/payments/payments-page.php:64
 #: includes/admin/payments/payments-page.php:80
 #: includes/admin/subscriptions/subscription-levels.php:18
@@ -226,7 +303,7 @@ msgstr "ID"
 #: includes/admin/discounts/discount-codes.php:18
 #: includes/admin/discounts/discount-codes.php:35
 #: includes/admin/discounts/discount-codes.php:114
-#: includes/admin/settings/settings.php:620
+#: includes/admin/settings/settings.php:671
 #: includes/admin/subscriptions/edit-subscription.php:16
 #: includes/admin/subscriptions/subscription-levels.php:19
 #: includes/admin/subscriptions/subscription-levels.php:35
@@ -254,14 +331,15 @@ msgstr "Code"
 #: includes/admin/discounts/discount-codes.php:38
 #: includes/admin/discounts/discount-codes.php:162
 #: includes/admin/discounts/edit-discount.php:63
-#: includes/admin/members/members-page.php:118
-#: includes/admin/members/members-page.php:132
+#: includes/admin/members/members-page.php:116
+#: includes/admin/members/members-page.php:130
 #: includes/admin/payments/payments-page.php:66
 #: includes/admin/payments/payments-page.php:82
 #: includes/class-rcp-export-members.php:42
 #: includes/class-rcp-export-payments.php:38 includes/invoice-functions.php:166
-#: includes/member-functions.php:567 includes/user-page-columns.php:4
-#: templates/subscription.php:13 templates/subscription.php:46
+#: includes/member-functions.php:536 includes/user-page-columns.php:4
+#: templates/paypal-express-confirm.php:11 templates/subscription.php:16
+#: templates/subscription.php:49
 msgid "Subscription"
 msgstr "Mitgliedschaft"
 
@@ -270,31 +348,34 @@ msgstr "Mitgliedschaft"
 #: includes/admin/discounts/discount-codes.php:153
 #: includes/admin/payments/edit-payment.php:29
 #: includes/admin/payments/new-payment.php:23
-#: includes/admin/payments/payments-page.php:69
-#: includes/admin/payments/payments-page.php:85
+#: includes/admin/payments/payments-page.php:68
+#: includes/admin/payments/payments-page.php:84
 #: includes/class-rcp-export-payments.php:39 includes/invoice-functions.php:167
-#: includes/member-functions.php:572 includes/member-functions.php:574
-#: templates/subscription.php:48
+#: includes/member-functions.php:541 includes/member-functions.php:543
+#: templates/subscription.php:51
 msgid "Amount"
 msgstr "Menge"
 
 #: includes/admin/discounts/discount-codes.php:23
 #: includes/admin/discounts/discount-codes.php:40
 #: includes/admin/discounts/discount-codes.php:141
-#: includes/admin/payments/payments-page.php:70
-#: includes/admin/payments/payments-page.php:86
+#: includes/admin/payments/payments-page.php:69
+#: includes/admin/payments/payments-page.php:85
 msgid "Type"
 msgstr "﻿Typ"
 
 #: includes/admin/discounts/discount-codes.php:24
 #: includes/admin/discounts/discount-codes.php:41
-#: includes/admin/members/edit-member.php:16
-#: includes/admin/members/members-page.php:119
-#: includes/admin/members/members-page.php:133
-#: includes/admin/members/view-member.php:19
+#: includes/admin/members/edit-member.php:24
+#: includes/admin/members/members-page.php:117
+#: includes/admin/members/members-page.php:131
+#: includes/admin/payments/edit-payment.php:56
+#: includes/admin/payments/new-payment.php:50
+#: includes/admin/payments/payments-page.php:71
+#: includes/admin/payments/payments-page.php:87
 #: includes/admin/subscriptions/edit-subscription.php:81
 #: includes/admin/subscriptions/subscription-levels.php:184
-#: includes/user-page-columns.php:5 templates/subscription.php:12
+#: includes/user-page-columns.php:5 templates/subscription.php:15
 msgid "Status"
 msgstr "Status"
 
@@ -310,22 +391,22 @@ msgstr "Übrig"
 
 #: includes/admin/discounts/discount-codes.php:27
 #: includes/admin/discounts/discount-codes.php:44
-#: includes/admin/members/members-page.php:121
-#: includes/admin/members/members-page.php:135
-#: includes/class-rcp-export-members.php:44 templates/subscription.php:17
+#: includes/admin/members/members-page.php:119
+#: includes/admin/members/members-page.php:133
+#: includes/class-rcp-export-members.php:44 templates/subscription.php:20
 msgid "Expiration"
 msgstr "Ablauf"
 
 #: includes/admin/discounts/discount-codes.php:29
 #: includes/admin/discounts/discount-codes.php:47
-#: includes/admin/members/members-page.php:124
-#: includes/admin/members/members-page.php:138
+#: includes/admin/members/members-page.php:122
+#: includes/admin/members/members-page.php:136
 #: includes/admin/payments/payments-page.php:74
 #: includes/admin/payments/payments-page.php:90
 #: includes/admin/subscriptions/subscription-levels.php:27
 #: includes/admin/subscriptions/subscription-levels.php:43
-#: includes/user-page-columns.php:6 templates/subscription.php:19
-#: templates/subscription.php:50
+#: includes/user-page-columns.php:6 templates/subscription.php:22
+#: templates/subscription.php:53
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -345,7 +426,7 @@ msgid "Flat"
 msgstr "Flat"
 
 #: includes/admin/discounts/discount-codes.php:76
-#: includes/admin/settings/settings.php:58
+#: includes/admin/settings/settings.php:70
 msgid "active"
 msgstr "aktiv"
 
@@ -359,31 +440,29 @@ msgstr "abgelaufen"
 
 #: includes/admin/discounts/discount-codes.php:84
 #: includes/admin/subscriptions/subscription-levels.php:58
-#: includes/member-functions.php:365
 msgid "none"
 msgstr "keine"
 
 #: includes/admin/discounts/discount-codes.php:89
-#: includes/admin/members/members-page.php:173
+#: includes/admin/members/members-page.php:169
+#: includes/admin/payments/payments-page.php:119
 #: includes/admin/subscriptions/subscription-levels.php:90
 msgid "Edit"
 msgstr "Bearbeiten"
 
 #: includes/admin/discounts/discount-codes.php:91
-#: includes/admin/members/members-page.php:177
 #: includes/admin/subscriptions/subscription-levels.php:92
 msgid "Deactivate"
 msgstr "Deaktivieren"
 
 #: includes/admin/discounts/discount-codes.php:93
-#: includes/admin/members/members-page.php:175
 #: includes/admin/subscriptions/subscription-levels.php:94
 msgid "Activate"
 msgstr "Aktivieren"
 
 #: includes/admin/discounts/discount-codes.php:95
-#: includes/admin/logs-list-table.php:109
-#: includes/admin/payments/payments-page.php:119
+#: includes/admin/logs-list-table.php:108
+#: includes/admin/payments/payments-page.php:121
 #: includes/admin/subscriptions/subscription-levels.php:96
 msgid "Delete"
 msgstr "Löschen"
@@ -426,9 +505,8 @@ msgid "The subscription levels this discount code can be used for."
 msgstr "Die Mitgliedschaftsstufe dieses Rabattcodes kann verwendet werden."
 
 #: includes/admin/discounts/discount-codes.php:182
-#: includes/admin/members/edit-member.php:48
-#: includes/admin/members/members-page.php:242
-#: includes/admin/members/view-member.php:35
+#: includes/admin/members/edit-member.php:65
+#: includes/admin/members/members-page.php:244
 msgid "Expiration date"
 msgstr "Ablaufdatum"
 
@@ -461,7 +539,8 @@ msgid "Edit Discount Code:"
 msgstr "Discount Code bearbeiten"
 
 #: includes/admin/discounts/edit-discount.php:7
-#: includes/admin/members/edit-member.php:7
+#: includes/admin/members/edit-member.php:12
+#: includes/admin/members/members-page.php:176
 #: includes/admin/payments/edit-payment.php:10
 #: includes/admin/payments/new-payment.php:4
 #: includes/admin/subscriptions/edit-subscription.php:8
@@ -522,8 +601,8 @@ msgstr "Ablaufdatum"
 
 #: includes/admin/discounts/edit-discount.php:87
 msgid ""
-" Enter the expiration date for this discount code in the format of yyyy-mm-dd. "
-"Leave blank for no expiration"
+" Enter the expiration date for this discount code in the format of yyyy-mm-"
+"dd. Leave blank for no expiration"
 msgstr ""
 "Ablaufdatum für diesen Rabatt im folgenden Format eingeben, yyyy-mm-dd. Wenn "
 "kein Ablaufdatum, leer lassen. "
@@ -566,8 +645,8 @@ msgstr "Mitglieder Export"
 
 #: includes/admin/export.php:13
 msgid ""
-"Download member data as a CSV file. This is useful for tasks such as importing "
-"batch users into Mail Chimp, or other systems."
+"Download member data as a CSV file. This is useful for tasks such as "
+"importing batch users into Mail Chimp, or other systems."
 msgstr ""
 "Mitgliedsdaten als CSV-Datei downloaden. Dies ist nützlich für Aufgaben wie "
 "das Importieren von Batch-Benutzern in MailChimp oder andere Systeme."
@@ -580,32 +659,32 @@ msgstr "Alle"
 msgid "Choose the subscription to export members from"
 msgstr "Wählen Sie das Abonnement, um Mitglieder zu exportieren"
 
-#: includes/admin/export.php:29 includes/admin/members/members-page.php:53
+#: includes/admin/export.php:29 includes/admin/members/members-page.php:51
 #: includes/admin/subscriptions/edit-subscription.php:85
 #: includes/admin/subscriptions/subscription-levels.php:188
-#: includes/member-functions.php:445
+#: includes/member-functions.php:434
 msgid "Active"
 msgstr "Aktiv"
 
-#: includes/admin/export.php:30 includes/admin/members/members-page.php:58
-#: includes/member-functions.php:451
+#: includes/admin/export.php:30 includes/admin/members/members-page.php:56
+#: includes/member-functions.php:440 includes/misc-functions.php:564
 msgid "Pending"
 msgstr "Unerledigt"
 
-#: includes/admin/export.php:31 includes/admin/members/members-page.php:63
-#: includes/member-functions.php:448
+#: includes/admin/export.php:31 includes/admin/members/members-page.php:61
+#: includes/member-functions.php:437
 msgid "Expired"
 msgstr "Abgelaufen"
 
-#: includes/admin/export.php:32 includes/admin/members/members-page.php:68
-#: includes/member-functions.php:454
+#: includes/admin/export.php:32 includes/admin/members/members-page.php:66
+#: includes/member-functions.php:443
 msgid "Cancelled"
 msgstr "Gelöscht"
 
-#: includes/admin/export.php:33 includes/admin/members/members-page.php:73
+#: includes/admin/export.php:33 includes/admin/members/members-page.php:71
 #: includes/admin/subscriptions/subscription-levels.php:72
 #: includes/admin/subscriptions/subscription-levels.php:168
-#: includes/member-functions.php:457 includes/member-functions.php:480
+#: includes/member-functions.php:446
 msgid "Free"
 msgstr "Gratis"
 
@@ -639,8 +718,8 @@ msgstr "Zahlungen Export"
 
 #: includes/admin/export.php:48
 msgid ""
-"Download payment data as a CSV file. Use this file for your own record keeping "
-"or tracking."
+"Download payment data as a CSV file. Use this file for your own record "
+"keeping or tracking."
 msgstr ""
 "Downloaden Sie die Zahlungsdaten als CSV-Datei. Verwenden Sie diese Datei für "
 "Ihre eigenen Aufzeichnungen oder für Tracking."
@@ -667,9 +746,9 @@ msgstr "Zahlungs CVS downloaden"
 #: includes/admin/help/help-menus-setup.php:84
 #: includes/admin/help/help-menus-setup.php:115
 #: includes/admin/help/help-menus-setup.php:125
-#: includes/admin/settings/settings.php:31
-#: includes/admin/settings/settings.php:45
-#: includes/admin/settings/settings.php:344
+#: includes/admin/settings/settings.php:44
+#: includes/admin/settings/settings.php:57
+#: includes/admin/settings/settings.php:395
 msgid "General"
 msgstr "Allgemein"
 
@@ -717,12 +796,14 @@ msgstr "Mit Aktionen"
 
 #: includes/admin/help/help-menus-setup-old.php:75
 #: includes/admin/help/help-menus-setup.php:132
-#: includes/admin/settings/settings.php:32
 msgid "Messages"
 msgstr "Nachrichten"
 
 #: includes/admin/help/help-menus-setup-old.php:78
 #: includes/admin/help/help-menus-setup.php:139
+#: includes/gateways/class-rcp-payment-gateways.php:62
+#: includes/gateways/class-rcp-payment-gateways.php:67
+#: includes/gateways/class-rcp-payment-gateways.php:115
 msgid "PayPal"
 msgstr "PayPal"
 
@@ -733,13 +814,13 @@ msgstr "Anmelde Formulare"
 
 #: includes/admin/help/help-menus-setup-old.php:84
 #: includes/admin/help/help-menus-setup.php:153
-#: includes/admin/settings/settings.php:34
+#: includes/admin/settings/settings.php:46
 msgid "Emails"
 msgstr "e-Mail"
 
 #: includes/admin/help/help-menus-setup-old.php:87
 #: includes/admin/help/help-menus-setup.php:160
-#: includes/admin/settings/settings.php:36
+#: includes/admin/settings/settings.php:48
 msgid "Misc"
 msgstr "Diverse"
 
@@ -748,89 +829,25 @@ msgstr "Diverse"
 msgid "Logging"
 msgstr "Protokollierung"
 
-#: includes/admin/help/help-page.php:9
-msgid "Help Documentation"
-msgstr "Hilfe Seiten"
-
-#: includes/admin/help/help-page.php:15 includes/admin/settings/settings.php:30
-#: includes/invoice-functions.php:59
-msgid "Restrict Content Pro"
-msgstr "Restrict Content Pro"
-
-#: includes/admin/help/help-page.php:23
-msgid "Index"
-msgstr "Verzeichnis"
-
-#: includes/admin/help/help-page.php:44
-msgid "Finding Documentation and About this Help Page"
-msgstr "Finde Dokumentation und Über diese Hilfe-Seite"
-
-#: includes/admin/help/help-page.php:53
-msgid "Quick Video Tutorials"
-msgstr "Kurz-Video Tutorials"
-
-#: includes/admin/help/help-page.php:82
-msgid "Restricting Post/Page Content"
-msgstr "Beitrags / Seiten Inhalt beschränken "
-
-#: includes/admin/help/help-page.php:92 includes/admin/metabox.php:25
-msgid "Show Excerpt?"
-msgstr "Auszug zeigen"
-
-#: includes/admin/help/help-page.php:93 includes/admin/metabox.php:31
-msgid "Hide from Feed?"
-msgstr "Feed vom ausblenden?"
-
-#: includes/admin/help/help-page.php:95
-#: includes/admin/members/edit-member.php:33
-#: includes/admin/members/members-page.php:226
-#: includes/admin/members/view-member.php:27 includes/admin/metabox.php:45
-msgid "Subscription Level"
-msgstr "Mitgliedschaftsstufe"
-
-#: includes/admin/help/help-page.php:96 includes/admin/metabox.php:52
-msgid "User Level"
-msgstr "Benutzer Ebene"
-
-#: includes/admin/help/help-page.php:154
-msgid "Frequently Asked Questions"
-msgstr "Häufig gestellte Fragen"
-
-#: includes/admin/help/help-page.php:176
-msgid "Short Code Reference"
-msgstr "Short Code Referenz"
-
-#: includes/admin/help/help-page.php:268
-msgid "Template Tag Reference"
-msgstr "Template Tag Referenz"
-
-#: includes/admin/help/help-page.php:337
-msgid "Filter Reference"
-msgstr "Referenz filtern"
-
-#: includes/admin/help/help-page.php:365
-msgid "Action Reference"
-msgstr "Aktionsreferenz"
-
 #: includes/admin/logs-list-table.php:54
 msgid "View logs for this user"
 msgstr "Log für diesen Benutzer zeigen"
 
-#: includes/admin/logs-list-table.php:59
+#: includes/admin/logs-list-table.php:58
 msgid "at"
 msgstr "bei"
 
-#: includes/admin/logs-list-table.php:91
+#: includes/admin/logs-list-table.php:90
 msgid "Log Error"
 msgstr "Log Fehler"
 
-#: includes/admin/logs-list-table.php:92
+#: includes/admin/logs-list-table.php:91
 msgid "Log Message"
 msgstr "Log Nachricht"
 
-#: includes/admin/logs-list-table.php:93
-#: includes/admin/members/members-page.php:115
-#: includes/admin/members/members-page.php:129
+#: includes/admin/logs-list-table.php:92
+#: includes/admin/members/members-page.php:113
+#: includes/admin/members/members-page.php:127
 #: includes/admin/payments/edit-payment.php:18
 #: includes/admin/payments/new-payment.php:12
 #: includes/admin/payments/payments-page.php:65
@@ -838,11 +855,11 @@ msgstr "Log Nachricht"
 msgid "User"
 msgstr "Benutzer"
 
-#: includes/admin/logs-list-table.php:94
-#: includes/admin/payments/payments-page.php:68
-#: includes/admin/payments/payments-page.php:84
+#: includes/admin/logs-list-table.php:93
+#: includes/admin/payments/payments-page.php:67
+#: includes/admin/payments/payments-page.php:83
 #: includes/class-rcp-export-payments.php:44 includes/class-rcp-export.php:68
-#: includes/member-functions.php:566 templates/subscription.php:49
+#: includes/member-functions.php:535 templates/subscription.php:52
 msgid "Date"
 msgstr "Datum"
 
@@ -850,240 +867,247 @@ msgstr "Datum"
 msgid "RCP Error Logs"
 msgstr "RCP Error Logs"
 
-#: includes/admin/members/edit-member.php:5
+#: includes/admin/members/edit-member.php:10
 msgid "Edit Member:"
 msgstr "Mitglied bearbeiten:"
 
-#: includes/admin/members/edit-member.php:28
+#: includes/admin/members/edit-member.php:16
+#: includes/admin/members/members-page.php:179
+msgid "Switch to User"
+msgstr ""
+
+#: includes/admin/members/edit-member.php:36
 msgid "The status of this user's subscription"
 msgstr "Mitgliedschaftsstatus dieses Nutzers"
 
-#: includes/admin/members/edit-member.php:43
-#: includes/admin/members/members-page.php:237
+#: includes/admin/members/edit-member.php:41
+#: includes/admin/members/members-page.php:228 includes/admin/metabox.php:45
+msgid "Subscription Level"
+msgstr "Mitgliedschaftsstufe"
+
+#: includes/admin/members/edit-member.php:51
+#: includes/admin/members/members-page.php:239
 msgid "Choose the subscription level for this user"
 msgstr "Wählen Sie die Mitgliedschaftsstufe für diesen Benutzer."
 
-#: includes/admin/members/edit-member.php:52
-#: includes/admin/members/members-page.php:246
+#: includes/admin/members/edit-member.php:56
+#: includes/class-rcp-export-members.php:43
+#: includes/class-rcp-export-payments.php:43 includes/invoice-functions.php:134
+#: includes/member-functions.php:538
+msgid "Subscription Key"
+msgstr "Mitgliedschaftsschlüssel"
+
+#: includes/admin/members/edit-member.php:60
+msgid "The member's subscription key. This cannot be changed."
+msgstr ""
+
+#: includes/admin/members/edit-member.php:71
+#: includes/admin/members/members-page.php:250
+msgid "Never expires?"
+msgstr ""
+
+#: includes/admin/members/edit-member.php:73
+#: includes/admin/members/members-page.php:252
 msgid "Enter the expiration date for this user in the format of yyyy-mm-dd"
 msgstr "Geben Sie das Ablaufdatum für diesen Benutzer im Format yyyy-mm-dd ein."
 
-#: includes/admin/members/edit-member.php:57
-#: includes/admin/members/members-page.php:101
-#: includes/admin/members/members-page.php:120
-#: includes/admin/members/members-page.php:134
+#: includes/admin/members/edit-member.php:78
+msgid "Payment Profile ID"
+msgstr ""
+
+#: includes/admin/members/edit-member.php:82
+msgid "This is the customer's payment profile ID in the payment processor"
+msgstr ""
+
+#: includes/admin/members/edit-member.php:87
+#: includes/admin/members/members-page.php:99
+#: includes/admin/members/members-page.php:118
+#: includes/admin/members/members-page.php:132
 msgid "Recurring"
 msgstr "Wiederkehrend"
 
-#: includes/admin/members/edit-member.php:62
+#: includes/admin/members/edit-member.php:92
 msgid "Is this user's subscription recurring?"
 msgstr "Ist das Abonnement dieses Benutzers wiederkehrend?"
 
-#: includes/admin/members/edit-member.php:68
+#: includes/admin/members/edit-member.php:98
 msgid "Trialing"
 msgstr "Zur Probe"
 
-#: includes/admin/members/edit-member.php:73
+#: includes/admin/members/edit-member.php:103
 msgid "Does this user have a trial membership?"
 msgstr "Hat dieser Benutzer eine Probe-Mitgliedschaft?"
 
-#: includes/admin/members/edit-member.php:79
+#: includes/admin/members/edit-member.php:109
 msgid "Sign Up Method"
 msgstr "Anmeldeart"
 
-#: includes/admin/members/edit-member.php:84
+#: includes/admin/members/edit-member.php:114
 msgid "User Signup"
 msgstr "Registrierung durch den Benutzer"
 
-#: includes/admin/members/edit-member.php:85
+#: includes/admin/members/edit-member.php:115
 msgid "Added by admin manually"
 msgstr "Von Administrator manuell hinzugefügt"
 
-#: includes/admin/members/edit-member.php:87
+#: includes/admin/members/edit-member.php:117
 msgid "Was this a real signup or a membership given to the user"
 msgstr ""
 "War dies eine echte Anmeldung oder eine erteilte Mitgliedschaft für den "
 "Benutzer?"
 
-#: includes/admin/members/edit-member.php:92
+#: includes/admin/members/edit-member.php:122
 msgid "User Notes"
 msgstr "Benutzerhinweise"
 
-#: includes/admin/members/edit-member.php:96
+#: includes/admin/members/edit-member.php:126
 msgid "Use this area to record notes about this user if needed"
 msgstr ""
 "Verwenden Sie diesen Bereich, um Notizen über diesen Benutzer aufzunehmen, "
 "falls nötig."
 
-#: includes/admin/members/edit-member.php:105
+#: includes/admin/members/edit-member.php:131
+msgid "Discount codes used"
+msgstr "Rabattcode verbraucht"
+
+#: includes/admin/members/edit-member.php:143
+#: includes/discount-functions.php:265
+msgid "None"
+msgstr "Keiner"
+
+#: includes/admin/members/edit-member.php:162
 msgid "Update User Subscription"
 msgstr "Benutzer-Mitgliedschaft aktualisieren"
 
-#: includes/admin/members/members-page.php:13
+#: includes/admin/members/members-page.php:11
 msgid " Paid Subscribers"
 msgstr "Zahlende Mitglieder"
 
-#: includes/admin/members/members-page.php:50
+#: includes/admin/members/members-page.php:48
 msgid "Status: "
 msgstr "Status:"
 
-#: includes/admin/members/members-page.php:52
+#: includes/admin/members/members-page.php:50
 msgid "View all active subscribers"
 msgstr "Alle aktiven Mitglieder ansehen"
 
-#: includes/admin/members/members-page.php:57
+#: includes/admin/members/members-page.php:55
 msgid "View all pending subscribers"
 msgstr "Alle anstehenden Abonnenten zeigen"
 
-#: includes/admin/members/members-page.php:62
+#: includes/admin/members/members-page.php:60
 msgid "View all expired subscribers"
 msgstr "Alle abgelaufenen Mitglieder ansehen"
 
-#: includes/admin/members/members-page.php:67
+#: includes/admin/members/members-page.php:65
 msgid "View all cancelled subscribers"
 msgstr "Alle annullierten Mitglieder ansehen"
 
-#: includes/admin/members/members-page.php:72
+#: includes/admin/members/members-page.php:70
 msgid "View all free members"
 msgstr "Alle Gratis Mitglieder ansehen"
 
-#: includes/admin/members/members-page.php:79
+#: includes/admin/members/members-page.php:77
 msgid "Search Members"
 msgstr "Benutzer suchen"
 
-#: includes/admin/members/members-page.php:83
+#: includes/admin/members/members-page.php:81
 msgid "Search members"
 msgstr "Benutzer suchen"
 
-#: includes/admin/members/members-page.php:90
+#: includes/admin/members/members-page.php:88
 msgid "All Subscriptions"
 msgstr "Alle Mitgliedschaftsstufen"
 
-#: includes/admin/members/members-page.php:99
+#: includes/admin/members/members-page.php:97
 msgid "Either"
 msgstr "Entweder"
 
-#: includes/admin/members/members-page.php:100
+#: includes/admin/members/members-page.php:98
 msgid "Not Recurring"
 msgstr "Nicht wiederkehrend"
 
-#: includes/admin/members/members-page.php:104
+#: includes/admin/members/members-page.php:102
 msgid "Newest First"
 msgstr "Neuste zuerst"
 
-#: includes/admin/members/members-page.php:105
+#: includes/admin/members/members-page.php:103
 msgid "Oldest First"
 msgstr "Älteste zuerst"
 
-#: includes/admin/members/members-page.php:109
+#: includes/admin/members/members-page.php:107
 #: includes/admin/reports/reports-page.php:559
 msgid "Filter"
 msgstr "Filter"
 
-#: includes/admin/members/members-page.php:117
-#: includes/admin/members/members-page.php:131
-#: includes/admin/settings/settings.php:656 templates/register-single.php:33
-#: templates/register.php:28
+#: includes/admin/members/members-page.php:115
+#: includes/admin/members/members-page.php:129
+#: includes/admin/settings/settings.php:707 templates/register-single.php:33
+#: templates/register.php:32
 msgid "Email"
 msgstr "e-Mail"
 
-#: includes/admin/members/members-page.php:122
-#: includes/admin/members/members-page.php:136
+#: includes/admin/members/members-page.php:120
+#: includes/admin/members/members-page.php:134
 #: includes/admin/subscriptions/edit-subscription.php:93
 #: includes/admin/subscriptions/subscription-levels.php:196
 msgid "User Role"
 msgstr "Benutzerrolle"
 
-#: includes/admin/members/members-page.php:160
+#: includes/admin/members/members-page.php:158
 msgid "View User's Profile"
 msgstr "Benutzer Profil zeigen"
 
-#: includes/admin/members/members-page.php:165
+#: includes/admin/members/members-page.php:163
 msgid "yes"
 msgstr "ja"
 
-#: includes/admin/members/members-page.php:165
+#: includes/admin/members/members-page.php:163
 msgid "no"
 msgstr "Nein"
 
-#: includes/admin/members/members-page.php:170
-msgid "Details"
-msgstr "Details"
+#: includes/admin/members/members-page.php:171
+msgid "Enable Access"
+msgstr ""
 
-#: includes/admin/members/members-page.php:185
+#: includes/admin/members/members-page.php:173
+msgid "Reoke Access"
+msgstr ""
+
+#: includes/admin/members/members-page.php:187
 msgid "No subscribers found"
 msgstr "Keine Mitglieder gefunden"
 
-#: includes/admin/members/members-page.php:197
-#: includes/admin/payments/payments-page.php:141
+#: includes/admin/members/members-page.php:199
+#: includes/admin/payments/payments-page.php:143
 msgid "&laquo; Previous"
 msgstr "&laquo; ehemalig"
 
-#: includes/admin/members/members-page.php:198
-#: includes/admin/payments/payments-page.php:142
+#: includes/admin/members/members-page.php:200
+#: includes/admin/payments/payments-page.php:144
 msgid "Next &raquo;"
 msgstr "Nächste &raquo;"
 
-#: includes/admin/members/members-page.php:209
+#: includes/admin/members/members-page.php:211
 msgid "Add New Subscription (for existing user)"
 msgstr "Neue Mitgliedschaft hinzufügen (für bestehende Benutzer)"
 
-#: includes/admin/members/members-page.php:215 templates/login.php:9
-#: templates/register-single.php:29 templates/register.php:24
+#: includes/admin/members/members-page.php:217 templates/login.php:9
+#: templates/register-single.php:29 templates/register.php:28
 msgid "Username"
 msgstr "Benutzername"
 
-#: includes/admin/members/members-page.php:221
+#: includes/admin/members/members-page.php:223
 msgid "Begin typing the user name to add a subscription to."
 msgstr "Bitte Benutzernamen eintragen, um eine Mitgliedschaft hinzuzufügen."
 
-#: includes/admin/members/members-page.php:230
+#: includes/admin/members/members-page.php:232
 msgid "--choose--"
 msgstr "--wählen--"
 
-#: includes/admin/members/members-page.php:253
+#: includes/admin/members/members-page.php:259
 msgid "Add User Subscription"
 msgstr "Benutzer-Mitgliedschaft hinzufügen"
-
-#: includes/admin/members/view-member.php:6
-msgid "View Member Details:"
-msgstr "Mitglied Details zeigen"
-
-#: includes/admin/members/view-member.php:8
-msgid "Go Back"
-msgstr "Gehe zurück"
-
-#: includes/admin/members/view-member.php:11
-msgid "Edit Member"
-msgstr "Mitglied bearbeiten"
-
-#: includes/admin/members/view-member.php:43
-msgid "Subscription key"
-msgstr "Mitgliedschaftsschlüssel"
-
-#: includes/admin/members/view-member.php:51
-msgid "Signup Method"
-msgstr "Anmelde Art"
-
-#: includes/admin/members/view-member.php:59
-msgid "Regular user signup"
-msgstr "Normale Benutzer-Anmeldung"
-
-#: includes/admin/members/view-member.php:62
-msgid "Manually added by an admin"
-msgstr "Von Administrator manuell hinzugefügt"
-
-#: includes/admin/members/view-member.php:71
-msgid "Discount codes used"
-msgstr "Rabattcode verbraucht"
-
-#: includes/admin/members/view-member.php:83 includes/discount-functions.php:261
-msgid "None"
-msgstr "Keiner"
-
-#: includes/admin/members/view-member.php:90
-msgid "Member Notes"
-msgstr "Mitglieder Hinweise"
 
 #: includes/admin/metabox.php:14
 msgid "Restrict this content"
@@ -1093,6 +1117,10 @@ msgstr "Diese Inhalte zu beschränken"
 msgid "Restrict this entry to active paid users only."
 msgstr "Beschränken Sie diesen Eintrag für (aktive) zahlende Benutzer."
 
+#: includes/admin/metabox.php:25
+msgid "Show Excerpt?"
+msgstr "Auszug zeigen"
+
 #: includes/admin/metabox.php:28
 msgid ""
 "Allow non active users to view the excerpt? If left unchecked, the message "
@@ -1100,6 +1128,10 @@ msgid ""
 msgstr ""
 "Sollen inaktive User den Auszug sehen? Wenn leer gelassen, wird Nachricht aus "
 "Einstellungen verwendet"
+
+#: includes/admin/metabox.php:31
+msgid "Hide from Feed?"
+msgstr "Feed vom ausblenden?"
 
 #: includes/admin/metabox.php:34
 msgid "Hide the excerpt of this post / page from the Feed?"
@@ -1119,14 +1151,18 @@ msgid "Choose the subscription levels allowed to view this content."
 msgstr ""
 "Wählen Sie die erlaubten Mitgliedschafts-Stufen, um diesen Inhalt anzusehen."
 
+#: includes/admin/metabox.php:52
+msgid "User Level"
+msgstr "Benutzer Ebene"
+
 #: includes/admin/metabox.php:55
 msgid ""
 "Choose the user level that can see this post / page's content. Users of this "
 "level and higher will be the only ones able to view the content."
 msgstr ""
 "Wählen Sie die Benutzer-Ebene, die den Inhalt dieses Beitrag / Seite, sehen "
-"können. Die Benutzer dieser Stufe oder höher, werden die einzigen sein, die in "
-"der Lage sind den Inhalt anzusehen."
+"können. Die Benutzer dieser Stufe oder höher, werden die einzigen sein, die "
+"in der Lage sind den Inhalt anzusehen."
 
 #: includes/admin/metabox.php:93
 #, php-format
@@ -1135,8 +1171,8 @@ msgid ""
 "restrict] short code to restrict partial content. %sView documentation%s."
 msgstr ""
 "Verwenden Sie diese Optionen um den Zugriff des gesamten Eintrag zu "
-"beschränken, oder verwenden Sie den [restrict] ... [/restrict] code,  um einen "
-"Teil des Inhalts zu vor Zugriff zu beschränken.%sView documentation%s."
+"beschränken, oder verwenden Sie den [restrict] ... [/restrict] code,  um "
+"einen Teil des Inhalts zu vor Zugriff zu beschränken.%sView documentation%s."
 
 #: includes/admin/metabox.php:133
 msgid "Note 1"
@@ -1147,8 +1183,8 @@ msgid ""
 "To hide this content from logged-out users, but allow free and paid, set the "
 "User Level to \"Subscriber\"."
 msgstr ""
-"Um diese Inhalte von abgemeldeten Nutzern zu verstecken, ihn jedoch gratis und "
-"bezahlten Mitgliedschaften zu erlauben, stellen Sie die Benutzerebene auf "
+"Um diese Inhalte von abgemeldeten Nutzern zu verstecken, ihn jedoch gratis "
+"und bezahlten Mitgliedschaften zu erlauben, stellen Sie die Benutzerebene auf "
 "\"Mitglied\"."
 
 #: includes/admin/metabox.php:134
@@ -1187,9 +1223,9 @@ msgstr "Das Datum für diese Zahlung im Format yyyy-mm-dd"
 
 #: includes/admin/payments/edit-payment.php:47
 #: includes/admin/payments/new-payment.php:41
-#: includes/admin/payments/payments-page.php:71
-#: includes/admin/payments/payments-page.php:87
-#: includes/invoice-functions.php:147 includes/member-functions.php:570
+#: includes/admin/payments/payments-page.php:70
+#: includes/admin/payments/payments-page.php:86
+#: includes/invoice-functions.php:147 includes/member-functions.php:539
 msgid "Transaction ID"
 msgstr "Transaktions-ID"
 
@@ -1197,19 +1233,35 @@ msgstr "Transaktions-ID"
 msgid "The transaction ID for this payment, if any"
 msgstr "Transaktions-ID der Zahlung, sofern vorhanden"
 
-#: includes/admin/payments/edit-payment.php:59
+#: includes/admin/payments/edit-payment.php:60
+#: includes/admin/payments/new-payment.php:54 includes/misc-functions.php:577
+msgid "Complete"
+msgstr ""
+
+#: includes/admin/payments/edit-payment.php:61
+#: includes/admin/payments/new-payment.php:55 includes/misc-functions.php:570
+msgid "Refunded"
+msgstr ""
+
+#: includes/admin/payments/edit-payment.php:63
+#: includes/admin/payments/new-payment.php:57
+msgid "The status of this payment."
+msgstr ""
+
+#: includes/admin/payments/edit-payment.php:71
 msgid "Update Payment"
 msgstr "Zahlung aktualisieren"
 
 #: includes/admin/payments/new-payment.php:2
-#: includes/admin/payments/new-payment.php:52
+#: includes/admin/payments/new-payment.php:64
 #: includes/admin/payments/payments-page.php:24
 msgid "Create Payment"
 msgstr "Zahlung erstellen"
 
 #: includes/admin/payments/new-payment.php:18
 msgid "Begin typing the user name to add a payment record for."
-msgstr "Bitte Benutzernamen eintragen, um eine Zahlungsbestätigung hinzuzufügen."
+msgstr ""
+"Bitte Benutzernamen eintragen, um eine Zahlungsbestätigung hinzuzufügen."
 
 #: includes/admin/payments/new-payment.php:36
 msgid "Enter the date for this payment in the format of yyyy-mm-dd"
@@ -1236,14 +1288,6 @@ msgstr "Alle Zahlungen ansehen"
 msgid "Reset User Filter"
 msgstr "Benutzerfilter reset"
 
-#: includes/admin/payments/payments-page.php:67
-#: includes/admin/payments/payments-page.php:83
-#: includes/class-rcp-export-members.php:43
-#: includes/class-rcp-export-payments.php:43 includes/invoice-functions.php:134
-#: includes/member-functions.php:569
-msgid "Subscription Key"
-msgstr "Mitgliedschaftsschlüssel"
-
 #: includes/admin/payments/payments-page.php:104
 msgid "View payments by this user"
 msgstr "Zahlungen dieses Benutzers zeigen"
@@ -1252,7 +1296,7 @@ msgstr "Zahlungen dieses Benutzers zeigen"
 msgid "Download Invoice"
 msgstr "Rechnung downloaden"
 
-#: includes/admin/payments/payments-page.php:128
+#: includes/admin/payments/payments-page.php:130
 msgid "No payments recorded yet"
 msgstr "Noch keine Zahlungen erfasst"
 
@@ -1318,7 +1362,8 @@ msgstr "Letztes Jahr"
 msgid "Custom"
 msgstr "Massgeschneidert"
 
-#: includes/admin/reports/reports-page.php:524 includes/invoice-functions.php:85
+#: includes/admin/reports/reports-page.php:524
+#: includes/invoice-functions.php:85
 msgid "From"
 msgstr "Von"
 
@@ -1339,31 +1384,31 @@ msgstr "Mitglieder pro Seite"
 msgid "Payments per page"
 msgstr "Zahlungen pro Seite"
 
-#: includes/admin/settings/settings.php:21
+#: includes/admin/settings/settings.php:34
 msgid "Options saved"
 msgstr "Optionen gespeichert"
 
-#: includes/admin/settings/settings.php:33
-msgid "Signup Form"
-msgstr "Anmelde Formular"
+#: includes/admin/settings/settings.php:43 includes/invoice-functions.php:59
+msgid "Restrict Content Pro"
+msgstr "Restrict Content Pro"
 
-#: includes/admin/settings/settings.php:35
+#: includes/admin/settings/settings.php:47
 msgid "PDF Invoices"
 msgstr "PDF Rechnungen"
 
-#: includes/admin/settings/settings.php:50
+#: includes/admin/settings/settings.php:62
 msgid "License Key"
 msgstr "Lizenzschlüssel"
 
-#: includes/admin/settings/settings.php:57
+#: includes/admin/settings/settings.php:69
 msgid "Deactivate License"
 msgstr "Lizens deaktivieren"
 
-#: includes/admin/settings/settings.php:60
+#: includes/admin/settings/settings.php:72
 msgid "Activate License"
 msgstr "Lizenz aktivieren"
 
-#: includes/admin/settings/settings.php:62
+#: includes/admin/settings/settings.php:74
 #, php-format
 msgid ""
 "Enter license key for Restrict Content Pro. This is required for automatic "
@@ -1372,106 +1417,59 @@ msgstr ""
 "Geben Sie den Lizenzschlüssel für Restrict Content Pro ein. Dieser ist "
 "zwingend verlangt für automatische Updates und <a href=\"%s\">Support</a>."
 
-#: includes/admin/settings/settings.php:68
-msgid "Currency"
-msgstr "Währung"
+#: includes/admin/settings/settings.php:80
+msgid "Registration Page"
+msgstr "Registrierungsseite"
 
-#: includes/admin/settings/settings.php:79
-msgid "Choose your currency."
-msgstr "Wählen Sie Ihre Währung aus"
-
-#: includes/admin/settings/settings.php:84
-msgid "Currency Position"
-msgstr "Währungszeichen Position"
-
-#: includes/admin/settings/settings.php:88
-msgid "Before - $10"
-msgstr "Bevor - 10$"
-
-#: includes/admin/settings/settings.php:89
-msgid "After - 10$"
-msgstr "Nach - $10"
-
-#: includes/admin/settings/settings.php:91
-msgid "Show the currency sign before or after the price?"
-msgstr "Währungszeichen vor oder nach dem Preis anzeigen"
+#: includes/admin/settings/settings.php:94
+#: includes/admin/settings/settings.php:117
+#: includes/admin/settings/settings.php:780
+#: includes/admin/settings/settings.php:811
+msgid "No pages found"
+msgstr "Keine Seiten gefunden"
 
 #: includes/admin/settings/settings.php:98
-msgid "Gateways"
-msgstr "Gateways"
+msgid "Choose the page that has the [register_form] short code"
+msgstr "Wählen Sie die Seite, die den [register_form] short code hat."
 
-#: includes/admin/settings/settings.php:101
-msgid ""
-"Check each of the payment gateways you would like to enable. Configure the "
-"selected gateways below."
+#: includes/admin/settings/settings.php:103
+msgid "Success Page"
+msgstr "Erfolg Seite"
+
+#: includes/admin/settings/settings.php:121
+msgid "This is the page users are redirected to after a successful registration"
 msgstr ""
-"Überprüfen Sie jede der Zahlungs-Gateways, die Sie aktivieren möchten. "
-"Konfigurieren Sie die ausgewählten Gateways unten."
+"Seite, auf welche Benutzer nach der erfolgreichen Registrierung umgeleitet "
+"werden."
 
-#: includes/admin/settings/settings.php:105
-msgid "Enabled Gateways"
-msgstr "Aktiviere Gateways"
+#: includes/admin/settings/settings.php:126 includes/member-forms.php:86
+msgid "Auto Renew"
+msgstr "Automatische Erneuerung"
 
-#: includes/admin/settings/settings.php:119
-msgid "PayPal Settings"
-msgstr "PayPal Einstellungen"
+#: includes/admin/settings/settings.php:130
+msgid "Always auto renew"
+msgstr "Immer automatisch erneuern"
 
-#: includes/admin/settings/settings.php:123
-msgid "PayPal Address"
-msgstr "PayPal Adresse"
-
-#: includes/admin/settings/settings.php:127
-msgid "Enter your PayPal email address."
-msgstr "Geben Sie Ihre PayPal e-Mail-Adresse ein"
+#: includes/admin/settings/settings.php:131
+msgid "Never auto renew"
+msgstr "Niemals automatisch erneuern"
 
 #: includes/admin/settings/settings.php:132
-msgid "PayPal Page Style"
-msgstr "PayPal Seitenstyle"
+msgid "Let customer choose whether to auto renew"
+msgstr "Lassen Sie Kunden wählen, ob sie automatisch erneuern möchten."
 
-#: includes/admin/settings/settings.php:136
+#: includes/admin/settings/settings.php:134
 msgid ""
-"Enter the PayPal page style name you wish to use, or leave blank for default."
+"Select the auto renew behavior you would like subscription levels to have"
 msgstr ""
-"Geben Sie den PayPal Seitenstyle-Namen ein, den Sie verwenden möchten. Für "
-"Standard das Feld leer lassen."
+"Wählen Sie die Einstellung, die die automatische Erneuerungsfunktion der "
+"Registrierungsstufen haben soll."
 
-#: includes/admin/settings/settings.php:141
-msgid "Sandbox Mode"
-msgstr "Sandbox Modus"
-
-#: includes/admin/settings/settings.php:145
-msgid ""
-"Use PayPal in Sandbox mode. This allows you to test the plugin with the <a "
-"href=\"http://developer.paypal.com\">PayPal test account</a>"
-msgstr ""
-"Verwenden Sie PayPal im Sandbox-Modus. So können Sie das Plugin mit dem <a "
-"href=\"http://developer.paypal.com\">PayPal Testkonto</a> testen."
-
-#: includes/admin/settings/settings.php:150
-msgid "Disable CURL"
-msgstr "CURL deaktivieren"
-
-#: includes/admin/settings/settings.php:154
-msgid "Only check this option if your host does not allow cURL"
-msgstr "Diese Option nur aktivieren, falls Ihr Host cURL nicht ermöglicht."
-
-#: includes/admin/settings/settings.php:159
-msgid "Disable IPN Verification"
-msgstr "IPN Verifikation deaktivieren"
-
-#: includes/admin/settings/settings.php:163
-msgid ""
-"Only check this option if your members statuses are not getting changed to "
-"\"active\""
-msgstr ""
-"Diese Option nur aktivieren, wenn die Mitglieder-Stati nicht auf \"aktiv\" "
-"wechseln werden."
-
-#: includes/admin/settings/settings.php:175
+#: includes/admin/settings/settings.php:139
 msgid "Free Content Message"
 msgstr "Gratis-Inhalte Nachricht"
 
-#: includes/admin/settings/settings.php:181
+#: includes/admin/settings/settings.php:145
 msgid ""
 "This is the message shown to users that do not have privilege to view free, "
 "user only content."
@@ -1479,11 +1477,11 @@ msgstr ""
 "Das ist die angezeigte Nachricht, welche Benutzer erhalten, die nicht die "
 "Berechtigung haben, den Gratis-Inhalt anzusehen."
 
-#: includes/admin/settings/settings.php:186
+#: includes/admin/settings/settings.php:150
 msgid "Premium Content Message"
 msgstr "Premium-Inhalte Nachricht"
 
-#: includes/admin/settings/settings.php:192
+#: includes/admin/settings/settings.php:156
 msgid ""
 "This is the message shown to users that do not have privilege to view premium "
 "content."
@@ -1491,181 +1489,257 @@ msgstr ""
 "Das ist die angezeigte Nachricht, welche Benutzer erhalten, die nicht die "
 "Berechtigung haben, den Premium-Inhalt anzusehen."
 
-#: includes/admin/settings/settings.php:204
-msgid "Registration Page"
-msgstr "Registrierungsseite"
+#: includes/admin/settings/settings.php:169
+msgid "Currency"
+msgstr "Währung"
 
-#: includes/admin/settings/settings.php:217
-#: includes/admin/settings/settings.php:239
-#: includes/admin/settings/settings.php:729
-#: includes/admin/settings/settings.php:760
-msgid "No pages found"
-msgstr "Keine Seiten gefunden"
+#: includes/admin/settings/settings.php:180
+msgid "Choose your currency."
+msgstr "Wählen Sie Ihre Währung aus"
 
-#: includes/admin/settings/settings.php:221
-msgid "Choose the page that has the [register_form] short code"
-msgstr "Wählen Sie die Seite, die den [register_form] short code hat."
+#: includes/admin/settings/settings.php:185
+msgid "Currency Position"
+msgstr "Währungszeichen Position"
 
-#: includes/admin/settings/settings.php:226
-msgid "Success Page"
-msgstr "Erfolg Seite"
+#: includes/admin/settings/settings.php:189
+msgid "Before - $10"
+msgstr "Bevor - 10$"
+
+#: includes/admin/settings/settings.php:190
+msgid "After - 10$"
+msgstr "Nach - $10"
+
+#: includes/admin/settings/settings.php:192
+msgid "Show the currency sign before or after the price?"
+msgstr "Währungszeichen vor oder nach dem Preis anzeigen"
+
+#: includes/admin/settings/settings.php:199
+msgid "Gateways"
+msgstr "Gateways"
+
+#: includes/admin/settings/settings.php:202
+msgid ""
+"Check each of the payment gateways you would like to enable. Configure the "
+"selected gateways below."
+msgstr ""
+"Überprüfen Sie jede der Zahlungs-Gateways, die Sie aktivieren möchten. "
+"Konfigurieren Sie die ausgewählten Gateways unten."
+
+#: includes/admin/settings/settings.php:206
+msgid "Enabled Gateways"
+msgstr "Aktiviere Gateways"
+
+#: includes/admin/settings/settings.php:228
+msgid "Sandbox Mode"
+msgstr "Sandbox Modus"
+
+#: includes/admin/settings/settings.php:232
+msgid ""
+"Use Restrict Content Pro in Sandbox mode. This allows you to test the plugin "
+"with test accounts from your payment processor."
+msgstr ""
+
+#: includes/admin/settings/settings.php:238
+msgid "Stripe Settings"
+msgstr ""
 
 #: includes/admin/settings/settings.php:243
-msgid "This is the page users are redirected to after a successful registration"
+msgid "Test Secret Key"
 msgstr ""
-"Seite, auf welche Benutzer nach der erfolgreichen Registrierung umgeleitet "
-"werden."
 
-#: includes/admin/settings/settings.php:248 includes/member-forms.php:81
-msgid "Auto Renew"
-msgstr "Automatische Erneuerung"
+#: includes/admin/settings/settings.php:247
+msgid ""
+"Enter your test secret key. Your API keys can be obtained from your <a href="
+"\"https://dashboard.stripe.com/account/apikeys\" target=\"_blank\">Stripe "
+"account settings</a>."
+msgstr ""
 
 #: includes/admin/settings/settings.php:252
-msgid "Always auto renew"
-msgstr "Immer automatisch erneuern"
-
-#: includes/admin/settings/settings.php:253
-msgid "Never auto renew"
-msgstr "Niemals automatisch erneuern"
-
-#: includes/admin/settings/settings.php:254
-msgid "Let customer choose whether to auto renew"
-msgstr "Lassen Sie Kunden wählen, ob sie automatisch erneuern möchten."
+msgid "Test Publishable Key"
+msgstr ""
 
 #: includes/admin/settings/settings.php:256
-msgid "Select the auto renew behavior you would like subscription levels to have"
+msgid "Enter your test publishable key"
 msgstr ""
-"Wählen Sie die Einstellung, die die automatische Erneuerungsfunktion der "
-"Registrierungsstufen haben soll."
 
 #: includes/admin/settings/settings.php:261
-msgid "jQuery Validation"
-msgstr "jQuery Validierung"
+msgid "Live Secret Key"
+msgstr ""
 
 #: includes/admin/settings/settings.php:265
-msgid ""
-"Check this to enable live, front end form validation. If this is disabled, all "
-"validation will be done server side and will require a page reload."
+msgid "Enter your live secret key"
 msgstr ""
-"Aktivieren Sie diese Option um live, Front-End Formularvalidierung zu "
-"ermöglichen. Ist diese Option deaktiviert, werden alle Validierungen "
-"serverseitig durchgeführt. Dies verlangt Neuladen der Seite."
 
 #: includes/admin/settings/settings.php:270
-msgid "Disable Form CSS"
-msgstr "Formular CSS deaktivieren"
+msgid "Live Publishable Key"
+msgstr ""
 
 #: includes/admin/settings/settings.php:274
-msgid "Check this to disable all included form styling."
-msgstr "Option ankreuzen, um alle Formstylings zu deaktivieren."
+msgid "Enter your live publishable key"
+msgstr ""
 
 #: includes/admin/settings/settings.php:279
-msgid "Enable reCaptcha"
-msgstr "Aktiviere reCaptcha"
-
-#: includes/admin/settings/settings.php:283
-msgid "Check this to enable reCaptcha on the registration form."
+msgid "Note"
 msgstr ""
-"Aktivieren Sie diese Option, um reCaptcha im Anmeldeformular einzuschalten."
 
-#: includes/admin/settings/settings.php:288
-msgid "reCaptcha Public Key"
-msgstr "reCaptcha öffentlicher Key"
-
-#: includes/admin/settings/settings.php:292
-msgid "This your own personal reCaptcha Public key. Go to"
-msgstr "Dies ist Ihr persönlicher, öffentlicher reCaptcha-Schlüssel. Gehe zu"
-
-#: includes/admin/settings/settings.php:292
-#: includes/admin/settings/settings.php:301
-msgid "your account"
-msgstr "dein Konto"
-
-#: includes/admin/settings/settings.php:292
-msgid "then click on your domain (or add a new one) to find your public key."
+#: includes/admin/settings/settings.php:279
+msgid ""
+"in order for subscription payments made through Stripe to be tracked, you "
+"must enter the following URL to your <a href=\"https://dashboard.stripe.com/"
+"account/webhooks\" target=\"_blank\">Stripe Webhooks</a> under Account "
+"Settings:"
 msgstr ""
-"um Ihren öffentlichen Schlüssel zu finden und klicken Sie auf Ihre Domain "
-"(oder fügen Sie eine neue hinzu)."
+
+#: includes/admin/settings/settings.php:285
+msgid "PayPal Settings"
+msgstr "PayPal Einstellungen"
+
+#: includes/admin/settings/settings.php:289
+msgid "PayPal Address"
+msgstr "PayPal Adresse"
+
+#: includes/admin/settings/settings.php:293
+msgid "Enter your PayPal email address."
+msgstr "Geben Sie Ihre PayPal e-Mail-Adresse ein"
 
 #: includes/admin/settings/settings.php:297
-msgid "reCaptcha Private Key"
-msgstr "Privater reCaptcha Schlüssel"
-
-#: includes/admin/settings/settings.php:301
-msgid "This your own personal reCaptcha Private key. Go to"
-msgstr "Dies ist Ihr persönlicher, privater reCaptcha Schlüssel. Gehe zu"
-
-#: includes/admin/settings/settings.php:301
-msgid "then click on your domain (or add a new one) to find your private key."
+msgid "PayPal API Credentials"
 msgstr ""
-"und klicken Sie auf Ihre Domain (oder fügen Sie eine neue hinzu), um Ihren "
-"privaten Schlüssel zu finden."
 
-#: includes/admin/settings/settings.php:306
-msgid "reCaptcha Style"
-msgstr "reCaptcha Style"
-
-#: includes/admin/settings/settings.php:321
-msgid "Choose the style you wish to use for your reCaptcha form"
-msgstr ""
-"Wählen Sie den Stil, den Sie für Ihr reCaptcha Formular verwenden möchten"
-
-#: includes/admin/settings/settings.php:326
-msgid "SSL"
-msgstr "SSL"
-
-#: includes/admin/settings/settings.php:330
+#: includes/admin/settings/settings.php:299
 msgid ""
-"Check this option if your registration page is using the https:// protocol. "
-"This will be the case if you have an SSL certificate installed."
-msgstr "Überprüfen"
+"The PayPal API credentials are required in order to use PayPal Express, "
+"PayPal Pro, and to support advanced subscription cancellation options in "
+"PayPal Standard. Test API credentials can be obtained at <a href=\"http://"
+"docs.pippinsplugins.com/article/826-setting-up-paypal-sandbox-accounts\" "
+"target=\"_blank\">developer.paypal.com</a>"
+msgstr ""
 
-#: includes/admin/settings/settings.php:348
+#: includes/admin/settings/settings.php:305
+msgid "Test API Username"
+msgstr ""
+
+#: includes/admin/settings/settings.php:309
+msgid "Enter your test API username"
+msgstr ""
+
+#: includes/admin/settings/settings.php:314
+msgid "Test API Password"
+msgstr ""
+
+#: includes/admin/settings/settings.php:318
+msgid "Enter your test API password"
+msgstr ""
+
+#: includes/admin/settings/settings.php:323
+msgid "Test API Signature"
+msgstr ""
+
+#: includes/admin/settings/settings.php:327
+msgid "Enter your test API signature"
+msgstr ""
+
+#: includes/admin/settings/settings.php:332
+msgid "Live API Username"
+msgstr ""
+
+#: includes/admin/settings/settings.php:336
+msgid "Enter your live API username"
+msgstr ""
+
+#: includes/admin/settings/settings.php:341
+msgid "Live API Password"
+msgstr ""
+
+#: includes/admin/settings/settings.php:345
+msgid "Enter your live API password"
+msgstr ""
+
+#: includes/admin/settings/settings.php:350
+msgid "Live API Signature"
+msgstr ""
+
+#: includes/admin/settings/settings.php:354
+msgid "Enter your live API signature"
+msgstr ""
+
+#: includes/admin/settings/settings.php:360
+msgid "PayPal Page Style"
+msgstr "PayPal Seitenstyle"
+
+#: includes/admin/settings/settings.php:364
+msgid ""
+"Enter the PayPal page style name you wish to use, or leave blank for default."
+msgstr ""
+"Geben Sie den PayPal Seitenstyle-Namen ein, den Sie verwenden möchten. Für "
+"Standard das Feld leer lassen."
+
+#: includes/admin/settings/settings.php:369
+msgid "Disable CURL"
+msgstr "CURL deaktivieren"
+
+#: includes/admin/settings/settings.php:373
+msgid "Only check this option if your host does not allow cURL"
+msgstr "Diese Option nur aktivieren, falls Ihr Host cURL nicht ermöglicht."
+
+#: includes/admin/settings/settings.php:378
+msgid "Disable IPN Verification"
+msgstr "IPN Verifikation deaktivieren"
+
+#: includes/admin/settings/settings.php:382
+msgid ""
+"Only check this option if your members statuses are not getting changed to "
+"\"active\""
+msgstr ""
+"Diese Option nur aktivieren, wenn die Mitglieder-Stati nicht auf \"aktiv\" "
+"wechseln werden."
+
+#: includes/admin/settings/settings.php:399
 msgid "From Name"
 msgstr "Absender Name"
 
-#: includes/admin/settings/settings.php:352
+#: includes/admin/settings/settings.php:403
 msgid ""
 "The name that emails come from. This is usually the name of your business."
 msgstr ""
 "Der Name, von dem die e-Mails kommen. Dies ist üblicherweise der Name Ihres "
 "Unternehmens."
 
-#: includes/admin/settings/settings.php:357
+#: includes/admin/settings/settings.php:408
 msgid "From Email"
 msgstr "Absender e-Mail"
 
-#: includes/admin/settings/settings.php:361
+#: includes/admin/settings/settings.php:412
 msgid "The email address that emails are sent from."
 msgstr "Die e-Mail-Adresse, von der e-Mails versendet werden."
 
-#: includes/admin/settings/settings.php:366
+#: includes/admin/settings/settings.php:417
 msgid "Active Subscription Email"
 msgstr "e-Mail aktivierte Mitgliedschaft"
 
-#: includes/admin/settings/settings.php:370
-#: includes/admin/settings/settings.php:402
-#: includes/admin/settings/settings.php:434
-#: includes/admin/settings/settings.php:505
-#: includes/admin/settings/settings.php:537
+#: includes/admin/settings/settings.php:421
+#: includes/admin/settings/settings.php:453
+#: includes/admin/settings/settings.php:485
+#: includes/admin/settings/settings.php:556
+#: includes/admin/settings/settings.php:588
 msgid "Disabled"
 msgstr "Deaktiviert"
 
-#: includes/admin/settings/settings.php:374
+#: includes/admin/settings/settings.php:425
 msgid "Check this to disable the email sent out when a member becomes active."
 msgstr ""
 "Aktivieren Sie diese Option, um die e-Mail Benachrichtigung zu deaktivieren, "
 "wenn eine Mitgliedschaft aktiv wird."
 
-#: includes/admin/settings/settings.php:379
-#: includes/admin/settings/settings.php:443
-#: includes/admin/settings/settings.php:464
-#: includes/admin/settings/settings.php:514
-#: includes/admin/settings/settings.php:546
+#: includes/admin/settings/settings.php:430
+#: includes/admin/settings/settings.php:494
+#: includes/admin/settings/settings.php:515
+#: includes/admin/settings/settings.php:565
+#: includes/admin/settings/settings.php:597
 msgid "Subject"
 msgstr "Betreff"
 
-#: includes/admin/settings/settings.php:383
+#: includes/admin/settings/settings.php:434
 msgid ""
 "The subject line for the email sent to users when their subscription becomes "
 "active."
@@ -1673,35 +1747,35 @@ msgstr ""
 "An Benutzer gesendete e-Mail Betreffzeile, wenn ihre Mitgliedschaft aktiviert "
 "wird."
 
-#: includes/admin/settings/settings.php:388
-#: includes/admin/settings/settings.php:420
-#: includes/admin/settings/settings.php:452
-#: includes/admin/settings/settings.php:473
-#: includes/admin/settings/settings.php:523
+#: includes/admin/settings/settings.php:439
+#: includes/admin/settings/settings.php:471
+#: includes/admin/settings/settings.php:503
+#: includes/admin/settings/settings.php:524
+#: includes/admin/settings/settings.php:574
 msgid "Email Body"
 msgstr "e-Mail Text"
 
-#: includes/admin/settings/settings.php:392
+#: includes/admin/settings/settings.php:443
 msgid ""
 "This is the email message that is sent to users when their subscription "
 "becomes active."
 msgstr "An Benutzer gesendete e-Mail, wenn ihre Mitgliedschaft aktiviert wird."
 
-#: includes/admin/settings/settings.php:397
+#: includes/admin/settings/settings.php:448
 msgid "Cancelled Subscription Email"
 msgstr "e-Mail gelöschte Mitgliedschaft"
 
-#: includes/admin/settings/settings.php:406
+#: includes/admin/settings/settings.php:457
 msgid "Check this to disable the email sent out when a member is cancelled."
 msgstr ""
 "Aktivieren Sie diese Option, um die e-Mail Benachrichtigung zu deaktivieren, "
 "wenn eine kostenlose Mitgliedschaft gelöscht wird."
 
-#: includes/admin/settings/settings.php:411
+#: includes/admin/settings/settings.php:462
 msgid "Subject line"
 msgstr "Betreff"
 
-#: includes/admin/settings/settings.php:415
+#: includes/admin/settings/settings.php:466
 msgid ""
 "The subject line for the email sent to users when their subscription is "
 "cancelled."
@@ -1709,47 +1783,48 @@ msgstr ""
 "An Benutzer gesendete e-Mail Betreffzeile, wenn ihre Mitgliedschaft gekündigt "
 "wird."
 
-#: includes/admin/settings/settings.php:424
+#: includes/admin/settings/settings.php:475
 msgid ""
 "This is the email message that is sent to users when their subscription is "
 "cancelled."
 msgstr "An Benutzer gesendete e-Mail, wenn ihre Mitgliedschaft gekündigt wird."
 
-#: includes/admin/settings/settings.php:429
+#: includes/admin/settings/settings.php:480
 msgid "Expired Subscription Email"
 msgstr "e-Mail abgelaufene Mitgliedschaft"
 
-#: includes/admin/settings/settings.php:438
+#: includes/admin/settings/settings.php:489
 msgid "Check this to disable the email sent out when a member expires."
 msgstr ""
 "Aktivieren Sie diese Option, um die e-Mail Benachrichtigung zu deaktivieren, "
 "wenn eine Mitgliedschaft abläuft."
 
-#: includes/admin/settings/settings.php:447
+#: includes/admin/settings/settings.php:498
 msgid ""
 "The subject line for the email sent to users when their subscription is "
 "expired."
 msgstr ""
-"An Benutzer gesendete e-Mail Betreffzeile, wenn ihre Mitgliedschaft abgelaufen "
-"ist."
+"An Benutzer gesendete e-Mail Betreffzeile, wenn ihre Mitgliedschaft "
+"abgelaufen ist."
 
-#: includes/admin/settings/settings.php:456
+#: includes/admin/settings/settings.php:507
 msgid ""
 "This is the email message that is sent to users when their subscription is "
 "expired."
 msgstr "An Benutzer gesendete e-Mail, wenn ihre Mitgliedschaft abgelaufen ist."
 
-#: includes/admin/settings/settings.php:460
+#: includes/admin/settings/settings.php:511
 msgid "Expiring Soon Email"
 msgstr "e-Mail Mitgliedschaft endet bald"
 
-#: includes/admin/settings/settings.php:468
+#: includes/admin/settings/settings.php:519
 msgid ""
-"The subject line for the email sent to users before their subscription expires."
+"The subject line for the email sent to users before their subscription "
+"expires."
 msgstr ""
 "An Benutzer gesendete e-Mail Betreffzeile, bevor ihre Mitgliedschaft abläuft."
 
-#: includes/admin/settings/settings.php:477
+#: includes/admin/settings/settings.php:528
 msgid ""
 "This is the email message that is sent to users before their subscription "
 "expires to encourage them to renew."
@@ -1757,25 +1832,25 @@ msgstr ""
 "An Benutzer gesendete e-Mail, bevor ihre Mitgliedschaft abläuft, um sie zu "
 "einer Erneuerung zu ermutigen."
 
-#: includes/admin/settings/settings.php:482
+#: includes/admin/settings/settings.php:533
 msgid "Reminder Period"
 msgstr "Mahnfrist"
 
-#: includes/admin/settings/settings.php:495
+#: includes/admin/settings/settings.php:546
 msgid "When should the renewal reminder be sent?"
 msgstr "Wann sollte die Erneuerungs-Erinnerung gesendet werden?"
 
-#: includes/admin/settings/settings.php:500
+#: includes/admin/settings/settings.php:551
 msgid "Free Subscription Email"
 msgstr "e-Mail Gratis-Mitgliedschaft"
 
-#: includes/admin/settings/settings.php:509
+#: includes/admin/settings/settings.php:560
 msgid "Check this to disable the email sent out when a free member registers."
 msgstr ""
 "Aktivieren Sie diese Option, um die e-Mail Benachrichtigung zu deaktivieren, "
 "wenn eine kostenlose Mitgliedschaft registriert wird."
 
-#: includes/admin/settings/settings.php:518
+#: includes/admin/settings/settings.php:569
 msgid ""
 "The subject line for the email sent to users when they sign up for a free "
 "membership."
@@ -1783,7 +1858,7 @@ msgstr ""
 "An Benutzer gesendete e-Mail-Betreffzeile, wenn sie sich für eine Gratis-"
 "Mitgliedschaft registriert haben."
 
-#: includes/admin/settings/settings.php:527
+#: includes/admin/settings/settings.php:578
 msgid ""
 "This is the email message that is sent to users when they sign up for a free "
 "account."
@@ -1791,18 +1866,18 @@ msgstr ""
 "An Benutzer gesendete e-Mail, wenn sie sich für eine Gratis-Mitgliedschaft "
 "registriert haben."
 
-#: includes/admin/settings/settings.php:532
+#: includes/admin/settings/settings.php:583
 msgid "Trial Subscription Email"
 msgstr "e-Mail Probe-Mitgliedschaft"
 
-#: includes/admin/settings/settings.php:541
+#: includes/admin/settings/settings.php:592
 msgid ""
 "Check this to disable the email sent out when a member signs up with a trial."
 msgstr ""
 "Aktivieren Sie diese Option, um die e-Mail Benachrichtigung zu deaktivieren, "
 "wenn eine Probe-Mitgliedschaft registriert wird."
 
-#: includes/admin/settings/settings.php:550
+#: includes/admin/settings/settings.php:601
 msgid ""
 "The subject line for the email sent to users when they sign up for a free "
 "trial."
@@ -1810,11 +1885,11 @@ msgstr ""
 "An Benutzer gesendete e-Mail Betreffzeile, wenn sie sich für einen Gratis-"
 "Testzugang registriert haben."
 
-#: includes/admin/settings/settings.php:555
+#: includes/admin/settings/settings.php:606
 msgid "Trial Email Message"
 msgstr "e-Mail Text"
 
-#: includes/admin/settings/settings.php:559
+#: includes/admin/settings/settings.php:610
 msgid ""
 "This is the email message that is sent to users when they sign up for a free "
 "trial."
@@ -1822,54 +1897,54 @@ msgstr ""
 "An Benutzer gesendete e-Mail, wenn sie sich für eine Gratis-Mitgliedschaft "
 "registriert haben."
 
-#: includes/admin/settings/settings.php:564
+#: includes/admin/settings/settings.php:615
 msgid "New User Notifications"
 msgstr "Neue Benutzer-Benachrichtigungen"
 
-#: includes/admin/settings/settings.php:569
+#: includes/admin/settings/settings.php:620
 msgid "Disable New User Notifications"
 msgstr "Deaktiviert"
 
-#: includes/admin/settings/settings.php:573
+#: includes/admin/settings/settings.php:624
 msgid ""
 "Check this option if you do NOT want to receive emails when new users signup"
 msgstr ""
 "Aktivieren Sie diese Option, wenn Sie KEINE e-mails von neuen Benutzer-"
 "Anmeldungen erhalten möchten."
 
-#: includes/admin/settings/settings.php:581
+#: includes/admin/settings/settings.php:632
 msgid "Available Template Tags"
 msgstr "Verfügbare Template Tags"
 
-#: includes/admin/settings/settings.php:583
+#: includes/admin/settings/settings.php:634
 msgid "will be replaced with the name of your site"
 msgstr "wird mit dem Namen Ihrer Website ersetzt"
 
-#: includes/admin/settings/settings.php:584
+#: includes/admin/settings/settings.php:635
 msgid "will be replaced with the user name of the person receiving the email"
 msgstr "wird mit dem Benutzernamen der Person, die das e-Mail erhält, ersetzt"
 
-#: includes/admin/settings/settings.php:585
+#: includes/admin/settings/settings.php:636
 msgid "will be replaced with the first name of the person receiving the email"
 msgstr "wird mit dem Vornamen der Person, die das e-Mail erhält, ersetzt"
 
-#: includes/admin/settings/settings.php:586
+#: includes/admin/settings/settings.php:637
 msgid "will be replaced with the last name of the person receiving the email"
 msgstr "wird mit dem Nachnamen der Person, die das e-Mail erhält,  ersetzt"
 
-#: includes/admin/settings/settings.php:587
+#: includes/admin/settings/settings.php:638
 msgid "will be replaced with the display name of the person receiving the email"
 msgstr "wird mit dem Anzeigenamen der Person, die das E-Mail erhält, ersetzt"
 
-#: includes/admin/settings/settings.php:588
+#: includes/admin/settings/settings.php:639
 msgid "will be replaced with the expiration date of subscription"
 msgstr "wird mit dem Ablaufdatum der Mitgliedschaft ersetzt"
 
-#: includes/admin/settings/settings.php:589
+#: includes/admin/settings/settings.php:640
 msgid "will be replaced with the name of the subscription"
 msgstr "wird mit dem Namen der Mitgliedschaft ersetzt"
 
-#: includes/admin/settings/settings.php:590
+#: includes/admin/settings/settings.php:641
 msgid ""
 "will be replaced with the unique, 32 character key created when the user is "
 "registered"
@@ -1877,27 +1952,27 @@ msgstr ""
 "wird mit einem einzigartigen, 32-stelligen Schlüssel getauscht, wenn der "
 "Benutzer registriert wird"
 
-#: includes/admin/settings/settings.php:591
+#: includes/admin/settings/settings.php:642
 msgid "will be replaced with the amount of the users last payment"
 msgstr "wird mit dem Betrag der letzten Zahlung des Benutzers ersetzt"
 
-#: includes/admin/settings/settings.php:601
+#: includes/admin/settings/settings.php:652
 msgid "Invoice Logo"
 msgstr "Rechnungs-Logo"
 
-#: includes/admin/settings/settings.php:605
+#: includes/admin/settings/settings.php:656
 msgid "Choose Logo"
 msgstr "Logo wählen"
 
-#: includes/admin/settings/settings.php:606
+#: includes/admin/settings/settings.php:657
 msgid "Upload a logo to display on the invoices."
 msgstr "Laden Sie ein Logo-Bild hoch, um es auf Ihren Rechnungen anzuzeigen."
 
-#: includes/admin/settings/settings.php:611
+#: includes/admin/settings/settings.php:662
 msgid "Company Name"
 msgstr "Firmenname"
 
-#: includes/admin/settings/settings.php:615
+#: includes/admin/settings/settings.php:666
 msgid ""
 "Enter the company name that will be shown on the invoice. This is only "
 "displayed if no logo image is uploaded above."
@@ -1905,94 +1980,96 @@ msgstr ""
 "Geben Sie den Firmennamen an, der auf der Rechnung angezeigt werden soll. "
 "Dieser wird nur angezeigt, wenn oben kein Logo-Bild hochgeladen wurde."
 
-#: includes/admin/settings/settings.php:624
+#: includes/admin/settings/settings.php:675
 msgid "Enter the personal name that will be shown on the invoice."
 msgstr ""
-"Geben Sie den persönlichen Namen ein, der auf der Rechnung gezeigt werden soll."
+"Geben Sie den persönlichen Namen ein, der auf der Rechnung gezeigt werden "
+"soll."
 
-#: includes/admin/settings/settings.php:629
+#: includes/admin/settings/settings.php:680
 msgid "Address Line 1"
 msgstr "Adresszeile 1"
 
-#: includes/admin/settings/settings.php:633
+#: includes/admin/settings/settings.php:684
 msgid "Enter the first address line that will appear on the invoice."
 msgstr ""
 "Geben Sie die erste Adresszeile ein, die auf der Rechnung erscheinen soll."
 
-#: includes/admin/settings/settings.php:638
+#: includes/admin/settings/settings.php:689
 msgid "Address Line 2"
 msgstr "Adresszeile 2"
 
-#: includes/admin/settings/settings.php:642
+#: includes/admin/settings/settings.php:693
 msgid "Enter the second address line that will appear on the invoice."
 msgstr ""
 "Geben Sie die zweite Adresszeile ein, die auf der Rechnung erscheinen soll."
 
-#: includes/admin/settings/settings.php:647
+#: includes/admin/settings/settings.php:698
 msgid "City, State, and Zip"
 msgstr "PLZ, Ort und Kanton (Bundesland)"
 
-#: includes/admin/settings/settings.php:651
+#: includes/admin/settings/settings.php:702
 msgid ""
 "Enter the city, state and zip/postal code that will appear on the invoice."
 msgstr ""
-"Geben Sie PLZ, Ort und Kanton (Bundesland) an, die auf der Rechnung erscheinen "
-"sollen."
+"Geben Sie PLZ, Ort und Kanton (Bundesland) an, die auf der Rechnung "
+"erscheinen sollen."
 
-#: includes/admin/settings/settings.php:660
+#: includes/admin/settings/settings.php:711
 msgid "Enter the email address that will appear on the invoice."
 msgstr "Geben Sie die e-Mail-Adresse an, die auf der Rechnung erscheinen soll."
 
-#: includes/admin/settings/settings.php:665
+#: includes/admin/settings/settings.php:716
 msgid "Header Text"
 msgstr "Kopfzeile"
 
-#: includes/admin/settings/settings.php:669
+#: includes/admin/settings/settings.php:720
 msgid ""
 "Enter the message you would like to be shown on the header of the invoice."
 msgstr ""
 "Geben Sie die Nachricht ein, die auf der Kopfzeile der Rechnung ausgewiesen "
 "werden soll."
 
-#: includes/admin/settings/settings.php:674
+#: includes/admin/settings/settings.php:725
 msgid "Notes"
 msgstr "Hinweise"
 
-#: includes/admin/settings/settings.php:678
-msgid "Enter additional notes you would like displayed below the invoice totals."
+#: includes/admin/settings/settings.php:729
+msgid ""
+"Enter additional notes you would like displayed below the invoice totals."
 msgstr ""
 "Zusätzliche Hinweise, die Sie unterhalb der Rechnungssummen anzeigen möchten."
 
-#: includes/admin/settings/settings.php:683
+#: includes/admin/settings/settings.php:734
 msgid "Footer Text"
 msgstr "Fusszeile"
 
-#: includes/admin/settings/settings.php:687
+#: includes/admin/settings/settings.php:738
 msgid ""
 "Enter the message you would like to be shown on the footer of the invoice."
 msgstr ""
 "Geben Sie die Nachricht ein, die auf der Fußzeile der Rechnung ausgewiesen "
 "werden soll."
 
-#: includes/admin/settings/settings.php:692
+#: includes/admin/settings/settings.php:743
 msgid "Characters not displaying correctly?"
 msgstr "Zeichen nicht korrekt angezeigt?"
 
-#: includes/admin/settings/settings.php:696
+#: includes/admin/settings/settings.php:747
 msgid ""
 "Check to enable the Free Sans/Free Serif font replacing Open Sans/Helvetica/"
 "Times. Only do this if you have characters which do not display correctly (e."
 "g. Greek characters)"
 msgstr ""
-"Aktivieren Sie die Funktion \"Free Sans/Free Serif font ersetzen mit Open Sans/"
-"Helvetica/Times\". Tun Sie dies nur, wenn Sie Zeichen haben, die nicht richtig "
-"angezeigt werden (zBsp. griechische Buchstaben)."
+"Aktivieren Sie die Funktion \"Free Sans/Free Serif font ersetzen mit Open "
+"Sans/Helvetica/Times\". Tun Sie dies nur, wenn Sie Zeichen haben, die nicht "
+"richtig angezeigt werden (zBsp. griechische Buchstaben)."
 
-#: includes/admin/settings/settings.php:707
+#: includes/admin/settings/settings.php:758
 msgid "Hide Premium Posts"
 msgstr "Premium Posts ausblenden?"
 
-#: includes/admin/settings/settings.php:711
+#: includes/admin/settings/settings.php:762
 msgid ""
 "Check this to hide all premium posts from queries when user is not logged in. "
 "Note, this will only hide posts that have the \"Paid Only?\" checkbox checked."
@@ -2001,11 +2078,11 @@ msgstr ""
 "verstecken, wenn der Benutzer nicht angemeldet ist. Hinweis: Dies versteckt "
 "nur Beiträge, die das \"Nur bezahlt? \" Kontrollkästchen aktiviert haben."
 
-#: includes/admin/settings/settings.php:716
+#: includes/admin/settings/settings.php:767
 msgid "Redirect Page"
 msgstr "Seite umleiten"
 
-#: includes/admin/settings/settings.php:733
+#: includes/admin/settings/settings.php:784
 msgid ""
 "This is the page non-subscribed users are redirected to when attempting to "
 "access a premium post or page"
@@ -2013,11 +2090,11 @@ msgstr ""
 "Dies ist die Seite, auf welche nicht-registrierte Benutzer weitergeleitet "
 "werden, wenn sie auf Premium-Inhalte zugreifen wollen."
 
-#: includes/admin/settings/settings.php:738
+#: includes/admin/settings/settings.php:789
 msgid "Redirect Default Login URL"
 msgstr "Standard-Weiterleitungs-Login URL"
 
-#: includes/admin/settings/settings.php:742
+#: includes/admin/settings/settings.php:793
 msgid ""
 "Check this to force the default login URL to redirect to the page specified "
 "below."
@@ -2025,11 +2102,11 @@ msgstr ""
 "Aktivieren Sie diese Option, um die Standard-Login URL zur Weiterleitung an "
 "die unten angegebene Seite zu zwingen."
 
-#: includes/admin/settings/settings.php:747
+#: includes/admin/settings/settings.php:798
 msgid "Login Page"
 msgstr "Login-Seite"
 
-#: includes/admin/settings/settings.php:764
+#: includes/admin/settings/settings.php:815
 msgid ""
 "This is the page the default login URL redirects to, if the option above is "
 "checked. This should be the page that contains the [login_form] short code."
@@ -2038,11 +2115,11 @@ msgstr ""
 "wenn die obere Option aktiviert ist. Dies sollte die Seite sein, welche den "
 "[login_form] Short Code beinhaltet."
 
-#: includes/admin/settings/settings.php:769
+#: includes/admin/settings/settings.php:820
 msgid "Prevent Account Sharing"
 msgstr "Verhindere Konto Sharing"
 
-#: includes/admin/settings/settings.php:773
+#: includes/admin/settings/settings.php:824
 msgid ""
 "Check this if you'd like to prevent multiple users from logging into the same "
 "account simultaneously."
@@ -2050,11 +2127,11 @@ msgstr ""
 "Aktivieren Sie diese Option, wenn Sie verhindern möchten, dass mehrere User "
 "gleichzeitig den selben Account verwenden."
 
-#: includes/admin/settings/settings.php:778
+#: includes/admin/settings/settings.php:829
 msgid "Email IPN reports"
 msgstr "e-Mail IPN Reports"
 
-#: includes/admin/settings/settings.php:782
+#: includes/admin/settings/settings.php:833
 msgid ""
 "Check this to send an email each time an IPN request is made with PayPal. The "
 "email will contain a list of all data sent. This is useful for debugging in "
@@ -2065,9 +2142,73 @@ msgstr ""
 "aller gesendeten Daten enthalten. Dies erleichtert die Fehlersuche, im Falle, "
 "dass etwas mit der PayPal-Integration nicht stimmt."
 
-#: includes/admin/settings/settings.php:793
+#: includes/admin/settings/settings.php:838
+msgid "Disable Form CSS"
+msgstr "Formular CSS deaktivieren"
+
+#: includes/admin/settings/settings.php:842
+msgid "Check this to disable all included form styling."
+msgstr "Option ankreuzen, um alle Formstylings zu deaktivieren."
+
+#: includes/admin/settings/settings.php:847
+msgid "Enable reCaptcha"
+msgstr "Aktiviere reCaptcha"
+
+#: includes/admin/settings/settings.php:851
+msgid "Check this to enable reCaptcha on the registration form."
+msgstr ""
+"Aktivieren Sie diese Option, um reCaptcha im Anmeldeformular einzuschalten."
+
+#: includes/admin/settings/settings.php:856
+msgid "reCaptcha Public Key"
+msgstr "reCaptcha öffentlicher Key"
+
+#: includes/admin/settings/settings.php:860
+msgid "This your own personal reCaptcha Public key. Go to"
+msgstr "Dies ist Ihr persönlicher, öffentlicher reCaptcha-Schlüssel. Gehe zu"
+
+#: includes/admin/settings/settings.php:860
+#: includes/admin/settings/settings.php:869
+msgid "your account"
+msgstr "dein Konto"
+
+#: includes/admin/settings/settings.php:860
+msgid "then click on your domain (or add a new one) to find your public key."
+msgstr ""
+"um Ihren öffentlichen Schlüssel zu finden und klicken Sie auf Ihre Domain "
+"(oder fügen Sie eine neue hinzu)."
+
+#: includes/admin/settings/settings.php:865
+msgid "reCaptcha Private Key"
+msgstr "Privater reCaptcha Schlüssel"
+
+#: includes/admin/settings/settings.php:869
+msgid "This your own personal reCaptcha Private key. Go to"
+msgstr "Dies ist Ihr persönlicher, privater reCaptcha Schlüssel. Gehe zu"
+
+#: includes/admin/settings/settings.php:869
+msgid "then click on your domain (or add a new one) to find your private key."
+msgstr ""
+"und klicken Sie auf Ihre Domain (oder fügen Sie eine neue hinzu), um Ihren "
+"privaten Schlüssel zu finden."
+
+#: includes/admin/settings/settings.php:874
+msgid "reCaptcha Style"
+msgstr "reCaptcha Style"
+
+#: includes/admin/settings/settings.php:889
+msgid "Choose the style you wish to use for your reCaptcha form"
+msgstr ""
+"Wählen Sie den Stil, den Sie für Ihr reCaptcha Formular verwenden möchten"
+
+#: includes/admin/settings/settings.php:900
 msgid "Save Options"
 msgstr "Optionen speichern"
+
+#: includes/admin/settings/settings.php:989
+#, php-format
+msgid "Your license key could not be activated. Error: %s"
+msgstr ""
 
 #: includes/admin/subscriptions/edit-subscription.php:6
 msgid "Edit Subscription Level:"
@@ -2130,15 +2271,16 @@ msgstr "Preis für diese Mitgliedschaftsstufe. Geben Sie 0 für Gratis ein."
 
 #: includes/admin/subscriptions/edit-subscription.php:72
 #: includes/admin/subscriptions/subscription-levels.php:175
+#: templates/paypal-express-confirm.php:16
 msgid "Signup Fee"
 msgstr "Anmeldegebühr"
 
 #: includes/admin/subscriptions/edit-subscription.php:76
 #: includes/admin/subscriptions/subscription-levels.php:179
 msgid ""
-"Optional signup fee to charge subscribers for the first billing cycle. Enter a "
-"negative number to give a discount on the first payment. This only applies to "
-"recurring subscriptions."
+"Optional signup fee to charge subscribers for the first billing cycle. Enter "
+"a negative number to give a discount on the first payment. This only applies "
+"to recurring subscriptions."
 msgstr ""
 "Den Mitgliedern eine optionale Anmeldegebühr für den ersten "
 "Abrechnungszeitraum in Rechnung stellen. Um einen Rabatt auf diese Zahlung zu "
@@ -2159,7 +2301,8 @@ msgstr ""
 #: includes/admin/subscriptions/edit-subscription.php:99
 #: includes/admin/subscriptions/subscription-levels.php:202
 msgid "The user role given to the member after signing up."
-msgstr "Die Benutzerrolle, die nach der Anmeldung an das Mitglied vergeben wird."
+msgstr ""
+"Die Benutzerrolle, die nach der Anmeldung an das Mitglied vergeben wird."
 
 #: includes/admin/subscriptions/edit-subscription.php:108
 msgid "Update Subscription"
@@ -2176,7 +2319,7 @@ msgid "Subscribers"
 msgstr "Mitglieder"
 
 #: includes/admin/subscriptions/subscription-levels.php:64
-#: templates/register.php:65
+#: templates/register.php:69
 msgid "unlimited"
 msgstr "unbegrenzt"
 
@@ -2230,16 +2373,16 @@ msgid "User Email"
 msgstr "Benutzer e-Mail"
 
 #: includes/class-rcp-export-members.php:40 templates/profile-editor.php:25
-#: templates/register-single.php:37 templates/register.php:32
+#: templates/register-single.php:37 templates/register.php:36
 msgid "First Name"
 msgstr "Vorname"
 
 #: includes/class-rcp-export-members.php:41 templates/profile-editor.php:29
-#: templates/register-single.php:41 templates/register.php:36
+#: templates/register-single.php:41 templates/register.php:40
 msgid "Last Name"
 msgstr "Letzter Name"
 
-#: includes/class-rcp-export-payments.php:42 includes/member-functions.php:568
+#: includes/class-rcp-export-payments.php:42 includes/member-functions.php:537
 msgid "Payment Type"
 msgstr "Zahlungstyp"
 
@@ -2247,7 +2390,21 @@ msgstr "Zahlungstyp"
 msgid "You do not have permission to export data."
 msgstr "Sie haben keine Berechtigung, Daten zu exportieren."
 
-#: includes/content-filters.php:129
+#: includes/class-rcp-member.php:62
+#, php-format
+msgid "Member's status changed from %s to %s"
+msgstr "Mitgliedsstatus geändert von %s zu %s"
+
+#: includes/class-rcp-member.php:127
+#, php-format
+msgid "Member's expiration changed from %s to %s"
+msgstr "Ablaufdatum von Mitglied ändert von %s zu %s"
+
+#: includes/content-filters.php:23
+msgid "This content is restricted to subscribers"
+msgstr ""
+
+#: includes/content-filters.php:100
 msgid "You need to have an active subscription to view this content."
 msgstr ""
 "Du musst ein aktive Mitgliedschaft besitzen um diesen Inhalt zu anzusehen."
@@ -2306,11 +2463,100 @@ msgstr "Neue Gratis Mitgliedschaft abonnieren auf"
 msgid "New trial subscription on "
 msgstr "Neue Probemitgliedschaft am"
 
-#: includes/gateways/paypal/paypal.php:166
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:110
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:194
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:266
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:99
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:272
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:400
+#: includes/gateways/stripe/functions.php:267
+#: includes/gateways/stripe/functions.php:432
+msgid "An unidentified error occurred."
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:121
+msgid "PayPal token creation failed."
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:122
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:206
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:278
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:111
+msgid "Error message:"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:123
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:207
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:279
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:112
+#: includes/member-functions.php:916 includes/member-functions.php:933
+#: includes/member-functions.php:949 includes/member-functions.php:965
+msgid "Error code:"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:137
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:237
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:310
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:137
+msgid "Something has gone wrong, please try again"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:151
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:164
+msgid ""
+"You have not configured PayPal API access. Please configure it in Restrict "
+"&rarr; Settings"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:205
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:277
+msgid "PayPal payment processing failed."
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:382
+#: includes/gateways/class-rcp-payment-gateway-paypal.php:268
+msgid "IPN report"
+msgstr "IPN Report"
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:110
+msgid "PayPal subscription creation failed."
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:168
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:641
+msgid "The card number you have entered is invalid"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:172
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:645
+msgid "The security code you have entered is invalid"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:176
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:649
+msgid "The zip / postal code you have entered is invalid"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:180
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:653
+msgid "The card holder name you have entered is invalid"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:184
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:657
+msgid "The card expiration month you have entered is invalid"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:188
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:661
+msgid "The card expiration year you have entered is invalid"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-paypal.php:229
 msgid "Duplicate Payment"
 msgstr "Doppelte Zahlung"
 
-#: includes/gateways/paypal/paypal.php:167
+#: includes/gateways/class-rcp-payment-gateway-paypal.php:230
 msgid ""
 "A duplicate payment was detected. The new payment was still recorded, so you "
 "may want to check into both payments."
@@ -2318,11 +2564,11 @@ msgstr ""
 "Doppelte Bezahlung wurde festgestellt. Die neue Zahlung wurde aufgezeichnet, "
 "bitte überprüfen Sie beide Zahlungen."
 
-#: includes/gateways/paypal/paypal.php:213
+#: includes/gateways/class-rcp-payment-gateway-paypal.php:249
 msgid "Invalid Currency Code"
 msgstr "Ungültiger Währungscode"
 
-#: includes/gateways/paypal/paypal.php:214
+#: includes/gateways/class-rcp-payment-gateway-paypal.php:250
 #, php-format
 msgid ""
 "The currency code in an IPN request did not match the site currency code. "
@@ -2331,26 +2577,125 @@ msgstr ""
 "Eine IPN Anfrage stimmt nicht mit dem Währungscode und dem Website-"
 "Währungscode überein. Zahlungsdaten: %s"
 
-#: includes/gateways/paypal/paypal.php:231
-msgid "IPN report"
-msgstr "IPN Report"
-
-#: includes/gateways/paypal/paypal.php:239
-msgid "Subscription Key Mismatch"
-msgstr "Mitgliedschaftsschlüssel stimmt nicht überein"
-
-#: includes/gateways/paypal/paypal.php:240
-#, php-format
-msgid ""
-"The subscription key in an IPN request did not match the subscription key "
-"recorded for the user. Payment data: %s"
-msgstr ""
-"Der Mitgliedschaftsschlüssel einer IPN Anfrage stimmt nicht mit dem für den "
-"Benutzer aufgezeichnet Abonnementschlüssel überein. Zahlungsdaten: %s"
-
-#: includes/gateways/paypal/paypal.php:408
+#: includes/gateways/class-rcp-payment-gateway-paypal.php:392
 msgid "Invalid IPN"
 msgstr "Ungültige IPN"
+
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:64
+msgid ""
+"Missing Stripe token, please try again or contact support if the issue "
+"persists."
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:161
+#, php-format
+msgid "Signup Fee for %s"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:163
+#, php-format
+msgid "Signup Discount for %s"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:193
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:210
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:227
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:243
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:259
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:321
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:338
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:355
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:371
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:387
+#: includes/gateways/stripe/functions.php:188
+#: includes/gateways/stripe/functions.php:205
+#: includes/gateways/stripe/functions.php:222
+#: includes/gateways/stripe/functions.php:238
+#: includes/gateways/stripe/functions.php:254
+#: includes/gateways/stripe/functions.php:370
+#: includes/gateways/stripe/functions.php:387
+#: includes/gateways/stripe/functions.php:403
+#: includes/gateways/stripe/functions.php:419 includes/member-functions.php:914
+#: includes/member-functions.php:931 includes/member-functions.php:947
+#: includes/member-functions.php:963 includes/member-functions.php:976
+msgid "An error occurred"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:195
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:212
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:229
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:245
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:261
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:323
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:340
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:357
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:373
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:389
+#: includes/gateways/stripe/functions.php:190
+#: includes/gateways/stripe/functions.php:207
+#: includes/gateways/stripe/functions.php:224
+#: includes/gateways/stripe/functions.php:240
+#: includes/gateways/stripe/functions.php:256
+#: includes/gateways/stripe/functions.php:372
+#: includes/gateways/stripe/functions.php:389
+#: includes/gateways/stripe/functions.php:405
+#: includes/gateways/stripe/functions.php:421
+#, php-format
+msgid "Error code: %s"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:424
+msgid "An error occurred, please contact the site administrator: "
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateways.php:57
+#: includes/gateways/class-rcp-payment-gateways.php:58
+msgid "Manual Payment"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateways.php:63
+msgid "PayPal Standard"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateways.php:68
+msgid "PayPal Express"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateways.php:72
+#: includes/gateways/class-rcp-payment-gateways.php:77
+msgid "Credit / Debit Card"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateways.php:73
+msgid "PayPal Pro"
+msgstr ""
+
+#: includes/gateways/class-rcp-payment-gateways.php:78
+msgid "Stripe"
+msgstr ""
+
+#: includes/gateways/gateway-functions.php:231
+msgid "Your account does not support updating your billing card"
+msgstr ""
+
+#: includes/gateways/stripe/functions.php:105
+msgid "Missing Stripe token"
+msgstr ""
+
+#: includes/install.php:92 templates/register-single.php:109
+#: templates/register.php:120
+msgid "Register"
+msgstr "Registrieren"
+
+#: includes/install.php:104
+msgid "Welcome"
+msgstr ""
+
+#: includes/install.php:105
+msgid ""
+"Welcome! This is your success page where members are redirected after "
+"completing their registration."
+msgstr ""
 
 #: includes/invoice-functions.php:43
 msgid "This payment record does not exist"
@@ -2377,7 +2722,7 @@ msgstr "Rechnungs Datum"
 msgid "Invoice ID"
 msgstr "Rechnungs ID"
 
-#: includes/invoice-functions.php:141 templates/subscription.php:47
+#: includes/invoice-functions.php:141 templates/subscription.php:50
 msgid "Payment Method"
 msgstr "Zahlungart"
 
@@ -2397,65 +2742,58 @@ msgstr "Total"
 msgid "Additional Notes"
 msgstr "Zusätzliche Hinweise"
 
-#: includes/login-functions.php:57 includes/registration-functions.php:284
+#: includes/login-functions.php:80 includes/registration-functions.php:334
 msgid "Invalid username"
 msgstr "Ungültiger Benutzername"
 
-#: includes/login-functions.php:62 includes/registration-functions.php:300
+#: includes/login-functions.php:85 includes/registration-functions.php:350
 msgid "Please enter a password"
 msgstr "Bitte ein Passwort eingeben"
 
-#: includes/login-functions.php:69
+#: includes/login-functions.php:92
 msgid "Incorrect password"
 msgstr "Ungültiges Passwort"
 
-#: includes/member-functions.php:390
-#, php-format
-msgid "Member's expiration changed from %s to %s"
-msgstr "Ablaufdatum von Mitglied ändert von %s zu %s"
-
-#: includes/member-functions.php:426 templates/register.php:64
-msgid "free"
-msgstr "gratis"
-
-#: includes/member-functions.php:496
-#, php-format
-msgid "Member's status changed from %s to %s"
-msgstr "Mitgliedsstatus geändert von %s zu %s"
-
-#: includes/member-functions.php:579
+#: includes/member-functions.php:548
 msgid "No payments recorded"
 msgstr "Keine Zahlungen erfasst"
 
-#: includes/member-functions.php:729
+#: includes/member-functions.php:740
 msgid "Please enter a valid email address"
 msgstr "Bitte eine gültige e-Mail Adresse eingeben"
 
-#: includes/member-functions.php:734
+#: includes/member-functions.php:745
 msgid "The email you entered belongs to another user. Please use another."
 msgstr ""
 "Die eingegebene e-Mail Adresse gehört zu einem anderen Benutzer. Bitte "
 "benutzen Sie eine andere."
 
-#: includes/member-functions.php:740
+#: includes/member-functions.php:751
 msgid "The passwords you entered do not match. Please try again."
 msgstr ""
 "Die eingegebenen Passwörter stimmen nicht überein. Bitte versuchen Sie es "
 "erneut."
 
-#: includes/member-functions.php:760
+#: includes/member-functions.php:773
 msgid "There was an error updating your profile. Please try again."
 msgstr ""
 "In der Aktualisierung Ihres Profils ist ein Fehler aufgetreten. Bitte "
 "versuchen Sie es erneut."
 
-#: includes/member-functions.php:787
+#: includes/member-functions.php:800
 msgid "Please enter a password, and confirm it"
 msgstr "Bitte ein Passwort eingeben und bestätigen"
 
-#: includes/member-functions.php:791 includes/registration-functions.php:304
+#: includes/member-functions.php:804 includes/registration-functions.php:354
 msgid "Passwords do not match"
 msgstr "Passwörter stimmen nicht überein"
+
+#: includes/member-functions.php:1042
+#, php-format
+msgid ""
+"There was a problem cancelling the subscription, please contact customer "
+"support. Error: %s"
+msgstr ""
 
 #: includes/misc-functions.php:113
 msgid "US Dollars (&#36;)"
@@ -2563,58 +2901,64 @@ msgstr "Russischer Rubel"
 
 #: includes/process-data.php:23 includes/process-data.php:42
 #: includes/process-data.php:63 includes/process-data.php:111
-#: includes/process-data.php:184 includes/process-data.php:217
-#: includes/process-data.php:250 includes/process-data.php:285
-#: includes/process-data.php:327 includes/process-data.php:335
-#: includes/process-data.php:345 includes/process-data.php:363
-#: includes/process-data.php:373 includes/process-data.php:385
-#: includes/process-data.php:394 includes/process-data.php:403
-#: includes/process-data.php:412
+#: includes/process-data.php:187 includes/process-data.php:220
+#: includes/process-data.php:253 includes/process-data.php:289
+#: includes/process-data.php:332 includes/process-data.php:340
+#: includes/process-data.php:348 includes/process-data.php:359
+#: includes/process-data.php:377 includes/process-data.php:387
+#: includes/process-data.php:399 includes/process-data.php:408
+#: includes/process-data.php:417 includes/process-data.php:426
 msgid "You do not have permission to perform this action."
 msgstr "Sie haben keine Berechtigung, diese Aktion durchzuführen."
 
-#: includes/registration-functions.php:47
+#: includes/registration-functions.php:58
 msgid "Please choose a subscription level"
 msgstr "Bitte wählen Sie eine Mitgliedschaft aus"
 
-#: includes/registration-functions.php:52
+#: includes/registration-functions.php:65
 msgid "You may only sign up for a free trial once"
 msgstr ""
 "Du kannst dich nur einmal für die kostenlose Mitgliedschaft registrieren."
 
-#: includes/registration-functions.php:58
+#: includes/registration-functions.php:78
 msgid "The discount you entered is invalid"
 msgstr "Der von Ihnen eingegebene Rabattcode ist ungültig."
 
-#: includes/registration-functions.php:61
+#: includes/registration-functions.php:87
 msgid "You can only use the discount code once"
 msgstr "Sie können den Rabattcode nur einmal benutzen."
 
-#: includes/registration-functions.php:66
+#: includes/registration-functions.php:108
 msgid "Free subscriptions cannot be automatically renewed"
 msgstr "Die Gratis Mitgliedschaft kann nicht automatisch erneuert werden"
 
-#: includes/registration-functions.php:280
+#: includes/registration-functions.php:330
 msgid "Username already taken"
 msgstr "Benutzername bereits vergeben"
 
-#: includes/registration-functions.php:288
+#: includes/registration-functions.php:338
 msgid "Please enter a username"
 msgstr "Bitte einen Benutzernamen eingeben"
 
-#: includes/registration-functions.php:292
+#: includes/registration-functions.php:342
 msgid "Invalid email"
 msgstr "Ungültige e-Mail"
 
-#: includes/registration-functions.php:296
+#: includes/registration-functions.php:346
 msgid "Email already registered"
 msgstr "e-Mail bereits registriert"
 
 #: includes/scripts.php:26
+msgid ""
+"Are you sure you wish to revoke this member's access? This will not cancel "
+"their payment plan."
+msgstr ""
+
+#: includes/scripts.php:27
 msgid "Are you sure you wish to cancel this member's subscription?"
 msgstr "Sind Sie sicher, dass Sie Ihre Mitgliedschaft löschen möchten?"
 
-#: includes/scripts.php:27
+#: includes/scripts.php:28
 msgid ""
 "If you delete this subscription, all members registered with this level will "
 "be canceled. Proceed?"
@@ -2622,7 +2966,7 @@ msgstr ""
 "Wenn Sie diese Mitgliedschaftsstufe löschen, werden alle mit dieser Stufe "
 "registrierten Mitglieder aufgehoben werden. Weiterfahren?"
 
-#: includes/scripts.php:28
+#: includes/scripts.php:29
 msgid ""
 "Are you sure you want to delete this payment? This action is irreversible. "
 "Proceed?"
@@ -2630,17 +2974,21 @@ msgstr ""
 "Sind Sie sicher, dass Sie diese Bezahlung löschen möchten? Diese Aktion kann "
 "nicht rückgängig gemacht werden. Weiterfahren?"
 
-#: includes/scripts.php:29
+#: includes/scripts.php:30
 msgid "You must choose a username"
 msgstr "Du musst einen Benutzernamen wählen"
 
-#: includes/scripts.php:32
+#: includes/scripts.php:33
 msgid "Use as Logo"
 msgstr "Als Logo nutzen"
 
-#: includes/scripts.php:33
+#: includes/scripts.php:34
 msgid "Choose a Logo"
 msgstr "Wähle ein Logo"
+
+#: includes/scripts.php:107
+msgid "Please Wait . . . "
+msgstr ""
 
 #: includes/shortcodes.php:155
 msgid "You are already registered and have an active subscription."
@@ -2730,9 +3078,36 @@ msgstr "Mitgliedschaft bearbeiten"
 msgid "Add Subscription"
 msgstr "Mitgliedschaft hinzufügen"
 
-#: includes/user-page-columns.php:24
-msgid "View Details"
-msgstr "Details zeigen"
+#: restrict-content-pro.php:139
+msgid ""
+"Your version of PHP is below the minimum version of PHP required by Restrict "
+"Content Pro. Please contact your host and request that your version be "
+"upgraded to 5.3 or later."
+msgstr ""
+
+#: templates/card-form.php:3 templates/card-update-form.php:4
+msgid "Card Number"
+msgstr ""
+
+#: templates/card-form.php:7 templates/card-update-form.php:8
+msgid "Card CVC"
+msgstr ""
+
+#: templates/card-form.php:11 templates/card-update-form.php:12
+msgid "Card ZIP or Postal Code"
+msgstr ""
+
+#: templates/card-form.php:15 templates/card-update-form.php:16
+msgid "Name on Card"
+msgstr ""
+
+#: templates/card-form.php:19 templates/card-update-form.php:20
+msgid "Expiration (MM/YYYY)"
+msgstr ""
+
+#: templates/card-update-form.php:40
+msgid "Update Card"
+msgstr ""
 
 #: templates/change-password.php:7
 msgid "Password changed successfully"
@@ -2751,7 +3126,7 @@ msgid "Change Password"
 msgstr "Passwort ändern"
 
 #: templates/login.php:13 templates/register-single.php:45
-#: templates/register.php:40
+#: templates/register.php:44
 msgid "Password"
 msgstr "Passwort"
 
@@ -2766,6 +3141,35 @@ msgstr "Passwort vergessen?"
 #: templates/login.php:30
 msgid "Logout"
 msgstr "abmelden"
+
+#: templates/paypal-express-confirm.php:3
+msgid "Please confirm your payment"
+msgstr ""
+
+#: templates/paypal-express-confirm.php:5
+msgid "PayPal Status:"
+msgstr ""
+
+#: templates/paypal-express-confirm.php:6
+msgid "Email:"
+msgstr ""
+
+#: templates/paypal-express-confirm.php:13
+msgid "Recurs"
+msgstr ""
+
+#: templates/paypal-express-confirm.php:18
+msgid "Subscription Cost"
+msgstr ""
+
+#: templates/paypal-express-confirm.php:27
+#, php-format
+msgid "Every %d %s(s)"
+msgstr ""
+
+#: templates/paypal-express-confirm.php:49
+msgid "Confirm"
+msgstr ""
 
 #: templates/profile-editor.php:16
 msgid "Success"
@@ -2815,65 +3219,168 @@ msgstr "Neues Konto registrieren"
 msgid "Upgrade Your Subscription"
 msgstr "Erweitere Deine Mitgliedschaft"
 
-#: templates/register-single.php:49 templates/register.php:44
+#: templates/register-single.php:49 templates/register.php:48
 msgid "Password Again"
 msgstr "Passwort wiederholen"
 
-#: templates/register-single.php:62 templates/register.php:80
+#: templates/register-single.php:62 templates/register.php:84
 msgid "Discount Code"
 msgstr "Rabattcode"
 
-#: templates/register-single.php:63 templates/register.php:81
+#: templates/register-single.php:63 templates/register.php:85
 msgid "Valid"
 msgstr "Gültig"
 
-#: templates/register-single.php:64 templates/register.php:82
+#: templates/register-single.php:64 templates/register.php:86
 msgid "Invalid"
 msgstr "Nicht zulässig"
 
-#: templates/register-single.php:85 templates/register.php:102
+#: templates/register-single.php:85 templates/register.php:106
 msgid "Choose Your Payment Method"
 msgstr "Wählen Sie Ihre Zahlungsmethode aus"
 
-#: templates/register-single.php:109 templates/register.php:116
-msgid "Register"
-msgstr "Registrieren"
-
-#: templates/register.php:58
+#: templates/register.php:62
 msgid "Choose your subscription level"
 msgstr "Bitte wähle eine Stufe aus"
 
-#: templates/register.php:72
+#: templates/register.php:68
+msgid "free"
+msgstr "gratis"
+
+#: templates/register.php:76
 msgid "You have not created any subscription levels yet"
 msgstr "Sie Haben noch keine Mitgliedschaftsstufe erstellt."
 
-#: templates/subscription.php:15
+#: templates/subscription.php:10
+msgid "Your profile has been successfully cancelled."
+msgstr ""
+
+#: templates/subscription.php:18
 msgid "Renewal Date"
 msgstr "Erneuerungsdatum"
 
-#: templates/subscription.php:30
+#: templates/subscription.php:33
 msgid "Renew your subscription"
 msgstr "Verlängern Sie Ihre Mitgliedschaft"
 
-#: templates/subscription.php:32
+#: templates/subscription.php:35
 msgid "Upgrade your subscription"
 msgstr "Erweitere Deine Mitgliedschaft"
 
-#: templates/subscription.php:34
+#: templates/subscription.php:37
 msgid "Cancel your subscription"
 msgstr "Ihre Anmeldung löschen"
 
-#: templates/subscription.php:45
+#: templates/subscription.php:48
 msgid "Invoice #"
 msgstr "Rechnung #"
 
-#: templates/subscription.php:62
+#: templates/subscription.php:65
 msgid "PDF Receipt"
 msgstr "PDF Empfang"
 
-#: templates/subscription.php:66
+#: templates/subscription.php:69
 msgid "You have not made any payments."
 msgstr "Sie haben keine Zahlungen geleistet."
+
+#~ msgid "Help Documentation"
+#~ msgstr "Hilfe Seiten"
+
+#~ msgid "Index"
+#~ msgstr "Verzeichnis"
+
+#~ msgid "Finding Documentation and About this Help Page"
+#~ msgstr "Finde Dokumentation und Über diese Hilfe-Seite"
+
+#~ msgid "Quick Video Tutorials"
+#~ msgstr "Kurz-Video Tutorials"
+
+#~ msgid "Restricting Post/Page Content"
+#~ msgstr "Beitrags / Seiten Inhalt beschränken "
+
+#~ msgid "Frequently Asked Questions"
+#~ msgstr "Häufig gestellte Fragen"
+
+#~ msgid "Short Code Reference"
+#~ msgstr "Short Code Referenz"
+
+#~ msgid "Template Tag Reference"
+#~ msgstr "Template Tag Referenz"
+
+#~ msgid "Filter Reference"
+#~ msgstr "Referenz filtern"
+
+#~ msgid "Action Reference"
+#~ msgstr "Aktionsreferenz"
+
+#~ msgid "Details"
+#~ msgstr "Details"
+
+#~ msgid "View Member Details:"
+#~ msgstr "Mitglied Details zeigen"
+
+#~ msgid "Go Back"
+#~ msgstr "Gehe zurück"
+
+#~ msgid "Edit Member"
+#~ msgstr "Mitglied bearbeiten"
+
+#~ msgid "Subscription key"
+#~ msgstr "Mitgliedschaftsschlüssel"
+
+#~ msgid "Signup Method"
+#~ msgstr "Anmelde Art"
+
+#~ msgid "Regular user signup"
+#~ msgstr "Normale Benutzer-Anmeldung"
+
+#~ msgid "Manually added by an admin"
+#~ msgstr "Von Administrator manuell hinzugefügt"
+
+#~ msgid "Member Notes"
+#~ msgstr "Mitglieder Hinweise"
+
+#~ msgid "Signup Form"
+#~ msgstr "Anmelde Formular"
+
+#~ msgid ""
+#~ "Use PayPal in Sandbox mode. This allows you to test the plugin with the <a "
+#~ "href=\"http://developer.paypal.com\">PayPal test account</a>"
+#~ msgstr ""
+#~ "Verwenden Sie PayPal im Sandbox-Modus. So können Sie das Plugin mit dem <a "
+#~ "href=\"http://developer.paypal.com\">PayPal Testkonto</a> testen."
+
+#~ msgid "jQuery Validation"
+#~ msgstr "jQuery Validierung"
+
+#~ msgid ""
+#~ "Check this to enable live, front end form validation. If this is disabled, "
+#~ "all validation will be done server side and will require a page reload."
+#~ msgstr ""
+#~ "Aktivieren Sie diese Option um live, Front-End Formularvalidierung zu "
+#~ "ermöglichen. Ist diese Option deaktiviert, werden alle Validierungen "
+#~ "serverseitig durchgeführt. Dies verlangt Neuladen der Seite."
+
+#~ msgid "SSL"
+#~ msgstr "SSL"
+
+#~ msgid ""
+#~ "Check this option if your registration page is using the https:// "
+#~ "protocol. This will be the case if you have an SSL certificate installed."
+#~ msgstr "Überprüfen"
+
+#~ msgid "Subscription Key Mismatch"
+#~ msgstr "Mitgliedschaftsschlüssel stimmt nicht überein"
+
+#~ msgid ""
+#~ "The subscription key in an IPN request did not match the subscription key "
+#~ "recorded for the user. Payment data: %s"
+#~ msgstr ""
+#~ "Der Mitgliedschaftsschlüssel einer IPN Anfrage stimmt nicht mit dem für "
+#~ "den Benutzer aufgezeichnet Abonnementschlüssel überein. Zahlungsdaten: %s"
+
+#~ msgid "View Details"
+#~ msgstr "Details zeigen"
 
 #~ msgid ""
 #~ "Check this if you'd like to prevents multiple users from logging into the "
