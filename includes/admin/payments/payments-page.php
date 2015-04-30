@@ -135,7 +135,7 @@ function rcp_payments_page() {
 					<div class="tablenav-pages alignright">
 						<?php
 
-							$base = 'admin.php?' . esc_url( remove_query_arg( 'p', $_SERVER['QUERY_STRING'] ) ) . '%_%';
+							$base = 'admin.php?' . remove_query_arg( 'p', $_SERVER['QUERY_STRING'] ) . '%_%';
 
 							echo paginate_links( array(
 								'base' 		=> $base,

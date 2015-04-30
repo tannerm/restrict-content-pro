@@ -192,7 +192,7 @@ function rcp_members_page() {
 					<div class="tablenav-pages alignright">
 						<?php
 							$query_string = $_SERVER['QUERY_STRING'];
-							$base = 'admin.php?' . esc_url( remove_query_arg('p', $query_string) ) . '%_%';
+							$base = 'admin.php?' . remove_query_arg( 'p', $query_string ) . '%_%';
 							echo paginate_links( array(
 								'base' => $base,
 								'format' => '&p=%#%',
