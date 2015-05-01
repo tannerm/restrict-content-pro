@@ -13,7 +13,7 @@ function rcp_admin_notices() {
 	}
 
 	if( rcp_check_if_upgrade_needed() ) {
-		echo '<div class="error"><p>' . __( 'The Restrict Content Pro database needs updated: ', 'rcp' ) . ' ' . '<a href="' . esc_url( add_query_arg( 'rcp-action', 'upgrade', admin_url() ) ) . '">' . __( 'upgrade now', 'rcp' ) . '</a></p></div>';
+		echo '<div class="error"><p>' . __( 'The Restrict Content Pro database needs to be updated: ', 'rcp' ) . ' ' . '<a href="' . esc_url( add_query_arg( 'rcp-action', 'upgrade', admin_url() ) ) . '">' . __( 'upgrade now', 'rcp' ) . '</a></p></div>';
 	}
 
 	if( isset( $_GET['rcp-db'] ) && $_GET['rcp-db'] == 'updated' ) {
