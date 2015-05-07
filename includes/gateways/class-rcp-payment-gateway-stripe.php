@@ -517,9 +517,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// failed payment
 					if ( $event->type == 'charge.failed' ) {
 
-						// send email alerting the user of the failed payment
-						rcp_email_failed_payment_notice( $invoice );
-
 						do_action( 'rcp_stripe_charge_failed', $invoice );
 
 						die( 'rcp_stripe_charge_failed action fired successfully' );
