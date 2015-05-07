@@ -170,7 +170,7 @@ function rcp_members_page() {
 									<?php if(isset($_GET['status']) && $_GET['status'] == 'cancelled') { ?>
 										| <a href="<?php echo esc_url( add_query_arg('activate_member', $member->ID, $current_page) ); ?>" class="rcp_activate"><?php _e('Enable Access', 'rcp'); ?></a>
 									<?php } elseif( (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status'])) {  ?>
-										| <a href="<?php echo esc_url( add_query_arg('revoke_access', $member->ID, $current_page) ); ?>" class="rcp_revoke"><?php _e('Reoke Access', 'rcp'); ?></a>
+										| <a href="<?php echo esc_url( add_query_arg('revoke_access', $member->ID, $current_page) ); ?>" class="rcp_revoke"><?php _e('Revoke Access', 'rcp'); ?></a>
 									<?php } ?>
 									<?php if( rcp_can_member_cancel( $member->ID ) ) { ?>
 										| <a href="<?php echo wp_nonce_url( add_query_arg('cancel_member', $member->ID, $current_page ), 'rcp-cancel-nonce' ); ?>" class="rcp_cancel"><?php _e('Cancel', 'rcp'); ?></a>
@@ -192,7 +192,7 @@ function rcp_members_page() {
 					<div class="tablenav-pages alignright">
 						<?php
 							$query_string = $_SERVER['QUERY_STRING'];
-							$base = 'admin.php?' . esc_url( remove_query_arg('p', $query_string) ) . '%_%';
+							$base = 'admin.php?' . remove_query_arg( 'p', $query_string ) . '%_%';
 							echo paginate_links( array(
 								'base' => $base,
 								'format' => '&p=%#%',

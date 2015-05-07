@@ -146,6 +146,10 @@ function rcp_stripe_create_discount() {
 		return; // Old Stripe gateway is active
 	}
 
+	if( ! rcp_is_gateway_enabled( 'stripe' ) ) {
+		return;
+	}
+
 	global $rcp_options;
 
 	if( ! class_exists( 'Stripe' ) ) {
@@ -288,6 +292,10 @@ function rcp_stripe_update_discount() {
 
 	if( function_exists( 'rcp_stripe_add_discount' ) ) {
 		return; // Old Stripe gateway is active
+	}
+
+	if( ! rcp_is_gateway_enabled( 'stripe' ) ) {
+		return;
 	}
 
 	global $rcp_options;
