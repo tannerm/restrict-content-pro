@@ -301,7 +301,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
 
-					$this->renew_member( true );
+					$member->renew( true );
 
 					do_action( 'rcp_ipn_subscr_payment', $user_id );
 
@@ -357,7 +357,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			            case 'completed' :
 
 							// set this user to active
-							$this->renew_member();
+							$member->renew();
 
 							$rcp_payments->insert( $payment_data );
 
