@@ -257,13 +257,13 @@ function rcp_process_registration() {
 
 					// activate the user's trial subscription
 					rcp_set_status( $user_data['id'], 'active' );
-					rcp_email_subscription_status( $user_id, 'trial' );
+					rcp_email_subscription_status( $user_data['id'], 'trial' );
 
 				} else {
 
 					// set the user's status to free
 					rcp_set_status( $user_data['id'], 'free' );
-					rcp_email_subscription_status( $user_id, 'free' );
+					rcp_email_subscription_status( $user_data['id'], 'free' );
 
 				}
 
