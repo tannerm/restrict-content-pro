@@ -41,7 +41,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		}
 
-		if( ! class_exists( 'Stripe' ) ) {
+		if( ! class_exists( 'Stripe\Stripe' ) ) {
 			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
 		}
 

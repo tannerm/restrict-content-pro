@@ -886,7 +886,7 @@ function rcp_cancel_member_payment_profile( $member_id = 0 ) {
 
 	if( rcp_is_stripe_subscriber( $member_id ) ) {
 
-		if( ! class_exists( 'Stripe' ) ) {
+		if( ! class_exists( 'Stripe\Stripe' ) ) {
 			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
 		}
 
