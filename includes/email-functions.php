@@ -31,6 +31,10 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 
 		case "active" :
 
+			if( rcp_is_trialing( $user_id ) ) {
+				break;
+			}
+
 			if( ! isset( $rcp_options['disable_active_email'] ) ) {
 
 				$message = isset( $rcp_options['active_email'] ) ? $rcp_options['active_email'] : '';
