@@ -120,7 +120,7 @@ function rcp_stripe_update_billing_card( $member_id = 0, $member_obj ) {
 	}
 
 	\Stripe\Stripe::setApiKey( $secret_key );
-	$customer = Stripe_Customer::retrieve( $customer_id );
+	$customer = Stripe\Customer::retrieve( $customer_id );
 
 	$customer->card = $_POST['stripeToken']; // obtained with stripe.js
 	$customer->save();
