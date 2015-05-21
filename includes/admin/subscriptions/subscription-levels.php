@@ -140,7 +140,7 @@ function rcp_member_levels_page()
 										}
 										?>
 									</select>
-									<p class="description"><?php _e('Level of accesss this subscription gives. Leave at 0 for default or you are unsure what this is.', 'rcp'); ?></p>
+									<p class="description"><?php _e('Level of access this subscription gives. Leave None for default or you are unsure what this is.', 'rcp'); ?></p>
 								</td>
 							</tr>
 							<tr class="form-field">
