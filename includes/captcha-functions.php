@@ -10,9 +10,8 @@ function rcp_show_captcha() {
 	// reCaptcha
 	if( isset( $rcp_options['enable_recaptcha'] ) && ! empty( $rcp_options['recaptcha_public_key'] ) ) {
 		$publickey = trim( $rcp_options['recaptcha_public_key'] );
-		$ssl = isset( $rcp_options['ssl'] );
-		echo '<script type="text/javascript"> var RecaptchaOptions = { theme : "' . $rcp_options['recaptcha_style'] . '" };</script>';
-		echo '<p id="rcp_recaptcha">' . recaptcha_get_html( $publickey, null, $ssl ) . '</p>';
+		echo '<script type="text/javascript"> var RecaptchaOptions = { theme : "' . esc_attr( $rcp_options['recaptcha_style'] ) . '" };</script>';
+		echo '<p id="rcp_recaptcha">' . recaptcha_get_html( $publickey, null, is_ssl() ) . '</p>';
 	}
 }
 add_action( 'rcp_before_registration_submit_field', 'rcp_show_captcha', 100 );
