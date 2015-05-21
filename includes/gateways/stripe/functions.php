@@ -312,7 +312,7 @@ function rcp_stripe_update_discount() {
 
 	\Stripe\Stripe::setApiKey( $secret_key );
 
-	if ( ! rcp_stripe_does_coupon_exists( $_POST['rcp_discount'] ) ) {
+	if ( ! rcp_stripe_does_coupon_exists( $_POST['code'] ) ) {
 
 		try {
 
@@ -473,5 +473,6 @@ function rcp_stripe_does_coupon_exists( $code ) {
 	} catch ( Exception $e ) {
 		$exists = false;
 	}
+
 	return $exists;
 }
