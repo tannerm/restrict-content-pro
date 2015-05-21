@@ -224,3 +224,22 @@ function rcp_email_on_activation( $status, $user_id ) {
 
 }
 add_action( 'rcp_set_status', 'rcp_email_on_activation', 10, 2 );
+
+/**
+ * Triggers the cancellation notice when an account is marked as active
+ *
+ * @access  public
+ * @since   2.1
+ * @return  void
+ */
+function rcp_email_on_cancellation( $status, $user_id ) {
+
+	if( 'cancelled' == $status ) {
+
+		// send welcome email
+		rcp_email_subscription_status( $user_id, 'cancelled' );
+
+	}
+
+}
+add_action( 'rcp_set_status', 'rcp_email_on_cancellation', 10, 2 );
