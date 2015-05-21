@@ -3,11 +3,9 @@
 // function to create the DB / Options / Defaults
 function rcp_options_install() {
    	global $wpdb,$rcp_db_name, $rcp_db_version, $rcp_discounts_db_name, $rcp_discounts_db_version, 
-   	$rcp_payments_db_name, $rcp_payments_db_version, $rcp_options;
+   	$rcp_payments_db_name, $rcp_payments_db_version;
 
-   	if( ! is_array( $rcp_options ) ) {
-   		$rcp_options = array();
-   	}
+   	$rcp_options = get_option( 'rcp_settings', array() );
 
 	// create the RCP subscription level database table
 	if ($wpdb->get_var( "show tables like '$rcp_db_name'" ) != $rcp_db_name ) {
