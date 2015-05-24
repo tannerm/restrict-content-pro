@@ -95,7 +95,7 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
-								<div class="description"><?php _e( 'Choose the page that has the [register_form] short code', 'rcp' ); ?></div>
+								<div class="description"><?php _e( 'Choose the page that has the [register_form] short code.', 'rcp' ); ?></div>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -118,7 +118,7 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
-								<div class="description"><?php _e( 'This is the page users are redirected to after a successful registration', 'rcp' ); ?></div>
+								<div class="description"><?php _e( 'This is the page users are redirected to after a successful registration.', 'rcp' ); ?></div>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -131,7 +131,7 @@ function rcp_settings_page() {
 									<option value="2"<?php selected( '2', rcp_get_auto_renew_behavior() ); ?>><?php _e( 'Never auto renew', 'rcp' ); ?></option>
 									<option value="3"<?php selected( '3', rcp_get_auto_renew_behavior() ); ?>><?php _e( 'Let customer choose whether to auto renew', 'rcp' ); ?></option>
 								</select>
-								<div class="description"><?php _e( 'Select the auto renew behavior you would like subscription levels to have', 'rcp' ); ?></div>
+								<div class="description"><?php _e( 'Select the auto renew behavior you would like subscription levels to have.', 'rcp' ); ?></div>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -253,7 +253,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[stripe_test_publishable]" style="width: 300px;" name="rcp_settings[stripe_test_publishable]" value="<?php if(isset($rcp_options['stripe_test_publishable'])) { echo $rcp_options['stripe_test_publishable']; } ?>"/>
-								<div class="description"><?php _e('Enter your test publishable key', 'rcp'); ?></div>
+								<div class="description"><?php _e('Enter your test publishable key.', 'rcp'); ?></div>
 							</td>
 						</tr>
 						<tr>
@@ -262,7 +262,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[stripe_live_secret]" style="width: 300px;" name="rcp_settings[stripe_live_secret]" value="<?php if(isset($rcp_options['stripe_live_secret'])) { echo $rcp_options['stripe_live_secret']; } ?>"/>
-								<div class="description"><?php _e('Enter your live secret key', 'rcp'); ?></div>
+								<div class="description"><?php _e('Enter your live secret key.', 'rcp'); ?></div>
 							</td>
 						</tr>
 						<tr>
@@ -271,7 +271,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[stripe_live_publishable]" style="width: 300px;" name="rcp_settings[stripe_live_publishable]" value="<?php if(isset($rcp_options['stripe_live_publishable'])) { echo $rcp_options['stripe_live_publishable']; } ?>"/>
-								<div class="description"><?php _e('Enter your live publishable key', 'rcp'); ?></div>
+								<div class="description"><?php _e('Enter your live publishable key.', 'rcp'); ?></div>
 							</td>
 						</tr>
 						<tr>
@@ -296,7 +296,7 @@ function rcp_settings_page() {
 						<tr>
 							<th><?php _e( 'PayPal API Credentials', 'rcp' ); ?></th>
 							<td>
-								<p><?php _e( 'The PayPal API credentials are required in order to use PayPal Express, PayPal Pro, and to support advanced subscription cancellation options in PayPal Standard. Test API credentials can be obtained at <a href="http://docs.pippinsplugins.com/article/826-setting-up-paypal-sandbox-accounts" target="_blank">developer.paypal.com</a>', 'rcp' ); ?></p>
+								<p><?php _e( 'The PayPal API credentials are required in order to use PayPal Express, PayPal Pro, and to support advanced subscription cancellation options in PayPal Standard. Test API credentials can be obtained at <a href="http://docs.pippinsplugins.com/article/826-setting-up-paypal-sandbox-accounts" target="_blank">developer.paypal.com</a>.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<?php if( ! function_exists( 'rcp_register_paypal_pro_express_gateway' ) ) : ?>
@@ -306,7 +306,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[test_paypal_api_username]" style="width: 300px;" name="rcp_settings[test_paypal_api_username]" value="<?php if(isset($rcp_options['test_paypal_api_username'])) { echo trim( $rcp_options['test_paypal_api_username'] ); } ?>"/>
-								<div class="description"><?php _e('Enter your test API username', 'rcp_paypal'); ?></div>
+								<div class="description"><?php _e('Enter your test API username.', 'rcp_paypal'); ?></div>
 							</td>
 						</tr>
 						<tr>
@@ -315,7 +315,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[test_paypal_api_password]" style="width: 300px;" name="rcp_settings[test_paypal_api_password]" value="<?php if(isset($rcp_options['test_paypal_api_password'])) { echo trim( $rcp_options['test_paypal_api_password'] ); } ?>"/>
-								<div class="description"><?php _e('Enter your test API password', 'rcp_paypal'); ?></div>
+								<div class="description"><?php _e('Enter your test API password.', 'rcp_paypal'); ?></div>
 							</td>
 						</tr>
 						<tr>
@@ -324,7 +324,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[test_paypal_api_signature]" style="width: 300px;" name="rcp_settings[test_paypal_api_signature]" value="<?php if(isset($rcp_options['test_paypal_api_signature'])) { echo trim( $rcp_options['test_paypal_api_signature'] ); } ?>"/>
-								<div class="description"><?php _e('Enter your test API signature', 'rcp_paypal'); ?></div>
+								<div class="description"><?php _e('Enter your test API signature.', 'rcp_paypal'); ?></div>
 							</td>
 						</tr>
 						<tr>
@@ -333,7 +333,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[live_paypal_api_username]" style="width: 300px;" name="rcp_settings[live_paypal_api_username]" value="<?php if(isset($rcp_options['live_paypal_api_username'])) { echo trim( $rcp_options['live_paypal_api_username'] ); } ?>"/>
-								<div class="description"><?php _e('Enter your live API username', 'rcp_paypal'); ?></div>
+								<div class="description"><?php _e('Enter your live API username.', 'rcp_paypal'); ?></div>
 							</td>
 						</tr>
 						<tr>
@@ -342,7 +342,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[live_paypal_api_password]" style="width: 300px;" name="rcp_settings[live_paypal_api_password]" value="<?php if(isset($rcp_options['live_paypal_api_password'])) { echo trim( $rcp_options['live_paypal_api_password'] ); } ?>"/>
-								<div class="description"><?php _e('Enter your live API password', 'rcp_paypal'); ?></div>
+								<div class="description"><?php _e('Enter your live API password.', 'rcp_paypal'); ?></div>
 							</td>
 						</tr>
 						<tr>
@@ -351,7 +351,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[live_paypal_api_signature]" style="width: 300px;" name="rcp_settings[live_paypal_api_signature]" value="<?php if(isset($rcp_options['live_paypal_api_signature'])) { echo trim( $rcp_options['live_paypal_api_signature'] ); } ?>"/>
-								<div class="description"><?php _e('Enter your live API signature', 'rcp_paypal'); ?></div>
+								<div class="description"><?php _e('Enter your live API signature.', 'rcp_paypal'); ?></div>
 							</td>
 						</tr>
 						<?php endif; ?>
@@ -370,7 +370,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[disable_curl]" id="rcp_settings[disable_curl]" <?php if( isset( $rcp_options['disable_curl'] ) ) checked('1', $rcp_options['disable_curl']); ?>/>
-								<span class="description"><?php _e( 'Only check this option if your host does not allow cURL', 'rcp' ); ?></span>
+								<span class="description"><?php _e( 'Only check this option if your host does not allow cURL.', 'rcp' ); ?></span>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -379,7 +379,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[disable_ipn_verify]" id="rcp_settings[disable_ipn_verify]" <?php if( isset( $rcp_options['disable_ipn_verify'] ) ) checked('1', $rcp_options['disable_ipn_verify']); ?>/>
-								<span class="description"><?php _e( 'Only check this option if your members statuses are not getting changed to "active"', 'rcp' ); ?></span>
+								<span class="description"><?php _e( 'Only check this option if your members statuses are not getting changed to "active".', 'rcp' ); ?></span>
 							</td>
 						</tr>
 					</table>
@@ -621,7 +621,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<input type="checkbox" value="1" name="rcp_settings[disable_new_user_notices]" id="rcp_settings[disable_new_user_notices]" <?php if( isset( $rcp_options['disable_new_user_notices'] ) ) checked('1', $rcp_options['disable_new_user_notices']); ?>/>
-									<span class="description"><?php _e( 'Check this option if you do NOT want to receive emails when new users signup', 'rcp' ); ?></span>
+									<span class="description"><?php _e( 'Check this option if you do NOT want to receive emails when new users signup.', 'rcp' ); ?></span>
 								</td>
 							</tr>
 						</table>
@@ -886,7 +886,7 @@ function rcp_settings_page() {
 
 									?>
 								</select>
-								<div class="description"><?php _e( 'Choose the style you wish to use for your reCaptcha form', 'rcp' ); ?></div>
+								<div class="description"><?php _e( 'Choose the style you wish to use for your reCaptcha form.', 'rcp' ); ?></div>
 							</td>
 						</tr>
 					</table>
