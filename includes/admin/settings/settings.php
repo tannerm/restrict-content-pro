@@ -781,7 +781,7 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
-								<div class="description"><?php _e( 'This is the page non-subscribed users are redirected to when attempting to access a premium post or page', 'rcp' ); ?></div>
+								<div class="description"><?php _e( 'This is the page non-subscribed users are redirected to when attempting to access a premium post or page.', 'rcp' ); ?></div>
 							</td>
 						</tr>
 						<tr valign="top">
