@@ -25,7 +25,7 @@ function rcp_get_metabox_fields() {
             	'name' => __( 'Show Excerpt?', 'rcp' ),
             	'id'   => $rcp_prefix . 'show_excerpt',
             	'type' => 'checkbox',
-            	'desc' => __( 'Allow non active users to view the excerpt? If left unchecked, the message defined in settings will be used', 'rcp' )
+            	'desc' => __( 'Allow non active users to view the excerpt? If left unchecked, the message defined in settings will be used.', 'rcp' )
          	),
     		array(
             	'name' => __( 'Hide from Feed?', 'rcp' ),
