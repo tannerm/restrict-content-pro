@@ -80,7 +80,7 @@ class RCP_Payment_Gateway {
 		$member->renew( $recurring, $status );
 	}
 
-	private function add_error( $code = '', $message = '' ) {
+	public function add_error( $code = '', $message = '' ) {
 		rcp_errors()->add( $code, $message, 'register' );
 	}
 

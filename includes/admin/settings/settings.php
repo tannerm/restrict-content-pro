@@ -71,7 +71,7 @@ function rcp_settings_page() {
 								<?php } elseif( ! empty( $rcp_options['license_key'] ) ) { ?>
 									<input type="submit" class="button-secondary" name="rcp_license_activate" value="<?php _e('Activate License', 'rcp'); ?>"/>
 								<?php } ?>
-								<div class="description"><?php printf( __( 'Enter license key for Restrict Content Pro. This is required for automatic updates and <a href="%s">support</a>.', 'rcp' ), 'http://pippinsplugins.com/plugin-support' ); ?></div>
+								<p class="description"><?php printf( __( 'Enter license key for Restrict Content Pro. This is required for automatic updates and <a href="%s">support</a>.', 'rcp' ), 'http://pippinsplugins.com/plugin-support' ); ?></p>
 							</td>
 						</tr>
 						<?php do_action( 'rcp_license_settings', $rcp_options ); ?>
@@ -95,7 +95,7 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
-								<div class="description"><?php _e( 'Choose the page that has the [register_form] short code', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Choose the page that has the [register_form] short code.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -118,7 +118,7 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
-								<div class="description"><?php _e( 'This is the page users are redirected to after a successful registration', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'This is the page users are redirected to after a successful registration.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -131,7 +131,7 @@ function rcp_settings_page() {
 									<option value="2"<?php selected( '2', rcp_get_auto_renew_behavior() ); ?>><?php _e( 'Never auto renew', 'rcp' ); ?></option>
 									<option value="3"<?php selected( '3', rcp_get_auto_renew_behavior() ); ?>><?php _e( 'Let customer choose whether to auto renew', 'rcp' ); ?></option>
 								</select>
-								<div class="description"><?php _e( 'Select the auto renew behavior you would like subscription levels to have', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Select the auto renew behavior you would like subscription levels to have.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -142,7 +142,7 @@ function rcp_settings_page() {
 								<?php
 								$free_message = isset( $rcp_options['free_message'] ) ? $rcp_options['free_message'] : '';
 								wp_editor( $free_message, 'rcp_settings_free_message', array( 'textarea_name' => 'rcp_settings[free_message]', 'teeny' => true ) ); ?>
-								<div class="description"><?php _e( 'This is the message shown to users that do not have privilege to view free, user only content.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'This is the message shown to users that do not have privilege to view free, user only content.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -153,7 +153,7 @@ function rcp_settings_page() {
 								<?php
 								$paid_message = isset( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : '';
 								wp_editor( $paid_message, 'rcp_settings_paid_message', array( 'textarea_name' => 'rcp_settings[paid_message]', 'teeny' => true ) ); ?>
-								<div class="description"><?php _e( 'This is the message shown to users that do not have privilege to view premium content.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'This is the message shown to users that do not have privilege to view premium content.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<?php do_action( 'rcp_messages_settings', $rcp_options ); ?>
@@ -177,7 +177,7 @@ function rcp_settings_page() {
 									}
 									?>
 								</select>
-								<div class="description"><?php _e( 'Choose your currency.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Choose your currency.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -189,7 +189,7 @@ function rcp_settings_page() {
 									<option value="before" <?php selected('before', $rcp_options['currency_position']); ?>><?php _e( 'Before - $10', 'rcp' ); ?></option>
 									<option value="after" <?php selected('after', $rcp_options['currency_position']); ?>><?php _e( 'After - 10$', 'rcp' ); ?></option>
 								</select>
-								<div class="description"><?php _e( 'Show the currency sign before or after the price?', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Show the currency sign before or after the price?', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<?php $gateways = rcp_get_payment_gateways(); ?>
@@ -244,7 +244,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[stripe_test_secret]" style="width: 300px;" name="rcp_settings[stripe_test_secret]" value="<?php if(isset($rcp_options['stripe_test_secret'])) { echo $rcp_options['stripe_test_secret']; } ?>"/>
-								<div class="description"><?php _e('Enter your test secret key. Your API keys can be obtained from your <a href="https://dashboard.stripe.com/account/apikeys" target="_blank">Stripe account settings</a>.', 'rcp'); ?></div>
+								<p class="description"><?php _e('Enter your test secret key. Your API keys can be obtained from your <a href="https://dashboard.stripe.com/account/apikeys" target="_blank">Stripe account settings</a>.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
@@ -253,7 +253,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[stripe_test_publishable]" style="width: 300px;" name="rcp_settings[stripe_test_publishable]" value="<?php if(isset($rcp_options['stripe_test_publishable'])) { echo $rcp_options['stripe_test_publishable']; } ?>"/>
-								<div class="description"><?php _e('Enter your test publishable key', 'rcp'); ?></div>
+								<p class="description"><?php _e('Enter your test publishable key.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
@@ -262,7 +262,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[stripe_live_secret]" style="width: 300px;" name="rcp_settings[stripe_live_secret]" value="<?php if(isset($rcp_options['stripe_live_secret'])) { echo $rcp_options['stripe_live_secret']; } ?>"/>
-								<div class="description"><?php _e('Enter your live secret key', 'rcp'); ?></div>
+								<p class="description"><?php _e('Enter your live secret key.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
@@ -271,7 +271,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[stripe_live_publishable]" style="width: 300px;" name="rcp_settings[stripe_live_publishable]" value="<?php if(isset($rcp_options['stripe_live_publishable'])) { echo $rcp_options['stripe_live_publishable']; } ?>"/>
-								<div class="description"><?php _e('Enter your live publishable key', 'rcp'); ?></div>
+								<p class="description"><?php _e('Enter your live publishable key.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
@@ -290,13 +290,13 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[paypal_email]" style="width: 300px;" name="rcp_settings[paypal_email]" value="<?php if( isset( $rcp_options['paypal_email'] ) ) { echo $rcp_options['paypal_email']; } ?>"/>
-								<div class="description"><?php _e( 'Enter your PayPal email address.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Enter your PayPal email address.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th><?php _e( 'PayPal API Credentials', 'rcp' ); ?></th>
 							<td>
-								<p><?php _e( 'The PayPal API credentials are required in order to use PayPal Express, PayPal Pro, and to support advanced subscription cancellation options in PayPal Standard. Test API credentials can be obtained at <a href="http://docs.pippinsplugins.com/article/826-setting-up-paypal-sandbox-accounts" target="_blank">developer.paypal.com</a>', 'rcp' ); ?></p>
+								<p><?php _e( 'The PayPal API credentials are required in order to use PayPal Express, PayPal Pro, and to support advanced subscription cancellation options in PayPal Standard. Test API credentials can be obtained at <a href="http://docs.pippinsplugins.com/article/826-setting-up-paypal-sandbox-accounts" target="_blank">developer.paypal.com</a>.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<?php if( ! function_exists( 'rcp_register_paypal_pro_express_gateway' ) ) : ?>
@@ -306,7 +306,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[test_paypal_api_username]" style="width: 300px;" name="rcp_settings[test_paypal_api_username]" value="<?php if(isset($rcp_options['test_paypal_api_username'])) { echo trim( $rcp_options['test_paypal_api_username'] ); } ?>"/>
-								<div class="description"><?php _e('Enter your test API username', 'rcp_paypal'); ?></div>
+								<p class="description"><?php _e('Enter your test API username.', 'rcp_paypal'); ?></p>
 							</td>
 						</tr>
 						<tr>
@@ -315,7 +315,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[test_paypal_api_password]" style="width: 300px;" name="rcp_settings[test_paypal_api_password]" value="<?php if(isset($rcp_options['test_paypal_api_password'])) { echo trim( $rcp_options['test_paypal_api_password'] ); } ?>"/>
-								<div class="description"><?php _e('Enter your test API password', 'rcp_paypal'); ?></div>
+								<p class="description"><?php _e('Enter your test API password.', 'rcp_paypal'); ?></p>
 							</td>
 						</tr>
 						<tr>
@@ -324,7 +324,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[test_paypal_api_signature]" style="width: 300px;" name="rcp_settings[test_paypal_api_signature]" value="<?php if(isset($rcp_options['test_paypal_api_signature'])) { echo trim( $rcp_options['test_paypal_api_signature'] ); } ?>"/>
-								<div class="description"><?php _e('Enter your test API signature', 'rcp_paypal'); ?></div>
+								<p class="description"><?php _e('Enter your test API signature.', 'rcp_paypal'); ?></p>
 							</td>
 						</tr>
 						<tr>
@@ -333,7 +333,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[live_paypal_api_username]" style="width: 300px;" name="rcp_settings[live_paypal_api_username]" value="<?php if(isset($rcp_options['live_paypal_api_username'])) { echo trim( $rcp_options['live_paypal_api_username'] ); } ?>"/>
-								<div class="description"><?php _e('Enter your live API username', 'rcp_paypal'); ?></div>
+								<p class="description"><?php _e('Enter your live API username.', 'rcp_paypal'); ?></p>
 							</td>
 						</tr>
 						<tr>
@@ -342,7 +342,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[live_paypal_api_password]" style="width: 300px;" name="rcp_settings[live_paypal_api_password]" value="<?php if(isset($rcp_options['live_paypal_api_password'])) { echo trim( $rcp_options['live_paypal_api_password'] ); } ?>"/>
-								<div class="description"><?php _e('Enter your live API password', 'rcp_paypal'); ?></div>
+								<p class="description"><?php _e('Enter your live API password.', 'rcp_paypal'); ?></p>
 							</td>
 						</tr>
 						<tr>
@@ -351,7 +351,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[live_paypal_api_signature]" style="width: 300px;" name="rcp_settings[live_paypal_api_signature]" value="<?php if(isset($rcp_options['live_paypal_api_signature'])) { echo trim( $rcp_options['live_paypal_api_signature'] ); } ?>"/>
-								<div class="description"><?php _e('Enter your live API signature', 'rcp_paypal'); ?></div>
+								<p class="description"><?php _e('Enter your live API signature.', 'rcp_paypal'); ?></p>
 							</td>
 						</tr>
 						<?php endif; ?>
@@ -361,7 +361,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[paypal_page_style]" style="width: 300px;" name="rcp_settings[paypal_page_style]" value="<?php if( isset( $rcp_options['paypal_page_style'] ) ) { echo trim( $rcp_options['paypal_page_style'] ); } ?>"/>
-								<div class="description"><?php _e( 'Enter the PayPal page style name you wish to use, or leave blank for default.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Enter the PayPal page style name you wish to use, or leave blank for default.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -370,7 +370,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[disable_curl]" id="rcp_settings[disable_curl]" <?php if( isset( $rcp_options['disable_curl'] ) ) checked('1', $rcp_options['disable_curl']); ?>/>
-								<span class="description"><?php _e( 'Only check this option if your host does not allow cURL', 'rcp' ); ?></span>
+								<span class="description"><?php _e( 'Only check this option if your host does not allow cURL.', 'rcp' ); ?></span>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -379,7 +379,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[disable_ipn_verify]" id="rcp_settings[disable_ipn_verify]" <?php if( isset( $rcp_options['disable_ipn_verify'] ) ) checked('1', $rcp_options['disable_ipn_verify']); ?>/>
-								<span class="description"><?php _e( 'Only check this option if your members statuses are not getting changed to "active"', 'rcp' ); ?></span>
+								<span class="description"><?php _e( 'Only check this option if your members statuses are not getting changed to "active".', 'rcp' ); ?></span>
 							</td>
 						</tr>
 					</table>
@@ -400,7 +400,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<input class="regular-text" id="rcp_settings[from_name]" style="width: 300px;" name="rcp_settings[from_name]" value="<?php if( isset( $rcp_options['from_name'] ) ) { echo $rcp_options['from_name']; } else { echo get_bloginfo( 'name' ); } ?>"/>
-									<div class="description"><?php _e( 'The name that emails come from. This is usually the name of your business.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'The name that emails come from. This is usually the name of your business.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr>
@@ -409,7 +409,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<input class="regular-text" id="rcp_settings[from_email]" style="width: 300px;" name="rcp_settings[from_email]" value="<?php if( isset( $rcp_options['from_email'] ) ) { echo $rcp_options['from_email']; } else { echo get_bloginfo( 'admin_email' ); } ?>"/>
-									<div class="description"><?php _e( 'The email address that emails are sent from.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'The email address that emails are sent from.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 
@@ -431,7 +431,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<input class="regular-text" id="rcp_settings[active_subject]" style="width: 300px;" name="rcp_settings[active_subject]" value="<?php if( isset( $rcp_options['active_subject'] ) ) { echo $rcp_options['active_subject']; } ?>"/>
-									<div class="description"><?php _e( 'The subject line for the email sent to users when their subscription becomes active.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'The subject line for the email sent to users when their subscription becomes active.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -440,7 +440,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<textarea id="rcp_settings[active_email]" style="width: 300px; height: 100px;" name="rcp_settings[active_email]"><?php if( isset( $rcp_options['active_email'] ) ) { echo $rcp_options['active_email']; } ?></textarea>
-									<div class="description"><?php _e( 'This is the email message that is sent to users when their subscription becomes active.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'This is the email message that is sent to users when their subscription becomes active.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -463,7 +463,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<input class="regular-text" id="rcp_settings[cancelled_subject]" style="width: 300px;" name="rcp_settings[cancelled_subject]" value="<?php if( isset( $rcp_options['cancelled_subject'] ) ) { echo $rcp_options['cancelled_subject']; } ?>"/>
-									<div class="description"><?php _e( 'The subject line for the email sent to users when their subscription is cancelled.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'The subject line for the email sent to users when their subscription is cancelled.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -472,7 +472,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<textarea id="rcp_settings[cancelled_email]" style="width: 300px; height: 100px;" name="rcp_settings[cancelled_email]"><?php if( isset( $rcp_options['cancelled_email'] ) ) { echo $rcp_options['cancelled_email']; } ?></textarea>
-									<div class="description"><?php _e( 'This is the email message that is sent to users when their subscription is cancelled.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'This is the email message that is sent to users when their subscription is cancelled.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -495,7 +495,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<input class="regular-text" id="rcp_settings[expired_subject]" style="width: 300px;" name="rcp_settings[expired_subject]" value="<?php if( isset( $rcp_options['expired_subject'] ) ) { echo $rcp_options['expired_subject']; } ?>"/>
-									<div class="description"><?php _e( 'The subject line for the email sent to users when their subscription is expired.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'The subject line for the email sent to users when their subscription is expired.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -504,7 +504,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<textarea id="rcp_settings[expired_email]" style="width: 300px; height: 100px;" name="rcp_settings[expired_email]"><?php if( isset( $rcp_options['expired_email'] ) ) { echo $rcp_options['expired_email']; } ?></textarea>
-									<div class="description"><?php _e( 'This is the email message that is sent to users when their subscription is expired.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'This is the email message that is sent to users when their subscription is expired.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -516,7 +516,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<input class="regular-text" id="rcp_settings[renewal_subject]" style="width: 300px;" name="rcp_settings[renewal_subject]" value="<?php if( isset( $rcp_options['renewal_subject'] ) ) { echo $rcp_options['renewal_subject']; } ?>"/>
-									<div class="description"><?php _e( 'The subject line for the email sent to users before their subscription expires.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'The subject line for the email sent to users before their subscription expires.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -525,7 +525,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<textarea id="rcp_settings[renew_notice_email]" style="width: 300px; height: 100px;" name="rcp_settings[renew_notice_email]"><?php if( isset( $rcp_options['renew_notice_email'] ) ) { echo $rcp_options['renew_notice_email']; } ?></textarea>
-									<div class="description"><?php _e( 'This is the email message that is sent to users before their subscription expires to encourage them to renew.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'This is the email message that is sent to users before their subscription expires to encourage them to renew.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -543,7 +543,7 @@ function rcp_settings_page() {
 
 										?>
 									</select>
-									<div class="description"><?php _e( 'When should the renewal reminder be sent?', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'When should the renewal reminder be sent?', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -566,7 +566,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<input class="regular-text" id="rcp_settings[free_subject]" style="width: 300px;" name="rcp_settings[free_subject]" value="<?php if( isset( $rcp_options['free_subject'] ) ) { echo $rcp_options['free_subject']; } ?>"/>
-									<div class="description"><?php _e( 'The subject line for the email sent to users when they sign up for a free membership.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'The subject line for the email sent to users when they sign up for a free membership.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -575,7 +575,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<textarea id="rcp_settings[free_email]" style="width: 300px; height: 100px;" name="rcp_settings[free_email]"><?php if( isset( $rcp_options['free_email'] ) ) { echo $rcp_options['free_email']; } ?></textarea>
-									<div class="description"><?php _e( 'This is the email message that is sent to users when they sign up for a free account.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'This is the email message that is sent to users when they sign up for a free account.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -598,7 +598,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<input class="regular-text" id="rcp_settings[trial_subject]" style="width: 300px;" name="rcp_settings[trial_subject]" value="<?php if( isset( $rcp_options['trial_subject'] ) ) { echo $rcp_options['trial_subject']; } ?>"/>
-									<div class="description"><?php _e( 'The subject line for the email sent to users when they sign up for a free trial.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'The subject line for the email sent to users when they sign up for a free trial.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -607,7 +607,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<textarea id="rcp_settings[trial_email]" style="width: 300px; height: 100px;" name="rcp_settings[trial_email]"><?php if( isset( $rcp_options['trial_email'] ) ) { echo $rcp_options['trial_email']; } ?></textarea>
-									<div class="description"><?php _e( 'This is the email message that is sent to users when they sign up for a free trial.', 'rcp' ); ?></div>
+									<p class="description"><?php _e( 'This is the email message that is sent to users when they sign up for a free trial.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -621,7 +621,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<input type="checkbox" value="1" name="rcp_settings[disable_new_user_notices]" id="rcp_settings[disable_new_user_notices]" <?php if( isset( $rcp_options['disable_new_user_notices'] ) ) checked('1', $rcp_options['disable_new_user_notices']); ?>/>
-									<span class="description"><?php _e( 'Check this option if you do NOT want to receive emails when new users signup', 'rcp' ); ?></span>
+									<span class="description"><?php _e( 'Check this option if you do NOT want to receive emails when new users signup.', 'rcp' ); ?></span>
 								</td>
 							</tr>
 						</table>
@@ -654,7 +654,7 @@ function rcp_settings_page() {
 							<td>
 								<input class="regular-text rcp-upload-field" id="rcp_settings[invoice_logo]" style="width: 300px;" name="rcp_settings[invoice_logo]" value="<?php if( isset( $rcp_options['invoice_logo'] ) ) { echo $rcp_options['invoice_logo']; } ?>"/>
 								<button class="button-secondary rcp-upload"><?php _e( 'Choose Logo', 'rcp' ); ?></button>
-								<div class="description"><?php _e( 'Upload a logo to display on the invoices.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Upload a logo to display on the invoices.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -663,7 +663,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[invoice_company]" style="width: 300px;" name="rcp_settings[invoice_company]" value="<?php if( isset( $rcp_options['invoice_company'] ) ) { echo $rcp_options['invoice_company']; } ?>"/>
-								<div class="description"><?php _e( 'Enter the company name that will be shown on the invoice. This is only displayed if no logo image is uploaded above.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Enter the company name that will be shown on the invoice. This is only displayed if no logo image is uploaded above.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -672,7 +672,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[invoice_name]" style="width: 300px;" name="rcp_settings[invoice_name]" value="<?php if( isset( $rcp_options['invoice_name'] ) ) { echo $rcp_options['invoice_name']; } ?>"/>
-								<div class="description"><?php _e( 'Enter the personal name that will be shown on the invoice.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Enter the personal name that will be shown on the invoice.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -681,7 +681,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[invoice_address]" style="width: 300px;" name="rcp_settings[invoice_address]" value="<?php if( isset( $rcp_options['invoice_address'] ) ) { echo $rcp_options['invoice_address']; } ?>"/>
-								<div class="description"><?php _e( 'Enter the first address line that will appear on the invoice.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Enter the first address line that will appear on the invoice.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -690,7 +690,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[invoice_address_2]" style="width: 300px;" name="rcp_settings[invoice_address_2]" value="<?php if( isset( $rcp_options['invoice_address_2'] ) ) { echo $rcp_options['invoice_address_2']; } ?>"/>
-								<div class="description"><?php _e( 'Enter the second address line that will appear on the invoice.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Enter the second address line that will appear on the invoice.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -699,7 +699,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[invoice_city_state_zip]" style="width: 300px;" name="rcp_settings[invoice_city_state_zip]" value="<?php if( isset( $rcp_options['invoice_city_state_zip'] ) ) { echo $rcp_options['invoice_city_state_zip']; } ?>"/>
-								<div class="description"><?php _e( 'Enter the city, state and zip/postal code that will appear on the invoice.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Enter the city, state and zip/postal code that will appear on the invoice.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -708,7 +708,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[invoice_email]" style="width: 300px;" name="rcp_settings[invoice_email]" value="<?php if( isset( $rcp_options['invoice_email'] ) ) { echo $rcp_options['invoice_email']; } ?>"/>
-								<div class="description"><?php _e( 'Enter the email address that will appear on the invoice.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Enter the email address that will appear on the invoice.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -717,7 +717,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[invoice_header]" style="width: 300px;" name="rcp_settings[invoice_header]" value="<?php if( isset( $rcp_options['invoice_header'] ) ) { echo $rcp_options['invoice_header']; } ?>"/>
-								<div class="description"><?php _e( 'Enter the message you would like to be shown on the header of the invoice.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Enter the message you would like to be shown on the header of the invoice.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -726,7 +726,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<textarea id="rcp_settings[invoice_notes]" style="width: 300px; height: 100px;" name="rcp_settings[invoice_notes]"><?php if( isset( $rcp_options['invoice_notes'] ) ) { echo $rcp_options['invoice_notes']; } ?></textarea>
-								<div class="description"><?php _e( 'Enter additional notes you would like displayed below the invoice totals.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Enter additional notes you would like displayed below the invoice totals.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -735,7 +735,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[invoice_footer]" style="width: 300px;" name="rcp_settings[invoice_footer]" value="<?php if( isset( $rcp_options['invoice_footer'] ) ) { echo $rcp_options['invoice_footer']; } ?>"/>
-								<div class="description"><?php _e( 'Enter the message you would like to be shown on the footer of the invoice.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Enter the message you would like to be shown on the footer of the invoice.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -781,7 +781,7 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
-								<div class="description"><?php _e( 'This is the page non-subscribed users are redirected to when attempting to access a premium post or page', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'This is the page non-subscribed users are redirected to when attempting to access a premium post or page.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -812,7 +812,7 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
-								<div class="description"><?php _e( 'This is the page the default login URL redirects to, if the option above is checked. This should be the page that contains the [login_form] short code.', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'This is the page the default login URL redirects to, if the option above is checked. This should be the page that contains the [login_form] short code.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -886,7 +886,7 @@ function rcp_settings_page() {
 
 									?>
 								</select>
-								<div class="description"><?php _e( 'Choose the style you wish to use for your reCaptcha form', 'rcp' ); ?></div>
+								<p class="description"><?php _e( 'Choose the style you wish to use for your reCaptcha form.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 					</table>

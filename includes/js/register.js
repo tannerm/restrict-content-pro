@@ -26,7 +26,7 @@ jQuery(document).ready(function($) {
 
 	}).on( 'rcp_level_change', function() {
 
-		rcp_validate_form( false );
+		rcp_validate_form( true );
 
 	}).on( 'rcp_discount_applied', function() {
 

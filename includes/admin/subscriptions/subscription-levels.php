@@ -150,9 +150,9 @@ function rcp_member_levels_page()
 								<td>
 									<input type="text" id="rcp-duration" style="width: 40px;" name="duration" value=""/>
 									<select name="duration_unit" id="rcp-duration-unit">
-										<option value="day"><?php _e('Days(s)', 'rcp'); ?></option>
+										<option value="day"><?php _e('Day(s)', 'rcp'); ?></option>
 										<option value="month"><?php _e('Month(s)', 'rcp'); ?></option>
-										<option value="year"><?php _e('Years(s)', 'rcp'); ?></option>
+										<option value="year"><?php _e('Year(s)', 'rcp'); ?></option>
 									</select>
 									<p class="description"><?php _e('Length of time for this membership level. Enter 0 for unlimited.', 'rcp'); ?></p>
 								</td>
