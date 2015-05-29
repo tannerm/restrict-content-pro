@@ -97,7 +97,7 @@ rcp_show_error_messages( 'register' ); ?>
 			<p id="rcp_level_details_wrap" class="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>">
 				<span class="rcp_price"><?php echo rcp_currency_filter( $level->price ); ?></span>
 				<span class="rcp_sep">&nbsp;/&nbsp;</span>
-				<span class="rcp_duration"><?php echo $level->duration . ' ' . rcp_filter_duration_unit( $level->duration_unit, $level->duration ); ?></span>
+				<span class="rcp_duration"><?php echo $level->duration > 0 ? $level->duration . '&nbsp;' . rcp_filter_duration_unit( $level->duration_unit, $level->duration ) : __( 'unlimited', 'rcp' ); ?></span>
 			</p>
 		</fieldset>
 
