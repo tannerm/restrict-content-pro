@@ -633,6 +633,7 @@ function rcp_settings_page() {
 						<ul>
 							<li><em>%blogname%</em> - <?php _e( 'will be replaced with the name of your site', 'rcp' ); ?></li>
 							<li><em>%username%</em> - <?php _e( 'will be replaced with the user name of the person receiving the email', 'rcp' ); ?></li>
+							<li><em>%useremail%</em> - <?php _e( 'will be replaced with the email of the person receiving the email', 'rcp' ); ?></li>
 							<li><em>%firstname%</em> - <?php _e( 'will be replaced with the first name of the person receiving the email', 'rcp' ); ?></li>
 							<li><em>%lastname%</em> - <?php _e( 'will be replaced with the last name of the person receiving the email', 'rcp' ); ?></li>
 							<li><em>%displayname%</em> - <?php _e( 'will be replaced with the display name of the person receiving the email', 'rcp' ); ?></li>
