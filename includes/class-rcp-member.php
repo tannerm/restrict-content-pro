@@ -56,7 +56,7 @@ class RCP_Member extends WP_User {
 					$this->set_recurring( false );
 				}
 
-				do_action( 'rcp_set_status', $new_status, $this->ID );
+				do_action( 'rcp_set_status', $new_status, $this->ID, $old_status );
 
 				// Record the status change
 				rcp_add_member_note( $this->ID, sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
