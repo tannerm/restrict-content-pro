@@ -454,12 +454,15 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			try {
 
-				$event = \Stripe\Event::retrieve( $event_id );
-
+				$event   = \Stripe\Event::retrieve( $event_id );
 				$invoice = $event->data->object;
 
+				if( empty( $invoice->customer ) ) {
+					die( 'no customer attached' );
+				}
+
 				// retrieve the customer who made this payment (only for subscriptions)
-				$user = rcp_get_member_id_from_profile_id( $invoice->customer );
+				$user    = rcp_get_member_id_from_profile_id( $invoice->customer );
 
 				if( empty( $user ) ) {
 
