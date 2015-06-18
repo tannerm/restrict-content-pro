@@ -1,4 +1,4 @@
-<fieldset class="rcp_card_fielset">
+<fieldset class="rcp_card_fieldset">
 	<p id="rcp_card_number_wrap">
 		<label><?php _e( 'Card Number', 'rcp' ); ?></label>
 		<input type="text" size="20" maxlength="20" name="rcp_card_number" class="rcp_card_number card-number" />

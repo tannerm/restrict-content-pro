@@ -31,20 +31,19 @@ function rcp_options_upgrade() {
 
 	global $wpdb, $rcp_db_name, $rcp_db_version, $rcp_discounts_db_name, $rcp_discounts_db_version, $rcp_payments_db_name, $rcp_payments_db_version;
 
-
 	/****************************************
 	* upgrade discount codes DB
 	****************************************/
 
-	if( !$wpdb->query( "SELECT `max_uses` FROM `" . $rcp_discounts_db_name . "`" ) ) {
+	if( ! $wpdb->query( "SHOW COLUMNS FROM `" . $rcp_discounts_db_name . "` LIKE 'max_uses'" ) ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_discounts_db_name . "` ADD `max_uses` mediumint" );
 		update_option( 'rcp_discounts_db_version', $rcp_discounts_db_version );
 	}
-	if( ! $wpdb->query( "SELECT `expiration` FROM `" . $rcp_discounts_db_name . "`" ) ) {
+	if( ! $wpdb->query( "SHOW COLUMNS FROM `" . $rcp_discounts_db_name . "` LIKE 'expiration'" ) ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_discounts_db_name . "` ADD `expiration` mediumtext" );
 		update_option( 'rcp_discounts_db_version', $rcp_discounts_db_version );
 	}
-	if( ! $wpdb->query( "SELECT `subscription_id` FROM `" . $rcp_discounts_db_name . "`" ) ) {
+	if( ! $wpdb->query( "SHOW COLUMNS FROM `" . $rcp_discounts_db_name . "` LIKE 'subscription_id'" ) ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_discounts_db_name . "` ADD `subscription_id` mediumint" );
 		update_option( 'rcp_discounts_db_version', $rcp_discounts_db_version );
 	}
@@ -56,32 +55,25 @@ function rcp_options_upgrade() {
 	if( get_option('rcp_db_version') == '' )
 		update_option( 'rcp_db_version', $rcp_db_version );
 
-	if( !$wpdb->query( "SELECT `level` FROM `" . $rcp_db_name . "`" ) ) {
+	if( ! $wpdb->query( "SHOW COLUMNS FROM `" . $rcp_db_name . "` LIKE 'level'" ) ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_db_name . "` ADD `level` mediumtext" );
 		update_option( 'rcp_db_version', $rcp_db_version );
 	}
-	if(!$wpdb->query( "SELECT `status` FROM `" . $rcp_db_name . "`" ) ) {
+	if( ! $wpdb->query( "SHOW COLUMNS FROM `" . $rcp_db_name . "` LIKE 'status'" ) ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_db_name . "` ADD `status` tinytext" );
 		update_option( 'rcp_db_version', $rcp_db_version );
 	}
-	if(!$wpdb->query( "SELECT `fee` FROM `" . $rcp_db_name . "`") ) {
+	if( ! $wpdb->query( "SHOW COLUMNS FROM `" . $rcp_db_name . "` LIKE 'fee'" ) ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_db_name . "` ADD `fee` tinytext" );
 		update_option( 'rcp_db_version', $rcp_db_version );
 	}
-
+	if( ! $wpdb->query( "SHOW COLUMNS FROM `" . $rcp_db_name . "` LIKE 'role'" ) ) {
+		$wpdb->query( "ALTER TABLE `" . $rcp_db_name . "` ADD `role` tinytext" );
+		update_option( 'rcp_db_version', $rcp_db_version );
+	}
 	if( version_compare( get_option( 'rcp_db_version' ), '1.3', '<' ) ) {
 		$wpdb->query( "ALTER TABLE " . $rcp_db_name . " MODIFY `duration` smallint" );
 		update_option( "rcp_db_version", $rcp_db_version );
-	}
-
-	if(!$wpdb->query( "SELECT `status` FROM `" . $rcp_db_name . "`") ) {
-		$wpdb->query( "ALTER TABLE `" . $rcp_db_name . "` ADD `status` tinytext" );
-		update_option( 'rcp_db_version', $rcp_db_version );
-	}
-
-	if(!$wpdb->query( "SELECT `role` FROM `" . $rcp_db_name . "`") ) {
-		$wpdb->query( "ALTER TABLE `" . $rcp_db_name . "` ADD `role` tinytext" );
-		update_option( 'rcp_db_version', $rcp_db_version );
 	}
 
 	/****************************************
@@ -92,13 +84,11 @@ function rcp_options_upgrade() {
 		$wpdb->query( "ALTER TABLE " . $rcp_payments_db_name . " MODIFY `amount` mediumtext" );
 		update_option( "rcp_payments_db_version", $rcp_payments_db_version );
 	}
-
-	if( ! $wpdb->query( "SELECT `transaction_id` FROM `" . $rcp_payments_db_name . "`" ) ) {
+	if( ! $wpdb->query( "SHOW COLUMNS FROM `" . $rcp_payments_db_name . "` LIKE 'transaction_id'" ) ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_payments_db_name . "` ADD `transaction_id` tinytext" );
 		update_option( 'rcp_payments_db_version', $rcp_payments_db_version );
 	}
-
-	if( ! $wpdb->query( "SELECT `status` FROM `" . $rcp_payments_db_name . "`" ) ) {
+	if( ! $wpdb->query( "SHOW COLUMNS FROM `" . $rcp_payments_db_name . "` LIKE 'status'" ) ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_payments_db_name . "` ADD `status` varchar(200)" );
 		update_option( 'rcp_payments_db_version', $rcp_payments_db_version );
 	}
