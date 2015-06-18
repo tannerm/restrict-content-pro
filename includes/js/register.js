@@ -267,6 +267,16 @@ function rcp_validate_discount() {
 	var gateway_fields = $('.rcp_gateway_fields');
 	var discount = $('#rcp_discount_code').val();
 
+	if( $('input[name="rcp_level"]').length ) {
+
+		var subscription = $('input[name="rcp_level"]').val();
+
+	} else {
+
+		var subscription = $('#rcp_subscription_levels input:checked').val();
+
+	}
+
 	if( ! discount ) {
 		return;
 	}
@@ -274,7 +284,7 @@ function rcp_validate_discount() {
 	var data = {
 		action: 'validate_discount',
 		code: discount,
-		subscription_id: $('#rcp_subscription_levels input:checked').val()
+		subscription_id: subscription
 	};
 
 	rcp_validating_discount = true;
