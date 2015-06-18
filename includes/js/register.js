@@ -28,10 +28,6 @@ jQuery(document).ready(function($) {
 
 		rcp_validate_form( true );
 
-	}).on( 'rcp_discount_applied', function() {
-
-		rcp_validate_form( true );
-
 	});
 
 	// Validate discount code
@@ -105,6 +101,8 @@ function rcp_validate_form( validate_gateways ) {
 		// Validate the discount selected gateway
 		rcp_validate_gateways();
 	}
+
+	rcp_validate_discount();
 
 }
 
@@ -259,7 +257,7 @@ function rcp_validate_gateways() {
 
 }
 
-function rcp_validate_discount( discount_code ) {
+function rcp_validate_discount() {
 
 	if( rcp_validating_discount ) {
 		return;
@@ -267,9 +265,15 @@ function rcp_validate_discount( discount_code ) {
 
 	var $ = jQuery;
 	var gateway_fields = $('.rcp_gateway_fields');
+	var discount = $('#rcp_discount_code').val();
+
+	if( ! discount ) {
+		return;
+	}
+
 	var data = {
 		action: 'validate_discount',
-		code: discount_code,
+		code: discount,
 		subscription_id: $('#rcp_subscription_levels input:checked').val()
 	};
 
