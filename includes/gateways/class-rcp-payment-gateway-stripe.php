@@ -119,14 +119,13 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					} else {
 
-						$customer = \Stripe\Customer::create( array(
-								'card' 			=> $_POST['stripeToken'],
-								'plan' 			=> $plan_id,
-								'email' 		=> $this->email,
-								'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
-								'coupon' 		=> $_POST['rcp_discount']
-							)
-						);
+						$customer = \Stripe\Customer::create( apply_filters( 'rcp_stripe_customer_create_args', array(
+							'card' 			=> $_POST['stripeToken'],
+							'plan' 			=> $plan_id,
+							'email' 		=> $this->email,
+							'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
+							'coupon' 		=> $_POST['rcp_discount']
+						), $this ) );
 
 					}
 
@@ -143,13 +142,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					} else {
 
-						$customer = \Stripe\Customer::create( array(
-								'card' 			=> $_POST['stripeToken'],
-								'plan' 			=> $plan_id,
-								'email' 		=> $this->email,
-								'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name
-							)
-						);
+						$customer = \Stripe\Customer::create( apply_filters( 'rcp_stripe_customer_create_args', array(
+							'card' 			=> $_POST['stripeToken'],
+							'plan' 			=> $plan_id,
+							'email' 		=> $this->email,
+							'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name
+						), $this ) );
 
 					}
 
@@ -163,18 +161,18 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						$description = sprintf( __( 'Signup Discount for %s', 'rcp_stripe' ), $this->subscription_name );
 					}
 
-					\Stripe\InvoiceItem::create( array(
-							'customer'    => $customer->id,
-							'amount'      => $this->signup_fee * 100,
-							'currency'    => strtolower( $this->currency ),
-							'description' => $description
-						)
-					);
+					\Stripe\InvoiceItem::create( apply_filters( 'rcp_stripe_invoice_item_create_args', array(
+						'customer'    => $customer->id,
+						'amount'      => $this->signup_fee * 100,
+						'currency'    => strtolower( $this->currency ),
+						'description' => $description
+					), $this, $customer ) );
 
 					// Create the invoice containing taxes / discounts / fees
-					$invoice = \Stripe\Invoice::create( array(
+					$invoice = \Stripe\Invoice::create( apply_filters( 'rcp_stripe_invoice_create_args', array(
 						'customer' => $customer->id, // the customer to apply the fee to
-					) );
+					), $this, $customer ) );
+
 					$invoice->pay();
 
 				}
@@ -282,21 +280,20 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			try {
 
-				$charge = \Stripe\Charge::create( array(
-						'amount' 		 => $this->amount * 100, // amount in cents
-						'currency' 		 => strtolower( $this->currency ),
-						'card' 			 => $_POST['stripeToken'],
-						'description' 	 => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
-						'receipt_email'  => $this->email,
-						'metadata'       => array(
-							'email'      => $this->email,
-							'user_id'    => $this->user_id,
-							'level_id'   => $this->subscription_id,
-							'level'      => $this->subscription_name,
-							'key'        => $this->subscription_key
-						)
+				$charge = \Stripe\Charge::create( apply_filters( 'rcp_stripe_charge_create_args', array(
+					'amount' 		 => $this->amount * 100, // amount in cents
+					'currency' 		 => strtolower( $this->currency ),
+					'card' 			 => $_POST['stripeToken'],
+					'description' 	 => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
+					'receipt_email'  => $this->email,
+					'metadata'       => array(
+						'email'      => $this->email,
+						'user_id'    => $this->user_id,
+						'level_id'   => $this->subscription_id,
+						'level'      => $this->subscription_name,
+						'key'        => $this->subscription_key
 					)
-				);
+				), $this ) );
 
 				$payment_data = array(
 					'date'              => date( 'Y-m-d g:i:s', time() ),
