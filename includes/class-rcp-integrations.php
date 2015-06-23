@@ -4,7 +4,7 @@ class RCP_Integrations {
 
 	public function __construct() {
 
-		$this->load();
+		add_action( 'plugins_loaded', array( $this, 'load' ) );
 
 	}
 
