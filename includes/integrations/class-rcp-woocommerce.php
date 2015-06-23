@@ -3,6 +3,11 @@
 class RCP_WooCommerce {
 	
 	public function __construct() {
+
+		if( ! class_exists( 'WooCommerce' ) ) {
+			return;
+		}
+
 		add_filter( 'woocommerce_product_data_tabs', array( $this, 'data_tab' ) );
 		add_action( 'woocommerce_product_data_panels', array( $this, 'data_display' ) );
 	}
@@ -25,7 +30,7 @@ class RCP_WooCommerce {
 			
 			<div class="options_group">
 				<p><?php _e( 'Restrict purchasing of this product to:', 'rcp' ); ?></p>
-				
+
 			</div>
 
 			<div class="options_group">
