@@ -16,6 +16,7 @@
 				<label for="rcp_user_pass"><?php _e( 'Password', 'rcp' ); ?></label>
 				<input name="rcp_user_pass" id="rcp_user_pass" class="required" type="password"/>
 			</p>
+			<?php do_action( 'rcp_login_form_fields_before_submit' ); ?>
 			<p>
 				<label for="rcp_user_remember"><?php _e( 'Remember', 'rcp' ); ?></label>
 				<input type="checkbox" name="rcp_user_remember" id="rcp_user_remember" value="1"/>
@@ -27,6 +28,7 @@
 				<input type="hidden" name="rcp_login_nonce" value="<?php echo wp_create_nonce( 'rcp-login-nonce' ); ?>"/>
 				<input id="rcp_login_submit" type="submit" value="Login"/>
 			</p>
+			<?php do_action( 'rcp_login_form_fields_after_submit' ); ?>
 		</fieldset>
 
 		<?php do_action( 'rcp_after_login_form_fields' ); ?>
