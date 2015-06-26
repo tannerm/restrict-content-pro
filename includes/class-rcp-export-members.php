@@ -68,6 +68,9 @@ class RCP_Members_Export extends RCP_Export {
 
 		if( $members ) :
 			foreach ( $members as $member ) {
+
+				$discounts = (array) get_user_meta( $member->ID, 'rcp_user_discounts', true );
+
 				$data[] = array(
 					'user_id'          => $member->ID,
 					'user_login'       => $member->user_login,
@@ -77,7 +80,7 @@ class RCP_Members_Export extends RCP_Export {
 					'subscription'     => rcp_get_subscription( $member->ID ),
 					'subscription_key' => rcp_get_subscription_key( $member->ID ),
 					'expiration'       => rcp_get_expiration_date( $member->ID ),
-					'discount_codes'   => implode( ' ', (array) get_user_meta( $member->ID, 'rcp_user_discounts', true ) )
+					'discount_codes'   => ! empty( $discounts ) && is_array( $discounts ) ? implode( ' ', $discounts ) : ''
 				);
 
 			}
