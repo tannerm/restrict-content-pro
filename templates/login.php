@@ -4,6 +4,9 @@
 	<?php rcp_show_error_messages( 'login' ); ?>
 
 	<form id="rcp_login_form"  class="rcp_form" method="POST" action="<?php echo esc_url( rcp_get_current_url() ); ?>">
+		
+		<?php do_action( 'rcp_before_login_form_fields' ); ?>
+
 		<fieldset class="rcp_login_data">
 			<p>
 				<label for="rcp_user_Login"><?php _e( 'Username', 'rcp' ); ?></label>
@@ -25,6 +28,9 @@
 				<input id="rcp_login_submit" type="submit" value="Login"/>
 			</p>
 		</fieldset>
+
+		<?php do_action( 'rcp_after_login_form_fields' ); ?>
+
 	</form>
 <?php else : ?>
 	<div class="rcp_logged_in"><a href="<?php echo wp_logout_url( home_url() ); ?>"><?php _e( 'Logout', 'rcp' ); ?></a></div>
