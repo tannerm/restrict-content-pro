@@ -11,7 +11,8 @@ class RCP_Integrations {
 	public function get_integrations() {
 
 		return apply_filters( 'rcp_integrations', array(
-			'woocommerce'    => 'WooCommerce',
+			'woocommerce'          => 'WooCommerce',
+			'google-authenticator' => 'Google Authenticator'
 		) );
 
 	}
