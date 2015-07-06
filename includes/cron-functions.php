@@ -12,7 +12,7 @@ function rcp_setup_cron_jobs() {
 }
 add_action('wp', 'rcp_setup_cron_jobs');
 
-// runs each day and checks for expired members. Each member gets an email on the day of their expiration
+// runs each day and checks for expired members. Each member gets an email 1-2 days after their expiration
 function rcp_check_for_expired_users() {
 	
 	global $wpdb;
@@ -38,7 +38,7 @@ function rcp_check_for_expired_users() {
 		foreach( $expired_members as $key => $member_id ) {
 
 			$expiration_date = rcp_get_expiration_timestamp( $member_id );
-			if( $expiration_date && strtotime( '-1 day', current_time( 'timestamp' ) ) > $expiration_date ) {
+			if( $expiration_date && strtotime( '-2 days', current_time( 'timestamp' ) ) > $expiration_date ) {
 				rcp_set_status( $member_id, 'expired' );
 			}
 		}

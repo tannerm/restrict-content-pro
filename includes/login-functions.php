@@ -115,6 +115,7 @@ function rcp_process_login_form() {
 
 		// redirect the user back to the page they were previously on
 		wp_redirect( $redirect ); exit;
+
 	} else {
 
 		if( function_exists( 'limit_login_failed' ) ) {

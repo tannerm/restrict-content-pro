@@ -1215,3 +1215,17 @@ function rcp_get_switch_to_url( $user_id = 0 ) {
 	return $member->get_switch_to_url();
 
 }
+
+/**
+ * Validate a potential username
+ *
+ * @access      public
+ * @since       2.2
+ * @param       string $username The username to validate
+ * @return      bool
+ */
+function rcp_validate_username( $username = '' ) {
+	$sanitized = sanitize_user( $username, false );
+	$valid = ( $sanitized == $username );
+	return (bool) apply_filters( 'rcp_validate_username', $valid, $username );
+}

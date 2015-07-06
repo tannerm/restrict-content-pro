@@ -218,6 +218,9 @@ function rcp_process_registration() {
 				// Remove trialing status, if it exists
 				delete_user_meta( $user_data['id'], 'rcp_is_trialing' );
 
+				// log the new user in
+				rcp_login_user_in( $user_data['id'], $user_data['login'] );
+
 				$redirect = rcp_get_return_url( $user_data['id'] );
 
 				$subscription_data = array(
@@ -331,7 +334,7 @@ function rcp_validate_user_data() {
 			// Username already registered
 			rcp_errors()->add( 'username_unavailable', __( 'Username already taken', 'rcp' ), 'register' );
 		}
-		if( ! validate_username( $user['login'] ) ) {
+		if( ! rcp_validate_username( $user['login'] ) ) {
 			// invalid username
 			rcp_errors()->add( 'username_invalid', __( 'Invalid username', 'rcp' ), 'register' );
 		}

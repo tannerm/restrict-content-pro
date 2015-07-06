@@ -3,7 +3,7 @@
 Plugin Name: Restrict Content Pro
 Plugin URL: http://pippinsplugins.com/restrict-content-pro-premium-content-plugin
 Description: Setup a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
-Version: 2.1.11
+Version: 2.2
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
 Contributors: mordauk
@@ -19,7 +19,7 @@ if ( !defined( 'RCP_PLUGIN_FILE' ) ) {
 	define( 'RCP_PLUGIN_FILE', __FILE__ );
 }
 if ( !defined( 'RCP_PLUGIN_VERSION' ) ) {
-	define( 'RCP_PLUGIN_VERSION', '2.1.11' );
+	define( 'RCP_PLUGIN_VERSION', '2.2' );
 }
 
 
@@ -149,6 +149,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	// global includes
 	require( RCP_PLUGIN_DIR . 'includes/install.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-capabilities.php' );
+	include( RCP_PLUGIN_DIR . 'includes/class-rcp-integrations.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-levels.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-member.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-payments.php' );
