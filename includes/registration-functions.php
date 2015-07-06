@@ -331,7 +331,7 @@ function rcp_validate_user_data() {
 			// Username already registered
 			rcp_errors()->add( 'username_unavailable', __( 'Username already taken', 'rcp' ), 'register' );
 		}
-		if( ! validate_username( $user['login'] ) ) {
+		if( ! rcp_validate_username( $user['login'] ) ) {
 			// invalid username
 			rcp_errors()->add( 'username_invalid', __( 'Invalid username', 'rcp' ), 'register' );
 		}
