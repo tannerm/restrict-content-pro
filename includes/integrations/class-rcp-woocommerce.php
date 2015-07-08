@@ -231,7 +231,7 @@ class RCP_WooCommerce {
 
 			}
 
-			if( $levels ) {
+			if( is_array( $levels ) && ! empty( $array[0] ) ) {
 
 				if( ! in_array( rcp_get_subscription_id(), $levels ) ) {
 					$has_access = false;
@@ -277,7 +277,7 @@ class RCP_WooCommerce {
 
 			}
 
-			if( $levels ) {
+			if( is_array( $levels ) && ! empty( $array[0] ) ) {
 
 				if( ! in_array( rcp_get_subscription_id(), $levels ) ) {
 					$has_access = false;
