@@ -42,6 +42,7 @@ class RCP_Members_Export extends RCP_Export {
 			'subscription'     => __( 'Subscription', 'rcp' ),
 			'subscription_key' => __( 'Subscription Key', 'rcp' ),
 			'expiration'       => __( 'Expiration', 'rcp' ),
+			'status'           => __( 'Status', 'rcp' ),
 			'discount_codes'   => __( 'Discount Codes', 'rcp' ),
 			'profile_id'       => __( 'Payment Profile ID', 'rcp' )
 		);
@@ -83,6 +84,7 @@ class RCP_Members_Export extends RCP_Export {
 					'subscription'     => $member->get_subscription_id(),
 					'subscription_key' => $member->get_subscription_key(),
 					'expiration'       => $member->get_expiration_date(),
+					'status'           => $member->get_status(),
 					'discount_codes'   => ! empty( $discounts ) && is_array( $discounts ) ? implode( ' ', $discounts ) : '',
 					'profile_id'       => $member->get_payment_profile_id()
 				);
