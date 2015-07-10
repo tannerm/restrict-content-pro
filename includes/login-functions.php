@@ -125,6 +125,53 @@ function rcp_process_login_form() {
 	}
 }
 add_action('init', 'rcp_process_login_form');
+
+/**
+ * Process the password reset. adapted from wp-login.php
+ *
+ * @access      public
+ * @since       1.0
+ */
+function rcp_process_lostpassword_reset() {
+
+	if( ! isset( $_GET['rcp_action'] ) || 'lostpassword_reset' != $_GET['rcp_action'] ) {
+		return;
+	}
+
+	list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
+	$rp_cookie = 'rcp-resetpass-' . COOKIEHASH;
+
+	// store reset key and login name in cookie & remove from URL
+	if ( isset( $_GET['key'] ) ) {
+		$value = sprintf( '%s:%s', wp_unslash( $_GET['login'] ), wp_unslash( $_GET['key'] ) );
+		setcookie( $rp_cookie, $value, 0, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+		wp_safe_redirect( remove_query_arg( array( 'key', 'login' ) ) );
+		exit;
+	}
+
+	// check if the reset key and login name are valid
+	if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
+		list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
+		$user = check_password_reset_key( $rp_key, $rp_login );
+	} else {
+		$user = false;
+	}
+
+	if ( ! $user || is_wp_error( $user ) ) {
+		setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+		if ( $user && $user->get_error_code() === 'expired_key' ) {
+			rcp_errors()->add( 'expired_key', __('Your password reset link has expired.', 'rcp'), 'password' );
+		} else {
+			rcp_errors()->add( 'invalid_key', __('Your password reset link appears to be invalid.', 'rcp'), 'password' );
+		}
+	}
+
+}
+
+add_action('init', 'rcp_process_lostpassword_reset');
+
+// lostpassword_reset
+
 /**
  * Process the lost password form
  *
