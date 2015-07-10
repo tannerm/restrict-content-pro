@@ -132,7 +132,7 @@ add_action('init', 'rcp_process_login_form');
  * @since       1.0
  */
 function rcp_process_lostpassword_form() {
-	if( ! isset( $_POST['rcp_action'] ) || 'lostpassword' != $_POST['rcp_action'] ) {
+	if( 'POST' !== $_SERVER['REQUEST_METHOD'] || ! isset( $_POST['rcp_action'] ) || 'lostpassword' != $_POST['rcp_action'] ) {
 		return;
 	}
 
@@ -140,9 +140,7 @@ function rcp_process_lostpassword_form() {
 		return;
 	}
 
-	if ('POST' == $_SERVER['REQUEST_METHOD']) {
-		$errors = rcp_retrieve_password();
-	}
+	rcp_retrieve_password();
 }
 add_action('init', 'rcp_process_lostpassword_form');
 
