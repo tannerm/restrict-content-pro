@@ -694,7 +694,7 @@ function rcp_is_stripe_subscriber( $user_id = 0 ) {
 
 		$ret = true;
 
-	} 
+	}
 
 	return (bool) apply_filters( 'rcp_is_stripe_subscriber', $ret, $user_id );
 }
@@ -788,8 +788,14 @@ function rcp_change_password() {
 
 		global $user_ID;
 
-		if( !is_user_logged_in() )
+		list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
+		$rp_cookie = 'rcp-resetpass-' . COOKIEHASH;
+
+		$user = rcp_get_user_resetting_password($rp_path, $rp_cookie);
+
+		if( !is_user_logged_in() && !$user) {
 			return;
+		}
 
 		if( wp_verify_nonce( $_POST['rcp_password_nonce'], 'rcp-password-nonce' ) ) {
 
@@ -812,10 +818,12 @@ function rcp_change_password() {
 			if( empty( $errors ) ) {
 				// change the password here
 				$user_data = array(
-					'ID' 		=> $user_ID,
+					'ID' 		=> (is_user_logged_in()) ? $user_ID : $user->ID,
 					'user_pass' => $_POST['rcp_user_pass']
 				);
 				wp_update_user( $user_data );
+				// remove cookie with password reset info
+				setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
 				// send password change email here (if WP doesn't)
 				wp_safe_redirect( add_query_arg( 'password-reset', 'true', $_POST['rcp_redirect'] ) );
 				exit;
@@ -824,6 +832,19 @@ function rcp_change_password() {
 	}
 }
 add_action( 'init', 'rcp_change_password' );
+
+function rcp_get_user_resetting_password($rp_path, $rp_cookie) {
+
+	// check if the reset key and login name are valid
+	if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
+		list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
+		$user = check_password_reset_key( $rp_key, $rp_login );
+	} else {
+		$user = false;
+	}
+
+	return $user;
+}
 
 /**
  * Process a member cancellation request
