@@ -155,25 +155,23 @@ add_action('init', 'rcp_process_lostpassword_form');
 function rcp_retrieve_password() {
 	global $wpdb, $wp_hasher;
 
-	$errors = new WP_Error();
-
 	if ( empty( $_POST['rcp_user_login'] ) ) {
-		$errors->add('empty_username', __('<strong>ERROR</strong>: Enter a username or e-mail address.'));
+		rcp_errors()->add( 'empty_username', __( 'Enter a username or e-mail address.', 'rcp' ), 'lostpassword' );
 	} elseif ( strpos( $_POST['rcp_user_login'], '@' ) ) {
 		$user_data = get_user_by( 'email', trim( $_POST['rcp_user_login'] ) );
 		if ( empty( $user_data ) )
-			$errors->add('invalid_email', __('<strong>ERROR</strong>: There is no user registered with that email address.'));
+			rcp_errors()->add( 'invalid_email', __( 'There is no user registered with that email address.', 'rcp' ), 'lostpassword' );
 	} else {
 		$login = trim($_POST['rcp_user_login']);
 		$user_data = get_user_by('login', $login);
 	}
 
-	if ( $errors->get_error_code() )
-		return $errors;
+	if ( rcp_errors()->get_error_code() )
+		return rcp_errors();
 
 	if ( !$user_data ) {
-		$errors->add('invalidcombo', __('<strong>ERROR</strong>: Invalid username or e-mail.'));
-		return $errors;
+		rcp_errors()->add('invalidcombo', __('Invalid username or e-mail.', 'rcp' ), 'lostpassword');
+		return rcp_errors();
 	}
 
 	// Redefining user_login ensures we return the right case in the email.
@@ -183,7 +181,8 @@ function rcp_retrieve_password() {
 	$allow = apply_filters( 'allow_password_reset', true, $user_data->ID );
 
 	if ( ! $allow ) {
-		return new WP_Error( 'no_password_reset', __('Password reset is not allowed for this user') );
+		rcp_errors()->add( 'no_password_reset', __( 'Password reset is not allowed for this user', 'rcp' ), 'lostpassword' );
+		return rcp_errors();
 	} elseif ( is_wp_error( $allow ) ) {
 		return $allow;
 	}
