@@ -27,6 +27,20 @@ function rcp_login_form_fields( $args = array() ) {
 	return ob_get_clean();
 }
 
+// login form fields
+function rcp_lostpassword_form_fields() {
+
+	ob_start();
+
+	do_action( 'rcp_before_lostpassword_form' );
+
+	rcp_get_template_part( 'lostpassword' );
+
+	do_action( 'rcp_after_lostpassword_form' );
+
+	return ob_get_clean();
+}
+
 // registration form fields
 function rcp_registration_form_fields( $id = null ) {
 
