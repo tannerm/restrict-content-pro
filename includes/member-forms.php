@@ -27,7 +27,7 @@ function rcp_login_form_fields( $args = array() ) {
 	return ob_get_clean();
 }
 
-// login form fields
+// lost password form fields
 function rcp_lostpassword_form_fields() {
 
 	ob_start();
@@ -37,6 +37,16 @@ function rcp_lostpassword_form_fields() {
 	rcp_get_template_part( 'lostpassword' );
 
 	do_action( 'rcp_after_lostpassword_form' );
+
+	return ob_get_clean();
+}
+
+// lost password check email message
+function rcp_lostpassword_checkemail_message() {
+
+	ob_start();
+
+	rcp_get_template_part( 'lostpassword_checkemail' );
 
 	return ob_get_clean();
 }

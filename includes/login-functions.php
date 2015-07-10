@@ -140,7 +140,13 @@ function rcp_process_lostpassword_form() {
 		return;
 	}
 
-	rcp_retrieve_password();
+	$errors = rcp_retrieve_password();
+
+	if ( !is_wp_error($errors) ) {
+		$redirect_to = strtok(rcp_get_current_url(), '?') . '?rcp_action=lostpassword_checkemail';
+		wp_redirect( $redirect_to );
+		exit();
+	}
 }
 add_action('init', 'rcp_process_lostpassword_form');
 

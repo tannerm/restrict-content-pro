@@ -196,6 +196,8 @@ function rcp_login_form( $atts, $content = null ) {
 
 	if ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword") {
 		$output = rcp_lostpassword_form_fields();
+	} elseif ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword_checkemail") {
+		$output = rcp_lostpassword_checkemail_message();
 	} else {
 		$output = rcp_login_form_fields( array( 'redirect' => $redirect, 'class' => $class ) );
 	}
