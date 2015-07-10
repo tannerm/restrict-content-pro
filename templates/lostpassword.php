@@ -8,7 +8,7 @@
 
         <fieldset class="rcp_lostpassword_data">
             <p>
-                <label for="rcp_user_login"><?php _e( 'Username', 'rcp' ); ?></label>
+                <label for="rcp_user_login"><?php _e( 'Username or E-mail:', 'rcp' ); ?></label>
                 <input name="rcp_user_login" id="rcp_user_login" class="required" type="text"/>
             </p>
             <?php do_action( 'rcp_lostpassword_form_fields_before_submit' ); ?>
