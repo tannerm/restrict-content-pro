@@ -143,7 +143,7 @@ function rcp_process_lostpassword_form() {
 	$errors = rcp_retrieve_password();
 
 	if ( !is_wp_error($errors) ) {
-		$redirect_to = strtok(rcp_get_current_url(), '?') . '?rcp_action=lostpassword_checkemail';
+		$redirect_to = esc_url($_POST['rcp_redirect']) . '?rcp_action=lostpassword_checkemail';
 		wp_redirect( $redirect_to );
 		exit();
 	}
@@ -207,7 +207,7 @@ function rcp_retrieve_password() {
 	$message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
 	$message .= __('If this was a mistake, just ignore this email and nothing will happen.') . "\r\n\r\n";
 	$message .= __('To reset your password, visit the following address:') . "\r\n\r\n";
-	$message .= '<' . network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . ">\r\n";
+	$message .= '<' . esc_url($_POST['rcp_redirect']) . "?rcp_action=lostpassword_reset&key=$key&login=" . rawurlencode($user_login) . ">\r\n";
 
 	if ( is_multisite() )
 		$blogname = $GLOBALS['current_site']->site_name;
