@@ -98,7 +98,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// No customer found
 					} catch ( Exception $e ) {
 
-
 						$customer_exists = false;
 
 					}
@@ -573,7 +572,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					jQuery('#rcp_ajax_loading').hide();
 
 					// show the errors on the form
-					jQuery(".payment-errors").html(response.error.message);
+					jQuery('#rcp_registration_form').unblock();
+					jQuery("#rcp_submit").before( '<div class="rcp_message error"><p class="rcp_error"><span>' + response.error.message + '</span></p></div>' );
 
 				} else {
 					var form$ = jQuery("#rcp_registration_form");
