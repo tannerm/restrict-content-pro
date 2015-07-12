@@ -104,6 +104,7 @@ function rcp_print_scripts() {
 	wp_localize_script('rcp-register', 'rcp_script_options',
 		array(
 			'ajaxurl'    => admin_url( 'admin-ajax.php' ),
+			'register'   => __( 'Register', 'rcp' ),
 			'pleasewait' => __( 'Please Wait . . . ', 'rcp' )
 		)
 	);
