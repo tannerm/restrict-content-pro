@@ -129,7 +129,7 @@ function rcp_process_registration() {
 		}
 
 		// only create the user if there are no errors
-		if( ! empty( $errors ) ) {
+		if( ! empty( $errors ) || $is_ajax ) {
 			return;
 		}
 
