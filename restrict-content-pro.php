@@ -170,6 +170,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/gateways/gateway-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/invoice-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/login-functions.php' );
+	include( RCP_PLUGIN_DIR . 'includes/member-forms.php' );
 	include( RCP_PLUGIN_DIR . 'includes/member-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/misc-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/registration-functions.php' );
@@ -222,7 +223,6 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 
 	} else {
 
-		include( RCP_PLUGIN_DIR . 'includes/member-forms.php' );
 		include( RCP_PLUGIN_DIR . 'includes/content-filters.php' );
 		include( RCP_PLUGIN_DIR . 'includes/feed-functions.php' );
 		if( isset( $rcp_options['enable_recaptcha'] ) ) {
