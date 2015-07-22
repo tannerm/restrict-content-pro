@@ -104,6 +104,60 @@ function rcp_process_data() {
 
 		}
 
+		// bulk edit members
+		if( isset( $_POST['rcp-bulk-action'] ) && $_POST['rcp-bulk-action'] ) {
+
+			if( ! wp_verify_nonce( $_POST['rcp_bulk_edit_nonce'], 'rcp_bulk_edit_nonce' ) ) {
+				wp_die( __( 'Nonce verification failed.', 'rcp' ) );
+			}
+
+			if( ! current_user_can( 'rcp_manage_members' ) ) {
+				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
+			}
+
+			if( empty( $_POST['member-ids'] ) ) {
+				wp_die( __( 'Please select at least one member to edit.', 'rcp' ) );
+			}
+
+			$member_ids = array_map( 'absint', $_POST['member-ids'] );
+			$action     = sanitize_text_field( $_POST['rcp-bulk-action'] );
+
+			foreach( $member_ids as $member_id ) {
+
+				$member = new RCP_Member( $member_id );
+				switch( $action ) {
+
+					case 'mark-active' :
+
+						$member->set_status( 'active' );
+
+						break;
+
+					case 'mark-expired' :
+
+						$member->set_status( 'expired' );
+
+						break;
+
+					case 'mark-cancelled' :
+
+						$member->set_status( 'cancelled' );
+
+						break;
+
+					case 'delete' :
+
+						wp_delete_user( $member->ID );
+
+						break;
+
+				}
+			}
+
+			wp_redirect( admin_url( 'admin.php?page=rcp-members&rcp_message=members_updated' ) ); exit;			
+
+		}
+
 		// edit a member's subscription
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-member' ) {
 

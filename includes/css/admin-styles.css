@@ -29,6 +29,7 @@
 .center { text-align: center; }
 img.help-image { max-width: 99%; overflow: hidden; border: 1px solid #ccc; }
 /* members page columns */
+.rcp-checkbox-col { width: 20px; }
 .rcp-user-col { width: 100px; }
 .rcp-id-col { width: 50px; }
 .rcp-email-col { width: 180px; }
