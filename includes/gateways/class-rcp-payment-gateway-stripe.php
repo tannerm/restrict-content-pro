@@ -98,7 +98,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// No customer found
 					} catch ( Exception $e ) {
 
-
 						$customer_exists = false;
 
 					}
@@ -562,6 +561,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 ?>
 		<script type="text/javascript">
 
+			var rcp_script_options;
+			var rcp_processing;
+			var rcp_stripe_processing = false;
+
 			// this identifies your website in the createToken call below
 			Stripe.setPublishableKey('<?php echo $this->publishable_key; ?>');
 
@@ -573,10 +576,16 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					jQuery('#rcp_ajax_loading').hide();
 
 					// show the errors on the form
-					jQuery(".payment-errors").html(response.error.message);
+					jQuery('#rcp_registration_form').unblock();
+					jQuery('#rcp_submit').before( '<div class="rcp_message error"><p class="rcp_error"><span>' + response.error.message + '</span></p></div>' );
+					jQuery('#rcp_submit').val( rcp_script_options.register );
+
+					rcp_stripe_processing = false;
+					rcp_processing = false;
 
 				} else {
-					var form$ = jQuery("#rcp_registration_form");
+
+					var form$ = jQuery('#rcp_registration_form');
 					// token contains id, last4, and card type
 					var token = response['id'];
 					// insert the token into the form so it gets submitted to the server
@@ -591,34 +600,41 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			jQuery(document).ready(function($) {
 
 				$("#rcp_registration_form").on('submit', function(event) {
-					// get the subscription price
 
-					if( $('.rcp_level:checked').length ) {
-						var price = $('.rcp_level:checked').closest('li').find('span.rcp_price').attr('rel') * 100;
-					} else {
-						var price = $('.rcp_level').attr('rel') * 100;
+					if( ! rcp_stripe_processing ) {
+
+						rcp_stripe_processing = true;
+
+						// get the subscription price
+						if( $('.rcp_level:checked').length ) {
+							var price = $('.rcp_level:checked').closest('li').find('span.rcp_price').attr('rel') * 100;
+						} else {
+							var price = $('.rcp_level').attr('rel') * 100;
+						}
+
+						if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]').val() == 'stripe') && price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100')) {
+
+							event.preventDefault();
+
+							// disable the submit button to prevent repeated clicks
+							$('#rcp_registration_form #rcp_submit').attr("disabled", "disabled");
+							$('#rcp_ajax_loading').show();
+
+							// createToken returns immediately - the supplied callback submits the form if there are no errors
+							Stripe.createToken({
+								number: $('.card-number').val(),
+								name: $('.card-name').val(),
+								cvc: $('.card-cvc').val(),
+								exp_month: $('.card-expiry-month').val(),
+								exp_year: $('.card-expiry-year').val(),
+								address_zip: $('.card-zip').val()
+							}, stripeResponseHandler);
+
+							return false;
+						}
+
 					}
 
-					if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]').val() == 'stripe') && price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100')) {
-
-						event.preventDefault();
-
-						// disable the submit button to prevent repeated clicks
-						$('#rcp_registration_form #rcp_submit').attr("disabled", "disabled");
-						$('#rcp_ajax_loading').show();
-
-						// createToken returns immediately - the supplied callback submits the form if there are no errors
-						Stripe.createToken({
-							number: $('.card-number').val(),
-							name: $('.card-name').val(),
-							cvc: $('.card-cvc').val(),
-							exp_month: $('.card-expiry-month').val(),
-							exp_year: $('.card-expiry-year').val(),
-							address_zip: $('.card-zip').val()
-						}, stripeResponseHandler);
-
-						return false;
-					}
 				});
 			});
 		</script>

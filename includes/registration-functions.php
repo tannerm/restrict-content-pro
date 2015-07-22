@@ -129,7 +129,7 @@ function rcp_process_registration() {
 		}
 
 		// only create the user if there are no errors
-		if( ! empty( $errors ) ) {
+		if( ! empty( $errors ) || $is_ajax ) {
 			return;
 		}
 
@@ -152,6 +152,7 @@ function rcp_process_registration() {
 					'user_email'		=> $user_data['email'],
 					'first_name'		=> $user_data['first_name'],
 					'last_name'			=> $user_data['last_name'],
+					'display_name'      => $user_data['first_name'] . ' ' . $user_data['last_name'],
 					'user_registered'	=> date( 'Y-m-d H:i:s' )
 				)
 			);
