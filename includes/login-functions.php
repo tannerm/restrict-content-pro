@@ -204,7 +204,7 @@ add_action('init', 'rcp_process_lostpassword_form');
  * @since       1.0
  */
 function rcp_retrieve_password() {
-	global $wpdb, $wp_hasher;
+	global $wpdb, $wp_hasher, $wp_db_version;
 
 	if ( empty( $_POST['rcp_user_login'] ) ) {
 		rcp_errors()->add( 'empty_username', __( 'Enter a username or e-mail address.', 'rcp' ), 'lostpassword' );
@@ -246,7 +246,13 @@ function rcp_retrieve_password() {
 		require_once ABSPATH . WPINC . '/class-phpass.php';
 		$wp_hasher = new PasswordHash( 8, true );
 	}
-	$hashed = time() . ':' . $wp_hasher->HashPassword( $key );
+	if ($wp_db_version >= 31536) {
+		// 4.3 or later
+		$hashed = time() . ':' . $wp_hasher->HashPassword( $key );
+	} else {
+		$hashed = $wp_hasher->HashPassword( $key );
+	}
+
 	$wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user_login ) );
 
 	$message = __('Someone requested that the password be reset for the following account:') . "\r\n\r\n";
