@@ -120,38 +120,48 @@ function rcp_process_data() {
 			}
 
 			$member_ids = array_map( 'absint', $_POST['member-ids'] );
-			$action     = sanitize_text_field( $_POST['rcp-bulk-action'] );
+			$action     = ! empty( $_POST['rcp-bulk-action'] ) ? sanitize_text_field( $_POST['rcp-bulk-action'] ) : false;
 
 			foreach( $member_ids as $member_id ) {
 
 				$member = new RCP_Member( $member_id );
-				switch( $action ) {
 
-					case 'mark-active' :
+				if( $action ) {
+	
+					switch( $action ) {
 
-						$member->set_status( 'active' );
+						case 'mark-active' :
 
-						break;
+							$member->set_status( 'active' );
 
-					case 'mark-expired' :
+							break;
 
-						$member->set_status( 'expired' );
+						case 'mark-expired' :
 
-						break;
+							$member->set_status( 'expired' );
 
-					case 'mark-cancelled' :
+							break;
 
-						$member->set_status( 'cancelled' );
+						case 'mark-cancelled' :
 
-						break;
+							$member->set_status( 'cancelled' );
 
-					case 'delete' :
+							break;
 
-						wp_delete_user( $member->ID );
+						case 'delete' :
 
-						break;
+							wp_delete_user( $member->ID );
+
+							break;
+
+					}
 
 				}
+
+				if( ! empty( $_POST['expiration'] ) && 'delete' !== $action ) {
+					$member->set_expiration_date( date( 'Y-m-d H:i:s', strtotime( $_POST['expiration'] ) ) );
+				}
+
 			}
 
 			wp_redirect( admin_url( 'admin.php?page=rcp-members&rcp_message=members_updated' ) ); exit;			

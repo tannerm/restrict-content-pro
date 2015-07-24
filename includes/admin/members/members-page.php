@@ -108,7 +108,7 @@ function rcp_members_page() {
 			</form>
 			<?php do_action('rcp_members_above_table'); ?>
 			<form id="rcp-members-form" action="<?php echo esc_attr( admin_url( 'admin.php?page=rcp-members' ) ); ?>" method="post">
-				<div class="alignleft actions bulkactions">
+				<div id="rcp-bulk-action-options">
 					<label for="rcp-bulk-member-action" class="screen-reader-text"><?php _e( 'Select bulk action', 'rcp' ); ?></label>
 					<select name="rcp-bulk-action" id="rcp-bulk-member-action">
 						<option value="-1"><?php _e( 'Bulk Actions', 'rcp' ); ?></option>
@@ -117,13 +117,14 @@ function rcp_members_page() {
 						<option value="mark-cancelled"><?php _e( 'Revoke Access', 'rcp' ); ?></option>
 						<option value="delete"><?php _e( 'Delete', 'rcp' ); ?></option>
 					</select>
+					<input type="text" class="rcp-datepicker" name="expiration" placeholder="<?php esc_attr_e( 'New Expiration Date', 'rcp' ); ?>" id="rcp-bulk-expiration" value=""/>
 					<input type="submit" id="rcp-submit-bulk-action" class="button action" value="<?php _e( 'Apply', 'rcp' ); ?>"/>
-					<?php echo wp_nonce_field( 'rcp_bulk_edit_nonce', 'rcp_bulk_edit_nonce' ); ?>
 				</div>
+				<?php echo wp_nonce_field( 'rcp_bulk_edit_nonce', 'rcp_bulk_edit_nonce' ); ?>
 				<table class="wp-list-table widefat fixed posts">
 					<thead>
 						<tr>
-							<th class="rcp-checkbox-col"></th>
+							<th class="rcp-checkbox-col"><input type="checkbox" id="rcp-bulk-select-all"/></th>
 							<th class="rcp-user-col"><?php _e('User', 'rcp'); ?></th>
 							<th class="rcp-id-col"><?php _e('ID', 'rcp'); ?></th>
 							<th class="rcp-email-col"><?php _e('Email', 'rcp'); ?></th>
@@ -171,7 +172,7 @@ function rcp_members_page() {
 						foreach( $members as $key => $member) : ?>
 							<tr class="rcp_row <?php do_action( 'rcp_member_row_class', $member ); if( rcp_is_odd( $i ) ) { echo ' alternate'; } ?>">
 								<td>
-									<input type="checkbox" name="member-ids[]" value="<?php echo absint( $member->ID ); ?>"/>
+									<input type="checkbox" class="rcp-member-cb" name="member-ids[]" value="<?php echo absint( $member->ID ); ?>"/>
 								</td>
 								<td><a href="<?php echo add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php echo $member->user_login; ?></a></td>
 								<td><?php echo $member->ID; ?></td>
