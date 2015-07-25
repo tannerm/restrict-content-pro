@@ -11,35 +11,40 @@
 
 class RCP_Payment_Gateway_Twocheckout_Standard extends RCP_Payment_Gateway {
 
-  /**
-   * get things going
-   *
-   * @since      2.1
-   */
-  public function init() {
-    global $rcp_options;
+	private $secret_key;
+	private $publishable_key;
+	private $seller_id;
 
-    $this->supports[]  = 'one-time';
-    $this->supports[]  = 'recurring';
-    $this->supports[]  = 'fees';
+	/**
+	* get things going
+	*
+	* @since      2.1
+	*/
+	public function init() {
+		global $rcp_options;
 
-    $this->test_mode   = isset( $rcp_options['sandbox'] );
+		$this->supports[]  = 'one-time';
+		$this->supports[]  = 'recurring';
+		$this->supports[]  = 'fees';
 
-    if( $this->test_mode ) {
+		$this->test_mode   = isset( $rcp_options['sandbox'] );
 
-      $this->secret_key      = isset( $rcp_options['twocheckout_test_private'] )      ? trim( $rcp_options['twocheckout_test_private'] )      : '';
-      $this->publishable_key = isset( $rcp_options['twocheckout_test_publishable'] ) ? trim( $rcp_options['twocheckout_test_publishable'] ) : '';
+		if( $this->test_mode ) {
 
-    } else {
+			$this->secret_key      = isset( $rcp_options['twocheckout_test_private'] )      ? trim( $rcp_options['twocheckout_test_private'] )     : '';
+			$this->publishable_key = isset( $rcp_options['twocheckout_test_publishable'] )  ? trim( $rcp_options['twocheckout_test_publishable'] ) : '';
 
-      $this->secret_key      = isset( $rcp_options['twocheckout_live_private'] )      ? trim( $rcp_options['twocheckout_live_private'] )      : '';
-      $this->publishable_key = isset( $rcp_options['twocheckout_live_publishable'] ) ? trim( $rcp_options['twocheckout_live_publishable'] ) : '';
+		} else {
 
-    }
+			$this->secret_key      = isset( $rcp_options['twocheckout_live_private'] )        ? trim( $rcp_options['twocheckout_live_private'] )     : '';
+			$this->publishable_key = isset( $rcp_options['twocheckout_live_publishable'] )    ? trim( $rcp_options['twocheckout_live_publishable'] ) : '';
+			$this->seller_id       = isset( $rcp_options['twocheckout_live_seller_id'] )      ? trim( $rcp_options['twocheckout_live_seller_id'] )   : '';
 
-    if( ! class_exists( 'Twocheckout' ) ) {
-      require_once RCP_PLUGIN_DIR . 'includes/libraries/twocheckout/Twocheckout.php';
-    } 
-  } // end init
+		}
+
+		if( ! class_exists( 'Twocheckout' ) ) {
+			require_once RCP_PLUGIN_DIR . 'includes/libraries/twocheckout/Twocheckout.php';
+		} 
+	} // end init
 
 }
