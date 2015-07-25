@@ -31,14 +31,14 @@ class RCP_Payment_Gateway_Twocheckout_Standard extends RCP_Payment_Gateway {
 
 		if( $this->test_mode ) {
 
-			$this->secret_key      = isset( $rcp_options['twocheckout_test_private'] )      ? trim( $rcp_options['twocheckout_test_private'] )     : '';
-			$this->publishable_key = isset( $rcp_options['twocheckout_test_publishable'] )  ? trim( $rcp_options['twocheckout_test_publishable'] ) : '';
+			$this->secret_key      = isset( $rcp_options['twocheckout_test_private'] )     ? trim( $rcp_options['twocheckout_test_private'] )     : '';
+			$this->publishable_key = isset( $rcp_options['twocheckout_test_publishable'] ) ? trim( $rcp_options['twocheckout_test_publishable'] ) : '';
 
 		} else {
 
-			$this->secret_key      = isset( $rcp_options['twocheckout_live_private'] )        ? trim( $rcp_options['twocheckout_live_private'] )     : '';
-			$this->publishable_key = isset( $rcp_options['twocheckout_live_publishable'] )    ? trim( $rcp_options['twocheckout_live_publishable'] ) : '';
-			$this->seller_id       = isset( $rcp_options['twocheckout_live_seller_id'] )      ? trim( $rcp_options['twocheckout_live_seller_id'] )   : '';
+			$this->secret_key      = isset( $rcp_options['twocheckout_live_private'] )     ? trim( $rcp_options['twocheckout_live_private'] )     : '';
+			$this->publishable_key = isset( $rcp_options['twocheckout_live_publishable'] ) ? trim( $rcp_options['twocheckout_live_publishable'] ) : '';
+			$this->seller_id       = isset( $rcp_options['twocheckout_live_seller_id'] )   ? trim( $rcp_options['twocheckout_live_seller_id'] )   : '';
 
 		}
 
