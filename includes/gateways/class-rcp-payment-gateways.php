@@ -78,10 +78,10 @@ class RCP_Payment_Gateways {
 				'admin_label'  => __( 'Stripe', 'rcp' ),
 				'class'        => 'RCP_Payment_Gateway_Stripe'
 			),
-			'2checkout' => array(
+			'twocheckout' => array(
 				'label'        => __( 'Credit / Debit Card', 'rcp' ),
 				'admin_label'  => __( '2Checkpot Standard', 'rcp' ),
-				'class'        => 'RCP_Payment_Gateway_2Checkout_Standard'
+				'class'        => 'RCP_Payment_Gateway_Twocheckout_Standard'
 			)
 		);
 
