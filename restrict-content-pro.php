@@ -166,6 +166,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-paypal-pro.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-paypal-express.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-stripe.php' );
+	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-2checkout-standard.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateways.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/gateway-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/invoice-functions.php' );
