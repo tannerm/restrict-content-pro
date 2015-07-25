@@ -382,9 +382,6 @@ function rcp_settings_page() {
 								<span class="description"><?php _e( 'Only check this option if your members statuses are not getting changed to "active".', 'rcp' ); ?></span>
 							</td>
 						</tr>
-
-
-
 						<?php if( ! function_exists( 'rcp_register_twocheckout_gateway' ) ) : ?>
 						<tr valign="top">
 							<th colspan=2>
@@ -393,49 +390,41 @@ function rcp_settings_page() {
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[stripe_test_secret]"><?php _e( 'Test Secret Key', 'rcp' ); ?></label>
+								<label for="rcp_settings[twocheckout_test_private]"><?php _e( 'Test Private Key', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<input class="regular-text" id="rcp_settings[stripe_test_secret]" style="width: 300px;" name="rcp_settings[stripe_test_secret]" value="<?php if(isset($rcp_options['stripe_test_secret'])) { echo $rcp_options['stripe_test_secret']; } ?>"/>
-								<p class="description"><?php _e('Enter your test secret key. Your API keys can be obtained from your <a href="https://dashboard.stripe.com/account/apikeys" target="_blank">Stripe account settings</a>.', 'rcp'); ?></p>
+								<input class="regular-text" id="rcp_settings[twocheckout_test_private]" style="width: 300px;" name="rcp_settings[twocheckout_test_private]" value="<?php if(isset($rcp_options['twocheckout_test_private'])) { echo $rcp_options['twocheckout_test_private']; } ?>"/>
+								<p class="description"><?php _e('Enter your test private key. Your test API keys can be obtained from the <a href="https://sandbox.2checkout.com/sandbox/api" target="_blank">2Checkout Sandbox</a>.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[stripe_test_publishable]"><?php _e( 'Test Publishable Key', 'rcp' ); ?></label>
+								<label for="rcp_settings[twocheckout_test_publishable]"><?php _e( 'Test Publishable Key', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<input class="regular-text" id="rcp_settings[stripe_test_publishable]" style="width: 300px;" name="rcp_settings[stripe_test_publishable]" value="<?php if(isset($rcp_options['stripe_test_publishable'])) { echo $rcp_options['stripe_test_publishable']; } ?>"/>
+								<input class="regular-text" id="rcp_settings[twocheckout_test_publishable]" style="width: 300px;" name="rcp_settings[twocheckout_test_publishable]" value="<?php if(isset($rcp_options['twocheckout_test_publishable'])) { echo $rcp_options['twocheckout_test_publishable']; } ?>"/>
 								<p class="description"><?php _e('Enter your test publishable key.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[stripe_live_secret]"><?php _e( 'Live Secret Key', 'rcp' ); ?></label>
+								<label for="rcp_settings[twocheckout_live_private]"><?php _e( 'Live Private Key', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<input class="regular-text" id="rcp_settings[stripe_live_secret]" style="width: 300px;" name="rcp_settings[stripe_live_secret]" value="<?php if(isset($rcp_options['stripe_live_secret'])) { echo $rcp_options['stripe_live_secret']; } ?>"/>
-								<p class="description"><?php _e('Enter your live secret key.', 'rcp'); ?></p>
+								<input class="regular-text" id="rcp_settings[twocheckout_live_private]" style="width: 300px;" name="rcp_settings[twocheckout_live_private]" value="<?php if(isset($rcp_options['twocheckout_live_private'])) { echo $rcp_options['twocheckout_live_private']; } ?>"/>
+								<p class="description"><?php _e('Enter your live secret key. Your API keys can be obtained from the <a href="https://pci.trustwave.com/2checkout" target="_blank">2Checkout PCI Program</a>.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[stripe_live_publishable]"><?php _e( 'Live Publishable Key', 'rcp' ); ?></label>
+								<label for="rcp_settings[twocheckout_live_publishable]"><?php _e( 'Live Publishable Key', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<input class="regular-text" id="rcp_settings[stripe_live_publishable]" style="width: 300px;" name="rcp_settings[stripe_live_publishable]" value="<?php if(isset($rcp_options['stripe_live_publishable'])) { echo $rcp_options['stripe_live_publishable']; } ?>"/>
+								<input class="regular-text" id="rcp_settings[twocheckout_live_publishable]" style="width: 300px;" name="rcp_settings[twocheckout_live_publishable]" value="<?php if(isset($rcp_options['twocheckout_live_publishable'])) { echo $rcp_options['twocheckout_live_publishable']; } ?>"/>
 								<p class="description"><?php _e('Enter your live publishable key.', 'rcp'); ?></p>
 							</td>
 						</tr>
-						<tr>
-							<th colspan=2>
-								<p><strong><?php _e('Note', 'rcp'); ?></strong>: <?php _e('in order for subscription payments made through Stripe to be tracked, you must enter the following URL to your <a href="https://dashboard.stripe.com/account/webhooks" target="_blank">Stripe Webhooks</a> under Account Settings:', 'rcp'); ?></p>
-								<p><strong><?php echo esc_url( add_query_arg( 'listener', 'stripe', home_url() ) ); ?></strong></p>
-							</th>
-						</tr>
 						<?php endif; ?>
-
-
 					</table>
 					<?php do_action( 'rcp_payments_settings', $rcp_options ); ?>
 
