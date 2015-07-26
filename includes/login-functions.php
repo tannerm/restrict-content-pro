@@ -246,7 +246,7 @@ function rcp_retrieve_password() {
 		require_once ABSPATH . WPINC . '/class-phpass.php';
 		$wp_hasher = new PasswordHash( 8, true );
 	}
-	if ($wp_db_version >= 31536) {
+	if ($wp_db_version >= 32814) {
 		// 4.3 or later
 		$hashed = time() . ':' . $wp_hasher->HashPassword( $key );
 	} else {
