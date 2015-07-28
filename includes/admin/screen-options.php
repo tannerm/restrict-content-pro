@@ -38,7 +38,13 @@ function rcp_screen_options() {
 }
  
 function rcp_set_screen_option($status, $option, $value) {
-	if ( 'rcp_members_per_page' == $option ) return $value;
-	if ( 'rcp_payments_per_page' == $option ) return $value;
+	if ( 'rcp_members_per_page' == $option ) {
+		return $value;
+	}
+	if ( 'rcp_payments_per_page' == $option ) {
+		return $value;
+	}
+
+	return $status;
 }
 add_filter('set-screen-option', 'rcp_set_screen_option', 10, 3);
