@@ -404,7 +404,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		if ( $paid ) {
 
 			// set this user to active
-			$member->renew( $this->auto_renew );
+			$member->set_status( 'active' );
+			$member->set_recurring( $this->auto_renew );
 
 			if ( ! is_user_logged_in() ) {
 
