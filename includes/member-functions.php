@@ -850,6 +850,10 @@ function rcp_get_user_resetting_password($rp_cookie) {
 		$user = false;
 	}
 
+	if (is_wp_error( $user )) {
+		$user = false;
+	}
+
 	return $user;
 }
 
