@@ -27,7 +27,12 @@ function rcp_login_form_fields( $args = array() ) {
 	return ob_get_clean();
 }
 
-// lost password form fields
+/**
+ * Display lost password form fields
+ *
+ * @since       2.3
+ * @return      string HTML content
+ */
 function rcp_lostpassword_form_fields() {
 
 	ob_start();
@@ -41,7 +46,12 @@ function rcp_lostpassword_form_fields() {
 	return ob_get_clean();
 }
 
-// lost password check email message
+/**
+ * Display lost password check email message
+ *
+ * @since       2.3
+ * @return      string HTML content
+ */
 function rcp_lostpassword_checkemail_message() {
 
 	ob_start();
@@ -71,7 +81,7 @@ function rcp_registration_form_fields( $id = null ) {
 		} else {
 
 			rcp_get_template_part( 'register', 'single' );
-			
+
 		}
 
 	} else {

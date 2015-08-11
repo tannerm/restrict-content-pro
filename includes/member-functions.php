@@ -834,6 +834,13 @@ function rcp_change_password() {
 add_action( 'init', 'rcp_change_password' );
 
 function rcp_get_user_resetting_password($rp_path, $rp_cookie) {
+/**
+ * Return the user who is initiating the password reset, or false if not performing a reset
+ *
+ * @param       string $rp_cookie Password reset cookie name
+ * @since       2.3
+ * @return      WP_User|false User object if reset key and login name exist and are valid, false if not
+ */
 
 	// check if the reset key and login name are valid
 	if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {

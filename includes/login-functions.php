@@ -130,7 +130,7 @@ add_action('init', 'rcp_process_login_form');
  * Process the password reset. adapted from wp-login.php
  *
  * @access      public
- * @since       1.0
+ * @since       2.3
  */
 function rcp_process_lostpassword_reset() {
 
@@ -170,13 +170,11 @@ function rcp_process_lostpassword_reset() {
 
 add_action('init', 'rcp_process_lostpassword_reset');
 
-// lostpassword_reset
-
 /**
  * Process the lost password form
  *
  * @access      public
- * @since       1.0
+ * @since       2.3
  */
 function rcp_process_lostpassword_form() {
 	if( 'POST' !== $_SERVER['REQUEST_METHOD'] || ! isset( $_POST['rcp_action'] ) || 'lostpassword' != $_POST['rcp_action'] ) {
@@ -201,7 +199,7 @@ add_action('init', 'rcp_process_lostpassword_form');
  * Send password reset email to user. Adapted from wp-login.php
  *
  * @access      public
- * @since       1.0
+ * @since       2.3
  */
 function rcp_retrieve_password() {
 	global $wpdb, $wp_hasher, $wp_db_version;
