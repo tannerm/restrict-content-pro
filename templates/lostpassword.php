@@ -2,7 +2,7 @@
 
     <?php rcp_show_error_messages( 'lostpassword' ); ?>
 
-    <form id="rcp_lostpassword_form" class="rcp_form" method="POST" action="<?php echo esc_url( rcp_get_current_url() ); ?>?rcp_action=lostpassword">
+    <form id="rcp_lostpassword_form" class="rcp_form" method="POST" action="<?php echo esc_url( add_query_arg( 'rcp_action', 'lostpassword') ); ?>">
 
         <?php do_action( 'rcp_before_lostpassword_form_fields' ); ?>
 
