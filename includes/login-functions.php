@@ -208,15 +208,17 @@ function rcp_retrieve_password() {
 		rcp_errors()->add( 'empty_username', __( 'Enter a username or e-mail address.', 'rcp' ), 'lostpassword' );
 	} elseif ( strpos( $_POST['rcp_user_login'], '@' ) ) {
 		$user_data = get_user_by( 'email', trim( $_POST['rcp_user_login'] ) );
-		if ( empty( $user_data ) )
+		if ( empty( $user_data ) ) {
 			rcp_errors()->add( 'invalid_email', __( 'There is no user registered with that email address.', 'rcp' ), 'lostpassword' );
+		}
 	} else {
 		$login = trim($_POST['rcp_user_login']);
 		$user_data = get_user_by('login', $login);
 	}
 
-	if ( rcp_errors()->get_error_code() )
+	if ( rcp_errors()->get_error_code() ) {
 		return rcp_errors();
+	}
 
 	if ( !$user_data ) {
 		rcp_errors()->add('invalidcombo', __('Invalid username or e-mail.', 'rcp' ), 'lostpassword');
@@ -260,14 +262,15 @@ function rcp_retrieve_password() {
 	$message .= __('To reset your password, visit the following address:') . "\r\n\r\n";
 	$message .= '<' . esc_url($_POST['rcp_redirect']) . "?rcp_action=lostpassword_reset&key=$key&login=" . rawurlencode($user_login) . ">\r\n";
 
-	if ( is_multisite() )
+	if ( is_multisite() ) {
 		$blogname = $GLOBALS['current_site']->site_name;
-	else
+	} else {
 		/*
 		 * The blogname option is escaped with esc_html on the way into the database
 		 * in sanitize_option we want to reverse this for the plain text arena of emails.
 		 */
 		$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
+	}
 
 	$title = sprintf( __('[%s] Password Reset'), $blogname );
 
@@ -275,8 +278,9 @@ function rcp_retrieve_password() {
 
 	$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );
 
-	if ( $message && !wp_mail( $user_email, wp_specialchars_decode( $title ), $message ) )
+	if ( $message && !wp_mail( $user_email, wp_specialchars_decode( $title ), $message ) ) {
 		wp_die( __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function.') );
+	}
 
 	return true;
 }
