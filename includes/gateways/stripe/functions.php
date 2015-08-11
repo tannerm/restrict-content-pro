@@ -120,10 +120,105 @@ function rcp_stripe_update_billing_card( $member_id = 0, $member_obj ) {
 	}
 
 	\Stripe\Stripe::setApiKey( $secret_key );
-	$customer = \Stripe\Customer::retrieve( $customer_id );
 
-	$customer->card = $_POST['stripeToken']; // obtained with stripe.js
-	$customer->save();
+	try {
+
+		$customer = \Stripe\Customer::retrieve( $customer_id );
+
+		$customer->card = $_POST['stripeToken']; // obtained with stripe.js
+		$customer->save();
+
+
+	} catch ( \Stripe\Error\Card $e ) {
+
+		$body = $e->getJsonBody();
+		$err  = $body['error'];
+
+		$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
+		if( isset( $err['code'] ) ) {
+			$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
+		}
+		$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+		$error .= "<p>Message: " . $err['message'] . "</p>";
+
+		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+
+		exit;
+
+	} catch (\Stripe\Error\InvalidRequest $e) {
+
+		// Invalid parameters were supplied to Stripe's API
+		$body = $e->getJsonBody();
+		$err  = $body['error'];
+
+		$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
+		if( isset( $err['code'] ) ) {
+			$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
+		}
+		$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+		$error .= "<p>Message: " . $err['message'] . "</p>";
+
+		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+
+	} catch (\Stripe\Error\Authentication $e) {
+
+		// Authentication with Stripe's API failed
+		// (maybe you changed API keys recently)
+
+		$body = $e->getJsonBody();
+		$err  = $body['error'];
+
+		$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
+		if( isset( $err['code'] ) ) {
+			$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
+		}
+		$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+		$error .= "<p>Message: " . $err['message'] . "</p>";
+
+		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+
+	} catch (\Stripe\Error\ApiConnection $e) {
+
+		// Network communication with Stripe failed
+
+		$body = $e->getJsonBody();
+		$err  = $body['error'];
+
+		$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
+		if( isset( $err['code'] ) ) {
+			$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
+		}
+		$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+		$error .= "<p>Message: " . $err['message'] . "</p>";
+
+		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+
+	} catch (\Stripe\Error\Base $e) {
+
+		// Display a very generic error to the user
+
+		$body = $e->getJsonBody();
+		$err  = $body['error'];
+
+		$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
+		if( isset( $err['code'] ) ) {
+			$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
+		}
+		$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+		$error .= "<p>Message: " . $err['message'] . "</p>";
+
+		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+
+	} catch (Exception $e) {
+
+		// Something else happened, completely unrelated to Stripe
+
+		$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
+		$error .= print_r( $e, true );
+
+		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+
+	}
 
 	wp_redirect( add_query_arg( 'card', 'updated' ) ); exit;
 
