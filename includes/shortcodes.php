@@ -311,7 +311,7 @@ function rcp_update_billing_card_shortcode( $atts, $content = null ) {
 
 				case 'updated' :
 
-					echo '<div class="rcp_message"><p class="rcp_success">' . __( 'Billing card updated successfully', 'rcp' ) . '</p></div>';
+					echo '<p class="rcp_success"><span>' . __( 'Billing card updated successfully', 'rcp' ) . '</span></p>';
 
 					break;
 
