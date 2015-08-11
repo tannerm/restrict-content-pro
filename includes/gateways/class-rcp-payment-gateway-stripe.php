@@ -104,54 +104,29 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				}
 
-				// Customer with a discount
-				if ( ! empty( $this->discount_code ) ) {
+				if( ! $customer_exists ) {
 
-					if( $customer_exists ) {
+					$customer_args = array(
+						'card' 			=> $_POST['stripeToken'],
+						'email' 		=> $this->email,
+						'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
+					);
 
-						$customer->card   = $_POST['stripeToken'];
-						$customer->coupon = $this->discount_code;
-						$customer->save();
+					if ( ! empty( $this->discount_code ) ) {
 
-						// Update the customer's subscription in Stripe
-						$customer_response = $customer->updateSubscription( array( 'plan' => $plan_id ) );
-
-					} else {
-
-						$customer = \Stripe\Customer::create( apply_filters( 'rcp_stripe_customer_create_args', array(
-							'card' 			=> $_POST['stripeToken'],
-							'plan' 			=> $plan_id,
-							'email' 		=> $this->email,
-							'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
-							'coupon' 		=> $_POST['rcp_discount']
-						), $this ) );
+						$customer_args['coupon'] = $this->discount_code;
 
 					}
 
-				// Customer without a discount
+					$customer = \Stripe\Customer::create( apply_filters( 'rcp_stripe_customer_create_args', $customer_args, $this ) );
+
 				} else {
 
-					if( $customer_exists ) {
-
-						$customer->card   = $_POST['stripeToken'];
-						$customer->save();
-
-						// Update the customer's subscription in Stripe
-						$customer_response = $customer->updateSubscription( array( 'plan' => $plan_id ) );
-
-					} else {
-
-						$customer = \Stripe\Customer::create( apply_filters( 'rcp_stripe_customer_create_args', array(
-							'card' 			=> $_POST['stripeToken'],
-							'plan' 			=> $plan_id,
-							'email' 		=> $this->email,
-							'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name
-						), $this ) );
-
-					}
-
+					$customer->card = $_POST['stripeToken'];
+	
 				}
 
+				// Add fees before the plan is updated and charged
 				if ( ! empty( $this->signup_fee ) ) {
 
 					if( $this->signup_fee > 0 ) {
@@ -172,9 +147,27 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						'customer' => $customer->id, // the customer to apply the fee to
 					), $this, $customer ) );
 
+				}
+
+				if ( ! empty( $this->discount_code ) ) {
+
+					$customer->coupon = $this->discount_code;
+
+				}
+
+				// Save the card and any coupon
+				$customer->save();
+
+				// Process the invoice if there is one
+				if( ! empty( $invoice ) ) {
+
 					$invoice->pay();
 
 				}
+
+
+				// Update the customer's subscription in Stripe
+				$customer->updateSubscription( array( 'plan' => $plan_id ) );
 
 				$member->set_payment_profile_id( $customer->id );
 
