@@ -284,3 +284,27 @@ function rcp_retrieve_password() {
 
 	return true;
 }
+
+/**
+ * Return the user who is initiating the password reset, or false if not performing a reset
+ *
+ * @param       string $rp_cookie Password reset cookie name
+ * @since       2.3
+ * @return      WP_User|false User object if reset key and login name exist and are valid, false if not
+ */
+function rcp_get_user_resetting_password($rp_cookie) {
+
+	// check if the reset key and login name are valid
+	if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
+		list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
+		$user = check_password_reset_key( $rp_key, $rp_login );
+	} else {
+		$user = false;
+	}
+
+	if (is_wp_error( $user )) {
+		$user = false;
+	}
+
+	return $user;
+}
