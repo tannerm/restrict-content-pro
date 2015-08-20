@@ -171,8 +171,6 @@ function rcp_process_registration() {
 			update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
 			update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
 
-			rcp_set_expiration_date( $user_data['id'], $member_expires );
-
 			// Set the user's role
 			$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
 			$user = new WP_User( $user_data['id'] );
@@ -195,6 +193,7 @@ function rcp_process_registration() {
 					if( $price == '0' ) {
 						rcp_set_status( $user_data['id'], 'active' );
 						rcp_email_subscription_status( $user_data['id'], 'active' );
+						rcp_set_expiration_date( $user_data['id'], $member_expires );
 						rcp_login_user_in( $user_data['id'], $user_data['login'] );
 						wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 					}
@@ -271,7 +270,6 @@ function rcp_process_registration() {
 
 				}
 
-				// date for trial / paid users, "none" for free users
 				rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 				if( $user_data['need_new'] ) {
