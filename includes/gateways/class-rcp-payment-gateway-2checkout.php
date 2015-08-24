@@ -67,36 +67,33 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 		Twocheckout::sellerId( $this->seller_id );
 		Twocheckout::sandbox( $this->sandbox );
 
-		$paid   = false;
-		$member = new RCP_Member( $this->user_id );
-		$customer_exists = false;
-
+		$paid         = false;
+		$member       = new RCP_Member( $this->user_id );
 		$subscription = rcp_get_subscription_details( $_POST['rcp_level'] );
-		$sub_id = $this->subscription_id;
 
 		if( empty( $_POST['twoCheckoutToken'] ) ) {
-			wp_die( __( 'Missing 2Checkout token, please try again or contact support if the issue persists.', 'rcp' ), __( 'Error', 'rcp' ), array( 'response' => 400 ) );
+			rcp_errors()->add( 'missing_card_token', __( 'Missing 2Checkout token, please try again or contact support if the issue persists.', 'rcp' ), 'register' );
+			return;
 		}
 
 		try {
 
-			$recurrence = $subscription->duration . ' ' . ucfirst( $subscription->duration_unit );
-			$charge = Twocheckout_Charge::auth(array(
+			$charge = Twocheckout_Charge::auth( array(
 				'merchantOrderId' => $this->subscription_id,
 				'token'           => $_POST['twoCheckoutToken'],
 				'currency'        => strtolower( $this->currency ),
 				'billingAddr'     => array(
-					'name'      => $_POST['rcp_card_name'],
-					'addrLine1' => $_POST['rcp_card_address'],
-					'city'      => $_POST['rcp_card_city'],
-					'state'     => $_POST['rcp_card_state'],
-					'zipCode'   => $_POST['rcp_card_zip'],
-					'country'   => $_POST['rcp_card_country'],
-					'email'     => $this->email,
+					'name'        => sanitize_text_field( $_POST['rcp_card_name'] ),
+					'addrLine1'   => sanitize_text_field( $_POST['rcp_card_address'] ),
+					'city'        => sanitize_text_field( $_POST['rcp_card_city'] ),
+					'state'       => sanitize_text_field( $_POST['rcp_card_state'] ),
+					'zipCode'     => sanitize_text_field( $_POST['rcp_card_zip'] ),
+					'country'     => sanitize_text_field( $_POST['rcp_card_country'] ),
+					'email'       => $this->email,
 				),
-				"lineItems"     => array(
+				"lineItems"       => array(
 					array(
-						"recurrence"  => $recurrence,
+						"recurrence"  => $subscription->duration . ' ' . ucfirst( $subscription->duration_unit ),
 						"type"        => 'product',
 						"price"       => $this->amount,
 						"productId"   => $subscription->id,
@@ -112,7 +109,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			if( $charge['response']['responseCode'] == 'APPROVED' ) {
 
 				$payment_data = array(
-					'date'              => date( 'Y-m-d g:i:s', time() ),
+					'date'              => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
 					'subscription'      => $this->subscription_name,
 					'payment_type' 		=> 'Credit Card One Time',
 					'subscription_key' 	=> $this->subscription_key,
@@ -125,14 +122,15 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 				$rcp_payments->insert( $payment_data );
 				$paid = true;
 
-				echo "Thanks for your Order!";
-				echo "<h3>Return Parameters:</h3>";
-				echo "<pre>"; print_r($subscription); echo "</pre>";
-				echo "<pre>"; print_r($charge); echo "</pre>";
+				// redirect to the success page, or error page if something went wrong
+				wp_redirect( $this->return_url ); exit;
 				
 			}
-		} catch (Twocheckout_Error $e) {
-			print_r($e->getMessage());
+
+		} catch ( Twocheckout_Error $e) {
+
+			rcp_errors()->add( '2checkout_error', $e->getMessage(), 'register' );
+
 		}
 	}
 
@@ -241,7 +239,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 		}
 
 		if( empty( $_POST['twoCheckoutToken'] ) ) {
-			rcp_errors()->add( 'missing_card_token', __( 'Missing 2Checkout token, please try again or contact support if the issue persists.', 'rcp' ), 'register' );
+			//rcp_errors()->add( 'missing_card_token', __( 'Missing 2Checkout token, please try again or contact support if the issue persists.', 'rcp' ), 'register' );
 		}		
 
 	}
