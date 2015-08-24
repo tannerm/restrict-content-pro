@@ -243,7 +243,7 @@ function rcp_get_current_url() {
 	else :
 
 		$current_url = 'http';
-		if ( isset( $_SERVER["HTTPS"] ) && $_SERVER["HTTPS"] == "on" ) $current_url .= "s";
+		if ( is_ssl() ) $current_url .= "s";
 
 		$current_url .= "://";
 
