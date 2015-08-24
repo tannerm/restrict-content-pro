@@ -67,7 +67,6 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 		Twocheckout::sellerId( $this->seller_id );
 		Twocheckout::sandbox( $this->sandbox );
 
-		$paid         = false;
 		$member       = new RCP_Member( $this->user_id );
 		$subscription = rcp_get_subscription_details( $_POST['rcp_level'] );
 
@@ -79,7 +78,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 		try {
 
 			$charge = Twocheckout_Charge::auth( array(
-				'merchantOrderId' => $this->subscription_id,
+				'merchantOrderId' => $this->subscription_key,
 				'token'           => $_POST['twoCheckoutToken'],
 				'currency'        => strtolower( $this->currency ),
 				'billingAddr'     => array(
@@ -100,13 +99,22 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 						"name"        => $subscription->name,
 						"quantity"    => '1',
 						"tangible"    => 'N',
-						"startupFee"  => $subscription->fee . '.00',
+						"startupFee"  => $subscription->fee,
 						"description" => $subscription->description
 					)
 				),
 			));
 
 			if( $charge['response']['responseCode'] == 'APPROVED' ) {
+
+				$charge_details = Twocheckout_Sale::retrieve( array(
+					'api'        => true,
+					'privateKey' => $this->secret_key,
+					'sellerId'   => $this->seller_id,
+					'sale_id'    => $charge['response']['transactionId']
+				) );
+
+				echo '<pre>'; print_r( $charge_details ); echo '</pre>'; exit;
 
 				$payment_data = array(
 					'date'              => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
@@ -120,7 +128,6 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				$rcp_payments = new RCP_Payments();
 				$rcp_payments->insert( $payment_data );
-				$paid = true;
 
 				// redirect to the success page, or error page if something went wrong
 				wp_redirect( $this->return_url ); exit;
@@ -140,6 +147,81 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 	 * @since 2.3
 	 */
 	public function process_webhooks() {
+
+		if ( isset( $_GET['listener'] ) && $_GET['listener'] == '2checkout' ) {
+
+			global $wpdb;
+
+			$hash  = strtoupper( md5( $_POST['sale_id'] . $this->seller_id . $_POST['invoice_id'] . $this->secret_key ) );
+
+			if ( ! hash_equals( $hash, $_POST['md5_hash'] ) ) {
+				edd_record_gateway_error( __( '2Checkout Error', 'rcp' ), sprintf( __( 'Invalid INS hash. INS data: %s', 'edd' ), json_encode( $_POST ) ) );
+				die('-1');
+			}
+
+			if ( empty( $_POST['message_type'] ) ) {
+				die( '-2' );
+			}
+
+			if ( empty( $_POST['vendor_id'] ) ) {
+				die( '-3' );
+			}
+
+			$subscription_key = sanitize_text_field( $_POST['vendor_order_id'] );
+			$member_id        = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'rcp_subscription_key' AND meta_value = %s LIMIT 1", $subscription_key ) );
+
+			if ( ! $member_id ) {
+				die( '-4' );
+			}
+
+			$member = new RCP_Member( $member_id );
+
+			switch( strtoupper( $_POST['message_type'] ) ) {
+
+				case 'ORDER_CREATED' :
+
+					break;
+
+				case 'REFUND_ISSUED' :
+
+					break;
+
+				case 'RECURRING_INSTALLMENT_SUCCESS' :
+
+					break;
+
+				case 'RECURRING_INSTALLMENT_FAILED' :
+
+					break;
+
+				case 'RECURRING_STOPPED' :
+
+					break;
+
+				case 'RECURRING_COMPLETE' :
+
+					break;
+
+				case 'RECURRING_RESTARTED' :
+
+					break;
+
+
+				case 'FRAUD_STATUS_CHANGED' :
+
+					switch ( $_POST['fraud_status'] ) {
+						case 'pass':
+							break;
+						case 'fail':
+							break;
+						case 'wait':
+							break;
+					}
+
+					break;
+			}
+
+		}
 	}
 
 	/**
@@ -236,11 +318,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 		if( empty( $_POST['rcp_card_zip'] ) && $this->card_needs_state_and_zip() ) {
 			rcp_errors()->add( 'missing_card_zip', __( 'The zip / postal code you have entered is invalid', 'rcp' ), 'register' );
-		}
-
-		if( empty( $_POST['twoCheckoutToken'] ) ) {
-			//rcp_errors()->add( 'missing_card_token', __( 'Missing 2Checkout token, please try again or contact support if the issue persists.', 'rcp' ), 'register' );
-		}		
+		}	
 
 	}
 
