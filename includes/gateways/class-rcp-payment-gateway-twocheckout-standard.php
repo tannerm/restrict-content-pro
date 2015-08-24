@@ -9,7 +9,7 @@
  * @since       2.2.3
 */
 
-class RCP_Payment_Gateway_Twocheckout_Standard extends RCP_Payment_Gateway {
+class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 	private $secret_key;
 	private $publishable_key;
