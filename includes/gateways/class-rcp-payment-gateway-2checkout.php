@@ -78,62 +78,62 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			wp_die( __( 'Missing 2Checkout token, please try again or contact support if the issue persists.', 'rcp' ), __( 'Error', 'rcp' ), array( 'response' => 400 ) );
 		}
 
-		// Haven't included other stuff yet untill I get this working
-			try {
+		try {
 
-				$recurrence = $subscription->duration . ' ' . ucfirst( $subscription->duration_unit );
-				$charge = Twocheckout_Charge::auth(array(
-					'merchantOrderId' => $this->subscription_id,
-					'token'           => $_POST['twoCheckoutToken'],
-					'currency'        => strtolower( $this->currency ),
-					'billingAddr'     => array(
-						'name'      => $_POST['rcp_card_name'],
-						'addrLine1' => $_POST['rcp_card_address'],
-						'city'      => $_POST['rcp_card_city'],
-						'state'     => $_POST['rcp_card_state'],
-						'zipCode'   => $_POST['rcp_card_zip'],
-						'country'   => $_POST['rcp_card_country'],
-						'email'     => $this->email,
-					),
-					"lineItems"     => array(
-						array(
-							"recurrence"  => $recurrence,
-							"type"        => 'product',
-							"price"       => $this->amount,
-							"productId"   => $subscription->id,
-							"name"        => $subscription->name,
-							"quantity"    => '1',
-							"tangible"    => 'N',
-							"startupFee"  => $subscription->fee . '.00',
-							"description" => $subscription->description
-						)
-					),
-				));
+			$recurrence = $subscription->duration . ' ' . ucfirst( $subscription->duration_unit );
+			$charge = Twocheckout_Charge::auth(array(
+				'merchantOrderId' => $this->subscription_id,
+				'token'           => $_POST['twoCheckoutToken'],
+				'currency'        => strtolower( $this->currency ),
+				'billingAddr'     => array(
+					'name'      => $_POST['rcp_card_name'],
+					'addrLine1' => $_POST['rcp_card_address'],
+					'city'      => $_POST['rcp_card_city'],
+					'state'     => $_POST['rcp_card_state'],
+					'zipCode'   => $_POST['rcp_card_zip'],
+					'country'   => $_POST['rcp_card_country'],
+					'email'     => $this->email,
+				),
+				"lineItems"     => array(
+					array(
+						"recurrence"  => $recurrence,
+						"type"        => 'product',
+						"price"       => $this->amount,
+						"productId"   => $subscription->id,
+						"name"        => $subscription->name,
+						"quantity"    => '1',
+						"tangible"    => 'N',
+						"startupFee"  => $subscription->fee . '.00',
+						"description" => $subscription->description
+					)
+				),
+			));
 
-				if( $charge['response']['responseCode'] == 'APPROVED' ) {
-					$response = $charge['response'];
-					$payment_data = array(
-						'date'              => date( 'Y-m-d g:i:s', time() ),
-						'subscription'      => $this->subscription_name,
-						'payment_type' 		=> 'Credit Card One Time',
-						'subscription_key' 	=> $this->subscription_key,
-						'amount' 			=> $this->amount,
-						'user_id' 			=> $this->user_id,
-						'transaction_id'    => $response['transactionId']
-					);
-					$rcp_payments = new RCP_Payments();
-					$rcp_payments->insert( $payment_data );
-					$paid = true;
+			if( $charge['response']['responseCode'] == 'APPROVED' ) {
 
-					echo "Thanks for your Order!";
-					echo "<h3>Return Parameters:</h3>";
-					echo "<pre>"; print_r($subscription); echo "</pre>";
-					echo "<pre>"; print_r($charge); echo "</pre>";
-					
-				}
-			} catch (Twocheckout_Error $e) {
-				print_r($e->getMessage());
+				$payment_data = array(
+					'date'              => date( 'Y-m-d g:i:s', time() ),
+					'subscription'      => $this->subscription_name,
+					'payment_type' 		=> 'Credit Card One Time',
+					'subscription_key' 	=> $this->subscription_key,
+					'amount' 			=> $this->amount,
+					'user_id' 			=> $this->user_id,
+					'transaction_id'    => $charge['response']['transactionId']
+				);
+
+				$rcp_payments = new RCP_Payments();
+				$rcp_payments->insert( $payment_data );
+				$paid = true;
+
+				echo "Thanks for your Order!";
+				echo "<h3>Return Parameters:</h3>";
+				echo "<pre>"; print_r($subscription); echo "</pre>";
+				echo "<pre>"; print_r($charge); echo "</pre>";
+				
 			}
+		} catch (Twocheckout_Error $e) {
+			print_r($e->getMessage());
+		}
 	}
 
 	/**
