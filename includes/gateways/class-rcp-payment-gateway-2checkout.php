@@ -228,7 +228,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			rcp_errors()->add( 'missing_card_city', __( 'The city you have entered is invalid', 'rcp' ), 'register' );
 		}
 
-		if( empty( $_POST['rcp_card_state'] ) ) {
+		if( empty( $_POST['rcp_card_state'] ) && $this->card_needs_state_and_zip() ) {
 			rcp_errors()->add( 'missing_card_state', __( 'The state you have entered is invalid', 'rcp' ), 'register' );
 		}
 
@@ -236,7 +236,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			rcp_errors()->add( 'missing_card_country', __( 'The country you have entered is invalid', 'rcp' ), 'register' );
 		}
 
-		if( empty( $_POST['rcp_card_zip'] ) ) {
+		if( empty( $_POST['rcp_card_zip'] ) && $this->card_needs_state_and_zip() ) {
 			rcp_errors()->add( 'missing_card_zip', __( 'The zip / postal code you have entered is invalid', 'rcp' ), 'register' );
 		}
 
@@ -253,5 +253,57 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 	 */
 	public function scripts() {
 		wp_enqueue_script( 'twocheckout', 'https://www.2checkout.com/checkout/api/2co.min.js', array( 'jquery' ) );
+	}
+
+	/**
+	 * Determine if zip / state are required
+	 *
+	 * @since 2.3
+	 */
+	private function card_needs_state_and_zip() {
+	
+		$ret = true;
+
+		if( ! empty( $_POST['rcp_card_country'] ) ) {
+
+			$needs_zip = array(
+				'AR',
+				'AU',
+				'BG',
+				'CA',
+				'CH',
+				'CY',
+				'EG',
+				'FR',
+				'IN',
+				'ID',
+				'IT',
+				'JP',
+				'MY',
+				'ME',
+				'NL',
+				'PA',
+				'PH',
+				'PO',
+				'RO',
+				'RU',
+				'SR',
+				'SG',
+				'ZA',
+				'ES',
+				'SW',
+				'TH',
+				'TU',
+				'GB',
+				'US'
+			);
+			
+			if( ! in_array( $_POST['rcp_card_country'], $needs_zip ) ) {
+				$ret = false;
+			}
+
+		}
+
+		return $ret;
 	}
 }
