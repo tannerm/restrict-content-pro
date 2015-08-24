@@ -382,6 +382,114 @@ function rcp_settings_page() {
 								<span class="description"><?php _e( 'Only check this option if your members statuses are not getting changed to "active".', 'rcp' ); ?></span>
 							</td>
 						</tr>
+						<?php // 2checkout ?>
+						<?php if( ! function_exists( 'rcp_register_twocheckout_gateway' ) ) : ?>
+						<tr valign="top">
+							<th colspan=2>
+								<h3><?php _e('2Checkout Settings', 'rcp'); ?></h3>
+							</th>
+						</tr>
+						<?php // 2checkout Test Private Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[twocheckout_test_private]"><?php _e( 'Test Private Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[twocheckout_test_private]" style="width: 300px;" name="rcp_settings[twocheckout_test_private]" value="<?php if(isset($rcp_options['twocheckout_test_private'])) { echo $rcp_options['twocheckout_test_private']; } ?>"/>
+								<p class="description"><?php _e('Enter your test private key. Your test API keys can be obtained from the <a href="https://sandbox.2checkout.com/sandbox/api" target="_blank">2Checkout Sandbox</a>.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // 2checkout Test Publishable Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[twocheckout_test_publishable]"><?php _e( 'Test Publishable Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[twocheckout_test_publishable]" style="width: 300px;" name="rcp_settings[twocheckout_test_publishable]" value="<?php if(isset($rcp_options['twocheckout_test_publishable'])) { echo $rcp_options['twocheckout_test_publishable']; } ?>"/>
+								<p class="description"><?php _e('Enter your test publishable key.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // 2checkout Test Seller ID ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[twocheckout_test_seller_id]"><?php _e( 'Test Seller ID', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[twocheckout_test_seller_id]" style="width: 300px;" name="rcp_settings[twocheckout_test_seller_id]" value="<?php if(isset($rcp_options['twocheckout_test_seller_id'])) { echo $rcp_options['twocheckout_test_seller_id']; } ?>"/>
+								<p class="description"><?php _e('Enter your live Seller ID. <a href="http://help.2checkout.com/articles/FAQ/Where-is-my-Seller-ID" target="_blank">Where is my Seller ID?</a>.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // 2checkout Test User Name ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[twocheckout_test_username]"><?php _e( 'Test Username', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[twocheckout_test_username]" style="width: 300px;" name="rcp_settings[twocheckout_test_username]" value="<?php if(isset($rcp_options['twocheckout_test_username'])) { echo $rcp_options['twocheckout_test_username']; } ?>"/>
+								<p class="description"><?php _e('Enter your sandbox Username', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // 2checkout Test Password ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[twocheckout_test_password]"><?php _e( 'Test Password', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="password" class="regular-text" id="rcp_settings[twocheckout_test_password]" style="width: 300px;" name="rcp_settings[twocheckout_test_password]" value="<?php if(isset($rcp_options['twocheckout_test_password'])) { echo $rcp_options['twocheckout_test_password']; } ?>"/>
+								<p class="description"><?php _e('Enter your sandbox password', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // 2checkout Live Private Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[twocheckout_live_private]"><?php _e( 'Live Private Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[twocheckout_live_private]" style="width: 300px;" name="rcp_settings[twocheckout_live_private]" value="<?php if(isset($rcp_options['twocheckout_live_private'])) { echo $rcp_options['twocheckout_live_private']; } ?>"/>
+								<p class="description"><?php _e('Enter your live secret key. Your API keys can be obtained from the <a href="https://pci.trustwave.com/2checkout" target="_blank">2Checkout PCI Program</a>.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // 2checkout Live Publishable Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[twocheckout_live_publishable]"><?php _e( 'Live Publishable Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[twocheckout_live_publishable]" style="width: 300px;" name="rcp_settings[twocheckout_live_publishable]" value="<?php if(isset($rcp_options['twocheckout_live_publishable'])) { echo $rcp_options['twocheckout_live_publishable']; } ?>"/>
+								<p class="description"><?php _e('Enter your live publishable key.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // 2checkout Live Seller ID ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[twocheckout_live_seller_id]"><?php _e( 'Live Seller ID', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[twocheckout_live_seller_id]" style="width: 300px;" name="rcp_settings[twocheckout_live_seller_id]" value="<?php if(isset($rcp_options['twocheckout_live_seller_id'])) { echo $rcp_options['twocheckout_live_seller_id']; } ?>"/>
+								<p class="description"><?php _e('Enter your live Seller ID. <a href="http://help.2checkout.com/articles/FAQ/Where-is-my-Seller-ID" target="_blank">Where is my Seller ID?</a>.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // 2checkout Live User Name ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[twocheckout_live_username]"><?php _e( 'Live Username', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[twocheckout_live_username]" style="width: 300px;" name="rcp_settings[twocheckout_live_username]" value="<?php if(isset($rcp_options['twocheckout_live_username'])) { echo $rcp_options['twocheckout_live_username']; } ?>"/>
+								<p class="description"><?php _e('Enter your 2checkout account Username', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // 2checkout Live Password ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[twocheckout_live_password]"><?php _e( 'Live Password', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="password" class="regular-text" id="rcp_settings[twocheckout_live_password]" style="width: 300px;" name="rcp_settings[twocheckout_live_password]" value="<?php if(isset($rcp_options['twocheckout_live_password'])) { echo $rcp_options['twocheckout_live_password']; } ?>"/>
+								<p class="description"><?php _e('Enter your 2checkout account password', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php endif; ?>
 					</table>
 					<?php do_action( 'rcp_payments_settings', $rcp_options ); ?>
 
