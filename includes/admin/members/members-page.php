@@ -107,86 +107,106 @@ function rcp_members_page() {
 				<input type="submit" class="button-secondary" value="<?php _e('Filter', 'rcp'); ?>"/>
 			</form>
 			<?php do_action('rcp_members_above_table'); ?>
-			<table class="wp-list-table widefat fixed posts">
-				<thead>
-					<tr>
-						<th class="rcp-user-col"><?php _e('User', 'rcp'); ?></th>
-						<th class="rcp-id-col"><?php _e('ID', 'rcp'); ?></th>
-						<th class="rcp-email-col"><?php _e('Email', 'rcp'); ?></th>
-						<th class="rcp-sub-col"><?php _e('Subscription', 'rcp'); ?></th>
-						<th class="rcp-status-col"><?php _e('Status', 'rcp'); ?></th>
-						<th class="rcp-recurring-col"><?php _e('Recurring', 'rcp'); ?></th>
-						<th class="rcp-expiration-col"><?php _e('Expiration', 'rcp'); ?></th>
-						<th class="rcp-role-col"><?php _e('User Role', 'rcp'); ?></th>
-						<?php do_action('rcp_members_page_table_header'); ?>
-						<th class="rcp-actions-role"><?php _e('Actions', 'rcp'); ?></th>
-					</tr>
-				</thead>
-				<tfoot>
-					<tr>
-						<th><?php _e('User', 'rcp'); ?></th>
-						<th><?php _e('ID', 'rcp'); ?></th>
-						<th><?php _e('Email', 'rcp'); ?></th>
-						<th><?php _e('Subscription', 'rcp'); ?></th>
-						<th><?php _e('Status', 'rcp'); ?></th>
-						<th><?php _e('Recurring', 'rcp'); ?></th>
-						<th><?php _e('Expiration', 'rcp'); ?></th>
-						<th><?php _e('User Role', 'rcp'); ?></th>
-						<?php do_action('rcp_members_page_table_footer'); ?>
-						<th><?php _e('Actions', 'rcp'); ?></th>
-					</tr>
-				</tfoot>
-				<tbody>
-				<?php
-
-				if( isset( $_GET['signup_method'] ) ) {
-					$method = $_GET['signup_method'] == 'live' ? 'live' : 'manual';
-					$members = get_users( array(
-							'meta_key' => 'rcp_signup_method',
-							'meta_value' => $method,
-							'number' => 999999
-						)
-					);
-					$per_page = 999999;
-				} else {
-					$members = rcp_get_members( $status, $subscription_id, $offset, $per_page, $order, $recurring, $search );
-				}
-				if($members) :
-					$i = 1;
-					foreach( $members as $key => $member) : ?>
-						<tr class="rcp_row <?php do_action( 'rcp_member_row_class', $member ); if( rcp_is_odd( $i ) ) { echo ' alternate'; } ?>">
-							<td><a href="<?php echo add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php echo $member->user_login; ?></a></td>
-							<td><?php echo $member->ID; ?></td>
-							<td><?php echo $member->user_email; ?></td>
-							<td><?php echo rcp_get_subscription($member->ID); ?></td>
-							<td><?php echo rcp_print_status($member->ID, false); ?></td>
-							<td><?php echo rcp_is_recurring($member->ID) ? __('yes', 'rcp') : __('no', 'rcp'); ?>
-							<td><?php echo rcp_get_expiration_date($member->ID); ?></td>
-							<td><?php echo rcp_get_user_role($member->ID); ?></td>
-							<?php do_action('rcp_members_page_table_column', $member->ID); ?>
-							<td>								
-								<?php if( current_user_can( 'rcp_manage_members' ) ) : ?>
-									<a href="<?php echo esc_url( add_query_arg('edit_member', $member->ID, $current_page) ); ?>"><?php _e('Edit', 'rcp'); ?></a>
-									<?php if(isset($_GET['status']) && $_GET['status'] == 'cancelled') { ?>
-										| <a href="<?php echo esc_url( add_query_arg('activate_member', $member->ID, $current_page) ); ?>" class="rcp_activate"><?php _e('Enable Access', 'rcp'); ?></a>
-									<?php } elseif( (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status'])) {  ?>
-										| <a href="<?php echo esc_url( add_query_arg('revoke_access', $member->ID, $current_page) ); ?>" class="rcp_revoke"><?php _e('Revoke Access', 'rcp'); ?></a>
-									<?php } ?>
-									<?php if( rcp_can_member_cancel( $member->ID ) ) { ?>
-										| <a href="<?php echo wp_nonce_url( add_query_arg('cancel_member', $member->ID, $current_page ), 'rcp-cancel-nonce' ); ?>" class="rcp_cancel"><?php _e('Cancel', 'rcp'); ?></a>
-									<?php } ?>
-									<?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
-										| <a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
-									<?php } ?>
-								<?php endif; ?>
-							</td>
+			<form id="rcp-members-form" action="<?php echo esc_attr( admin_url( 'admin.php?page=rcp-members' ) ); ?>" method="post">
+				<div id="rcp-bulk-action-options">
+					<label for="rcp-bulk-member-action" class="screen-reader-text"><?php _e( 'Select bulk action', 'rcp' ); ?></label>
+					<select name="rcp-bulk-action" id="rcp-bulk-member-action">
+						<option value="-1"><?php _e( 'Bulk Actions', 'rcp' ); ?></option>
+						<option value="mark-active"><?php _e( 'Mark as Active', 'rcp' ); ?></option>
+						<option value="mark-expired"><?php _e( 'Mark as Expired', 'rcp' ); ?></option>
+						<option value="mark-cancelled"><?php _e( 'Revoke Access', 'rcp' ); ?></option>
+						<option value="delete"><?php _e( 'Delete', 'rcp' ); ?></option>
+					</select>
+					<input type="text" class="rcp-datepicker" name="expiration" placeholder="<?php esc_attr_e( 'New Expiration Date', 'rcp' ); ?>" id="rcp-bulk-expiration" value=""/>
+					<input type="submit" id="rcp-submit-bulk-action" class="button action" value="<?php _e( 'Apply', 'rcp' ); ?>"/>
+				</div>
+				<?php echo wp_nonce_field( 'rcp_bulk_edit_nonce', 'rcp_bulk_edit_nonce' ); ?>
+				<table class="wp-list-table widefat fixed posts">
+					<thead>
+						<tr>
+							<th class="rcp-checkbox-col"><input type="checkbox" id="rcp-bulk-select-all"/></th>
+							<th class="rcp-user-col"><?php _e('User', 'rcp'); ?></th>
+							<th class="rcp-id-col"><?php _e('ID', 'rcp'); ?></th>
+							<th class="rcp-email-col"><?php _e('Email', 'rcp'); ?></th>
+							<th class="rcp-sub-col"><?php _e('Subscription', 'rcp'); ?></th>
+							<th class="rcp-status-col"><?php _e('Status', 'rcp'); ?></th>
+							<th class="rcp-recurring-col"><?php _e('Recurring', 'rcp'); ?></th>
+							<th class="rcp-expiration-col"><?php _e('Expiration', 'rcp'); ?></th>
+							<th class="rcp-role-col"><?php _e('User Role', 'rcp'); ?></th>
+							<?php do_action('rcp_members_page_table_header'); ?>
+							<th class="rcp-actions-role"><?php _e('Actions', 'rcp'); ?></th>
 						</tr>
-					<?php $i++;
-					endforeach;
-				else : ?>
-					<tr><td colspan="9"><?php _e('No subscribers found', 'rcp'); ?></td></tr>
-				<?php endif; ?>
-			</table>
+					</thead>
+					<tfoot>
+						<tr>
+							<th class="rcp-checkbox-col"></th>
+							<th><?php _e('User', 'rcp'); ?></th>
+							<th><?php _e('ID', 'rcp'); ?></th>
+							<th><?php _e('Email', 'rcp'); ?></th>
+							<th><?php _e('Subscription', 'rcp'); ?></th>
+							<th><?php _e('Status', 'rcp'); ?></th>
+							<th><?php _e('Recurring', 'rcp'); ?></th>
+							<th><?php _e('Expiration', 'rcp'); ?></th>
+							<th><?php _e('User Role', 'rcp'); ?></th>
+							<?php do_action('rcp_members_page_table_footer'); ?>
+							<th><?php _e('Actions', 'rcp'); ?></th>
+						</tr>
+					</tfoot>
+					<tbody>
+					<?php
+
+					if( isset( $_GET['signup_method'] ) ) {
+						$method = $_GET['signup_method'] == 'live' ? 'live' : 'manual';
+						$members = get_users( array(
+								'meta_key' => 'rcp_signup_method',
+								'meta_value' => $method,
+								'number' => 999999
+							)
+						);
+						$per_page = 999999;
+					} else {
+						$members = rcp_get_members( $status, $subscription_id, $offset, $per_page, $order, $recurring, $search );
+					}
+					if($members) :
+						$i = 1;
+						foreach( $members as $key => $member) : ?>
+							<tr class="rcp_row <?php do_action( 'rcp_member_row_class', $member ); if( rcp_is_odd( $i ) ) { echo ' alternate'; } ?>">
+								<td>
+									<input type="checkbox" class="rcp-member-cb" name="member-ids[]" value="<?php echo absint( $member->ID ); ?>"/>
+								</td>
+								<td><a href="<?php echo add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php echo $member->user_login; ?></a></td>
+								<td><?php echo $member->ID; ?></td>
+								<td><?php echo $member->user_email; ?></td>
+								<td><?php echo rcp_get_subscription($member->ID); ?></td>
+								<td><?php echo rcp_print_status($member->ID, false); ?></td>
+								<td><?php echo rcp_is_recurring($member->ID) ? __('yes', 'rcp') : __('no', 'rcp'); ?>
+								<td><?php echo rcp_get_expiration_date($member->ID); ?></td>
+								<td><?php echo rcp_get_user_role($member->ID); ?></td>
+								<?php do_action('rcp_members_page_table_column', $member->ID); ?>
+								<td>								
+									<?php if( current_user_can( 'rcp_manage_members' ) ) : ?>
+										<a href="<?php echo esc_url( add_query_arg('edit_member', $member->ID, $current_page) ); ?>"><?php _e('Edit', 'rcp'); ?></a>
+										<?php if(isset($_GET['status']) && $_GET['status'] == 'cancelled') { ?>
+											| <a href="<?php echo esc_url( add_query_arg('activate_member', $member->ID, $current_page) ); ?>" class="rcp_activate"><?php _e('Enable Access', 'rcp'); ?></a>
+										<?php } elseif( (isset($_GET['status']) && $_GET['status'] == 'active') || !isset($_GET['status'])) {  ?>
+											| <a href="<?php echo esc_url( add_query_arg('revoke_access', $member->ID, $current_page) ); ?>" class="rcp_revoke"><?php _e('Revoke Access', 'rcp'); ?></a>
+										<?php } ?>
+										<?php if( rcp_can_member_cancel( $member->ID ) ) { ?>
+											| <a href="<?php echo wp_nonce_url( add_query_arg('cancel_member', $member->ID, $current_page ), 'rcp-cancel-nonce' ); ?>" class="rcp_cancel"><?php _e('Cancel', 'rcp'); ?></a>
+										<?php } ?>
+										<?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
+											| <a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
+										<?php } ?>
+									<?php endif; ?>
+								</td>
+							</tr>
+						<?php $i++;
+						endforeach;
+					else : ?>
+						<tr><td colspan="9"><?php _e('No subscribers found', 'rcp'); ?></td></tr>
+					<?php endif; ?>
+				</table>
+			</form>
 			<?php if ($total_pages > 1 && !isset($_GET['signup_method']) ) : ?>
 				<div class="tablenav">
 					<div class="tablenav-pages alignright">
