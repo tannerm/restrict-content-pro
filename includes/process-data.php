@@ -3,7 +3,7 @@
 /*************************************************************************
 * this file processes all new subscription creations and updates
 * also manages adding/editings subscriptions to users
-* User registration and login is handled in handle-registration-login.php
+* User registration and login is handled in registration-functions.php
 **************************************************************************/
 function rcp_process_data() {
 
