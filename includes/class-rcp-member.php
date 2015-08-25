@@ -56,7 +56,7 @@ class RCP_Member extends WP_User {
 					$this->set_recurring( false );
 				}
 
-				do_action( 'rcp_set_status', $new_status, $this->ID );
+				do_action( 'rcp_set_status', $new_status, $this->ID, $old_status );
 
 				// Record the status change
 				rcp_add_member_note( $this->ID, sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
@@ -171,7 +171,7 @@ class RCP_Member extends WP_User {
 		if( $subscription->duration > 0 ) {
 
 			$last_day       = cal_days_in_month( CAL_GREGORIAN, date( 'n', $base_date ), date( 'Y', $base_date ) );
-			$expiration     = date( 'Y-m-d H:i:s', strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59' ) );
+			$expiration     = date( 'Y-m-d H:i:s', strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59', $base_date ) );
 
 			if( date( 'j', $base_date ) == $last_day && 'day' != $subscription->duration_unit ) {
 				$expiration = date( 'Y-m-d H:i:s', strtotime( $expiration . ' +2 days' ) );

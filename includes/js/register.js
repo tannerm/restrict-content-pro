@@ -1,6 +1,7 @@
 var rcp_validating_discount = false;
 var rcp_validating_gateway  = false;
 var rcp_validating_level    = false;
+var rcp_processing          = false;
 jQuery(document).ready(function($) {
 
 	// Initial validation of subscription level and gateway options
@@ -25,10 +26,6 @@ jQuery(document).ready(function($) {
 		rcp_validate_form( true );
 
 	}).on( 'rcp_level_change', function() {
-
-		rcp_validate_form( false );
-
-	}).on( 'rcp_discount_applied', function() {
 
 		rcp_validate_form( true );
 
@@ -73,6 +70,13 @@ jQuery(document).ready(function($) {
 
 		$('#rcp_submit', form).val( rcp_script_options.pleasewait );
 
+		// Don't allow form to be submitted multiple times simultaneously
+		if( rcp_processing ) {
+			return;
+		}
+
+		rcp_processing = true;
+
 		$.post( rcp_script_options.ajaxurl, form.serialize() + '&action=rcp_process_register_form&rcp_ajax=true', function(response) {
 
 			$('.rcp-submit-ajax', form).remove();
@@ -85,6 +89,7 @@ jQuery(document).ready(function($) {
 				$('#rcp_submit', form).before( response.data.errors );
 				$('#rcp_register_nonce', form).val( response.data.nonce );
 				form.unblock();
+				rcp_processing = false;
 			}
 		}).done(function( response ) {
 		}).fail(function( response ) {
@@ -105,6 +110,8 @@ function rcp_validate_form( validate_gateways ) {
 		// Validate the discount selected gateway
 		rcp_validate_gateways();
 	}
+
+	rcp_validate_discount();
 
 }
 
@@ -259,7 +266,7 @@ function rcp_validate_gateways() {
 
 }
 
-function rcp_validate_discount( discount_code ) {
+function rcp_validate_discount() {
 
 	if( rcp_validating_discount ) {
 		return;
@@ -267,10 +274,26 @@ function rcp_validate_discount( discount_code ) {
 
 	var $ = jQuery;
 	var gateway_fields = $('.rcp_gateway_fields');
+	var discount = $('#rcp_discount_code').val();
+
+	if( $('input[name="rcp_level"]').length ) {
+
+		var subscription = $('input[name="rcp_level"]').val();
+
+	} else {
+
+		var subscription = $('#rcp_subscription_levels input:checked').val();
+
+	}
+
+	if( ! discount ) {
+		return;
+	}
+
 	var data = {
 		action: 'validate_discount',
-		code: discount_code,
-		subscription_id: $('#rcp_subscription_levels input:checked').val()
+		code: discount,
+		subscription_id: subscription
 	};
 
 	rcp_validating_discount = true;

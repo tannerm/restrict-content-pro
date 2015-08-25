@@ -46,7 +46,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			}
 
 			if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
-				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
+				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_active_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
 				wp_mail( $admin_emails, __('New subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
@@ -66,7 +66,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			}
 
 			if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
-				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' ' . __('has cancelled their subscription to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Their subscription level was', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
+				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('has cancelled their subscription to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Their subscription level was', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_cancelled_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
 				wp_mail( $admin_emails, __('Cancelled subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
@@ -116,7 +116,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			}
 
 			if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
-				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
+				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_free_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
 				wp_mail( $admin_emails, __('New free subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
@@ -139,7 +139,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			}
 
 			if( ! isset( $rcp_options['disable_new_user_notices'] ) ) {
-				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
+				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_trial_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
 				wp_mail( $admin_emails, __('New trial subscription on ', 'rcp') . $site_name, $admin_message, $headers, $attachments );
@@ -177,6 +177,7 @@ function rcp_filter_email_tags( $message, $user_id, $display_name ) {
 
 	$message = str_replace('%blogname%', $site_name, $message);
 	$message = str_replace('%username%', $user->user_login, $message);
+	$message = str_replace('%useremail%', $user->user_email, $message);
 	$message = str_replace('%firstname%', $user->user_firstname, $message);
 	$message = str_replace('%lastname%', $user->user_lastname, $message);
 	$message = str_replace('%displayname%', $display_name, $message);

@@ -98,86 +98,76 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// No customer found
 					} catch ( Exception $e ) {
 
-
 						$customer_exists = false;
 
 					}
 
 				}
 
-				// Customer with a discount
-				if ( ! empty( $this->discount_code ) ) {
+				if( ! $customer_exists ) {
 
-					if( $customer_exists ) {
+					$customer_args = array(
+						'card' 			=> $_POST['stripeToken'],
+						'email' 		=> $this->email,
+						'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
+					);
 
-						$customer->card   = $_POST['stripeToken'];
-						$customer->coupon = $this->discount_code;
-						$customer->save();
+					if ( ! empty( $this->discount_code ) ) {
 
-						// Update the customer's subscription in Stripe
-						$customer_response = $customer->updateSubscription( array( 'plan' => $plan_id ) );
-
-					} else {
-
-						$customer = \Stripe\Customer::create( array(
-								'card' 			=> $_POST['stripeToken'],
-								'plan' 			=> $plan_id,
-								'email' 		=> $this->email,
-								'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
-								'coupon' 		=> $_POST['rcp_discount']
-							)
-						);
+						$customer_args['coupon'] = $this->discount_code;
 
 					}
 
-				// Customer without a discount
+					$customer = \Stripe\Customer::create( apply_filters( 'rcp_stripe_customer_create_args', $customer_args, $this ) );
+
 				} else {
 
-					if( $customer_exists ) {
-
-						$customer->card   = $_POST['stripeToken'];
-						$customer->save();
-
-						// Update the customer's subscription in Stripe
-						$customer_response = $customer->updateSubscription( array( 'plan' => $plan_id ) );
-
-					} else {
-
-						$customer = \Stripe\Customer::create( array(
-								'card' 			=> $_POST['stripeToken'],
-								'plan' 			=> $plan_id,
-								'email' 		=> $this->email,
-								'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name
-							)
-						);
-
-					}
-
+					$customer->card = $_POST['stripeToken'];
+	
 				}
 
-				if ( ! empty( $this->fee ) ) {
+				// Add fees before the plan is updated and charged
+				if ( ! empty( $this->signup_fee ) ) {
 
-					if( $this->fee > 0 ) {
+					if( $this->signup_fee > 0 ) {
 						$description = sprintf( __( 'Signup Fee for %s', 'rcp_stripe' ), $this->subscription_name );
 					} else {
 						$description = sprintf( __( 'Signup Discount for %s', 'rcp_stripe' ), $this->subscription_name );
 					}
 
-					\Stripe\InvoiceItem::create( array(
-							'customer'    => $customer->id,
-							'amount'      => $this->fee * 100,
-							'currency'    => strtolower( $this->currency ),
-							'description' => $description
-						)
-					);
+					\Stripe\InvoiceItem::create( apply_filters( 'rcp_stripe_invoice_item_create_args', array(
+						'customer'    => $customer->id,
+						'amount'      => $this->signup_fee * 100,
+						'currency'    => strtolower( $this->currency ),
+						'description' => $description
+					), $this, $customer ) );
 
 					// Create the invoice containing taxes / discounts / fees
-					$invoice = \Stripe\Invoice::create( array(
+					$invoice = \Stripe\Invoice::create( apply_filters( 'rcp_stripe_invoice_create_args', array(
 						'customer' => $customer->id, // the customer to apply the fee to
-					) );
+					), $this, $customer ) );
+
+				}
+
+				if ( ! empty( $this->discount_code ) ) {
+
+					$customer->coupon = $this->discount_code;
+
+				}
+
+				// Save the card and any coupon
+				$customer->save();
+
+				// Process the invoice if there is one
+				if( ! empty( $invoice ) ) {
+
 					$invoice->pay();
 
 				}
+
+
+				// Update the customer's subscription in Stripe
+				$customer->updateSubscription( array( 'plan' => $plan_id ) );
 
 				$member->set_payment_profile_id( $customer->id );
 
@@ -282,21 +272,20 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			try {
 
-				$charge = \Stripe\Charge::create( array(
-						'amount' 		 => $this->amount * 100, // amount in cents
-						'currency' 		 => strtolower( $this->currency ),
-						'card' 			 => $_POST['stripeToken'],
-						'description' 	 => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
-						'receipt_email'  => $this->email,
-						'metadata'       => array(
-							'email'      => $this->email,
-							'user_id'    => $this->user_id,
-							'level_id'   => $this->subscription_id,
-							'level'      => $this->subscription_name,
-							'key'        => $this->subscription_key
-						)
+				$charge = \Stripe\Charge::create( apply_filters( 'rcp_stripe_charge_create_args', array(
+					'amount' 		 => $this->amount * 100, // amount in cents
+					'currency' 		 => strtolower( $this->currency ),
+					'card' 			 => $_POST['stripeToken'],
+					'description' 	 => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
+					'receipt_email'  => $this->email,
+					'metadata'       => array(
+						'email'      => $this->email,
+						'user_id'    => $this->user_id,
+						'level_id'   => $this->subscription_id,
+						'level'      => $this->subscription_name,
+						'key'        => $this->subscription_key
 					)
-				);
+				), $this ) );
 
 				$payment_data = array(
 					'date'              => date( 'Y-m-d g:i:s', time() ),
@@ -408,7 +397,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		if ( $paid ) {
 
 			// set this user to active
-			$member->renew( $this->auto_renew );
+			$member->set_status( 'active' );
+			$member->set_recurring( $this->auto_renew );
 
 			if ( ! is_user_logged_in() ) {
 
@@ -454,12 +444,15 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			try {
 
-				$event = \Stripe\Event::retrieve( $event_id );
-
+				$event   = \Stripe\Event::retrieve( $event_id );
 				$invoice = $event->data->object;
 
+				if( empty( $invoice->customer ) ) {
+					die( 'no customer attached' );
+				}
+
 				// retrieve the customer who made this payment (only for subscriptions)
-				$user = rcp_get_member_id_from_profile_id( $invoice->customer );
+				$user    = rcp_get_member_id_from_profile_id( $invoice->customer );
 
 				if( empty( $user ) ) {
 
@@ -562,6 +555,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 ?>
 		<script type="text/javascript">
 
+			var rcp_script_options;
+			var rcp_processing;
+			var rcp_stripe_processing = false;
+
 			// this identifies your website in the createToken call below
 			Stripe.setPublishableKey('<?php echo $this->publishable_key; ?>');
 
@@ -573,10 +570,16 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					jQuery('#rcp_ajax_loading').hide();
 
 					// show the errors on the form
-					jQuery(".payment-errors").html(response.error.message);
+					jQuery('#rcp_registration_form').unblock();
+					jQuery('#rcp_submit').before( '<div class="rcp_message error"><p class="rcp_error"><span>' + response.error.message + '</span></p></div>' );
+					jQuery('#rcp_submit').val( rcp_script_options.register );
+
+					rcp_stripe_processing = false;
+					rcp_processing = false;
 
 				} else {
-					var form$ = jQuery("#rcp_registration_form");
+
+					var form$ = jQuery('#rcp_registration_form');
 					// token contains id, last4, and card type
 					var token = response['id'];
 					// insert the token into the form so it gets submitted to the server
@@ -591,34 +594,41 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			jQuery(document).ready(function($) {
 
 				$("#rcp_registration_form").on('submit', function(event) {
-					// get the subscription price
 
-					if( $('.rcp_level:checked').length ) {
-						var price = $('.rcp_level:checked').closest('li').find('span.rcp_price').attr('rel') * 100;
-					} else {
-						var price = $('.rcp_level').attr('rel') * 100;
+					if( ! rcp_stripe_processing ) {
+
+						rcp_stripe_processing = true;
+
+						// get the subscription price
+						if( $('.rcp_level:checked').length ) {
+							var price = $('.rcp_level:checked').closest('li').find('span.rcp_price').attr('rel') * 100;
+						} else {
+							var price = $('.rcp_level').attr('rel') * 100;
+						}
+
+						if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]').val() == 'stripe') && price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100')) {
+
+							event.preventDefault();
+
+							// disable the submit button to prevent repeated clicks
+							$('#rcp_registration_form #rcp_submit').attr("disabled", "disabled");
+							$('#rcp_ajax_loading').show();
+
+							// createToken returns immediately - the supplied callback submits the form if there are no errors
+							Stripe.createToken({
+								number: $('.card-number').val(),
+								name: $('.card-name').val(),
+								cvc: $('.card-cvc').val(),
+								exp_month: $('.card-expiry-month').val(),
+								exp_year: $('.card-expiry-year').val(),
+								address_zip: $('.card-zip').val()
+							}, stripeResponseHandler);
+
+							return false;
+						}
+
 					}
 
-					if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]').val() == 'stripe') && price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100')) {
-
-						event.preventDefault();
-
-						// disable the submit button to prevent repeated clicks
-						$('#rcp_registration_form #rcp_submit').attr("disabled", "disabled");
-						$('#rcp_ajax_loading').show();
-
-						// createToken returns immediately - the supplied callback submits the form if there are no errors
-						Stripe.createToken({
-							number: $('.card-number').val(),
-							name: $('.card-name').val(),
-							cvc: $('.card-cvc').val(),
-							exp_month: $('.card-expiry-month').val(),
-							exp_year: $('.card-expiry-year').val(),
-							address_zip: $('.card-zip').val()
-						}, stripeResponseHandler);
-
-						return false;
-					}
 				});
 			});
 		</script>

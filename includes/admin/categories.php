@@ -60,6 +60,7 @@ function rcp_category_edit_meta_fields( $term ) {
 				</label><br/>
 			<?php endforeach; ?>
 			<span class="description"><?php _e( 'Subscription levels allowed to view content in this category. Leave unchecked for all.', 'rcp' ); ?></span>
+			<?php wp_nonce_field( 'rcp_edit_category', 'rcp_edit_category' ); ?>
 		</td>
 	</tr>
 <?php
@@ -74,6 +75,10 @@ add_action( 'category_edit_form_fields', 'rcp_category_edit_meta_fields', 10, 2 
  * @return      void
  */
 function rcp_save_category_meta( $term_id ) {
+
+	if( ! check_admin_referer( 'rcp_edit_category', 'rcp_edit_category' ) ) {
+		return;
+	}
 
 	$fields = ! empty( $_POST['rcp_category_meta'] ) ? $_POST['rcp_category_meta'] : array();
 

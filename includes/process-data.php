@@ -63,7 +63,7 @@ function rcp_process_data() {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
 
-			if ( isset( $_POST['expiration'] ) &&  strtotime( 'NOW' ) > strtotime( $_POST['expiration'] ) ) :
+			if ( isset( $_POST['expiration'] ) &&  strtotime( 'NOW' ) > strtotime( $_POST['expiration'] ) && 'none' !== $_POST['expiration'] ) :
 
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&rcp_message=user_not_added';
 				header( "Location:" . $url );
@@ -118,6 +118,7 @@ function rcp_process_data() {
 			$level_id     = absint( $_POST['level'] );
 			$expiration   = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 
+			rcp_set_expiration_date( $user_id, $expiration );
 
 			if( isset( $_POST['level'] ) ) {
 
@@ -167,8 +168,6 @@ function rcp_process_data() {
 			if( isset( $_POST['payment-profile-id'] ) ) {
 				$member->set_payment_profile_id( $_POST['payment-profile-id'] );
 			}
-
-			rcp_set_expiration_date( $user_id, $expiration );
 
 			do_action( 'rcp_edit_member', $user_id );
 

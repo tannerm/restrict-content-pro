@@ -25,7 +25,7 @@ function rcp_get_metabox_fields() {
             	'name' => __( 'Show Excerpt?', 'rcp' ),
             	'id'   => $rcp_prefix . 'show_excerpt',
             	'type' => 'checkbox',
-            	'desc' => __( 'Allow non active users to view the excerpt? If left unchecked, the message defined in settings will be used', 'rcp' )
+            	'desc' => __( 'Allow non active users to view the excerpt? If left unchecked, the message defined in settings will be used.', 'rcp' )
          	),
     		array(
             	'name' => __( 'Hide from Feed?', 'rcp' ),
@@ -68,7 +68,7 @@ function rcp_get_metabox_fields() {
 function rcp_add_meta_boxes() {
     $rcp_meta_box = rcp_get_metabox_fields();
 	$post_types   = get_post_types( array( 'public' => true, 'show_ui' => true ), 'objects' );
-	$exclude      = apply_filters( 'rcp_metabox_excluded_post_types', array( 'forum', 'topic', 'reply' ) );
+	$exclude      = apply_filters( 'rcp_metabox_excluded_post_types', array( 'forum', 'topic', 'reply', 'product' ) );
 
 	foreach ( $post_types as $page )	{
 		if( !in_array( $page->name, $exclude ) )

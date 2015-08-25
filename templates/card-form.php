@@ -1,11 +1,11 @@
-<fieldset class="rcp_card_fielset">
+<fieldset class="rcp_card_fieldset">
 	<p id="rcp_card_number_wrap">
 		<label><?php _e( 'Card Number', 'rcp' ); ?></label>
-		<input type="text" size="20" name="rcp_card_number" class="rcp_card_number card-number" />
+		<input type="text" size="20" maxlength="20" name="rcp_card_number" class="rcp_card_number card-number" />
 	</p>
 	<p id="rcp_card_cvc_wrap">
 		<label><?php _e( 'Card CVC', 'rcp' ); ?></label>
-		<input type="text" size="4" name="rcp_card_cvc" class="rcp_card_cvc card-cvc" />
+		<input type="text" size="4" maxlength="4" name="rcp_card_cvc" class="rcp_card_cvc card-cvc" />
 	</p>
 	<p id="rcp_card_zip_wrap">
 		<label><?php _e( 'Card ZIP or Postal Code', 'rcp' ); ?></label>

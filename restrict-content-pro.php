@@ -3,7 +3,7 @@
 Plugin Name: Restrict Content Pro
 Plugin URL: http://pippinsplugins.com/restrict-content-pro-premium-content-plugin
 Description: Setup a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
-Version: 2.1.8
+Version: 2.2.7
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
 Contributors: mordauk
@@ -19,7 +19,7 @@ if ( !defined( 'RCP_PLUGIN_FILE' ) ) {
 	define( 'RCP_PLUGIN_FILE', __FILE__ );
 }
 if ( !defined( 'RCP_PLUGIN_VERSION' ) ) {
-	define( 'RCP_PLUGIN_VERSION', '2.1.8' );
+	define( 'RCP_PLUGIN_VERSION', '2.2.7' );
 }
 
 
@@ -149,6 +149,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	// global includes
 	require( RCP_PLUGIN_DIR . 'includes/install.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-capabilities.php' );
+	include( RCP_PLUGIN_DIR . 'includes/class-rcp-integrations.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-levels.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-member.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-payments.php' );
@@ -169,6 +170,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/gateways/gateway-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/invoice-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/login-functions.php' );
+	include( RCP_PLUGIN_DIR . 'includes/member-forms.php' );
 	include( RCP_PLUGIN_DIR . 'includes/member-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/misc-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/registration-functions.php' );
@@ -221,7 +223,6 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 
 	} else {
 
-		include( RCP_PLUGIN_DIR . 'includes/member-forms.php' );
 		include( RCP_PLUGIN_DIR . 'includes/content-filters.php' );
 		include( RCP_PLUGIN_DIR . 'includes/feed-functions.php' );
 		if( isset( $rcp_options['enable_recaptcha'] ) ) {

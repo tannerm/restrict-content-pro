@@ -129,7 +129,7 @@ function rcp_process_registration() {
 		}
 
 		// only create the user if there are no errors
-		if( ! empty( $errors ) ) {
+		if( ! empty( $errors ) || $is_ajax ) {
 			return;
 		}
 
@@ -152,6 +152,7 @@ function rcp_process_registration() {
 					'user_email'		=> $user_data['email'],
 					'first_name'		=> $user_data['first_name'],
 					'last_name'			=> $user_data['last_name'],
+					'display_name'      => $user_data['first_name'] . ' ' . $user_data['last_name'],
 					'user_registered'	=> date( 'Y-m-d H:i:s' )
 				)
 			);
@@ -169,8 +170,6 @@ function rcp_process_registration() {
 			$subscription_key = rcp_generate_subscription_key();
 			update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
 			update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
-
-			rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 			// Set the user's role
 			$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
@@ -194,6 +193,7 @@ function rcp_process_registration() {
 					if( $price == '0' ) {
 						rcp_set_status( $user_data['id'], 'active' );
 						rcp_email_subscription_status( $user_data['id'], 'active' );
+						rcp_set_expiration_date( $user_data['id'], $member_expires );
 						rcp_login_user_in( $user_data['id'], $user_data['login'] );
 						wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 					}
@@ -217,6 +217,9 @@ function rcp_process_registration() {
 
 				// Remove trialing status, if it exists
 				delete_user_meta( $user_data['id'], 'rcp_is_trialing' );
+
+				// log the new user in
+				rcp_login_user_in( $user_data['id'], $user_data['login'] );
 
 				$redirect = rcp_get_return_url( $user_data['id'] );
 
@@ -267,7 +270,6 @@ function rcp_process_registration() {
 
 				}
 
-				// date for trial / paid users, "none" for free users
 				rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 				if( $user_data['need_new'] ) {
@@ -331,7 +333,7 @@ function rcp_validate_user_data() {
 			// Username already registered
 			rcp_errors()->add( 'username_unavailable', __( 'Username already taken', 'rcp' ), 'register' );
 		}
-		if( ! validate_username( $user['login'] ) ) {
+		if( ! rcp_validate_username( $user['login'] ) ) {
 			// invalid username
 			rcp_errors()->add( 'username_invalid', __( 'Invalid username', 'rcp' ), 'register' );
 		}
