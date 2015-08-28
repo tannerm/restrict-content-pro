@@ -302,56 +302,56 @@ function rcp_settings_page() {
 						<?php if( ! function_exists( 'rcp_register_paypal_pro_express_gateway' ) ) : ?>
 						<tr>
 							<th>
-								<label for="rcp_settings[test_paypal_api_username]"><?php _e( 'Test API Username', 'rcp_paypal' ); ?></label>
+								<label for="rcp_settings[test_paypal_api_username]"><?php _e( 'Test API Username', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[test_paypal_api_username]" style="width: 300px;" name="rcp_settings[test_paypal_api_username]" value="<?php if(isset($rcp_options['test_paypal_api_username'])) { echo trim( $rcp_options['test_paypal_api_username'] ); } ?>"/>
-								<p class="description"><?php _e('Enter your test API username.', 'rcp_paypal'); ?></p>
+								<p class="description"><?php _e('Enter your test API username.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[test_paypal_api_password]"><?php _e( 'Test API Password', 'rcp_paypal' ); ?></label>
+								<label for="rcp_settings[test_paypal_api_password]"><?php _e( 'Test API Password', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[test_paypal_api_password]" style="width: 300px;" name="rcp_settings[test_paypal_api_password]" value="<?php if(isset($rcp_options['test_paypal_api_password'])) { echo trim( $rcp_options['test_paypal_api_password'] ); } ?>"/>
-								<p class="description"><?php _e('Enter your test API password.', 'rcp_paypal'); ?></p>
+								<p class="description"><?php _e('Enter your test API password.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[test_paypal_api_signature]"><?php _e( 'Test API Signature', 'rcp_paypal' ); ?></label>
+								<label for="rcp_settings[test_paypal_api_signature]"><?php _e( 'Test API Signature', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[test_paypal_api_signature]" style="width: 300px;" name="rcp_settings[test_paypal_api_signature]" value="<?php if(isset($rcp_options['test_paypal_api_signature'])) { echo trim( $rcp_options['test_paypal_api_signature'] ); } ?>"/>
-								<p class="description"><?php _e('Enter your test API signature.', 'rcp_paypal'); ?></p>
+								<p class="description"><?php _e('Enter your test API signature.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[live_paypal_api_username]"><?php _e( 'Live API Username', 'rcp_paypal' ); ?></label>
+								<label for="rcp_settings[live_paypal_api_username]"><?php _e( 'Live API Username', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[live_paypal_api_username]" style="width: 300px;" name="rcp_settings[live_paypal_api_username]" value="<?php if(isset($rcp_options['live_paypal_api_username'])) { echo trim( $rcp_options['live_paypal_api_username'] ); } ?>"/>
-								<p class="description"><?php _e('Enter your live API username.', 'rcp_paypal'); ?></p>
+								<p class="description"><?php _e('Enter your live API username.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[live_paypal_api_password]"><?php _e( 'Live API Password', 'rcp_paypal' ); ?></label>
+								<label for="rcp_settings[live_paypal_api_password]"><?php _e( 'Live API Password', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[live_paypal_api_password]" style="width: 300px;" name="rcp_settings[live_paypal_api_password]" value="<?php if(isset($rcp_options['live_paypal_api_password'])) { echo trim( $rcp_options['live_paypal_api_password'] ); } ?>"/>
-								<p class="description"><?php _e('Enter your live API password.', 'rcp_paypal'); ?></p>
+								<p class="description"><?php _e('Enter your live API password.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[live_paypal_api_signature]"><?php _e( 'Live API Signature', 'rcp_paypal' ); ?></label>
+								<label for="rcp_settings[live_paypal_api_signature]"><?php _e( 'Live API Signature', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[live_paypal_api_signature]" style="width: 300px;" name="rcp_settings[live_paypal_api_signature]" value="<?php if(isset($rcp_options['live_paypal_api_signature'])) { echo trim( $rcp_options['live_paypal_api_signature'] ); } ?>"/>
-								<p class="description"><?php _e('Enter your live API signature.', 'rcp_paypal'); ?></p>
+								<p class="description"><?php _e('Enter your live API signature.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<?php endif; ?>
