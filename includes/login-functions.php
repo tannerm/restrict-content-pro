@@ -177,6 +177,7 @@ add_action('init', 'rcp_process_lostpassword_reset');
  * @since       2.3
  */
 function rcp_process_lostpassword_form() {
+
 	if( 'POST' !== $_SERVER['REQUEST_METHOD'] || ! isset( $_POST['rcp_action'] ) || 'lostpassword' != $_POST['rcp_action'] ) {
 		return;
 	}
@@ -187,7 +188,7 @@ function rcp_process_lostpassword_form() {
 
 	$errors = rcp_retrieve_password();
 
-	if ( !is_wp_error($errors) ) {
+	if ( ! is_wp_error( $errors ) ) {
 		$redirect_to = esc_url($_POST['rcp_redirect']) . '?rcp_action=lostpassword_checkemail';
 		wp_redirect( $redirect_to );
 		exit();
@@ -260,10 +261,12 @@ function rcp_retrieve_password() {
 	$message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
 	$message .= __('If this was a mistake, just ignore this email and nothing will happen.') . "\r\n\r\n";
 	$message .= __('To reset your password, visit the following address:') . "\r\n\r\n";
-	$message .= '<' . esc_url_raw( add_query_arg( array('rcp_action' => 'lostpassword', 'key' => $key, 'login' => rawurlencode($user_login)), $_POST['rcp_redirect']) ) . ">\r\n";
+	$message .= '<' . esc_url_raw( add_query_arg( array( 'rcp_action' => 'lostpassword', 'key' => $key, 'login' => rawurlencode( $user_login ) ), $_POST['rcp_redirect'] ) ) . ">\r\n";
 
 	if ( is_multisite() ) {
+
 		$blogname = $GLOBALS['current_site']->site_name;
+
 	} else {
 		/*
 		 * The blogname option is escaped with esc_html on the way into the database
@@ -272,13 +275,11 @@ function rcp_retrieve_password() {
 		$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
 	}
 
-	$title = sprintf( __('[%s] Password Reset'), $blogname );
-
-	$title = apply_filters( 'retrieve_password_title', $title );
-
+	$title   = sprintf( __('[%s] Password Reset'), $blogname );
+	$title   = apply_filters( 'retrieve_password_title', $title );
 	$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );
 
-	if ( $message && !wp_mail( $user_email, wp_specialchars_decode( $title ), $message ) ) {
+	if ( $message && ! wp_mail( $user_email, wp_specialchars_decode( $title ), $message ) ) {
 		wp_die( __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function.') );
 	}
 
@@ -292,7 +293,7 @@ function rcp_retrieve_password() {
  * @since       2.3
  * @return      WP_User|false User object if reset key and login name exist and are valid, false if not
  */
-function rcp_get_user_resetting_password($rp_cookie) {
+function rcp_get_user_resetting_password( $rp_cookie ) {
 
 	// check if the reset key and login name are valid
 	if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
@@ -302,7 +303,7 @@ function rcp_get_user_resetting_password($rp_cookie) {
 		$user = false;
 	}
 
-	if (is_wp_error( $user )) {
+	if ( is_wp_error( $user ) ) {
 		$user = false;
 	}
 
