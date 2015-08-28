@@ -125,3 +125,186 @@ function rcp_process_login_form() {
 	}
 }
 add_action('init', 'rcp_process_login_form');
+
+/**
+ * Process the password reset. adapted from wp-login.php
+ *
+ * @access      public
+ * @since       2.3
+ */
+function rcp_process_lostpassword_reset() {
+
+	if( ! isset( $_GET['rcp_action'] ) || 'lostpassword_reset' != $_GET['rcp_action'] ) {
+		return;
+	}
+
+	list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
+	$rp_cookie = 'rcp-resetpass-' . COOKIEHASH;
+
+	// store reset key and login name in cookie & remove from URL
+	if ( isset( $_GET['key'] ) ) {
+		$value = sprintf( '%s:%s', wp_unslash( $_GET['login'] ), wp_unslash( $_GET['key'] ) );
+		setcookie( $rp_cookie, $value, 0, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+		wp_safe_redirect( remove_query_arg( array( 'key', 'login' ) ) );
+		exit;
+	}
+
+	// check if the reset key and login name are valid
+	if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
+		list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
+		$user = check_password_reset_key( $rp_key, $rp_login );
+	} else {
+		$user = false;
+	}
+
+	if ( ! $user || is_wp_error( $user ) ) {
+		setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
+		if ( $user && $user->get_error_code() === 'expired_key' ) {
+			rcp_errors()->add( 'expired_key', __('Your password reset link has expired.', 'rcp'), 'password' );
+		} else {
+			rcp_errors()->add( 'invalid_key', __('Your password reset link appears to be invalid.', 'rcp'), 'password' );
+		}
+	}
+
+}
+
+add_action('init', 'rcp_process_lostpassword_reset');
+
+/**
+ * Process the lost password form
+ *
+ * @access      public
+ * @since       2.3
+ */
+function rcp_process_lostpassword_form() {
+	if( 'POST' !== $_SERVER['REQUEST_METHOD'] || ! isset( $_POST['rcp_action'] ) || 'lostpassword' != $_POST['rcp_action'] ) {
+		return;
+	}
+
+	if( ! isset( $_POST['rcp_lostpassword_nonce'] ) || ! wp_verify_nonce( $_POST['rcp_lostpassword_nonce'], 'rcp-lostpassword-nonce' ) ) {
+		return;
+	}
+
+	$errors = rcp_retrieve_password();
+
+	if ( !is_wp_error($errors) ) {
+		$redirect_to = esc_url($_POST['rcp_redirect']) . '?rcp_action=lostpassword_checkemail';
+		wp_redirect( $redirect_to );
+		exit();
+	}
+}
+add_action('init', 'rcp_process_lostpassword_form');
+
+/**
+ * Send password reset email to user. Adapted from wp-login.php
+ *
+ * @access      public
+ * @since       2.3
+ */
+function rcp_retrieve_password() {
+	global $wpdb, $wp_hasher, $wp_db_version;
+
+	if ( empty( $_POST['rcp_user_login'] ) ) {
+		rcp_errors()->add( 'empty_username', __( 'Enter a username or e-mail address.', 'rcp' ), 'lostpassword' );
+	} elseif ( strpos( $_POST['rcp_user_login'], '@' ) ) {
+		$user_data = get_user_by( 'email', trim( $_POST['rcp_user_login'] ) );
+		if ( empty( $user_data ) ) {
+			rcp_errors()->add( 'invalid_email', __( 'There is no user registered with that email address.', 'rcp' ), 'lostpassword' );
+		}
+	} else {
+		$login = trim($_POST['rcp_user_login']);
+		$user_data = get_user_by('login', $login);
+	}
+
+	if ( rcp_errors()->get_error_code() ) {
+		return rcp_errors();
+	}
+
+	if ( !$user_data ) {
+		rcp_errors()->add('invalidcombo', __('Invalid username or e-mail.', 'rcp' ), 'lostpassword');
+		return rcp_errors();
+	}
+
+	// Redefining user_login ensures we return the right case in the email.
+	$user_login = $user_data->user_login;
+	$user_email = $user_data->user_email;
+
+	$allow = apply_filters( 'allow_password_reset', true, $user_data->ID );
+
+	if ( ! $allow ) {
+		rcp_errors()->add( 'no_password_reset', __( 'Password reset is not allowed for this user', 'rcp' ), 'lostpassword' );
+		return rcp_errors();
+	} elseif ( is_wp_error( $allow ) ) {
+		return $allow;
+	}
+
+	// Generate something random for a password reset key.
+	$key = wp_generate_password( 20, false );
+
+	// Now insert the key, hashed, into the DB.
+	if ( empty( $wp_hasher ) ) {
+		require_once ABSPATH . WPINC . '/class-phpass.php';
+		$wp_hasher = new PasswordHash( 8, true );
+	}
+	if ($wp_db_version >= 32814) {
+		// 4.3 or later
+		$hashed = time() . ':' . $wp_hasher->HashPassword( $key );
+	} else {
+		$hashed = $wp_hasher->HashPassword( $key );
+	}
+
+	$wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user_login ) );
+
+	$message = __('Someone requested that the password be reset for the following account:') . "\r\n\r\n";
+	$message .= network_home_url( '/' ) . "\r\n\r\n";
+	$message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
+	$message .= __('If this was a mistake, just ignore this email and nothing will happen.') . "\r\n\r\n";
+	$message .= __('To reset your password, visit the following address:') . "\r\n\r\n";
+	$message .= '<' . esc_url_raw( add_query_arg( array('rcp_action' => 'lostpassword', 'key' => $key, 'login' => rawurlencode($user_login)), $_POST['rcp_redirect']) ) . ">\r\n";
+
+	if ( is_multisite() ) {
+		$blogname = $GLOBALS['current_site']->site_name;
+	} else {
+		/*
+		 * The blogname option is escaped with esc_html on the way into the database
+		 * in sanitize_option we want to reverse this for the plain text arena of emails.
+		 */
+		$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
+	}
+
+	$title = sprintf( __('[%s] Password Reset'), $blogname );
+
+	$title = apply_filters( 'retrieve_password_title', $title );
+
+	$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );
+
+	if ( $message && !wp_mail( $user_email, wp_specialchars_decode( $title ), $message ) ) {
+		wp_die( __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function.') );
+	}
+
+	return true;
+}
+
+/**
+ * Return the user who is initiating the password reset, or false if not performing a reset
+ *
+ * @param       string $rp_cookie Password reset cookie name
+ * @since       2.3
+ * @return      WP_User|false User object if reset key and login name exist and are valid, false if not
+ */
+function rcp_get_user_resetting_password($rp_cookie) {
+
+	// check if the reset key and login name are valid
+	if ( isset( $_COOKIE[ $rp_cookie ] ) && 0 < strpos( $_COOKIE[ $rp_cookie ], ':' ) ) {
+		list( $rp_login, $rp_key ) = explode( ':', wp_unslash( $_COOKIE[ $rp_cookie ] ), 2 );
+		$user = check_password_reset_key( $rp_key, $rp_login );
+	} else {
+		$user = false;
+	}
+
+	if (is_wp_error( $user )) {
+		$user = false;
+	}
+
+	return $user;
+}
