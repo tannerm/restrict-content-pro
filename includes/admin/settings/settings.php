@@ -18,8 +18,6 @@ function rcp_settings_page() {
 		'redirect'              => 0,
 		'redirect_from_premium' => 0,
 		'login_redirect'        => 0,
-		'recaptcha_style'       => '',
-
 	);
 
 	$rcp_options = wp_parse_args( $rcp_options, $defaults );
@@ -854,40 +852,20 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[recaptcha_public_key]"><?php _e( 'reCaptcha Public Key' ); ?></label>
+								<label for="rcp_settings[recaptcha_public_key]"><?php _e( 'reCaptcha Site Key' ); ?></label>
 							</th>
 							<td>
 								<input id="rcp_settings[recaptcha_public_key]" style="width: 300px;" name="rcp_settings[recaptcha_public_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_public_key'] ) ) echo $rcp_options['recaptcha_public_key']; ?>" />
-								<p class="description"><?php _e( 'This your own personal reCaptcha Public key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/admin/list"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your public key.', 'rcp' ); ?></p>
+								<p class="description"><?php _e( 'This your own personal reCaptcha Site key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/admin/list"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your public key.', 'rcp' ); ?></p>
 							<td>
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[recaptcha_private_key]"><?php _e( 'reCaptcha Private Key' ); ?></label>
+								<label for="rcp_settings[recaptcha_private_key]"><?php _e( 'reCaptcha Secret Key' ); ?></label>
 							</th>
 							<td>
 								<input id="rcp_settings[recaptcha_private_key]" style="width: 300px;" name="rcp_settings[recaptcha_private_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_private_key'] ) ) echo $rcp_options['recaptcha_private_key']; ?>" />
-								<p class="description"><?php _e( 'This your own personal reCaptcha Private key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/admin/list"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your private key.', 'rcp' ); ?></p>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[recaptcha_style]"><?php _e( 'reCaptcha Style', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<select id="rcp_settings[recaptcha_style]" name="rcp_settings[recaptcha_style]">
-									<?php
-									$styles = array('red', 'white', 'blackglass', 'clean');
-									foreach ( $styles as $style ) {
-									  	$option = '<option value="' . $style . '" ' . selected($style, $rcp_options['recaptcha_style'], false) . '>';
-										$option .= ucwords($style);
-										$option .= '</option>';
-										echo $option;
-									}
-
-									?>
-								</select>
-								<p class="description"><?php _e( 'Choose the style you wish to use for your reCaptcha form.', 'rcp' ); ?></p>
+								<p class="description"><?php _e( 'This your own personal reCaptcha Secret key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/admin/list"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your private key.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 					</table>
