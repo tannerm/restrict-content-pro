@@ -18,7 +18,7 @@ rcp_show_error_messages( 'register' ); ?>
 <form id="rcp_registration_form" class="rcp_form" method="POST" action="<?php echo esc_url( rcp_get_current_url() ); ?>">
 
 	<div class="rcp_description"><?php echo wpautop( wptexturize( rcp_get_subscription_description( $rcp_level ) ) ); ?></div>
-	
+
 	<?php if( ! is_user_logged_in() ) { ?>
 
 	<?php do_action( 'rcp_before_register_form_fields' ); ?>
@@ -26,7 +26,7 @@ rcp_show_error_messages( 'register' ); ?>
 
 	<fieldset class="rcp_user_fieldset">
 		<p id="rcp_user_login_wrap">
-			<label for="rcp_user_Login"><?php echo apply_filters ( 'rcp_registration_username_label', __( 'Username', 'rcp' ) ); ?></label>
+			<label for="rcp_user_login"><?php echo apply_filters ( 'rcp_registration_username_label', __( 'Username', 'rcp' ) ); ?></label>
 			<input name="rcp_user_login" id="rcp_user_login" class="required" type="text" <?php if( isset( $_POST['rcp_user_login'] ) ) { echo 'value="' . esc_attr( $_POST['rcp_user_login'] ) . '"'; } ?>/>
 		</p>
 		<p id="rcp_user_email_wrap">
@@ -42,11 +42,11 @@ rcp_show_error_messages( 'register' ); ?>
 			<input name="rcp_user_last" id="rcp_user_last" type="text" <?php if( isset( $_POST['rcp_user_last'] ) ) { echo 'value="' . esc_attr( $_POST['rcp_user_last'] ) . '"'; } ?>/>
 		</p>
 		<p id="rcp_password_wrap">
-			<label for="password"><?php echo apply_filters ( 'rcp_registration_password_label', __( 'Password', 'rcp' ) ); ?></label>
+			<label for="rcp_password"><?php echo apply_filters ( 'rcp_registration_password_label', __( 'Password', 'rcp' ) ); ?></label>
 			<input name="rcp_user_pass" id="rcp_password" class="required" type="password"/>
 		</p>
 		<p id="rcp_password_again_wrap">
-			<label for="password_again"><?php echo apply_filters ( 'rcp_registration_password_again_label', __( 'Password Again', 'rcp' ) ); ?></label>
+			<label for="rcp_password_again"><?php echo apply_filters ( 'rcp_registration_password_again_label', __( 'Password Again', 'rcp' ) ); ?></label>
 			<input name="rcp_user_pass_confirm" id="rcp_password_again" class="required" type="password"/>
 		</p>
 
