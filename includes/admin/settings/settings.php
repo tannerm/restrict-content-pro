@@ -832,7 +832,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[redirect]"><?php _e( 'Redirect Page', 'rcp' ); ?></label>
+								<label for="rcp_settings[redirect]">&nbsp;&mdash;&nbsp;<?php _e( 'Redirect Page', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<select id="rcp_settings[redirect_from_premium]" name="rcp_settings[redirect_from_premium]">
@@ -863,7 +863,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[redirect]"><?php _e( 'Login Page', 'rcp' ); ?></label>
+								<label for="rcp_settings[redirect]">&nbsp;&mdash;&nbsp;<?php _e( 'Login Page', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<select id="rcp_settings[login_redirect]" name="rcp_settings[login_redirect]">
@@ -982,6 +982,7 @@ function rcp_sanitize_settings( $data ) {
 			// Check for various login form short codes
 			false === strpos( $page->post_content, '[login_form' ) &&
 			false === strpos( $page->post_content, '[edd_login' ) &&
+			false === strpos( $page->post_content, '[subscription_details' ) &&
 			false === strpos( $page->post_content, '[login' )
 		) {
 			unset( $data['hijack_login_url'] );
