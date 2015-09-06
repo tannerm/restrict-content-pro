@@ -121,6 +121,75 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
+								<label for="rcp_settings[account_page]"><?php _e( 'Account Page', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<select id="rcp_settings[account_page]" name="rcp_settings[account_page]">
+									<?php
+									if($pages) :
+										foreach ( $pages as $page ) {
+										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['account_page'], false) . '>';
+											$option .= $page->post_title;
+											$option .= ' (ID: ' . $page->ID . ')';
+											$option .= '</option>';
+											echo $option;
+										}
+									else :
+										echo '<option>' . __('No pages found', 'rcp' ) . '</option>';
+									endif;
+									?>
+								</select>
+								<p class="description"><?php _e( 'This page displays the account and membership information for members. Contains [subscription_details] shortcode.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[edit_profile]"><?php _e( 'Edit Profile Page', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<select id="rcp_settings[edit_profile]" name="rcp_settings[edit_profile]">
+									<?php
+									if($pages) :
+										foreach ( $pages as $page ) {
+										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['edit_profile'], false) . '>';
+											$option .= $page->post_title;
+											$option .= ' (ID: ' . $page->ID . ')';
+											$option .= '</option>';
+											echo $option;
+										}
+									else :
+										echo '<option>' . __('No pages found', 'rcp' ) . '</option>';
+									endif;
+									?>
+								</select>
+								<p class="description"><?php _e( 'This page displays a profile edit form for logged-in members. Contains [rcp_profile_editor] shortcode.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[update_card]"><?php _e( 'Update Billing Card Page', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<select id="rcp_settings[update_card]" name="rcp_settings[update_card]">
+									<?php
+									if($pages) :
+										foreach ( $pages as $page ) {
+										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['update_card'], false) . '>';
+											$option .= $page->post_title;
+											$option .= ' (ID: ' . $page->ID . ')';
+											$option .= '</option>';
+											echo $option;
+										}
+									else :
+										echo '<option>' . __('No pages found', 'rcp' ) . '</option>';
+									endif;
+									?>
+								</select>
+								<p class="description"><?php _e( 'This page displays a profile edit form for logged-in members. Contains [rcp_update_card] shortcode.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
 								<label for="rcp_settings[auto_renew]"><?php _e( 'Auto Renew', 'rcp' ); ?></label>
 							</th>
 							<td>

@@ -77,7 +77,7 @@ function rcp_register_scripts() {
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 	wp_register_script( 'rcp-register',  RCP_PLUGIN_URL . 'includes/js/register' . $suffix . '.js', array('jquery'), RCP_PLUGIN_VERSION );
 	wp_register_script( 'jquery-blockui',  RCP_PLUGIN_URL . 'includes/js/jquery.blockUI.js', array('jquery'), RCP_PLUGIN_VERSION );
-	wp_register_script( 'recaptcha', 'https://www.google.com/recaptcha/api.js', array(), AFFILIATEWP_VERSION );
+	wp_register_script( 'recaptcha', 'https://www.google.com/recaptcha/api.js', array(), RCP_PLUGIN_VERSION );
 
 }
 add_action( 'init', 'rcp_register_scripts' );
