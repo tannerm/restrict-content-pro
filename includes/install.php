@@ -117,7 +117,7 @@ function rcp_options_install() {
 
 		$account = $wpdb->get_var( "SELECT ID FROM $wpdb->posts WHERE post_type = 'page' AND post_content LIKE '%[subscription_details%' LIMIT 1;" );
 
-		if( empty( $search ) ) {
+		if( empty( $account ) ) {
 
 			// Account Page
 			$account = wp_insert_post(
@@ -144,7 +144,7 @@ function rcp_options_install() {
 
 		$profile = $wpdb->get_var( "SELECT ID FROM $wpdb->posts WHERE post_type = 'page' AND post_content LIKE '%[rcp_profile_editor%' LIMIT 1;" );
 
-		if( empty( $search ) ) {
+		if( empty( $profile ) ) {
 
 			// Profile editor Page
 			$profile = wp_insert_post(
@@ -169,12 +169,12 @@ function rcp_options_install() {
 	// Checks if the update billing card page option exists
 	if ( empty( $rcp_options['update_card'] ) ) {
 
-		$profile = $wpdb->get_var( "SELECT ID FROM $wpdb->posts WHERE post_type = 'page' AND post_content LIKE '%[rcp_update_card%' LIMIT 1;" );
+		$update_card = $wpdb->get_var( "SELECT ID FROM $wpdb->posts WHERE post_type = 'page' AND post_content LIKE '%[rcp_update_card%' LIMIT 1;" );
 
-		if( empty( $search ) ) {
+		if( empty( $update_card ) ) {
 
-			// Profile editor Page
-			$profile = wp_insert_post(
+			// update_card editor Page
+			$update_card = wp_insert_post(
 				array(
 					'post_title'     => __( 'Update Billing Card', 'rcp' ),
 					'post_content'   => '[rcp_update_card]',
