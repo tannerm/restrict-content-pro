@@ -18,11 +18,19 @@ function rcp_login_form_fields( $args = array() ) {
 
 	ob_start();
 
-	do_action( 'rcp_before_login_form' );
+	if ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword") {
+		echo rcp_lostpassword_form_fields();
+	} elseif ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword_checkemail") {
+		echo rcp_lostpassword_checkemail_message();
+	} elseif ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword_reset") {
+		echo rcp_change_password_form();
+	} else {
+		do_action( 'rcp_before_login_form' );
 
-	rcp_get_template_part( 'login' );
+		rcp_get_template_part( 'login' );
 
-	do_action( 'rcp_after_login_form' );
+		do_action( 'rcp_after_login_form' );
+	}
 
 	return ob_get_clean();
 }
