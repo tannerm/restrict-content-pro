@@ -258,7 +258,17 @@ function rcp_user_subscription_details( $atts, $content = null ) {
 
 	} else {
 
-		echo rcp_login_form_fields();
+		if ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword") {
+			$output = rcp_lostpassword_form_fields();
+		} elseif ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword_checkemail") {
+			$output = rcp_lostpassword_checkemail_message();
+		} elseif ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword_reset") {
+			$output = rcp_change_password_form();
+		} else {
+			$output = rcp_login_form_fields();
+		}
+
+		echo $output;
 
 	}
 
