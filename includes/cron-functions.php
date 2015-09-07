@@ -30,9 +30,12 @@ function rcp_check_for_expired_users() {
 			AND  (mt2.meta_key = 'rcp_status' 
 				AND CAST(mt2.meta_value AS CHAR) = 'active') ) 
 		ORDER BY user_login ASC LIMIT 9999";
-
+		
+  $query = apply_filters( 'rcp_check_for_expired_users_query_filter', $query );
+		
 	$expired_members = $wpdb->get_results( $query );
 	$expired_members = wp_list_pluck( $expired_members, 'ID' );
+	$expired_members = apply_filters( 'rcp_check_for_expired_users_members_filter', $expired_members );
 
 	if( $expired_members ) {
 		foreach( $expired_members as $key => $member_id ) {
