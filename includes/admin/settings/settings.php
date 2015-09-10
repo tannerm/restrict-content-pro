@@ -547,6 +547,37 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 							<tr valign="top">
+								<th colspan=2><h3><?php _e( 'Payment Recieved Email', 'rcp' ); ?></h3></th>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[disable_payment_received_email]"><?php _e( 'Disabled', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input type="checkbox" value="1" name="rcp_settings[disable_payment_received_email]" id="rcp_settings[disable_payment_received_email]" <?php checked( true, isset( $rcp_options['disable_payment_received_email'] ) ); ?>/>
+									<span><?php _e( 'Check this to disable the email sent out when a payment is received.', 'rcp' ); ?></span>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th>
+									<label for="rcp_settings[payment_received_subject]"><?php _e( 'Subject', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text" id="rcp_settings[payment_received_email]" style="width: 300px;" name="rcp_settings[payment_received_email]" value="<?php if( isset( $rcp_options['payment_received_email'] ) ) { echo $rcp_options['payment_received_email']; } ?>"/>
+									<p class="description"><?php _e( 'The subject line for the email sent to users upon a successful payment being received.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th>
+									<label for="rcp_settings[payment_received_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<textarea id="rcp_settings[payment_received_email]" style="width: 300px; height: 100px;" name="rcp_settings[payment_received_email]"><?php if( isset( $rcp_options['payment_received_email'] ) ) { echo $rcp_options['payment_received_email']; } ?></textarea>
+									<p class="description"><?php _e( 'This is the email message that is sent to users after a payment has been received from them.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+
+							<tr valign="top">
 								<th colspan=2>
 									<h3><?php _e( 'Free Subscription Email', 'rcp' ); ?></h3>
 								</th>
