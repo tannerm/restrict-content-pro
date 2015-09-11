@@ -563,7 +563,7 @@ function rcp_settings_page() {
 									<label for="rcp_settings[payment_received_subject]"><?php _e( 'Subject', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<input class="regular-text" id="rcp_settings[payment_received_email]" style="width: 300px;" name="rcp_settings[payment_received_email]" value="<?php if( isset( $rcp_options['payment_received_email'] ) ) { echo $rcp_options['payment_received_email']; } ?>"/>
+									<input class="regular-text" id="rcp_settings[payment_received_subject]" style="width: 300px;" name="rcp_settings[payment_received_subject]" value="<?php if( isset( $rcp_options['payment_received_subject'] ) ) { echo $rcp_options['payment_received_subject']; } ?>"/>
 									<p class="description"><?php _e( 'The subject line for the email sent to users upon a successful payment being received.', 'rcp' ); ?></p>
 								</td>
 							</tr>
