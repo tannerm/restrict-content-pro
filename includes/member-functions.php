@@ -1236,7 +1236,7 @@ function rcp_member_can_update_billing_card( $user_id = 0 ) {
 	$profile_id = $member->get_payment_profile_id();
 
 	// Check if the member is a Stripe customer
-	if( false !== strpos( $profile_id, 'cus_' ) ) {
+	if( rcp_is_stripe_subscriber( $user_id ) ) {
 
 		$ret = true;
 
