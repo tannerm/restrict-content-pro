@@ -483,7 +483,7 @@ if( ! function_exists( 'rcp_get_month_name' ) ) {
 	function rcp_get_month_name($n) {
 		$timestamp = mktime(0, 0, 0, $n, 1, 2005);
 
-		return date( "F", $timestamp );
+		return date_i18n( "F", $timestamp );
 	}
 }
 
