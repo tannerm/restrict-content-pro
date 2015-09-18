@@ -15,7 +15,6 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 	private $publishable_key;
 	private $seller_id;
 	private $environment;
-	private $sandbox;
 
 	/**
 	* get things going
@@ -37,7 +36,6 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			$this->publishable_key = isset( $rcp_options['twocheckout_test_publishable'] ) ? trim( $rcp_options['twocheckout_test_publishable'] ) : '';
 			$this->seller_id       = isset( $rcp_options['twocheckout_test_seller_id'] )   ? trim( $rcp_options['twocheckout_test_seller_id'] )   : '';
 			$this->environment     = 'sandbox';
-			$this->sandbox         = true;
 			
 		} else {
 
@@ -45,7 +43,6 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			$this->publishable_key = isset( $rcp_options['twocheckout_live_publishable'] ) ? trim( $rcp_options['twocheckout_live_publishable'] ) : '';
 			$this->seller_id       = isset( $rcp_options['twocheckout_live_seller_id'] )   ? trim( $rcp_options['twocheckout_live_seller_id'] )   : '';
 			$this->environment     = 'production';
-			$this->sandbox         = false;
 
 		}
 
@@ -65,7 +62,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 		Twocheckout::privateKey( $this->secret_key );
 		Twocheckout::sellerId( $this->seller_id );
-		Twocheckout::sandbox( $this->sandbox );
+		Twocheckout::sandbox( $this->test_mode );
 
 		$member       = new RCP_Member( $this->user_id );
 		$subscription = rcp_get_subscription_details( $_POST['rcp_level'] );
