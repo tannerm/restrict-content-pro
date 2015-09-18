@@ -196,7 +196,8 @@ function rcp_options_install() {
 	update_option( 'rcp_settings', $rcp_options );
 
 	// and option that allows us to make sure RCP is installed
-	add_option( 'rcp_is_installed', '1' );
+	update_option( 'rcp_is_installed', '1' );
+	update_option( 'rcp_version', RCP_PLUGIN_VERSION );
 
 }
 // run the install scripts upon plugin activation
