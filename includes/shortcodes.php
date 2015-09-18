@@ -194,17 +194,8 @@ function rcp_login_form( $atts, $content = null ) {
 	// set this to true so the CSS is loaded
 	$rcp_load_css = true;
 
-	if ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword") {
-		$output = rcp_lostpassword_form_fields();
-	} elseif ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword_checkemail") {
-		$output = rcp_lostpassword_checkemail_message();
-	} elseif ( isset($_REQUEST['rcp_action']) && $_REQUEST['rcp_action'] === "lostpassword_reset") {
-		$output = rcp_change_password_form( array( 'redirect' => $redirect) );
-	} else {
-		$output = rcp_login_form_fields( array( 'redirect' => $redirect, 'class' => $class ) );
-	}
+	return rcp_login_form_fields( array( 'redirect' => $redirect, 'class' => $class ) );
 
-	return $output;
 }
 add_shortcode( 'login_form', 'rcp_login_form' );
 

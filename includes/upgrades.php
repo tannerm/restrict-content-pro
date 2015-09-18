@@ -15,6 +15,9 @@ function rcp_check_if_upgrade_needed() {
 	if( version_compare( $rcp_payments_db_version, get_option( 'rcp_payments_db_version' ), '>' ) ) {
 		return true;
 	}
+	if( ! get_option( 'rcp_version' ) || version_compare( get_option( 'rcp_version' ), '2.3', '<' ) ) {
+		return true;
+	}
 	return false;
 }
 add_action( 'admin_init', 'rcp_check_if_upgrade_needed' );
@@ -91,6 +94,14 @@ function rcp_options_upgrade() {
 	if( ! $wpdb->query( "SHOW COLUMNS FROM `" . $rcp_payments_db_name . "` LIKE 'status'" ) ) {
 		$wpdb->query( "ALTER TABLE `" . $rcp_payments_db_name . "` ADD `status` varchar(200)" );
 		update_option( 'rcp_payments_db_version', $rcp_payments_db_version );
+	}
+
+	/****************************************
+	 * 2.3 upgrades for account pages
+	 ***************************************/
+	if( ! get_option( 'rcp_version' ) || version_compare( get_option( 'rcp_version' ), '2.3', '<' ) ) {
+		// Update or create plugin pages
+		rcp_options_install();
 	}
 
 }

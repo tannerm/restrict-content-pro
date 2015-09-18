@@ -29,6 +29,7 @@
 .center { text-align: center; }
 img.help-image { max-width: 99%; overflow: hidden; border: 1px solid #ccc; }
 /* members page columns */
+.rcp-checkbox-col { width: 20px; }
 .rcp-user-col { width: 100px; }
 .rcp-id-col { width: 50px; }
 .rcp-email-col { width: 180px; }
@@ -38,6 +39,26 @@ img.help-image { max-width: 99%; overflow: hidden; border: 1px solid #ccc; }
 .rcp-expiration-col { width: 140px; }
 .rcp-role-col { width: 90px; }
 .rcp-actions-col { }
+#rcp-bulk-action-options {
+	clear: both;
+	background: #f5f5f5;
+	background-image: -webkit-gradient(linear, left bottom, left top, from(#f5f5f5), to(#fafafa));
+	background-image: -webkit-linear-gradient(bottom, #f5f5f5, #fafafa);
+	background-image:    -moz-linear-gradient(bottom, #f5f5f5, #fafafa);
+	background-image:      -o-linear-gradient(bottom, #f5f5f5, #fafafa);
+	background-image: linear-gradient(to top, #f5f5f5, #fafafa);
+	border-color: #dfdfdf;
+	overflow: auto;
+	margin: 8px 0;
+	padding: 12px;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 3px;
+	font-size: 13px;
+	line-height: 2.1em;
+}
+#rcp-bulk-action-options p { color: #777; }
+#rcp-bulk-select-all { margin: 0; }
 /* subscription levels page columns */
 .rcp-sub-order-col {}
 .rcp-sub-id-col { width: 40px; }
