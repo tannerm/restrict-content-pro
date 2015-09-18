@@ -1230,10 +1230,7 @@ function rcp_member_can_update_billing_card( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$ret    = false;
-	$member = new RCP_Member( $user_id );
-
-	$profile_id = $member->get_payment_profile_id();
+	$ret = false;
 
 	// Check if the member is a Stripe customer
 	if( rcp_is_stripe_subscriber( $user_id ) ) {
