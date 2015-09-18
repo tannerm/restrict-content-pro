@@ -127,6 +127,7 @@ function rcp_settings_page() {
 								<select id="rcp_settings[account_page]" name="rcp_settings[account_page]">
 									<?php
 									if($pages) :
+										$rcp_options['account_page'] = isset( $rcp_options['account_page'] ) ? absint( $rcp_options['account_page'] ) : 0;
 										foreach ( $pages as $page ) {
 										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['account_page'], false) . '>';
 											$option .= $page->post_title;
@@ -150,6 +151,7 @@ function rcp_settings_page() {
 								<select id="rcp_settings[edit_profile]" name="rcp_settings[edit_profile]">
 									<?php
 									if($pages) :
+										$rcp_options['edit_profile'] = isset( $rcp_options['edit_profile'] ) ? absint( $rcp_options['edit_profile'] ) : 0;
 										foreach ( $pages as $page ) {
 										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['edit_profile'], false) . '>';
 											$option .= $page->post_title;
@@ -173,6 +175,7 @@ function rcp_settings_page() {
 								<select id="rcp_settings[update_card]" name="rcp_settings[update_card]">
 									<?php
 									if($pages) :
+										$rcp_options['update_card'] = isset( $rcp_options['update_card'] ) ? absint( $rcp_options['update_card'] ) : 0;
 										foreach ( $pages as $page ) {
 										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['update_card'], false) . '>';
 											$option .= $page->post_title;
