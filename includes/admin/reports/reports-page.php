@@ -122,6 +122,7 @@ function rcp_earnings_graph() {
 		   						);
 
 		   						$args['date'] = array( 'day' => $day, 'month' => $month, 'year' => $dates['year'] );
+
 								$payments = $payments_db->get_earnings( $args );
 								$earnings += $payments;
 								$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ); ?>
@@ -573,84 +574,140 @@ function rcp_reports_graph_controls() {
  * @return void
 */
 function rcp_get_report_dates() {
+
 	$dates = array();
 
 	// Make sure the reports are based off of the correct timezone
 	date_default_timezone_set( rcp_get_timezone_id() );
 
+	$current_time = current_time( 'timestamp' );
+
 	$dates['range']      = isset( $_GET['range'] )   ? $_GET['range']   : 'this_month';
-	$dates['day']        = isset( $_GET['day'] )     ? $_GET['day']     : null;
+	$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
+	$dates['year_end']   = isset( $_GET['year_end'] )? $_GET['year_end']: date( 'Y' );
 	$dates['m_start']    = isset( $_GET['m_start'] ) ? $_GET['m_start'] : 1;
 	$dates['m_end']      = isset( $_GET['m_end'] )   ? $_GET['m_end']   : 12;
-	$dates['year']       = isset( $_GET['year'] )    ? $_GET['year']    : date( 'Y' );
-	$dates['year_end']   = isset( $_GET['y_end'] )   ? $_GET['y_end']   : date( 'Y' );
+	$dates['day']        = isset( $_GET['day'] )     ? $_GET['day']     : 1;
+	$dates['day_end']    = isset( $_GET['day_end'] ) ? $_GET['day_end'] : cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
 
 	// Modify dates based on predefined ranges
 	switch ( $dates['range'] ) :
 
 		case 'this_month' :
-			$dates['m_start'] 	= date( 'n' );
-			$dates['m_end']		= date( 'n' );
-			$dates['year']		= date( 'Y' );
+			$dates['m_start']  = date( 'n', $current_time );
+			$dates['m_end']    = date( 'n', $current_time );
+			$dates['day']      = 1;
+			$dates['day_end']  = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
+			$dates['year']     = date( 'Y' );
+			$dates['year_end'] = date( 'Y' );
 		break;
 
 		case 'last_month' :
-			if( $dates['m_start'] == 1 ) {
+			if( date( 'n' ) == 1 ) {
 				$dates['m_start'] = 12;
 				$dates['m_end']	  = 12;
-				$dates['year']    = date( 'Y' ) - 1;
-				$dates['year_end']= date( 'Y' ) - 1;
+				$dates['year']    = date( 'Y', $current_time ) - 1;
+				$dates['year_end']= date( 'Y', $current_time ) - 1;
 			} else {
 				$dates['m_start'] = date( 'n' ) - 1;
 				$dates['m_end']	  = date( 'n' ) - 1;
-				$dates['year']    = date( 'Y' );
+				$dates['year_end']= $dates['year'];
 			}
+			$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
+		break;
+
+		case 'today' :
+			$dates['day']		= date( 'd', $current_time );
+			$dates['m_start'] 	= date( 'n', $current_time );
+			$dates['m_end']		= date( 'n', $current_time );
+			$dates['year']		= date( 'Y', $current_time );
+		break;
+
+		case 'yesterday' :
+
+			$year               = date( 'Y', $current_time );
+			$month              = date( 'n', $current_time );
+			$day                = date( 'd', $current_time );
+
+			if ( $month == 1 && $day == 1 ) {
+
+				$year -= 1;
+				$month = 12;
+				$day   = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+
+			} elseif ( $month > 1 && $day == 1 ) {
+
+				$month -= 1;
+				$day   = cal_days_in_month( CAL_GREGORIAN, $month, $year );
+
+			} else {
+
+				$day -= 1;
+
+			}
+
+			$dates['day']       = $day;
+			$dates['m_start']   = $month;
+			$dates['m_end']     = $month;
+			$dates['year']      = $year;
+			$dates['year_end']      = $year;
 		break;
 
 		case 'this_week' :
-			$dates['day']       = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 1;
+			$dates['day']       = date( 'd', $current_time - ( date( 'w', $current_time ) - 1 ) *60*60*24 ) - 1;
 			$dates['day']      += get_option( 'start_of_week' );
 			$dates['day_end']   = $dates['day'] + 6;
-			$dates['m_start'] 	= date( 'n' );
-			$dates['m_end']		= date( 'n' );
-			$dates['year']		= date( 'Y' );
+			$dates['m_start'] 	= date( 'n', $current_time );
+			$dates['m_end']		= date( 'n', $current_time );
+			$dates['year']		= date( 'Y', $current_time );
 		break;
 
 		case 'last_week' :
-			$dates['day']       = date( 'd', current_time( 'timestamp' ) - ( date( 'w' ) - 1 ) *60*60*24 ) - 8;
+			$dates['day']       = date( 'd', $current_time - ( date( 'w' ) - 1 ) *60*60*24 ) - 8;
 			$dates['day']      += get_option( 'start_of_week' );
 			$dates['day_end']   = $dates['day'] + 6;
-			$dates['m_start'] 	= date( 'n' );
-			$dates['m_end']		= date( 'n' );
 			$dates['year']		= date( 'Y' );
+
+			if( date( 'j', $current_time ) <= 7 ) {
+				$dates['m_start'] 	= date( 'n', $current_time ) - 1;
+				$dates['m_end']		= date( 'n', $current_time ) - 1;
+				if( $dates['m_start'] <= 1 ) {
+					$dates['year'] = date( 'Y', $current_time ) - 1;
+					$dates['year_end'] = date( 'Y', $current_time ) - 1;
+				}
+			} else {
+				$dates['m_start'] 	= date( 'n', $current_time );
+				$dates['m_end']		= date( 'n', $current_time );
+			}
 		break;
 
 		case 'this_quarter' :
-			$month_now = date( 'n' );
+			$month_now = date( 'n', $current_time );
 
 			if ( $month_now <= 3 ) {
 
 				$dates['m_start'] 	= 1;
-				$dates['m_end']		= 3;
-				$dates['year']		= date( 'Y' );
+				$dates['m_end']		= 4;
+				$dates['year']		= date( 'Y', $current_time );
 
 			} else if ( $month_now <= 6 ) {
 
 				$dates['m_start'] 	= 4;
-				$dates['m_end']		= 6;
-				$dates['year']		= date( 'Y' );
+				$dates['m_end']		= 7;
+				$dates['year']		= date( 'Y', $current_time );
 
 			} else if ( $month_now <= 9 ) {
 
 				$dates['m_start'] 	= 7;
-				$dates['m_end']		= 9;
-				$dates['year']		= date( 'Y' );
+				$dates['m_end']		= 10;
+				$dates['year']		= date( 'Y', $current_time );
 
 			} else {
 
 				$dates['m_start'] 	= 10;
-				$dates['m_end']		= 12;
-				$dates['year']		= date( 'Y' );
+				$dates['m_end']		= 1;
+				$dates['year']		= date( 'Y', $current_time );
+				$dates['year_end']  = date( 'Y', $current_time ) + 1;
 
 			}
 		break;
@@ -660,27 +717,28 @@ function rcp_get_report_dates() {
 
 			if ( $month_now <= 3 ) {
 
-				$dates['m_start'] 	= 10;
-				$dates['m_end']		= 12;
-				$dates['year']		= date( 'Y' ) - 1; // Previous year
+				$dates['m_start']   = 10;
+				$dates['m_end']     = 12;
+				$dates['year']      = date( 'Y', $current_time ) - 1; // Previous year
+				$dates['year_end']  = date( 'Y', $current_time ) - 1; // Previous year
 
 			} else if ( $month_now <= 6 ) {
 
 				$dates['m_start'] 	= 1;
 				$dates['m_end']		= 3;
-				$dates['year']		= date( 'Y' );
+				$dates['year']		= date( 'Y', $current_time );
 
 			} else if ( $month_now <= 9 ) {
 
 				$dates['m_start'] 	= 4;
 				$dates['m_end']		= 6;
-				$dates['year']		= date( 'Y' );
+				$dates['year']		= date( 'Y', $current_time );
 
 			} else {
 
 				$dates['m_start'] 	= 7;
 				$dates['m_end']		= 9;
-				$dates['year']		= date( 'Y' );
+				$dates['year']		= date( 'Y', $current_time );
 
 			}
 		break;
@@ -688,14 +746,14 @@ function rcp_get_report_dates() {
 		case 'this_year' :
 			$dates['m_start'] 	= 1;
 			$dates['m_end']		= 12;
-			$dates['year']		= date( 'Y' );
+			$dates['year']		= date( 'Y', $current_time );
 		break;
 
 		case 'last_year' :
 			$dates['m_start'] 	= 1;
 			$dates['m_end']		= 12;
-			$dates['year']		= date( 'Y' ) - 1;
-			$dates['year_end']  = date( 'Y' ) - 1;
+			$dates['year']		= date( 'Y', $current_time ) - 1;
+			$dates['year_end']  = date( 'Y', $current_time ) - 1;
 		break;
 
 	endswitch;

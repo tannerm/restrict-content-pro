@@ -32,13 +32,12 @@ jQuery(document).ready(function($) {
 	});
 
 	// Validate discount code
-	$('#rcp_discount_code').keyup( function( key ) {
+	$('#rcp_apply_discount').on( 'click', function(e) {
 		
-		if( key.which != 13 ) {
+		e.preventDefault();
 
-			rcp_validate_discount( $(this).val() );
+		rcp_validate_discount( $('#rcp_discount_code').val() );
 
-		}
 
 	});
 

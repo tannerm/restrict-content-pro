@@ -78,16 +78,13 @@ function rcp_options_install() {
 	$caps = new RCP_Capabilities;
 	$caps->add_caps();
 
-	// Setup some default options
-	$options = array();
-
 	// Checks if the purchase page option exists
 	if ( ! isset( $rcp_options['registration_page'] ) ) {
 
 		// Register Page
 		$register = wp_insert_post(
 			array(
-				'post_title'     => __( 'Register', 'edd' ),
+				'post_title'     => __( 'Register', 'rcp' ),
 				'post_content'   => '[register_form]',
 				'post_status'    => 'publish',
 				'post_author'    => 1,
@@ -99,8 +96,8 @@ function rcp_options_install() {
 		// Welcome (Success) Page
 		$success = wp_insert_post(
 			array(
-				'post_title'     => __( 'Welcome', 'edd' ),
-				'post_content'   => __( 'Welcome! This is your success page where members are redirected after completing their registration.', 'edd' ),
+				'post_title'     => __( 'Welcome', 'rcp' ),
+				'post_content'   => __( 'Welcome! This is your success page where members are redirected after completing their registration.', 'rcp' ),
 				'post_status'    => 'publish',
 				'post_author'    => 1,
 				'post_parent'    => $register,
@@ -110,15 +107,97 @@ function rcp_options_install() {
 		);
 
 		// Store our page IDs
-		$options['registration_page'] = $register;
-		$options['redirect']  = $success;
+		$rcp_options['registration_page'] = $register;
+		$rcp_options['redirect']  = $success;
 
 	}
 
-	update_option( 'rcp_settings', array_merge( $rcp_options, $options ) );
+	// Checks if the account page option exists
+	if ( empty( $rcp_options['account_page'] ) ) {
+
+		$account = $wpdb->get_var( "SELECT ID FROM $wpdb->posts WHERE post_type = 'page' AND post_content LIKE '%[subscription_details%' LIMIT 1;" );
+
+		if( empty( $account ) ) {
+
+			// Account Page
+			$account = wp_insert_post(
+				array(
+					'post_title'     => __( 'Your Membership', 'rcp' ),
+					'post_content'   => '[subscription_details]',
+					'post_status'    => 'publish',
+					'post_author'    => 1,
+					'post_parent'    => $rcp_options['registration_page'],
+					'post_type'      => 'page',
+					'comment_status' => 'closed'
+				)
+			);
+
+		}
+
+		// Store our page IDs
+		$rcp_options['account_page'] = $account;
+
+	}
+
+	// Checks if the profile editor page option exists
+	if ( empty( $rcp_options['edit_profile'] ) ) {
+
+		$profile = $wpdb->get_var( "SELECT ID FROM $wpdb->posts WHERE post_type = 'page' AND post_content LIKE '%[rcp_profile_editor%' LIMIT 1;" );
+
+		if( empty( $profile ) ) {
+
+			// Profile editor Page
+			$profile = wp_insert_post(
+				array(
+					'post_title'     => __( 'Edit Your Profile', 'rcp' ),
+					'post_content'   => '[rcp_profile_editor]',
+					'post_status'    => 'publish',
+					'post_author'    => 1,
+					'post_parent'    => $rcp_options['registration_page'],
+					'post_type'      => 'page',
+					'comment_status' => 'closed'
+				)
+			);
+
+		}
+
+		// Store our page IDs
+		$rcp_options['edit_profile'] = $profile;
+
+	}
+
+	// Checks if the update billing card page option exists
+	if ( empty( $rcp_options['update_card'] ) ) {
+
+		$update_card = $wpdb->get_var( "SELECT ID FROM $wpdb->posts WHERE post_type = 'page' AND post_content LIKE '%[rcp_update_card%' LIMIT 1;" );
+
+		if( empty( $update_card ) ) {
+
+			// update_card editor Page
+			$update_card = wp_insert_post(
+				array(
+					'post_title'     => __( 'Update Billing Card', 'rcp' ),
+					'post_content'   => '[rcp_update_card]',
+					'post_status'    => 'publish',
+					'post_author'    => 1,
+					'post_parent'    => $rcp_options['registration_page'],
+					'post_type'      => 'page',
+					'comment_status' => 'closed'
+				)
+			);
+
+		}
+
+		// Store our page IDs
+		$rcp_options['update_card'] = $profile;
+
+	}
+
+	update_option( 'rcp_settings', $rcp_options );
 
 	// and option that allows us to make sure RCP is installed
-	add_option( 'rcp_is_installed', '1' );
+	update_option( 'rcp_is_installed', '1' );
+	update_option( 'rcp_version', RCP_PLUGIN_VERSION );
 
 }
 // run the install scripts upon plugin activation

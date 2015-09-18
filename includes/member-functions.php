@@ -1124,6 +1124,42 @@ function rcp_get_member_id_from_profile_id( $profile_id = '' ) {
 }
 
 /**
+ * Determines if a member can renew their subscription
+ *
+ * @access      public
+ * @since       2.3
+ */
+function rcp_can_member_renew( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$ret    = true;
+	$member = new RCP_Member( $user_id );
+
+	if( $member->is_recurring() && $member->is_active() && 'cancelled' !== $member->get_status() ) {
+
+		$ret = false;
+
+	}
+
+	if( 'free' == $member->get_status() ) {
+
+		$ret = false;
+
+	}
+
+	if( ! rcp_subscription_upgrade_possible( $user_id ) ) {
+
+		$ret = false;
+
+	}
+
+	return apply_filters( 'rcp_member_can_renew', $ret, $user_id );
+}
+
+/**
  * Determines if a member can cancel their subscription on site
  *
  * @access      public
@@ -1194,21 +1230,15 @@ function rcp_member_can_update_billing_card( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$ret    = false;
-	$member = new RCP_Member( $user_id );
+	$ret = false;
 
-	if( $member->is_recurring() ) {
+	// Check if the member is a Stripe customer
+	if( rcp_is_stripe_subscriber( $user_id ) ) {
 
-		$profile_id = $member->get_payment_profile_id();
-
-		// Check if the member is a Stripe customer
-		if( false !== strpos( $profile_id, 'cus_' ) ) {
-
-			$ret = true;
-
-		}
+		$ret = true;
 
 	}
+
 
 	return apply_filters( 'rcp_member_can_update_billing_card', $ret, $user_id );
 }

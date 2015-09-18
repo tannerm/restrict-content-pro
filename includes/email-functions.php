@@ -244,3 +244,32 @@ function rcp_email_on_cancellation( $status, $user_id ) {
 
 }
 add_action( 'rcp_set_status', 'rcp_email_on_cancellation', 10, 2 );
+
+/**
+ * Triggers a email to the member when a payment is received
+ *
+ * @access  public
+ * @since   2.3
+ * @return  void
+ */
+function rcp_email_payment_received( $payment_id, $args ) {
+
+	global $rcp_options;
+
+	$user_info = get_userdata( $args['user_id'] );
+
+	if( ! $user_info ) {
+		return;
+	}
+
+	$message = ! empty( $rcp_options['payment_received_email'] ) ? $rcp_options['payment_received_email'] : false;
+
+	if( ! $message ) {
+		return;
+	}
+
+	$message = rcp_filter_email_tags( $message, $args['user_id'], $user_info->display_name );
+
+	wp_mail( $user_info->user_email, $rcp_options['payment_received_subject'], $message );
+}
+add_action( 'rcp_insert_payment', 'rcp_email_payment_received', 10, 2 );

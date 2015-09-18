@@ -70,6 +70,5 @@ if ( is_user_logged_in() ):
 	</form><!-- #rcp_profile_editor_form -->
 	<?php
 else:
-	echo '<p>' . __( 'You need to login to edit your profile.', 'rcp' ) . '</p>';
 	echo rcp_login_form_fields();
 endif;
