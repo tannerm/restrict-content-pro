@@ -1233,18 +1233,15 @@ function rcp_member_can_update_billing_card( $user_id = 0 ) {
 	$ret    = false;
 	$member = new RCP_Member( $user_id );
 
-	if( $member->is_recurring() ) {
+	$profile_id = $member->get_payment_profile_id();
 
-		$profile_id = $member->get_payment_profile_id();
+	// Check if the member is a Stripe customer
+	if( rcp_is_stripe_subscriber( $user_id ) ) {
 
-		// Check if the member is a Stripe customer
-		if( false !== strpos( $profile_id, 'cus_' ) ) {
-
-			$ret = true;
-
-		}
+		$ret = true;
 
 	}
+
 
 	return apply_filters( 'rcp_member_can_update_billing_card', $ret, $user_id );
 }
