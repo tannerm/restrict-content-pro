@@ -187,8 +187,8 @@ class RCP_Member extends WP_User {
 
 		do_action( 'rcp_member_pre_renew', $this->ID, $expiration, $this );
 
-		$this->set_status( $status );
 		$this->set_expiration_date( $expiration );
+		$this->set_status( $status );
 		$this->set_recurring( $recurring );
 
 		delete_user_meta( $this->ID, '_rcp_expired_email_sent' );
