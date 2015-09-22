@@ -354,8 +354,7 @@ class RCP_Member extends WP_User {
 	*/
 	public function is_active() {
 
-		$ret       = false;
-		$recurring = get_user_meta( $this->ID, 'rcp_recurring', true );
+		$ret = false;
 
 		if( user_can( $this->ID, 'manage_options' ) ) {
 			$ret = true;
