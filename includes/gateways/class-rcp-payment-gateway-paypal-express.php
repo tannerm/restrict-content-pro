@@ -351,6 +351,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			return;
 		}
 
+		$user_id = 0;
 		$posted  = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
 
 		if( ! empty( $posted['custom'] ) && is_numeric( $post['custom'] ) ) {

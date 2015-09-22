@@ -186,7 +186,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			status_header( 200 );
 
-			$posted = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
+			$user_id = 0;
+			$posted  = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
 
 			if( ! empty( $posted['custom'] ) && is_numeric( $post['custom'] ) ) {
 
@@ -203,7 +204,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			}
 
-			$member  = new RCP_Member( $user_id );
+			$member = new RCP_Member( $user_id );
 
 			if( ! $member || ! $member->get_subscription_id() ) {
 				die( 'no member found' );
