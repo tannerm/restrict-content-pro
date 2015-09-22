@@ -44,26 +44,26 @@ class RCP_Member extends WP_User {
 		$ret        = false;
 		$old_status = get_user_meta( $this->ID, 'rcp_status', true );
 
-		if( $old_status != $new_status ) {
+		if( ! empty( $new_status ) ) {
 
-			if( update_user_meta( $this->ID, 'rcp_status', $new_status ) ) {
+			update_user_meta( $this->ID, 'rcp_status', $new_status );
 
-				if( 'expired' != $new_status ) {
-					delete_user_meta( $this->ID, '_rcp_expired_email_sent');
-				}
-
-				if( 'expired' == $new_status || 'cancelled' == $new_status ) {
-					$this->set_recurring( false );
-				}
-
-				do_action( 'rcp_set_status', $new_status, $this->ID, $old_status );
-
-				// Record the status change
-				rcp_add_member_note( $this->ID, sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
-
-				$ret = true;
+			if( 'expired' != $new_status ) {
+				delete_user_meta( $this->ID, '_rcp_expired_email_sent');
 			}
 
+			if( 'expired' == $new_status || 'cancelled' == $new_status ) {
+				$this->set_recurring( false );
+			}
+
+			do_action( 'rcp_set_status', $new_status, $this->ID, $old_status );
+
+			// Record the status change
+			if( $old_status != $new_status ) {
+				rcp_add_member_note( $this->ID, sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
+			}
+
+			$ret = true;
 		}
 
 		return $ret;
