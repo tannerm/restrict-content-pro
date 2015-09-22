@@ -196,6 +196,11 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 				$user_id = rcp_get_member_id_from_profile_id( $posted['subscr_id'] );
 
+			} else if( ! empty( $posted['payer_email'] ) ) {
+
+				$user    = get_user_by( 'email', $posted['payer_email'] );
+				$user_id = $user ? $user->ID : false;
+
 			}
 
 			$member  = new RCP_Member( $user_id );
