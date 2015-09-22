@@ -416,7 +416,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 				$member->set_payment_profile_id( $posted['recurring_payment_id'] );
 
-				$this->renew_member( true );
+				$member->renew( true );
 
 				do_action( 'rcp_ipn_subscr_payment', $user_id );
 
