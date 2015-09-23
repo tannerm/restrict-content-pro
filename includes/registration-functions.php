@@ -212,6 +212,7 @@ function rcp_process_registration() {
 				} else {
 
 					$auto_renew = false;
+					rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 				}
 
