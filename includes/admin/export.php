@@ -10,7 +10,7 @@ function rcp_export_page() {
 		<?php do_action( 'rcp_export_page_top' ); ?>
 
 		<h3><?php _e( 'Members Export', 'rcp' ); ?></h3>
-		<p><?php _e( 'Download member data as a CSV file. This is useful for tasks such as importing batch users into Mail Chimp, or other systems.', 'rcp' ); ?></p>
+		<p><?php _e( 'Download member data as a CSV file. This is useful for tasks such as importing batch users into MailChimp, or other systems.', 'rcp' ); ?></p>
 		<form id="rcp_export" action="<?php echo $current_page; ?>" method="post">
 			<p>
 				<select name="rcp-subscription" id="rcp-subscription">
@@ -50,7 +50,7 @@ function rcp_export_page() {
 			<p>
 				<select name="rcp-year" id="rcp-year">
 					<option value="0"><?php _e( 'All years', 'rcp' ); ?>
-					<?php 
+					<?php
 					$current = date( 'Y' );
 					$year    = $current;
 					$end     = $current - 5;
