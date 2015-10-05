@@ -7,5 +7,5 @@
     <?php do_action( 'rcp_after_lostpassword_checkemail_message' ); ?>
 
 <?php else : ?>
-    <div class="rcp_logged_in"><a href="<?php echo wp_logout_url( home_url() ); ?>"><?php _e( 'Logout', 'rcp' ); ?></a></div>
+    <div class="rcp_logged_in"><a href="<?php echo wp_logout_url( home_url() ); ?>"><?php _e( 'Log out', 'rcp' ); ?></a></div>
 <?php endif; ?>
