@@ -479,7 +479,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						}
 
 						$payment_data = array(
-							'date'              => date( 'Y-m-d g:i:s', $event->created ),
+							'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
 							'subscription'      => $member->get_subscription_name(),
 							'payment_type' 		=> 'Credit Card',
 							'subscription_key' 	=> $member->get_subscription_key(),
