@@ -471,6 +471,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// check to confirm this is a stripe subscriber
 				if ( $member ) {
 
+					if( ! $member->get_subscription_id() ) {
+						die( 'no subscription ID for member' );
+					}
+
 					// setup payment data based on type of event
 					$payment_data = array(
 						'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
@@ -492,11 +496,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					}
 
-
-					if( ! $member->get_subscription_id() ) {
-						die( 'no subscription ID for member' );
-					}
-
 					if( ! rcp_check_for_existing_payment( $payment_data['payment_type'], $payment_data['date'], $payment_data['subscription_key'] ) ) {
 
 						$member->renew( $member->is_recurring() );
@@ -506,7 +505,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
 
-						die( 'rcp_stripe_charge_succeeded action fired successfully' );
+						die( 'rcp_stripe_charge_succeeded action fired successfully' . $payment_event->id );
 
 					} else {
 
