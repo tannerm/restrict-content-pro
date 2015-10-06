@@ -446,6 +446,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$event   = \Stripe\Event::retrieve( $event_id );
 				$invoice = $event->data->object;
+				$invoice_id = $event->data->object->invoice;
 
 				if( empty( $invoice->customer ) ) {
 					die( 'no customer attached' );
@@ -472,7 +473,42 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				if ( $member ) {
 
 					// successful payment
-					if ( $event->type == 'charge.succeeded' ) {
+					if ( $event->type == 'invoice.payment_succeeded' ) {
+
+						if( ! $member->get_subscription_id() ) {
+							die( 'no subscription ID for member' );
+						}
+
+						$invoice = $event->data->object;
+
+						$payment_data = array(
+							'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
+							'subscription'      => $member->get_subscription_name(),
+							'payment_type' 		=> 'Credit Card',
+							'subscription_key' 	=> $member->get_subscription_key(),
+							'amount' 			=> $invoice->amount_due / 100,
+							'user_id' 			=> $member->ID,
+							'transaction_id'    => $invoice->id
+						);
+
+						if( ! rcp_check_for_existing_payment( $payment_data['payment_type'], $payment_data['date'], $payment_data['subscription_key'] ) ) {
+
+							// record this payment if it hasn't been recorded yet
+							$rcp_payments->insert( $payment_data );
+
+							$member->renew( $member->is_recurring() );
+
+							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
+
+							die( 'rcp_stripe_charge_succeeded action fired successfully' );
+
+						} else {
+
+							die( 'duplicate payment found' );
+
+						}
+
+					} elseif ( $event->type == 'charge.succeeded' && $invoice_id == 'null' ) {
 
 						if( ! $member->get_subscription_id() ) {
 							die( 'no subscription ID for member' );
@@ -504,7 +540,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							die( 'duplicate payment found' );
 
 						}
-
 					}
 
 					// failed payment
