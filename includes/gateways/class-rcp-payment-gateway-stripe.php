@@ -446,7 +446,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$event   = \Stripe\Event::retrieve( $event_id );
 				$invoice = $event->data->object;
-				$invoice_id = $event->data->object->invoice;
 
 				if( empty( $invoice->customer ) ) {
 					die( 'no customer attached' );
@@ -488,7 +487,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							'subscription_key' 	=> $member->get_subscription_key(),
 							'amount' 			=> $invoice->amount_due / 100,
 							'user_id' 			=> $member->ID,
-							'transaction_id'    => $invoice->id
+							'transaction_id'    => $invoice->charge
 						);
 
 						if( ! rcp_check_for_existing_payment( $payment_data['payment_type'], $payment_data['date'], $payment_data['subscription_key'] ) ) {
@@ -508,7 +507,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						}
 
-					} elseif ( $event->type == 'charge.succeeded' && $invoice_id == 'null' ) {
+					} elseif ( $event->type == 'charge.succeeded' && $invoice->invoice == 'null' ) {
 
 						if( ! $member->get_subscription_id() ) {
 							die( 'no subscription ID for member' );
