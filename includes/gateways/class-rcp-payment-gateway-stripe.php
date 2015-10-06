@@ -493,10 +493,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						if( ! rcp_check_for_existing_payment( $payment_data['payment_type'], $payment_data['date'], $payment_data['subscription_key'] ) ) {
 
+							$member->renew( $member->is_recurring() );
+
 							// record this payment if it hasn't been recorded yet
 							$rcp_payments->insert( $payment_data );
-
-							$member->renew( $member->is_recurring() );
 
 							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
 
