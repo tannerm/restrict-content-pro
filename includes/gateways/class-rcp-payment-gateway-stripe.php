@@ -288,7 +288,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				), $this ) );
 
 				$payment_data = array(
-					'date'              => date( 'Y-m-d g:i:s', time() ),
+					'date'              => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
 					'subscription'      => $this->subscription_name,
 					'payment_type' 		=> 'Credit Card One Time',
 					'subscription_key' 	=> $this->subscription_key,

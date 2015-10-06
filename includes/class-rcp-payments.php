@@ -54,7 +54,7 @@ class RCP_Payments {
 
 		$defaults = array(
 			'subscription'      => '',
-			'date'              => date( 'Y-m-d H:i:s' ),
+			'date'              => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 			'amount'            => 0.00,
 			'user_id'           => 0,
 			'payment_type'      => '',
