@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since       2.0
  * @return      void
  */
-function rcp_category_edit_meta_fields( $term ) { 
+function rcp_category_edit_meta_fields( $term ) {
 	// retrieve the existing value(s) for this meta field. This returns an array
 	$term_meta = get_option( "rcp_category_meta_$term->term_id" );
 	$access_level = isset( $term_meta['access_level'] ) ? absint( $term_meta['access_level'] ) : 0;
@@ -33,7 +33,7 @@ function rcp_category_edit_meta_fields( $term ) {
 		<td>
 			<label for="rcp_category_meta[paid_only]">
 				<input type="checkbox" name="rcp_category_meta[paid_only]" id="rcp_category_meta[paid_only]" value="1"<?php checked( true, isset( $term_meta['paid_only'] ) ); ?>>
-				<span class="description"><?php _e( 'Restrict items in thie category to paid subscribers only?', 'rcp' ); ?></span>
+				<span class="description"><?php _e( 'Restrict items in this category to paid subscribers only?', 'rcp' ); ?></span>
 			</label>
 		</td>
 	</tr>
@@ -87,5 +87,5 @@ function rcp_save_category_meta( $term_id ) {
 	}
 
 	update_option( "rcp_category_meta_$term_id", $fields );
-}  
-add_action( 'edited_category', 'rcp_save_category_meta', 10, 2 );  
+}
+add_action( 'edited_category', 'rcp_save_category_meta', 10, 2 );
