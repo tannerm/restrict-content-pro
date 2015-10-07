@@ -505,7 +505,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
 
-						die( 'rcp_stripe_charge_succeeded action fired successfully' . $payment_event->id );
+						die( 'rcp_stripe_charge_succeeded action fired successfully' );
 
 					} else {
 
