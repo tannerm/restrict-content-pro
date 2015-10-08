@@ -475,7 +475,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						die( 'no subscription ID for member' );
 					}
 
-					// setup payment data based on type of event
+					// setup payment data
 					$payment_data = array(
 						'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
 						'subscription'      => $member->get_subscription_name(),
