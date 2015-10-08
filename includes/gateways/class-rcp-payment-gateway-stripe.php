@@ -482,21 +482,38 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						'payment_type' 		=> 'Credit Card',
 						'subscription_key' 	=> $member->get_subscription_key(),
 						'user_id' 			=> $member->ID,
+						'amount'            => '',
+						'transaction_id'    => '',
 					);
 
-					// successful subscription payment
-					if ( $event->type == 'invoice.payment_succeeded' ) {
-						$payment_data['amount']         = $payment_event->amount_due / 100;
-						$payment_data['transaction_id'] = $payment_event->charge;
+					if ( $event->type == 'charge.succeeded' ) {
 
-					// successful one-time payment
-					} elseif ( $event->type == 'charge.succeeded' && $payment_event->invoice == 'null' ) {
-						$payment_data['amount']         = $payment_event->amount / 100;
+						$invoice_id = $payment_event->invoice;
+
+						// successful one-time payment
+						if ( !$invoice_id ) {
+
+							$payment_data['amount']         = $payment_event->amount / 100;
+							$payment_data['transaction_id'] = $payment_event->id;
+
+						// successful subscription payment
+						} else {
+
+							$invoice = \Stripe\Invoice::retrieve( $invoice_id );
+							$payment_data['amount']         = $invoice->amount_due / 100;
+							$payment_data['transaction_id'] = $payment_event->id;
+
+						}
+
+					// successful subscription paid made with account credit where no charge is created
+					} elseif ( $event->type == 'invoice.payment_succeeded' && !$payment_event->charge ) {
+
+						$payment_data['amount']         = $payment_event->amount_due / 100;
 						$payment_data['transaction_id'] = $payment_event->id;
 
 					}
 
-					if( ! rcp_check_for_existing_payment( $payment_data['payment_type'], $payment_data['date'], $payment_data['subscription_key'] ) ) {
+					if( ! rcp_check_for_existing_payment_by_id( $payment_data['transaction_id'] ) ) {
 
 						$member->renew( $member->is_recurring() );
 
@@ -505,7 +522,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
 
-						die( 'rcp_stripe_charge_succeeded action fired successfully' );
+						die( 'rcp_stripe_charge_succeeded action fired successfully' . ' ' . $invoice_id );
 
 					} else {
 
