@@ -10,6 +10,7 @@
 function rcp_payments_page() {
 	global $rcp_options;
 	$current_page = admin_url( '/admin.php?page=rcp-payments' ); ?>
+
 	<div class="wrap">
 
 		<?php
@@ -116,9 +117,9 @@ function rcp_payments_page() {
 									<td>
 										<a href="<?php echo rcp_get_pdf_download_url( $payment->id ); ?>" class="rcp-payment-invoice"><?php _e( 'Download Invoice', 'rcp' ); ?></a>
 										<span>&nbsp;|&nbsp;</span>
-										<a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ) ) ); ?>" class="rcp-edit-payment"><?php _e( 'Edit', 'rcp' ); ?></a>
+										<a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php _e( 'Edit', 'rcp' ); ?></a>
 										<span>&nbsp;|&nbsp;</span>
-										<a href="<?php echo wp_nonce_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ) ), 'rcp_delete_payment_nonce' ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a>
+										<a href="<?php echo wp_nonce_url( add_query_arg( array( 'payment_id' => $payment->id, 'rcp-action' => 'delete_payment' ), admin_url( 'admin.php?page=rcp-payments' ) ), 'rcp_delete_payment_nonce' ); ?>" class="rcp-delete-payment"><?php _e( 'Delete', 'rcp' ); ?></a>
 									</td>
 								<?php endif; ?>
 							</tr>
