@@ -470,7 +470,7 @@ class RCP_Payments {
 		} else {
 
 			$where .= "WHERE ( `status` = 'complete' OR `status` IS NULL )";
-	
+
 		}
 
 		$earnings = get_transient( $cache_key );
