@@ -79,7 +79,7 @@ function rcp_process_data() {
 
 				rcp_set_status( $user->ID, 'active' );
 				rcp_set_expiration_date( $user->ID, $expiration );
-				
+
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
 
 				// Add a role, if needed, to the user
@@ -127,7 +127,7 @@ function rcp_process_data() {
 				$member = new RCP_Member( $member_id );
 
 				if( $action ) {
-	
+
 					switch( $action ) {
 
 						case 'mark-active' :
@@ -164,7 +164,7 @@ function rcp_process_data() {
 
 			}
 
-			wp_redirect( admin_url( 'admin.php?page=rcp-members&rcp_message=members_updated' ) ); exit;			
+			wp_redirect( admin_url( 'admin.php?page=rcp-members&rcp_message=members_updated' ) ); exit;
 
 		}
 
@@ -338,6 +338,10 @@ function rcp_process_data() {
 			}
 
 			if( ! empty( $add ) ) {
+				$cache_args = array( 'earnings' => 1, 'subscription' => 0, 'user_id' => 0, 'date' => '' );
+				$cache_key  = md5( implode( ',', $cache_args ) );
+				delete_transient( $cache_key );
+
 				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_added' );
 			} else {
 				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_not_added' );
@@ -374,6 +378,10 @@ function rcp_process_data() {
 			}
 
 			if( ! empty( $update ) ) {
+				$cache_args = array( 'earnings' => 1, 'subscription' => 0, 'user_id' => 0, 'date' => '' );
+				$cache_key  = md5( implode( ',', $cache_args ) );
+				delete_transient( $cache_key );
+
 				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_updated' );
 			} else {
 				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_not_updated' );
