@@ -323,9 +323,9 @@ function rcp_process_data() {
 			if( $user ) {
 
 				$data = array(
-					'amount'           => $_POST['amount'],
+					'amount'           => empty( $_POST['amount'] ) ? 0.00 : sanitize_text_field( $_POST['amount'] ),
 					'user_id'          => $user->ID,
-					'date'             => date( 'Y-m-d', strtotime( $_POST['date'], current_time( 'timestamp' ) ) ) . ' ' . date( 'H:i:s', current_time( 'timestamp' ) ),
+					'date'             => empty( $_POST['date'] ) ? date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) : date( 'Y-m-d', strtotime( $_POST['date'], current_time( 'timestamp' ) ) ) . ' ' . date( 'H:i:s', current_time( 'timestamp' ) ),
 					'payment_type'     => 'manual',
 					'subscription'     => rcp_get_subscription( $user->ID ),
 					'subscription_key' => rcp_get_subscription_key( $user->ID ),
@@ -364,9 +364,9 @@ function rcp_process_data() {
 			if( $user && $payment_id ) {
 
 				$data = array(
-					'amount'           => sanitize_text_field( $_POST['amount'] ),
+					'amount'           => empty( $_POST['amount'] ) ? 0.00 : sanitize_text_field( $_POST['amount'] ),
 					'user_id'          => $user->ID,
-					'date'             => date( 'Y-m-d H:i:s', strtotime( $_POST['date'], current_time( 'timestamp' ) ) ),
+					'date'             => empty( $_POST['date'] ) ? date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) : date( 'Y-m-d', strtotime( $_POST['date'], current_time( 'timestamp' ) ) ) . ' ' . date( 'H:i:s', current_time( 'timestamp' ) ),
 					'subscription'     => rcp_get_subscription( $user->ID ),
 					'subscription_key' => rcp_get_subscription_key( $user->ID ),
 					'transaction_id'   => sanitize_text_field( $_POST['transaction-id'] ),
