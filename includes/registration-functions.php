@@ -160,6 +160,8 @@ function rcp_process_registration() {
 
 		if( $user_data['id'] ) {
 
+			update_user_meta( $user_data['id'], '_rcp_new_subscription', '1' );
+
 			if( ! rcp_is_active( $user_data['id'] ) ) {
 
 				rcp_set_status( $user_data['id'], 'pending' );
@@ -443,3 +445,17 @@ function rcp_get_auto_renew_behavior() {
 	return apply_filters( 'rcp_auto_renew_behavior', $behavior );
 }
 
+/**
+ * When new subscriptions are registered, a flag is set
+ *
+ * This removes the flag as late as possible so other systems can hook into
+ * rcp_set_status and perform actions on new subscriptions
+ *
+ * @access      public
+ * @since       2.3.6
+ * @return      void
+ */
+function rcp_remove_new_subscription_flag( $status, $user_id ) {
+	delete_user_meta( $user_id, '_rcp_new_subscription', true );
+}
+add_action( 'rcp_set_status', 'rcp_remove_new_subscription_flag', 999999999999, 2 );
