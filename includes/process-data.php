@@ -181,8 +181,11 @@ function rcp_process_data() {
 			$status       = sanitize_text_field( $_POST['status'] );
 			$level_id     = absint( $_POST['level'] );
 			$expiration   = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
+			$expiration   = 'none' !== $expiration ? date( 'Y-m-d 23:59:59', strtotime( $_POST['expiration'] ) ) : $expiration;
 
-			rcp_set_expiration_date( $user_id, $expiration );
+			if( ! empty( $_POST['expiration'] ) ) {
+				$member->set_expiration_date( $expiration );
+			}
 
 			if( isset( $_POST['level'] ) ) {
 
