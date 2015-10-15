@@ -138,7 +138,7 @@ class RCP_Levels {
 
 		}
 
-		$levels = apply_filters( 'rcp_get_level', $levels );
+		$levels = apply_filters( 'rcp_get_levels', $levels );
 
 		if( ! empty( $levels ) ) {
 			return $levels;
