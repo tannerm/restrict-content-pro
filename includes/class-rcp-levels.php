@@ -65,7 +65,7 @@ class RCP_Levels {
 
 		}
 
-		return $level;
+		return apply_filters( 'rcp_get_level', $level );
 
 	}
 
@@ -90,7 +90,7 @@ class RCP_Levels {
 
 		}
 
-		return $level;
+		return apply_filters( 'rcp_get_level', $level );
 
 	}
 
@@ -138,8 +138,12 @@ class RCP_Levels {
 
 		}
 
-		if( ! empty( $levels ) )
+		$levels = apply_filters( 'rcp_get_level', $levels );
+
+		if( ! empty( $levels ) ) {
 			return $levels;
+		}
+
 		return false;
 	}
 
@@ -166,9 +170,10 @@ class RCP_Levels {
 
 		}
 
-		if( $value )
-			return $value[0];
-		return false;
+		$value = ( $value ) ? $value[0] : false;
+
+		return apply_filters( 'rcp_get_level_field', $value, $level_id, $field );
+
 	}
 
 
