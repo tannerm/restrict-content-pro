@@ -46,7 +46,7 @@ msgstr "شما اجازه دسترسی به نصب به روز رسانی پلا
 
 # @ edd
 # @ rcp
-# @ rcp_stripe
+# @ rcp
 #: RCP_Plugin_Updater.php:324 includes/admin/settings/settings.php:1071
 #: includes/class-rcp-export.php:167
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:113
@@ -3153,12 +3153,12 @@ msgstr ""
 "از دست رفته نشانه رمز خط خطی، لطفا دوباره سعی کنید و یا تماس بگیرید اگر مشکل "
 "ادامه یافت."
 
-# @ rcp_stripe
+# @ rcp
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:133
 msgid "Signup Fee for %s"
 msgstr "هزینه ثبت نام برای %s"
 
-# @ rcp_stripe
+# @ rcp
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:135
 msgid "Signup Discount for %s"
 msgstr "تخفیف ثبت نام برای %s"
@@ -3222,7 +3222,7 @@ msgstr "خطایی رخ داده است"
 msgid "Error code: %s"
 msgstr "کد خطا: %s"
 
-# @ rcp_stripe
+# @ rcp
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:414
 msgid "An error occurred, please contact the site administrator: "
 msgstr "خطایی روی داد، لطفا با مدیر سایت تماس بگیرید :"
