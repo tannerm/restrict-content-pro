@@ -130,9 +130,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				if ( ! empty( $this->signup_fee ) ) {
 
 					if( $this->signup_fee > 0 ) {
-						$description = sprintf( __( 'Signup Fee for %s', 'rcp_stripe' ), $this->subscription_name );
+						$description = sprintf( __( 'Signup Fee for %s', 'rcp' ), $this->subscription_name );
 					} else {
-						$description = sprintf( __( 'Signup Discount for %s', 'rcp_stripe' ), $this->subscription_name );
+						$description = sprintf( __( 'Signup Discount for %s', 'rcp' ), $this->subscription_name );
 					}
 
 					\Stripe\InvoiceItem::create( apply_filters( 'rcp_stripe_invoice_item_create_args', array(
@@ -411,7 +411,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		} else {
 
-			wp_die( __( 'An error occurred, please contact the site administrator: ', 'rcp_stripe' ) . get_bloginfo( 'admin_email' ), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+			wp_die( __( 'An error occurred, please contact the site administrator: ', 'rcp' ) . get_bloginfo( 'admin_email' ), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 		}
 
