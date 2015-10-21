@@ -6,7 +6,7 @@
  * @access      private
  * @since       2.1
  */
-function rcp_update_card_form_js() {
+function rcp_stripe_update_card_form_js() {
 	global $rcp_options;
 
 	if( ! rcp_is_gateway_enabled( 'stripe' ) ) {
@@ -27,7 +27,7 @@ function rcp_update_card_form_js() {
 ?>
 	<script type="text/javascript">
 
-		function rcp_response_handler(status, response) {
+		function rcp_stripe_response_handler(status, response) {
 			if (response.error) {
 
 				// re-enable the submit button
@@ -71,7 +71,7 @@ function rcp_update_card_form_js() {
 					exp_month: $('.card-expiry-month').val(),
 					exp_year: $('.card-expiry-year').val(),
 					address_zip: $('.card-zip').val()
-				}, rcp_response_handler);
+				}, rcp_stripe_response_handler);
 
 				return false;
 			});
@@ -79,7 +79,7 @@ function rcp_update_card_form_js() {
 	</script>
 <?php
 }
-add_action( 'rcp_before_update_billing_card_form', 'rcp_update_card_form_js' );
+add_action( 'rcp_before_update_billing_card_form', 'rcp_stripe_update_card_form_js' );
 
 /**
  * Process an update card form request
@@ -87,7 +87,7 @@ add_action( 'rcp_before_update_billing_card_form', 'rcp_update_card_form_js' );
  * @access      private
  * @since       2.1
  */
-function rcp_update_billing_card( $member_id = 0, $member_obj ) {
+function rcp_stripe_update_billing_card( $member_id = 0, $member_obj ) {
 
 	if( empty( $member_id ) ) {
 		return;
@@ -223,7 +223,7 @@ function rcp_update_billing_card( $member_id = 0, $member_obj ) {
 	wp_redirect( add_query_arg( 'card', 'updated' ) ); exit;
 
 }
-add_action( 'rcp_update_billing_card', 'rcp_update_billing_card', 10, 2 );
+add_action( 'rcp_update_billing_card', 'rcp_stripe_update_billing_card', 10, 2 );
 
 /**
  * Create discount code in Stripe when one is created in RCP
@@ -231,13 +231,13 @@ add_action( 'rcp_update_billing_card', 'rcp_update_billing_card', 10, 2 );
  * @access      private
  * @since       2.1
  */
-function rcp_create_discount() {
+function rcp_stripe_create_discount() {
 	
 	if( ! is_admin() ) {
 		return;
 	}
 
-	if( function_exists( 'rcp_add_discount' ) ) {
+	if( function_exists( 'rcp_stripe_add_discount' ) ) {
 		return; // Old Stripe gateway is active
 	}
 
@@ -371,7 +371,7 @@ function rcp_create_discount() {
 	}
 
 }
-add_action( 'rcp_pre_add_discount', 'rcp_create_discount' );
+add_action( 'rcp_pre_add_discount', 'rcp_stripe_create_discount' );
 
 /**
  * Update a discount in Stripe when a local code is updated
@@ -379,13 +379,13 @@ add_action( 'rcp_pre_add_discount', 'rcp_create_discount' );
  * @access      private
  * @since       2.1
  */
-function rcp_update_discount() {
+function rcp_stripe_update_discount() {
 
 	if( ! is_admin() ) {
 		return;
 	}
 
-	if( function_exists( 'rcp_add_discount' ) ) {
+	if( function_exists( 'rcp_stripe_add_discount' ) ) {
 		return; // Old Stripe gateway is active
 	}
 
@@ -411,7 +411,7 @@ function rcp_update_discount() {
 
 	\Stripe\Stripe::setApiKey( $secret_key );
 
-	if ( ! rcp_does_coupon_exists( $_POST['code'] ) ) {
+	if ( ! rcp_stripe_does_coupon_exists( $_POST['code'] ) ) {
 
 		try {
 
@@ -434,7 +434,7 @@ function rcp_update_discount() {
 			}
 
 		} catch ( Exception $e ) {
-			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp' ) );
+			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
 		}
 
 	} else {
@@ -444,7 +444,7 @@ function rcp_update_discount() {
 			$cpn = \Stripe\Coupon::retrieve( $_POST['code'] );
 			$cpn->delete();
 		} catch ( Exception $e ) {
-			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp' ) );
+			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
 		}
 
 		// now add a new one. This is a fake "update"
@@ -544,7 +544,7 @@ function rcp_update_discount() {
 		}
 	}
 }
-add_action( 'rcp_edit_discount', 'rcp_update_discount' );
+add_action( 'rcp_edit_discount', 'rcp_stripe_update_discount' );
 
 /**
  * Check if a coupone exists in Stripe
@@ -552,7 +552,7 @@ add_action( 'rcp_edit_discount', 'rcp_update_discount' );
  * @access      private
  * @since       2.1
  */
-function rcp_does_coupon_exists( $code ) {
+function rcp_stripe_does_coupon_exists( $code ) {
 	global $rcp_options;
 
 	if( ! class_exists( 'Stripe\Stripe' ) ) {

@@ -1078,7 +1078,7 @@ function rcp_backfill_payment_profile_ids( $profile_id, $user_id, $member_object
 	if( empty( $profile_id ) ) {
 
 		// Check for Stripe
-		$profile_id = get_user_meta( $user_id, '_rcp_user_id', true );
+		$profile_id = get_user_meta( $user_id, '_rcp_stripe_user_id', true );
 
 		if( ! empty( $profile_id ) ) {
 
