@@ -444,7 +444,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			try {
 
-				$event   = \Stripe\Event::retrieve( $event_id );
+				$event         = \Stripe\Event::retrieve( $event_id );
 				$payment_event = $event->data->object;
 
 				if( empty( $payment_event->customer ) ) {
@@ -452,7 +452,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				}
 
 				// retrieve the customer who made this payment (only for subscriptions)
-				$user    = rcp_get_member_id_from_profile_id( $payment_event->customer );
+				$user = rcp_get_member_id_from_profile_id( $payment_event->customer );
 
 				if( empty( $user ) ) {
 
@@ -488,32 +488,30 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					if ( $event->type == 'charge.succeeded' ) {
 
-						$invoice_id = $payment_event->invoice;
-
-						// successful one-time payment
-						if ( !$invoice_id ) {
+						// Successful one-time payment
+						if ( empty( $payment_event->invoice ) ) {
 
 							$payment_data['amount']         = $payment_event->amount / 100;
 							$payment_data['transaction_id'] = $payment_event->id;
 
-						// successful subscription payment
+						// Successful subscription payment
 						} else {
 
-							$invoice = \Stripe\Invoice::retrieve( $invoice_id );
+							$invoice = \Stripe\Invoice::retrieve( $payment_event->invoice );
 							$payment_data['amount']         = $invoice->amount_due / 100;
 							$payment_data['transaction_id'] = $payment_event->id;
 
 						}
 
-					// successful subscription paid made with account credit where no charge is created
-					} elseif ( $event->type == 'invoice.payment_succeeded' && !$payment_event->charge ) {
+					// Successful subscription paid made with account credit where no charge is created
+					} elseif ( $event->type == 'invoice.payment_succeeded' && empty( $payment_event->charge ) ) {
 
 						$payment_data['amount']         = $payment_event->amount_due / 100;
 						$payment_data['transaction_id'] = $payment_event->id;
 
 					}
 
-					if( ! rcp_check_for_existing_payment_by_id( $payment_data['transaction_id'] ) ) {
+					if( ! $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
 
 						$member->renew( $member->is_recurring() );
 
