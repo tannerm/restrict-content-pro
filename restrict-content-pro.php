@@ -7,6 +7,8 @@ Version: 2.3.5
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
 Contributors: mordauk
+Text Domain: rcp
+Domain Path: languages
 */
 
 if ( !defined( 'RCP_PLUGIN_DIR' ) ) {

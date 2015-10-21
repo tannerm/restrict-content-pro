@@ -118,7 +118,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					}
 
-					$customer = \Stripe\Customer::create( apply_filters( 'rcp_stripe_customer_create_args', $customer_args, $this ) );
+					$customer = \Stripe\Customer::create( apply_filters( 'rcp_customer_create_args', $customer_args, $this ) );
 
 				} else {
 
@@ -130,12 +130,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				if ( ! empty( $this->signup_fee ) ) {
 
 					if( $this->signup_fee > 0 ) {
-						$description = sprintf( __( 'Signup Fee for %s', 'rcp_stripe' ), $this->subscription_name );
+						$description = sprintf( __( 'Signup Fee for %s', 'rcp' ), $this->subscription_name );
 					} else {
-						$description = sprintf( __( 'Signup Discount for %s', 'rcp_stripe' ), $this->subscription_name );
+						$description = sprintf( __( 'Signup Discount for %s', 'rcp' ), $this->subscription_name );
 					}
 
-					\Stripe\InvoiceItem::create( apply_filters( 'rcp_stripe_invoice_item_create_args', array(
+					\Stripe\InvoiceItem::create( apply_filters( 'rcp_invoice_item_create_args', array(
 						'customer'    => $customer->id,
 						'amount'      => $this->signup_fee * 100,
 						'currency'    => strtolower( $this->currency ),
@@ -143,7 +143,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					), $this, $customer ) );
 
 					// Create the invoice containing taxes / discounts / fees
-					$invoice = \Stripe\Invoice::create( apply_filters( 'rcp_stripe_invoice_create_args', array(
+					$invoice = \Stripe\Invoice::create( apply_filters( 'rcp_invoice_create_args', array(
 						'customer' => $customer->id, // the customer to apply the fee to
 					), $this, $customer ) );
 
@@ -272,7 +272,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			try {
 
-				$charge = \Stripe\Charge::create( apply_filters( 'rcp_stripe_charge_create_args', array(
+				$charge = \Stripe\Charge::create( apply_filters( 'rcp_charge_create_args', array(
 					'amount' 		 => $this->amount * 100, // amount in cents
 					'currency' 		 => strtolower( $this->currency ),
 					'card' 			 => $_POST['stripeToken'],
@@ -407,11 +407,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			}
 
-			do_action( 'rcp_stripe_signup', $this->user_id, $this );
+			do_action( 'rcp_signup', $this->user_id, $this );
 
 		} else {
 
-			wp_die( __( 'An error occurred, please contact the site administrator: ', 'rcp_stripe' ) . get_bloginfo( 'admin_email' ), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+			wp_die( __( 'An error occurred, please contact the site administrator: ', 'rcp' ) . get_bloginfo( 'admin_email' ), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 		}
 
@@ -532,8 +532,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					if ( $event->type == 'charge.failed' ) {
 
 						do_action( 'rcp_stripe_charge_failed', $payment_event );
+						do_action( 'rcp_charge_failed', $payment_event );
 
-						die( 'rcp_stripe_charge_failed action fired successfully' );
+						die( 'rcp_charge_failed action fired successfully' );
 
 					}
 
@@ -547,6 +548,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					}
 
 					do_action( 'rcp_stripe_' . $event->type, $payment_event );
+					do_action( 'rcp_' . $event->type, $payment_event );
 
 				}
 
@@ -578,7 +580,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			var rcp_script_options;
 			var rcp_processing;
-			var rcp_stripe_processing = false;
+			var rcp_processing = false;
 
 			// this identifies your website in the createToken call below
 			Stripe.setPublishableKey('<?php echo $this->publishable_key; ?>');
@@ -595,7 +597,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					jQuery('#rcp_submit').before( '<div class="rcp_message error"><p class="rcp_error"><span>' + response.error.message + '</span></p></div>' );
 					jQuery('#rcp_submit').val( rcp_script_options.register );
 
-					rcp_stripe_processing = false;
+					rcp_processing = false;
 					rcp_processing = false;
 
 				} else {
@@ -616,9 +618,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$("#rcp_registration_form").on('submit', function(event) {
 
-					if( ! rcp_stripe_processing ) {
+					if( ! rcp_processing ) {
 
-						rcp_stripe_processing = true;
+						rcp_processing = true;
 
 						// get the subscription price
 						if( $('.rcp_level:checked').length ) {

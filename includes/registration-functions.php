@@ -160,6 +160,8 @@ function rcp_process_registration() {
 
 		if( $user_data['id'] ) {
 
+			update_user_meta( $user_data['id'], '_rcp_new_subscription', '1' );
+
 			if( ! rcp_is_active( $user_data['id'] ) ) {
 
 				rcp_set_status( $user_data['id'], 'pending' );
@@ -191,9 +193,9 @@ function rcp_process_registration() {
 
 					// if the discount is 100%, log the user in and redirect to success page
 					if( $price == '0' ) {
-						rcp_set_status( $user_data['id'], 'active' );
 						rcp_email_subscription_status( $user_data['id'], 'active' );
 						rcp_set_expiration_date( $user_data['id'], $member_expires );
+						rcp_set_status( $user_data['id'], 'active' );
 						rcp_login_user_in( $user_data['id'], $user_data['login'] );
 						wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 					}
@@ -251,6 +253,7 @@ function rcp_process_registration() {
 			} else {
 
 				// This is a free user registration or trial
+				rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 				// if the subscription is a free trial, we need to record it in the user meta
 				if( $member_expires != 'none' ) {
@@ -270,8 +273,6 @@ function rcp_process_registration() {
 					rcp_email_subscription_status( $user_data['id'], 'free' );
 
 				}
-
-				rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 				if( $user_data['need_new'] ) {
 
@@ -443,3 +444,17 @@ function rcp_get_auto_renew_behavior() {
 	return apply_filters( 'rcp_auto_renew_behavior', $behavior );
 }
 
+/**
+ * When new subscriptions are registered, a flag is set
+ *
+ * This removes the flag as late as possible so other systems can hook into
+ * rcp_set_status and perform actions on new subscriptions
+ *
+ * @access      public
+ * @since       2.3.6
+ * @return      void
+ */
+function rcp_remove_new_subscription_flag( $status, $user_id ) {
+	delete_user_meta( $user_id, '_rcp_new_subscription', true );
+}
+add_action( 'rcp_set_status', 'rcp_remove_new_subscription_flag', 999999999999, 2 );

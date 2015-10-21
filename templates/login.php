@@ -26,7 +26,7 @@
 				<input type="hidden" name="rcp_action" value="login"/>
 				<input type="hidden" name="rcp_redirect" value="<?php echo esc_url( $rcp_login_form_args['redirect'] ); ?>"/>
 				<input type="hidden" name="rcp_login_nonce" value="<?php echo wp_create_nonce( 'rcp-login-nonce' ); ?>"/>
-				<input id="rcp_login_submit" type="submit" value="Login"/>
+				<input id="rcp_login_submit" type="submit" value="<?php _e( 'Login', 'rcp' ); ?>"/>
 			</p>
 			<?php do_action( 'rcp_login_form_fields_after_submit' ); ?>
 		</fieldset>

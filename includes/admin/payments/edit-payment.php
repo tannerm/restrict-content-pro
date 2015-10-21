@@ -5,7 +5,7 @@ $payment    = $payments->get_payment( $payment_id );
 $user       = get_userdata( $payment->user_id );
 ?>
 <h2>
-	<?php _e( 'Edit Payment', 'rcp' ); ?> - 
+	<?php _e( 'Edit Payment', 'rcp' ); ?> -
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-payments' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
@@ -29,7 +29,7 @@ $user       = get_userdata( $payment->user_id );
 					<label for="rcp-amount"><?php _e( 'Amount', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input name="amount" id="rcp-amount" type="text" value="<?php echo esc_attr( $payment->amount ); ?>"/>
+					<input name="amount" id="rcp-amount" pattern="^[+-]?[0-9]{1,3}(?:,?[0-9]{3})*\.[0-9]{2}$" title="<?php _e( 'Please enter a payment amount in the format of 1.99', 'rcp' ); ?>" min="0.00"  value="<?php echo esc_attr( $payment->amount ); ?>"/>
 					<p class="description"><?php _e( 'The amount of this payment', 'rcp' ); ?></p>
 				</td>
 			</tr>
