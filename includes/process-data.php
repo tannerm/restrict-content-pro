@@ -77,8 +77,8 @@ function rcp_process_data() {
 				$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 				$level_id   = absint( $_POST['level'] );
 
-				rcp_set_status( $user->ID, 'active' );
 				rcp_set_expiration_date( $user->ID, $expiration );
+				rcp_set_status( $user->ID, 'active' );
 
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
 
@@ -126,6 +126,10 @@ function rcp_process_data() {
 
 				$member = new RCP_Member( $member_id );
 
+				if( ! empty( $_POST['expiration'] ) && 'delete' !== $action ) {
+					$member->set_expiration_date( date( 'Y-m-d H:i:s', strtotime( $_POST['expiration'] ) ) );
+				}
+
 				if( $action ) {
 
 					switch( $action ) {
@@ -156,10 +160,6 @@ function rcp_process_data() {
 
 					}
 
-				}
-
-				if( ! empty( $_POST['expiration'] ) && 'delete' !== $action ) {
-					$member->set_expiration_date( date( 'Y-m-d H:i:s', strtotime( $_POST['expiration'] ) ) );
 				}
 
 			}

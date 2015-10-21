@@ -193,9 +193,9 @@ function rcp_process_registration() {
 
 					// if the discount is 100%, log the user in and redirect to success page
 					if( $price == '0' ) {
-						rcp_set_status( $user_data['id'], 'active' );
 						rcp_email_subscription_status( $user_data['id'], 'active' );
 						rcp_set_expiration_date( $user_data['id'], $member_expires );
+						rcp_set_status( $user_data['id'], 'active' );
 						rcp_login_user_in( $user_data['id'], $user_data['login'] );
 						wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 					}
@@ -253,6 +253,7 @@ function rcp_process_registration() {
 			} else {
 
 				// This is a free user registration or trial
+				rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 				// if the subscription is a free trial, we need to record it in the user meta
 				if( $member_expires != 'none' ) {
@@ -272,8 +273,6 @@ function rcp_process_registration() {
 					rcp_email_subscription_status( $user_data['id'], 'free' );
 
 				}
-
-				rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 				if( $user_data['need_new'] ) {
 
