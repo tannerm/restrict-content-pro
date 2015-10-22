@@ -82,7 +82,7 @@ function rcp_process_registration() {
 
 			if( $discount_valid && $price > 0 ) {
 
-				if( ! $user_data['need_new'] && rcp_user_has_used_discount( $user_data['id'] , $discount ) && apply_filters( 'rcp_discounts_once_per_user', true ) ) {
+				if( ! $user_data['need_new'] && rcp_user_has_used_discount( $user_data['id'] , $discount ) && apply_filters( 'rcp_discounts_once_per_user', false ) ) {
 
 					$discount_valid = false;
 					rcp_errors()->add( 'discount_already_used', __( 'You can only use the discount code once', 'rcp' ), 'register' );
@@ -193,7 +193,6 @@ function rcp_process_registration() {
 
 					// if the discount is 100%, log the user in and redirect to success page
 					if( $full_discount ) {
-						rcp_email_subscription_status( $user_data['id'], 'active' );
 						rcp_set_expiration_date( $user_data['id'], $member_expires );
 						rcp_set_status( $user_data['id'], 'active' );
 						rcp_login_user_in( $user_data['id'], $user_data['login'] );
@@ -455,6 +454,11 @@ function rcp_get_auto_renew_behavior() {
  * @return      void
  */
 function rcp_remove_new_subscription_flag( $status, $user_id ) {
+
+	if( 'active' !== $status ) {
+		return;
+	}
+
 	delete_user_meta( $user_id, '_rcp_new_subscription' );
 }
 add_action( 'rcp_set_status', 'rcp_remove_new_subscription_flag', 999999999999, 2 );
