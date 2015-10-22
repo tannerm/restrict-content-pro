@@ -455,6 +455,6 @@ function rcp_get_auto_renew_behavior() {
  * @return      void
  */
 function rcp_remove_new_subscription_flag( $status, $user_id ) {
-	delete_user_meta( $user_id, '_rcp_new_subscription', true );
+	delete_user_meta( $user_id, '_rcp_new_subscription' );
 }
 add_action( 'rcp_set_status', 'rcp_remove_new_subscription_flag', 999999999999, 2 );
