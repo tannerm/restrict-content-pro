@@ -103,11 +103,6 @@ function rcp_process_registration() {
 
 		}
 
-		if( $price == 0 && isset( $_POST['rcp_auto_renew'] ) ) {
-			// since free subscriptions do not go through PayPal, they cannot be auto renewed
-			rcp_errors()->add( 'invalid_auto_renew', __( 'Free subscriptions cannot be automatically renewed', 'rcp' ), 'register' );
-		}
-
 		// Validate extra fields in gateways with the 2.1+ gateway API
 		if( ! has_action( 'rcp_gateway_' . $gateway ) && $price > 0 ) {
 		
