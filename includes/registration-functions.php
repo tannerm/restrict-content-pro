@@ -27,6 +27,7 @@ function rcp_process_registration() {
 
 		global $rcp_options, $user_ID;
 
+		$full_discount   = false;
 		$subscription_id = isset( $_POST['rcp_level'] ) ? absint( $_POST['rcp_level'] ) : false;
 		$discount        = isset( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : '';
 		$discount_valid  = false;
@@ -94,7 +95,11 @@ function rcp_process_registration() {
 
 					if( is_object( $discount_obj ) ) {
 						// calculate the after-discount price
-						$price = $discounts->calc_discounted_price( $base_price, $discount_obj->amount, $discount_obj->unit );
+						$discounted_price = $discounts->calc_discounted_price( $base_price, $discount_obj->amount, $discount_obj->unit );
+						if( 0 == $discounted_price ) {
+							$full_discount = true;
+						}
+
 					}
 
 				}
@@ -104,7 +109,7 @@ function rcp_process_registration() {
 		}
 
 		// Validate extra fields in gateways with the 2.1+ gateway API
-		if( ! has_action( 'rcp_gateway_' . $gateway ) && $price > 0 ) {
+		if( ! has_action( 'rcp_gateway_' . $gateway ) && $price > 0 && ! $full_discount ) {
 		
 			$gateways    = new RCP_Payment_Gateways;
 			$gateway_var = $gateways->get_gateway( $gateway );
@@ -187,7 +192,7 @@ function rcp_process_registration() {
 					$discounts->increase_uses( $discount_obj->id );
 
 					// if the discount is 100%, log the user in and redirect to success page
-					if( $price == '0' ) {
+					if( $full_discount ) {
 						rcp_email_subscription_status( $user_data['id'], 'active' );
 						rcp_set_expiration_date( $user_data['id'], $member_expires );
 						rcp_set_status( $user_data['id'], 'active' );
@@ -253,12 +258,12 @@ function rcp_process_registration() {
 				// if the subscription is a free trial, we need to record it in the user meta
 				if( $member_expires != 'none' ) {
 
+					// activate the user's trial subscription
+					rcp_set_status( $user_data['id'], 'active' );
+
 					// this is so that users can only sign up for one trial
 					update_user_meta( $user_data['id'], 'rcp_has_trialed', 'yes' );
 					update_user_meta( $user_data['id'], 'rcp_is_trialing', 'yes' );
-
-					// activate the user's trial subscription
-					rcp_set_status( $user_data['id'], 'active' );
 					rcp_email_subscription_status( $user_data['id'], 'trial' );
 
 				} else {
