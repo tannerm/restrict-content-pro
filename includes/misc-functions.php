@@ -483,7 +483,7 @@ if( ! function_exists( 'rcp_get_month_name' ) ) {
 	function rcp_get_month_name($n) {
 		$timestamp = mktime(0, 0, 0, $n, 1, 2005);
 
-		return date( "F", $timestamp );
+		return date_i18n( "F", $timestamp );
 	}
 }
 
@@ -581,4 +581,28 @@ function rcp_get_payment_status_label( $payment ) {
 
 	return apply_filters( 'rcp_payment_status_label', $label, $status, $payment );
 
+}
+
+/**
+ * Get User IP
+ *
+ * Returns the IP address of the current visitor
+ *
+ * @since 1.3
+ * @return string $ip User's IP address
+ */
+function rcp_get_ip() {
+
+	$ip = '127.0.0.1';
+
+	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+		//check ip from share internet
+		$ip = $_SERVER['HTTP_CLIENT_IP'];
+	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+		//to check ip is pass from proxy
+		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+		$ip = $_SERVER['REMOTE_ADDR'];
+	}
+	return apply_filters( 'rcp_get_ip', $ip );
 }

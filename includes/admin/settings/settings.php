@@ -18,8 +18,6 @@ function rcp_settings_page() {
 		'redirect'              => 0,
 		'redirect_from_premium' => 0,
 		'login_redirect'        => 0,
-		'recaptcha_style'       => '',
-
 	);
 
 	$rcp_options = wp_parse_args( $rcp_options, $defaults );
@@ -119,6 +117,78 @@ function rcp_settings_page() {
 									?>
 								</select>
 								<p class="description"><?php _e( 'This is the page users are redirected to after a successful registration.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[account_page]"><?php _e( 'Account Page', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<select id="rcp_settings[account_page]" name="rcp_settings[account_page]">
+									<?php
+									if($pages) :
+										$rcp_options['account_page'] = isset( $rcp_options['account_page'] ) ? absint( $rcp_options['account_page'] ) : 0;
+										foreach ( $pages as $page ) {
+										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['account_page'], false) . '>';
+											$option .= $page->post_title;
+											$option .= ' (ID: ' . $page->ID . ')';
+											$option .= '</option>';
+											echo $option;
+										}
+									else :
+										echo '<option>' . __('No pages found', 'rcp' ) . '</option>';
+									endif;
+									?>
+								</select>
+								<p class="description"><?php _e( 'This page displays the account and membership information for members. Contains [subscription_details] shortcode.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[edit_profile]"><?php _e( 'Edit Profile Page', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<select id="rcp_settings[edit_profile]" name="rcp_settings[edit_profile]">
+									<?php
+									if($pages) :
+										$rcp_options['edit_profile'] = isset( $rcp_options['edit_profile'] ) ? absint( $rcp_options['edit_profile'] ) : 0;
+										foreach ( $pages as $page ) {
+										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['edit_profile'], false) . '>';
+											$option .= $page->post_title;
+											$option .= ' (ID: ' . $page->ID . ')';
+											$option .= '</option>';
+											echo $option;
+										}
+									else :
+										echo '<option>' . __('No pages found', 'rcp' ) . '</option>';
+									endif;
+									?>
+								</select>
+								<p class="description"><?php _e( 'This page displays a profile edit form for logged-in members. Contains [rcp_profile_editor] shortcode.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[update_card]"><?php _e( 'Update Billing Card Page', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<select id="rcp_settings[update_card]" name="rcp_settings[update_card]">
+									<?php
+									if($pages) :
+										$rcp_options['update_card'] = isset( $rcp_options['update_card'] ) ? absint( $rcp_options['update_card'] ) : 0;
+										foreach ( $pages as $page ) {
+										  	$option = '<option value="' . $page->ID . '" ' . selected($page->ID, $rcp_options['update_card'], false) . '>';
+											$option .= $page->post_title;
+											$option .= ' (ID: ' . $page->ID . ')';
+											$option .= '</option>';
+											echo $option;
+										}
+									else :
+										echo '<option>' . __('No pages found', 'rcp' ) . '</option>';
+									endif;
+									?>
+								</select>
+								<p class="description"><?php _e( 'This page displays a profile edit form for logged-in members. Contains [rcp_update_card] shortcode.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -302,56 +372,56 @@ function rcp_settings_page() {
 						<?php if( ! function_exists( 'rcp_register_paypal_pro_express_gateway' ) ) : ?>
 						<tr>
 							<th>
-								<label for="rcp_settings[test_paypal_api_username]"><?php _e( 'Test API Username', 'rcp_paypal' ); ?></label>
+								<label for="rcp_settings[test_paypal_api_username]"><?php _e( 'Test API Username', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[test_paypal_api_username]" style="width: 300px;" name="rcp_settings[test_paypal_api_username]" value="<?php if(isset($rcp_options['test_paypal_api_username'])) { echo trim( $rcp_options['test_paypal_api_username'] ); } ?>"/>
-								<p class="description"><?php _e('Enter your test API username.', 'rcp_paypal'); ?></p>
+								<p class="description"><?php _e('Enter your test API username.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[test_paypal_api_password]"><?php _e( 'Test API Password', 'rcp_paypal' ); ?></label>
+								<label for="rcp_settings[test_paypal_api_password]"><?php _e( 'Test API Password', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[test_paypal_api_password]" style="width: 300px;" name="rcp_settings[test_paypal_api_password]" value="<?php if(isset($rcp_options['test_paypal_api_password'])) { echo trim( $rcp_options['test_paypal_api_password'] ); } ?>"/>
-								<p class="description"><?php _e('Enter your test API password.', 'rcp_paypal'); ?></p>
+								<p class="description"><?php _e('Enter your test API password.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[test_paypal_api_signature]"><?php _e( 'Test API Signature', 'rcp_paypal' ); ?></label>
+								<label for="rcp_settings[test_paypal_api_signature]"><?php _e( 'Test API Signature', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[test_paypal_api_signature]" style="width: 300px;" name="rcp_settings[test_paypal_api_signature]" value="<?php if(isset($rcp_options['test_paypal_api_signature'])) { echo trim( $rcp_options['test_paypal_api_signature'] ); } ?>"/>
-								<p class="description"><?php _e('Enter your test API signature.', 'rcp_paypal'); ?></p>
+								<p class="description"><?php _e('Enter your test API signature.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[live_paypal_api_username]"><?php _e( 'Live API Username', 'rcp_paypal' ); ?></label>
+								<label for="rcp_settings[live_paypal_api_username]"><?php _e( 'Live API Username', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[live_paypal_api_username]" style="width: 300px;" name="rcp_settings[live_paypal_api_username]" value="<?php if(isset($rcp_options['live_paypal_api_username'])) { echo trim( $rcp_options['live_paypal_api_username'] ); } ?>"/>
-								<p class="description"><?php _e('Enter your live API username.', 'rcp_paypal'); ?></p>
+								<p class="description"><?php _e('Enter your live API username.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[live_paypal_api_password]"><?php _e( 'Live API Password', 'rcp_paypal' ); ?></label>
+								<label for="rcp_settings[live_paypal_api_password]"><?php _e( 'Live API Password', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[live_paypal_api_password]" style="width: 300px;" name="rcp_settings[live_paypal_api_password]" value="<?php if(isset($rcp_options['live_paypal_api_password'])) { echo trim( $rcp_options['live_paypal_api_password'] ); } ?>"/>
-								<p class="description"><?php _e('Enter your live API password.', 'rcp_paypal'); ?></p>
+								<p class="description"><?php _e('Enter your live API password.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<label for="rcp_settings[live_paypal_api_signature]"><?php _e( 'Live API Signature', 'rcp_paypal' ); ?></label>
+								<label for="rcp_settings[live_paypal_api_signature]"><?php _e( 'Live API Signature', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[live_paypal_api_signature]" style="width: 300px;" name="rcp_settings[live_paypal_api_signature]" value="<?php if(isset($rcp_options['live_paypal_api_signature'])) { echo trim( $rcp_options['live_paypal_api_signature'] ); } ?>"/>
-								<p class="description"><?php _e('Enter your live API signature.', 'rcp_paypal'); ?></p>
+								<p class="description"><?php _e('Enter your live API signature.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<?php endif; ?>
@@ -676,6 +746,36 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 							<tr valign="top">
+								<th colspan=2><h3><?php _e( 'Payment Recieved Email', 'rcp' ); ?></h3></th>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[disable_payment_received_email]"><?php _e( 'Disabled', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input type="checkbox" value="1" name="rcp_settings[disable_payment_received_email]" id="rcp_settings[disable_payment_received_email]" <?php checked( true, isset( $rcp_options['disable_payment_received_email'] ) ); ?>/>
+									<span><?php _e( 'Check this to disable the email sent out when a payment is received.', 'rcp' ); ?></span>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th>
+									<label for="rcp_settings[payment_received_subject]"><?php _e( 'Subject', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text" id="rcp_settings[payment_received_subject]" style="width: 300px;" name="rcp_settings[payment_received_subject]" value="<?php if( isset( $rcp_options['payment_received_subject'] ) ) { echo $rcp_options['payment_received_subject']; } ?>"/>
+									<p class="description"><?php _e( 'The subject line for the email sent to users upon a successful payment being received.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th>
+									<label for="rcp_settings[payment_received_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<textarea id="rcp_settings[payment_received_email]" style="width: 300px; height: 100px;" name="rcp_settings[payment_received_email]"><?php if( isset( $rcp_options['payment_received_email'] ) ) { echo $rcp_options['payment_received_email']; } ?></textarea>
+									<p class="description"><?php _e( 'This is the email message that is sent to users after a payment has been received from them.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr valign="top">
 								<th colspan=2>
 									<h3><?php _e( 'New User Notifications', 'rcp' ); ?></h3>
 								</th>
@@ -830,7 +930,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[redirect]"><?php _e( 'Redirect Page', 'rcp' ); ?></label>
+								<label for="rcp_settings[redirect]">&nbsp;&mdash;&nbsp;<?php _e( 'Redirect Page', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<select id="rcp_settings[redirect_from_premium]" name="rcp_settings[redirect_from_premium]">
@@ -861,7 +961,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[redirect]"><?php _e( 'Login Page', 'rcp' ); ?></label>
+								<label for="rcp_settings[redirect]">&nbsp;&mdash;&nbsp;<?php _e( 'Login Page', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<select id="rcp_settings[login_redirect]" name="rcp_settings[login_redirect]">
@@ -919,40 +1019,20 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[recaptcha_public_key]"><?php _e( 'reCaptcha Public Key' ); ?></label>
+								<label for="rcp_settings[recaptcha_public_key]"><?php _e( 'reCaptcha Site Key' ); ?></label>
 							</th>
 							<td>
 								<input id="rcp_settings[recaptcha_public_key]" style="width: 300px;" name="rcp_settings[recaptcha_public_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_public_key'] ) ) echo $rcp_options['recaptcha_public_key']; ?>" />
-								<p class="description"><?php _e( 'This your own personal reCaptcha Public key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/admin/list"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your public key.', 'rcp' ); ?></p>
+								<p class="description"><?php _e( 'This your own personal reCaptcha Site key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your site key.', 'rcp' ); ?></p>
 							<td>
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[recaptcha_private_key]"><?php _e( 'reCaptcha Private Key' ); ?></label>
+								<label for="rcp_settings[recaptcha_private_key]"><?php _e( 'reCaptcha Secret Key' ); ?></label>
 							</th>
 							<td>
 								<input id="rcp_settings[recaptcha_private_key]" style="width: 300px;" name="rcp_settings[recaptcha_private_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_private_key'] ) ) echo $rcp_options['recaptcha_private_key']; ?>" />
-								<p class="description"><?php _e( 'This your own personal reCaptcha Private key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/admin/list"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your private key.', 'rcp' ); ?></p>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th>
-								<label for="rcp_settings[recaptcha_style]"><?php _e( 'reCaptcha Style', 'rcp' ); ?></label>
-							</th>
-							<td>
-								<select id="rcp_settings[recaptcha_style]" name="rcp_settings[recaptcha_style]">
-									<?php
-									$styles = array('red', 'white', 'blackglass', 'clean');
-									foreach ( $styles as $style ) {
-									  	$option = '<option value="' . $style . '" ' . selected($style, $rcp_options['recaptcha_style'], false) . '>';
-										$option .= ucwords($style);
-										$option .= '</option>';
-										echo $option;
-									}
-
-									?>
-								</select>
-								<p class="description"><?php _e( 'Choose the style you wish to use for your reCaptcha form.', 'rcp' ); ?></p>
+								<p class="description"><?php _e( 'This your own personal reCaptcha Secret key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your secret key.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 					</table>
@@ -1000,6 +1080,7 @@ function rcp_sanitize_settings( $data ) {
 			// Check for various login form short codes
 			false === strpos( $page->post_content, '[login_form' ) &&
 			false === strpos( $page->post_content, '[edd_login' ) &&
+			false === strpos( $page->post_content, '[subscription_details' ) &&
 			false === strpos( $page->post_content, '[login' )
 		) {
 			unset( $data['hijack_login_url'] );

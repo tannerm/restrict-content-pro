@@ -91,7 +91,7 @@ function rcp_render_meta_box() {
 
 	echo '<tr><td colspan="3">' . sprintf(
             __( 'Use these options to restrict this entire entry, or the [restrict] ... [/restrict] short code to restrict partial content. %sView documentation%s.', 'rcp' ),
-            '<a href="' . admin_url( 'admin.php?page=rcp-help#restricting-content' ) . '">',
+            '<a href="' . esc_url( 'http://docs.pippinsplugins.com/article/36-restricting-post-and-page-content' ) . '" target="_blank">',
             '</a>'
         ) . '</td></tr>';
 

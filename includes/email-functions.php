@@ -216,7 +216,7 @@ add_action( 'rcp_set_status', 'rcp_email_on_expiration', 10, 2 );
  */
 function rcp_email_on_activation( $status, $user_id ) {
 
-	if( 'active' == $status ) {
+	if( 'active' == $status && get_user_meta( $user_id, '_rcp_new_subscription', true ) ) {
 
 		// send welcome email
 		rcp_email_subscription_status( $user_id, 'active' );
@@ -244,3 +244,43 @@ function rcp_email_on_cancellation( $status, $user_id ) {
 
 }
 add_action( 'rcp_set_status', 'rcp_email_on_cancellation', 10, 2 );
+
+/**
+ * Triggers a email to the member when a payment is received
+ *
+ * @access  public
+ * @since   2.3
+ * @return  void
+ */
+function rcp_email_payment_received( $payment_id, $args ) {
+
+	global $rcp_options;
+
+	$user_info = get_userdata( $args['user_id'] );
+
+	if( ! $user_info ) {
+		return;
+	}
+
+	$message = ! empty( $rcp_options['payment_received_email'] ) ? $rcp_options['payment_received_email'] : false;
+	$message = rcp_filter_email_tags( $message, $args['user_id'], $user_info->display_name );
+	$message = apply_filters( 'rcp_payment_received_email', $message, $payment_id, $args );
+
+	if( ! $message ) {
+		return;
+	}
+
+	$site_name  = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
+	$from_name  = isset( $rcp_options['from_name'] ) ? $rcp_options['from_name'] : $site_name;
+	$from_name  = apply_filters( 'rcp_emails_from_name', $from_name, $args['user_id'], rcp_get_status( $args['user_id'] ) );
+
+	$from_email = isset( $rcp_options['from_email'] ) ? $rcp_options['from_email'] : get_option( 'admin_email' );
+	$from_email = apply_filters( 'rcp_emails_from_address', $from_email );
+
+	$headers    = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
+	$headers   .= "Reply-To: ". $from_email . "\r\n";
+	$headers    = apply_filters( 'rcp_email_headers', $headers, $args['user_id'], rcp_get_status( $args['user_id'] ) );
+
+	wp_mail( $user_info->user_email, $rcp_options['payment_received_subject'], $message, $headers );
+}
+add_action( 'rcp_insert_payment', 'rcp_email_payment_received', 10, 2 );

@@ -40,24 +40,24 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 		}
 
 		if ( $userlevel == 'admin' && current_user_can( 'switch_themes' ) && $has_access ) {
-			return do_shortcode( wpautop( $content ) );
+			return apply_filters( 'rcp_restrict_shortcode_return', $content );
 		}
 		if ( $userlevel == 'editor' && current_user_can( 'moderate_comments' ) && $has_access ) {
-			return do_shortcode( wpautop( $content ) );
+			return apply_filters( 'rcp_restrict_shortcode_return', $content );
 		}
 		if ( $userlevel == 'author' && current_user_can( 'upload_files' ) && $has_access ) {
 			return do_shortcode(  wpautop( $content ) );
 		}
 		if ( $userlevel == 'contributor' && current_user_can( 'edit_posts' ) && $has_access ) {
-		 	return do_shortcode( wpautop( $content ) );
+		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
 		}
 		if ( $userlevel == 'subscriber' && current_user_can( 'read' ) && $has_access ) {
-		 	return do_shortcode( wpautop( $content ) );
+		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
 		}
 		if ( $userlevel == 'none' && is_user_logged_in() && $has_access ) {
-		 	return do_shortcode( wpautop( $content ) );
+		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
 		} else {
-			return '<div class="rcp_restricted rcp_paid_only">' . rcp_format_teaser($teaser) . '</div>';
+			return '<div class="rcp_restricted rcp_paid_only">' . rcp_format_teaser( $teaser ) . '</div>';
 		}
 
 	} else {
@@ -73,23 +73,25 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 		}
 
 		if ( $userlevel == 'admin' && current_user_can( 'switch_themes' ) && $has_access ) {
-			return do_shortcode( wpautop( $content ) );
+			return apply_filters( 'rcp_restrict_shortcode_return', $content );
 		} elseif ( $userlevel == 'editor' && current_user_can( 'moderate_comments' ) && $has_access ) {
-			return do_shortcode( wpautop( $content ) );
+			return apply_filters( 'rcp_restrict_shortcode_return', $content );
 		} elseif ( $userlevel == 'author' && current_user_can( 'upload_files' ) && $has_access ) {
-			return do_shortcode( wpautop( $content ) );
+			return apply_filters( 'rcp_restrict_shortcode_return', $content );
 		} elseif ( $userlevel == 'contributor' && current_user_can( 'edit_posts' ) && $has_access ) {
-		 	return do_shortcode( wpautop( $content ) );
+		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
 		} elseif ( $userlevel == 'subscriber' && current_user_can( 'read' ) && $has_access ) {
-		 	return do_shortcode( wpautop( $content ) );
+		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
 		} elseif ( $userlevel == 'none' && is_user_logged_in() && $has_access ) {
-		 	return do_shortcode( wpautop( $content ) );
+		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
 		} else {
-			return '<div class="rcp_restricted">' . do_shortcode( wpautop( $teaser ) ) . '</div>';
+			return '<div class="rcp_restricted">' . rcp_format_teaser( $teaser ) . '</div>';
 		}
 	}
 }
 add_shortcode( 'restrict', 'rcp_restrict_shortcode' );
+add_filter( 'rcp_restrict_shortcode_return', 'wpautop' );
+add_filter( 'rcp_restrict_shortcode_return', 'do_shortcode' );
 
 // shows content only to active, paid users
 function rcp_is_paid_user_shortcode( $atts, $content = null ) {
@@ -194,9 +196,8 @@ function rcp_login_form( $atts, $content = null ) {
 	// set this to true so the CSS is loaded
 	$rcp_load_css = true;
 
-	$output = rcp_login_form_fields( array( 'redirect' => $redirect, 'class' => $class ) );
+	return rcp_login_form_fields( array( 'redirect' => $redirect, 'class' => $class ) );
 
-	return $output;
 }
 add_shortcode( 'login_form', 'rcp_login_form' );
 
@@ -247,7 +248,7 @@ function rcp_user_subscription_details( $atts, $content = null ) {
 	if( is_user_logged_in() ) {
 
 		rcp_get_template_part( 'subscription' );
-		
+
 	} else {
 
 		echo rcp_login_form_fields();

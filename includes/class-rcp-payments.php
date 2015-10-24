@@ -54,7 +54,7 @@ class RCP_Payments {
 
 		$defaults = array(
 			'subscription'      => '',
-			'date'              => date( 'Y-m-d H:i:s' ),
+			'date'              => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 			'amount'            => 0.00,
 			'user_id'           => 0,
 			'payment_type'      => '',
@@ -65,8 +65,9 @@ class RCP_Payments {
 
 		$args = wp_parse_args( $payment_data, $defaults );
 
-		if( $this->payment_exists( $args ) )
+		if( $this->payment_exists( $args['transaction_id'] ) ) {
 			return;
+		}
 
 		$wpdb->insert( $this->db_name, $args, array( '%s', '%s', '%s', '%d', '%s', '%s', '%s' ) );
 
@@ -95,27 +96,21 @@ class RCP_Payments {
 	 * Checks if a payment exists in the DB
 	 *
 	 * @access  public
-	 * @param   $args Array An array of the payment details we need to look for
+	 * @param   $transaction_id The transaction ID of the payment recod
 	 * @since   1.5
 	*/
-
-	public function payment_exists( $args = array() ) {
+	public function payment_exists( $transaction_id = '' ) {
 
 		global $wpdb;
 
-		$found = $wpdb->get_results(
+		$found = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT id FROM " . $this->db_name . " WHERE `date`='%s' AND `subscription_key`='%s' AND `payment_type`='%s';",
-				$args['date'],
-				$args['subscription_key'],
-				$args['payment_type']
+				"SELECT id FROM " . $this->db_name . " WHERE `transaction_id`='%s' LIMIT 1;",
+				$transaction_id
 			)
 		);
 
-		if( $found )
-			return true; // this payment already exists
-
-		return false;
+		return (bool) $found;
 
 	}
 
@@ -470,7 +465,7 @@ class RCP_Payments {
 		} else {
 
 			$where .= "WHERE ( `status` = 'complete' OR `status` IS NULL )";
-	
+
 		}
 
 		$earnings = get_transient( $cache_key );

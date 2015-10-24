@@ -32,13 +32,12 @@ jQuery(document).ready(function($) {
 	});
 
 	// Validate discount code
-	$('#rcp_discount_code').keyup( function( key ) {
+	$('#rcp_apply_discount').on( 'click', function(e) {
 		
-		if( key.which != 13 ) {
+		e.preventDefault();
 
-			rcp_validate_discount( $(this).val() );
+		rcp_validate_discount();
 
-		}
 
 	});
 
@@ -276,13 +275,13 @@ function rcp_validate_discount() {
 	var gateway_fields = $('.rcp_gateway_fields');
 	var discount = $('#rcp_discount_code').val();
 
-	if( $('input[name="rcp_level"]').length ) {
+	if( $('#rcp_subscription_levels input:checked').length ) {
 
-		var subscription = $('input[name="rcp_level"]').val();
+		var subscription = $('#rcp_subscription_levels input:checked').val();
 
 	} else {
 
-		var subscription = $('#rcp_subscription_levels input:checked').val();
+		var subscription = $('input[name="rcp_level"]').val();
 
 	}
 

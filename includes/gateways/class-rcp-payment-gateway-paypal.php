@@ -186,10 +186,25 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			status_header( 200 );
 
+			$user_id = 0;
 			$posted  = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
 
-			$user_id = absint( $posted['custom'] );
-			$member  = new RCP_Member( $user_id );
+			if( ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
+
+				$user_id = absint( $posted['custom'] );
+
+			} else if( ! empty( $posted['subscr_id'] ) ) {
+
+				$user_id = rcp_get_member_id_from_profile_id( $posted['subscr_id'] );
+
+			} else if( ! empty( $posted['payer_email'] ) ) {
+
+				$user    = get_user_by( 'email', $posted['payer_email'] );
+				$user_id = $user ? $user->ID : false;
+
+			}
+
+			$member = new RCP_Member( $user_id );
 
 			if( ! $member || ! $member->get_subscription_id() ) {
 				die( 'no member found' );
@@ -209,7 +224,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			// setup the payment info in an array for storage
 			$payment_data = array(
-				'date'             => date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'] ) ),
+				'date'             => date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'], current_time( 'timestamp' ) ) ),
 				'subscription'     => $posted['item_name'],
 				'payment_type'     => $posted['txn_type'],
 				'subscription_key' => $subscription_key,
@@ -294,14 +309,14 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					// when a user makes a recurring payment
 
-					// record this payment in the database
-					$rcp_payments->insert( $payment_data );
-
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
 
 					$member->renew( true );
+
+					// record this payment in the database
+					$rcp_payments->insert( $payment_data );
 
 					do_action( 'rcp_ipn_subscr_payment', $user_id );
 

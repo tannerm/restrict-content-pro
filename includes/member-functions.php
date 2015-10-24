@@ -824,8 +824,14 @@ function rcp_change_password() {
 
 		global $user_ID;
 
-		if( !is_user_logged_in() )
+		list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
+		$rp_cookie = 'rcp-resetpass-' . COOKIEHASH;
+
+		$user = rcp_get_user_resetting_password( $rp_cookie );
+
+		if( !is_user_logged_in() && !$user) {
 			return;
+		}
 
 		if( wp_verify_nonce( $_POST['rcp_password_nonce'], 'rcp-password-nonce' ) ) {
 
@@ -848,10 +854,12 @@ function rcp_change_password() {
 			if( empty( $errors ) ) {
 				// change the password here
 				$user_data = array(
-					'ID' 		=> $user_ID,
+					'ID' 		=> (is_user_logged_in()) ? $user_ID : $user->ID,
 					'user_pass' => $_POST['rcp_user_pass']
 				);
 				wp_update_user( $user_data );
+				// remove cookie with password reset info
+				setcookie( $rp_cookie, ' ', time() - YEAR_IN_SECONDS, $rp_path, COOKIE_DOMAIN, is_ssl(), true );
 				// send password change email here (if WP doesn't)
 				wp_safe_redirect( add_query_arg( 'password-reset', 'true', $_POST['rcp_redirect'] ) );
 				exit;
@@ -1146,6 +1154,42 @@ function rcp_get_member_id_from_profile_id( $profile_id = '' ) {
 }
 
 /**
+ * Determines if a member can renew their subscription
+ *
+ * @access      public
+ * @since       2.3
+ */
+function rcp_can_member_renew( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$ret    = true;
+	$member = new RCP_Member( $user_id );
+
+	if( $member->is_recurring() && $member->is_active() && 'cancelled' !== $member->get_status() ) {
+
+		$ret = false;
+
+	}
+
+	if( 'free' == $member->get_status() ) {
+
+		$ret = false;
+
+	}
+
+	if( ! rcp_subscription_upgrade_possible( $user_id ) ) {
+
+		$ret = false;
+
+	}
+
+	return apply_filters( 'rcp_member_can_renew', $ret, $user_id );
+}
+
+/**
  * Determines if a member can cancel their subscription on site
  *
  * @access      public
@@ -1222,21 +1266,15 @@ function rcp_member_can_update_billing_card( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$ret    = false;
-	$member = new RCP_Member( $user_id );
+	$ret = false;
 
-	if( $member->is_recurring() ) {
+	// Check if the member is a Stripe customer
+	if( rcp_is_stripe_subscriber( $user_id ) ) {
 
-		$profile_id = $member->get_payment_profile_id();
-
-		// Check if the member is a Stripe customer
-		if( false !== strpos( $profile_id, 'cus_' ) ) {
-
-			$ret = true;
-
-		}
+		$ret = true;
 
 	}
+
 
 	return apply_filters( 'rcp_member_can_update_billing_card', $ret, $user_id );
 }

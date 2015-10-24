@@ -186,7 +186,7 @@ function rcp_load_gateway_scripts() {
 
 	global $rcp_options;
 
-	if( ! rcp_is_registration_page() ) {
+	if( ! rcp_is_registration_page() && ! defined( 'RCP_LOAD_SCRIPTS_GLOBALLY' ) ) {
 		return;
 	}
 

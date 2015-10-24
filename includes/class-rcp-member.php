@@ -44,26 +44,26 @@ class RCP_Member extends WP_User {
 		$ret        = false;
 		$old_status = get_user_meta( $this->ID, 'rcp_status', true );
 
-		if( $old_status != $new_status ) {
+		if( ! empty( $new_status ) ) {
 
-			if( update_user_meta( $this->ID, 'rcp_status', $new_status ) ) {
+			update_user_meta( $this->ID, 'rcp_status', $new_status );
 
-				if( 'expired' != $new_status ) {
-					delete_user_meta( $this->ID, '_rcp_expired_email_sent');
-				}
-
-				if( 'expired' == $new_status || 'cancelled' == $new_status ) {
-					$this->set_recurring( false );
-				}
-
-				do_action( 'rcp_set_status', $new_status, $this->ID, $old_status );
-
-				// Record the status change
-				rcp_add_member_note( $this->ID, sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
-
-				$ret = true;
+			if( 'expired' != $new_status ) {
+				delete_user_meta( $this->ID, '_rcp_expired_email_sent');
 			}
 
+			if( 'expired' == $new_status || 'cancelled' == $new_status ) {
+				$this->set_recurring( false );
+			}
+
+			do_action( 'rcp_set_status', $new_status, $this->ID, $old_status );
+
+			// Record the status change
+			if( $old_status != $new_status ) {
+				rcp_add_member_note( $this->ID, sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
+			}
+
+			$ret = true;
 		}
 
 		return $ret;
@@ -187,8 +187,8 @@ class RCP_Member extends WP_User {
 
 		do_action( 'rcp_member_pre_renew', $this->ID, $expiration, $this );
 
-		$this->set_status( $status );
 		$this->set_expiration_date( $expiration );
+		$this->set_status( $status );
 		$this->set_recurring( $recurring );
 
 		delete_user_meta( $this->ID, '_rcp_expired_email_sent' );
@@ -354,8 +354,7 @@ class RCP_Member extends WP_User {
 	*/
 	public function is_active() {
 
-		$ret       = false;
-		$recurring = get_user_meta( $this->ID, 'rcp_recurring', true );
+		$ret = false;
 
 		if( user_can( $this->ID, 'manage_options' ) ) {
 			$ret = true;

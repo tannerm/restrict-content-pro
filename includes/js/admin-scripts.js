@@ -123,7 +123,7 @@ jQuery(document).ready(function($) {
 				if(search_response.id == 'found') {
 					$(search_response.results).appendTo('#rcp_user_search_results');
 				} else if(search_response.id == 'fail') {
-					$('#rcp_user_search_results').text(search_response.msg);
+					$('#rcp_user_search_results').html(search_response.msg);
 				}
 			}
 		});

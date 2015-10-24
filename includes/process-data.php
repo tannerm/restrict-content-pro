@@ -3,7 +3,7 @@
 /*************************************************************************
 * this file processes all new subscription creations and updates
 * also manages adding/editings subscriptions to users
-* User registration and login is handled in handle-registration-login.php
+* User registration and login is handled in registration-functions.php
 **************************************************************************/
 function rcp_process_data() {
 
@@ -77,9 +77,9 @@ function rcp_process_data() {
 				$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 				$level_id   = absint( $_POST['level'] );
 
-				rcp_set_status( $user->ID, 'active' );
 				rcp_set_expiration_date( $user->ID, $expiration );
-				
+				rcp_set_status( $user->ID, 'active' );
+
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
 
 				// Add a role, if needed, to the user
@@ -126,8 +126,12 @@ function rcp_process_data() {
 
 				$member = new RCP_Member( $member_id );
 
+				if( ! empty( $_POST['expiration'] ) && 'delete' !== $action ) {
+					$member->set_expiration_date( date( 'Y-m-d H:i:s', strtotime( $_POST['expiration'] ) ) );
+				}
+
 				if( $action ) {
-	
+
 					switch( $action ) {
 
 						case 'mark-active' :
@@ -158,13 +162,9 @@ function rcp_process_data() {
 
 				}
 
-				if( ! empty( $_POST['expiration'] ) && 'delete' !== $action ) {
-					$member->set_expiration_date( date( 'Y-m-d H:i:s', strtotime( $_POST['expiration'] ) ) );
-				}
-
 			}
 
-			wp_redirect( admin_url( 'admin.php?page=rcp-members&rcp_message=members_updated' ) ); exit;			
+			wp_redirect( admin_url( 'admin.php?page=rcp-members&rcp_message=members_updated' ) ); exit;
 
 		}
 
@@ -181,8 +181,11 @@ function rcp_process_data() {
 			$status       = sanitize_text_field( $_POST['status'] );
 			$level_id     = absint( $_POST['level'] );
 			$expiration   = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
+			$expiration   = 'none' !== $expiration ? date( 'Y-m-d 23:59:59', strtotime( $_POST['expiration'] ) ) : $expiration;
 
-			rcp_set_expiration_date( $user_id, $expiration );
+			if( ! empty( $_POST['expiration'] ) ) {
+				$member->set_expiration_date( $expiration );
+			}
 
 			if( isset( $_POST['level'] ) ) {
 
@@ -323,9 +326,9 @@ function rcp_process_data() {
 			if( $user ) {
 
 				$data = array(
-					'amount'           => $_POST['amount'],
+					'amount'           => empty( $_POST['amount'] ) ? 0.00 : sanitize_text_field( $_POST['amount'] ),
 					'user_id'          => $user->ID,
-					'date'             => date( 'Y-m-d', strtotime( $_POST['date'] ) ) . ' ' . date( 'H:i:s', current_time( 'timestamp' ) ),
+					'date'             => empty( $_POST['date'] ) ? date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) : date( 'Y-m-d', strtotime( $_POST['date'], current_time( 'timestamp' ) ) ) . ' ' . date( 'H:i:s', current_time( 'timestamp' ) ),
 					'payment_type'     => 'manual',
 					'subscription'     => rcp_get_subscription( $user->ID ),
 					'subscription_key' => rcp_get_subscription_key( $user->ID ),
@@ -338,6 +341,10 @@ function rcp_process_data() {
 			}
 
 			if( ! empty( $add ) ) {
+				$cache_args = array( 'earnings' => 1, 'subscription' => 0, 'user_id' => 0, 'date' => '' );
+				$cache_key  = md5( implode( ',', $cache_args ) );
+				delete_transient( $cache_key );
+
 				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_added' );
 			} else {
 				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_not_added' );
@@ -360,9 +367,9 @@ function rcp_process_data() {
 			if( $user && $payment_id ) {
 
 				$data = array(
-					'amount'           => sanitize_text_field( $_POST['amount'] ),
+					'amount'           => empty( $_POST['amount'] ) ? 0.00 : sanitize_text_field( $_POST['amount'] ),
 					'user_id'          => $user->ID,
-					'date'             => date( 'Y-m-d H:i:s', strtotime( $_POST['date'] ) ),
+					'date'             => empty( $_POST['date'] ) ? date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) : date( 'Y-m-d', strtotime( $_POST['date'], current_time( 'timestamp' ) ) ) . ' ' . date( 'H:i:s', current_time( 'timestamp' ) ),
 					'subscription'     => rcp_get_subscription( $user->ID ),
 					'subscription_key' => rcp_get_subscription_key( $user->ID ),
 					'transaction_id'   => sanitize_text_field( $_POST['transaction-id'] ),
@@ -374,6 +381,10 @@ function rcp_process_data() {
 			}
 
 			if( ! empty( $update ) ) {
+				$cache_args = array( 'earnings' => 1, 'subscription' => 0, 'user_id' => 0, 'date' => '' );
+				$cache_key  = md5( implode( ',', $cache_args ) );
+				delete_transient( $cache_key );
+
 				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_updated' );
 			} else {
 				$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_not_updated' );
