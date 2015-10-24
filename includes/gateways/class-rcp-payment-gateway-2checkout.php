@@ -185,7 +185,6 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			$hash  = strtoupper( md5( $_POST['sale_id'] . $this->seller_id . $_POST['invoice_id'] . $this->secret_key ) );
 
 			if ( ! hash_equals( $hash, $_POST['md5_hash'] ) ) {
-				edd_record_gateway_error( __( '2Checkout Error', 'rcp' ), sprintf( __( 'Invalid INS hash. INS data: %s', 'edd' ), json_encode( $_POST ) ) );
 				die('-1');
 			}
 
