@@ -156,6 +156,7 @@ function rcp_process_registration() {
 					'user_registered'	=> date( 'Y-m-d H:i:s' )
 				)
 			);
+
 		}
 
 		if( $user_data['id'] ) {

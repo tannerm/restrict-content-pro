@@ -57,7 +57,7 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 		if ( $userlevel == 'none' && is_user_logged_in() && $has_access ) {
 		 	return do_shortcode( wpautop( $content ) );
 		} else {
-			return '<div class="rcp_restricted rcp_paid_only">' . rcp_format_teaser($teaser) . '</div>';
+			return '<div class="rcp_restricted rcp_paid_only">' . rcp_format_teaser( $teaser ) . '</div>';
 		}
 
 	} else {
@@ -85,7 +85,7 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 		} elseif ( $userlevel == 'none' && is_user_logged_in() && $has_access ) {
 		 	return do_shortcode( wpautop( $content ) );
 		} else {
-			return '<div class="rcp_restricted">' . do_shortcode( wpautop( $teaser ) ) . '</div>';
+			return '<div class="rcp_restricted">' . rcp_format_teaser( $teaser ) . '</div>';
 		}
 	}
 }
