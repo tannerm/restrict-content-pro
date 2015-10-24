@@ -210,6 +210,22 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				case 'ORDER_CREATED' :
 
+					$recurring = ! empty( $_POST['recurring'] );
+					$member->renew( $recurring );
+
+					$payment_data = array(
+						'date'             => date( 'Y-m-d g:i:s', strtotime( $_POST['timestamp'], current_time( 'timestamp' ) ) ),
+						'subscription'     => $member->get_subscription_name(),
+						'payment_type'     => $payment_type,
+						'subscription_key' => $subscription_key,
+						'amount'           => sanitize_text_field( $_POST['invoice_list_amount'] ),
+						'user_id'          => $member->user_id,
+						'transaction_id'   => sanitize_text_field( $_POST['invoice_id'] )
+					);
+
+					$rcp_payments = new RCP_Payments();
+					$rcp_payments->insert( $payment_data );
+
 					break;
 
 				case 'REFUND_ISSUED' :
@@ -250,6 +266,8 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 					break;
 			}
+
+			do_action( 'rcp_2co_' . strtolower( $_POST['message_type'] ) . '_ins', $member );
 
 		}
 	}
