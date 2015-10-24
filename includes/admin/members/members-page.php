@@ -197,6 +197,7 @@ function rcp_members_page() {
 										<?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
 											| <a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
 										<?php } ?>
+										<?php do_action( 'rcp_member_row_actions', $member->ID ); ?>
 									<?php endif; ?>
 								</td>
 							</tr>
