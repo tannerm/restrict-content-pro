@@ -57,7 +57,7 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 		if ( $userlevel == 'none' && is_user_logged_in() && $has_access ) {
 		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
 		} else {
-			return '<div class="rcp_restricted rcp_paid_only">' . rcp_format_teaser($teaser) . '</div>';
+			return '<div class="rcp_restricted rcp_paid_only">' . rcp_format_teaser( $teaser ) . '</div>';
 		}
 
 	} else {
