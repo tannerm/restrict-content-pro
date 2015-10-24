@@ -75,115 +75,77 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 		$paid = false;
 
 		if ( $this->auto_renew ) {
-			try {
 
-				$charge = Twocheckout_Charge::auth( array(
-					'merchantOrderId' => $this->subscription_key,
-					'token'           => $_POST['twoCheckoutToken'],
-					'currency'        => strtolower( $this->currency ),
-					'billingAddr'     => array(
-						'name'        => sanitize_text_field( $_POST['rcp_card_name'] ),
-						'addrLine1'   => sanitize_text_field( $_POST['rcp_card_address'] ),
-						'city'        => sanitize_text_field( $_POST['rcp_card_city'] ),
-						'state'       => sanitize_text_field( $_POST['rcp_card_state'] ),
-						'zipCode'     => sanitize_text_field( $_POST['rcp_card_zip'] ),
-						'country'     => sanitize_text_field( $_POST['rcp_card_country'] ),
-						'email'       => $this->email,
-					),
-					"lineItems"       => array(
-						array(
-							"recurrence"  => $subscription->duration . ' ' . ucfirst( $subscription->duration_unit ),
-							"type"        => 'product',
-							"price"       => $this->amount,
-							"productId"   => $subscription->id,
-							"name"        => $subscription->name,
-							"quantity"    => '1',
-							"tangible"    => 'N',
-							"startupFee"  => $subscription->fee,
-							"description" => $subscription->description
-						)
-					),
-				));
+			$payment_type = 'Credit Card';
+			$line_items   = array( array(
+				"recurrence"  => $subscription->duration . ' ' . ucfirst( $subscription->duration_unit ),
+				"type"        => 'product',
+				"price"       => $this->amount,
+				"productId"   => $subscription->id,
+				"name"        => $subscription->name,
+				"quantity"    => '1',
+				"tangible"    => 'N',
+				"startupFee"  => $subscription->fee,
+				"description" => $subscription->description
+			) );
 
-				if( $charge['response']['responseCode'] == 'APPROVED' ) {
-
-					$payment_data = array(
-						'date'             => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
-						'subscription'     => $this->subscription_name,
-						'payment_type'     => 'Credit Card',
-						'subscription_key' => $this->subscription_key,
-						'amount'           => $this->amount,
-						'user_id'          => $this->user_id,
-						'transaction_id'   => $charge['response']['transactionId']
-					);
-
-					$rcp_payments = new RCP_Payments();
-					$rcp_payments->insert( $payment_data );
-
-					$paid = true;
-				}
-
-			} catch ( Twocheckout_Error $e) {
-
-				rcp_errors()->add( '2checkout_error', $e->getMessage(), 'register' );
-
-			}
-
-			$paid = true;
 		} else {
-			try {
 
-				$charge = Twocheckout_Charge::auth( array(
-					'merchantOrderId' => $this->subscription_key,
-					'token'           => $_POST['twoCheckoutToken'],
-					'currency'        => strtolower( $this->currency ),
-					'billingAddr'     => array(
-						'name'        => sanitize_text_field( $_POST['rcp_card_name'] ),
-						'addrLine1'   => sanitize_text_field( $_POST['rcp_card_address'] ),
-						'city'        => sanitize_text_field( $_POST['rcp_card_city'] ),
-						'state'       => sanitize_text_field( $_POST['rcp_card_state'] ),
-						'zipCode'     => sanitize_text_field( $_POST['rcp_card_zip'] ),
-						'country'     => sanitize_text_field( $_POST['rcp_card_country'] ),
-						'email'       => $this->email,
-					),
-					"lineItems"       => array(
-						array(
-							"recurrence"  => 0,
-							"type"        => 'product',
-							"price"       => $this->amount,
-							"productId"   => $subscription->id,
-							"name"        => $subscription->name,
-							"quantity"    => '1',
-							"tangible"    => 'N',
-							"startupFee"  => $subscription->fee,
-							"description" => $subscription->description
-						)
-					),
-				));
+			$payment_type = 'Credit Card One Time';
+			$line_items   = array( array(
+				"recurrence"  => 0,
+				"type"        => 'product',
+				"price"       => $this->amount,
+				"productId"   => $subscription->id,
+				"name"        => $subscription->name,
+				"quantity"    => '1',
+				"tangible"    => 'N',
+				"startupFee"  => $subscription->fee,
+				"description" => $subscription->description
+			) );
 
-				if( $charge['response']['responseCode'] == 'APPROVED' ) {
+		}
 
-					$payment_data = array(
-						'date'             => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
-						'subscription'     => $this->subscription_name,
-						'payment_type'     => 'Credit Card One Time',
-						'subscription_key' => $this->subscription_key,
-						'amount'           => $this->amount,
-						'user_id'          => $this->user_id,
-						'transaction_id'   => $charge['response']['transactionId']
-					);
+		try {
 
-					$rcp_payments = new RCP_Payments();
-					$rcp_payments->insert( $payment_data );
+			$charge = Twocheckout_Charge::auth( array(
+				'merchantOrderId' => $this->subscription_key,
+				'token'           => $_POST['twoCheckoutToken'],
+				'currency'        => strtolower( $this->currency ),
+				'billingAddr'     => array(
+					'name'        => sanitize_text_field( $_POST['rcp_card_name'] ),
+					'addrLine1'   => sanitize_text_field( $_POST['rcp_card_address'] ),
+					'city'        => sanitize_text_field( $_POST['rcp_card_city'] ),
+					'state'       => sanitize_text_field( $_POST['rcp_card_state'] ),
+					'zipCode'     => sanitize_text_field( $_POST['rcp_card_zip'] ),
+					'country'     => sanitize_text_field( $_POST['rcp_card_country'] ),
+					'email'       => $this->email,
+				),
+				"lineItems"       => $line_items,
+			));
 
-					$paid = true;
-				}
+			if( $charge['response']['responseCode'] == 'APPROVED' ) {
 
-			} catch ( Twocheckout_Error $e) {
+				$payment_data = array(
+					'date'             => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
+					'subscription'     => $this->subscription_name,
+					'payment_type'     => $payment_type,
+					'subscription_key' => $this->subscription_key,
+					'amount'           => $this->amount,
+					'user_id'          => $this->user_id,
+					'transaction_id'   => $charge['response']['transactionId']
+				);
 
-				rcp_errors()->add( '2checkout_error', $e->getMessage(), 'register' );
+				$rcp_payments = new RCP_Payments();
+				$rcp_payments->insert( $payment_data );
 
+				$paid = true;
 			}
+
+		} catch ( Twocheckout_Error $e) {
+
+			rcp_errors()->add( '2checkout_error', $e->getMessage(), 'register' );
+
 		}
 
 		if ( $paid ) {
