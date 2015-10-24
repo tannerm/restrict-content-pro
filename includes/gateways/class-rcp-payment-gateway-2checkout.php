@@ -206,6 +206,8 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 			$member = new RCP_Member( $member_id );
 
+			$payments = new RCP_Payments();
+
 			switch( strtoupper( $_POST['message_type'] ) ) {
 
 				case 'ORDER_CREATED' :
@@ -223,12 +225,14 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 						'transaction_id'   => sanitize_text_field( $_POST['invoice_id'] )
 					);
 
-					$rcp_payments = new RCP_Payments();
-					$rcp_payments->insert( $payment_data );
+					$payments->insert( $payment_data );
 
 					break;
 
 				case 'REFUND_ISSUED' :
+
+					$payment = $payments->get_payment_by( 'transaction_id', $_POST['invoice_id'] );
+					$payments->update( $payment->id, array( 'status' => 'refunded' ) );
 
 					break;
 
@@ -242,6 +246,9 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				case 'RECURRING_STOPPED' :
 
+					$member->cancel();
+					$member->add_note( __( 'Subscription cancelled in 2Checkout', 'rcp' ) );
+
 					break;
 
 				case 'RECURRING_COMPLETE' :
@@ -249,6 +256,9 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 					break;
 
 				case 'RECURRING_RESTARTED' :
+
+					$member->set_status( 'active' );
+					$member->add_note( __( 'Subscription restarted in 2Checkout', 'rcp' ) );
 
 					break;
 
@@ -259,6 +269,10 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 						case 'pass':
 							break;
 						case 'fail':
+
+							$member->set_status( 'pending' );
+							$member->add_note( __( 'Payment flagged as fraudulent in 2Checkout', 'rcp' ) );
+
 							break;
 						case 'wait':
 							break;
