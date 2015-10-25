@@ -66,8 +66,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 		Twocheckout::sellerId( $this->seller_id );
 		Twocheckout::sandbox( $this->test_mode );
 
-		$member       = new RCP_Member( $this->user_id );
-		$subscription = rcp_get_subscription_details( $_POST['rcp_level'] );
+		$member = new RCP_Member( $this->user_id );
 
 		if( empty( $_POST['twoCheckoutToken'] ) ) {
 			rcp_errors()->add( 'missing_card_token', __( 'Missing 2Checkout token, please try again or contact support if the issue persists.', 'rcp' ), 'register' );
@@ -80,15 +79,14 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 			$payment_type = 'Credit Card';
 			$line_items   = array( array(
-				"recurrence"  => $subscription->duration . ' ' . ucfirst( $subscription->duration_unit ),
+				"recurrence"  => $this->length . ' ' . ucfirst( $this->length_unit ),
 				"type"        => 'product',
 				"price"       => $this->amount,
-				"productId"   => $subscription->id,
-				"name"        => $subscription->name,
+				"productId"   => $this->subscription_id,
+				"name"        => $this->subscription_name,
 				"quantity"    => '1',
 				"tangible"    => 'N',
-				"startupFee"  => $subscription->fee,
-				"description" => $subscription->description
+				"startupFee"  => $this->signup_fee
 			) );
 
 		} else {
@@ -98,12 +96,11 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 				"recurrence"  => 0,
 				"type"        => 'product',
 				"price"       => $this->amount,
-				"productId"   => $subscription->id,
-				"name"        => $subscription->name,
+				"productId"   => $this->subscription_id,
+				"name"        => $this->subscription_name,
 				"quantity"    => '1',
 				"tangible"    => 'N',
-				"startupFee"  => $subscription->fee,
-				"description" => $subscription->description
+				"startupFee"  => $this->signup_fee
 			) );
 
 		}
@@ -133,7 +130,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 					'subscription'     => $this->subscription_name,
 					'payment_type'     => $payment_type,
 					'subscription_key' => $this->subscription_key,
-					'amount'           => $this->amount,
+					'amount'           => $this->amount + $this->signup_fee,
 					'user_id'          => $this->user_id,
 					'transaction_id'   => $charge['response']['transactionId']
 				);
@@ -155,8 +152,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			$member->set_payment_profile_id( '2co_' . $charge['response']['orderNumber'] );
 
 			// set this user to active
-			$member->set_status( 'active' );
-			$member->set_recurring( $this->auto_renew );
+			$member->renew( $this->auto_renew );
 
 			if ( ! is_user_logged_in() ) {
 
@@ -213,9 +209,6 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				case 'ORDER_CREATED' :
 
-					$recurring = ! empty( $_POST['recurring'] );
-					$member->renew( $recurring );
-
 					$payment_data = array(
 						'date'             => date( 'Y-m-d g:i:s', strtotime( $_POST['timestamp'], current_time( 'timestamp' ) ) ),
 						'subscription'     => $member->get_subscription_name(),
@@ -228,12 +221,22 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 					$payments->insert( $payment_data );
 
+					$recurring = ! empty( $_POST['recurring'] );
+					$member->renew( $recurring );
+					$member->add_note( __( 'Subscription cancelled via refund 2Checkout', 'rcp' ) );
+
 					break;
 
 				case 'REFUND_ISSUED' :
 
 					$payment = $payments->get_payment_by( 'transaction_id', $_POST['invoice_id'] );
 					$payments->update( $payment->id, array( 'status' => 'refunded' ) );
+
+					if( ! empty( $_POST['recurring'] ) ) {
+
+						$member->cancel();
+
+					}
 
 					break;
 
