@@ -19,7 +19,6 @@
  * @param       $number INT The number to retrieve
  * @return      array
 */
-
 function rcp_get_payments( $offset = 0, $number = 20 ) {
 	global $wpdb, $rcp_payments_db_name;
 	if( $number > 0 ) {
@@ -61,7 +60,6 @@ function rcp_count_payments() {
  * @access      private
  * @return      float
 */
-
 function rcp_get_earnings() {
 	global $wpdb, $rcp_payments_db_name;
 	$payments = get_transient( 'rcp_earnings' );
@@ -88,7 +86,6 @@ function rcp_get_earnings() {
  * @param       $payment_data ARRAY The data to store
  * @return      INT the ID of the new payment, or false if insertion fails
 */
-
 function rcp_insert_payment( $payment_data = array() ) {
 	global $wpdb, $rcp_payments_db_name;
 
@@ -143,7 +140,6 @@ function rcp_insert_payment( $payment_data = array() ) {
  * @param       $subscriptionkey string The subscription key the payment is connected to
  * @return      bool
 */
-
 function rcp_check_for_existing_payment( $type, $date, $subscription_key ) {
 
 	global $wpdb, $rcp_payments_db_name;
