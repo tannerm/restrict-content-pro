@@ -133,17 +133,6 @@ function rcp_process_registration() {
 			return;
 		}
 
-		// deterime the expiration date of the user's subscription
-		if( $expiration->duration > 0 ) {
-
-			$member_expires = rcp_calc_member_expiration( $expiration );
-
-		} else {
-
-			$member_expires = 'none';
-
-		}
-
 		if( $user_data['need_new'] ) {
 
 			$user_data['id'] = wp_insert_user( array(
@@ -159,6 +148,9 @@ function rcp_process_registration() {
 
 		}
 
+		// Setup the member object
+		$member = new RCP_Member( $user_data['id'] );
+
 		if( $user_data['id'] ) {
 
 			update_user_meta( $user_data['id'], '_rcp_new_subscription', '1' );
@@ -173,6 +165,9 @@ function rcp_process_registration() {
 			$subscription_key = rcp_generate_subscription_key();
 			update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
 			update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
+
+			// Calculate the expiration date for the member
+			$member_expires = $member->calculate_expiration();
 
 			// Set the user's role
 			$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
