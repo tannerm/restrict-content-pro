@@ -33,6 +33,9 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 	 */
 	public function process_signup() {
 
+		$member = new RCP_Member( $this->user_id );
+		$member->renew( false, 'pending' );
+
 		// setup the payment info in an array for storage
 		$payment_data = array(
 			'subscription'     => $this->subscription_name,
@@ -45,8 +48,6 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 
 		$rcp_payments = new RCP_Payments();
 		$rcp_payments->insert( $payment_data );
-
-		$this->renew_member( false, 'pending' );
 
 		wp_redirect( $this->return_url ); exit;
 
