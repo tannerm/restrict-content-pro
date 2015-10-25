@@ -457,6 +457,16 @@ function rcp_settings_page() {
 								<h3><?php _e('2Checkout Settings', 'rcp'); ?></h3>
 							</th>
 						</tr>
+						<?php // 2checkout Secret Word ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[twocheckout_secret_word]"><?php _e( 'Secret Word', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[twocheckout_secret_word]" style="width: 300px;" name="rcp_settings[twocheckout_secret_word]" value="<?php if(isset($rcp_options['twocheckout_secret_word'])) { echo $rcp_options['twocheckout_secret_word']; } ?>"/>
+								<p class="description"><?php _e('Enter your secret word. This can be obtained from the <a href="https://sandbox.2checkout.com/sandbox/acct/detail_company_info" target="_blank">2Checkout Sandbox</a>.', 'rcp'); ?></p>
+							</td>
+						</tr>
 						<?php // 2checkout Test Private Key ?>
 						<tr>
 							<th>

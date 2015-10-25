@@ -11,6 +11,7 @@
 
 class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
+	private $secret_word;
 	private $secret_key;
 	private $publishable_key;
 	private $seller_id;
@@ -28,6 +29,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
 
+		$this->secret_word = isset( $rcp_options['sandbox'] ) ? trim( $rcp_options['twocheckout_secret_word'] ) : '';;
 		$this->test_mode   = isset( $rcp_options['sandbox'] );
 
 		if( $this->test_mode ) {
@@ -182,7 +184,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 			global $wpdb;
 
-			$hash  = strtoupper( md5( $_POST['sale_id'] . $this->seller_id . $_POST['invoice_id'] . $this->secret_key ) );
+			$hash  = strtoupper( md5( $_POST['sale_id'] . $this->seller_id . $_POST['invoice_id'] . $this->secret_word ) );
 
 			if ( ! hash_equals( $hash, $_POST['md5_hash'] ) ) {
 				die('-1');
@@ -281,7 +283,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			}
 
 			do_action( 'rcp_2co_' . strtolower( $_POST['message_type'] ) . '_ins', $member );
-
+			die( 'success');
 		}
 	}
 
