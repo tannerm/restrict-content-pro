@@ -158,9 +158,39 @@ function rcp_check_for_existing_payment( $type, $date, $subscription_key ) {
  * @param       $user_id INT The ID of the user to retrieve a payment amount for
  * @return      float
 */
-
 function rcp_get_users_last_payment_amount( $user_id = 0 ) {
 	global $wpdb, $rcp_payments_db_name;
 	$query = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_payments_db_name . " WHERE `user_id`='%d' ORDER BY id DESC LIMIT 1;", $user_id ) );
 	return $query[0]->amount;
+}
+
+
+/**
+ * Calculates a new expiration
+ *
+ * @deprecated  2.4
+ * @access      private
+ * @param       $expiration_object
+ * @return      string
+*/
+function rcp_calc_member_expiration( $expiration_object ) {
+
+	$member_expires = 'none';
+
+	if( $expiration_object->duration > 0 ) {
+
+		$current_time       = current_time( 'timestamp' );
+		$last_day           = cal_days_in_month( CAL_GREGORIAN, date( 'n', $current_time ), date( 'Y', $current_time ) );
+
+		$expiration_unit 	= $expiration_object->duration_unit;
+		$expiration_length 	= $expiration_object->duration;
+		$member_expires 	= date( 'Y-m-d H:i:s', strtotime( '+' . $expiration_length . ' ' . $expiration_unit . ' 23:59:59' ) );
+
+		if( date( 'j', $current_time ) == $last_day && 'day' != $expiration_unit ) {
+			$member_expires = date( 'Y-m-d H:i:s', strtotime( $member_expires . ' +2 days' ) );
+		}
+
+	}
+
+	return apply_filters( 'rcp_calc_member_expiration', $member_expires, $expiration_object );
 }
