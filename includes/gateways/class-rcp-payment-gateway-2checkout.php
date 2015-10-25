@@ -51,6 +51,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 		if( ! class_exists( 'Twocheckout' ) ) {
 			require_once RCP_PLUGIN_DIR . 'includes/libraries/twocheckout/Twocheckout.php';
 		}
+
 	} // end init
 
 	/**
@@ -59,8 +60,6 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 	 * @since 2.3
 	 */
 	public function process_signup() {
-
-		require_once RCP_PLUGIN_DIR . 'includes/libraries/twocheckout/Twocheckout.php';
 
 		Twocheckout::privateKey( $this->secret_key );
 		Twocheckout::sellerId( $this->seller_id );

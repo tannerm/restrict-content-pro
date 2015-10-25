@@ -12,6 +12,7 @@ class Twocheckout_Sale extends Twocheckout
             $urlSuffix = '/api/sales/list_sales';
         }
         $result = $request->doCall($urlSuffix, $params);
+
         return Twocheckout_Util::returnResponse($result);
     }
 

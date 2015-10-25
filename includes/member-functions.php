@@ -705,36 +705,6 @@ function rcp_is_stripe_subscriber( $user_id = 0 ) {
 	return (bool) apply_filters( 'rcp_is_stripe_subscriber', $ret, $user_id );
 }
 
-/**
- * Determine if a member is a 2Checkout Customer
- *
- * @since       v2.1
- * @access      public
- * @param       $user_id INT the ID of the user to check
- * @return      bool
-*/
-function rcp_is_2checkout_subscriber( $user_id = 0 ) {
-
-	if( empty( $user_id ) ) {
-		$user_id = get_current_user_id();
-	}
-
-	$ret = false;
-
-	$member = new RCP_Member( $user_id );
-
-	$profile_id = $member->get_payment_profile_id();
-
-	// Check if the member is a Stripe customer
-	if( false !== strpos( $profile_id, '2co_' ) ) {
-
-		$ret = true;
-
-	}
-
-	return (bool) apply_filters( 'rcp_is_2checkout_subscriber', $ret, $user_id );
-}
-
 
 /**
  * Process Profile Updater Form
@@ -1088,6 +1058,17 @@ function rcp_cancel_member_payment_profile( $member_id = 0 ) {
 
 		}
 
+	} elseif( rcp_is_2checkout_subscriber( $member_id ) ) {
+
+		$cancelled = rcp_2checkout_cancel_member( $member_id );
+
+		if( is_wp_error( $cancelled ) ) {
+
+			wp_die( $cancelled->get_error_message(), __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+		} else {
+			$success = true;
+		}
 	}
 
 	if( $success ) {
