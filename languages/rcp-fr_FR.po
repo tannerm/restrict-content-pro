@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Restrict Content Pro\n"
 "Report-Msgid-Bugs-To: http://restrictcontentpro.com/support/\n"
-"POT-Creation-Date: 2015-10-10 07:42:32+00:00\n"
-"PO-Revision-Date: 2015-10-10 09:52+0200\n"
-"Last-Translator: fxbenard | FxB <fx@fxbenard.com>\n"
+"POT-Creation-Date: 2015-10-29 10:14-0500\n"
+"PO-Revision-Date: 2015-10-29 10:14-0500\n"
+"Last-Translator: Pippin Williamson <pippin@pippinsplugins.com>\n"
 "Language-Team: FX Bénard <fx@fxbenard.com>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -17,86 +17,6 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: includes\n"
 "X-Poedit-SearchPath-1: templates\n"
-
-#: RCP_Plugin_Updater.php:177
-#, fuzzy
-msgid ""
-"There is a new version of %1$s available. <a target=\"_blank\" class="
-"\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
-msgstr ""
-"Il y a une nouvelle version de %1$s disponible. <a target=\"_blank\" class="
-"\"thickbox\" href=\"%2$s\">Voir les détails de la version %3$s</a>."
-
-#: RCP_Plugin_Updater.php:184
-#, fuzzy
-msgid ""
-"There is a new version of %1$s available. <a target=\"_blank\" class="
-"\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a href=\"%4$s"
-"\">update now</a>."
-msgstr ""
-"Il y a une nouvelle version de %1$s disponible. <a target=\"_blank\" class="
-"\"thickbox\" href=\"%2$s\">Voir les détails de la version %3$s </a> ou <a "
-"href=\"%4$s\">mettre à jour maintenant</a>."
-
-#: RCP_Plugin_Updater.php:324
-msgid "You do not have permission to install plugin updates"
-msgstr ""
-"Vous n&rsquo;êtes pas autorisé à installer les mises à jour de l&rsquo;"
-"extension."
-
-#: RCP_Plugin_Updater.php:324 includes/admin/settings/settings.php:1071
-#: includes/class-rcp-export.php:167
-#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:113
-#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:125
-#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:137
-#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:197
-#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:209
-#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:237
-#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:269
-#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:281
-#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:310
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:102
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:114
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:137
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:64
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:190
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:207
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:224
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:240
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:256
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:265
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:317
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:334
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:351
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:367
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:383
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:392
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:414
-#: includes/gateways/gateway-functions.php:231
-#: includes/gateways/stripe/functions.php:105
-#: includes/gateways/stripe/functions.php:144
-#: includes/gateways/stripe/functions.php:161
-#: includes/gateways/stripe/functions.php:178
-#: includes/gateways/stripe/functions.php:194
-#: includes/gateways/stripe/functions.php:210
-#: includes/gateways/stripe/functions.php:219
-#: includes/gateways/stripe/functions.php:294
-#: includes/gateways/stripe/functions.php:311
-#: includes/gateways/stripe/functions.php:328
-#: includes/gateways/stripe/functions.php:344
-#: includes/gateways/stripe/functions.php:360
-#: includes/gateways/stripe/functions.php:369
-#: includes/gateways/stripe/functions.php:437
-#: includes/gateways/stripe/functions.php:447
-#: includes/gateways/stripe/functions.php:484
-#: includes/gateways/stripe/functions.php:501
-#: includes/gateways/stripe/functions.php:517
-#: includes/gateways/stripe/functions.php:533
-#: includes/gateways/stripe/functions.php:542 includes/member-functions.php:935
-#: includes/member-functions.php:952 includes/member-functions.php:968
-#: includes/member-functions.php:984 includes/member-functions.php:993
-msgid "Error"
-msgstr "Erreur"
 
 #: includes/admin/admin-ajax-actions.php:59
 msgid "No users found"
@@ -126,12 +46,14 @@ msgid ""
 msgstr ""
 
 #: includes/admin/admin-notices.php:26
+#, php-format
 msgid ""
 "Please <a href=\"%s\">enter and activate</a> your license key for Restrict "
 "Content Pro to enable automatic updates."
 msgstr ""
 
 #: includes/admin/admin-notices.php:31
+#, php-format
 msgid ""
 "You are using an outdated version of the Stripe integration for Restrict "
 "Content Pro. Please <a href=\"%s\">deactivate</a> the add-on version to "
@@ -139,6 +61,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/admin-notices.php:36
+#, php-format
 msgid ""
 "You are using an outdated version of the PayPal Pro / Express integration for "
 "Restrict Content Pro. Please <a href=\"%s\">deactivate</a> the add-on version "
@@ -1075,10 +998,6 @@ msgstr "Expiré"
 msgid "Revoke Access"
 msgstr "Révoquer l'Accès"
 
-#: includes/admin/members/members-page.php:120
-msgid "New Expiration Date"
-msgstr "Nouvelle date d'expiration"
-
 #: includes/admin/members/members-page.php:121 templates/register.php:92
 msgid "Apply"
 msgstr "Appliquer"
@@ -1204,6 +1123,7 @@ msgstr ""
 "élément."
 
 #: includes/admin/metabox.php:93
+#, php-format
 msgid ""
 "Use these options to restrict this entire entry, or the [restrict] ... [/"
 "restrict] short code to restrict partial content. %sView documentation%s."
@@ -1434,6 +1354,10 @@ msgstr "Paiements par page"
 msgid "Options saved"
 msgstr "Options enregistrés"
 
+#: includes/admin/settings/settings.php:41 includes/invoice-functions.php:59
+msgid "Restrict Content Pro"
+msgstr "Abonnements"
+
 #: includes/admin/settings/settings.php:45
 msgid "PDF Invoices"
 msgstr "﻿Factures PDF"
@@ -1451,6 +1375,7 @@ msgid "Activate License"
 msgstr "Activer la licence"
 
 #: includes/admin/settings/settings.php:72
+#, php-format
 msgid ""
 "Enter license key for Restrict Content Pro. This is required for automatic "
 "updates and <a href=\"%s\">support</a>."
@@ -2325,8 +2250,62 @@ msgid "Save Options"
 msgstr "Enregistrer les options"
 
 #: includes/admin/settings/settings.php:1071
+#, php-format
 msgid "Your license key could not be activated. Error: %s"
 msgstr ""
+
+#: includes/admin/settings/settings.php:1071 includes/class-rcp-export.php:167
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:113
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:125
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:137
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:197
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:209
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:237
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:269
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:281
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:310
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:102
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:114
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:137
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:64
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:190
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:207
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:224
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:240
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:256
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:265
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:317
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:334
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:351
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:367
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:383
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:392
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:414
+#: includes/gateways/gateway-functions.php:231
+#: includes/gateways/stripe/functions.php:105
+#: includes/gateways/stripe/functions.php:144
+#: includes/gateways/stripe/functions.php:161
+#: includes/gateways/stripe/functions.php:178
+#: includes/gateways/stripe/functions.php:194
+#: includes/gateways/stripe/functions.php:210
+#: includes/gateways/stripe/functions.php:219
+#: includes/gateways/stripe/functions.php:294
+#: includes/gateways/stripe/functions.php:311
+#: includes/gateways/stripe/functions.php:328
+#: includes/gateways/stripe/functions.php:344
+#: includes/gateways/stripe/functions.php:360
+#: includes/gateways/stripe/functions.php:369
+#: includes/gateways/stripe/functions.php:437
+#: includes/gateways/stripe/functions.php:447
+#: includes/gateways/stripe/functions.php:484
+#: includes/gateways/stripe/functions.php:501
+#: includes/gateways/stripe/functions.php:517
+#: includes/gateways/stripe/functions.php:533
+#: includes/gateways/stripe/functions.php:542 includes/member-functions.php:935
+#: includes/member-functions.php:952 includes/member-functions.php:968
+#: includes/member-functions.php:984 includes/member-functions.php:993
+msgid "Error"
+msgstr "Erreur"
 
 #: includes/admin/subscriptions/edit-subscription.php:6
 msgid "Edit Subscription Level:"
@@ -2506,10 +2485,12 @@ msgid "You do not have permission to export data."
 msgstr "﻿Vous n&rsquo;êtes pas autorisé à exporter des données."
 
 #: includes/class-rcp-member.php:63
+#, php-format
 msgid "Member's status changed from %s to %s"
 msgstr "L&rsquo;état du membre a changé de %s à %s"
 
 #: includes/class-rcp-member.php:127
+#, php-format
 msgid "Member's expiration changed from %s to %s"
 msgstr "﻿Expiration du membre changée de %s à %s"
 
@@ -2638,32 +2619,32 @@ msgid "PayPal subscription creation failed."
 msgstr "ID de l'abonnement Paypal : %s"
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:168
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:648
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:669
 msgid "The card number you have entered is invalid"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:172
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:652
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:673
 msgid "The security code you have entered is invalid"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:176
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:656
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:677
 msgid "The zip / postal code you have entered is invalid"
 msgstr "Le code postal que vous avez saisi est incorrect."
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:180
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:660
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:681
 msgid "The card holder name you have entered is invalid"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:184
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:664
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:685
 msgid "The card expiration month you have entered is invalid"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:188
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:668
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:689
 msgid "The card expiration year you have entered is invalid"
 msgstr ""
 
@@ -2684,6 +2665,7 @@ msgid "Invalid Currency Code"
 msgstr "﻿Code de devise invalide"
 
 #: includes/gateways/class-rcp-payment-gateway-paypal.php:265
+#, php-format
 msgid ""
 "The currency code in an IPN request did not match the site currency code. "
 "Payment data: %s"
@@ -2702,11 +2684,12 @@ msgid ""
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:133
+#, php-format
 msgid "Signup Fee for %s"
 msgstr "Frais d&rsquo;inscription pour %s"
 
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:135
-#, fuzzy
+#, fuzzy, php-format
 msgid "Signup Discount for %s"
 msgstr "Remise(s)"
 
@@ -2763,6 +2746,7 @@ msgstr "Une erreur est survenue."
 #: includes/gateways/stripe/functions.php:496
 #: includes/gateways/stripe/functions.php:512
 #: includes/gateways/stripe/functions.php:528
+#, php-format
 msgid "Error code: %s"
 msgstr "Code d'erreur : %s"
 
@@ -2874,6 +2858,7 @@ msgid "You do not have permission to download this invoice"
 msgstr "﻿Vous n&rsquo;êtes pas autorisé à télécharger cette facture."
 
 #: includes/invoice-functions.php:58
+#, php-format
 msgid "Invoice #%d"
 msgstr "﻿Facture #%d"
 
@@ -2955,6 +2940,7 @@ msgstr ""
 "Quelqu'un a demandé que le mot de passe du compte suivant soit réinitialisé : "
 
 #: includes/login-functions.php:261
+#, php-format
 msgid "Username: %s"
 msgstr "Nom d'utilisateur : %s"
 
@@ -2970,6 +2956,7 @@ msgid "To reset your password, visit the following address:"
 msgstr "Pour réinitialiser votre mot de passe, visitez l'adresse suivante :"
 
 #: includes/login-functions.php:278
+#, php-format
 msgid "[%s] Password Reset"
 msgstr "[%s] Réinitialisation du mot de passe"
 
@@ -3018,6 +3005,7 @@ msgid "Passwords do not match"
 msgstr "Les mots de passe ne correspondent pas"
 
 #: includes/member-functions.php:1056
+#, php-format
 msgid ""
 "There was a problem cancelling the subscription, please contact customer "
 "support. Error: %s"
@@ -3129,14 +3117,14 @@ msgstr "﻿Roubles russes"
 
 #: includes/process-data.php:23 includes/process-data.php:42
 #: includes/process-data.php:63 includes/process-data.php:115
-#: includes/process-data.php:175 includes/process-data.php:250
-#: includes/process-data.php:283 includes/process-data.php:316
-#: includes/process-data.php:356 includes/process-data.php:403
-#: includes/process-data.php:411 includes/process-data.php:419
-#: includes/process-data.php:430 includes/process-data.php:448
-#: includes/process-data.php:458 includes/process-data.php:470
-#: includes/process-data.php:479 includes/process-data.php:488
-#: includes/process-data.php:497
+#: includes/process-data.php:175 includes/process-data.php:253
+#: includes/process-data.php:286 includes/process-data.php:319
+#: includes/process-data.php:359 includes/process-data.php:406
+#: includes/process-data.php:414 includes/process-data.php:422
+#: includes/process-data.php:433 includes/process-data.php:451
+#: includes/process-data.php:461 includes/process-data.php:473
+#: includes/process-data.php:482 includes/process-data.php:491
+#: includes/process-data.php:500
 msgid "You do not have permission to perform this action."
 msgstr "Vous n&rsquo;êtes pas autorisé à effectuer cette action."
 
@@ -3149,25 +3137,21 @@ msgstr "Échec de la vérification du nonce"
 msgid "Please select at least one member to edit."
 msgstr ""
 
-#: includes/registration-functions.php:58
+#: includes/registration-functions.php:59
 msgid "Please choose a subscription level"
 msgstr "Choisissez un type d'abonnement"
 
-#: includes/registration-functions.php:65
+#: includes/registration-functions.php:66
 msgid "You may only sign up for a free trial once"
 msgstr "Vous ne pouvez vous abonnez à la version d'essai qu'une seule fois."
 
-#: includes/registration-functions.php:78
+#: includes/registration-functions.php:79
 msgid "The discount you entered is invalid"
 msgstr "Le code de réduction indiqué n'est pas valide"
 
-#: includes/registration-functions.php:87
+#: includes/registration-functions.php:88
 msgid "You can only use the discount code once"
 msgstr "Vous ne pouvez utiliser ce code de réduction qu'une seule fois."
-
-#: includes/registration-functions.php:108
-msgid "Free subscriptions cannot be automatically renewed"
-msgstr "Les abonnements gratuits ne peuvent pas être renouvelés"
 
 #: includes/registration-functions.php:335
 msgid "Username already taken"
@@ -3227,11 +3211,11 @@ msgstr "﻿Choisir un logo"
 msgid "Please Wait . . . "
 msgstr "Veuillez patienter&hellip;"
 
-#: includes/shortcodes.php:155
+#: includes/shortcodes.php:157
 msgid "You are already registered and have an active subscription."
 msgstr "Vous êtes déjà abonné et vous avez un abonnement actif."
 
-#: includes/shortcodes.php:313
+#: includes/shortcodes.php:315
 msgid "Billing card updated successfully"
 msgstr "Carte de paiement mis à jour avec succès."
 
@@ -3319,13 +3303,6 @@ msgstr "Modifier l'abonnement"
 msgid "Add Subscription"
 msgstr "Ajouter un abonnement"
 
-#: restrict-content-pro.php:141
-msgid ""
-"Your version of PHP is below the minimum version of PHP required by Restrict "
-"Content Pro. Please contact your host and request that your version be "
-"upgraded to 5.3 or later."
-msgstr ""
-
 #: templates/card-form.php:3 templates/card-update-form.php:4
 msgid "Card Number"
 msgstr "Numéro de carte"
@@ -3381,6 +3358,10 @@ msgstr "Se souvenir de moi"
 msgid "Lost your password?"
 msgstr "Mot de passe perdu ?"
 
+#: templates/login.php:29
+msgid "Login"
+msgstr ""
+
 #: templates/login.php:38 templates/lostpassword.php:28
 #: templates/lostpassword_checkemail.php:10
 #, fuzzy
@@ -3422,6 +3403,7 @@ msgid "Subscription Cost"
 msgstr "Coût de l&rsquo;abonnement"
 
 #: templates/paypal-express-confirm.php:27
+#, php-format
 msgid "Every %d %s(s)"
 msgstr "tous les %d %s(s)"
 
@@ -3496,6 +3478,7 @@ msgid "Choose Your Payment Method"
 msgstr "Choisissez votre mode de paiement"
 
 #: templates/register.php:21
+#, php-format
 msgid "<a href=\"%s\">Log in</a> if you wish to renew an existing subscription."
 msgstr ""
 
@@ -3543,15 +3526,34 @@ msgstr "﻿Reçu PDF"
 msgid "You have not made any payments."
 msgstr "﻿Vous n&rsquo;avez effectué aucun versement."
 
-#. Description of the plugin/theme
-msgid ""
-"Set up a complete subscription system for your WordPress site and deliver "
-"premium content to your subscribers. Unlimited subscription packages, "
-"membership management, discount codes, registration / login forms, and more."
-msgstr ""
+#, fuzzy
+#~ msgid ""
+#~ "There is a new version of %1$s available. <a target=\"_blank\" class="
+#~ "\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
+#~ msgstr ""
+#~ "Il y a une nouvelle version de %1$s disponible. <a target=\"_blank\" class="
+#~ "\"thickbox\" href=\"%2$s\">Voir les détails de la version %3$s</a>."
 
-#~ msgid "Restrict Content Pro"
-#~ msgstr "Abonnements"
+#, fuzzy
+#~ msgid ""
+#~ "There is a new version of %1$s available. <a target=\"_blank\" class="
+#~ "\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a href=\"%4$s"
+#~ "\">update now</a>."
+#~ msgstr ""
+#~ "Il y a une nouvelle version de %1$s disponible. <a target=\"_blank\" class="
+#~ "\"thickbox\" href=\"%2$s\">Voir les détails de la version %3$s </a> ou <a "
+#~ "href=\"%4$s\">mettre à jour maintenant</a>."
+
+#~ msgid "You do not have permission to install plugin updates"
+#~ msgstr ""
+#~ "Vous n&rsquo;êtes pas autorisé à installer les mises à jour de l&rsquo;"
+#~ "extension."
+
+#~ msgid "New Expiration Date"
+#~ msgstr "Nouvelle date d'expiration"
+
+#~ msgid "Free subscriptions cannot be automatically renewed"
+#~ msgstr "Les abonnements gratuits ne peuvent pas être renouvelés"
 
 #~ msgid "Pippin Williamson"
 #~ msgstr "Pippin Williamson"
