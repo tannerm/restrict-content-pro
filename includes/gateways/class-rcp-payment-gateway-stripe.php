@@ -123,7 +123,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				} else {
 
 					$customer->card = $_POST['stripeToken'];
-	
+
 				}
 
 				// Add fees before the plan is updated and charged
@@ -467,7 +467,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				}
 
 				$member = new RCP_Member( $user );
-				
+
 				// check to confirm this is a stripe subscriber
 				if ( $member ) {
 
@@ -559,7 +559,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			die( '1' );
 
 		}
-		
+
 		die( 'no event ID found' );
 
 	}
