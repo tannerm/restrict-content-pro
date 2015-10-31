@@ -85,7 +85,7 @@ class RCP_Members_Export extends RCP_Export {
 					'subscription_key' => $member->get_subscription_key(),
 					'expiration'       => $member->get_expiration_date(),
 					'status'           => $member->get_status(),
-					'discount_codes'   => ! empty( $discounts ) && is_array( $discounts ) ? implode( ' ', $discounts ) : '',
+					'discount_codes'   => ! empty( $discounts ) && is_array( $discounts ) && ! is_object( $discounts ) ? implode( ' ', $discounts ) : '',
 					'profile_id'       => $member->get_payment_profile_id()
 				);
 
