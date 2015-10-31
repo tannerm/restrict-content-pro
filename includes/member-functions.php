@@ -1196,9 +1196,7 @@ function rcp_can_member_cancel( $user_id = 0 ) {
 
 		} elseif ( rcp_is_2checkout_subscriber( $user_id ) && defined( 'TWOCHECKOUT_ADMIN_USER' ) && defined( 'TWOCHECKOUT_ADMIN_PASSWORD' ) ) {
 
-			if ( ! empty( TWOCHECKOUT_ADMIN_USER ) && ! empty( TWOCHECKOUT_ADMIN_PASSWORD ) ) {
 				$ret = true;
-			}
 
 		}
 
