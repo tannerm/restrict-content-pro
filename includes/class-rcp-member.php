@@ -171,15 +171,27 @@ class RCP_Member extends WP_User {
 			if( in_array( date( 'j', $expire_timestamp ), $extension_days ) && 'day' !== $subscription->duration_unit ) {
 
 				/*
-				 * Here we extend the expiration date by 2 days in order to account for "walking" payment dates in PayPal.
+				 * Here we extend the expiration date by 1-3 days in order to account for "walking" payment dates in PayPal.
 				 *
 				 * See https://github.com/pippinsplugins/restrict-content-pro/issues/239
 				 */
 
-				$expiration = date( 'Y-m-d H:i:s', strtotime( $expiration . ' +2 days' ) );
+				$month = date( 'n', $expire_timestamp );
+
+				if( $month < 12 ) {
+					$month += 1;
+					$year   = date( 'Y' );
+				} else {
+					$month  = 1;
+					$year   = date( 'Y' ) + 1;
+				}
+
+				$timestamp  = mktime( 0, 0, 0, $month, 1, $year );
+
+				$expiration = date( 'Y-m-d 23:59:59', $timestamp );
 			}
 
-			$expiration = date( 'Y-m-d H:i:s', $expire_timestamp );
+			$expiration = date( 'Y-m-d 23:59:59', $expire_timestamp );
 
 		} else {
 
