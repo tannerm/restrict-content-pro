@@ -475,56 +475,61 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						die( 'no subscription ID for member' );
 					}
 
-					// setup payment data
-					$payment_data = array(
-						'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
-						'subscription'      => $member->get_subscription_name(),
-						'payment_type' 		=> 'Credit Card',
-						'subscription_key' 	=> $member->get_subscription_key(),
-						'user_id' 			=> $member->ID,
-						'amount'            => '',
-						'transaction_id'    => '',
-					);
+					if( $event->type == 'charge.succeeded' || $event->type == 'invoice.payment_succeeded' ) {
 
-					if ( $event->type == 'charge.succeeded' ) {
+						// setup payment data
+						$payment_data = array(
+							'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
+							'subscription'      => $member->get_subscription_name(),
+							'payment_type' 		=> 'Credit Card',
+							'subscription_key' 	=> $member->get_subscription_key(),
+							'user_id' 			=> $member->ID,
+							'amount'            => '',
+							'transaction_id'    => '',
+						);
 
-						// Successful one-time payment
-						if ( empty( $payment_event->invoice ) ) {
+						if ( $event->type == 'charge.succeeded' ) {
 
-							$payment_data['amount']         = $payment_event->amount / 100;
-							$payment_data['transaction_id'] = $payment_event->id;
+							// Successful one-time payment
+							if ( empty( $payment_event->invoice ) ) {
 
-						// Successful subscription payment
-						} else {
+								$payment_data['amount']         = $payment_event->amount / 100;
+								$payment_data['transaction_id'] = $payment_event->id;
 
-							$invoice = \Stripe\Invoice::retrieve( $payment_event->invoice );
-							$payment_data['amount']         = $invoice->amount_due / 100;
+							// Successful subscription payment
+							} else {
+
+								$invoice = \Stripe\Invoice::retrieve( $payment_event->invoice );
+								$payment_data['amount']         = $invoice->amount_due / 100;
+								$payment_data['transaction_id'] = $payment_event->id;
+
+							}
+
+						// Successful subscription paid made with account credit where no charge is created
+						} elseif ( $event->type == 'invoice.payment_succeeded' && empty( $payment_event->charge ) ) {
+
+							$payment_data['amount']         = $payment_event->amount_due / 100;
 							$payment_data['transaction_id'] = $payment_event->id;
 
 						}
 
-					// Successful subscription paid made with account credit where no charge is created
-					} elseif ( $event->type == 'invoice.payment_succeeded' && empty( $payment_event->charge ) ) {
 
-						$payment_data['amount']         = $payment_event->amount_due / 100;
-						$payment_data['transaction_id'] = $payment_event->id;
+						if( ! empty( $payment_data['transaction_id'] ) && ! $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
 
-					}
+							$member->renew( $member->is_recurring() );
 
-					if( ! $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
+							// record this payment if it hasn't been recorded yet
+							$rcp_payments->insert( $payment_data );
 
-						$member->renew( $member->is_recurring() );
+							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
 
-						// record this payment if it hasn't been recorded yet
-						$rcp_payments->insert( $payment_data );
+							die( 'rcp_stripe_charge_succeeded action fired successfully' );
 
-						do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
+						} else {
 
-						die( 'rcp_stripe_charge_succeeded action fired successfully' );
+							die( 'duplicate payment found' );
 
-					} else {
-
-						die( 'duplicate payment found' );
+						}
 
 					}
 
