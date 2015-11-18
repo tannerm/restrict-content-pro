@@ -73,7 +73,15 @@ class RCP_Members_Export extends RCP_Export {
 
 				$member = new RCP_Member( $member->ID );
 
-				$discounts = (array) get_user_meta( $member->ID, 'rcp_user_discounts', true );
+				$discounts = get_user_meta( $member->ID, 'rcp_user_discounts', true );
+				if( ! empty( $discounts ) && is_array( $discounts ) && ! $discounts instanceof stdClass ) {
+					foreach( $discounts as $key => $code ) {
+						if( ! is_string( $code ) ) {
+							unset( $discounts[ $key ] );
+						}
+					}
+					$discounts = implode( ' ', $discounts );
+				}
 
 				$data[] = array(
 					'user_id'          => $member->ID,
@@ -85,7 +93,7 @@ class RCP_Members_Export extends RCP_Export {
 					'subscription_key' => $member->get_subscription_key(),
 					'expiration'       => $member->get_expiration_date(),
 					'status'           => $member->get_status(),
-					'discount_codes'   => ! empty( $discounts ) && is_array( $discounts ) && ! is_object( $discounts ) ? implode( ' ', $discounts ) : '',
+					'discount_codes'   => $discounts,
 					'profile_id'       => $member->get_payment_profile_id()
 				);
 
