@@ -223,7 +223,7 @@ function rcp_process_registration() {
 
 				$subscription_data = array(
 					'price'             => ! empty( $discounted_price ) ? $discounted_price : $price,
-					'discount'          => $base_price - $discounted_price,
+					'discount'          => ! empty( $discounted_price ) ? $base_price - $discounted_price : 0,
 					'discount_code'     => $discount,
 					'fee' 			    => ! empty( $subscription->fee ) ? number_format( $subscription->fee, 2 ) : 0,
 					'length' 			=> $expiration->duration,
