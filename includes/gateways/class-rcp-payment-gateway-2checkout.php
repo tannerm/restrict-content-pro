@@ -29,7 +29,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
 
-		$this->secret_word = isset( $rcp_options['sandbox'] ) ? trim( $rcp_options['twocheckout_secret_word'] ) : '';;
+		$this->secret_word = isset( $rcp_options['twocheckout_secret_word'] ) ? trim( $rcp_options['twocheckout_secret_word'] ) : '';
 		$this->test_mode   = isset( $rcp_options['sandbox'] );
 
 		if( $this->test_mode ) {
