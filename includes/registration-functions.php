@@ -155,16 +155,21 @@ function rcp_process_registration() {
 
 			update_user_meta( $user_data['id'], '_rcp_new_subscription', '1' );
 
+			$subscription_key = rcp_generate_subscription_key();
+
 			if( ! rcp_is_active( $user_data['id'] ) ) {
 
 				rcp_set_status( $user_data['id'], 'pending' );
+				update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
+				update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
 	
-			}
+			} else {
 
-			// setup a unique key for this subscription
-			$subscription_key = rcp_generate_subscription_key();
-			update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
-			update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
+				// If the member is already active, we need to set these as pending changes
+				update_user_meta( $user_data['id'], 'rcp_pending_subscription_level', $subscription_id );
+				update_user_meta( $user_data['id'], 'rcp_pending_subscription_key', $subscription_key );
+
+			}
 
 			// Calculate the expiration date for the member
 			$member_expires = $member->calculate_expiration();
@@ -458,3 +463,33 @@ function rcp_remove_new_subscription_flag( $status, $user_id ) {
 	delete_user_meta( $user_id, '_rcp_new_subscription' );
 }
 add_action( 'rcp_set_status', 'rcp_remove_new_subscription_flag', 999999999999, 2 );
+
+/**
+ * When upgrading subscriptions, the new level / key are stored as pending. Once payment is received, the pending
+ * values are set as the permanent values.
+ *
+ * See https://github.com/pippinsplugins/restrict-content-pro/issues/294
+ *
+ * @access      public
+ * @since       2.4.3
+ * @return      void
+ */
+function rcp_set_pending_subscription_on_upgrade( $status, $user_id ) {
+
+	if( 'active' !== $status ) {
+		return;
+	}
+
+	$subscription_id  = get_user_meta( $user_id, 'rcp_pending_subscription_level', true );
+	$subscription_key = get_user_meta( $user_id, 'rcp_pending_subscription_key', true );
+
+	if( ! empty( $subscription_id ) && ! empty( $subscription_key ) ) {
+
+		update_user_meta( $user_id, 'rcp_subscription_level', $subscription_id );
+		update_user_meta( $user_id, 'rcp_subscription_key', $subscription_key );
+
+		delete_user_meta( $user_id, 'rcp_pending_subscription_level' );
+		delete_user_meta( $user_id, 'rcp_pending_subscription_key' );
+	}
+}
+add_action( 'rcp_set_status', 'rcp_set_pending_subscription_on_upgrade', 10, 2 );
