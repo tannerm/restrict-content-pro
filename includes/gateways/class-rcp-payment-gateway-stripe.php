@@ -480,9 +480,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						// setup payment data
 						$payment_data = array(
 							'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
-							'subscription'      => $member->get_subscription_name(),
 							'payment_type' 		=> 'Credit Card',
-							'subscription_key' 	=> $member->get_subscription_key(),
 							'user_id' 			=> $member->ID,
 							'amount'            => '',
 							'transaction_id'    => '',
@@ -517,6 +515,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						if( ! empty( $payment_data['transaction_id'] ) && ! $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
 
 							$member->renew( $member->is_recurring() );
+
+							// These must be retrieved after the status is set to active in order for upgrades to work properly
+							$payment_data['subscription']     = $member->get_subscription_name();
+							$payment_data['subscription_key'] = $member->get_subscription_key();
 
 							// record this payment if it hasn't been recorded yet
 							$rcp_payments->insert( $payment_data );
