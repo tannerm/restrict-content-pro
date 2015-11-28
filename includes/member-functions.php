@@ -1127,7 +1127,6 @@ function rcp_can_member_renew( $user_id = 0 ) {
 	$member = new RCP_Member( $user_id );
 
 	if( $member->is_recurring() && $member->is_active() && 'cancelled' !== $member->get_status() ) {
-
 		$ret = false;
 
 	}

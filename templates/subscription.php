@@ -29,13 +29,21 @@ if( isset( $_GET['profile'] ) && 'cancelled' == $_GET['profile'] ) : ?>
 			<td><?php echo rcp_get_expiration_date(); ?></td>
 			<td>
 				<?php
+				$links = array();
 				if( rcp_can_member_renew() ) {
-					echo '<a href="' . esc_url( get_permalink( $rcp_options['registration_page'] ) ) . '" title="' . __( 'Renew your subscription', 'rcp' ) . '" class="rcp_sub_details_renew">' . __( 'Renew your subscription', 'rcp' ) . '</a>';
-				} elseif( ! rcp_is_active( $user_ID ) && rcp_subscription_upgrade_possible( $user_ID ) ) {
-					echo '<a href="' . esc_url( get_permalink( $rcp_options['registration_page'] ) ) . '" title="' . __( 'Upgrade your subscription', 'rcp' ) . '" class="rcp_sub_details_renew">' . __( 'Upgrade your subscription', 'rcp' ) . '</a>';
-				} elseif( rcp_is_active( $user_ID ) && rcp_can_member_cancel( $user_ID ) ) {
-					echo '<a href="' . rcp_get_member_cancel_url( $user_ID ) . '" title="' . __( 'Cancel your subscription', 'rcp' ) . '">' . __( 'Cancel your subscription', 'rcp' ) . '</a>';
+					$links[] = '<a href="' . esc_url( get_permalink( $rcp_options['registration_page'] ) ) . '" title="' . __( 'Renew your subscription', 'rcp' ) . '" class="rcp_sub_details_renew">' . __( 'Renew your subscription', 'rcp' ) . '</a>';
 				}
+
+				if( rcp_subscription_upgrade_possible( $user_ID ) ) {
+					$links[] = '<a href="' . esc_url( get_permalink( $rcp_options['registration_page'] ) ) . '" title="' . __( 'Upgrade your subscription', 'rcp' ) . '" class="rcp_sub_details_renew">' . __( 'Upgrade your subscription', 'rcp' ) . '</a>';
+				}
+
+				if( rcp_is_active( $user_ID ) && rcp_can_member_cancel( $user_ID ) ) {
+					$links[] = '<a href="' . rcp_get_member_cancel_url( $user_ID ) . '" title="' . __( 'Cancel your subscription', 'rcp' ) . '">' . __( 'Cancel your subscription', 'rcp' ) . '</a>';
+				}
+
+				echo implode( '<br/>', $links );
+
 				do_action( 'rcp_subscription_details_action_links' );
 				?>
 			</td>
