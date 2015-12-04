@@ -756,7 +756,7 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 							<tr valign="top">
-								<th colspan=2><h3><?php _e( 'Payment Recieved Email', 'rcp' ); ?></h3></th>
+								<th colspan=2><h3><?php _e( 'Payment Received Email', 'rcp' ); ?></h3></th>
 							</tr>
 							<tr>
 								<th>
@@ -1143,7 +1143,7 @@ function rcp_activate_license() {
 	delete_transient( 'rcp_license_check' );
 
 	if( 'valid' !== $license_data->license ) {
-		wp_die( sprintf( __( 'Your license key could not be activated. Error: %s', 'rcp' ), $license_data->error ), __( 'Error', 'rcp' ), array( 'response' => 401, 'back_link' => true ) );		
+		wp_die( sprintf( __( 'Your license key could not be activated. Error: %s', 'rcp' ), $license_data->error ), __( 'Error', 'rcp' ), array( 'response' => 401, 'back_link' => true ) );
 	}
 
 }
