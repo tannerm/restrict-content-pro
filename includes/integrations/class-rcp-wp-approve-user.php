@@ -44,7 +44,7 @@ class RCP_WP_Approve_User {
 	 * @since   2.4
 	 */
 	private function is_pending( $user_id = 0 ) {
-		return (bool) ! get_user_meta( $user_id, 'wp-approve-user', true ) && ! user_can( $user_id, 'edit_pages' );
+		return (bool) is_user_logged_in() && ! get_user_meta( $user_id, 'wp-approve-user', true ) && ! user_can( $user_id, 'edit_pages' );
 	}
 
 	/**
