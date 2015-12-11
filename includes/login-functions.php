@@ -70,14 +70,22 @@ function rcp_process_login_form() {
 		return;
 	}
 
-	// this returns the user ID and other info from the user name
-	$user = get_user_by( 'login', $_POST['rcp_user_login'] );
+	if( is_email( $_POST['rcp_user_login'] ) ) {
+
+		$user = get_user_by( 'email', $_POST['rcp_user_login'] );
+	
+	} else {
+
+		// this returns the user ID and other info from the user name
+		$user = get_user_by( 'login', $_POST['rcp_user_login'] );
+
+	}
 
 	do_action( 'rcp_before_form_errors', $_POST );
 
 	if( !$user ) {
 		// if the user name doesn't exist
-		rcp_errors()->add( 'empty_username', __( 'Invalid username', 'rcp' ), 'login' );
+		rcp_errors()->add( 'empty_username', __( 'Invalid username or email', 'rcp' ), 'login' );
 	}
 
 	if( !isset( $_POST['rcp_user_pass'] ) || $_POST['rcp_user_pass'] == '') {
@@ -87,7 +95,7 @@ function rcp_process_login_form() {
 
 	if( $user ) {
 		// check the user's login with their password
-		if( !wp_check_password( $_POST['rcp_user_pass'], $user->user_pass, $user->ID ) ) {
+		if( ! wp_check_password( $_POST['rcp_user_pass'], $user->user_pass, $user->ID ) ) {
 			// if the password is incorrect for the specified user
 			rcp_errors()->add( 'empty_password', __( 'Incorrect password', 'rcp' ), 'login' );
 		}
