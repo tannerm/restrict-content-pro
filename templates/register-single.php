@@ -64,6 +64,7 @@ rcp_show_error_messages( 'register' ); ?>
 				<span class="rcp_discount_invalid" style="display: none;"> - <?php _e( 'Invalid', 'rcp' ); ?></span>
 			</label>
 			<input type="text" id="rcp_discount_code" name="rcp_discount" class="rcp_discount_code" value=""/>
+			<button class="rcp_button" id="rcp_apply_discount"><?php _e( 'Apply', 'rcp' ); ?></button>
 		</p>
 	</fieldset>
 	<?php endif; ?>
