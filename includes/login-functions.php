@@ -146,6 +146,8 @@ function rcp_process_lostpassword_reset() {
 		return;
 	}
 
+	nocache_headers();
+
 	list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
 	$rp_cookie = 'rcp-resetpass-' . COOKIEHASH;
 
