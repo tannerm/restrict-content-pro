@@ -222,7 +222,7 @@ class RCP_Add_On_Updater {
 
 		$data = $_data;
 
-		$data['license'] = ! empty( $rcp_options['license_key'] ) trim( $rcp_options['license_key'] ) : '';
+		$data['license'] = ! empty( $rcp_options['license_key'] ) ? trim( $rcp_options['license_key'] ) : '';
 
 		if( empty( $data['addon_id'] ) ) {
 			$data['addon_id'] = $this->addon_id;
