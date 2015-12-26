@@ -180,6 +180,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
+				//hook for custom handling of credit card failures
+				do_action( 'rcp_stripe_payment_failed', $err, $customer_exists);
+
 				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
 					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
