@@ -82,7 +82,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			'PAYMENTREQUEST_0_ITEMAMT'       => $amount,
 			'PAYMENTREQUEST_0_SHIPPINGAMT'   => 0,
 			'PAYMENTREQUEST_0_TAXAMT'        => 0,
-			'PAYMENTREQUEST_0_DESC'          => $this->subscription_name,
+			'PAYMENTREQUEST_0_DESC'          => html_entity_decode( substr( $this->subscription_name, 0, 127 ), ENT_COMPAT, 'UTF-8' ),
 			'PAYMENTREQUEST_0_CUSTOM'        => $this->user_id,
 			'PAYMENTREQUEST_0_NOTIFYURL'     => add_query_arg( 'listener', 'EIPN', home_url( 'index.php' ) ),
 			'EMAIL'                          => $this->email,
@@ -98,7 +98,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		);
 
 		if( $this->auto_renew && ! empty( $this->length ) ) {
-			$args['L_BILLINGAGREEMENTDESCRIPTION0'] = $this->subscription_name;
+			$args['L_BILLINGAGREEMENTDESCRIPTION0'] = html_entity_decode( substr( $this->subscription_name, 0, 127 ), ENT_COMPAT, 'UTF-8' );
 			$args['L_BILLINGTYPE0']                 = 'RecurringPayments';
 			$args['RETURNURL']                      = add_query_arg( array( 'rcp-recurring' => '1' ), $args['RETURNURL'] );
 		}
@@ -183,7 +183,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'CURRENCYCODE'        => $details['CURRENCYCODE'],
 					'FAILEDINITAMTACTION' => 'CancelOnFailure',
 					'L_BILLINGTYPE0'      => 'RecurringPayments',
-					'DESC'                => $details['subscription']['name'],
+					'DESC'                => html_entity_decode( substr( $details['subscription']['name'], 0, 127 ), ENT_COMPAT, 'UTF-8' ),
 					'BUTTONSOURCE'        => 'EasyDigitalDownloads_SP'
 				);
 
