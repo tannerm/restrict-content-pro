@@ -292,7 +292,13 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_subscription_id() {
 
-		$subscription_id = get_user_meta( $this->ID, 'rcp_subscription_level', true );
+		$subscription_id = get_user_meta( $this->ID, 'rcp_pending_subscription_level', true );
+
+		if( empty( $subscription_id ) ) {
+
+			$subscription_id = get_user_meta( $this->ID, 'rcp_subscription_level', true );
+
+		}
 
 		return apply_filters( 'rcp_member_get_subscription_id', $subscription_id, $this->ID, $this );
 
@@ -306,7 +312,13 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_subscription_key() {
 
-		$subscription_key = get_user_meta( $this->ID, 'rcp_subscription_key', true );
+		$subscription_key = get_user_meta( $this->ID, 'rcp_pending_subscription_key', true );
+
+		if( empty( $subscription_id ) ) {
+
+			$subscription_key = get_user_meta( $this->ID, 'rcp_subscription_key', true );
+
+		}
 
 		return apply_filters( 'rcp_member_get_subscription_key', $subscription_key, $this->ID, $this );
 
