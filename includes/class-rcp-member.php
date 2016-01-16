@@ -100,7 +100,13 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_expiration_time() {
 
-		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+		$expiration = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
+
+		if( empty( $expiration ) ) {
+
+			$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+
+		}
 
 		return apply_filters( 'rcp_member_get_expiration_time', strtotime( $expiration ), $this->ID, $this );
 
@@ -128,6 +134,8 @@ class RCP_Member extends WP_User {
 				rcp_add_member_note( $this->ID, $note );
 
 			}
+
+			delete_user_meta( $this->ID, 'rcp_pending_expiration_date' );
 
 			do_action( 'rcp_set_expiration_date', $this->ID, $new_date, $old_date );
 

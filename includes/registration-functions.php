@@ -179,6 +179,8 @@ function rcp_process_registration() {
 			// Calculate the expiration date for the member
 			$member_expires = $member->calculate_expiration();
 
+			update_user_meta( $user_data['id'], 'rcp_pending_expiration_date', $member_expires );
+
 			// Set the user's role
 			$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
 			$user = new WP_User( $user_data['id'] );
