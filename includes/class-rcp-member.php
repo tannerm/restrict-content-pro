@@ -153,13 +153,13 @@ class RCP_Member extends WP_User {
 	 * @since   2.4
 	 * @return  String Date in Y-m-d H:i:s format or "none" if is a lifetime member
 	*/
-	public function calculate_expiration() {
+	public function calculate_expiration( $force_now = false ) {
 
 		// Get the member's current expiration date
 		$expiration = $this->get_expiration_time();
 
 		// Determine what date to use as the start for the new expiration calculation
-		if( $expiration > current_time( 'timestamp' ) && ! $this->is_expired() && $this->get_status() == 'active' ) {
+		if( ! $force_now && $expiration > current_time( 'timestamp' ) && ! $this->is_expired() && $this->get_status() == 'active' ) {
 
 			$base_timestamp = $expiration;
 
