@@ -129,14 +129,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// Add fees before the plan is updated and charged
 				if ( ! empty( $this->signup_fee ) ) {
 
-					$save_balance = false;
-
 					if( $this->signup_fee > 0 ) {
-						$save_balance = true;
-						$customer->account_balance = $customer->account_balance + ( $this->signup_fee * 100 ); // Add additional amount to initial payment (in cents)
-					} else if( $this->signup_fee < 0 ) {
-						$save_balance = true;
 						$customer->account_balance = $customer->account_balance - ( $this->signup_fee * 100 ); // Add additional amount to initial payment (in cents)
+					} else if( $this->signup_fee < 0 ) {
+						$customer->account_balance = $customer->account_balance + ( $this->signup_fee * 100 ); // Add additional amount to initial payment (in cents)
 					}
 
 				}
