@@ -129,23 +129,19 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// Add fees before the plan is updated and charged
 				if ( ! empty( $this->signup_fee ) ) {
 
+					$save_balance = false;
+
 					if( $this->signup_fee > 0 ) {
-						$description = sprintf( __( 'Signup Fee for %s', 'rcp' ), $this->subscription_name );
-					} else {
-						$description = sprintf( __( 'Signup Discount for %s', 'rcp' ), $this->subscription_name );
+						$save_balance = true;
+						$customer->account_balance = $customer->account_balance + ( $this->signup_fee * 100 ); // Add additional amount to initial payment (in cents)
+					} else if( $this->signup_fee < 0 ) {
+						$save_balance = true;
+						$customer->account_balance = $customer->account_balance - ( $this->signup_fee * 100 ); // Add additional amount to initial payment (in cents)
 					}
 
-					\Stripe\InvoiceItem::create( apply_filters( 'rcp_stripe_invoice_item_create_args', array(
-						'customer'    => $customer->id,
-						'amount'      => $this->signup_fee * 100,
-						'currency'    => strtolower( $this->currency ),
-						'description' => $description
-					), $this, $customer ) );
-
-					// Create the invoice containing taxes / discounts / fees
-					$invoice = \Stripe\Invoice::create( apply_filters( 'rcp_stripe_invoice_create_args', array(
-						'customer' => $customer->id, // the customer to apply the fee to
-					), $this, $customer ) );
+					if( ! empty( $save_balance ) ) {
+						$customer->save();
+					}
 
 				}
 
@@ -514,7 +510,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							$payment_data['transaction_id'] = $payment_event->id;
 
 						}
-
 
 						if( ! empty( $payment_data['transaction_id'] ) && ! $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
 
