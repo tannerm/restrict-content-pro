@@ -139,10 +139,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						$customer->account_balance = $customer->account_balance - ( $this->signup_fee * 100 ); // Add additional amount to initial payment (in cents)
 					}
 
-					if( ! empty( $save_balance ) ) {
-						$customer->save();
-					}
-
 				}
 
 				if ( ! empty( $this->discount_code ) ) {
@@ -153,14 +149,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				// Save the card and any coupon
 				$customer->save();
-
-				// Process the invoice if there is one
-				if( ! empty( $invoice ) ) {
-
-					$invoice->pay();
-
-				}
-
 
 				// Update the customer's subscription in Stripe
 				$customer->updateSubscription( array( 'plan' => $plan_id ) );
