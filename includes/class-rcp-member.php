@@ -78,7 +78,13 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_expiration_date( $formatted = true ) {
 
-		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+		$expiration = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
+
+		if( empty( $expiration ) ) {
+
+			$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+
+		}
 
 		if( $expiration ) {
 			$expiration = $expiration != 'none' ? $expiration : 'none';
@@ -155,8 +161,14 @@ class RCP_Member extends WP_User {
 	*/
 	public function calculate_expiration( $force_now = false ) {
 
+		$pending_exp = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
+
+		if( ! empty( $pending_exp ) ) {
+			return $pending_exp;
+		}
+
 		// Get the member's current expiration date
-		$expiration = $this->get_expiration_time();
+		$expiration  = $this->get_expiration_time();
 
 		// Determine what date to use as the start for the new expiration calculation
 		if( ! $force_now && $expiration > current_time( 'timestamp' ) && ! $this->is_expired() && $this->get_status() == 'active' ) {
