@@ -263,7 +263,7 @@ function rcp_earnings_graph() {
 add_action( 'rcp_reports_tab_earnings', 'rcp_earnings_graph' );
 
 /**
- * Displays the earnings graph.
+ * Displays the signups graph.
  *
  * @access  public
  * @since   1.8
