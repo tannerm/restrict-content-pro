@@ -224,7 +224,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			// setup the payment info in an array for storage
 			$payment_data = array(
-				'date'             => date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'] ) ),
+				'date'             => date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'], current_time( 'timestamp' ) ) ),
 				'subscription'     => $posted['item_name'],
 				'payment_type'     => $posted['txn_type'],
 				'subscription_key' => $subscription_key,
@@ -309,14 +309,14 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					// when a user makes a recurring payment
 
-					// record this payment in the database
-					$rcp_payments->insert( $payment_data );
-
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
 
 					$member->renew( true );
+
+					// record this payment in the database
+					$rcp_payments->insert( $payment_data );
 
 					do_action( 'rcp_ipn_subscr_payment', $user_id );
 

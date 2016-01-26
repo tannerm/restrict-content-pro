@@ -91,9 +91,11 @@ function rcp_render_meta_box() {
 
 	echo '<tr><td colspan="3">' . sprintf(
             __( 'Use these options to restrict this entire entry, or the [restrict] ... [/restrict] short code to restrict partial content. %sView documentation%s.', 'rcp' ),
-            '<a href="' . admin_url( 'admin.php?page=rcp-help#restricting-content' ) . '">',
+            '<a href="' . esc_url( 'http://docs.pippinsplugins.com/article/36-restricting-post-and-page-content' ) . '" target="_blank">',
             '</a>'
         ) . '</td></tr>';
+
+    do_action( 'rcp_metabox_fields_before' );
 
     foreach ( $rcp_meta_box['fields'] as $field ) {
         // get current post meta data
@@ -130,6 +132,9 @@ function rcp_render_meta_box() {
 			echo '<td class="rcp_meta_box_desc">', $field['desc'], '</td>';
         echo '</tr>';
     }
+    
+    do_action( 'rcp_metabox_fields_after' );
+    
     echo '<tr><td colspan="3"><strong>' . __( 'Note 1', 'rcp' ) . '</strong>: ' . __( 'To hide this content from logged-out users, but allow free and paid, set the User Level to "Subscriber".', 'rcp' ) . '</td></tr>';
 	echo '<tr><td colspan="3"><strong>' . __( 'Note 2', 'rcp' ) . '</strong>: ' . __( 'Access level, subscription level, and user level can all be combined to require the user meet all three specifications.', 'rcp' ) . '</td></tr>';
 

@@ -2,11 +2,13 @@
 /*
 Plugin Name: Restrict Content Pro
 Plugin URL: http://pippinsplugins.com/restrict-content-pro-premium-content-plugin
-Description: Setup a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
-Version: 2.3.4
+Description: Set up a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
+Version: 2.4.8
 Author: Pippin Williamson
 Author URI: http://pippinsplugins.com
 Contributors: mordauk
+Text Domain: rcp
+Domain Path: languages
 */
 
 if ( !defined( 'RCP_PLUGIN_DIR' ) ) {
@@ -19,7 +21,7 @@ if ( !defined( 'RCP_PLUGIN_FILE' ) ) {
 	define( 'RCP_PLUGIN_FILE', __FILE__ );
 }
 if ( !defined( 'RCP_PLUGIN_VERSION' ) ) {
-	define( 'RCP_PLUGIN_VERSION', '2.3.4' );
+	define( 'RCP_PLUGIN_VERSION', '2.4.8' );
 }
 
 
@@ -166,6 +168,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-paypal-pro.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-paypal-express.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-stripe.php' );
+	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-2checkout.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateways.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/gateway-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/invoice-functions.php' );

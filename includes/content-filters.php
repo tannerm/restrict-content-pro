@@ -12,11 +12,11 @@ function rcp_filter_restricted_content( $content ) {
 	if ( rcp_is_paid_content( $post->ID ) ) {
 
 		$message = ! empty( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : false; // message shown for premium content
-	
+
 	} else {
-		
+
 		$message = ! empty( $rcp_options['free_message'] ) ? $rcp_options['free_message'] : false; // message shown for free content
-		
+
 	}
 
 	if( empty( $message ) ) {
@@ -110,8 +110,8 @@ add_filter( 'the_content', 'rcp_filter_restricted_category_content', 101 );
 
 
 function rcp_user_level_checks() {
-	if ( current_user_can( 'read' ) ) {		
-		if ( current_user_can( 'edit_posts' ) ) {		
+	if ( current_user_can( 'read' ) ) {
+		if ( current_user_can( 'edit_posts' ) ) {
 			if ( current_user_can( 'upload_files' ) ) {
 				if ( current_user_can( 'moderate_comments' ) ) {
 					if ( current_user_can( 'switch_themes' ) ) {
@@ -127,7 +127,7 @@ function rcp_user_level_checks() {
 			}
 		} else {
 			add_filter( 'the_content', 'rcp_display_message_to_subscribers' );
-		}				
+		}
 	} else {
 		add_filter( 'the_content', 'rcp_display_message_to_non_loggged_in_users' );
 	}
@@ -232,23 +232,25 @@ function rcp_display_message_to_subscribers( $content ) {
 function rcp_display_message_to_non_loggged_in_users( $content ) {
 	global $rcp_options, $post, $user_ID;
 
-	$message = $rcp_options['free_message'];
-	$paid_message = $rcp_options['paid_message'];
+	$message      = isset( $rcp_options['free_message'] ) ? $rcp_options['free_message'] : '';
+	$paid_message = isset( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : '';
+
 	if ( rcp_is_paid_content( $post->ID ) ) {
 		$message = $paid_message;
 	}
 
-	$user_level = get_post_meta( $post->ID, 'rcp_user_level', true );
+	$user_level   = get_post_meta( $post->ID, 'rcp_user_level', true );
 	$access_level = get_post_meta( $post->ID, 'rcp_access_level', true );
+	$has_access   = false;
 
-	$has_access = false;
 	if ( rcp_user_has_access( $user_ID, $access_level ) ) {
 		$has_access = true;
 	}
 
-	if ( !is_user_logged_in() && ( $user_level == 'Administrator' || $user_level == 'Editor' || $user_level == 'Author' || $user_level == 'Contributor' || $user_level == 'Subscriber' ) && $has_access ) {
+	if ( ! is_user_logged_in() && ( $user_level == 'Administrator' || $user_level == 'Editor' || $user_level == 'Author' || $user_level == 'Contributor' || $user_level == 'Subscriber' ) && $has_access ) {
 		return rcp_format_teaser( $message );
 	}
+
 	// return the content unfilitered
 	return $content;
 }

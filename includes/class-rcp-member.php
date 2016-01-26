@@ -78,7 +78,13 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_expiration_date( $formatted = true ) {
 
-		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+		$expiration = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
+
+		if( empty( $expiration ) ) {
+
+			$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+
+		}
 
 		if( $expiration ) {
 			$expiration = $expiration != 'none' ? $expiration : 'none';
@@ -100,7 +106,13 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_expiration_time() {
 
-		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+		$expiration = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
+
+		if( empty( $expiration ) ) {
+
+			$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+
+		}
 
 		return apply_filters( 'rcp_member_get_expiration_time', strtotime( $expiration ), $this->ID, $this );
 
@@ -129,12 +141,85 @@ class RCP_Member extends WP_User {
 
 			}
 
+			delete_user_meta( $this->ID, 'rcp_pending_expiration_date' );
+
 			do_action( 'rcp_set_expiration_date', $this->ID, $new_date, $old_date );
 
 			$ret = true;
 		}
 
 		return $ret;
+
+	}
+
+	/**
+	 * Calculates the new expiration date for a member
+	 *
+	 * @access  public
+	 * @since   2.4
+	 * @return  String Date in Y-m-d H:i:s format or "none" if is a lifetime member
+	*/
+	public function calculate_expiration( $force_now = false ) {
+
+		$pending_exp = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
+
+		if( ! empty( $pending_exp ) ) {
+			return $pending_exp;
+		}
+
+		// Get the member's current expiration date
+		$expiration  = $this->get_expiration_time();
+
+		// Determine what date to use as the start for the new expiration calculation
+		if( ! $force_now && $expiration > current_time( 'timestamp' ) && ! $this->is_expired() && $this->get_status() == 'active' ) {
+
+			$base_timestamp = $expiration;
+
+		} else {
+
+			$base_timestamp = current_time( 'timestamp' );
+
+		}
+
+		$subscription = rcp_get_subscription_details( $this->get_subscription_id() );
+
+		if( $subscription->duration > 0 ) {
+
+			$expire_timestamp  = strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59', $base_timestamp );
+			$extension_days    = array( '29', '30', '31' );
+
+			if( in_array( date( 'j', $expire_timestamp ), $extension_days ) && 'day' !== $subscription->duration_unit ) {
+
+				/*
+				 * Here we extend the expiration date by 1-3 days in order to account for "walking" payment dates in PayPal.
+				 *
+				 * See https://github.com/pippinsplugins/restrict-content-pro/issues/239
+				 */
+
+				$month = date( 'n', $expire_timestamp );
+
+				if( $month < 12 ) {
+					$month += 1;
+					$year   = date( 'Y' );
+				} else {
+					$month  = 1;
+					$year   = date( 'Y' ) + 1;
+				}
+
+				$timestamp  = mktime( 0, 0, 0, $month, 1, $year );
+
+				$expiration = date( 'Y-m-d 23:59:59', $timestamp );
+			}
+
+			$expiration = date( 'Y-m-d 23:59:59', $expire_timestamp );
+
+		} else {
+
+			$expiration = 'none';
+
+		}
+
+		return apply_filters( 'rcp_member_calculated_expiration', $expiration, $this->ID, $this );
 
 	}
 
@@ -152,38 +237,8 @@ class RCP_Member extends WP_User {
 			return false;
 		}
 
-		// Get the member's current expiration date
-		$expires        = $this->get_expiration_time();
-
-		// Determine what date to use as the start for the new expiration calculation
-		if( $expires > current_time( 'timestamp' ) && rcp_is_active( $this->ID ) ) {
-
-			$base_date  = $expires;
-
-		} else {
-
-			$base_date  = current_time( 'timestamp' );
-
-		}
-
-		$subscription   = rcp_get_subscription_details( $this->get_subscription_id() );
-
-		if( $subscription->duration > 0 ) {
-
-			$last_day       = cal_days_in_month( CAL_GREGORIAN, date( 'n', $base_date ), date( 'Y', $base_date ) );
-			$expiration     = date( 'Y-m-d H:i:s', strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59', $base_date ) );
-
-			if( date( 'j', $base_date ) == $last_day && 'day' != $subscription->duration_unit ) {
-				$expiration = date( 'Y-m-d H:i:s', strtotime( $expiration . ' +2 days' ) );
-			}
-
-		} else {
-
-			$expiration = 'none';
-
-		}
-
-		$expiration     = apply_filters( 'rcp_member_renewal_expiration', $expiration, $subscription, $this->ID );
+		$subscription = rcp_get_subscription_details( $this->get_subscription_id() );
+		$expiration   = apply_filters( 'rcp_member_renewal_expiration', $this->calculate_expiration(), $subscription, $this->ID );
 
 		do_action( 'rcp_member_pre_renew', $this->ID, $expiration, $this );
 
@@ -257,7 +312,13 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_subscription_id() {
 
-		$subscription_id = get_user_meta( $this->ID, 'rcp_subscription_level', true );
+		$subscription_id = get_user_meta( $this->ID, 'rcp_pending_subscription_level', true );
+
+		if( empty( $subscription_id ) ) {
+
+			$subscription_id = get_user_meta( $this->ID, 'rcp_subscription_level', true );
+
+		}
 
 		return apply_filters( 'rcp_member_get_subscription_id', $subscription_id, $this->ID, $this );
 
@@ -271,7 +332,13 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_subscription_key() {
 
-		$subscription_key = get_user_meta( $this->ID, 'rcp_subscription_key', true );
+		$subscription_key = get_user_meta( $this->ID, 'rcp_pending_subscription_key', true );
+
+		if( empty( $subscription_id ) ) {
+
+			$subscription_key = get_user_meta( $this->ID, 'rcp_subscription_key', true );
+
+		}
 
 		return apply_filters( 'rcp_member_get_subscription_key', $subscription_key, $this->ID, $this );
 

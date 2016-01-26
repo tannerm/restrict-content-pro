@@ -342,29 +342,6 @@ function rcp_user_can_access( $user_id = 0, $post_id = 0 ) {
 	return $member->can_access( $post_id );
 }
 
-function rcp_calc_member_expiration( $expiration_object ) {
-
-	$member_expires = 'none';
-
-	if( $expiration_object->duration > 0 ) {
-
-		$current_time       = current_time( 'timestamp' );
-		$last_day           = cal_days_in_month( CAL_GREGORIAN, date( 'n', $current_time ), date( 'Y', $current_time ) );
-
-		$expiration_unit 	= $expiration_object->duration_unit;
-		$expiration_length 	= $expiration_object->duration;
-		$member_expires 	= date( 'Y-m-d H:i:s', strtotime( '+' . $expiration_length . ' ' . $expiration_unit . ' 23:59:59' ) );
-
-		if( date( 'j', $current_time ) == $last_day && 'day' != $expiration_unit ) {
-			$member_expires = date( 'Y-m-d H:i:s', strtotime( $member_expires . ' +2 days' ) );
-		}
-
-	}
-
-	return apply_filters( 'rcp_calc_member_expiration', $member_expires, $expiration_object );
-}
-
-
 /*
 * Gets the date of a user's expiration in a nice format
 * @param int $user_id - the ID of the user to return the subscription level of
@@ -1058,6 +1035,17 @@ function rcp_cancel_member_payment_profile( $member_id = 0 ) {
 
 		}
 
+	} elseif( rcp_is_2checkout_subscriber( $member_id ) ) {
+
+		$cancelled = rcp_2checkout_cancel_member( $member_id );
+
+		if( is_wp_error( $cancelled ) ) {
+
+			wp_die( $cancelled->get_error_message(), __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+		} else {
+			$success = true;
+		}
 	}
 
 	if( $success ) {
@@ -1179,13 +1167,17 @@ function rcp_can_member_cancel( $user_id = 0 ) {
 		$profile_id = $member->get_payment_profile_id();
 
 		// Check if the member is a Stripe customer
-		if( false !== strpos( $profile_id, 'cus_' ) ) {
+		if( rcp_is_stripe_subscriber( $user_id ) ) {
 
 			$ret = true;
 
 		} elseif ( rcp_is_paypal_subscriber( $user_id ) && rcp_has_paypal_api_access() ) {
 
 			$ret = true;
+
+		} elseif ( rcp_is_2checkout_subscriber( $user_id ) && defined( 'TWOCHECKOUT_ADMIN_USER' ) && defined( 'TWOCHECKOUT_ADMIN_PASSWORD' ) ) {
+
+				$ret = true;
 
 		}
 

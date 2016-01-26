@@ -216,7 +216,7 @@ add_action( 'rcp_set_status', 'rcp_email_on_expiration', 10, 2 );
  */
 function rcp_email_on_activation( $status, $user_id ) {
 
-	if( 'active' == $status ) {
+	if( 'active' == $status && get_user_meta( $user_id, '_rcp_new_subscription', true ) ) {
 
 		// send welcome email
 		rcp_email_subscription_status( $user_id, 'active' );

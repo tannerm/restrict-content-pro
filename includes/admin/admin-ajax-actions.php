@@ -56,7 +56,7 @@ function rcp_search_users() {
 			echo json_encode( array( 'results' => $user_list, 'id' => 'found' ) );
 
 		} else {
-			echo json_encode( array( 'msg' => __( 'No users found', 'rcp' ), 'results' => 'none', 'id' => 'fail' ) );
+			echo json_encode( array( 'msg' => '<ul><li>' . __( 'No users found', 'rcp' ) . '</li></ul>', 'results' => 'none', 'id' => 'fail' ) );
 		}
 
 	}

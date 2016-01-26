@@ -5,6 +5,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 	protected $member;
 	protected $level_id;
 	protected $level_id_2;
+	protected $level_id_3;
 
 	public function setUp() {
 		parent::setUp();
@@ -32,6 +33,14 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 			'name'          => 'Silver',
 			'duration'      => 1,
 			'duration_unit' => 'month',
+			'status'        => 'active',
+			'level'         => 3
+		) );
+
+		$this->level_id_3 = $levels->insert( array(
+			'name'          => 'Bronze',
+			'duration'      => 1,
+			'duration_unit' => 'day',
 			'status'        => 'active',
 			'level'         => 3
 		) );
@@ -108,6 +117,39 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 
 		$this->assertEquals( date_i18n( get_option( 'date_format' ), strtotime( '2025-01-01 00:00:00' ) ), $this->member->get_expiration_date() );
 		$this->assertEquals( '2025-01-01 00:00:00', $this->member->get_expiration_date( false) );
+
+	}
+
+	function test_calculate_expiration() {
+
+		// Test brand new member
+		update_user_meta( $this->member->ID, 'rcp_subscription_level', $this->level_id );
+		delete_user_meta( $this->member->ID, 'rcp_expiration' );
+
+		$expiration = $this->member->calculate_expiration();
+
+		$this->member->set_expiration_date( $expiration );
+		$this->assertEquals( $expiration, $this->member->get_expiration_date( false ) );
+		$this->assertEquals( date( 'Y-n-d', strtotime( '+1 month') ), date( 'Y-n-d', $this->member->get_expiration_time() ) );
+
+		// Now manually set expiration to last day of the month to force a date "walk".
+		// See https://github.com/pippinsplugins/restrict-content-pro/issues/239
+		
+		update_user_meta( $this->member->ID, 'rcp_expiration', date( 'Y-n-d 23:59:59', strtotime( 'October 31, 2018' ) ) );
+		
+		$this->member->set_status( 'active' );
+		
+		$expiration = $this->member->calculate_expiration();
+		$this->member->set_expiration_date( $expiration );
+		$this->assertEquals( '2018-12-01 23:59:59', date( 'Y-n-d H:i:s', $this->member->get_expiration_time() ) );
+
+		// Now test a one-day subscription
+		delete_user_meta( $this->member->ID, 'rcp_expiration' );
+		update_user_meta( $this->member->ID, 'rcp_subscription_level', $this->level_id_3 );
+
+		$expiration = $this->member->calculate_expiration();
+		$this->member->set_expiration_date( $expiration );
+		$this->assertEquals( date( 'Y-n-d 23:59:59', strtotime( '+1 day' ) ), date( 'Y-n-d H:i:s', $this->member->get_expiration_time() ) );
 
 	}
 

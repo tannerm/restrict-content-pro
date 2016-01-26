@@ -123,29 +123,17 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				} else {
 
 					$customer->card = $_POST['stripeToken'];
-	
+
 				}
 
 				// Add fees before the plan is updated and charged
 				if ( ! empty( $this->signup_fee ) ) {
 
 					if( $this->signup_fee > 0 ) {
-						$description = sprintf( __( 'Signup Fee for %s', 'rcp_stripe' ), $this->subscription_name );
-					} else {
-						$description = sprintf( __( 'Signup Discount for %s', 'rcp_stripe' ), $this->subscription_name );
+						$customer->account_balance = $customer->account_balance - ( $this->signup_fee * 100 ); // Add additional amount to initial payment (in cents)
+					} else if( $this->signup_fee < 0 ) {
+						$customer->account_balance = $customer->account_balance + ( $this->signup_fee * 100 ); // Add additional amount to initial payment (in cents)
 					}
-
-					\Stripe\InvoiceItem::create( apply_filters( 'rcp_stripe_invoice_item_create_args', array(
-						'customer'    => $customer->id,
-						'amount'      => $this->signup_fee * 100,
-						'currency'    => strtolower( $this->currency ),
-						'description' => $description
-					), $this, $customer ) );
-
-					// Create the invoice containing taxes / discounts / fees
-					$invoice = \Stripe\Invoice::create( apply_filters( 'rcp_stripe_invoice_create_args', array(
-						'customer' => $customer->id, // the customer to apply the fee to
-					), $this, $customer ) );
 
 				}
 
@@ -157,14 +145,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				// Save the card and any coupon
 				$customer->save();
-
-				// Process the invoice if there is one
-				if( ! empty( $invoice ) ) {
-
-					$invoice->pay();
-
-				}
-
 
 				// Update the customer's subscription in Stripe
 				$customer->updateSubscription( array( 'plan' => $plan_id ) );
@@ -288,7 +268,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				), $this ) );
 
 				$payment_data = array(
-					'date'              => date( 'Y-m-d g:i:s', time() ),
+					'date'              => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
 					'subscription'      => $this->subscription_name,
 					'payment_type' 		=> 'Credit Card One Time',
 					'subscription_key' 	=> $this->subscription_key,
@@ -407,11 +387,15 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			}
 
+			if( ! $this->auto_renew ) {
+				$member->set_expiration_date( $member->calculate_expiration() );
+			}
+
 			do_action( 'rcp_stripe_signup', $this->user_id, $this );
 
 		} else {
 
-			wp_die( __( 'An error occurred, please contact the site administrator: ', 'rcp_stripe' ) . get_bloginfo( 'admin_email' ), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+			wp_die( __( 'An error occurred, please contact the site administrator: ', 'rcp' ) . get_bloginfo( 'admin_email' ), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 		}
 
@@ -444,21 +428,21 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			try {
 
-				$event   = \Stripe\Event::retrieve( $event_id );
-				$invoice = $event->data->object;
+				$event         = \Stripe\Event::retrieve( $event_id );
+				$payment_event = $event->data->object;
 
-				if( empty( $invoice->customer ) ) {
+				if( empty( $payment_event->customer ) ) {
 					die( 'no customer attached' );
 				}
 
 				// retrieve the customer who made this payment (only for subscriptions)
-				$user    = rcp_get_member_id_from_profile_id( $invoice->customer );
+				$user = rcp_get_member_id_from_profile_id( $payment_event->customer );
 
 				if( empty( $user ) ) {
 
 					// Grab the customer ID from the old meta keys
 					global $wpdb;
-					$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = '_rcp_stripe_user_id' AND meta_value = %s LIMIT 1", $invoice->customer ) );
+					$user = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = '_rcp_stripe_user_id' AND meta_value = %s LIMIT 1", $payment_event->customer ) );
 
 				}
 
@@ -467,33 +451,60 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				}
 
 				$member = new RCP_Member( $user );
-				
+
 				// check to confirm this is a stripe subscriber
 				if ( $member ) {
 
-					// successful payment
-					if ( $event->type == 'charge.succeeded' ) {
+					if( ! $member->get_subscription_id() ) {
+						die( 'no subscription ID for member' );
+					}
 
-						if( ! $member->get_subscription_id() ) {
-							die( 'no subscription ID for member' );
-						}
+					if( $event->type == 'charge.succeeded' || $event->type == 'invoice.payment_succeeded' ) {
 
+						// setup payment data
 						$payment_data = array(
-							'date'              => date( 'Y-m-d g:i:s', $event->created ),
-							'subscription'      => $member->get_subscription_name(),
+							'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
 							'payment_type' 		=> 'Credit Card',
-							'subscription_key' 	=> $member->get_subscription_key(),
-							'amount' 			=> $invoice->amount / 100,
 							'user_id' 			=> $member->ID,
-							'transaction_id'    => $invoice->id
+							'amount'            => '',
+							'transaction_id'    => '',
 						);
 
-						if( ! rcp_check_for_existing_payment( $payment_data['payment_type'], $payment_data['date'], $payment_data['subscription_key'] ) ) {
+						if ( $event->type == 'charge.succeeded' ) {
+
+							// Successful one-time payment
+							if ( empty( $payment_event->invoice ) ) {
+
+								$payment_data['amount']         = $payment_event->amount / 100;
+								$payment_data['transaction_id'] = $payment_event->id;
+
+							// Successful subscription payment
+							} else {
+
+								$invoice = \Stripe\Invoice::retrieve( $payment_event->invoice );
+								$payment_data['amount']         = $invoice->amount_due / 100;
+								$payment_data['transaction_id'] = $payment_event->id;
+
+							}
+
+						// Successful subscription paid made with account credit where no charge is created
+						} elseif ( $event->type == 'invoice.payment_succeeded' && empty( $payment_event->charge ) ) {
+
+							$payment_data['amount']         = $payment_event->amount_due / 100;
+							$payment_data['transaction_id'] = $payment_event->id;
+
+						}
+
+						if( ! empty( $payment_data['transaction_id'] ) && ! $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
+
+							$member->renew( $member->is_recurring() );
+
+							// These must be retrieved after the status is set to active in order for upgrades to work properly
+							$payment_data['subscription']     = $member->get_subscription_name();
+							$payment_data['subscription_key'] = $member->get_subscription_key();
 
 							// record this payment if it hasn't been recorded yet
 							$rcp_payments->insert( $payment_data );
-
-							$member->renew( $member->is_recurring() );
 
 							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
 
@@ -525,7 +536,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					}
 
-					do_action( 'rcp_stripe_' . $event->type, $invoice );
+					do_action( 'rcp_stripe_' . $event->type, $payment_event );
 
 				}
 
@@ -538,7 +549,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			die( '1' );
 
 		}
-		
+
 		die( 'no event ID found' );
 
 	}

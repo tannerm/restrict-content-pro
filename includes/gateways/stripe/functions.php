@@ -399,6 +399,10 @@ function rcp_stripe_update_discount() {
 		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
 	}
 
+	if ( ! empty( $_REQUEST['deactivate_discount'] ) || ! empty( $_REQUEST['activate_discount'] ) ) {
+		return;
+	}
+
 	if ( isset( $rcp_options['sandbox'] ) ) {
 		$secret_key = trim( $rcp_options['stripe_test_secret'] );
 	} else {

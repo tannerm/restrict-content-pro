@@ -27,6 +27,7 @@ function rcp_process_registration() {
 
 		global $rcp_options, $user_ID;
 
+		$full_discount   = false;
 		$subscription_id = isset( $_POST['rcp_level'] ) ? absint( $_POST['rcp_level'] ) : false;
 		$discount        = isset( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : '';
 		$discount_valid  = false;
@@ -81,7 +82,7 @@ function rcp_process_registration() {
 
 			if( $discount_valid && $price > 0 ) {
 
-				if( ! $user_data['need_new'] && rcp_user_has_used_discount( $user_data['id'] , $discount ) && apply_filters( 'rcp_discounts_once_per_user', true ) ) {
+				if( ! $user_data['need_new'] && rcp_user_has_used_discount( $user_data['id'] , $discount ) && apply_filters( 'rcp_discounts_once_per_user', false ) ) {
 
 					$discount_valid = false;
 					rcp_errors()->add( 'discount_already_used', __( 'You can only use the discount code once', 'rcp' ), 'register' );
@@ -94,7 +95,11 @@ function rcp_process_registration() {
 
 					if( is_object( $discount_obj ) ) {
 						// calculate the after-discount price
-						$price = $discounts->calc_discounted_price( $base_price, $discount_obj->amount, $discount_obj->unit );
+						$discounted_price = $discounts->calc_discounted_price( $base_price, $discount_obj->amount, $discount_obj->unit );
+						if( 0 == $discounted_price ) {
+							$full_discount = true;
+						}
+
 					}
 
 				}
@@ -103,13 +108,8 @@ function rcp_process_registration() {
 
 		}
 
-		if( $price == 0 && isset( $_POST['rcp_auto_renew'] ) ) {
-			// since free subscriptions do not go through PayPal, they cannot be auto renewed
-			rcp_errors()->add( 'invalid_auto_renew', __( 'Free subscriptions cannot be automatically renewed', 'rcp' ), 'register' );
-		}
-
 		// Validate extra fields in gateways with the 2.1+ gateway API
-		if( ! has_action( 'rcp_gateway_' . $gateway ) && $price > 0 ) {
+		if( ! has_action( 'rcp_gateway_' . $gateway ) && $price > 0 && ! $full_discount ) {
 		
 			$gateways    = new RCP_Payment_Gateways;
 			$gateway_var = $gateways->get_gateway( $gateway );
@@ -133,17 +133,6 @@ function rcp_process_registration() {
 			return;
 		}
 
-		// deterime the expiration date of the user's subscription
-		if( $expiration->duration > 0 ) {
-
-			$member_expires = rcp_calc_member_expiration( $expiration );
-
-		} else {
-
-			$member_expires = 'none';
-
-		}
-
 		if( $user_data['need_new'] ) {
 
 			$user_data['id'] = wp_insert_user( array(
@@ -156,20 +145,56 @@ function rcp_process_registration() {
 					'user_registered'	=> date( 'Y-m-d H:i:s' )
 				)
 			);
+
 		}
 
+		// Setup the member object
+		$member = new RCP_Member( $user_data['id'] );
+
 		if( $user_data['id'] ) {
+
+			// Determine auto renew behavior
+			if( '3' == rcp_get_auto_renew_behavior() && isset( $_POST['rcp_auto_renew'] ) ) {
+
+				$auto_renew = true;
+
+			} elseif( '1' == rcp_get_auto_renew_behavior() ) {
+
+				$auto_renew = true;
+
+			} else {
+
+				$auto_renew = false;
+
+			}
+
+			update_user_meta( $user_data['id'], '_rcp_new_subscription', '1' );
+
+			$subscription_key = rcp_generate_subscription_key();
 
 			if( ! rcp_is_active( $user_data['id'] ) ) {
 
 				rcp_set_status( $user_data['id'], 'pending' );
+
+				update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
+				update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
+
+				// Ensure no pending level details are set
+				delete_user_meta( $user_data['id'], 'rcp_pending_subscription_level' );
+				delete_user_meta( $user_data['id'], 'rcp_pending_subscription_key' );
 	
+			} else {
+
+				// If the member is already active, we need to set these as pending changes
+				update_user_meta( $user_data['id'], 'rcp_pending_subscription_level', $subscription_id );
+				update_user_meta( $user_data['id'], 'rcp_pending_subscription_key', $subscription_key );
+
 			}
 
-			// setup a unique key for this subscription
-			$subscription_key = rcp_generate_subscription_key();
-			update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
-			update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
+			// Calculate the expiration date for the member
+			$member_expires = $member->calculate_expiration( $auto_renew );
+
+			update_user_meta( $user_data['id'], 'rcp_pending_expiration_date', $member_expires );
 
 			// Set the user's role
 			$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
@@ -190,29 +215,12 @@ function rcp_process_registration() {
 					$discounts->increase_uses( $discount_obj->id );
 
 					// if the discount is 100%, log the user in and redirect to success page
-					if( $price == '0' ) {
-						rcp_set_status( $user_data['id'], 'active' );
-						rcp_email_subscription_status( $user_data['id'], 'active' );
+					if( $full_discount ) {
 						rcp_set_expiration_date( $user_data['id'], $member_expires );
+						rcp_set_status( $user_data['id'], 'active' );
 						rcp_login_user_in( $user_data['id'], $user_data['login'] );
 						wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 					}
-
-				}
-
-				// Determine auto renew behavior
-				if( '3' == rcp_get_auto_renew_behavior() && isset( $_POST['rcp_auto_renew'] ) ) {
-
-					$auto_renew = true;
-
-				} elseif( '1' == rcp_get_auto_renew_behavior() ) {
-
-					$auto_renew = true;
-
-				} else {
-
-					$auto_renew = false;
-					rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 				}
 
@@ -225,8 +233,8 @@ function rcp_process_registration() {
 				$redirect = rcp_get_return_url( $user_data['id'] );
 
 				$subscription_data = array(
-					'price'             => $price,
-					'discount'          => $base_price - $price,
+					'price'             => ! empty( $discounted_price ) ? $discounted_price : $price,
+					'discount'          => ! empty( $discounted_price ) ? $base_price - $discounted_price : 0,
 					'discount_code'     => $discount,
 					'fee' 			    => ! empty( $subscription->fee ) ? number_format( $subscription->fee, 2 ) : 0,
 					'length' 			=> $expiration->duration,
@@ -251,16 +259,17 @@ function rcp_process_registration() {
 			} else {
 
 				// This is a free user registration or trial
+				rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 				// if the subscription is a free trial, we need to record it in the user meta
 				if( $member_expires != 'none' ) {
 
+					// activate the user's trial subscription
+					rcp_set_status( $user_data['id'], 'active' );
+
 					// this is so that users can only sign up for one trial
 					update_user_meta( $user_data['id'], 'rcp_has_trialed', 'yes' );
 					update_user_meta( $user_data['id'], 'rcp_is_trialing', 'yes' );
-
-					// activate the user's trial subscription
-					rcp_set_status( $user_data['id'], 'active' );
 					rcp_email_subscription_status( $user_data['id'], 'trial' );
 
 				} else {
@@ -270,8 +279,6 @@ function rcp_process_registration() {
 					rcp_email_subscription_status( $user_data['id'], 'free' );
 
 				}
-
-				rcp_set_expiration_date( $user_data['id'], $member_expires );
 
 				if( $user_data['need_new'] ) {
 
@@ -443,3 +450,52 @@ function rcp_get_auto_renew_behavior() {
 	return apply_filters( 'rcp_auto_renew_behavior', $behavior );
 }
 
+/**
+ * When new subscriptions are registered, a flag is set
+ *
+ * This removes the flag as late as possible so other systems can hook into
+ * rcp_set_status and perform actions on new subscriptions
+ *
+ * @access      public
+ * @since       2.3.6
+ * @return      void
+ */
+function rcp_remove_new_subscription_flag( $status, $user_id ) {
+
+	if( 'active' !== $status ) {
+		return;
+	}
+
+	delete_user_meta( $user_id, '_rcp_new_subscription' );
+}
+add_action( 'rcp_set_status', 'rcp_remove_new_subscription_flag', 999999999999, 2 );
+
+/**
+ * When upgrading subscriptions, the new level / key are stored as pending. Once payment is received, the pending
+ * values are set as the permanent values.
+ *
+ * See https://github.com/pippinsplugins/restrict-content-pro/issues/294
+ *
+ * @access      public
+ * @since       2.4.3
+ * @return      void
+ */
+function rcp_set_pending_subscription_on_upgrade( $status, $user_id ) {
+
+	if( 'active' !== $status ) {
+		return;
+	}
+
+	$subscription_id  = get_user_meta( $user_id, 'rcp_pending_subscription_level', true );
+	$subscription_key = get_user_meta( $user_id, 'rcp_pending_subscription_key', true );
+
+	if( ! empty( $subscription_id ) && ! empty( $subscription_key ) ) {
+
+		update_user_meta( $user_id, 'rcp_subscription_level', $subscription_id );
+		update_user_meta( $user_id, 'rcp_subscription_key', $subscription_key );
+
+		delete_user_meta( $user_id, 'rcp_pending_subscription_level' );
+		delete_user_meta( $user_id, 'rcp_pending_subscription_key' );
+	}
+}
+add_action( 'rcp_set_status', 'rcp_set_pending_subscription_on_upgrade', 10, 2 );
