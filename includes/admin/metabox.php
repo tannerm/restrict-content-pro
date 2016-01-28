@@ -68,7 +68,7 @@ function rcp_get_metabox_fields() {
 function rcp_add_meta_boxes() {
     $rcp_meta_box = rcp_get_metabox_fields();
 	$post_types   = get_post_types( array( 'public' => true, 'show_ui' => true ), 'objects' );
-	$exclude      = apply_filters( 'rcp_metabox_excluded_post_types', array( 'forum', 'topic', 'reply', 'product' ) );
+	$exclude      = apply_filters( 'rcp_metabox_excluded_post_types', array( 'forum', 'topic', 'reply', 'product', 'attachment' ) );
 
 	foreach ( $post_types as $page )	{
 		if( !in_array( $page->name, $exclude ) )
@@ -132,9 +132,9 @@ function rcp_render_meta_box() {
 			echo '<td class="rcp_meta_box_desc">', $field['desc'], '</td>';
         echo '</tr>';
     }
-    
+
     do_action( 'rcp_metabox_fields_after' );
-    
+
     echo '<tr><td colspan="3"><strong>' . __( 'Note 1', 'rcp' ) . '</strong>: ' . __( 'To hide this content from logged-out users, but allow free and paid, set the User Level to "Subscriber".', 'rcp' ) . '</td></tr>';
 	echo '<tr><td colspan="3"><strong>' . __( 'Note 2', 'rcp' ) . '</strong>: ' . __( 'Access level, subscription level, and user level can all be combined to require the user meet all three specifications.', 'rcp' ) . '</td></tr>';
 
