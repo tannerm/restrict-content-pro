@@ -287,6 +287,14 @@ class RCP_Discounts {
 
 		$args = wp_parse_args( $args, $defaults );
 
+		$amount = $this->format_amount( $args['amount'], $args['unit'] );
+
+		if ( is_wp_error( $amount ) ) {
+			wp_die( $amount->get_error_message() );
+		} else {
+			$args['amount'] = $amount;
+		}
+
 		if( $this->get_by( 'code', $args['code'] ) ) {
 			return false; // this code already exists
 		}
@@ -341,6 +349,14 @@ class RCP_Discounts {
 		$discount = get_object_vars( $discount );
 
 		$args     = array_merge( $discount, $args );
+
+		$amount = $this->format_amount( $args['amount'], $args['unit'] );
+
+		if ( is_wp_error( $amount ) ) {
+			wp_die( $amount->get_error_message() );
+		} else {
+			$args['amount'] = $amount;
+		}
 
 		do_action( 'rcp_pre_edit_discount', absint( $discount_id ), $args );
 
@@ -528,5 +544,33 @@ class RCP_Discounts {
 		return number_format( (float) $discounted_price, 2 );
 
 	}
+
+
+	/**
+	 * Sanitizes the discount amount
+	 *
+	 * @access public
+	 * @since 2.4.9
+	 * @param $amount The discount amount
+	 * @param $type string The discount type
+	 * @return mixed array|WP_Error
+	 */
+	public function format_amount( $amount, $type ) {
+
+		if ( empty( $amount ) || ! is_numeric( $amount ) ) {
+			return new WP_Error( 'amount_missing', __( 'Please enter a discount amount containing numbers only.', 'rcp' ) );
+		}
+
+		if ( ! isset( $type ) || ! in_array( $type, array( '%', 'flat' ) ) ) {
+			$type = 'flat';
+		}
+
+		if ( '%' === $type && ! filter_var( $amount, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1, 'max_range' => 100 ) ) ) ) {
+			return new WP_Error( 'invalid_percent', __( 'Percentage discounts must be whole numbers between 1 and 100.', 'rcp' ) );
+		}
+
+		return filter_input( INPUT_POST, 'amount', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION  );
+	}
+
 
 }
