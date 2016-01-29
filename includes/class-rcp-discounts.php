@@ -290,7 +290,7 @@ class RCP_Discounts {
 		$amount = $this->format_amount( $args['amount'], $args['unit'] );
 
 		if ( is_wp_error( $amount ) ) {
-			wp_die( $amount->get_error_message() );
+			return $amount;
 		} else {
 			$args['amount'] = $amount;
 		}
@@ -353,7 +353,7 @@ class RCP_Discounts {
 		$amount = $this->format_amount( $args['amount'], $args['unit'] );
 
 		if ( is_wp_error( $amount ) ) {
-			wp_die( $amount->get_error_message() );
+			return $amount;
 		} else {
 			$args['amount'] = $amount;
 		}

@@ -270,6 +270,10 @@ function rcp_process_data() {
 
 			$add = $discounts->insert( $data );
 
+			if ( is_wp_error( $add ) ) {
+				wp_die( $add );
+			}
+
 			if( $add ) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&rcp_message=discount_added';
 			} else {
@@ -302,6 +306,10 @@ function rcp_process_data() {
 			);
 
 			$update = $discounts->update( $_POST['discount_id'], $data );
+
+			if ( is_wp_error( $update ) ) {
+				wp_die( $update );
+			}
 
 			if( $update ) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-updated=1';
