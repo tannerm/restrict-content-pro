@@ -129,7 +129,7 @@ class RCP_Member extends WP_User {
 	public function set_expiration_date( $new_date = '' ) {
 
 		$ret      = false;
-		$old_date = $this->get_expiration_date( false );
+		$old_date = get_user_meta( $this->ID, 'rcp_expiration', true ); // This calls user meta directly to avoid retrieving the pending date
 
 		if( $old_date !== $new_date ) {
 
