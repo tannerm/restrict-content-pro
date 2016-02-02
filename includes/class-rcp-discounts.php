@@ -569,7 +569,7 @@ class RCP_Discounts {
 			return new WP_Error( 'invalid_percent', __( 'Percentage discounts must be whole numbers between 1 and 100.', 'rcp' ) );
 		}
 
-		return filter_input( INPUT_POST, 'amount', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION  );
+		return filter_var( $amount, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION  );
 	}
 
 

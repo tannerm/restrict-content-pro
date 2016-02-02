@@ -23,6 +23,19 @@ class RCP_Discount_Tests extends WP_UnitTestCase {
 
 	}
 
+	function test_format_amount() {
+		$formatted_amount = $this->db->format_amount( '10', '%' );
+		$this->assertEquals( '10', $formatted_amount );
+	}
+
+	function test_format_amount_decimal() {
+		$formatted_amount = $this->db->format_amount( '10.25', '%' );
+		$this->assertTrue( is_wp_error( $formatted_amount ) );
+
+		$formatted_amount = $this->db->format_amount( '10.25', 'flat' );
+		$this->assertEquals( '10.25', $formatted_amount );
+	}
+
 	function test_has_discounts() {
 		$this->assertTrue( rcp_has_discounts() );
 	}
@@ -33,7 +46,7 @@ class RCP_Discount_Tests extends WP_UnitTestCase {
 			'name'   => 'Test Code 2',
 			'code'   => 'test2',
 			'status' => 'active',
-			'amount' => '10'
+			'amount' => '10',
 		);
 		$discount_id = $this->db->insert( $args );
 
@@ -45,6 +58,7 @@ class RCP_Discount_Tests extends WP_UnitTestCase {
 
 		$updated = $this->db->update( $this->discount_id, array( 'name' => 'Updated Code', 'amount' => '10' ) );
 		$this->assertTrue( $updated );
+
 		$discount = $this->db->get_discount( $this->discount_id );
 		$this->assertEquals( 'Updated Code', $discount->name );
 
