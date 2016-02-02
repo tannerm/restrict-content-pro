@@ -43,7 +43,7 @@ class RCP_Discount_Tests extends WP_UnitTestCase {
 
 	function test_update_discount() {
 
-		$updated = $this->db->update( $this->discount_id, array( 'name' => 'Updated Code' ) );
+		$updated = $this->db->update( $this->discount_id, array( 'name' => 'Updated Code', 'amount' => '10' ) );
 		$this->assertTrue( $updated );
 		$discount = $this->db->get_discount( $this->discount_id );
 		$this->assertEquals( 'Updated Code', $discount->name );
@@ -136,7 +136,7 @@ class RCP_Discount_Tests extends WP_UnitTestCase {
 	function test_user_has_used() {
 
 		$this->assertFalse( $this->db->user_has_used( 1, 'test' ) );
-		
+
 		$this->db->add_to_user( 1, 'test' );
 
 		$this->assertTrue( $this->db->user_has_used( 1, 'test' ) );
