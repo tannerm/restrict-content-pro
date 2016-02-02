@@ -96,6 +96,8 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		if( is_wp_error( $request ) ) {
 
+			do_action( 'rcp_paypal_pro_signup_payment_failed', $request, $this );
+
 			$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
 			$error .= '<p>' . $request->get_error_message() . '</p>';
 
@@ -106,6 +108,8 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			parse_str( $request['body'], $data );
 
 			if( 'failure' === strtolower( $data['ACK'] ) ) {
+
+				do_action( 'rcp_paypal_pro_signup_payment_failed', $request, $this );
 
 				$error = '<p>' . __( 'PayPal subscription creation failed.', 'rcp' ) . '</p>';
 				$error .= '<p>' . __( 'Error message:', 'rcp' ) . ' ' . $data['L_LONGMESSAGE0'] . '</p>';

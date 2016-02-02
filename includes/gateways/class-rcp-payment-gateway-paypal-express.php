@@ -107,6 +107,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		if( is_wp_error( $request ) ) {
 
+			do_action( 'rcp_paypal_express_signup_payment_failed', $request, $this );
+
 			$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
 			$error .= '<p>' . $request->get_error_message() . '</p>';
 
