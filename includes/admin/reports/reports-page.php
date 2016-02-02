@@ -66,7 +66,7 @@ function rcp_earnings_graph() {
 			$day_by_day 	= false;
 			break;
 		case 'other' :
-			if( ( $dates['m_end'] - $dates['m_start'] ) >= 2 ) {
+			if( $dates['m_end'] - $dates['m_start'] >= 2 || $dates['year_end'] > $dates['year'] ) {
 				$time_format	= '%b';
 				$tick_size		= 'month';
 				$day_by_day 	= false;
@@ -83,6 +83,7 @@ function rcp_earnings_graph() {
 			break;
 	endswitch;
 
+
 	$time_format 	= apply_filters( 'rcp_graph_timeformat', $time_format );
 	$tick_size 		= apply_filters( 'rcp_graph_ticksize', $tick_size );
 	$earnings 		= (float) 0.00; // Total earnings for time period shown
@@ -97,31 +98,31 @@ function rcp_earnings_graph() {
 	ob_start(); ?>
 	<script type="text/javascript">
 	   jQuery( document ).ready( function($) {
-	   		$.plot(
-	   			$("#rcp_earnings_graph"),
-	   			[{
-   					data: [
-	   					<?php
+			$.plot(
+				$("#rcp_earnings_graph"),
+				[{
+					data: [
+						<?php
 
-	   					if( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
+						if( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
 
 							//Day by day
 							$day     = $dates['day'];
 							$day_end = $dates['day_end'];
-	   						$month   = $dates['m_start'];
+							$month   = $dates['m_start'];
 
 							while ( $day <= $day_end ) :
 
-		   						$args = array(
-		   							'date' => array(
-		   								'day'   => $day,
-		   								'month' => $month,
-		   								'year'  => $dates['year']
-		   							),
-		   							'fields' => 'amount'
-		   						);
+								$args = array(
+									'date' => array(
+										'day'   => $day,
+										'month' => $month,
+										'year'  => $dates['year']
+									),
+									'fields' => 'amount'
+								);
 
-		   						$args['date'] = array( 'day' => $day, 'month' => $month, 'year' => $dates['year'] );
+								$args['date'] = array( 'day' => $day, 'month' => $month, 'year' => $dates['year'] );
 
 								$payments = $payments_db->get_earnings( $args );
 								$earnings += $payments;
@@ -142,6 +143,9 @@ function rcp_earnings_graph() {
 								} elseif( $y == $dates['year'] ) {
 									$month_start = $dates['m_start'];
 									$month_end   = 12;
+								} elseif ( $y == $dates['year_end'] ) {
+									$month_start = 1;
+									$month_end   = $dates['m_end'];
 								} else {
 									$month_start = 1;
 									$month_end   = 12;
@@ -177,21 +181,21 @@ function rcp_earnings_graph() {
 								$y++;
 							endwhile;
 
-	   					}
+						}
 
-	   					?>,
-	   				],
-	   				yaxis: 2,
-   					label: "<?php _e( 'Earnings', 'rcp' ); ?>",
-   					id: 'sales'
-   				}],
-	   		{
-               	series: {
-                   lines: { show: true },
-                   points: { show: true }
-            	},
-            	grid: {
-           			show: true,
+						?>,
+					],
+					yaxis: 2,
+					label: "<?php _e( 'Earnings', 'rcp' ); ?>",
+					id: 'sales'
+				}],
+			{
+				series: {
+				   lines: { show: true },
+				   points: { show: true }
+				},
+				grid: {
+					show: true,
 					aboveData: false,
 					color: '#ccc',
 					backgroundColor: '#fff',
@@ -199,54 +203,54 @@ function rcp_earnings_graph() {
 					borderColor: '#ccc',
 					clickable: false,
 					hoverable: true
-           		},
-            	xaxis: {
-	   				mode: "time",
-	   				timeFormat: "<?php echo $time_format; ?>",
-	   				minTickSize: [1, "<?php echo $tick_size; ?>"]
-   				},
-   				yaxis: {
-   					min: 0,
-   					minTickSize: 1,
-   					tickDecimals: 0
-   				}
+				},
+				xaxis: {
+					mode: "time",
+					timeFormat: "<?php echo $time_format; ?>",
+					minTickSize: [1, "<?php echo $tick_size; ?>"]
+				},
+				yaxis: {
+					min: 0,
+					minTickSize: 1,
+					tickDecimals: 0
+				}
 
-            });
+			});
 
 			function rcp_flot_tooltip(x, y, contents) {
-		        $('<div id="rcp-flot-tooltip">' + contents + '</div>').css( {
-		            position: 'absolute',
-		            display: 'none',
-		            top: y + 5,
-		            left: x + 5,
-		            border: '1px solid #fdd',
-		            padding: '2px',
-		            'background-color': '#fee',
-		            opacity: 0.80
-		        }).appendTo("body").fadeIn(200);
-		    }
+				$('<div id="rcp-flot-tooltip">' + contents + '</div>').css( {
+					position: 'absolute',
+					display: 'none',
+					top: y + 5,
+					left: x + 5,
+					border: '1px solid #fdd',
+					padding: '2px',
+					'background-color': '#fee',
+					opacity: 0.80
+				}).appendTo("body").fadeIn(200);
+			}
 
-		    var previousPoint = null;
-		    $("#rcp_earnings_graph").bind("plothover", function (event, pos, item) {
-	            if (item) {
-	                if (previousPoint != item.dataIndex) {
-	                    previousPoint = item.dataIndex;
-	                    $("#rcp-flot-tooltip").remove();
-	                    var x = item.datapoint[0].toFixed(2),
-                        y = item.datapoint[1].toFixed(2);
-                    	if( rcp_vars.currency_pos == 'before' ) {
+			var previousPoint = null;
+			$("#rcp_earnings_graph").bind("plothover", function (event, pos, item) {
+				if (item) {
+					if (previousPoint != item.dataIndex) {
+						previousPoint = item.dataIndex;
+						$("#rcp-flot-tooltip").remove();
+						var x = item.datapoint[0].toFixed(2),
+						y = item.datapoint[1].toFixed(2);
+						if( rcp_vars.currency_pos == 'before' ) {
 							rcp_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + rcp_vars.currency_sign + y );
-                    	} else {
+						} else {
 							rcp_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y + rcp_vars.currency_sign );
-                    	}
-	                }
-	            } else {
-	                $("#rcp-flot-tooltip").remove();
-	                previousPoint = null;
-	            }
-		    });
+						}
+					}
+				} else {
+					$("#rcp-flot-tooltip").remove();
+					previousPoint = null;
+				}
+			});
 	   });
-    </script>
+	</script>
 	<h2><?php _e( 'Earnings Report', 'rcp' ); ?></h2>
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
@@ -302,7 +306,7 @@ function rcp_signups_graph() {
 			$day_by_day 	= false;
 			break;
 		case 'other' :
-			if( ( $dates['m_end'] - $dates['m_start'] ) >= 2 ) {
+			if( $dates['m_end'] - $dates['m_start'] >= 2 || $dates['year_end'] > $dates['year'] ) {
 				$time_format	= '%b';
 				$tick_size		= 'month';
 				$day_by_day 	= false;
@@ -328,31 +332,31 @@ function rcp_signups_graph() {
 	ob_start(); ?>
 	<script type="text/javascript">
 	   jQuery( document ).ready( function($) {
-	   		$.plot(
-	   			$("#rcp_signups_graph"),
-	   			[{
-   					data: [
-	   					<?php
+			$.plot(
+				$("#rcp_signups_graph"),
+				[{
+					data: [
+						<?php
 
-	   					if( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
+						if( $dates['range'] == 'this_week' || $dates['range'] == 'last_week'  ) {
 
 							//Day by day
 							$day     = $dates['day'];
 							$day_end = $dates['day_end'];
-	   						$month   = $dates['m_start'];
+							$month   = $dates['m_start'];
 
 							while ( $day <= $day_end ) :
 
-		   						$args = array(
-		   							'date' => array(
-		   								'day'   => $day,
-		   								'month' => $month,
-		   								'year'  => $dates['year']
-		   							),
-		   							'fields' => 'amount'
-		   						);
+								$args = array(
+									'date' => array(
+										'day'   => $day,
+										'month' => $month,
+										'year'  => $dates['year']
+									),
+									'fields' => 'amount'
+								);
 
-		   						$users = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(ID) FROM $wpdb->users WHERE (%d = MONTH ( user_registered ) AND %d = YEAR ( user_registered ) AND %d = DAY ( user_registered ))", $month, $dates['year'], $day ) );
+								$users = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(ID) FROM $wpdb->users WHERE (%d = MONTH ( user_registered ) AND %d = YEAR ( user_registered ) AND %d = DAY ( user_registered ))", $month, $dates['year'], $day ) );
 								$signups += $users;
 								$date = mktime( 0, 0, 0, $month, $day, $dates['year'] ); ?>
 								[<?php echo $date * 1000; ?>, <?php echo $users; ?>],
@@ -371,6 +375,9 @@ function rcp_signups_graph() {
 								} elseif( $y == $dates['year'] ) {
 									$month_start = $dates['m_start'];
 									$month_end   = 12;
+								} elseif ( $y == $dates['year_end'] ) {
+									$month_start = 1;
+									$month_end   = $dates['m_end'];
 								} else {
 									$month_start = 1;
 									$month_end   = 12;
@@ -402,21 +409,21 @@ function rcp_signups_graph() {
 
 								$y++;
 							endwhile;
-	   					}
+						}
 
-	   					?>,
-	   				],
-	   				yaxis: 2,
-   					label: "<?php _e( 'Signups', 'rcp' ); ?>",
-   					id: 'sales'
-   				}],
-	   		{
-               	series: {
-                   lines: { show: true },
-                   points: { show: true }
-            	},
-            	grid: {
-           			show: true,
+						?>,
+					],
+					yaxis: 2,
+					label: "<?php _e( 'Signups', 'rcp' ); ?>",
+					id: 'sales'
+				}],
+			{
+				series: {
+				   lines: { show: true },
+				   points: { show: true }
+				},
+				grid: {
+					show: true,
 					aboveData: false,
 					color: '#ccc',
 					backgroundColor: '#fff',
@@ -424,50 +431,50 @@ function rcp_signups_graph() {
 					borderColor: '#ccc',
 					clickable: false,
 					hoverable: true
-           		},
-            	xaxis: {
-	   				mode: "time",
-	   				timeFormat: "<?php echo $time_format; ?>",
-	   				minTickSize: [1, "<?php echo $tick_size; ?>"]
-   				},
-   				yaxis: [
-   					{ min: 0, tickSize: 1, tickDecimals: 2 },
-   					{ min: 0, tickDecimals: 0 }
-   				]
+				},
+				xaxis: {
+					mode: "time",
+					timeFormat: "<?php echo $time_format; ?>",
+					minTickSize: [1, "<?php echo $tick_size; ?>"]
+				},
+				yaxis: [
+					{ min: 0, tickSize: 1, tickDecimals: 2 },
+					{ min: 0, tickDecimals: 0 }
+				]
 
-            });
+			});
 
 			function rcp_flot_tooltip(x, y, contents) {
-		        $('<div id="rcp-flot-tooltip">' + contents + '</div>').css( {
-		            position: 'absolute',
-		            display: 'none',
-		            top: y + 5,
-		            left: x + 5,
-		            border: '1px solid #fdd',
-		            padding: '2px',
-		            'background-color': '#fee',
-		            opacity: 0.80
-		        }).appendTo("body").fadeIn(200);
-		    }
+				$('<div id="rcp-flot-tooltip">' + contents + '</div>').css( {
+					position: 'absolute',
+					display: 'none',
+					top: y + 5,
+					left: x + 5,
+					border: '1px solid #fdd',
+					padding: '2px',
+					'background-color': '#fee',
+					opacity: 0.80
+				}).appendTo("body").fadeIn(200);
+			}
 
-		    var previousPoint = null;
-		    $("#rcp_signups_graph").bind("plothover", function (event, pos, item) {
-	            if (item) {
-	                if (previousPoint != item.dataIndex) {
-	                    previousPoint = item.dataIndex;
-	                    $("#rcp-flot-tooltip").remove();
-	                    var x = item.datapoint[0].toFixed(2),
-	                        y = item.datapoint[1].toFixed(2);
-		                rcp_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y.replace( '.00', '' ) );
-	                }
-	            } else {
-	                $("#rcp-flot-tooltip").remove();
-	                previousPoint = null;
-	            }
-		    });
+			var previousPoint = null;
+			$("#rcp_signups_graph").bind("plothover", function (event, pos, item) {
+				if (item) {
+					if (previousPoint != item.dataIndex) {
+						previousPoint = item.dataIndex;
+						$("#rcp-flot-tooltip").remove();
+						var x = item.datapoint[0].toFixed(2),
+							y = item.datapoint[1].toFixed(2);
+						rcp_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y.replace( '.00', '' ) );
+					}
+				} else {
+					$("#rcp-flot-tooltip").remove();
+					previousPoint = null;
+				}
+			});
 
 	   });
-    </script>
+	</script>
 	<h2><?php _e( 'Signups Report', 'rcp' ); ?></h2>
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
@@ -511,40 +518,40 @@ function rcp_reports_graph_controls() {
 		<div class="tablenav top">
 			<div class="alignleft actions">
 
-		       	<input type="hidden" name="page" value="rcp-reports"/>
+				<input type="hidden" name="page" value="rcp-reports"/>
 
-		       	<select id="rcp-graphs-date-options" name="range">
-		       		<?php
-		       		foreach ( $date_options as $key => $option ) {
-		       			echo '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $dates['range'] ) . '>' . esc_html( $option ) . '</option>';
-		       		}
-		       		?>
-		       	</select>
+				<select id="rcp-graphs-date-options" name="range">
+					<?php
+					foreach ( $date_options as $key => $option ) {
+						echo '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $dates['range'] ) . '>' . esc_html( $option ) . '</option>';
+					}
+					?>
+				</select>
 
-		       	<div id="rcp-date-range-options" <?php echo $display; ?>>
+				<div id="rcp-date-range-options" <?php echo $display; ?>>
 					<span><?php _e( 'From', 'rcp' ); ?>&nbsp;</span>
-			       	<select id="rcp-graphs-month-start" name="m_start">
-			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo rcp_get_month_name( $i ); ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			       	<select id="rcp-graphs-year" name="year">
-			       		<?php for ( $i = 2007; $i <= $dates['year_end']; $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			       	<span><?php _e( 'To', 'rcp' ); ?>&nbsp;</span>
-			       	<select id="rcp-graphs-month-start" name="m_end">
-			       		<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo rcp_get_month_name( $i ); ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			       	<select id="rcp-graphs-year" name="year_end">
-			       		<?php for ( $i = 2007; $i <= $dates['year_end']; $i++ ) : ?>
-			       			<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year_end'] ); ?>><?php echo $i; ?></option>
-				       	<?php endfor; ?>
-			       	</select>
-			    </div>
+					<select id="rcp-graphs-month-start" name="m_start">
+						<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_start'] ); ?>><?php echo rcp_get_month_name( $i ); ?></option>
+						<?php endfor; ?>
+					</select>
+					<select id="rcp-graphs-year" name="year">
+						<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year'] ); ?>><?php echo $i; ?></option>
+						<?php endfor; ?>
+					</select>
+					<span><?php _e( 'To', 'rcp' ); ?>&nbsp;</span>
+					<select id="rcp-graphs-month-start" name="m_end">
+						<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['m_end'] ); ?>><?php echo rcp_get_month_name( $i ); ?></option>
+						<?php endfor; ?>
+					</select>
+					<select id="rcp-graphs-year" name="year_end">
+						<?php for ( $i = 2007; $i <= date( 'Y' ); $i++ ) : ?>
+							<option value="<?php echo absint( $i ); ?>" <?php selected( $i, $dates['year_end'] ); ?>><?php echo $i; ?></option>
+						<?php endfor; ?>
+					</select>
+				</div>
 
 				<?php if( 'earnings' == $active_tab ) : $levels = rcp_get_subscription_levels(); ?>
 					<select id="rcp-graphs-subscriptions" name="subscription">
@@ -555,9 +562,9 @@ function rcp_reports_graph_controls() {
 					</select>
 				<?php endif; ?>
 
-			    <input type="hidden" name="rcp_action" value="" />
-			    <input type="hidden" name="tab" value="<?php echo $active_tab ?>" />
-		       	<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'rcp' ); ?>"/>
+				<input type="hidden" name="rcp_action" value="" />
+				<input type="hidden" name="tab" value="<?php echo $active_tab ?>" />
+				<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'rcp' ); ?>"/>
 			</div>
 		</div>
 	</form>
@@ -604,34 +611,34 @@ function rcp_get_report_dates() {
 
 		case 'last_month' :
 			if( date( 'n' ) == 1 ) {
-				$dates['m_start'] = 12;
-				$dates['m_end']	  = 12;
-				$dates['year']    = date( 'Y', $current_time ) - 1;
-				$dates['year_end']= date( 'Y', $current_time ) - 1;
+				$dates['m_start']  = 12;
+				$dates['m_end']    = 12;
+				$dates['year']     = date( 'Y', $current_time ) - 1;
+				$dates['year_end'] = date( 'Y', $current_time ) - 1;
 			} else {
-				$dates['m_start'] = date( 'n' ) - 1;
-				$dates['m_end']	  = date( 'n' ) - 1;
-				$dates['year_end']= $dates['year'];
+				$dates['m_start']  = date( 'n' ) - 1;
+				$dates['m_end']    = date( 'n' ) - 1;
+				$dates['year_end'] = $dates['year'];
 			}
 			$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
 		break;
 
 		case 'today' :
-			$dates['day']		= date( 'd', $current_time );
-			$dates['m_start'] 	= date( 'n', $current_time );
-			$dates['m_end']		= date( 'n', $current_time );
-			$dates['year']		= date( 'Y', $current_time );
+			$dates['day']     = date( 'd', $current_time );
+			$dates['m_start'] = date( 'n', $current_time );
+			$dates['m_end']   = date( 'n', $current_time );
+			$dates['year']    = date( 'Y', $current_time );
 		break;
 
 		case 'yesterday' :
 
-			$year               = date( 'Y', $current_time );
-			$month              = date( 'n', $current_time );
-			$day                = date( 'd', $current_time );
+			$year  = date( 'Y', $current_time );
+			$month = date( 'n', $current_time );
+			$day   = date( 'd', $current_time );
 
 			if ( $month == 1 && $day == 1 ) {
 
-				$year -= 1;
+				$year  -= 1;
 				$month = 12;
 				$day   = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 
@@ -650,35 +657,21 @@ function rcp_get_report_dates() {
 			$dates['m_start']   = $month;
 			$dates['m_end']     = $month;
 			$dates['year']      = $year;
-			$dates['year_end']      = $year;
+			$dates['year_end']  = $year;
 		break;
 
 		case 'this_week' :
-			$dates['day']       = date( 'd', $current_time - ( date( 'w', $current_time ) - 1 ) *60*60*24 ) - 1;
-			$dates['day']      += get_option( 'start_of_week' );
-			$dates['day_end']   = $dates['day'] + 6;
-			$dates['m_start'] 	= date( 'n', $current_time );
-			$dates['m_end']		= date( 'n', $current_time );
-			$dates['year']		= date( 'Y', $current_time );
-		break;
-
 		case 'last_week' :
-			$dates['day']       = date( 'd', $current_time - ( date( 'w' ) - 1 ) *60*60*24 ) - 8;
-			$dates['day']      += get_option( 'start_of_week' );
-			$dates['day_end']   = $dates['day'] + 6;
-			$dates['year']		= date( 'Y' );
+			$base_time = $dates['range'] === 'this_week' ? current_time( 'mysql' ) : date( 'Y-n-d h:i:s', current_time( 'timestamp' ) - WEEK_IN_SECONDS );
+			$start_end = get_weekstartend( $base_time, get_option( 'start_of_week' ) );
 
-			if( date( 'j', $current_time ) <= 7 ) {
-				$dates['m_start'] 	= date( 'n', $current_time ) - 1;
-				$dates['m_end']		= date( 'n', $current_time ) - 1;
-				if( $dates['m_start'] <= 1 ) {
-					$dates['year'] = date( 'Y', $current_time ) - 1;
-					$dates['year_end'] = date( 'Y', $current_time ) - 1;
-				}
-			} else {
-				$dates['m_start'] 	= date( 'n', $current_time );
-				$dates['m_end']		= date( 'n', $current_time );
-			}
+			$dates['day']      = date( 'd', $start_end['start'] );
+			$dates['m_start']  = date( 'n', $start_end['start'] );
+			$dates['year']     = date( 'Y', $start_end['start'] );
+
+			$dates['day_end']  = date( 'd', $start_end['end'] );
+			$dates['m_end']    = date( 'n', $start_end['end'] );
+			$dates['year_end'] = date( 'Y', $start_end['end'] );
 		break;
 
 		case 'this_quarter' :
@@ -686,28 +679,28 @@ function rcp_get_report_dates() {
 
 			if ( $month_now <= 3 ) {
 
-				$dates['m_start'] 	= 1;
-				$dates['m_end']		= 4;
-				$dates['year']		= date( 'Y', $current_time );
+				$dates['m_start'] = 1;
+				$dates['m_end']   = 4;
+				$dates['year']    = date( 'Y', $current_time );
 
 			} else if ( $month_now <= 6 ) {
 
-				$dates['m_start'] 	= 4;
-				$dates['m_end']		= 7;
-				$dates['year']		= date( 'Y', $current_time );
+				$dates['m_start'] = 4;
+				$dates['m_end']   = 7;
+				$dates['year']    = date( 'Y', $current_time );
 
 			} else if ( $month_now <= 9 ) {
 
-				$dates['m_start'] 	= 7;
-				$dates['m_end']		= 10;
-				$dates['year']		= date( 'Y', $current_time );
+				$dates['m_start'] = 7;
+				$dates['m_end']   = 10;
+				$dates['year']    = date( 'Y', $current_time );
 
 			} else {
 
-				$dates['m_start'] 	= 10;
-				$dates['m_end']		= 1;
-				$dates['year']		= date( 'Y', $current_time );
-				$dates['year_end']  = date( 'Y', $current_time ) + 1;
+				$dates['m_start']  = 10;
+				$dates['m_end']    = 1;
+				$dates['year']     = date( 'Y', $current_time );
+				$dates['year_end'] = date( 'Y', $current_time ) + 1;
 
 			}
 		break;
@@ -717,43 +710,43 @@ function rcp_get_report_dates() {
 
 			if ( $month_now <= 3 ) {
 
-				$dates['m_start']   = 10;
-				$dates['m_end']     = 12;
-				$dates['year']      = date( 'Y', $current_time ) - 1; // Previous year
-				$dates['year_end']  = date( 'Y', $current_time ) - 1; // Previous year
+				$dates['m_start']  = 10;
+				$dates['m_end']    = 12;
+				$dates['year']     = date( 'Y', $current_time ) - 1; // Previous year
+				$dates['year_end'] = date( 'Y', $current_time ) - 1; // Previous year
 
 			} else if ( $month_now <= 6 ) {
 
-				$dates['m_start'] 	= 1;
-				$dates['m_end']		= 3;
-				$dates['year']		= date( 'Y', $current_time );
+				$dates['m_start'] = 1;
+				$dates['m_end']   = 3;
+				$dates['year']    = date( 'Y', $current_time );
 
 			} else if ( $month_now <= 9 ) {
 
-				$dates['m_start'] 	= 4;
-				$dates['m_end']		= 6;
-				$dates['year']		= date( 'Y', $current_time );
+				$dates['m_start'] = 4;
+				$dates['m_end']   = 6;
+				$dates['year']    = date( 'Y', $current_time );
 
 			} else {
 
-				$dates['m_start'] 	= 7;
-				$dates['m_end']		= 9;
-				$dates['year']		= date( 'Y', $current_time );
+				$dates['m_start'] = 7;
+				$dates['m_end']   = 9;
+				$dates['year']    = date( 'Y', $current_time );
 
 			}
 		break;
 
 		case 'this_year' :
-			$dates['m_start'] 	= 1;
-			$dates['m_end']		= 12;
-			$dates['year']		= date( 'Y', $current_time );
+			$dates['m_start'] = 1;
+			$dates['m_end']   = 12;
+			$dates['year']    = date( 'Y', $current_time );
 		break;
 
 		case 'last_year' :
-			$dates['m_start'] 	= 1;
-			$dates['m_end']		= 12;
-			$dates['year']		= date( 'Y', $current_time ) - 1;
-			$dates['year_end']  = date( 'Y', $current_time ) - 1;
+			$dates['m_start']  = 1;
+			$dates['m_end']    = 12;
+			$dates['year']     = date( 'Y', $current_time ) - 1;
+			$dates['year_end'] = date( 'Y', $current_time ) - 1;
 		break;
 
 	endswitch;
