@@ -481,7 +481,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 							// cancel the previous plan
 							$customer = \Stripe\Customer::retrieve( $payment_event->customer );
-							$customer->subscriptions->retrieve( $payment_event->plan->id )->cancel();
+							$customer->subscriptions->retrieve( $event->data->previous_attributes->plan->id )->cancel();
 
 							// add the new plan
 							$customer->updateSubscription( array( 'plan' => $payment_event->id ) );
