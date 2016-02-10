@@ -152,6 +152,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 			// set this user to active
 			$member->renew( $this->auto_renew );
+			$member->add_note( __( 'Subscription started in 2Checkout', 'rcp' ) );
 
 			if ( ! is_user_logged_in() ) {
 
@@ -207,23 +208,6 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			switch( strtoupper( $_POST['message_type'] ) ) {
 
 				case 'ORDER_CREATED' :
-
-					$payment_data = array(
-						'date'             => date( 'Y-m-d g:i:s', strtotime( $_POST['timestamp'], current_time( 'timestamp' ) ) ),
-						'subscription'     => $member->get_subscription_name(),
-						'payment_type'     => sanitize_text_field( $_POST['payment_type'] ),
-						'subscription_key' => $subscription_key,
-						'amount'           => sanitize_text_field( $_POST['invoice_list_amount'] ),
-						'user_id'          => $member->ID,
-						'transaction_id'   => sanitize_text_field( $_POST['invoice_id'] )
-					);
-
-					$payments->insert( $payment_data );
-
-					$recurring = ! empty( $_POST['recurring'] );
-					$member->renew( $recurring );
-					$member->add_note( __( 'Subscription started in 2Checkout', 'rcp' ) );
-
 					break;
 
 				case 'REFUND_ISSUED' :
