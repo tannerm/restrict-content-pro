@@ -65,7 +65,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'USER'               => $this->username,
 			'PWD'                => $this->password,
 			'SIGNATURE'          => $this->signature,
-			'VERSION'            => '121',
+			'VERSION'            => '124',
 			'METHOD'             => 'CreateRecurringPaymentsProfile',
 			'AMT'                => $this->amount,
 			'INITAMT'            => 0,
