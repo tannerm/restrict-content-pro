@@ -211,10 +211,10 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 					$payment_data = array(
 						'date'             => date( 'Y-m-d g:i:s', strtotime( $_POST['timestamp'], current_time( 'timestamp' ) ) ),
 						'subscription'     => $member->get_subscription_name(),
-						'payment_type'     => $payment_type,
+						'payment_type'     => sanitize_text_field( $_POST['payment_type'] ),
 						'subscription_key' => $subscription_key,
 						'amount'           => sanitize_text_field( $_POST['invoice_list_amount'] ),
-						'user_id'          => $member->user_id,
+						'user_id'          => $member->ID,
 						'transaction_id'   => sanitize_text_field( $_POST['invoice_id'] )
 					);
 
@@ -222,7 +222,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 					$recurring = ! empty( $_POST['recurring'] );
 					$member->renew( $recurring );
-					$member->add_note( __( 'Subscription cancelled via refund 2Checkout', 'rcp' ) );
+					$member->add_note( __( 'Subscription started in 2Checkout', 'rcp' ) );
 
 					break;
 
@@ -234,12 +234,28 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 					if( ! empty( $_POST['recurring'] ) ) {
 
 						$member->cancel();
+						$member->add_note( __( 'Subscription cancelled via refund 2Checkout', 'rcp' ) );
 
 					}
 
 					break;
 
 				case 'RECURRING_INSTALLMENT_SUCCESS' :
+
+					$payment_data = array(
+						'date'             => date( 'Y-m-d g:i:s', strtotime( $_POST['timestamp'], current_time( 'timestamp' ) ) ),
+						'subscription'     => $member->get_subscription_name(),
+						'payment_type'     => sanitize_text_field( $_POST['payment_type'] ),
+						'subscription_key' => $subscription_key,
+						'amount'           => sanitize_text_field( $_POST['item_list_amount_1'] ), // don't have a total from this call, but this should be safe
+						'user_id'          => $member->ID,
+						'transaction_id'   => sanitize_text_field( $_POST['invoice_id'] )
+					);
+
+					$recurring = ! empty( $_POST['recurring'] );
+					$member->renew( $recurring );
+					$payments->insert( $payment_data );
+					$member->add_note( __( 'Subscription renewed in 2Checkout', 'rcp' ) );
 
 					break;
 
