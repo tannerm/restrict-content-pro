@@ -74,7 +74,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			'USER'                           => $this->username,
 			'PWD'                            => $this->password,
 			'SIGNATURE'                      => $this->signature,
-			'VERSION'                        => '121',
+			'VERSION'                        => '124',
 			'METHOD'                         => 'SetExpressCheckout',
 			'PAYMENTREQUEST_0_AMT'           => $amount,
 			'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
@@ -82,7 +82,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			'PAYMENTREQUEST_0_ITEMAMT'       => $amount,
 			'PAYMENTREQUEST_0_SHIPPINGAMT'   => 0,
 			'PAYMENTREQUEST_0_TAXAMT'        => 0,
-			'PAYMENTREQUEST_0_DESC'          => $this->subscription_name,
+			'PAYMENTREQUEST_0_DESC'          => html_entity_decode( substr( $this->subscription_name, 0, 127 ), ENT_COMPAT, 'UTF-8' ),
 			'PAYMENTREQUEST_0_CUSTOM'        => $this->user_id,
 			'PAYMENTREQUEST_0_NOTIFYURL'     => add_query_arg( 'listener', 'EIPN', home_url( 'index.php' ) ),
 			'EMAIL'                          => $this->email,
@@ -98,14 +98,16 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		);
 
 		if( $this->auto_renew && ! empty( $this->length ) ) {
-			$args['L_BILLINGAGREEMENTDESCRIPTION0'] = $this->subscription_name;
+			$args['L_BILLINGAGREEMENTDESCRIPTION0'] = html_entity_decode( substr( $this->subscription_name, 0, 127 ), ENT_COMPAT, 'UTF-8' );
 			$args['L_BILLINGTYPE0']                 = 'RecurringPayments';
 			$args['RETURNURL']                      = add_query_arg( array( 'rcp-recurring' => '1' ), $args['RETURNURL'] );
 		}
 
-		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'body' => $args ) );
+		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
 
 		if( is_wp_error( $request ) ) {
+
+			do_action( 'rcp_paypal_express_signup_payment_failed', $request, $this );
 
 			$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
 			$error .= '<p>' . $request->get_error_message() . '</p>';
@@ -172,7 +174,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'USER'                => $this->username,
 					'PWD'                 => $this->password,
 					'SIGNATURE'           => $this->signature,
-					'VERSION'             => '121',
+					'VERSION'             => '124',
 					'TOKEN'               => $_POST['token'],
 					'METHOD'              => 'CreateRecurringPaymentsProfile',
 					'PROFILESTARTDATE'    => date( 'Y-m-d\Tg:i:s', strtotime( '+' . $details['subscription']['duration'] . ' ' . $details['subscription']['duration_unit'], time() ) ),
@@ -183,11 +185,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'CURRENCYCODE'        => $details['CURRENCYCODE'],
 					'FAILEDINITAMTACTION' => 'CancelOnFailure',
 					'L_BILLINGTYPE0'      => 'RecurringPayments',
-					'DESC'                => $details['subscription']['name'],
+					'DESC'                => html_entity_decode( substr( $details['subscription']['name'], 0, 127 ), ENT_COMPAT, 'UTF-8' ),
 					'BUTTONSOURCE'        => 'EasyDigitalDownloads_SP'
 				);
 
-				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'body' => $args ) );
+				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
 
 				if( is_wp_error( $request ) ) {
 
@@ -246,7 +248,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'USER'                           => $this->username,
 					'PWD'                            => $this->password,
 					'SIGNATURE'                      => $this->signature,
-					'VERSION'                        => '121',
+					'VERSION'                        => '124',
 					'METHOD'                         => 'DoExpressCheckoutPayment',
 					'PAYMENTREQUEST_0_PAYMENTACTION' => 'Sale',
 					'TOKEN'                          => $_POST['token'],
@@ -259,7 +261,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'BUTTONSOURCE'                   => 'EasyDigitalDownloads_SP'
 				);
 
-				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'body' => $args ) );
+				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
 
 				if( is_wp_error( $request ) ) {
 
@@ -462,12 +464,12 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			'USER'      => $this->username,
 			'PWD'       => $this->password,
 			'SIGNATURE' => $this->signature,
-			'VERSION'   => '121',
+			'VERSION'   => '124',
 			'METHOD'    => 'GetExpressCheckoutDetails',
 			'TOKEN'     => $token
 		);
 
-		$request = wp_remote_get( add_query_arg( $args, $this->api_endpoint ), array( 'timeout' => 45, 'sslverify' => false ) );
+		$request = wp_remote_get( add_query_arg( $args, $this->api_endpoint ), array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1' ) );
 
 		if( is_wp_error( $request ) ) {
 

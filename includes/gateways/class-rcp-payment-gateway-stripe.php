@@ -129,23 +129,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// Add fees before the plan is updated and charged
 				if ( ! empty( $this->signup_fee ) ) {
 
-					if( $this->signup_fee > 0 ) {
-						$description = sprintf( __( 'Signup Fee for %s', 'rcp' ), $this->subscription_name );
-					} else {
-						$description = sprintf( __( 'Signup Discount for %s', 'rcp' ), $this->subscription_name );
-					}
-
-					\Stripe\InvoiceItem::create( apply_filters( 'rcp_stripe_invoice_item_create_args', array(
-						'customer'    => $customer->id,
-						'amount'      => $this->signup_fee * 100,
-						'currency'    => strtolower( $this->currency ),
-						'description' => $description
-					), $this, $customer ) );
-
-					// Create the invoice containing taxes / discounts / fees
-					$invoice = \Stripe\Invoice::create( apply_filters( 'rcp_stripe_invoice_create_args', array(
-						'customer' => $customer->id, // the customer to apply the fee to
-					), $this, $customer ) );
+					$customer->account_balance = $customer->account_balance + ( $this->signup_fee * 100 ); // Add additional amount to initial payment (in cents)	
 
 				}
 
@@ -157,14 +141,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				// Save the card and any coupon
 				$customer->save();
-
-				// Process the invoice if there is one
-				if( ! empty( $invoice ) ) {
-
-					$invoice->pay();
-
-				}
-
 
 				// Update the customer's subscription in Stripe
 				$customer->updateSubscription( array( 'plan' => $plan_id ) );
@@ -179,6 +155,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
+
+				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
 
 				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
@@ -214,6 +192,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
+				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
+
 				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
 					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
@@ -230,6 +210,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
+				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
+
 				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
 					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
@@ -245,6 +227,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
+				
+				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
 
 				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
@@ -307,6 +291,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
+				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
+
 				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
 					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
@@ -323,6 +309,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// Invalid parameters were supplied to Stripe's API
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
+
+				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
 
 				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
@@ -341,6 +329,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
+				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
+
 				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
 					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
@@ -357,6 +347,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
 
+				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
+
 				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
 					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
@@ -372,6 +364,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$body = $e->getJsonBody();
 				$err  = $body['error'];
+
+				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
 
 				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
 				if( isset( $err['code'] ) ) {
@@ -405,6 +399,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// log the new user in
 				rcp_login_user_in( $this->user_id, $this->user_name, $_POST['rcp_user_pass'] );
 
+			}
+
+			if( ! $this->auto_renew ) {
+				$member->set_expiration_date( $member->calculate_expiration() );
 			}
 
 			do_action( 'rcp_stripe_signup', $this->user_id, $this );
@@ -510,7 +508,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							$payment_data['transaction_id'] = $payment_event->id;
 
 						}
-
 
 						if( ! empty( $payment_data['transaction_id'] ) && ! $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
 

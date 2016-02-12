@@ -28,6 +28,15 @@ function rcp_settings_page() {
 		if ( ! isset( $_REQUEST['updated'] ) )
 			$_REQUEST['updated'] = false;
 		?>
+		
+		<h1><?php _e( 'Restrict Content Pro', 'rcp' ); ?></h1>
+		<h2 class="nav-tab-wrapper">
+			<a href="#general" class="nav-tab"><?php _e( 'General', 'rcp' ); ?></a>
+			<a href="#payments" class="nav-tab"><?php _e( 'Payments', 'rcp' ); ?></a>
+			<a href="#emails" class="nav-tab"><?php _e( 'Emails', 'rcp' ); ?></a>
+			<a href="#invoices" class="nav-tab"><?php _e( 'PDF Invoices', 'rcp' ); ?></a>
+			<a href="#misc" class="nav-tab"><?php _e( 'Misc', 'rcp' ); ?></a>
+		</h2>
 		<?php if ( false !== $_REQUEST['updated'] ) : ?>
 		<div class="updated fade"><p><strong><?php _e( 'Options saved', 'rcp' ); ?></strong></p></div>
 		<?php endif; ?>
@@ -37,14 +46,6 @@ function rcp_settings_page() {
 
 			<?php $pages = get_pages(); ?>
 
-			<h2 class="nav-tab-wrapper">
-				<?php _e( 'Restrict Content Pro', 'rcp' ); ?>
-				<a href="#general" class="nav-tab"><?php _e( 'General', 'rcp' ); ?></a>
-				<a href="#payments" class="nav-tab"><?php _e( 'Payments', 'rcp' ); ?></a>
-				<a href="#emails" class="nav-tab"><?php _e( 'Emails', 'rcp' ); ?></a>
-				<a href="#invoices" class="nav-tab"><?php _e( 'PDF Invoices', 'rcp' ); ?></a>
-				<a href="#misc" class="nav-tab"><?php _e( 'Misc', 'rcp' ); ?></a>
-			</h2>
 
 			<div id="tab_container">
 
@@ -756,7 +757,7 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 							<tr valign="top">
-								<th colspan=2><h3><?php _e( 'Payment Recieved Email', 'rcp' ); ?></h3></th>
+								<th colspan=2><h3><?php _e( 'Payment Received Email', 'rcp' ); ?></h3></th>
 							</tr>
 							<tr>
 								<th>
@@ -1143,7 +1144,7 @@ function rcp_activate_license() {
 	delete_transient( 'rcp_license_check' );
 
 	if( 'valid' !== $license_data->license ) {
-		wp_die( sprintf( __( 'Your license key could not be activated. Error: %s', 'rcp' ), $license_data->error ), __( 'Error', 'rcp' ), array( 'response' => 401, 'back_link' => true ) );		
+		wp_die( sprintf( __( 'Your license key could not be activated. Error: %s', 'rcp' ), $license_data->error ), __( 'Error', 'rcp' ), array( 'response' => 401, 'back_link' => true ) );
 	}
 
 }
