@@ -65,7 +65,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'USER'               => $this->username,
 			'PWD'                => $this->password,
 			'SIGNATURE'          => $this->signature,
-			'VERSION'            => '121',
+			'VERSION'            => '124',
 			'METHOD'             => 'CreateRecurringPaymentsProfile',
 			'AMT'                => $this->amount,
 			'INITAMT'            => 0,
@@ -92,7 +92,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'TOTALBILLINGCYCLES' => $this->auto_renew ? 0 : 1
 		);
 
-		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'body' => $args ) );
+		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
 
 		if( is_wp_error( $request ) ) {
 
