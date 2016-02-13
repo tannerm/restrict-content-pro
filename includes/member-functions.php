@@ -615,7 +615,7 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
 	if( ( ! rcp_is_active( $user_id ) || ! rcp_is_recurring( $user_id ) ) && rcp_has_paid_levels() )
 		$ret = true;
 
-	if ( rcp_has_upgrade_paths( $user_id ) ) {
+	if ( rcp_has_upgrade_path( $user_id ) ) {
 		$ret = true;
 	}
 
@@ -626,11 +626,11 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
  * Does this user have an upgrade path?
  *
  * @since 4.5
- * @param int $user_id
+ * @param int $user_id the ID of the user to check
  *
  * @return bool
  */
-function rcp_has_upgrade_paths( $user_id = 0 ) {
+function rcp_has_upgrade_path( $user_id = 0 ) {
 	return ( bool ) rcp_get_upgrade_paths( $user_id );
 }
 
@@ -638,7 +638,7 @@ function rcp_has_upgrade_paths( $user_id = 0 ) {
  * Get subscriptions to which this user can upgrade
  *
  * @since 4.5
- * @param int $user_id
+ * @param int $user_id the ID of the user to check
  *
  * @return mixed|void
  */
@@ -648,7 +648,8 @@ function rcp_get_upgrade_paths( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$user_subscription = rcp_get_subscription_id( $user_id );
+	// make sure the user is active an get the subscription ID
+	$user_subscription = ( rcp_is_active( $user_id ) ) ? rcp_get_subscription_id( $user_id ) : '';
 	$subscriptions     = rcp_get_paid_levels();
 
 	// remove the user's current subscription from the list

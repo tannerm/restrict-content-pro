@@ -35,7 +35,7 @@ if( isset( $_GET['profile'] ) && 'cancelled' == $_GET['profile'] ) : ?>
 				}
 
 				if ( rcp_subscription_upgrade_possible( $user_ID ) ) {
-					$links[] = apply_filters( 'rcp_subscription_details_action_upgrade', '<a href="' . esc_url( get_permalink( $rcp_options['registration_page'] ) ) . '" title="' . __( 'Upgrade your subscription', 'rcp' ) . '" class="rcp_sub_details_renew">' . __( 'Upgrade your subscription', 'rcp' ) . '</a>', $user_ID );
+					$links[] = apply_filters( 'rcp_subscription_details_action_upgrade', '<a href="' . esc_url( get_permalink( $rcp_options['registration_page'] ) ) . '" title="' . __( 'View upgrade options', 'rcp' ) . '" class="rcp_sub_details_renew">' . __( 'View upgrade options', 'rcp' ) . '</a>', $user_ID );
 				}
 
 				if ( rcp_is_active( $user_ID ) && rcp_can_member_cancel( $user_ID ) ) {
