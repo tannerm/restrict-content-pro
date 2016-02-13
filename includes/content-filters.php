@@ -208,8 +208,9 @@ function rcp_display_message_to_contributors( $content ) {
 function rcp_display_message_to_subscribers( $content ) {
 	global $rcp_options, $post, $user_ID;
 
-	$message = $rcp_options['free_message'];
-	$paid_message = $rcp_options['paid_message'];
+	$message      = isset( $rcp_options['free_message'] ) ? $rcp_options['free_message'] : '';
+ 	$paid_message = isset( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : '';
+
 	if ( rcp_is_paid_content( $post->ID ) ) {
 		$message = $paid_message;
 	}
