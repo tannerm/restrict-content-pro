@@ -153,6 +153,21 @@ function rcp_process_registration() {
 
 		if( $user_data['id'] ) {
 
+			// Determine auto renew behavior
+			if( '3' == rcp_get_auto_renew_behavior() && isset( $_POST['rcp_auto_renew'] ) ) {
+
+				$auto_renew = true;
+
+			} elseif( '1' == rcp_get_auto_renew_behavior() ) {
+
+				$auto_renew = true;
+
+			} else {
+
+				$auto_renew = false;
+
+			}
+
 			update_user_meta( $user_data['id'], '_rcp_new_subscription', '1' );
 
 			$subscription_key = rcp_generate_subscription_key();
@@ -160,8 +175,13 @@ function rcp_process_registration() {
 			if( ! rcp_is_active( $user_data['id'] ) ) {
 
 				rcp_set_status( $user_data['id'], 'pending' );
+
 				update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
 				update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
+
+				// Ensure no pending level details are set
+				delete_user_meta( $user_data['id'], 'rcp_pending_subscription_level' );
+				delete_user_meta( $user_data['id'], 'rcp_pending_subscription_key' );
 	
 			} else {
 
@@ -172,7 +192,9 @@ function rcp_process_registration() {
 			}
 
 			// Calculate the expiration date for the member
-			$member_expires = $member->calculate_expiration();
+			$member_expires = $member->calculate_expiration( $auto_renew );
+
+			update_user_meta( $user_data['id'], 'rcp_pending_expiration_date', $member_expires );
 
 			// Set the user's role
 			$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
@@ -199,21 +221,6 @@ function rcp_process_registration() {
 						rcp_login_user_in( $user_data['id'], $user_data['login'] );
 						wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 					}
-
-				}
-
-				// Determine auto renew behavior
-				if( '3' == rcp_get_auto_renew_behavior() && isset( $_POST['rcp_auto_renew'] ) ) {
-
-					$auto_renew = true;
-
-				} elseif( '1' == rcp_get_auto_renew_behavior() ) {
-
-					$auto_renew = true;
-
-				} else {
-
-					$auto_renew = false;
 
 				}
 

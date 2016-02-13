@@ -377,13 +377,30 @@ add_action( 'rcp_pre_add_discount', 'rcp_stripe_create_discount' );
  * Update a discount in Stripe when a local code is updated
  *
  * @access      private
+ * @param       $discount_id int the id of the discount being updated
+ * @param       $args array the array of discount args
+ *              array(
+ *					'name',
+ *					'description',
+ *					'amount',
+ *					'unit',
+ *					'code',
+ *					'status',
+ *					'expiration',
+ *					'max_uses',
+ *					'subscription_id'
+ *				)
  * @since       2.1
  */
-function rcp_stripe_update_discount() {
+function rcp_stripe_update_discount( $discount_id, $args ) {
 
 	if( ! is_admin() ) {
 		return;
 	}
+
+	// bail if the discount id or args are empty
+	if ( empty( $discount_id ) || empty( $args )  )
+		return;
 
 	if( function_exists( 'rcp_stripe_add_discount' ) ) {
 		return; // Old Stripe gateway is active
@@ -411,23 +428,23 @@ function rcp_stripe_update_discount() {
 
 	\Stripe\Stripe::setApiKey( $secret_key );
 
-	if ( ! rcp_stripe_does_coupon_exists( $_POST['code'] ) ) {
+	if ( ! rcp_stripe_does_coupon_exists( $discount_id ) ) {
 
 		try {
 
-			if ( $_POST['unit'] == '%' ) {
+			if ( $args['unit'] == '%' ) {
 				\Stripe\Coupon::create( array(
-						"percent_off" => sanitize_text_field( $_POST['amount'] ),
+						"percent_off" => sanitize_text_field( $args['amount'] ),
 						"duration"    => "forever",
-						"id"          => sanitize_text_field( $_POST['code'] ),
+						"id"          => sanitize_text_field( $discount_id ),
 						"currency"    => strtolower( $rcp_options['currency'] )
 					)
 				);
 			} else {
 				\Stripe\Coupon::create( array(
-						"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
+						"amount_off" => sanitize_text_field( $args['amount'] ) * 100,
 						"duration"   => "forever",
-						"id"         => sanitize_text_field( $_POST['code'] ),
+						"id"         => sanitize_text_field( $discount_id ),
 						"currency"   => strtolower( $rcp_options['currency'] )
 					)
 				);
@@ -441,7 +458,7 @@ function rcp_stripe_update_discount() {
 
 		// first delete the discount in Stripe
 		try {
-			$cpn = \Stripe\Coupon::retrieve( $_POST['code'] );
+			$cpn = \Stripe\Coupon::retrieve( $discount_id );
 			$cpn->delete();
 		} catch ( Exception $e ) {
 			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
@@ -450,19 +467,19 @@ function rcp_stripe_update_discount() {
 		// now add a new one. This is a fake "update"
 		try {
 
-			if ( $_POST['unit'] == '%' ) {
+			if ( $args['unit'] == '%' ) {
 				\Stripe\Coupon::create( array(
-						"percent_off" => sanitize_text_field( $_POST['amount'] ),
+						"percent_off" => sanitize_text_field( $args['amount'] ),
 						"duration"    => "forever",
-						"id"          => sanitize_text_field( $_POST['code'] ),
+						"id"          => sanitize_text_field( $discount_id ),
 						"currency"    => strtolower( $rcp_options['currency'] )
 					)
 				);
 			} else {
 				\Stripe\Coupon::create( array(
-						"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
+						"amount_off" => sanitize_text_field( $args['amount'] ) * 100,
 						"duration"   => "forever",
-						"id"         => sanitize_text_field( $_POST['code'] ),
+						"id"         => sanitize_text_field( $discount_id ),
 						"currency"   => strtolower( $rcp_options['currency'] )
 					)
 				);
@@ -544,7 +561,7 @@ function rcp_stripe_update_discount() {
 		}
 	}
 }
-add_action( 'rcp_edit_discount', 'rcp_stripe_update_discount' );
+add_action( 'rcp_edit_discount', 'rcp_stripe_update_discount', 10, 2 );
 
 /**
  * Check if a coupone exists in Stripe

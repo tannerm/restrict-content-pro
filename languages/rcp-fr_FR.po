@@ -3682,7 +3682,7 @@ msgstr "Choisissez votre mode de paiement"
 #: templates/register.php:21
 msgid ""
 "<a href=\"%s\">Log in</a> if you wish to renew an existing subscription."
-msgstr ""
+msgstr "<a href=\"%s\">Connectez-vous</a> si vous souhaitez renouveler votre abonnement."
 
 #: templates/register.php:62
 msgid "Choose your subscription level"
