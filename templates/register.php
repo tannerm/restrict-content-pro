@@ -1,4 +1,7 @@
-<?php global $rcp_options, $post; ?>
+<?php
+global $rcp_options, $post;
+$is_upgrade = ( rcp_is_active() && rcp_is_recurring() );
+?>
 
 <?php if( ! is_user_logged_in() ) { ?>
 	<h3 class="rcp_header">
@@ -57,7 +60,9 @@ rcp_show_error_messages( 'register' ); ?>
 	<?php do_action( 'rcp_before_subscription_form_fields' ); ?>
 
 	<fieldset class="rcp_subscription_fieldset">
-	<?php $levels = rcp_get_subscription_levels( 'active' );
+	<?php
+	// if the user is active and recurring then we are handling an upgrade/downgrade.
+	$levels = ( $is_upgrade ) ? rcp_get_upgrade_paths() : rcp_get_subscription_levels( 'active' );
 	if( $levels ) : ?>
 		<p class="rcp_subscription_message"><?php echo apply_filters ( 'rcp_registration_choose_subscription', __( 'Choose your subscription level', 'rcp' ) ); ?></p>
 		<ul id="rcp_subscription_levels">
@@ -120,6 +125,7 @@ rcp_show_error_messages( 'register' ); ?>
 	<?php do_action( 'rcp_before_registration_submit_field', $levels ); ?>
 
 	<p id="rcp_submit_wrap">
+		<input type="hidden" name="rcp_is_upgrade" value="<?php echo $is_upgrade; ?>"/>
 		<input type="hidden" name="rcp_register_nonce" value="<?php echo wp_create_nonce('rcp-register-nonce' ); ?>"/>
 		<input type="submit" name="rcp_submit_registration" id="rcp_submit" value="<?php echo apply_filters ( 'rcp_registration_register_button', __( 'Register', 'rcp' ) ); ?>"/>
 	</p>

@@ -615,7 +615,50 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
 	if( ( ! rcp_is_active( $user_id ) || ! rcp_is_recurring( $user_id ) ) && rcp_has_paid_levels() )
 		$ret = true;
 
+	if ( rcp_has_upgrade_paths( $user_id ) ) {
+		$ret = true;
+	}
+
 	return (bool) apply_filters( 'rcp_can_upgrade_subscription', $ret, $user_id );
+}
+
+/**
+ * Does this user have an upgrade path?
+ *
+ * @since 4.5
+ * @param int $user_id
+ *
+ * @return bool
+ */
+function rcp_has_upgrade_paths( $user_id = 0 ) {
+	return ( bool ) rcp_get_upgrade_paths( $user_id );
+}
+
+/**
+ * Get subscriptions to which this user can upgrade
+ *
+ * @since 4.5
+ * @param int $user_id
+ *
+ * @return mixed|void
+ */
+function rcp_get_upgrade_paths( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$user_subscription = rcp_get_subscription_id( $user_id );
+	$subscriptions     = rcp_get_paid_levels();
+
+	// remove the user's current subscription from the list
+	foreach( $subscriptions as $key => $subscription ) {
+		if ( $user_subscription == $subscription->id ) {
+			unset( $subscriptions[ $key ] );
+		}
+	}
+
+	return apply_filters( 'rcp_get_upgrade_paths', $subscriptions, $user_id );
 }
 
 

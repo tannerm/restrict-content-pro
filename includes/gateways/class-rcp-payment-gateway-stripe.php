@@ -68,7 +68,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			// process a subscription sign up
 
-			$plan_id = strtolower( str_replace( ' ', '', $this->subscription_name ) );
+			$plan_id    = strtolower( str_replace( ' ', '', $this->subscription_name ) );
+			$is_upgrade = ! empty( $_POST['rcp_is_upgrade'] );
 
 			if ( ! $this->plan_exists( $plan_id ) ) {
 				// create the plan if it doesn't exist
