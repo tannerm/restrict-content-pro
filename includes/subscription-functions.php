@@ -308,3 +308,32 @@ function rcp_get_renewal_reminder_period() {
 	$period = isset( $rcp_options['renewal_reminder_period'] ) ? $rcp_options['renewal_reminder_period'] : 'none';
 	return apply_filters( 'rcp_get_renewal_reminder_period', $period );
 }
+
+/**
+ * Get taxonomies that can be restricted
+ *
+ * @since 4.5
+ * @param string $output
+ * @return mixed|void
+ */
+function rcp_get_restricted_taxonomies( $output = 'names' ) {
+	return apply_filters( 'rcp_get_restricted_taxonomies', get_taxonomies( array( 'public' => true, 'show_ui' => true ), $output ) );
+}
+
+/**
+ * Get restrictions for the provided term_id
+ *
+ * @since 4.5
+ * @param $term_id
+ *
+ * @return mixed|void
+ */
+function rcp_get_term_restrictions( $term_id ) {
+
+	// fallback to older method of handling term meta if term meta does not exist
+	if ( ( ! function_exists( 'get_term_meta' ) ) || ! $restrictions = get_term_meta( $term_id, 'rcp_restricted_meta', true ) ) {
+		$restrictions = get_option( "rcp_category_meta_$term_id" );
+	}
+
+	return apply_filters( 'rcp_get_term_restrictions', $restrictions, $term_id );
+}

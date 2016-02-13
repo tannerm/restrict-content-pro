@@ -40,62 +40,17 @@ add_filter( 'the_content', 'rcp_filter_restricted_content', 100 );
  * @return      $content
  */
 function rcp_filter_restricted_category_content( $content ) {
-	global $post, $user_ID, $rcp_options;
+	global $post, $rcp_options;
 
-	$has_access = true;
+	$restricted = false;
 
-	$categories = get_the_category( $post->ID );
-	if( empty( $categories ) ) {
-		return $content;
-	}
-
-	// Loop through the categories and determine if one has restriction options
-	foreach( $categories as $category ) {
-
-		$term_meta = get_option( "rcp_category_meta_$category->term_id" );
-		if( ! empty( $term_meta ) ) {
-
-			/**
-			 * Check that the user has a paid subscription
-			 */
-
-			$paid_only = ! empty( $term_meta['paid_only'] );
-
-			if( $paid_only && ! rcp_is_paid_user() ) {
-
-				$has_access = false;
-
-			}
-
-			/**
-			 * If restricted to one or more subscription levels, make sure that the user is a member of one of the levls
-			 */
-
-			$subscriptions = ! empty( $term_meta['subscriptions'] ) ? array_map( 'absint', $term_meta['subscriptions'] ) : false;
-
-			if( $subscriptions && ! in_array( rcp_get_subscription_id(), $subscriptions ) ) {
-
-				$has_access = false;
-
-			}
-
-			/**
-			 * If restricted to one or more access levels, make sure that the user is a member of one of the levls
-			 */
-
-			$access_level = ! empty( $term_meta['access_level'] ) ? absint( $term_meta['access_level'] ) : 0;
-
-			if( $access_level > 0 && ! rcp_user_has_access( $user_ID, $access_level ) ) {
-
-				$has_access = false;
-
-			}
-
+	foreach( rcp_get_restricted_taxonomies() as $taxonomy ) {
+		if ( $restricted = rcp_is_post_taxonomy_restricted( $post->ID, $taxonomy ) ) {
+			break;
 		}
-
 	}
 
-	if( ! $has_access ) {
+	if ( $restricted ) {
 
 		$message = ! empty( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : __( 'You need to have an active subscription to view this content.', 'rcp' );
 
@@ -108,6 +63,84 @@ function rcp_filter_restricted_category_content( $content ) {
 }
 add_filter( 'the_content', 'rcp_filter_restricted_category_content', 101 );
 
+/**
+ * Check the provided taxonomy along with the given post id to see if any restrictions are found
+ *
+ * @since      4.5
+ * @param      $post_id
+ * @param      $taxonomy
+ * @param null $user_id
+ *
+ * @return bool|mixed|void
+ */
+function rcp_is_post_taxonomy_restricted( $post_id, $taxonomy, $user_id = null ) {
+
+	// make sure this post supports the supplied taxonomy
+	$post_taxonomies = get_post_taxonomies( $post_id );
+	if ( ! in_array( $taxonomy, (array) $post_taxonomies ) ) {
+		return false;
+	}
+
+	$terms = get_the_terms( $post_id, $taxonomy );
+
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return false;
+	}
+
+	if ( ! $user_id ) {
+		$user_id = get_current_user_id();
+	}
+
+	$restricted = false;
+
+	// Loop through the categories and determine if one has restriction options
+	foreach( $terms as $term ) {
+
+		$term_meta = rcp_get_term_restrictions( $term->term_id );
+		if( ! empty( $term_meta ) ) {
+
+			/**
+			 * Check that the user has a paid subscription
+			 */
+
+			$paid_only = ! empty( $term_meta['paid_only'] );
+
+			if( $paid_only && ! rcp_is_paid_user( $user_id ) ) {
+
+				$restricted = true;
+
+			}
+
+			/**
+			 * If restricted to one or more subscription levels, make sure that the user is a member of one of the levls
+			 */
+
+			$subscriptions = ! empty( $term_meta['subscriptions'] ) ? array_map( 'absint', $term_meta['subscriptions'] ) : false;
+
+			if( $subscriptions && ! in_array( rcp_get_subscription_id( $user_id ), $subscriptions ) ) {
+
+				$restricted = true;
+
+			}
+
+			/**
+			 * If restricted to one or more access levels, make sure that the user is a member of one of the levls
+			 */
+
+			$access_level = ! empty( $term_meta['access_level'] ) ? absint( $term_meta['access_level'] ) : 0;
+
+			if( $access_level > 0 && ! rcp_user_has_access( $user_id, $access_level ) ) {
+
+				$restricted = true;
+
+			}
+
+		}
+
+	}
+
+	return apply_filters( 'rcp_is_post_taxonomy_restricted', $restricted, $taxonomy, $post_id, $user_id );
+}
 
 function rcp_user_level_checks() {
 	if ( current_user_can( 'read' ) ) {
