@@ -312,7 +312,7 @@ function rcp_get_renewal_reminder_period() {
 /**
  * Get taxonomies that can be restricted
  *
- * @since 4.5
+ * @since 2.5
  * @param string $output
  * @return mixed|void
  */
@@ -323,7 +323,7 @@ function rcp_get_restricted_taxonomies( $output = 'names' ) {
 /**
  * Get restrictions for the provided term_id
  *
- * @since 4.5
+ * @since 2.5
  * @param $term_id
  *
  * @return mixed|void

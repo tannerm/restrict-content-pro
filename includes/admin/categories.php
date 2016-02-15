@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Setup actions for taxonomy restricted fields
  *
- * @since 4.5
+ * @since 2.5
  */
 function rcp_setup_taxonomy_edit_fields() {
 	$taxonomies = rcp_get_restricted_taxonomies();
