@@ -296,7 +296,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Handle Stripe processing error
 	 *
-	 * @since 4.5
+	 * @since 2.5
 	 * @param $e
 	 */
 	protected function handle_processing_error( $e ) {

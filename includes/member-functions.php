@@ -625,7 +625,7 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
 /**
  * Does this user have an upgrade path?
  *
- * @since 4.5
+ * @since 2.5
  * @param int $user_id the ID of the user to check
  *
  * @return bool
@@ -637,7 +637,7 @@ function rcp_has_upgrade_path( $user_id = 0 ) {
 /**
  * Get subscriptions to which this user can upgrade
  *
- * @since 4.5
+ * @since 2.5
  * @param int $user_id the ID of the user to check
  *
  * @return mixed|void

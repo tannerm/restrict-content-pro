@@ -180,7 +180,7 @@ function rcp_has_paid_levels() {
 /**
  * Return the paid levels
  *
- * @since 4.5
+ * @since 2.5
  * @return array()
  */
 function rcp_get_paid_levels() {
