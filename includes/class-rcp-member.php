@@ -597,4 +597,82 @@ class RCP_Member extends WP_User {
 		}
 	}
 
+	/**
+	 * Get the prorate credit amount for the user's remaining subscription
+	 *
+	 * @since 2.5
+	 * @return int
+	 */
+	public function get_prorate_credit_amount() {
+
+		// make sure this is an active, paying subscriber
+		if ( ! $this->is_active() ) {
+			return 0;
+		}
+
+		// get the most recent payment
+		foreach( $this->get_payments() as $pmt ) {
+			if ( 'complete' != $pmt->status ) {
+				continue;
+			}
+
+			$payment = $pmt;
+			break;
+		}
+
+		if ( empty( $payment ) ) {
+			return 0;
+		}
+
+		$subscription    = rcp_get_subscription_details_by_name( $payment->subscription );
+		$subscription_id = $this->get_subscription_id();
+
+		// make sure the subscription payment matches the existing subscription
+		if ( empty( $subscription->id ) || empty( $subscription->duration ) || $subscription->id != $subscription_id ) {
+			return 0;
+		}
+
+		$member_term = $this->get_expiration_date();
+
+		// if this is member does not have an expiration date, calculate it
+		if ( 'none' == $member_term ) {
+			return 0;
+		}
+
+		// make sure we have a valid date
+		if ( ! $member_term = strtotime( $member_term ) ) {
+			return 0;
+		}
+
+		$member_term_dt = date( 'Y-m-d', $member_term ) . ' 23:59:59';
+		$member_term    = strtotime( $member_term_dt );
+
+		$time_remaining = $member_term - current_time( 'timestamp' );
+
+		// total time is a function of the expiration date minus the subscription term.
+		// This allows for > 100% discount for renewed subscriptions
+		if ( ! $start_date = strtotime( $member_term_dt . ' -' . $subscription->duration . $subscription->duration_unit ) ) {
+			return 0;
+		}
+
+		$total_time = $member_term - $start_date;
+
+		if ( $time_remaining <= 0 ) {
+			return 0;
+		}
+
+		// calculate discount as percentage of subscription remaining
+		$payment_amount       = abs( $subscription->price );
+		$percentage_remaining = $time_remaining / $total_time;
+		$discount             = round( $payment_amount * $percentage_remaining, 2 );
+
+		// make sure they get a discount. This shouldn't ever run
+		if ( ! $discount > 0 ) {
+			$discount = $payment_amount;
+		}
+
+		return apply_filters( 'rcp_member_prorate_credit', number_format( (float) $discount, 2 ), $this->ID, $this );
+
+	}
+
 }
