@@ -982,17 +982,17 @@ function rcp_cancel_member_payment_profile( $member_id = 0 ) {
 			$api_endpoint  = isset( $rcp_options['sandbox'] ) ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp';
 
 			$args = array(
-				'USER'      => $rcp_options[ $api_username ],
-				'PWD'       => $rcp_options[ $api_password ],
-				'SIGNATURE' => $rcp_options[ $api_signature ],
-				'VERSION'   => '76.0',
+				'USER'      => trim( $rcp_options[ $api_username ] ),
+				'PWD'       => trim( $rcp_options[ $api_password ] ),
+				'SIGNATURE' => trim( $rcp_options[ $api_signature ] ),
+				'VERSION'   => '124',
 				'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
 				'PROFILEID' => $member->get_payment_profile_id(),
 				'ACTION'    => 'Cancel'
 			);
 
 			$error_msg = '';
-			$request   = wp_remote_post( $api_endpoint, array( 'body' => $args, 'timeout' => 30 ) );
+			$request   = wp_remote_post( $api_endpoint, array( 'body' => $args, 'timeout' => 30, 'httpversion' => '1.1' ) );
 
 			if ( is_wp_error( $request ) ) {
 
