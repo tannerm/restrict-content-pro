@@ -488,23 +488,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						die( 'no subscription ID for member' );
 					}
 
-					// in case a user attempts to resubscribe but has a previously unpaid subscription
-					if( $event->type == 'customer.subscription.updated' && $payment_event->status == 'unpaid' ) {
-
-						// make sure we're acting on a upgrade or downgrade only
-						if( $event->data->previous_attributes->plan ) {
-
-							// cancel the previous plan
-							$customer = \Stripe\Customer::retrieve( $payment_event->customer );
-							$customer->subscriptions->retrieve( $payment_event->id )->cancel();
-
-							// add the new subscription plan
-							$customer->subscriptions->create( array( 'plan' => $payment_event->plan->id ) );
-
-						}
-
-					}
-
 					if( $event->type == 'charge.succeeded' || $event->type == 'invoice.payment_succeeded' ) {
 
 						// setup payment data
