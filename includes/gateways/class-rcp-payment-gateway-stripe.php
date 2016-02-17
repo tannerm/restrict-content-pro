@@ -139,6 +139,21 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				}
 
+				// clean up any past due or unpaid subscriptions before upgrading/downgrading
+				foreach( $customer->subscriptions->all()->data as $subscription ) {
+
+					// check if we are renewing an existing subscription. This should not ever be 'active', if it is Stripe
+					// will do nothing. If it is 'past_due' the most recent invoice will be paid and the subscription will become active
+					if ( $subscription->plan->id == $plan_id && in_array( $subscription->status, array( 'active', 'past_due' ) ) ) {
+						continue;
+					}
+
+					// remove any subscriptions that are past_due or inactive
+					if ( in_array( $subscription->status, array( 'past_due', 'unpaid' ) ) ) {
+						$subscription->cancel();
+					}
+				}
+
 				// Save the card and any coupon
 				$customer->save();
 
@@ -471,23 +486,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					if( ! $member->get_subscription_id() ) {
 						die( 'no subscription ID for member' );
-					}
-
-					// in case a user attempts to resubscribe but has a previously unpaid subscription
-					if( $event->type == 'customer.subscription.updated' && $payment_event->status == 'unpaid' ) {
-
-						// make sure we're acting on a upgrade or downgrade only
-						if( $event->data->previous_attributes->plan ) {
-
-							// cancel the previous plan
-							$customer = \Stripe\Customer::retrieve( $payment_event->customer );
-							$customer->subscriptions->retrieve( $payment_event->plan->id )->cancel();
-
-							// add the new plan
-							$customer->updateSubscription( array( 'plan' => $payment_event->id ) );
-
-						}
-
 					}
 
 					if( $event->type == 'charge.succeeded' || $event->type == 'invoice.payment_succeeded' ) {
