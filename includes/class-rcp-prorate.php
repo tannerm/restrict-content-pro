@@ -69,17 +69,25 @@ class RCP_Prorate {
 	 */
 	protected function __construct() {
 
-		add_action( 'init',                                     array( $this, 'setup_submission_vars' ), 99 );
-		add_action( 'wp_ajax_rcp_process_register_form',        array( $this, 'setup_submission_vars' ), 99 );
-		add_action( 'wp_ajax_nopriv_rcp_process_register_form', array( $this, 'setup_submission_vars' ), 99 );
+//		add_action( 'init',                                     array( $this, 'setup_submission_vars' ), 99 );
+//		add_action( 'wp_ajax_rcp_process_register_form',        array( $this, 'setup_submission_vars' ), 99 );
+//		add_action( 'wp_ajax_nopriv_rcp_process_register_form', array( $this, 'setup_submission_vars' ), 99 );
 
 		add_action( 'rcp_before_subscription_form_fields', array( $this, 'add_prorate_message' ) );
+		add_action( 'rcp_cart_init',                       array( $this, 'add_prorate_fee'     ) );
+//		add_filter( 'rcp_get_level_field',        array( $this, 'maybe_prorate_price'  ), 10, 3 );
+//		add_filter( 'rcp_get_level',              array( $this, 'maybe_prorate_level'  ) );
+//		add_filter( 'rcp_get_levels',             array( $this, 'maybe_prorate_levels' ) );
+//		add_filter( 'rcp_calc_member_expiration', array( $this, 'calc_renewal_expiration' ), 10, 2 );
 
-		add_filter( 'rcp_get_level_field',        array( $this, 'maybe_prorate_price'  ), 10, 3 );
-		add_filter( 'rcp_get_level',              array( $this, 'maybe_prorate_level'  ) );
-		add_filter( 'rcp_get_levels',             array( $this, 'maybe_prorate_levels' ) );
-		add_filter( 'rcp_calc_member_expiration', array( $this, 'calc_renewal_expiration' ), 10, 2 );
+	}
 
+	public function add_prorate_fee( $cart ) {
+		if ( ! $amount = $this->get_prorate_amount() ) {
+			return;
+		}
+
+		$cart->add_fee( -1 * $amount, __( 'Proration Credit', 'rcp' ) );
 	}
 
 	public function add_prorate_message() {

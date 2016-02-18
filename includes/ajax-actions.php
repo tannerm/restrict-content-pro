@@ -21,7 +21,7 @@ function rcp_validate_discount_with_ajax() {
 				// this is a 100% discount
 				
 				$return['full']   = true;
-	
+
 			}
 
 			$return['valid']  = true;
@@ -50,3 +50,26 @@ function rcp_load_gateway_fields() {
 }
 add_action( 'wp_ajax_rcp_load_gateway_fields', 'rcp_load_gateway_fields' );
 add_action( 'wp_ajax_nopriv_rcp_load_gateway_fields', 'rcp_load_gateway_fields' );
+
+function rcp_calc_total_ajax() {
+	$return = array(
+		'valid' => false,
+		'total' => __( 'An error occured, please refresh the page and try again.' ),
+	);
+
+	if ( ! isset( $_POST['level'], $_POST['discount'] ) ) {
+		wp_send_json( $return );
+	}
+
+	rcp_setup_cart( $_POST['level'], $_POST['discount'] );
+
+	ob_start();
+
+	rcp_get_template_part( 'register-total-details' );
+
+	$return['total'] = ob_get_clean();
+
+	wp_send_json( $return );
+}
+add_action( 'wp_ajax_rcp_calc_discount', 'rcp_calc_total_ajax' );
+add_action( 'wp_ajax_nopriv_rcp_calc_discount', 'rcp_calc_total_ajax' );

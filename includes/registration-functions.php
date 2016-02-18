@@ -499,3 +499,136 @@ function rcp_set_pending_subscription_on_upgrade( $status, $user_id ) {
 	}
 }
 add_action( 'rcp_set_status', 'rcp_set_pending_subscription_on_upgrade', 10, 2 );
+
+/**
+ * Get formatted total for this registration
+ *
+ * @since      2.5
+ * @param bool $echo
+ *
+ * @return mixed|string|void
+ */
+function rcp_registration_total( $echo = true ) {
+	$total = rcp_get_registration_total();
+
+	// the cart has not been setup yet
+	if ( false === $total ) {
+		return false;
+	}
+
+	if ( 0 < $total ) {
+		$total = rcp_currency_filter( $total );
+	} else {
+		$total = __( 'free', 'rcp' );;
+	}
+
+	$total = apply_filters( 'rcp_registration_total', $total );
+
+	if ( $echo ) {
+		echo $total;
+	}
+
+	return $total;
+}
+
+/**
+ * Get the total for this registration
+ *
+ * @since 2.5
+ *
+ * @return mixed|void
+ */
+function rcp_get_registration_total() {
+	global $rcp_cart;
+
+	if ( ! is_a( $rcp_cart, 'RCP_Cart' ) ) {
+		return false;
+	}
+
+	return $rcp_cart->get_total();
+}
+
+/**
+ * Get formatted recurring total for this registration
+ *
+ * @since      2.5
+ * @param bool $echo
+ *
+ * @return mixed|string|void
+ */
+function rcp_registration_recurring_total( $echo = true ) {
+	$total = rcp_get_registration_recurring_total();
+
+	// the cart has not been setup yet
+	if ( false === $total ) {
+		return false;
+	}
+
+	if ( 0 < $total ) {
+		global $rcp_cart;
+		$total = rcp_currency_filter( $total );
+		$subscription = rcp_get_subscription_details( $rcp_cart->get_subscription() );
+
+		if ( $subscription->duration == 1 ) {
+			$total .= '/' . $subscription->duration_unit;
+		} else {
+			$total .= sprintf( ' every %s %s', $subscription->duration, $subscription->duration_unit );
+		}
+	} else {
+		$total = __( 'free', 'rcp' );;
+	}
+
+	$total = apply_filters( 'rcp_registration_total', $total );
+
+	if ( $echo ) {
+		echo $total;
+	}
+
+	return $total;
+}
+
+/**
+ * Get the recurring total payment
+ *
+ * @since 2.5
+ * @return bool
+ */
+function rcp_get_registration_recurring_total() {
+	global $rcp_cart;
+
+	if ( ! is_a( $rcp_cart, 'RCP_Cart' ) ) {
+		return false;
+	}
+
+	return $rcp_cart->get_recurring_total();
+}
+
+/**
+ * Setup the cart object
+ *
+ * @since      2.5
+ * @param      $level_id
+ * @param null $discount
+ *
+ * @return mixed|void
+ */
+function rcp_setup_cart( $level_id, $discount = null ) {
+	global $rcp_cart;
+
+	$rcp_cart = new RCP_Cart( $level_id, $discount );
+	do_action( 'rcp_setup_cart', $level_id, $discount );
+}
+
+/**
+ * Add the registration total before the gateway fields
+ *
+ * @since 2.5
+ */
+function rcp_registration_total_field() {
+	?>
+	<div class="rcp_registration_total">
+		<p><strong>Total:</strong> <span class="registration-total"></span></p>
+	</div>
+	<?php
+}
+add_action( 'rcp_after_register_form_fields', 'rcp_registration_total_field' );

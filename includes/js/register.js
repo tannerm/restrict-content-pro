@@ -2,10 +2,13 @@ var rcp_validating_discount = false;
 var rcp_validating_gateway  = false;
 var rcp_validating_level    = false;
 var rcp_processing          = false;
+var rcp_calculating_total   = false;
+
 jQuery(document).ready(function($) {
 
 	// Initial validation of subscription level and gateway options
 	rcp_validate_form( true );
+	rcp_calc_total();
 
 	// Trigger gateway change event when gateway option changes
 	$('#rcp_payment_gateways select, #rcp_payment_gateways input').change( function() {
@@ -36,9 +39,14 @@ jQuery(document).ready(function($) {
 		
 		e.preventDefault();
 
+		$('body').trigger( 'rcp_discount_change' );
+
 		rcp_validate_discount();
 
+	});
 
+	$('body').on( 'rcp_discount_change rcp_level_change', function() {
+		rcp_calc_total()
 	});
 
 	$(document).on('click', '#rcp_registration_form #rcp_submit', function(e) {
@@ -334,4 +342,30 @@ function rcp_validate_discount() {
 		$('body').trigger('rcp_discount_applied', [ response ] );
 
 	});
+}
+
+function rcp_calc_total() {
+
+	var $               = jQuery;
+	var $total          = $('.rcp_registration_total');
+	var discount        = $('#rcp_discount_code').val();
+	var subscription    = ( $('#rcp_subscription_levels input:checked').length ) ? $('#rcp_subscription_levels input:checked').val() : $('input[name="rcp_level"]').val();
+
+	rcp_calculating_total = true;
+
+	var data = {
+		action: 'rcp_calc_discount',
+		level: subscription,
+		discount: discount
+	};
+
+	$.post(rcp_script_options.ajaxurl, data, function(response) {
+		rcp_calculating_total = false;
+
+		if (undefined !== response.total ) {
+			$total.html(response.total);
+		}
+
+	});
+
 }

@@ -1308,3 +1308,21 @@ function rcp_validate_username( $username = '' ) {
 	$valid = ( $sanitized == $username );
 	return (bool) apply_filters( 'rcp_validate_username', $valid, $username );
 }
+
+/**
+ * Get the prorate amount for this member
+ *
+ * @since 2.5
+ * @param int $user_id
+ *
+ * @return int
+ */
+function rcp_get_member_prorate_amount( $user_id = 0 ) {
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$member = new RCP_Member( $user_id );
+
+	return $member->get_prorate_credit_amount();
+}
