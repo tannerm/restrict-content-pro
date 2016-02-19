@@ -1,9 +1,9 @@
 <?php
 
-class RCP_Cart {
+class RCP_Registration {
 
 	/**
-	 * Store the subscription for the cart
+	 * Store the subscription for the registration
 	 *
 	 * @since 2.5
 	 * @var int
@@ -11,7 +11,7 @@ class RCP_Cart {
 	protected $subscription = 0;
 
 	/**
-	 * Store the discounts for the cart
+	 * Store the discounts for the registration
 	 *
 	 * @since 2.5
 	 * @var array
@@ -19,25 +19,30 @@ class RCP_Cart {
 	protected $discounts = array();
 
 	/**
-	 * Store the fees/credits for the cart. Credits are negative fees.
+	 * Store the fees/credits for the registration. Credits are negative fees.
 	 *
 	 * @since 2.5
 	 * @var array
 	 */
 	protected $fees = array();
 
-	public function __construct( $level_id, $discount = null ) {
+	public function __construct( $level_id = 0, $discount = null ) {
+
+		if ( ! $level_id ) {
+			return;
+		}
+
 		$this->set_subscription( $level_id );
 
 		if ( $discount ) {
 			$this->add_discount( $discount );
 		}
 
-		do_action( 'rcp_cart_init', $this );
+		do_action( 'rcp_registration_init', $this );
 	}
 
 	/**
-	 * Set the subscription for this cart
+	 * Set the subscription for this registration
 	 *
 	 * @since 2.5
 	 * @param $subscription_id
@@ -60,7 +65,7 @@ class RCP_Cart {
 	}
 
 	/**
-	 * Get cart subscription
+	 * Get registration subscription
 	 *
 	 * @since 2.5
 	 * @return int
@@ -70,7 +75,7 @@ class RCP_Cart {
 	}
 
 	/**
-	 * Add discount to the cart
+	 * Add discount to the registration
 	 *
 	 * @since      2.5
 	 * @param      $code
@@ -88,7 +93,7 @@ class RCP_Cart {
 	}
 
 	/**
-	 * Get cart discounts
+	 * Get registration discounts
 	 *
 	 * @since 2.5
 	 * @return array|bool
@@ -102,7 +107,7 @@ class RCP_Cart {
 	}
 
 	/**
-	 * Add fee to the cart. Use negative fee for credit.
+	 * Add fee to the registration. Use negative fee for credit.
 	 *
 	 * @since      2.5
 	 * @param      $amount
@@ -125,13 +130,13 @@ class RCP_Cart {
 			return false;
 		}
 
-		$this->fees[ $id ] = apply_filters( 'rcp_cart_add_fee', $fee, $this );
+		$this->fees[ $id ] = apply_filters( 'rcp_registration_add_fee', $fee, $this );
 
 		return true;
 	}
 
 	/**
-	 * Get cart fees
+	 * Get registration fees
 	 *
 	 * @since 2.5
 	 * @return array|bool
@@ -182,7 +187,7 @@ class RCP_Cart {
 	 */
 	public function get_total_discounts( $total = null, $only_recurring = false ) {
 
-		if ( ! $cart_discounts = $this->get_discounts() ) {
+		if ( ! $registration_discounts = $this->get_discounts() ) {
 			return 0;
 		}
 
@@ -192,13 +197,13 @@ class RCP_Cart {
 
 		$original_total = $total;
 
-		foreach( $cart_discounts as $cart_discount => $recurring ) {
+		foreach( $registration_discounts as $registration_discount => $recurring ) {
 			if ( $only_recurring && ! $recurring ) {
 				continue;
 			}
 
 			$discounts    = new RCP_Discounts();
-			$discount_obj = $discounts->get_by( 'code', $cart_discount );
+			$discount_obj = $discounts->get_by( 'code', $registration_discount );
 
 			if ( is_object( $discount_obj ) ) {
 				// calculate the after-discount price
@@ -206,12 +211,12 @@ class RCP_Cart {
 			}
 		}
 
-		return apply_filters( 'rcp_cart_get_total_discounts', (float) ( $original_total - $total ), $original_total, $this );
+		return apply_filters( 'rcp_registration_get_total_discounts', (float) ( $original_total - $total ), $original_total, $this );
 
 	}
 
 	/**
-	 * Get the cart total
+	 * Get the registration total
 	 *
 	 * @since 2.5
 	 * @return mixed|void
@@ -226,10 +231,16 @@ class RCP_Cart {
 			$total = 0;
 		}
 
-		return apply_filters( 'rcp_cart_get_total', number_format( (float) $total, 2 ), $this );
+		return apply_filters( 'rcp_registration_get_total', number_format( (float) $total, 2 ), $this );
 
 	}
 
+	/**
+	 * Get the registration recurring total
+	 *
+	 * @since 2.5
+	 * @return mixed|void
+	 */
 	public function get_recurring_total() {
 
 		$total = rcp_get_subscription_price( $this->subscription );
@@ -240,7 +251,7 @@ class RCP_Cart {
 			$total = 0;
 		}
 
-		return apply_filters( 'rcp_cart_get_recurring_total', number_format( (float) $total, 2 ), $this );
+		return apply_filters( 'rcp_registration_get_recurring_total', number_format( (float) $total, 2 ), $this );
 
 	}
 

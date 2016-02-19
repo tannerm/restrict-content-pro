@@ -51,17 +51,20 @@ function rcp_load_gateway_fields() {
 add_action( 'wp_ajax_rcp_load_gateway_fields', 'rcp_load_gateway_fields' );
 add_action( 'wp_ajax_nopriv_rcp_load_gateway_fields', 'rcp_load_gateway_fields' );
 
+/**
+ * Setup the registration details
+ *
+ * @since 2.5
+ */
 function rcp_calc_total_ajax() {
 	$return = array(
 		'valid' => false,
 		'total' => __( 'An error occured, please refresh the page and try again.' ),
 	);
 
-	if ( ! isset( $_POST['level'], $_POST['discount'] ) ) {
+	if ( ! rcp_is_registration() ) {
 		wp_send_json( $return );
 	}
-
-	rcp_setup_cart( $_POST['level'], $_POST['discount'] );
 
 	ob_start();
 

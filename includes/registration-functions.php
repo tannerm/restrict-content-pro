@@ -154,19 +154,7 @@ function rcp_process_registration() {
 		if( $user_data['id'] ) {
 
 			// Determine auto renew behavior
-			if( '3' == rcp_get_auto_renew_behavior() && isset( $_POST['rcp_auto_renew'] ) ) {
-
-				$auto_renew = true;
-
-			} elseif( '1' == rcp_get_auto_renew_behavior() ) {
-
-				$auto_renew = true;
-
-			} else {
-
-				$auto_renew = false;
-
-			}
+			$auto_renew = rcp_registration_is_recurring();
 
 			update_user_meta( $user_data['id'], '_rcp_new_subscription', '1' );
 
@@ -501,6 +489,45 @@ function rcp_set_pending_subscription_on_upgrade( $status, $user_id ) {
 add_action( 'rcp_set_status', 'rcp_set_pending_subscription_on_upgrade', 10, 2 );
 
 /**
+ * Determine if this registration is recurring
+ *
+ * @since 2.5
+ * @return bool
+ */
+function rcp_registration_is_recurring() {
+
+	$auto_renew = false;
+
+	if ( '3' == rcp_get_auto_renew_behavior() ) {
+		$auto_renew = isset( $_POST['rcp_auto_renew'] );
+	}
+
+	if ( '1' == rcp_get_auto_renew_behavior() ) {
+		$auto_renew = true;
+	}
+
+	// make sure this gateway supports recurring payments
+	if ( $auto_renew && ! empty( $_POST['rcp_gateway'] ) ) {
+		$auto_renew = rcp_gateway_supports( sanitize_text_field( $_POST['rcp_gateway'] ), 'recurring' );
+	}
+
+	return apply_filters( 'rcp_registration_is_recurring', $auto_renew );
+
+}
+
+/**
+ * Add the registration total before the gateway fields
+ *
+ * @since 2.5
+ */
+function rcp_registration_total_field() {
+	?>
+	<div class="rcp_registration_total"></div>
+<?php
+}
+add_action( 'rcp_after_register_form_fields', 'rcp_registration_total_field' );
+
+/**
  * Get formatted total for this registration
  *
  * @since      2.5
@@ -511,7 +538,7 @@ add_action( 'rcp_set_status', 'rcp_set_pending_subscription_on_upgrade', 10, 2 )
 function rcp_registration_total( $echo = true ) {
 	$total = rcp_get_registration_total();
 
-	// the cart has not been setup yet
+	// the registration has not been setup yet
 	if ( false === $total ) {
 		return false;
 	}
@@ -539,13 +566,12 @@ function rcp_registration_total( $echo = true ) {
  * @return mixed|void
  */
 function rcp_get_registration_total() {
-	global $rcp_cart;
 
-	if ( ! is_a( $rcp_cart, 'RCP_Cart' ) ) {
+	if ( ! rcp_is_registration() ) {
 		return false;
 	}
 
-	return $rcp_cart->get_total();
+	return rcp_get_registration()->get_total();
 }
 
 /**
@@ -559,26 +585,25 @@ function rcp_get_registration_total() {
 function rcp_registration_recurring_total( $echo = true ) {
 	$total = rcp_get_registration_recurring_total();
 
-	// the cart has not been setup yet
+	// the registration has not been setup yet
 	if ( false === $total ) {
 		return false;
 	}
 
 	if ( 0 < $total ) {
-		global $rcp_cart;
 		$total = rcp_currency_filter( $total );
-		$subscription = rcp_get_subscription_details( $rcp_cart->get_subscription() );
+		$subscription = rcp_get_subscription_details( rcp_get_registration()->get_subscription() );
 
 		if ( $subscription->duration == 1 ) {
 			$total .= '/' . $subscription->duration_unit;
 		} else {
-			$total .= sprintf( ' every %s %s', $subscription->duration, $subscription->duration_unit );
+			$total .= sprintf( ' every %s %ss', $subscription->duration, $subscription->duration_unit );
 		}
 	} else {
 		$total = __( 'free', 'rcp' );;
 	}
 
-	$total = apply_filters( 'rcp_registration_total', $total );
+	$total = apply_filters( 'rcp_registration_recurring_total', $total );
 
 	if ( $echo ) {
 		echo $total;
@@ -591,20 +616,48 @@ function rcp_registration_recurring_total( $echo = true ) {
  * Get the recurring total payment
  *
  * @since 2.5
- * @return bool
+ * @return bool|Int
  */
 function rcp_get_registration_recurring_total() {
-	global $rcp_cart;
 
-	if ( ! is_a( $rcp_cart, 'RCP_Cart' ) ) {
+	if ( ! rcp_is_registration() ) {
 		return false;
 	}
 
-	return $rcp_cart->get_recurring_total();
+	return rcp_get_registration()->get_recurring_total();
 }
 
 /**
- * Setup the cart object
+ * Is the registration object setup?
+ *
+ * @since 2.5
+ * @return bool
+ */
+function rcp_is_registration() {
+	return (bool) rcp_get_registration()->get_subscription();
+}
+
+/**
+ * Get the registration object. If it hasn't been setup, setup an empty
+ * registration object.
+ *
+ * @return RCP_Registration
+ */
+function rcp_get_registration() {
+	global $rcp_registration;
+
+	// setup empty registration object if one doesn't exist
+	if ( ! is_a( $rcp_registration, 'RCP_Registration' ) ) {
+		rcp_setup_registration();
+	}
+
+	return $rcp_registration;
+}
+
+/**
+ * Setup the registration object
+ *
+ * Auto setup cart on page load if $_POST parameters are found
  *
  * @since      2.5
  * @param      $level_id
@@ -612,23 +665,22 @@ function rcp_get_registration_recurring_total() {
  *
  * @return mixed|void
  */
-function rcp_setup_cart( $level_id, $discount = null ) {
-	global $rcp_cart;
+function rcp_setup_registration( $level_id = null, $discount = null ) {
+	global $rcp_registration;
 
-	$rcp_cart = new RCP_Cart( $level_id, $discount );
-	do_action( 'rcp_setup_cart', $level_id, $discount );
+	$rcp_registration = new RCP_Registration( $level_id, $discount );
+	do_action( 'rcp_setup_registration', $level_id, $discount );
 }
 
-/**
- * Add the registration total before the gateway fields
- *
- * @since 2.5
- */
-function rcp_registration_total_field() {
-	?>
-	<div class="rcp_registration_total">
-		<p><strong>Total:</strong> <span class="registration-total"></span></p>
-	</div>
-	<?php
+function rcp_setup_registration_init() {
+
+	if ( empty( $_POST['rcp_level'] ) ) {
+		return;
+	}
+
+	$level_id = abs( $_POST['rcp_level'] );
+	$discount = ( empty( $_POST['rcp_discount'] ) ) ? null : sanitize_text_field( $_POST['rcp_discount'] );
+
+	rcp_setup_registration( $level_id, $discount );
 }
-add_action( 'rcp_after_register_form_fields', 'rcp_registration_total_field' );
+add_action( 'init', 'rcp_setup_registration_init' );

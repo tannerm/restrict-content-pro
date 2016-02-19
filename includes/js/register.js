@@ -45,9 +45,8 @@ jQuery(document).ready(function($) {
 
 	});
 
-	$('body').on( 'rcp_discount_change rcp_level_change', function() {
-		rcp_calc_total()
-	});
+	$(document.getElementById('rcp_auto_renew')).on('change', rcp_calc_total);
+	$('body').on( 'rcp_discount_change rcp_level_change', rcp_calc_total);
 
 	$(document).on('click', '#rcp_registration_form #rcp_submit', function(e) {
 
@@ -165,28 +164,9 @@ function rcp_validate_subscription_level() {
 
 }
 
-
-function rcp_validate_gateways() {
-
-	if( rcp_validating_gateway ) {
-		return;
-	}
-
-	var $       = jQuery;
-	var form    = $('#rcp_registration_form');
-	var is_free = false;
-	var options = [];
-	var level   = jQuery( '#rcp_subscription_levels input:checked' );
-	var full    = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
+function rcp_get_gateway() {
 	var gateway;
-
-	rcp_validating_gateway = true;
-
-	if( level.attr('rel') == 0 ) {
-		is_free = true;
-	}
-
-	$('.rcp_message.error', form).remove();
+	var $ = jQuery;
 
 	if( $('#rcp_payment_gateways').length > 0 ) {
 
@@ -204,6 +184,31 @@ function rcp_validate_gateways() {
 		gateway = $( 'input[name="rcp_gateway"]' );
 
 	}
+
+	return gateway;
+}
+
+function rcp_validate_gateways() {
+
+	if( rcp_validating_gateway ) {
+		return;
+	}
+
+	var $       = jQuery;
+	var form    = $('#rcp_registration_form');
+	var is_free = false;
+	var options = [];
+	var level   = jQuery( '#rcp_subscription_levels input:checked' );
+	var full    = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
+	var gateway = rcp_get_gateway();
+
+	rcp_validating_gateway = true;
+
+	if( level.attr('rel') == 0 ) {
+		is_free = true;
+	}
+
+	$('.rcp_message.error', form).remove();
 
 	if( is_free ) {
 
@@ -350,14 +355,24 @@ function rcp_calc_total() {
 	var $total          = $('.rcp_registration_total');
 	var discount        = $('#rcp_discount_code').val();
 	var subscription    = ( $('#rcp_subscription_levels input:checked').length ) ? $('#rcp_subscription_levels input:checked').val() : $('input[name="rcp_level"]').val();
+	var $gateway        = rcp_get_gateway();
+
+	if ( ! $total.length ) {
+		return;
+	}
 
 	rcp_calculating_total = true;
 
 	var data = {
 		action: 'rcp_calc_discount',
-		level: subscription,
-		discount: discount
+		rcp_level: subscription,
+		rcp_discount: discount,
+		rcp_gateway: $gateway.val()
 	};
+
+	if ( $('#rcp_auto_renew').is(':checked') ) {
+		data.rcp_auto_renew = true;
+	}
 
 	$.post(rcp_script_options.ajaxurl, data, function(response) {
 		rcp_calculating_total = false;
