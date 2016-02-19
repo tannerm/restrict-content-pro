@@ -211,6 +211,11 @@ class RCP_Registration {
 			}
 		}
 
+		// make sure the discount is not > 100%
+		if ( 0 > $total ) {
+			$total = 0;
+		}
+
 		return apply_filters( 'rcp_registration_get_total_discounts', (float) ( $original_total - $total ), $original_total, $this );
 
 	}
@@ -218,14 +223,23 @@ class RCP_Registration {
 	/**
 	 * Get the registration total
 	 *
+	 * @param bool $discounts | Include discounts?
+	 * @param bool $fees      | Include fees?
+	 *
 	 * @since 2.5
 	 * @return mixed|void
 	 */
-	public function get_total() {
+	public function get_total( $discounts = true, $fees = true ) {
 
 		$total = rcp_get_subscription_price( $this->subscription );
-		$total -= $this->get_total_discounts( $total );
-		$total += $this->get_total_fees( $total );
+
+		if ( $discounts ) {
+			$total -= $this->get_total_discounts( $total );
+		}
+
+		if ( $fees ) {
+			$total += $this->get_total_fees( $total );
+		}
 
 		if ( 0 > $total ) {
 			$total = 0;
@@ -238,14 +252,23 @@ class RCP_Registration {
 	/**
 	 * Get the registration recurring total
 	 *
+	 * @param bool $discounts | Include discounts?
+	 * @param bool $fees      | Include fees?
+	 *
 	 * @since 2.5
 	 * @return mixed|void
 	 */
-	public function get_recurring_total() {
+	public function get_recurring_total( $discounts = true, $fees = true  ) {
 
 		$total = rcp_get_subscription_price( $this->subscription );
-		$total -= $this->get_total_discounts( $total, true );
-		$total += $this->get_total_fees( $total, true );
+
+		if ( $discounts ) {
+			$total -= $this->get_total_discounts( $total, true );
+		}
+
+		if ( $fees ) {
+			$total += $this->get_total_fees( $total, true );
+		}
 
 		if ( 0 > $total ) {
 			$total = 0;
