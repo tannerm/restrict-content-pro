@@ -8,11 +8,6 @@ function rcp_sysinfo_page() {
 	}
 
 	include RCP_PLUGIN_DIR . 'includes/admin/tools/system-info.php';
-
-	if ( isset( $_POST['rcp-sysinfo'] ) ) {
-		rcp_tools_sysinfo_download();
-	}
-
 ?>
 
 	<div class="wrap">
@@ -28,3 +23,30 @@ function rcp_sysinfo_page() {
 	</div>
 <?php
 }
+
+/**
+ * Listens for system info download requests and delivers the file
+ */
+function rcp_tools_sysinfo_download() {
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		return;
+	}
+
+	if ( ! current_user_can( 'rcp_view_payments' ) ) {
+		return;
+	}
+
+	if ( ! isset( $_POST['rcp-download-sysinfo'] ) ) {
+		return;
+	}
+
+	nocache_headers();
+
+	header( 'Content-Type: text/plain' );
+	header( 'Content-Disposition: attachment; filename="rcp-system-info.txt"' );
+
+	echo wp_strip_all_tags( $_POST['rcp-sysinfo'] );
+	exit;
+}
+add_action( 'admin_init', 'rcp_tools_sysinfo_download' );

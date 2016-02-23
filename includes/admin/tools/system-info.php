@@ -209,22 +209,3 @@ function rcp_tools_system_info_report() {
 
 	return $return;
 }
-
-/**
- * Generates the system info file
- */
-function rcp_tools_sysinfo_download() {
-
-	if( ! current_user_can( 'rcp_view_payments' ) ) {
-		return;
-	}
-
-	nocache_headers();
-
-	header( 'Content-Type: text/plain' );
-	header( 'Content-Disposition: attachment; filename="rcp-system-info.txt"' );
-
-	echo wp_strip_all_tags( $_POST['rcp-sysinfo'] );
-	exit;
-}
-add_action( 'rcp_download_sysinfo', 'rcp_tools_sysinfo_download' );
