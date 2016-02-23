@@ -42,35 +42,24 @@ function rcp_tools_system_info_report() {
 	$return .= 'Registered Post Stati:    ' . implode( ', ', get_post_stati() ) . "\n";
 
 	// RCP Config
-	$license_key                = $rcp_options['license_key'];
-	$auto_renew                 = $rcp_options['auto_renew'];
 	$auto_renew_options         = array( 1 => 'Always auto renew', 2 => 'Never auto renew', 3 => 'Let customer choose whether to auto renew' );
-	$currency                   = $rcp_options['currency'];
-	$currency_position          = $rcp_options['currency_position'];
-	$sandbox                    = $rcp_options['sandbox'];
 
 	$return .= "\n" . '-- RCP Configuration' . "\n\n";
 	$return .= 'Version:                          ' . RCP_PLUGIN_VERSION . "\n";
-	$return .= 'License Key:                      ' . ( ! empty( $license_key ) ? $license_key . "\n" : "Not set\n" );
-	$return .= 'Auto Renew:                       ' . ( ! empty( $auto_renew ) && array_key_exists( $auto_renew, $auto_renew_options ) ? $auto_renew_options[$auto_renew] . "\n" : "Invalid Configuration\n" );
-	$return .= 'Currency:                         ' . ( ! empty( $currency ) ? $currency . "\n" : "Invalid Configuration\n" );
-	$return .= 'Currency Position:                ' . ( ! empty( $currency_position ) ? $currency_position . "\n" : "Invalid Configuration\n" );
-	$return .= 'Sandbox Mode:                     ' . ( ! empty( $sandbox ) ? "True" . "\n" : "False\n" );
+	$return .= 'License Key:                      ' . ( ! empty( $rcp_options['license_key'] ) ? $rcp_options['license_key'] . "\n" : "Not set\n" );
+	$return .= 'Auto Renew:                       ' . ( ! empty( $rcp_options['auto_renew'] ) && array_key_exists( $rcp_options['auto_renew'], $auto_renew_options ) ? $auto_renew_options[$rcp_options['auto_renew']] . "\n" : "Invalid Configuration\n" );
+	$return .= 'Currency:                         ' . ( ! empty( $rcp_options['currency'] ) ? $rcp_options['currency'] . "\n" : "Invalid Configuration\n" );
+	$return .= 'Currency Position:                ' . ( ! empty( $rcp_options['currency_position'] ) ? $rcp_options['currency_position'] . "\n" : "Invalid Configuration\n" );
+	$return .= 'Sandbox Mode:                     ' . ( ! empty( $rcp_options['sandbox'] ) ? "True" . "\n" : "False\n" );
 
 
 	// RCP pages
-	$registration_page = $rcp_options['registration_page'];
-	$success_page      = $rcp_options['redirect'];
-	$account_page      = $rcp_options['account_page'];
-	$edit_profile_page = $rcp_options['edit_profile'];
-	$update_card_page  = $rcp_options['update_card'];
-
 	$return .= "\n" . '-- RCP Page Configuration' . "\n\n";
-	$return .= 'Registration Page:                ' . ( ! empty( $registration_page ) ? get_permalink( $registration_page ) . "\n" : "Unset\n" );
-	$return .= 'Success Page:                     ' . ( ! empty( $success_page ) ? get_permalink( $success_page ) . "\n" : "Unset\n" );
-	$return .= 'Account Page:                     ' . ( ! empty( $account_page ) ? get_permalink( $account_page ) . "\n" : "Unset\n" );
-	$return .= 'Edit Profile Page:                ' . ( ! empty( $edit_profile_page ) ? get_permalink( $edit_profile_page ) . "\n" : "Unset\n" );
-	$return .= 'Update Billing Card Page:         ' . ( ! empty( $update_card_page ) ? get_permalink( $update_card_page ) . "\n" : "Unset\n" );
+	$return .= 'Registration Page:                ' . ( ! empty( $rcp_options['registration_page'] ) ? get_permalink( $rcp_options['registration_page'] ) . "\n" : "Unset\n" );
+	$return .= 'Success Page:                     ' . ( ! empty( $rcp_options['redirect'] ) ? get_permalink( $rcp_options['redirect'] ) . "\n" : "Unset\n" );
+	$return .= 'Account Page:                     ' . ( ! empty( $rcp_options['account_page'] ) ? get_permalink( $rcp_options['account_page'] ) . "\n" : "Unset\n" );
+	$return .= 'Edit Profile Page:                ' . ( ! empty( $rcp_options['edit_profile'] ) ? get_permalink( $rcp_options['edit_profile'] ) . "\n" : "Unset\n" );
+	$return .= 'Update Billing Card Page:         ' . ( ! empty( $rcp_options['update_card'] ) ? get_permalink( $rcp_options['update_card'] ) . "\n" : "Unset\n" );
 
 	// RCP gateways
 	$return .= "\n" . '-- RCP Gateway Configuration' . "\n\n";
@@ -89,28 +78,17 @@ function rcp_tools_system_info_report() {
 	}
 
 	// RCP Misc Settings
-	$hide_premium_posts         = ( ! empty( $rcp_options['hide_premium'] ) ? "True" : "False" );
-	$redirect_from_premium      = $rcp_options['redirect_from_premium'];
-	$redirect_default_login_url = ( ! empty( $rcp_options['hijack_login_url'] ) ? "True" : "False" );
-	$redirect_login_page        = $rcp_options['login_redirect'];
-	$prevent_account_sharing    = ( ! empty( $rcp_options['no_login_sharing'] ) ? "True" : "False" );
-	$email_ipn_reports          = ( ! empty( $rcp_options['email_ipn_reports'] ) ? "True" : "False" );
-	$disable_form_css           = ( ! empty( $rcp_options['disable_css'] ) ? "True" : "False" );
-	$enable_recaptcha           = ( ! empty( $rcp_options['enable_recaptcha'] ) ? "True" : "False" );
-	$recaptcha_public_key       = $rcp_options['recaptcha_public_key'];
-	$recaptcha_private_key      = $rcp_options['recaptcha_private_key'];
-
 	$return .= "\n" . '-- RCP Misc Settings' . "\n\n";
-	$return .= 'Hide Premium Posts:               ' . $hide_premium_posts . "\n";
-	$return .= 'Redirect Page:                    ' . ( ! empty( $redirect_from_premium ) ? get_permalink( $redirect_from_premium ) . "\n" : "Unset\n" );
-	$return .= 'Redirect Default Login URL        ' . $redirect_default_login_url . "\n";
-	$return .= 'Login Page:                       ' . ( ! empty( $redirect_login_page ) ? get_permalink( $redirect_login_page ) . "\n" : "Unset\n" );
-	$return .= 'Prevent Account Sharing:          ' . $prevent_account_sharing . "\n";
-	$return .= 'Email IPN Reports:                ' . $email_ipn_reports . "\n";
-	$return .= 'Disable Form CSS:                 ' . $disable_form_css . "\n";
-	$return .= 'Enable reCaptcha:                 ' . $enable_recaptcha . "\n";
-	$return .= 'reCaptcha Site Key:               ' . ( ! empty( $recaptcha_public_key ) ? "Set\n" : "Unset\n" );
-	$return .= 'reCaptcha Secret Key:             ' . ( ! empty( $recaptcha_secret_key ) ? "Set\n" : "Unset\n" );
+	$return .= 'Hide Premium Posts:               ' . ( ! empty( $rcp_options['hide_premium'] ) ? "True\n" : "False\n" );
+	$return .= 'Redirect Page:                    ' . ( ! empty( $rcp_options['redirect_from_premium'] ) ? get_permalink( $rcp_options['redirect_from_premium'] ) . "\n" : "Unset\n" );
+	$return .= 'Redirect Default Login URL        ' . ( ! empty( $rcp_options['hijack_login_url'] ) ? "True\n" : "False\n" );
+	$return .= 'Login Page:                       ' . ( ! empty( $rcp_options['login_redirect'] ) ? get_permalink( $rcp_options['login_redirect'] ) . "\n" : "Unset\n" );
+	$return .= 'Prevent Account Sharing:          ' . ( ! empty( $rcp_options['no_login_sharing'] ) ? "True\n" : "False\n" );
+	$return .= 'Email IPN Reports:                ' . ( ! empty( $rcp_options['email_ipn_reports'] ) ? "True\n" : "False\n" );
+	$return .= 'Disable Form CSS:                 ' . ( ! empty( $rcp_options['disable_css'] ) ? "True\n" : "False\n" );
+	$return .= 'Enable reCaptcha:                 ' . ( ! empty( $rcp_options['enable_recaptcha'] ) ? "True\n" : "False\n" );
+	$return .= 'reCaptcha Site Key:               ' . ( ! empty( $rcp_options['recaptcha_public_key'] ) ? "Set\n" : "Unset\n" );
+	$return .= 'reCaptcha Secret Key:             ' . ( ! empty( $rcp_options['recaptcha_private_key'] ) ? "Set\n" : "Unset\n" );
 
 	// RCP Templates
 	$dir = get_stylesheet_directory() . '/rcp/';
