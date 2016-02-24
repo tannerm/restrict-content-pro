@@ -528,7 +528,7 @@ function rcp_registration_total( $echo = true ) {
 	if ( 0 < $total ) {
 		$total = rcp_currency_filter( $total );
 	} else {
-		$total = __( 'free', 'rcp' );;
+		$total = __( 'free', 'rcp' );
 	}
 
 	$total = apply_filters( 'rcp_registration_total', $total );
