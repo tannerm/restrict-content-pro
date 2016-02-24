@@ -1,6 +1,9 @@
 <?php
 /**
  * Displays the system info report
+ *
+ * @since 2.5
+ * @return string $return The compiled system info report.
  */
 function rcp_tools_system_info_report() {
 

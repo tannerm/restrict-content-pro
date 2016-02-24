@@ -1,6 +1,8 @@
 <?php
 /**
  * Displays the Tools page
+ *
+ * @since 2.5
  */
 function rcp_sysinfo_page() {
 	if( ! current_user_can( 'rcp_view_payments' ) ) {
@@ -26,6 +28,8 @@ function rcp_sysinfo_page() {
 
 /**
  * Listens for system info download requests and delivers the file
+ *
+ * @since 2.5
  */
 function rcp_tools_sysinfo_download() {
 
