@@ -496,7 +496,7 @@ function rcp_registration_is_recurring() {
 	if ( $auto_renew && ! empty( $_POST['rcp_level'] ) ) {
 		$details = rcp_get_subscription_details( $_POST['rcp_level'] );
 
-		// check if this is an unlimitted or free subscription
+		// check if this is an unlimited or free subscription
 		if ( empty( $details->duration ) || empty( $details->price ) ) {
 			$auto_renew = false;
 		}

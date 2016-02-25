@@ -46,7 +46,7 @@ jQuery(document).ready(function($) {
 	});
 
 	$(document.getElementById('rcp_auto_renew')).on('change', rcp_calc_total);
-	$('body').on( 'rcp_discount_change rcp_level_change', rcp_calc_total);
+	$('body').on( 'rcp_discount_change rcp_level_change rcp_gateway_change', rcp_calc_total);
 
 	$(document).on('click', '#rcp_registration_form #rcp_submit', function(e) {
 
