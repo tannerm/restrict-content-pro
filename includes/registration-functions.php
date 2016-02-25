@@ -40,7 +40,7 @@ function rcp_process_registration() {
 
 	// if both today's total and the recurring total are 0, the there is a full discount
 	// if this is not a recurring subscription only check today's total
-	$full_discount = ( $auto_renew ) ? ! ( boolval( (float) rcp_get_registration()->get_total() ) || boolval( (float) rcp_get_registration()->get_recurring_total() ) ) : ! boolval( (float) rcp_get_registration()->get_total() );
+	$full_discount = ( $auto_renew ) ? ( rcp_get_registration()->get_total() == 0 && rcp_get_registration()->get_recurring_total() == 0 ) : ( rcp_get_registration()->get_total() == 0 );
 
 	// get the selected payment method/gateway
 	if( ! isset( $_POST['rcp_gateway'] ) ) {

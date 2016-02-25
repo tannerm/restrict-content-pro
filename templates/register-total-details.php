@@ -6,7 +6,7 @@ if ( ! rcp_is_registration() ) {
 
 ?>
 
-<table class="rcp_registration_total_details">
+<table class="rcp_registration_total_details rcp-table">
 
 	<tbody style="vertical-align: top;">
 
