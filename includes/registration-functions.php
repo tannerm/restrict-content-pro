@@ -493,6 +493,15 @@ function rcp_registration_is_recurring() {
 		$auto_renew = rcp_gateway_supports( sanitize_text_field( $_POST['rcp_gateway'] ), 'recurring' );
 	}
 
+	if ( $auto_renew && ! empty( $_POST['rcp_level'] ) ) {
+		$details = rcp_get_subscription_details( $_POST['rcp_level'] );
+
+		// check if this is an unlimitted or free subscription
+		if ( empty( $details->duration ) || empty( $details->price ) ) {
+			$auto_renew = false;
+		}
+	}
+
 	return apply_filters( 'rcp_registration_is_recurring', $auto_renew );
 
 }
