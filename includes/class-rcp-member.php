@@ -610,6 +610,10 @@ class RCP_Member extends WP_User {
 			return 0;
 		}
 
+		if ( apply_filters( 'rcp_disable_prorate_credit', false, $this ) ) {
+			return 0;
+		}
+
 		// get the most recent payment
 		foreach( $this->get_payments() as $pmt ) {
 			if ( 'complete' != $pmt->status ) {
@@ -632,39 +636,45 @@ class RCP_Member extends WP_User {
 			return 0;
 		}
 
-		$member_term = $this->get_expiration_date();
+		$exp_date = $this->get_expiration_date();
 
 		// if this is member does not have an expiration date, calculate it
-		if ( 'none' == $member_term ) {
+		if ( 'none' == $exp_date ) {
 			return 0;
 		}
 
 		// make sure we have a valid date
-		if ( ! $member_term = strtotime( $member_term ) ) {
+		if ( ! $exp_date = strtotime( $exp_date ) ) {
 			return 0;
 		}
 
-		$member_term_dt = date( 'Y-m-d', $member_term ) . ' 23:59:59';
-		$member_term    = strtotime( $member_term_dt );
+		$exp_date_dt = date( 'Y-m-d', $exp_date ) . ' 23:59:59';
+		$exp_date    = strtotime( $exp_date_dt, current_time( 'timestamp' ) );
 
-		$time_remaining = $member_term - current_time( 'timestamp' );
+		$time_remaining = $exp_date - current_time( 'timestamp' );
 
-		// total time is a function of the expiration date minus the subscription term.
-		// This allows for > 100% discount for renewed subscriptions
-		if ( ! $start_date = strtotime( $member_term_dt . ' -' . $subscription->duration . $subscription->duration_unit ) ) {
+		// Calculate the start date based on the expiration date
+		if ( ! $start_date = strtotime( $exp_date_dt . ' -' . $subscription->duration . $subscription->duration_unit, current_time( 'timestamp' ) ) ) {
 			return 0;
 		}
 
-		$total_time = $member_term - $start_date;
+		$total_time = $exp_date - $start_date;
 
 		if ( $time_remaining <= 0 ) {
 			return 0;
 		}
 
 		// calculate discount as percentage of subscription remaining
+		// use the previous payment amount
 		$payment_amount       = abs( $subscription->price );
 		$percentage_remaining = $time_remaining / $total_time;
-		$discount             = round( $payment_amount * $percentage_remaining, 2 );
+
+		// make sure we don't credit more than 100%
+		if ( $percentage_remaining > 1 ) {
+			$percentage_remaining = 1;
+		}
+
+		$discount = round( $payment_amount * $percentage_remaining, 2 );
 
 		// make sure they get a discount. This shouldn't ever run
 		if ( ! $discount > 0 ) {

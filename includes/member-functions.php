@@ -648,9 +648,9 @@ function rcp_get_upgrade_paths( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	// make sure the user is active an get the subscription ID
-	$user_subscription = ( rcp_is_active( $user_id ) ) ? rcp_get_subscription_id( $user_id ) : '';
-	$subscriptions     = rcp_get_paid_levels();
+	// make sure the user is active and get the subscription ID
+	$user_subscription = ( rcp_is_active( $user_id ) && 'cancelled' !== rcp_get_status() ) ? rcp_get_subscription_id( $user_id ) : '';
+	$subscriptions     = rcp_get_subscription_levels( 'active' );
 
 	// remove the user's current subscription from the list
 	foreach( $subscriptions as $key => $subscription ) {
@@ -659,7 +659,7 @@ function rcp_get_upgrade_paths( $user_id = 0 ) {
 		}
 	}
 
-	return apply_filters( 'rcp_get_upgrade_paths', $subscriptions, $user_id );
+	return apply_filters( 'rcp_get_upgrade_paths', array_values( $subscriptions ), $user_id );
 }
 
 
@@ -1317,7 +1317,7 @@ function rcp_validate_username( $username = '' ) {
  *
  * @return int
  */
-function rcp_get_member_prorate_amount( $user_id = 0 ) {
+function rcp_get_member_prorate_credit( $user_id = 0 ) {
 	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}

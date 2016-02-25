@@ -154,6 +154,7 @@ class RCP_Registration {
 	 *
 	 * @since 2.5
 	 * @param null $total
+	 * @param bool $only_recurring | set to only get fees that are recurring
 	 *
 	 * @return int
 	 */
@@ -173,7 +174,13 @@ class RCP_Registration {
 			$fees += $fee['amount'];
 		}
 
-		return $fees;
+		// if total is present, make sure that any negative fees are not
+		// greater than the total.
+		if ( $total && ( $fees + $total ) < 0 ) {
+			$fees = -1 * $total;
+		}
+
+		return apply_filters( 'rcp_registration_get_total_fees', (float) $fees, $total, $only_recurring, $this );
 
 	}
 
@@ -182,6 +189,7 @@ class RCP_Registration {
 	 *
 	 * @since 2.5
 	 * @param null $total
+	 * @param bool $only_recurring | set to only get discounts that are recurring
 	 *
 	 * @return int|mixed|void
 	 */
@@ -216,7 +224,7 @@ class RCP_Registration {
 			$total = 0;
 		}
 
-		return apply_filters( 'rcp_registration_get_total_discounts', (float) ( $original_total - $total ), $original_total, $this );
+		return apply_filters( 'rcp_registration_get_total_discounts', (float) ( $original_total - $total ), $original_total, $only_recurring, $this );
 
 	}
 

@@ -201,7 +201,7 @@ function rcp_process_registration() {
 		$redirect = rcp_get_return_url( $user_data['id'] );
 
 		$subscription_data = array(
-			'price'             => rcp_get_registration()->get_total( true, false ),
+			'price'             => rcp_get_registration()->get_total( true, false ), // get total without the fee
 			'discount'          => rcp_get_registration()->get_total_discounts(),
 			'discount_code'     => $discount,
 			'fee' 			    => rcp_get_registration()->get_total_fees(),
@@ -654,6 +654,9 @@ function rcp_setup_registration( $level_id = null, $discount = null ) {
 	do_action( 'rcp_setup_registration', $level_id, $discount );
 }
 
+/**
+ * Automatically setup the registration object
+ */
 function rcp_setup_registration_init() {
 
 	if ( empty( $_POST['rcp_level'] ) ) {
@@ -666,3 +669,59 @@ function rcp_setup_registration_init() {
 	rcp_setup_registration( $level_id, $discount );
 }
 add_action( 'init', 'rcp_setup_registration_init' );
+
+
+/**
+ * Filter levels to only show valid upgrade levels
+ *
+ * @since 2.5
+ * @return mixed|void
+ */
+function rcp_filter_registration_upgrade_levels() {
+
+	remove_filter( 'rcp_get_levels', 'rcp_filter_registration_upgrade_levels' );
+
+	$levels = rcp_get_upgrade_paths();
+
+	add_filter( 'rcp_get_levels', 'rcp_filter_registration_upgrade_levels' );
+
+	return $levels;
+
+}
+
+/**
+ * Hook into registration page and filter upgrade path
+ */
+add_action( 'rcp_before_subscription_form_fields', 'rcp_filter_registration_upgrade_levels' );
+
+/**
+ * Add prorate credit to member registration
+ *
+ * @since 2.5
+ * @param $registration
+ */
+function rcp_add_prorate_fee( $registration ) {
+	if ( ! $amount = rcp_get_member_prorate_credit() ) {
+		return;
+	}
+
+	$registration->add_fee( -1 * $amount, __( 'Proration Credit', 'rcp' ) );
+}
+add_action( 'rcp_registration_init', 'rcp_add_prorate_fee' );
+
+/**
+ * Add message to checkout specifying proration credit
+ *
+ * @since 2.5
+ */
+function rcp_add_prorate_message() {
+	if ( ! $amount = rcp_get_member_prorate_credit() ) {
+		return;
+	}
+
+	$prorate_message = sprintf( '<p>%s</p>', __( 'If you upgrade or downgrade your account, the new subscription will be prorated up to %s for the first payment. Prorated prices are shown below.', 'rcp' ) );
+
+	printf( apply_filters( 'rcp_registration_prorate_message', $prorate_message ), esc_html( rcp_currency_filter( $amount ) ) );
+}
+add_action( 'rcp_before_subscription_form_fields', 'rcp_add_prorate_message' );
+

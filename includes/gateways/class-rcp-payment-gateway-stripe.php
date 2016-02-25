@@ -143,7 +143,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$customer->save();
 
 				// Update the customer's subscription in Stripe
-				$customer->updateSubscription( array( 'plan' => $plan_id ) );
+				$customer->updateSubscription( array( 'plan' => $plan_id, 'prorate' => false ) );
 
 				$member->set_payment_profile_id( $customer->id );
 
