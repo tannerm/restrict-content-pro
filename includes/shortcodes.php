@@ -177,6 +177,66 @@ function rcp_registration_form( $atts, $content = null ) {
 }
 add_shortcode( 'register_form', 'rcp_registration_form' );
 
+function rcp_register_form_stripe_checkout( $atts ) {
+	global $rcp_options;
+
+	$key = ( isset( $rcp_options['sandbox'] ) ) ? $rcp_options['stripe_test_publishable'] : $rcp_options['stripe_live_publishable'];
+
+	$atts = wp_parse_args( $atts, array(
+		'plan_id' => 0,
+	) );
+
+	if ( empty( $atts['plan_id'] ) ) {
+		return;
+	}
+
+	$user         = wp_get_current_user();
+	$subscription = rcp_get_subscription_details( $atts['plan_id'] );
+	$price        = $subscription->price * 100;
+
+	$data = array(
+		'data-key'               => $key,
+		'data-name'              => get_option( 'blogname' ),
+		'data-description'       => sprintf( 'Join %s ($%s per %s)', $subscription->name, $subscription->price, $subscription->duration_unit ),
+		'data-label'             => 'Join ' . $subscription->name,
+		'data-amount'            => $subscription->price * 100,
+		'data-local'             => 'auto',
+		'data-allow-remember-me' => true,
+	);
+
+	if ( ! empty( $user->user_email ) ) {
+		$data['data-email'] = $user->user_email;
+	}
+
+	if ( $image = get_site_icon_url() ) {
+		$data['data-image'] = $image;
+	}
+
+	foreach( $atts as $att => $value ) {
+		if ( 0 !== strpos( $att, 'data-' ) ) {
+			continue;
+		}
+
+		$data[ $att ] = $value;
+	}
+
+	apply_filters( 'rcp_stripe_checkout_data', $data );
+
+	ob_start();
+	?>
+	<form action="" method="post">
+		<script src="https://checkout.stripe.com/checkout.js" class="stripe-button" <?php foreach( $data as $label => $value ) { printf( ' %s="%s" ', esc_attr( $label ), esc_attr( $value ) ); } ?> ></script>
+		<input type="hidden" name="subscription_id" value="<?php echo $subscription->id ?>" />
+		<input type="hidden" name="price" value="<?php echo $price ?>" />
+		<input type="hidden" name="source" value="stripe-checkout" />
+		<input type="hidden" name="rcp_register_nonce" value="<?php echo wp_create_nonce('rcp-register-nonce' ); ?>"/>
+	</form>
+	<?php
+
+	return apply_filters( 'register_form_stripe', ob_get_clean(), $atts );
+}
+add_shortcode( 'register_form_stripe', 'rcp_register_form_stripe_checkout' );
+
 // user login form
 function rcp_login_form( $atts, $content = null ) {
 
