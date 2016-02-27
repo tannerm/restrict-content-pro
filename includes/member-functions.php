@@ -534,6 +534,57 @@ function rcp_print_user_payments( $user_id ) {
 }
 
 /**
+ * Prints payment history for the specific user in a formatted table
+ *
+ * @since 2.5
+ * @param $user_id
+ *
+ * @return mixed|string|void
+ */
+function rcp_print_user_payments_formatted( $user_id ) {
+
+	$payments = new RCP_Payments;
+	$user_payments = $payments->get_payments( array( 'user_id' => $user_id ) );
+	$payments_list = '';
+
+	if ( ! $user_payments ) {
+		return $payments_list;
+	} ?>
+
+	<table class="wp-list-table widefat fixed posts rcp-table rcp_payment_details" style="width: 100%;">
+		
+		<thead>
+			<tr>
+				<th><?php _e( 'Date', 'rcp' ); ?></th>
+				<th><?php _e( 'Subscription', 'rcp' ); ?></th>
+				<th><?php _e( 'Payment Type', 'rcp' ); ?></th>
+				<th><?php _e( 'Subscription Key', 'rcp' ); ?></th>
+				<th><?php _e( 'Transaction ID', 'rcp' ); ?></th>
+				<th><?php _e( 'Amount', 'rcp' ); ?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach( $user_payments as $payment ) : ?>
+
+				<tr>
+					<td><?php echo esc_html( $payment->date ); ?></td>
+					<td><?php echo esc_html( $payment->subscription ); ?></td>
+					<td><?php echo esc_html( $payment->payment_type ); ?></td>
+					<td><?php echo esc_html( $payment->subscription_key ); ?></td>
+					<td><a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php echo empty( $payment->transaction_id ) ? '' : esc_html( $payment->transaction_id ); ?></a></td>
+					<td><?php echo ( '' == $payment->amount ) ? esc_html( rcp_currency_filter( $payment->amount2 ) ) : esc_html( rcp_currency_filter( $payment->amount ) ); ?></td>
+				</tr>
+
+			<?php endforeach; ?>
+		</tbody>
+
+	</table>
+
+	<?php
+	return apply_filters( 'rcp_print_user_payments_formatted', ob_get_clean(), $user_id );
+}
+
+/**
  * Retrieve the payments for a specific user
  *
  * @since       v1.5
@@ -615,7 +666,51 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
 	if( ( ! rcp_is_active( $user_id ) || ! rcp_is_recurring( $user_id ) ) && rcp_has_paid_levels() )
 		$ret = true;
 
+	if ( rcp_has_upgrade_path( $user_id ) ) {
+		$ret = true;
+	}
+
 	return (bool) apply_filters( 'rcp_can_upgrade_subscription', $ret, $user_id );
+}
+
+/**
+ * Does this user have an upgrade path?
+ *
+ * @since 2.5
+ * @param int $user_id the ID of the user to check
+ *
+ * @return bool
+ */
+function rcp_has_upgrade_path( $user_id = 0 ) {
+	return ( bool ) rcp_get_upgrade_paths( $user_id );
+}
+
+/**
+ * Get subscriptions to which this user can upgrade
+ *
+ * @since 2.5
+ * @param int $user_id the ID of the user to check
+ *
+ * @return mixed|void
+ */
+function rcp_get_upgrade_paths( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	// make sure the user is active and get the subscription ID
+	$user_subscription = ( rcp_is_active( $user_id ) && 'cancelled' !== rcp_get_status() ) ? rcp_get_subscription_id( $user_id ) : '';
+	$subscriptions     = rcp_get_subscription_levels( 'active' );
+
+	// remove the user's current subscription from the list
+	foreach( $subscriptions as $key => $subscription ) {
+		if ( $user_subscription == $subscription->id ) {
+			unset( $subscriptions[ $key ] );
+		}
+	}
+
+	return apply_filters( 'rcp_get_upgrade_paths', array_values( $subscriptions ), $user_id );
 }
 
 
@@ -1127,7 +1222,6 @@ function rcp_can_member_renew( $user_id = 0 ) {
 	$member = new RCP_Member( $user_id );
 
 	if( $member->is_recurring() && $member->is_active() && 'cancelled' !== $member->get_status() ) {
-
 		$ret = false;
 
 	}
@@ -1264,4 +1358,22 @@ function rcp_validate_username( $username = '' ) {
 	$sanitized = sanitize_user( $username, false );
 	$valid = ( $sanitized == $username );
 	return (bool) apply_filters( 'rcp_validate_username', $valid, $username );
+}
+
+/**
+ * Get the prorate amount for this member
+ *
+ * @since 2.5
+ * @param int $user_id
+ *
+ * @return int
+ */
+function rcp_get_member_prorate_credit( $user_id = 0 ) {
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$member = new RCP_Member( $user_id );
+
+	return $member->get_prorate_credit_amount();
 }

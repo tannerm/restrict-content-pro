@@ -156,6 +156,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-member.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-payments.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-discounts.php' );
+	include( RCP_PLUGIN_DIR . 'includes/class-rcp-registration.php' );
 	include( RCP_PLUGIN_DIR . 'includes/scripts.php' );
 	include( RCP_PLUGIN_DIR . 'includes/ajax-actions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/cron-functions.php' );
