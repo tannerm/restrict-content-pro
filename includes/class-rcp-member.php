@@ -597,4 +597,92 @@ class RCP_Member extends WP_User {
 		}
 	}
 
+	/**
+	 * Get the prorate credit amount for the user's remaining subscription
+	 *
+	 * @since 2.5
+	 * @return int
+	 */
+	public function get_prorate_credit_amount() {
+
+		// make sure this is an active, paying subscriber
+		if ( ! $this->is_active() ) {
+			return 0;
+		}
+
+		if ( apply_filters( 'rcp_disable_prorate_credit', false, $this ) ) {
+			return 0;
+		}
+
+		// get the most recent payment
+		foreach( $this->get_payments() as $pmt ) {
+			if ( 'complete' != $pmt->status ) {
+				continue;
+			}
+
+			$payment = $pmt;
+			break;
+		}
+
+		if ( empty( $payment ) ) {
+			return 0;
+		}
+
+		$subscription    = rcp_get_subscription_details_by_name( $payment->subscription );
+		$subscription_id = $this->get_subscription_id();
+
+		// make sure the subscription payment matches the existing subscription
+		if ( empty( $subscription->id ) || empty( $subscription->duration ) || $subscription->id != $subscription_id ) {
+			return 0;
+		}
+
+		$exp_date = $this->get_expiration_date();
+
+		// if this is member does not have an expiration date, calculate it
+		if ( 'none' == $exp_date ) {
+			return 0;
+		}
+
+		// make sure we have a valid date
+		if ( ! $exp_date = strtotime( $exp_date ) ) {
+			return 0;
+		}
+
+		$exp_date_dt = date( 'Y-m-d', $exp_date ) . ' 23:59:59';
+		$exp_date    = strtotime( $exp_date_dt, current_time( 'timestamp' ) );
+
+		$time_remaining = $exp_date - current_time( 'timestamp' );
+
+		// Calculate the start date based on the expiration date
+		if ( ! $start_date = strtotime( $exp_date_dt . ' -' . $subscription->duration . $subscription->duration_unit, current_time( 'timestamp' ) ) ) {
+			return 0;
+		}
+
+		$total_time = $exp_date - $start_date;
+
+		if ( $time_remaining <= 0 ) {
+			return 0;
+		}
+
+		// calculate discount as percentage of subscription remaining
+		// use the previous payment amount
+		$payment_amount       = abs( $subscription->price );
+		$percentage_remaining = $time_remaining / $total_time;
+
+		// make sure we don't credit more than 100%
+		if ( $percentage_remaining > 1 ) {
+			$percentage_remaining = 1;
+		}
+
+		$discount = round( $payment_amount * $percentage_remaining, 2 );
+
+		// make sure they get a discount. This shouldn't ever run
+		if ( ! $discount > 0 ) {
+			$discount = $payment_amount;
+		}
+
+		return apply_filters( 'rcp_member_prorate_credit', number_format( (float) $discount, 2 ), $this->ID, $this );
+
+	}
+
 }
