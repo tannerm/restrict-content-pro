@@ -551,28 +551,32 @@ function rcp_print_user_payments_formatted( $user_id ) {
 		return $payments_list;
 	} ?>
 
-	<table class="rcp-table rcp_payment_details" style="width: 100%;">
-		<tr>
-			<th><?php _e( 'Date', 'rcp' ); ?></th>
-			<th><?php _e( 'Subscription', 'rcp' ); ?></th>
-			<th><?php _e( 'Payment Type', 'rcp' ); ?></th>
-			<th><?php _e( 'Subscription Key', 'rcp' ); ?></th>
-			<th><?php _e( 'Transaction ID', 'rcp' ); ?></th>
-			<th><?php _e( 'Amount', 'rcp' ); ?></th>
-		</tr>
-
-		<?php foreach( $user_payments as $payment ) : ?>
-
+	<table class="wp-list-table widefat fixed posts rcp-table rcp_payment_details" style="width: 100%;">
+		
+		<thead>
 			<tr>
-				<td><?php echo esc_html( $payment->date ); ?></td>
-				<td><?php echo esc_html( $payment->subscription ); ?></td>
-				<td><?php echo esc_html( $payment->payment_type ); ?></td>
-				<td><?php echo esc_html( $payment->subscription_key ); ?></td>
-				<td><a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php echo empty( $payment->transaction_id ) ? '' : esc_html( $payment->transaction_id ); ?></a></td>
-				<td><?php echo ( '' == $payment->amount ) ? esc_html( rcp_currency_filter( $payment->amount2 ) ) : esc_html( rcp_currency_filter( $payment->amount ) ); ?></td>
+				<th><?php _e( 'Date', 'rcp' ); ?></th>
+				<th><?php _e( 'Subscription', 'rcp' ); ?></th>
+				<th><?php _e( 'Payment Type', 'rcp' ); ?></th>
+				<th><?php _e( 'Subscription Key', 'rcp' ); ?></th>
+				<th><?php _e( 'Transaction ID', 'rcp' ); ?></th>
+				<th><?php _e( 'Amount', 'rcp' ); ?></th>
 			</tr>
+		</thead>
+		<tbody>
+			<?php foreach( $user_payments as $payment ) : ?>
 
-		<?php endforeach; ?>
+				<tr>
+					<td><?php echo esc_html( $payment->date ); ?></td>
+					<td><?php echo esc_html( $payment->subscription ); ?></td>
+					<td><?php echo esc_html( $payment->payment_type ); ?></td>
+					<td><?php echo esc_html( $payment->subscription_key ); ?></td>
+					<td><a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php echo empty( $payment->transaction_id ) ? '' : esc_html( $payment->transaction_id ); ?></a></td>
+					<td><?php echo ( '' == $payment->amount ) ? esc_html( rcp_currency_filter( $payment->amount2 ) ) : esc_html( rcp_currency_filter( $payment->amount ) ); ?></td>
+				</tr>
+
+			<?php endforeach; ?>
+		</tbody>
 
 	</table>
 
