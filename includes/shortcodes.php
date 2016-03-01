@@ -177,59 +177,57 @@ function rcp_registration_form( $atts, $content = null ) {
 }
 add_shortcode( 'register_form', 'rcp_registration_form' );
 
+/**
+ * Shortcode for displaying stripe checkout
+ *
+ * @since 2.5
+ * @param $atts
+ *
+ * @return mixed|void
+ */
 function rcp_register_form_stripe_checkout( $atts ) {
 	global $rcp_options;
 
-	$key = ( isset( $rcp_options['sandbox'] ) ) ? $rcp_options['stripe_test_publishable'] : $rcp_options['stripe_live_publishable'];
-
-	$atts = wp_parse_args( $atts, array(
-		'plan_id' => 0,
-	) );
-
 	if ( empty( $atts['plan_id'] ) ) {
-		return;
+		return '';
 	}
+
+	$key = ( isset( $rcp_options['sandbox'] ) ) ? $rcp_options['stripe_test_publishable'] : $rcp_options['stripe_live_publishable'];
 
 	$user         = wp_get_current_user();
 	$subscription = rcp_get_subscription_details( $atts['plan_id'] );
-	$price        = $subscription->price * 100;
 
-	$data = array(
+	$data = wp_parse_args( $atts, array(
+		'plan_id'                => 0,
 		'data-key'               => $key,
 		'data-name'              => get_option( 'blogname' ),
-		'data-description'       => sprintf( 'Join %s ($%s per %s)', $subscription->name, $subscription->price, $subscription->duration_unit ),
+		'data-description'       => $subscription->description,
 		'data-label'             => 'Join ' . $subscription->name,
+		'data-panel-label'       => 'Register - {{amount}}',
 		'data-amount'            => $subscription->price * 100,
 		'data-local'             => 'auto',
 		'data-allow-remember-me' => true,
-	);
+	) );
 
-	if ( ! empty( $user->user_email ) ) {
+	if ( empty( $data['data-email'] ) && ! empty( $user->user_email ) ) {
 		$data['data-email'] = $user->user_email;
 	}
 
-	if ( $image = get_site_icon_url() ) {
+	if ( empty( $data['data-image'] ) && $image = get_site_icon_url() ) {
 		$data['data-image'] = $image;
 	}
 
-	foreach( $atts as $att => $value ) {
-		if ( 0 !== strpos( $att, 'data-' ) ) {
-			continue;
-		}
-
-		$data[ $att ] = $value;
-	}
-
-	apply_filters( 'rcp_stripe_checkout_data', $data );
+	$data = apply_filters( 'rcp_stripe_checkout_data', $data );
 
 	ob_start();
 	?>
 	<form action="" method="post">
+		<?php do_action( 'register_form_stripe_fields', $data ); ?>
 		<script src="https://checkout.stripe.com/checkout.js" class="stripe-button" <?php foreach( $data as $label => $value ) { printf( ' %s="%s" ', esc_attr( $label ), esc_attr( $value ) ); } ?> ></script>
-		<input type="hidden" name="subscription_id" value="<?php echo $subscription->id ?>" />
-		<input type="hidden" name="price" value="<?php echo $price ?>" />
-		<input type="hidden" name="source" value="stripe-checkout" />
+		<input type="hidden" name="rcp_level" value="<?php echo $subscription->id ?>" />
 		<input type="hidden" name="rcp_register_nonce" value="<?php echo wp_create_nonce('rcp-register-nonce' ); ?>"/>
+		<input type="hidden" name="rcp_gateway" value="stripe"/>
+		<input type="hidden" name="rcp_method" value="stripe_checkout"/>
 	</form>
 	<?php
 

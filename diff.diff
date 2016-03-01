@@ -1,0 +1,189 @@
+diff --git a/includes/gateways/class-rcp-payment-gateway-stripe.php b/includes/gateways/class-rcp-payment-gateway-stripe.php
+index fb61f2a..824a146 100644
+--- a/includes/gateways/class-rcp-payment-gateway-stripe.php
++++ b/includes/gateways/class-rcp-payment-gateway-stripe.php
+@@ -11,8 +11,8 @@
+ 
+ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
+ 
+-	private $secret_key;
+-	private $publishable_key;
++	protected $secret_key;
++	protected $publishable_key;
+ 
+ 	/**
+ 	 * Get things going
+@@ -565,6 +565,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
+ 	 */
+ 	public function validate_fields() {
+ 
++		// return early if we already have a token
++		if ( ! empty( $_POST['stripeToken'] ) ) {
++			return;
++		}
++
+ 		if( empty( $_POST['rcp_card_number'] ) ) {
+ 			rcp_errors()->add( 'missing_card_number', __( 'The card number you have entered is invalid', 'rcp' ), 'register' );
+ 		}
+diff --git a/includes/gateways/class-rcp-payment-gateways.php b/includes/gateways/class-rcp-payment-gateways.php
+index 8215ad4..edd5a3f 100644
+--- a/includes/gateways/class-rcp-payment-gateways.php
++++ b/includes/gateways/class-rcp-payment-gateways.php
+@@ -78,6 +78,11 @@ class RCP_Payment_Gateways {
+ 				'admin_label'  => __( 'Stripe', 'rcp' ),
+ 				'class'        => 'RCP_Payment_Gateway_Stripe'
+ 			),
++			'stripe_checkout' => array(
++				'label'        => __( 'Stripe', 'rcp' ),
++				'admin_label'  => __( 'Stripe Checkout', 'rcp' ),
++				'class'        => 'RCP_Payment_Gateway_Stripe_Checkout'
++			),
+ 			'twocheckout' => array(
+ 				'label'        => __( 'Credit / Debit Card', 'rcp' ),
+ 				'admin_label'  => __( '2Checkout', 'rcp' ),
+diff --git a/includes/registration-functions.php b/includes/registration-functions.php
+index f1b8768..d75dfaf 100755
+--- a/includes/registration-functions.php
++++ b/includes/registration-functions.php
+@@ -276,6 +276,42 @@ add_action( 'init', 'rcp_process_registration', 100 );
+ add_action( 'wp_ajax_rcp_process_register_form', 'rcp_process_registration', 100 );
+ add_action( 'wp_ajax_nopriv_rcp_process_register_form', 'rcp_process_registration', 100 );
+ 
++/**
++ * Provide the default registration values when checking out with Stripe Checkout.
++ */
++function rcp_handle_stripe_checkout() {
++
++	if ( isset( $_POST['rcp_ajax'] ) || empty( $_POST['rcp_method'] ) || empty( $_POST['stripeEmail'] ) || 'stripe_checkout' !== $_POST['rcp_method'] ) {
++		return;
++	}
++
++	if ( empty( $_POST['rcp_user_email'] ) ) {
++		$_POST['rcp_user_email'] = $_POST['stripeEmail'];
++	}
++
++	if ( empty( $_POST['rcp_user_login'] ) ) {
++		$_POST['rcp_user_login'] = $_POST['stripeEmail'];
++	}
++
++	if ( empty( $_POST['rcp_user_first'] ) ) {
++		$_POST['rcp_user_first'] = explode( '@', $_POST['rcp_user_email'] )[0];
++	}
++
++	if ( empty( $_POST['rcp_user_last'] ) ) {
++		$_POST['rcp_user_last'] = '';
++	}
++
++	if ( empty( $_POST['rcp_user_pass'] ) ) {
++		$_POST['rcp_user_pass'] = wp_generate_password();
++	}
++
++	if ( empty( $_POST['rcp_user_pass_confirm'] ) ) {
++		$_POST['rcp_user_pass_confirm'] = $_POST['rcp_user_pass'];
++	}
++
++}
++add_action( 'rcp_before_form_errors', 'rcp_handle_stripe_checkout' );
++
+ 
+ /**
+  * Validate and setup the user data for registration
+diff --git a/includes/shortcodes.php b/includes/shortcodes.php
+index ff18dea..e2cdd8e 100755
+--- a/includes/shortcodes.php
++++ b/includes/shortcodes.php
+@@ -177,59 +177,57 @@ function rcp_registration_form( $atts, $content = null ) {
+ }
+ add_shortcode( 'register_form', 'rcp_registration_form' );
+ 
++/**
++ * Shortcode for displaying stripe checkout
++ *
++ * @since 2.5
++ * @param $atts
++ *
++ * @return mixed|void
++ */
+ function rcp_register_form_stripe_checkout( $atts ) {
+ 	global $rcp_options;
+ 
+-	$key = ( isset( $rcp_options['sandbox'] ) ) ? $rcp_options['stripe_test_publishable'] : $rcp_options['stripe_live_publishable'];
+-
+-	$atts = wp_parse_args( $atts, array(
+-		'plan_id' => 0,
+-	) );
+-
+ 	if ( empty( $atts['plan_id'] ) ) {
+-		return;
++		return '';
+ 	}
+ 
++	$key = ( isset( $rcp_options['sandbox'] ) ) ? $rcp_options['stripe_test_publishable'] : $rcp_options['stripe_live_publishable'];
++
+ 	$user         = wp_get_current_user();
+ 	$subscription = rcp_get_subscription_details( $atts['plan_id'] );
+-	$price        = $subscription->price * 100;
+ 
+-	$data = array(
++	$data = wp_parse_args( $atts, array(
++		'plan_id'                => 0,
+ 		'data-key'               => $key,
+ 		'data-name'              => get_option( 'blogname' ),
+-		'data-description'       => sprintf( 'Join %s ($%s per %s)', $subscription->name, $subscription->price, $subscription->duration_unit ),
++		'data-description'       => $subscription->description,
+ 		'data-label'             => 'Join ' . $subscription->name,
++		'data-panel-label'       => 'Register - {{amount}}',
+ 		'data-amount'            => $subscription->price * 100,
+ 		'data-local'             => 'auto',
+ 		'data-allow-remember-me' => true,
+-	);
++	) );
+ 
+-	if ( ! empty( $user->user_email ) ) {
++	if ( empty( $data['data-email'] ) && ! empty( $user->user_email ) ) {
+ 		$data['data-email'] = $user->user_email;
+ 	}
+ 
+-	if ( $image = get_site_icon_url() ) {
++	if ( empty( $data['data-image'] ) && $image = get_site_icon_url() ) {
+ 		$data['data-image'] = $image;
+ 	}
+ 
+-	foreach( $atts as $att => $value ) {
+-		if ( 0 !== strpos( $att, 'data-' ) ) {
+-			continue;
+-		}
+-
+-		$data[ $att ] = $value;
+-	}
+-
+-	apply_filters( 'rcp_stripe_checkout_data', $data );
++	$data = apply_filters( 'rcp_stripe_checkout_data', $data );
+ 
+ 	ob_start();
+ 	?>
+ 	<form action="" method="post">
++		<?php do_action( 'register_form_stripe_fields', $data ); ?>
+ 		<script src="https://checkout.stripe.com/checkout.js" class="stripe-button" <?php foreach( $data as $label => $value ) { printf( ' %s="%s" ', esc_attr( $label ), esc_attr( $value ) ); } ?> ></script>
+-		<input type="hidden" name="subscription_id" value="<?php echo $subscription->id ?>" />
+-		<input type="hidden" name="price" value="<?php echo $price ?>" />
+-		<input type="hidden" name="source" value="stripe-checkout" />
++		<input type="hidden" name="rcp_level" value="<?php echo $subscription->id ?>" />
+ 		<input type="hidden" name="rcp_register_nonce" value="<?php echo wp_create_nonce('rcp-register-nonce' ); ?>"/>
++		<input type="hidden" name="rcp_gateway" value="stripe"/>
++		<input type="hidden" name="rcp_method" value="stripe_checkout"/>
+ 	</form>
+ 	<?php
+ 
+diff --git a/restrict-content-pro.php b/restrict-content-pro.php
+index 6b80a8e..ce9767d 100755
+--- a/restrict-content-pro.php
++++ b/restrict-content-pro.php
+@@ -169,6 +169,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
+ 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-paypal-pro.php' );
+ 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-paypal-express.php' );
+ 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-stripe.php' );
++	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-stripe-checkout.php' );
+ 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-2checkout.php' );
+ 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateways.php' );
+ 	include( RCP_PLUGIN_DIR . 'includes/gateways/gateway-functions.php' );
