@@ -188,17 +188,17 @@ add_shortcode( 'register_form', 'rcp_registration_form' );
 function rcp_register_form_stripe_checkout( $atts ) {
 	global $rcp_options;
 
-	if ( empty( $atts['plan_id'] ) ) {
+	if ( empty( $atts['id'] ) ) {
 		return '';
 	}
 
 	$key = ( isset( $rcp_options['sandbox'] ) ) ? $rcp_options['stripe_test_publishable'] : $rcp_options['stripe_live_publishable'];
 
 	$user         = wp_get_current_user();
-	$subscription = rcp_get_subscription_details( $atts['plan_id'] );
+	$subscription = rcp_get_subscription_details( $atts['id'] );
 
 	$data = wp_parse_args( $atts, array(
-		'plan_id'                => 0,
+		'id'                     => 0,
 		'data-key'               => $key,
 		'data-name'              => get_option( 'blogname' ),
 		'data-description'       => $subscription->description,
