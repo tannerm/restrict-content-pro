@@ -12,24 +12,31 @@
 class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 
 
+	/**
+	 * Print fields for this gateway
+	 *
+	 * @return string
+	 */
 	public function fields() {
 
-		$data = array(
+		$data = apply_filters( 'rcp_stripe_checkout_form_data', array(
 			'key'               => $this->publishable_key,
-			'name'              => get_option( 'blogname' ),
 			'local'             => 'auto',
 			'allow-remember-me' => true,
-		);
+		) );
 
 		$subscriptions = array();
 		foreach ( rcp_get_subscription_levels( 'active' ) as $subscription ) {
 			$subscriptions[ $subscription->id ] = array(
 				'description' => $subscription->description,
+				'name'        => $subscription->name,
 				'label'       => 'Join ' . $subscription->name,
 				'amount'      => '',
 				'panelLabel'  => 'Register',
 			);
 		}
+
+		$subscriptions = apply_filters( 'rcp_stripe_checkout_subscription_data', $subscriptions );
 
 		ob_start(); ?>
 
@@ -37,18 +44,25 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			var rcpSubscriptions = <?php echo json_encode( $subscriptions ); ?>;
 			var checkoutArgs     = <?php echo json_encode( $data ); ?>;
 
-			checkoutArgs.token = function(token){
+			// define the token function
+			checkoutArgs.token = function(token){ jQuery('body').trigger('rcp_stripe_checkout_submit', token); };
+
+			jQuery('body').on('rcp_stripe_checkout_submit', function(e, token){
 				jQuery('#rcp_registration_form').append('<input type="hidden" name="stripeToken" value="' + token.id + '" />').submit();
-			};
+			});
 
 			var rcpStripeCheckout = StripeCheckout.configure(checkoutArgs);
 
 			jQuery('#rcp_submit').on('click', function(e) {
-				debugger;
-				var level = jQuery(this).closest('form').find('input[name=rcp_level]:checked').val();
+				var $form = jQuery(this).closest('form');
+				var $level = $form.find('input[name=rcp_level]:checked');
+
+				if (!$level.length) {
+					$level = $form.find('input[name=rcp_level]');
+				}
 
 				// Open Checkout with further options
-				rcpStripeCheckout.open(rcpSubscriptions[level]);
+				rcpStripeCheckout.open(rcpSubscriptions[$level.val()]);
 				e.preventDefault();
 
 				return false;
