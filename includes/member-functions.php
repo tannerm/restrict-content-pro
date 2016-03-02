@@ -534,6 +534,57 @@ function rcp_print_user_payments( $user_id ) {
 }
 
 /**
+ * Prints payment history for the specific user in a formatted table
+ *
+ * @since 2.5
+ * @param $user_id
+ *
+ * @return mixed|string|void
+ */
+function rcp_print_user_payments_formatted( $user_id ) {
+
+	$payments = new RCP_Payments;
+	$user_payments = $payments->get_payments( array( 'user_id' => $user_id ) );
+	$payments_list = '';
+
+	if ( ! $user_payments ) {
+		return $payments_list;
+	} ?>
+
+	<table class="wp-list-table widefat fixed posts rcp-table rcp_payment_details" style="width: 100%;">
+		
+		<thead>
+			<tr>
+				<th><?php _e( 'Date', 'rcp' ); ?></th>
+				<th><?php _e( 'Subscription', 'rcp' ); ?></th>
+				<th><?php _e( 'Payment Type', 'rcp' ); ?></th>
+				<th><?php _e( 'Subscription Key', 'rcp' ); ?></th>
+				<th><?php _e( 'Transaction ID', 'rcp' ); ?></th>
+				<th><?php _e( 'Amount', 'rcp' ); ?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach( $user_payments as $payment ) : ?>
+
+				<tr>
+					<td><?php echo esc_html( $payment->date ); ?></td>
+					<td><?php echo esc_html( $payment->subscription ); ?></td>
+					<td><?php echo esc_html( $payment->payment_type ); ?></td>
+					<td><?php echo esc_html( $payment->subscription_key ); ?></td>
+					<td><a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php echo empty( $payment->transaction_id ) ? '' : esc_html( $payment->transaction_id ); ?></a></td>
+					<td><?php echo ( '' == $payment->amount ) ? esc_html( rcp_currency_filter( $payment->amount2 ) ) : esc_html( rcp_currency_filter( $payment->amount ) ); ?></td>
+				</tr>
+
+			<?php endforeach; ?>
+		</tbody>
+
+	</table>
+
+	<?php
+	return apply_filters( 'rcp_print_user_payments_formatted', ob_get_clean(), $user_id );
+}
+
+/**
  * Retrieve the payments for a specific user
  *
  * @since       v1.5
@@ -1026,17 +1077,17 @@ function rcp_cancel_member_payment_profile( $member_id = 0 ) {
 			$api_endpoint  = isset( $rcp_options['sandbox'] ) ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp';
 
 			$args = array(
-				'USER'      => $rcp_options[ $api_username ],
-				'PWD'       => $rcp_options[ $api_password ],
-				'SIGNATURE' => $rcp_options[ $api_signature ],
-				'VERSION'   => '76.0',
+				'USER'      => trim( $rcp_options[ $api_username ] ),
+				'PWD'       => trim( $rcp_options[ $api_password ] ),
+				'SIGNATURE' => trim( $rcp_options[ $api_signature ] ),
+				'VERSION'   => '124',
 				'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
 				'PROFILEID' => $member->get_payment_profile_id(),
 				'ACTION'    => 'Cancel'
 			);
 
 			$error_msg = '';
-			$request   = wp_remote_post( $api_endpoint, array( 'body' => $args, 'timeout' => 30 ) );
+			$request   = wp_remote_post( $api_endpoint, array( 'body' => $args, 'timeout' => 30, 'httpversion' => '1.1' ) );
 
 			if ( is_wp_error( $request ) ) {
 
