@@ -294,7 +294,8 @@ function rcp_handle_stripe_checkout() {
 	}
 
 	if ( empty( $_POST['rcp_user_first'] ) ) {
-		$_POST['rcp_user_first'] = explode( '@', $_POST['rcp_user_email'] )[0];
+		$user_email = explode( '@', $_POST['rcp_user_email'] );
+		$_POST['rcp_user_first'] = $user_email[0];
 	}
 
 	if ( empty( $_POST['rcp_user_last'] ) ) {
