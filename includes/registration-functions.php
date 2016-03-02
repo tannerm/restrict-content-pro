@@ -281,7 +281,7 @@ add_action( 'wp_ajax_nopriv_rcp_process_register_form', 'rcp_process_registratio
  */
 function rcp_handle_stripe_checkout() {
 
-	if ( isset( $_POST['rcp_ajax'] ) || empty( $_POST['rcp_method'] ) || empty( $_POST['stripeEmail'] ) || 'stripe_checkout' !== $_POST['rcp_method'] ) {
+	if ( isset( $_POST['rcp_ajax'] ) || empty( $_POST['rcp_gateway'] ) || empty( $_POST['stripeEmail'] ) || 'stripe_checkout' !== $_POST['rcp_gateway'] ) {
 		return;
 	}
 

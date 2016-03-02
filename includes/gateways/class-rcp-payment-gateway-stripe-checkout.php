@@ -30,9 +30,9 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			$subscriptions[ $subscription->id ] = array(
 				'description' => $subscription->description,
 				'name'        => $subscription->name,
-				'label'       => 'Join ' . $subscription->name,
+				'label'       => sprintf( __( 'Join %s', 'rcp' ), $subscription->name ),
 				'amount'      => '',
-				'panelLabel'  => 'Register',
+				'panelLabel'  => __( 'Register', 'rcp' ),
 			);
 		}
 
