@@ -192,6 +192,11 @@ function rcp_register_form_stripe_checkout( $atts ) {
 		return '';
 	}
 
+	// button is an alias for data-label
+	if ( isset( $atts['button'] ) ) {
+		$atts['data-label'] = $atts['button'];
+	}
+
 	$key = ( isset( $rcp_options['sandbox'] ) ) ? $rcp_options['stripe_test_publishable'] : $rcp_options['stripe_live_publishable'];
 
 	$user         = wp_get_current_user();
