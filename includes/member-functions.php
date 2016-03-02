@@ -682,7 +682,7 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
  * @return bool
  */
 function rcp_has_upgrade_path( $user_id = 0 ) {
-	return ( bool ) rcp_get_upgrade_paths( $user_id );
+	return apply_filters( 'rcp_has_upgrade_path', ( bool ) rcp_get_upgrade_paths( $user_id ), $user_id );
 }
 
 /**
