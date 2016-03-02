@@ -104,7 +104,8 @@ function rcp_payments_page() {
 								<td>
 									<a href="<?php echo esc_url( add_query_arg( 'user_id', $payment->user_id, menu_page_url( 'rcp-payments', false ) ) ); ?>" title="<?php _e( 'View payments by this user', 'rcp' ); ?>">
 										<?php echo isset( $user->display_name ) ? esc_html( $user->display_name ) : ''; ?>
-									</a>
+									</a><br />
+									(<a href="<?php echo esc_url( add_query_arg( array( 'page' => 'rcp-members', 'edit_member' => $user->ID ), $current_page) ); ?>"><?php _e('Edit', 'rcp'); ?></a>)
 								</td>
 								<td><?php echo esc_html( $payment->subscription ); ?></td>
 								<td><?php echo esc_html( $payment->date ); ?></td>
