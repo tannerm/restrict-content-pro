@@ -189,6 +189,12 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'BUTTONSOURCE'        => 'EasyDigitalDownloads_SP'
 				);
 
+				$initial_amt = round( $details['AMT'] + $details['subscription']['fee'], 2 );
+
+				if ( $initial_amt > 0 ) {
+					$args['INITAMT'] = $initial_amt;
+				}
+
 				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
 
 				if( is_wp_error( $request ) ) {
