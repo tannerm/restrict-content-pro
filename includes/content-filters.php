@@ -42,13 +42,26 @@ add_filter( 'the_content', 'rcp_filter_restricted_content', 100 );
 function rcp_filter_restricted_category_content( $content ) {
 	global $post, $rcp_options;
 
-	$restricted = false;
+	$restrictions = array();
 
 	foreach( rcp_get_restricted_taxonomies() as $taxonomy ) {
-		if ( $restricted = rcp_is_post_taxonomy_restricted( $post->ID, $taxonomy ) ) {
-			break;
+		$restriction = rcp_is_post_taxonomy_restricted( $post->ID, $taxonomy );
+
+		// -1 means that the taxonomy terms are unrestricted
+		if ( -1 === $restriction ) {
+			continue;
 		}
+
+		// true or false. Whether or not the user has access to the restricted taxonomy terms
+		$restrictions[] = $restriction;
+
 	}
+
+	if ( empty( $restrictions ) ) {
+		return $content;
+	}
+
+	$restricted = ( apply_filters( 'rcp_restricted_taxonomy_match_all', true ) ) ? false !== array_search( true, $restrictions ) : false === array_search( false, $restrictions );
 
 	if ( $restricted ) {
 
@@ -66,75 +79,72 @@ add_filter( 'the_content', 'rcp_filter_restricted_category_content', 101 );
 /**
  * Check the provided taxonomy along with the given post id to see if any restrictions are found
  *
- * @since      4.5
+ * @since      2.5
  * @param      $post_id
  * @param      $taxonomy
  * @param null $user_id
  *
- * @return bool|mixed|void
+ * @return int|bool true if tax is restricted, false if user can access, -1 if unrestricted or invalid
  */
 function rcp_is_post_taxonomy_restricted( $post_id, $taxonomy, $user_id = null ) {
+
+	$restricted = -1;
 
 	// make sure this post supports the supplied taxonomy
 	$post_taxonomies = get_post_taxonomies( $post_id );
 	if ( ! in_array( $taxonomy, (array) $post_taxonomies ) ) {
-		return false;
+		return $restricted;
 	}
 
 	$terms = get_the_terms( $post_id, $taxonomy );
 
 	if ( empty( $terms ) || is_wp_error( $terms ) ) {
-		return false;
+		return $restricted;
 	}
 
 	if ( ! $user_id ) {
 		$user_id = get_current_user_id();
 	}
 
-	$restricted = false;
-
 	// Loop through the categories and determine if one has restriction options
 	foreach( $terms as $term ) {
 
 		$term_meta = rcp_get_term_restrictions( $term->term_id );
-		if( ! empty( $term_meta ) ) {
 
-			/**
-			 * Check that the user has a paid subscription
-			 */
+		if ( empty( $term_meta['paid_only'] ) && empty( $term_meta['subscriptions'] ) && ( empty( $term_meta['access_level'] ) || 'None' == $term_meta['access_level'] ) ) {
+			continue;
+		}
 
-			$paid_only = ! empty( $term_meta['paid_only'] );
+		$restricted = false;
 
-			if( $paid_only && ! rcp_is_paid_user( $user_id ) ) {
+		/** Check that the user has a paid subscription ****************************************************************/
+		$paid_only = ! empty( $term_meta['paid_only'] );
+		if( $paid_only && ! rcp_is_paid_user( $user_id ) ) {
+			$restricted = true;
+		}
 
-				$restricted = true;
+		/** If restricted to one or more subscription levels, make sure that the user is a member of one of the levels */
+		$subscriptions = ! empty( $term_meta['subscriptions'] ) ? array_map( 'absint', $term_meta['subscriptions'] ) : false;
+		if( $subscriptions && ! in_array( rcp_get_subscription_id( $user_id ), $subscriptions ) ) {
+			$restricted = true;
+		}
 
-			}
+		/** If restricted to one or more access levels, make sure that the user is a member of one of the levls ********/
+		$access_level = ! empty( $term_meta['access_level'] ) ? absint( $term_meta['access_level'] ) : 0;
+		if( $access_level > 0 && ! rcp_user_has_access( $user_id, $access_level ) ) {
+			$restricted = true;
+		}
 
-			/**
-			 * If restricted to one or more subscription levels, make sure that the user is a member of one of the levls
-			 */
+		$match_all = apply_filters( 'rcp_restricted_taxonomy_term_match_all', true, $post_id, $taxonomy, $user_id );
 
-			$subscriptions = ! empty( $term_meta['subscriptions'] ) ? array_map( 'absint', $term_meta['subscriptions'] ) : false;
+		// if we are matching all terms then it only takes one restricted term to restrict the taxonomy
+		if ( $restricted && $match_all ) {
+			break;
+		}
 
-			if( $subscriptions && ! in_array( rcp_get_subscription_id( $user_id ), $subscriptions ) ) {
-
-				$restricted = true;
-
-			}
-
-			/**
-			 * If restricted to one or more access levels, make sure that the user is a member of one of the levls
-			 */
-
-			$access_level = ! empty( $term_meta['access_level'] ) ? absint( $term_meta['access_level'] ) : 0;
-
-			if( $access_level > 0 && ! rcp_user_has_access( $user_id, $access_level ) ) {
-
-				$restricted = true;
-
-			}
-
+		// if we are matching any term, then we only need the user to have access to one
+		if ( ! $match_all && ! $restricted ) {
+			break;
 		}
 
 	}
