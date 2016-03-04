@@ -107,7 +107,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 			parse_str( $request['body'], $data );
 
-			if( 'failure' === strtolower( $data['ACK'] ) ) {
+			if( false !== strpos( strtolower( $data['ACK'] ), 'failure' ) ) {
 
 				do_action( 'rcp_paypal_pro_signup_payment_failed', $request, $this );
 
