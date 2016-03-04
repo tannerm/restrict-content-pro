@@ -391,3 +391,52 @@ function rcp_update_billing_card_shortcode( $atts, $content = null ) {
 }
 add_shortcode( 'card_details', 'rcp_update_billing_card_shortcode' ); // Old version
 add_shortcode( 'rcp_update_card', 'rcp_update_billing_card_shortcode' );
+
+/**
+ * Show User's Subscription ID Shortcode
+ *
+ * @since 2.5
+ * @return string
+ */
+function rcp_user_subscription_id_shortcode() {
+	if ( ! is_user_logged_in() ) {
+		return '';
+	}
+
+	return rcp_get_subscription_id();
+}
+add_shortcode( 'subscription_id', 'rcp_user_subscription_id_shortcode' );
+
+/**
+ * Show User's Subscription ID Shortcode
+ *
+ * @since 2.5
+ * @return string
+ */
+function rcp_user_subscription_name_shortcode() {
+	if ( ! is_user_logged_in() ) {
+		return '';
+	}
+
+	if ( ! $id = rcp_get_subscription_id() ) {
+		return '';
+	}
+
+	return rcp_get_subscription_name( $id );
+}
+add_shortcode( 'subscription_name', 'rcp_user_subscription_name_shortcode' );
+
+/**
+ * Show User's Expiration Shortcode
+ *
+ * @since 2.5
+ * @return string
+ */
+function rcp_user_expiration_shortcode() {
+	if ( ! is_user_logged_in() ) {
+		return '';
+	}
+
+	return rcp_get_expiration_date();
+}
+add_shortcode( 'user_expiration', 'rcp_user_expiration_shortcode' );
