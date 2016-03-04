@@ -11,8 +11,8 @@
 
 class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
-	private $secret_key;
-	private $publishable_key;
+	protected $secret_key;
+	protected $publishable_key;
 
 	/**
 	 * Get things going
@@ -68,7 +68,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			// process a subscription sign up
 
-			$plan_id = strtolower( str_replace( ' ', '', $this->subscription_name ) );
+			$plan_id    = strtolower( str_replace( ' ', '', $this->subscription_name ) );
 
 			if ( ! $this->plan_exists( $plan_id ) ) {
 				// create the plan if it doesn't exist
@@ -143,7 +143,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$customer->save();
 
 				// Update the customer's subscription in Stripe
-				$customer->updateSubscription( array( 'plan' => $plan_id ) );
+				$customer->updateSubscription( array( 'plan' => $plan_id, 'prorate' => false ) );
 
 				$member->set_payment_profile_id( $customer->id );
 
@@ -153,91 +153,28 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			} catch ( \Stripe\Error\Card $e ) {
 
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
-
-				exit;
+				$this->handle_processing_error( $e );
 
 			} catch (\Stripe\Error\InvalidRequest $e) {
 
 				// Invalid parameters were supplied to Stripe's API
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+				$this->handle_processing_error( $e );
 
 			} catch (\Stripe\Error\Authentication $e) {
 
 				// Authentication with Stripe's API failed
 				// (maybe you changed API keys recently)
-
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+				$this->handle_processing_error( $e );
 
 			} catch (\Stripe\Error\ApiConnection $e) {
 
 				// Network communication with Stripe failed
-
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+				$this->handle_processing_error( $e );
 
 			} catch (\Stripe\Error\Base $e) {
 
 				// Display a very generic error to the user
-
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-				
-				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+				$this->handle_processing_error( $e );
 
 			} catch (Exception $e) {
 
@@ -288,93 +225,30 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			} catch ( \Stripe\Error\Card $e ) {
 
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
-
-				exit;
+				$this->handle_processing_error( $e );
 
 			} catch (\Stripe\Error\InvalidRequest $e) {
 
 				// Invalid parameters were supplied to Stripe's API
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
+				$this->handle_processing_error( $e );
 
-				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			} catch (\Stripe\Error\Authentication $e) {
 
 				// Authentication with Stripe's API failed
 				// (maybe you changed API keys recently)
-
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+				$this->handle_processing_error( $e );
 
 			} catch (\Stripe\Error\ApiConnection $e) {
 
 				// Network communication with Stripe failed
+				$this->handle_processing_error( $e );
 
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			} catch (\Stripe\Error\Base $e) {
 
 				// Display a very generic error to the user
-
-				$body = $e->getJsonBody();
-				$err  = $body['error'];
-
-				do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
-
-				$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
-				if( isset( $err['code'] ) ) {
-					$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
-				}
-				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
-				$error .= "<p>Message: " . $err['message'] . "</p>";
-
-				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
+				$this->handle_processing_error( $e );
 
 			} catch (Exception $e) {
 
@@ -416,6 +290,28 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		// redirect to the success page, or error page if something went wrong
 		wp_redirect( $this->return_url ); exit;
 
+	}
+
+	/**
+	 * Handle Stripe processing error
+	 *
+	 * @since 2.5
+	 * @param $e
+	 */
+	protected function handle_processing_error( $e ) {
+		$body = $e->getJsonBody();
+		$err  = $body['error'];
+
+		do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
+
+		$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
+		if( isset( $err['code'] ) ) {
+			$error .= '<p>' . sprintf( __( 'Error code: %s', 'rcp' ), $err['code'] ) . '</p>';
+		}
+		$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+		$error .= "<p>Message: " . $err['message'] . "</p>";
+
+		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 	}
 
 	public function process_webhooks() {

@@ -177,6 +177,68 @@ function rcp_registration_form( $atts, $content = null ) {
 }
 add_shortcode( 'register_form', 'rcp_registration_form' );
 
+/**
+ * Shortcode for displaying stripe checkout
+ *
+ * @since 2.5
+ * @param $atts
+ *
+ * @return mixed|void
+ */
+function rcp_register_form_stripe_checkout( $atts ) {
+	global $rcp_options;
+
+	if ( empty( $atts['id'] ) ) {
+		return '';
+	}
+
+	// button is an alias for data-label
+	if ( isset( $atts['button'] ) ) {
+		$atts['data-label'] = $atts['button'];
+	}
+
+	$key = ( isset( $rcp_options['sandbox'] ) ) ? $rcp_options['stripe_test_publishable'] : $rcp_options['stripe_live_publishable'];
+
+	$user         = wp_get_current_user();
+	$subscription = rcp_get_subscription_details( $atts['id'] );
+
+	$data = wp_parse_args( $atts, array(
+		'id'                     => 0,
+		'data-key'               => $key,
+		'data-name'              => get_option( 'blogname' ),
+		'data-description'       => $subscription->description,
+		'data-label'             => sprintf( __( 'Join %s', 'rcp' ), $subscription->name ),
+		'data-panel-label'       => __( 'Register - {{amount}}', 'rcp' ),
+		'data-amount'            => $subscription->price * 100,
+		'data-local'             => 'auto',
+		'data-allow-remember-me' => true,
+	) );
+
+	if ( empty( $data['data-email'] ) && ! empty( $user->user_email ) ) {
+		$data['data-email'] = $user->user_email;
+	}
+
+	if ( empty( $data['data-image'] ) && $image = get_site_icon_url() ) {
+		$data['data-image'] = $image;
+	}
+
+	$data = apply_filters( 'rcp_stripe_checkout_data', $data );
+
+	ob_start();
+	?>
+	<form action="" method="post">
+		<?php do_action( 'register_form_stripe_fields', $data ); ?>
+		<script src="https://checkout.stripe.com/checkout.js" class="stripe-button" <?php foreach( $data as $label => $value ) { printf( ' %s="%s" ', esc_attr( $label ), esc_attr( $value ) ); } ?> ></script>
+		<input type="hidden" name="rcp_level" value="<?php echo $subscription->id ?>" />
+		<input type="hidden" name="rcp_register_nonce" value="<?php echo wp_create_nonce('rcp-register-nonce' ); ?>"/>
+		<input type="hidden" name="rcp_gateway" value="stripe_checkout"/>
+	</form>
+	<?php
+
+	return apply_filters( 'register_form_stripe', ob_get_clean(), $atts );
+}
+add_shortcode( 'register_form_stripe', 'rcp_register_form_stripe_checkout' );
+
 // user login form
 function rcp_login_form( $atts, $content = null ) {
 
