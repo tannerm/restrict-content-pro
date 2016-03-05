@@ -551,7 +551,7 @@ function rcp_print_user_payments_formatted( $user_id ) {
 		return $payments_list;
 	} ?>
 
-	<table class="wp-list-table widefat fixed posts rcp-table rcp_payment_details" style="width: 100%;">
+	<table class="wp-list-table widefat fixed posts rcp-table rcp_payment_details" style="display: block; width: 100%;">
 		
 		<thead>
 			<tr>
@@ -666,7 +666,51 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
 	if( ( ! rcp_is_active( $user_id ) || ! rcp_is_recurring( $user_id ) ) && rcp_has_paid_levels() )
 		$ret = true;
 
+	if ( rcp_has_upgrade_path( $user_id ) ) {
+		$ret = true;
+	}
+
 	return (bool) apply_filters( 'rcp_can_upgrade_subscription', $ret, $user_id );
+}
+
+/**
+ * Does this user have an upgrade path?
+ *
+ * @since 2.5
+ * @param int $user_id the ID of the user to check
+ *
+ * @return bool
+ */
+function rcp_has_upgrade_path( $user_id = 0 ) {
+	return ( bool ) rcp_get_upgrade_paths( $user_id );
+}
+
+/**
+ * Get subscriptions to which this user can upgrade
+ *
+ * @since 2.5
+ * @param int $user_id the ID of the user to check
+ *
+ * @return mixed|void
+ */
+function rcp_get_upgrade_paths( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	// make sure the user is active and get the subscription ID
+	$user_subscription = ( rcp_is_active( $user_id ) && 'cancelled' !== rcp_get_status() ) ? rcp_get_subscription_id( $user_id ) : '';
+	$subscriptions     = rcp_get_subscription_levels( 'active' );
+
+	// remove the user's current subscription from the list
+	foreach( $subscriptions as $key => $subscription ) {
+		if ( $user_subscription == $subscription->id ) {
+			unset( $subscriptions[ $key ] );
+		}
+	}
+
+	return apply_filters( 'rcp_get_upgrade_paths', array_values( $subscriptions ), $user_id );
 }
 
 
@@ -1178,7 +1222,6 @@ function rcp_can_member_renew( $user_id = 0 ) {
 	$member = new RCP_Member( $user_id );
 
 	if( $member->is_recurring() && $member->is_active() && 'cancelled' !== $member->get_status() ) {
-
 		$ret = false;
 
 	}
@@ -1315,4 +1358,22 @@ function rcp_validate_username( $username = '' ) {
 	$sanitized = sanitize_user( $username, false );
 	$valid = ( $sanitized == $username );
 	return (bool) apply_filters( 'rcp_validate_username', $valid, $username );
+}
+
+/**
+ * Get the prorate amount for this member
+ *
+ * @since 2.5
+ * @param int $user_id
+ *
+ * @return int
+ */
+function rcp_get_member_prorate_credit( $user_id = 0 ) {
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$member = new RCP_Member( $user_id );
+
+	return $member->get_prorate_credit_amount();
 }

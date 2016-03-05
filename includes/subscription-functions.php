@@ -174,17 +174,28 @@ function rcp_filter_duration_unit( $unit, $length ) {
 * @return boolean - TRUE if paid levels exist, false if only free
 */
 function rcp_has_paid_levels() {
-	$levels = rcp_get_subscription_levels();
-	if( $levels ) {
-		foreach( $levels as $level ) {
-			if( $level->price > 0 && $level->status == 'active' ) {
-				return true;
-			}
-		}
-	}
-	return false;
+	return ( bool ) rcp_get_paid_levels();
 }
 
+/**
+ * Return the paid levels
+ *
+ * @since 2.5
+ * @return array()
+ */
+function rcp_get_paid_levels() {
+
+	$paid_levels = array();
+
+	foreach( rcp_get_subscription_levels() as $level ) {
+		if( $level->price > 0 && $level->status == 'active' ) {
+			$paid_levels[] = $level;
+		}
+	}
+
+	return apply_filters( 'rcp_get_paid_levels', $paid_levels );
+
+}
 
 /*
 * Retrieves available access levels
