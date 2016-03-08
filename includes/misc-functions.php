@@ -606,3 +606,47 @@ function rcp_get_ip() {
 	}
 	return apply_filters( 'rcp_get_ip', $ip );
 }
+
+/**
+ * Get RCP Currency
+ *
+ * @since 2.5
+ * @return mixed|void
+ */
+function rcp_get_currency() {
+	global $rcp_options;
+	return apply_filters( 'rcp_get_currency', $rcp_options['currency'] );
+}
+
+/**
+ * Determines if RCP is using a zero-decimal currency
+ *
+ * @access      public
+ * @since       2.5
+ * @return      bool
+ */
+function rcp_is_zero_decimal_currency() {
+
+	$currency = strtoupper( rcp_get_currency() );
+
+	$zero_dec_currencies = array(
+		'BIF',
+		'CLP',
+		'DJF',
+		'GNF',
+		'JPY',
+		'KMF',
+		'KRW',
+		'MGA',
+		'PYG',
+		'RWF',
+		'VND',
+		'VUV',
+		'XAF',
+		'XOF',
+		'XPF'
+	);
+
+	return apply_filters( 'rcp_is_zero_decimal_currency', in_array( $currency, $zero_dec_currencies ) );
+
+}
