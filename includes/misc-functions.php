@@ -632,12 +632,18 @@ function rcp_is_restricted_content( $post_id ) {
 		$restricted = true;
 	}
 
-	if ( ! $restricted && ! empty( get_post_meta( $post_id, 'rcp_user_level', true ) ) && 'All' !== get_post_meta( $post_id, 'rcp_user_level', true ) ) {
-		$restricted = true;
+	if ( ! $restricted ) {
+		$rcp_user_level = get_post_meta( $post_id, 'rcp_user_level', true );
+		if ( ! empty( $rcp_user_level ) && 'All' !== $rcp_user_level ) {
+			$restricted = true;
+		}
 	}
 
-	if ( ! $restricted && ! empty( get_post_meta( $post_id, 'rcp_access_level', true ) ) && 'None' !== get_post_meta( $post_id, 'rcp_access_level', true ) ) {
-		$restricted = true;
+	if ( ! $restricted ) {
+		$rcp_access_level = get_post_meta( $post_id, 'rcp_access_level', true );
+		if ( ! empty( $rcp_access_level ) && 'None' !== $rcp_access_level ) {
+			$restricted = true;
+		}
 	}
 
 	return apply_filters( 'rcp_is_restricted_content', $restricted, $post_id );
