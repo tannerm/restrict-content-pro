@@ -61,7 +61,7 @@ function rcp_filter_restricted_category_content( $content ) {
 		return $content;
 	}
 
-	$restricted = ( apply_filters( 'rcp_restricted_taxonomy_match_all', true ) ) ? false !== array_search( true, $restrictions ) : false === array_search( false, $restrictions );
+	$restricted = ( apply_filters( 'rcp_restricted_taxonomy_match_all', false ) ) ? false !== array_search( true, $restrictions ) : false === array_search( false, $restrictions );
 
 	if ( $restricted ) {
 
@@ -135,7 +135,7 @@ function rcp_is_post_taxonomy_restricted( $post_id, $taxonomy, $user_id = null )
 			$restricted = true;
 		}
 
-		$match_all = apply_filters( 'rcp_restricted_taxonomy_term_match_all', true, $post_id, $taxonomy, $user_id );
+		$match_all = apply_filters( 'rcp_restricted_taxonomy_term_match_all', false, $post_id, $taxonomy, $user_id );
 
 		// if we are matching all terms then it only takes one restricted term to restrict the taxonomy
 		if ( $restricted && $match_all ) {
