@@ -157,12 +157,6 @@ function rcp_process_data() {
 
 							break;
 
-						case 'delete' :
-
-							wp_delete_user( $member->ID );
-
-							break;
-
 					}
 
 				}
