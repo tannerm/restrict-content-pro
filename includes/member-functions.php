@@ -551,7 +551,7 @@ function rcp_print_user_payments_formatted( $user_id ) {
 		return $payments_list;
 	} ?>
 
-	<table class="wp-list-table widefat fixed posts rcp-table rcp_payment_details" style="width: 100%;">
+	<table class="wp-list-table widefat fixed posts rcp-table rcp_payment_details" style="display: block; width: 100%;">
 		
 		<thead>
 			<tr>

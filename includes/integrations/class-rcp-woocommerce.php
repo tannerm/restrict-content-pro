@@ -1,7 +1,7 @@
 <?php
 
 class RCP_WooCommerce {
-	
+
 	/**
 	 * Get things started
 	 *
@@ -20,6 +20,7 @@ class RCP_WooCommerce {
 
 		add_filter( 'woocommerce_is_purchasable', array( $this, 'is_purchasable' ), 999999, 2 );
 		add_filter( 'woocommerce_product_is_visible', array( $this, 'is_visible' ), 999999, 2 );
+		add_filter( 'wc_get_template_part', array( $this, 'hide_template' ), 999999, 3 );
 	}
 
 	/**
@@ -35,7 +36,7 @@ class RCP_WooCommerce {
 			'target' => 'rcp_access_control',
 			'class'  => array(),
 		);
-	
+
 		return $tabs;
 
 	}
@@ -49,12 +50,12 @@ class RCP_WooCommerce {
 	public function data_display() {
 ?>
 		<div id="rcp_access_control" class="panel woocommerce_options_panel">
-			
+
 			<div class="options_group">
 				<p><?php _e( 'Restrict purchasing of this product to:', 'rcp' ); ?></p>
 				<?php
 
-				woocommerce_wp_checkbox( array( 
+				woocommerce_wp_checkbox( array(
 					'id'      => '_rcp_woo_active_to_purchase',
 					'label'   => __( 'Active subscribers only?', 'rcp' ),
 					'cbvalue' => 1
@@ -62,7 +63,7 @@ class RCP_WooCommerce {
 
 				$levels = (array) get_post_meta( get_the_ID(), '_rcp_woo_subscription_levels_to_purchase', true );
 				foreach ( rcp_get_subscription_levels( 'all' ) as $level ) {
-					woocommerce_wp_checkbox( array( 
+					woocommerce_wp_checkbox( array(
 						'name'    => '_rcp_woo_subscription_levels_to_purchase[]',
 						'id'      => '_rcp_woo_subscription_level_' . $level->id,
 						'label'   => $level->name,
@@ -71,7 +72,7 @@ class RCP_WooCommerce {
 					) );
 				}
 
-				woocommerce_wp_select( array( 
+				woocommerce_wp_select( array(
 					'id'      => '_rcp_woo_access_level_to_purchase',
 					'label'   => __( 'Access level required?', 'rcp' ),
 					'options' => rcp_get_access_levels()
@@ -83,7 +84,7 @@ class RCP_WooCommerce {
 				<p><?php _e( 'Restrict viewing of this product to:', 'rcp' ); ?></p>
 				<?php
 
-				woocommerce_wp_checkbox( array( 
+				woocommerce_wp_checkbox( array(
 					'id'      => '_rcp_woo_active_to_view',
 					'label'   => __( 'Active subscribers only?', 'rcp' ),
 					'cbvalue' => 1
@@ -91,7 +92,7 @@ class RCP_WooCommerce {
 
 				$levels = (array) get_post_meta( get_the_ID(), '_rcp_woo_subscription_levels_to_view', true );
 				foreach ( rcp_get_subscription_levels( 'all' ) as $level ) {
-					woocommerce_wp_checkbox( array( 
+					woocommerce_wp_checkbox( array(
 						'name'    => '_rcp_woo_subscription_levels_to_view[]',
 						'id'      => '_rcp_woo_subscription_level_to_view_' . $level->id,
 						'label'   => $level->name,
@@ -100,7 +101,7 @@ class RCP_WooCommerce {
 					) );
 				}
 
-				woocommerce_wp_select( array( 
+				woocommerce_wp_select( array(
 					'id'      => '_rcp_woo_access_level_to_view',
 					'label'   => __( 'Access level required?', 'rcp' ),
 					'options' => rcp_get_access_levels()
@@ -298,6 +299,32 @@ class RCP_WooCommerce {
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * Load
+	 *
+	 * @access  public
+	 * @since   2.5
+	 */
+	public function hide_template( $template, $slug, $name ) {
+
+		global $product;
+
+		if ( ! is_single() && get_post_type() == 'product' ) {
+			return $template;
+		}
+
+		if( 'content-single-product' !== $slug . '-' . $name ) {
+			return $template;
+		}
+
+		if( $this->is_visible( $product->is_visible(), get_the_ID() ) ) {
+			return $template;
+		}
+
+
+		return rcp_get_template_part( 'woocommerce', 'single-no-access', false );
 	}
 
 }

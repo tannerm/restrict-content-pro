@@ -276,6 +276,43 @@ add_action( 'init', 'rcp_process_registration', 100 );
 add_action( 'wp_ajax_rcp_process_register_form', 'rcp_process_registration', 100 );
 add_action( 'wp_ajax_nopriv_rcp_process_register_form', 'rcp_process_registration', 100 );
 
+/**
+ * Provide the default registration values when checking out with Stripe Checkout.
+ */
+function rcp_handle_stripe_checkout() {
+
+	if ( isset( $_POST['rcp_ajax'] ) || empty( $_POST['rcp_gateway'] ) || empty( $_POST['stripeEmail'] ) || 'stripe_checkout' !== $_POST['rcp_gateway'] ) {
+		return;
+	}
+
+	if ( empty( $_POST['rcp_user_email'] ) ) {
+		$_POST['rcp_user_email'] = $_POST['stripeEmail'];
+	}
+
+	if ( empty( $_POST['rcp_user_login'] ) ) {
+		$_POST['rcp_user_login'] = $_POST['stripeEmail'];
+	}
+
+	if ( empty( $_POST['rcp_user_first'] ) ) {
+		$user_email = explode( '@', $_POST['rcp_user_email'] );
+		$_POST['rcp_user_first'] = $user_email[0];
+	}
+
+	if ( empty( $_POST['rcp_user_last'] ) ) {
+		$_POST['rcp_user_last'] = '';
+	}
+
+	if ( empty( $_POST['rcp_user_pass'] ) ) {
+		$_POST['rcp_user_pass'] = wp_generate_password();
+	}
+
+	if ( empty( $_POST['rcp_user_pass_confirm'] ) ) {
+		$_POST['rcp_user_pass_confirm'] = $_POST['rcp_user_pass'];
+	}
+
+}
+add_action( 'rcp_before_form_errors', 'rcp_handle_stripe_checkout' );
+
 
 /**
  * Validate and setup the user data for registration
