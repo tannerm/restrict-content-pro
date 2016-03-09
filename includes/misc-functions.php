@@ -621,13 +621,17 @@ function rcp_get_currency() {
 /**
  * Determines if RCP is using a zero-decimal currency
  *
+ * @param $currency
+ *
  * @access      public
  * @since       2.5
  * @return      bool
  */
-function rcp_is_zero_decimal_currency() {
+function rcp_is_zero_decimal_currency( $currency = '' ) {
 
-	$currency = strtoupper( rcp_get_currency() );
+	if ( ! $currency ) {
+		$currency = strtoupper( rcp_get_currency() );
+	}
 
 	$zero_dec_currencies = array(
 		'BIF',
