@@ -102,6 +102,14 @@ function rcp_process_data() {
 				} else {
 					delete_user_meta( $user->ID, 'rcp_recurring' );
 				}
+
+				// Email the user if it's a new subscription
+				$new_subscription = get_user_meta( $user->ID, '_rcp_new_subscription', true );
+				if ( empty( $new_subscription ) ) {
+					rcp_email_subscription_status( $user->ID, 'active' );
+					update_user_meta( $user->ID, '_rcp_new_subscription', '1' );
+				}
+
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&rcp_message=user_added';
 				header( "Location:" .  $url);
 
