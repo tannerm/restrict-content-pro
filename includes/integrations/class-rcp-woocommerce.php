@@ -232,7 +232,7 @@ class RCP_WooCommerce {
 
 			}
 
-			if( is_array( $levels ) && ! empty( $array[0] ) ) {
+			if( is_array( $levels ) && ! empty( $levels[0] ) ) {
 
 				if( ! in_array( rcp_get_subscription_id(), $levels ) ) {
 					$has_access = false;
@@ -263,39 +263,40 @@ class RCP_WooCommerce {
 	*/
 	public function is_visible( $ret, $product_id ) {
 
-		if( $ret ) {
+		if( ! $ret ) {
+			return $ret;
+		}
 
-			$has_access   = true;
-			$active_only  = get_post_meta( $product_id, '_rcp_woo_active_to_view', true );
-			$levels       = (array) get_post_meta( $product_id, '_rcp_woo_subscription_levels_to_view', true );
-			$access_level = get_post_meta( $product_id, '_rcp_woo_access_level_to_view', true );
+		$active_only  = get_post_meta( $product_id, '_rcp_woo_active_to_view', true );
+		$levels       = (array) get_post_meta( $product_id, '_rcp_woo_subscription_levels_to_view', true );
+		$access_level = get_post_meta( $product_id, '_rcp_woo_access_level_to_view', true );
 
-			if( $active_only ) {
+		if( $active_only ) {
 
-				if( ! rcp_is_active() ) {
-					$has_access = false;
-				}
-
+			if( ! rcp_is_active() ) {
+				$ret = false;
 			}
 
-			if( is_array( $levels ) && ! empty( $array[0] ) ) {
+		}
 
-				if( ! in_array( rcp_get_subscription_id(), $levels ) ) {
-					$has_access = false;
-				}
+		if( is_array( $levels ) && ! empty( $levels[0] ) ) {
 
+			if( ! in_array( rcp_get_subscription_id(), $levels ) ) {
+				$ret = false;
 			}
 
-			if( $access_level ) {
+		}
 
-				if( ! rcp_user_has_access( get_current_user_id(), $access_level ) ) {
-					$has_access = false;
-				}
+		if( $access_level ) {
 
+			if( ! rcp_user_has_access( get_current_user_id(), $access_level ) ) {
+				$ret = false;
 			}
 
-			$ret = $has_access;
+		}
 
+		if ( true === rcp_is_post_taxonomy_restricted( $product_id, 'product_cat' ) ) {
+			$ret = false;
 		}
 
 		return $ret;
