@@ -177,7 +177,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'VERSION'             => '124',
 					'TOKEN'               => $_POST['token'],
 					'METHOD'              => 'CreateRecurringPaymentsProfile',
-					'PROFILESTARTDATE'    => date( 'Y-m-d\Tg:i:s', strtotime( '+' . $details['subscription']['duration'] . ' ' . $details['subscription']['duration_unit'], time() ) ),
+					'PROFILESTARTDATE'    => date( 'Y-m-d\TH:i:s', strtotime( '+' . $details['subscription']['duration'] . ' ' . $details['subscription']['duration_unit'], time() ) ),
 					'BILLINGPERIOD'       => ucwords( $details['subscription']['duration_unit'] ),
 					'BILLINGFREQUENCY'    => $details['subscription']['duration'],
 					'AMT'                 => $details['AMT'],
@@ -225,7 +225,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 						$member->set_payment_profile_id( $data['PROFILEID'] );
 
 						$payment_data = array(
-							'date'             => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
+							'date'             => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 							'subscription'     => $member->get_subscription_name(),
 							'payment_type'     => 'PayPal Express',
 							'subscription_key' => $member->get_subscription_key(),
@@ -297,7 +297,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 						$member->renew( false );
 
 						$payment_data = array(
-							'date'             => date( 'Y-m-d g:i:s', strtotime( $data['PAYMENTINFO_0_ORDERTIME'] ) ),
+							'date'             => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 							'subscription'     => $member->get_subscription_name(),
 							'payment_type'     => 'PayPal Express One Time',
 							'subscription_key' => $member->get_subscription_key(),
@@ -392,7 +392,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		// setup the payment info in an array for storage
 		$payment_data = array(
-			'date'             => date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'] ) ),
+			'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'] ) ),
 			'subscription'     => $member->get_subscription_name(),
 			'payment_type'     => $posted['txn_type'],
 			'subscription_key' => $member->get_subscription_key(),

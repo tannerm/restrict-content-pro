@@ -206,7 +206,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				), $this ) );
 
 				$payment_data = array(
-					'date'              => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
+					'date'              => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 					'subscription'      => $this->subscription_name,
 					'payment_type' 		=> 'Credit Card One Time',
 					'subscription_key' 	=> $this->subscription_key,
@@ -368,9 +368,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					if( $event->type == 'charge.succeeded' || $event->type == 'invoice.payment_succeeded' ) {
 
+						$account = \Stripe\Account::retrieve();
+						$payment_date = date_create( date( 'c', $event->created ), new DateTimeZone( $account->timezone ) );
+
 						// setup payment data
 						$payment_data = array(
-							'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
+							'date'              => get_date_from_gmt( $payment_date->format( 'c' ) ),
 							'payment_type' 		=> 'Credit Card',
 							'user_id' 			=> $member->ID,
 							'amount'            => '',

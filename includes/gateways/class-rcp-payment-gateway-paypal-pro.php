@@ -85,7 +85,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'CVV2'               => sanitize_text_field( $_POST['rcp_card_cvc'] ),
 			'ZIP'                => sanitize_text_field( $_POST['rcp_card_zip'] ),
 			'BUTTONSOURCE'       => 'EasyDigitalDownloads_SP',
-			'PROFILESTARTDATE'   => date( 'Y-m-d\Tg:i:s', strtotime( '+' . $this->length . ' ' . $this->length_unit, time() ) ),
+			'PROFILESTARTDATE'   => date( 'Y-m-d\TH:i:s', strtotime( '+' . $this->length . ' ' . $this->length_unit, time() ) ),
 			'BILLINGPERIOD'      => ucwords( $this->length_unit ),
 			'BILLINGFREQUENCY'   => $this->length,
 			'FAILEDINITAMTACTION'=> 'CancelOnFailure',
