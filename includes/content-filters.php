@@ -90,6 +90,10 @@ function rcp_is_post_taxonomy_restricted( $post_id, $taxonomy, $user_id = null )
 
 	$restricted = -1;
 
+	if ( current_user_can( 'edit_post', $post_id ) ) {
+		return $restricted;
+	}
+
 	// make sure this post supports the supplied taxonomy
 	$post_taxonomies = get_post_taxonomies( $post_id );
 	if ( ! in_array( $taxonomy, (array) $post_taxonomies ) ) {
