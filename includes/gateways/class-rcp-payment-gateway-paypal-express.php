@@ -414,6 +414,35 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		// Subscriptions
 		switch ( $posted['txn_type'] ) :
 
+			case "recurring_payment_profile_created":
+
+				if ( isset( $posted['initial_payment_txn_id'] ) ) {
+					$transaction_id = ( 'Completed' == $posted['initial_payment_status'] ) ? $posted['initial_payment_txn_id'] : '';
+				} else {
+					$transaction_id = $posted['ipn_track_id'];
+				}
+
+				if ( empty( $transaction_id ) || $rcp_payments->payment_exists( $transaction_id ) ) {
+					break;
+				}
+
+				// setup the payment info in an array for storage
+				$payment_data = array(
+					'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['time_created'] ) ),
+					'subscription'     => $member->get_subscription_name(),
+					'payment_type'     => $posted['txn_type'],
+					'subscription_key' => $member->get_subscription_key(),
+					'amount'           => number_format( (float) $posted['initial_payment_amount'], 2 ),
+					'user_id'          => $user_id,
+					'transaction_id'   => sanitize_text_field( $transaction_id ),
+				);
+
+				$rcp_payments->insert( $payment_data );
+
+				$expiration = date( 'Y-m-d 23:59:59', strtotime( $posted['next_payment_date'] ) );
+				$member->renew( $member->is_recurring(), 'active', $expiration );
+
+				break;
 			case "recurring_payment" :
 
 				// when a user makes a recurring payment

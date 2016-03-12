@@ -68,9 +68,8 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'VERSION'            => '124',
 			'METHOD'             => 'CreateRecurringPaymentsProfile',
 			'AMT'                => $this->amount,
-			'INITAMT'            => 0,
+			'INITAMT'            => round( $this->amount + $this->signup_fee, 2 ),
 			'CURRENCYCODE'       => strtoupper( $this->currency ),
-			'ITEMAMT'            => round( $this->amount + $this->signup_fee, 2 ),
 			'SHIPPINGAMT'        => 0,
 			'TAXAMT'             => 0,
 			'DESC'               => $this->subscription_name,
@@ -91,6 +90,11 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'FAILEDINITAMTACTION'=> 'CancelOnFailure',
 			'TOTALBILLINGCYCLES' => $this->auto_renew ? 0 : 1
 		);
+
+		// make sure the initial amount is not less than 0
+		if ( $args['INITAMT'] < 0 ) {
+			$args['INITAMT'] = 0;
+		}
 
 		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
 
@@ -120,15 +124,12 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			} else {
 
 				// Successful signup
+				$member = new RCP_Member( $this->user_id );
+				$member->set_payment_profile_id( $data['PROFILEID'] );
 
 				if ( 'ActiveProfile' === $data['PROFILESTATUS'] ) {
-
 					// Confirm a one-time payment
-					$member = new RCP_Member( $this->user_id );
-
 					$member->renew( $this->auto_renew );
-					$member->set_payment_profile_id( $data['PROFILEID'] );
-
 				}
 
 				wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
