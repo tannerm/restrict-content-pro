@@ -325,6 +325,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		// retrieve the request's body and parse it as JSON
 		$body          = @file_get_contents( 'php://input' );
 		$event_json_id = json_decode( $body );
+		$expiration    = '';
 
 		// for extra security, retrieve from the Stripe API
 		if ( isset( $event_json_id->id ) ) {
@@ -402,12 +403,23 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 							$payment_data['amount']         = $payment_event->amount_due / 100;
 							$payment_data['transaction_id'] = $payment_event->id;
+							$invoice                        = $payment_event;
 
 						}
 
 						if( ! empty( $payment_data['transaction_id'] ) && ! $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
 
-							$member->renew( $member->is_recurring() );
+							if ( ! empty( $invoice->subscription ) ) {
+								$customer = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
+								$subscription = $customer->subscriptions->retrieve( $invoice->subscription );
+
+								if ( ! empty( $subscription ) ) {
+									$expiration = date( 'Y-m-d 23:59:59', $subscription->current_period_end );
+								}
+
+							}
+
+							$member->renew( $member->is_recurring(), 'active', $expiration );
 
 							// These must be retrieved after the status is set to active in order for upgrades to work properly
 							$payment_data['subscription']     = $member->get_subscription_name();

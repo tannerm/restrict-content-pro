@@ -231,14 +231,16 @@ class RCP_Member extends WP_User {
 	 * @access  public
 	 * @since   2.1
 	*/
-	public function renew( $recurring = false, $status = 'active' ) {
+	public function renew( $recurring = false, $status = 'active', $expiration = '' ) {
 
 		if( ! $this->get_subscription_id() ) {
 			return false;
 		}
 
-		$subscription = rcp_get_subscription_details( $this->get_subscription_id() );
-		$expiration   = apply_filters( 'rcp_member_renewal_expiration', $this->calculate_expiration(), $subscription, $this->ID );
+		if ( ! $expiration ) {
+			$subscription = rcp_get_subscription_details( $this->get_subscription_id() );
+			$expiration   = apply_filters( 'rcp_member_renewal_expiration', $this->calculate_expiration(), $subscription, $this->ID );
+		}
 
 		do_action( 'rcp_member_pre_renew', $this->ID, $expiration, $this );
 
