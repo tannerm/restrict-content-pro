@@ -93,7 +93,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		// make sure the initial amount is not less than 0
 		if ( $args['INITAMT'] < 0 ) {
-			$args['INITAMT'] = 0;
+			unset( $args['INITAMT'] );
 		}
 
 		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );

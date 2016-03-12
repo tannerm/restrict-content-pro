@@ -181,6 +181,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'BILLINGPERIOD'       => ucwords( $details['subscription']['duration_unit'] ),
 					'BILLINGFREQUENCY'    => $details['subscription']['duration'],
 					'AMT'                 => $details['AMT'],
+					'INITAMT'             => round( $details['AMT'] + $details['subscription']['fee'], 2 ),
 					'CURRENCYCODE'        => $details['CURRENCYCODE'],
 					'FAILEDINITAMTACTION' => 'CancelOnFailure',
 					'L_BILLINGTYPE0'      => 'RecurringPayments',
@@ -188,12 +189,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'BUTTONSOURCE'        => 'EasyDigitalDownloads_SP'
 				);
 
-				$initial_amt = round( $details['AMT'] + $details['subscription']['fee'], 2 );
-
-				if ( $initial_amt > 0 ) {
-					$args['INITAMT'] = $initial_amt;
-				} else {
-					$initial_amt = 0;
+				if ( $args['INITAMT'] < 0 ) {
+					unset( $args['INITAMT'] );
 				}
 
 				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
@@ -220,22 +217,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					} else {
 
 						$member = new RCP_Member( $details['PAYMENTREQUEST_0_CUSTOM'] );
-
-						$member->renew( true );
 						$member->set_payment_profile_id( $data['PROFILEID'] );
-
-						$payment_data = array(
-							'date'             => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
-							'subscription'     => $member->get_subscription_name(),
-							'payment_type'     => 'PayPal Express',
-							'subscription_key' => $member->get_subscription_key(),
-							'amount'           => $initial_amt,
-							'user_id'          => $member->ID,
-							'transaction_id'   => $data['PROFILEID']
-						);
-
-						$rcp_payments = new RCP_Payments;
-						$rcp_payments->insert( $payment_data );
 
 						wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
 
