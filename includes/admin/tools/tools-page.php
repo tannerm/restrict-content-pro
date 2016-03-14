@@ -4,7 +4,7 @@
  *
  * @since 2.5
  */
-function rcp_sysinfo_page() {
+function rcp_tools_page() {
 	if( ! current_user_can( 'rcp_view_payments' ) ) {
 		return;
 	}
