@@ -214,14 +214,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 						$member = new RCP_Member( $details['PAYMENTREQUEST_0_CUSTOM'] );
 
-						$member->renew( true );
-						$member->set_payment_profile_id( $data['PROFILEID'] );
-
 						$payment_data = array(
 							'date'             => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
-							'subscription'     => $member->get_subscription_name(),
+							'subscription'     => $member->get_pending_subscription_name(),
 							'payment_type'     => 'PayPal Express',
-							'subscription_key' => $member->get_subscription_key(),
+							'subscription_key' => $member->get_pending_subscription_key(),
 							'amount'           => round( $details['AMT'] + $details['subscription']['fee'], 2 ),
 							'user_id'          => $member->ID,
 							'transaction_id'   => $data['PROFILEID']
@@ -229,6 +226,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 						$rcp_payments = new RCP_Payments;
 						$rcp_payments->insert( $payment_data );
+
+						$member->renew( true );
+						$member->set_payment_profile_id( $data['PROFILEID'] );
 
 						wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
 
@@ -479,7 +479,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			parse_str( $request['body'], $data );
 
-			$data['subscription'] = (array) rcp_get_subscription_details( rcp_get_subscription_id( $_GET['user_id'] ) );
+			$member = new RCP_Member( absint( $_GET['user_id'] ) );
+
+			$data['subscription'] = (array) rcp_get_subscription_details( $member->get_pending_subscription_id() );
 
 			return $data;
 

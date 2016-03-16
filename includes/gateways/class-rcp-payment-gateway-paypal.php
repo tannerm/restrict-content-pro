@@ -206,11 +206,19 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			$member = new RCP_Member( $user_id );
 
-			if( ! $member || ! $member->get_subscription_id() ) {
+			$subscription_id = $member->get_pending_subscription_id();
+
+			if( empty( $subscription_id ) ) {
+
+				$subscription_id = $member->get_subscription_id();
+
+			}
+
+			if( ! $member || ! $subscription_id ) {
 				die( 'no member found' );
 			}
 
-			if( ! rcp_get_subscription_details( $member->get_subscription_id() ) ) {
+			if( ! rcp_get_subscription_details( $subscription_id ) ) {
 				die( 'no subscription level found' );
 			}
 
@@ -220,7 +228,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			$amount2 			= number_format( (float) $posted['mc_amount3'], 2 );
 			$payment_status 	= $posted['payment_status'];
 			$currency_code		= $posted['mc_currency'];
-			$subscription_price = number_format( (float) rcp_get_subscription_price( $member->get_subscription_id() ), 2 );
+			$subscription_price = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
 
 			// setup the payment info in an array for storage
 			$payment_data = array(
@@ -387,7 +395,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			        endswitch;
 
-			   
+
 			        die( 'successful web_accept' );
 
 				break;

@@ -168,7 +168,7 @@ class RCP_Member extends WP_User {
 		}
 
 		// Get the member's current expiration date
-		$expiration  = $this->get_expiration_time();
+		$expiration = $this->get_expiration_time();
 
 		// Determine what date to use as the start for the new expiration calculation
 		if( ! $force_now && $expiration > current_time( 'timestamp' ) && ! $this->is_expired() && $this->get_status() == 'active' ) {
@@ -181,7 +181,13 @@ class RCP_Member extends WP_User {
 
 		}
 
-		$subscription = rcp_get_subscription_details( $this->get_subscription_id() );
+		$subscription_id = $this->get_pending_subscription_id();
+
+		if( empty( $subscription_id ) ) {
+			$subscription_id = $this->get_subscription_id();
+		}
+
+		$subscription = rcp_get_subscription_details( $subscription_id );
 
 		if( $subscription->duration > 0 ) {
 
@@ -237,7 +243,13 @@ class RCP_Member extends WP_User {
 			return false;
 		}
 
-		$subscription = rcp_get_subscription_details( $this->get_subscription_id() );
+		$subscription_id = $this->get_pending_subscription_id();
+
+		if( empty( $subscription_id ) ) {
+			$subscription_id = $this->get_subscription_id();
+		}
+
+		$subscription = rcp_get_subscription_details( $subscription_id );
 		$expiration   = apply_filters( 'rcp_member_renewal_expiration', $this->calculate_expiration(), $subscription, $this->ID );
 
 		do_action( 'rcp_member_pre_renew', $this->ID, $expiration, $this );
@@ -312,15 +324,21 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_subscription_id() {
 
-		$subscription_id = get_user_meta( $this->ID, 'rcp_pending_subscription_level', true );
-
-		if( empty( $subscription_id ) ) {
-
-			$subscription_id = get_user_meta( $this->ID, 'rcp_subscription_level', true );
-
-		}
+		$subscription_id = get_user_meta( $this->ID, 'rcp_subscription_level', true );
 
 		return apply_filters( 'rcp_member_get_subscription_id', $subscription_id, $this->ID, $this );
+
+	}
+
+	/**
+	 * Retrieves the pending subscription ID of the member
+	 *
+	 * @access  public
+	 * @since   2.4.12
+	*/
+	public function get_pending_subscription_id() {
+
+		return get_user_meta( $this->ID, 'rcp_pending_subscription_level', true );
 
 	}
 
@@ -332,28 +350,47 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_subscription_key() {
 
-		$subscription_key = get_user_meta( $this->ID, 'rcp_pending_subscription_key', true );
-
-		if( empty( $subscription_id ) ) {
-
-			$subscription_key = get_user_meta( $this->ID, 'rcp_subscription_key', true );
-
-		}
+		$subscription_key = get_user_meta( $this->ID, 'rcp_subscription_key', true );
 
 		return apply_filters( 'rcp_member_get_subscription_key', $subscription_key, $this->ID, $this );
 
 	}
 
 	/**
-	 * Retrieves the current susbcription name of the member
+	 * Retrieves the pending subscription key of the member
+	 *
+	 * @access  public
+	 * @since   2.4.12
+	*/
+	public function get_pending_subscription_key() {
+
+		return get_user_meta( $this->ID, 'rcp_pending_subscription_key', true );
+
+	}
+
+	/**
+	 * Retrieves the current subscription name of the member
 	 *
 	 * @access  public
 	 * @since   2.1
 	*/
 	public function get_subscription_name() {
 
-		$subscription = $this->get_subscription_id();
-		$sub_name     = rcp_get_subscription_name( $subscription );
+		$sub_name = rcp_get_subscription_name( $this->get_subscription_id() );
+
+		return apply_filters( 'rcp_member_get_subscription_name', $sub_name, $this->ID, $this );
+
+	}
+
+	/**
+	 * Retrieves the pending subscription name of the member
+	 *
+	 * @access  public
+	 * @since   2.4.12
+	*/
+	public function get_pending_subscription_name() {
+
+		$sub_name = rcp_get_subscription_name( $this->get_pending_subscription_id() );
 
 		return apply_filters( 'rcp_member_get_subscription_name', $sub_name, $this->ID, $this );
 
