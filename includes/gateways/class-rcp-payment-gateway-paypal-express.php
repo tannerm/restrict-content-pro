@@ -481,7 +481,13 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			$member = new RCP_Member( absint( $_GET['user_id'] ) );
 
-			$data['subscription'] = (array) rcp_get_subscription_details( $member->get_pending_subscription_id() );
+			$subscription_id = $member->get_pending_subscription_id();
+
+			if( empty( $subscription_id ) ) {
+				$subscription_id = $member->get_subscription_id();
+			}
+
+			$data['subscription'] = (array) rcp_get_subscription_details( $subscription_id );
 
 			return $data;
 
