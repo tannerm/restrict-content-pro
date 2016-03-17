@@ -682,7 +682,7 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
  * @return bool
  */
 function rcp_has_upgrade_path( $user_id = 0 ) {
-	return ( bool ) rcp_get_upgrade_paths( $user_id );
+	return apply_filters( 'rcp_has_upgrade_path', ( bool ) rcp_get_upgrade_paths( $user_id ), $user_id );
 }
 
 /**
@@ -700,7 +700,7 @@ function rcp_get_upgrade_paths( $user_id = 0 ) {
 	}
 
 	// make sure the user is active and get the subscription ID
-	$user_subscription = ( rcp_is_active( $user_id ) && 'cancelled' !== rcp_get_status() ) ? rcp_get_subscription_id( $user_id ) : '';
+	$user_subscription = ( rcp_is_recurring( $user_id ) && rcp_is_active( $user_id ) && 'cancelled' !== rcp_get_status() ) ? rcp_get_subscription_id( $user_id ) : '';
 	$subscriptions     = rcp_get_subscription_levels( 'active' );
 
 	// remove the user's current subscription from the list

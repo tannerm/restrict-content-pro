@@ -335,10 +335,11 @@ function rcp_validate_discount() {
 				$('#rcp_gateway_extra_fields').remove();
 
 			} else {
-				
+
 				$('#rcp_auto_renew_wrap').show();
 				gateway_fields.show().removeClass('rcp_discounted_100');
-			
+				rcp_validate_gateways();
+
 			}
 
 		}
