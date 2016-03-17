@@ -104,9 +104,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				if( ! $customer_exists ) {
 
 					$customer_args = array(
-						'card' 			=> $_POST['stripeToken'],
-						'email' 		=> $this->email,
-						'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
+						'card'  => $_POST['stripeToken'],
+						'email' => $this->email
 					);
 
 					if ( ! empty( $this->discount_code ) ) {
@@ -135,6 +134,13 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					$customer->coupon = $this->discount_code;
 
 				}
+
+				$customer->description = 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name;
+				$customer->metadata    = array(
+					'user_id'      => $this->user_id,
+					'email'        => $this->email,
+					'subscription' => $this->subscription_name
+				);
 
 				// Save the card and any coupon
 				$customer->save();
