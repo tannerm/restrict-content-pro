@@ -19,11 +19,19 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 	 */
 	public function fields() {
 
+		if( is_user_logged_in() ) {
+			$email = wp_get_current_user()->user_email;
+		} else {
+			$email = false;
+		}
+
 		$data = apply_filters( 'rcp_stripe_checkout_form_data', array(
 			'key'               => $this->publishable_key,
 			'local'             => 'auto',
 			'allow-remember-me' => true,
+			'email'             => $email,
 		) );
+
 
 		$subscriptions = array();
 		foreach ( rcp_get_subscription_levels( 'active' ) as $subscription ) {
@@ -48,6 +56,10 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			// define the token function
 			checkoutArgs.token = function(token){ jQuery('body').trigger('rcp_stripe_checkout_submit', token); };
 
+			if( ! checkoutArgs.email ) {
+				checkoutArgs.email = jQuery('#rcp_registration_form #rcp_user_email' ).val();
+			}
+			
 			jQuery('#rcp_registration_form #rcp_submit').val( rcp_script_options.pay_now );
 
 			jQuery('body').on('rcp_stripe_checkout_submit', function(e, token){
