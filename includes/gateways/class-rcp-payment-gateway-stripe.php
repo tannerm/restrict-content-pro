@@ -146,9 +146,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$customer->save();
 
 				// Update the customer's subscription in Stripe
-				$customer->updateSubscription( array( 'plan' => $plan_id, 'prorate' => false ) );
+				$subscription = $customer->updateSubscription( array( 'plan' => $plan_id, 'prorate' => false ) );
 
 				$member->set_payment_profile_id( $customer->id );
+				$member->set_merchant_subscription_id( $subscription->id );
 
 				// subscription payments are recorded via webhook
 
@@ -416,12 +417,15 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						if( ! empty( $payment_data['transaction_id'] ) && ! $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
 
 							if ( ! empty( $invoice->subscription ) ) {
+
 								$customer = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
 								$subscription = $customer->subscriptions->retrieve( $invoice->subscription );
 
 								if ( ! empty( $subscription ) ) {
 									$expiration = date( 'Y-m-d 23:59:59', $subscription->current_period_end );
 								}
+
+								$member->set_merchant_subscription_id( $subscription->id );
 
 							}
 

@@ -307,6 +307,40 @@ class RCP_Member extends WP_User {
 	}
 
 	/**
+	 * Retrieves the subscription ID of the member from the merchant processor.
+	 *
+	 * This is used by payment gateways to retrieve the ID of the subscription.
+	 *
+	 * @access  public
+	 * @since   2.5
+	*/
+	public function get_merchant_subscription_id() {
+
+		$subscription_id = get_user_meta( $this->ID, 'rcp_merchant_subscription_id', true );
+
+		return apply_filters( 'rcp_member_get_merchant_subscription_id', $subscription_id, $this->ID, $this );
+
+	}
+
+	/**
+	 * Sets the payment profile ID for a member
+	 *
+	 * This is used by payment gateways to store the ID of the subscription.
+	 *
+	 * @access  public
+	 * @since   2.5
+	*/
+	public function set_merchant_subscription_id( $subscription_id = '' ) {
+
+		do_action( 'rcp_member_pre_set_profile_payment_id', $this->ID, $subscription_id, $this );
+
+		update_user_meta( $this->ID, 'rcp_merchant_subscription_id', $subscription_id );
+
+		do_action( 'rcp_member_post_set_profile_payment_id', $this->ID, $subscription_id, $this );
+
+	}
+
+	/**
 	 * Retrieves the subscription ID of the member
 	 *
 	 * @access  public
