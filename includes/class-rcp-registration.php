@@ -244,9 +244,9 @@ class RCP_Registration {
 		if ( $fees ) {
 			$total += $this->get_total_fees( $total );
 		}
-		
+
 		if ( $discounts ) {
-			$total -= $this->get_total_discounts( $total );
+			$total -= $this->get_total_discounts( $total - $fees );
 		}
 
 		if ( 0 > $total ) {
