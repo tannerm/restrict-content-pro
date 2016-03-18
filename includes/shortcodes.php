@@ -209,7 +209,7 @@ function rcp_register_form_stripe_checkout( $atts ) {
 		'data-description'       => $subscription->description,
 		'data-label'             => sprintf( __( 'Join %s', 'rcp' ), $subscription->name ),
 		'data-panel-label'       => __( 'Register - {{amount}}', 'rcp' ),
-		'data-amount'            => $subscription->price * 100,
+		'data-amount'            => $subscription->price * rcp_stripe_get_currency_multiplier(),
 		'data-local'             => 'auto',
 		'data-allow-remember-me' => true,
 	) );

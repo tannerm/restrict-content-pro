@@ -271,7 +271,7 @@ function rcp_stripe_create_discount() {
 			);
 		} else {
 			\Stripe\Coupon::create( array(
-					"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
+					"amount_off" => sanitize_text_field( $_POST['amount'] ) * rcp_stripe_get_currency_multiplier(),
 					"duration"   => "forever",
 					"id"         => sanitize_text_field( $_POST['code'] ),
 					"currency"   => strtolower( $rcp_options['currency'] )
@@ -442,7 +442,7 @@ function rcp_stripe_update_discount( $discount_id, $args ) {
 				);
 			} else {
 				\Stripe\Coupon::create( array(
-						"amount_off" => sanitize_text_field( $args['amount'] ) * 100,
+						"amount_off" => sanitize_text_field( $args['amount'] ) * rcp_stripe_get_currency_multiplier(),
 						"duration"   => "forever",
 						"id"         => sanitize_text_field( $discount_id ),
 						"currency"   => strtolower( $rcp_options['currency'] )
@@ -477,7 +477,7 @@ function rcp_stripe_update_discount( $discount_id, $args ) {
 				);
 			} else {
 				\Stripe\Coupon::create( array(
-						"amount_off" => sanitize_text_field( $args['amount'] ) * 100,
+						"amount_off" => sanitize_text_field( $args['amount'] ) * rcp_stripe_get_currency_multiplier(),
 						"duration"   => "forever",
 						"id"         => sanitize_text_field( $discount_id ),
 						"currency"   => strtolower( $rcp_options['currency'] )
@@ -591,4 +591,19 @@ function rcp_stripe_does_coupon_exists( $code ) {
 	}
 
 	return $exists;
+}
+
+/**
+ * Return the multiplier for the currency. Most currencies are multiplied by 100. Zere decimal
+ * currencies should not be multiplied so use 1.
+ *
+ * @param string $currency
+ *
+ * @since 2.5
+ * @return int
+ */
+function rcp_stripe_get_currency_multiplier( $currency = '' ) {
+	$multiplier = ( rcp_is_zero_decimal_currency( $currency ) ) ? 1 : 100;
+
+	return apply_filters( 'rcp_stripe_get_currency_multiplier', $multiplier, $currency );
 }

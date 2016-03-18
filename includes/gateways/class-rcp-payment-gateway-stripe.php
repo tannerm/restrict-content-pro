@@ -125,7 +125,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// Add fees before the plan is updated and charged
 				if ( ! empty( $this->signup_fee ) ) {
 
-					$customer->account_balance = $customer->account_balance + ( $this->signup_fee * 100 ); // Add additional amount to initial payment (in cents)	
+					$customer->account_balance = $customer->account_balance + ( $this->signup_fee * rcp_stripe_get_currency_multiplier() ); // Add additional amount to initial payment (in cents)
 
 				}
 
@@ -197,7 +197,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			try {
 
 				$charge = \Stripe\Charge::create( apply_filters( 'rcp_stripe_charge_create_args', array(
-					'amount' 		 => $this->amount * 100, // amount in cents
+					'amount' 		 => $this->amount * rcp_stripe_get_currency_multiplier(), // amount in cents
 					'currency' 		 => strtolower( $this->currency ),
 					'card' 			 => $_POST['stripeToken'],
 					'description' 	 => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
@@ -392,14 +392,14 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							// Successful one-time payment
 							if ( empty( $payment_event->invoice ) ) {
 
-								$payment_data['amount']         = $payment_event->amount / 100;
+								$payment_data['amount']         = $payment_event->amount / rcp_stripe_get_currency_multiplier();
 								$payment_data['transaction_id'] = $payment_event->id;
 
 							// Successful subscription payment
 							} else {
 
 								$invoice = \Stripe\Invoice::retrieve( $payment_event->invoice );
-								$payment_data['amount']         = $invoice->amount_due / 100;
+								$payment_data['amount']         = $invoice->amount_due / rcp_stripe_get_currency_multiplier();
 								$payment_data['transaction_id'] = $payment_event->id;
 
 							}
@@ -407,7 +407,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						// Successful subscription paid made with account credit where no charge is created
 						} elseif ( $event->type == 'invoice.payment_succeeded' && empty( $payment_event->charge ) ) {
 
-							$payment_data['amount']         = $payment_event->amount_due / 100;
+							$payment_data['amount']         = $payment_event->amount_due / rcp_stripe_get_currency_multiplier();
 							$payment_data['transaction_id'] = $payment_event->id;
 							$invoice                        = $payment_event;
 
@@ -540,9 +540,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						// get the subscription price
 						if( $('.rcp_level:checked').length ) {
-							var price = $('.rcp_level:checked').closest('li').find('span.rcp_price').attr('rel') * 100;
+							var price = $('.rcp_level:checked').closest('li').find('span.rcp_price').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
 						} else {
-							var price = $('.rcp_level').attr('rel') * 100;
+							var price = $('.rcp_level').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
 						}
 
 						if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]').val() == 'stripe') && price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100')) {
@@ -629,7 +629,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		// get all subscription level info for this plan
 		$plan           = rcp_get_subscription_details_by_name( $plan_name );
-		$price          = $plan->price * 100;
+		$price          = $plan->price * rcp_stripe_get_currency_multiplier();
 		$interval       = $plan->duration_unit;
 		$interval_count = $plan->duration;
 		$name           = $plan->name;
