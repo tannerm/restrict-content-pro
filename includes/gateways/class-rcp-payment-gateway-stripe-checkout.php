@@ -48,7 +48,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			// define the token function
 			checkoutArgs.token = function(token){ jQuery('body').trigger('rcp_stripe_checkout_submit', token); };
 
-			jQuery('#rcp_submit').val( rcp_script_options.pay_now );
+			jQuery('#rcp_registration_form #rcp_submit').val( rcp_script_options.pay_now );
 
 			jQuery('body').on('rcp_stripe_checkout_submit', function(e, token){
 				jQuery('#rcp_registration_form').append('<input type="hidden" name="stripeToken" value="' + token.id + '" />').submit();
@@ -56,7 +56,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 
 			var rcpStripeCheckout = StripeCheckout.configure(checkoutArgs);
 
-			jQuery('#rcp_submit').on('click', function(e) {
+			jQuery('#rcp_registration_form #rcp_submit').on('click', function(e) {
 				var $form = jQuery(this).closest('form');
 				var $level = $form.find('input[name=rcp_level]:checked');
 
@@ -87,9 +87,9 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 	 * @since 2.5
 	 */
 	public function scripts() {
+		parent::scripts();
 		wp_enqueue_script( 'stripe-checkout', 'https://checkout.stripe.com/checkout.js', array( 'jquery' ) );
 
-		parent::scripts();
 	}
 
 	/**

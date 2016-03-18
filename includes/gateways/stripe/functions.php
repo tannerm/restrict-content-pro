@@ -9,14 +9,14 @@
 function rcp_stripe_update_card_form_js() {
 	global $rcp_options;
 
-	if( ! rcp_is_gateway_enabled( 'stripe' ) ) {
+	if( ! rcp_is_gateway_enabled( 'stripe' ) && ! rcp_is_gateway_enabled( 'stripe_checkout' ) ) {
 		return;
 	}
 
 	if( isset( $rcp_options['sandbox'] ) ) {
-		$key = $rcp_options['stripe_test_publishable'];
+		$key = trim( $rcp_options['stripe_test_publishable'] );
 	} else {
-		$key = $rcp_options['stripe_live_publishable'];
+		$key = trim( $rcp_options['stripe_live_publishable'] );
 	}
 
 	if( empty( $key ) ) {
