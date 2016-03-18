@@ -212,7 +212,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				), $this ) );
 
 				$payment_data = array(
-					'date'              => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
+					'date'              => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 					'subscription'      => $this->subscription_name,
 					'payment_type' 		=> 'Credit Card One Time',
 					'subscription_key' 	=> $this->subscription_key,
@@ -331,6 +331,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		// retrieve the request's body and parse it as JSON
 		$body          = @file_get_contents( 'php://input' );
 		$event_json_id = json_decode( $body );
+		$expiration    = '';
 
 		// for extra security, retrieve from the Stripe API
 		if ( isset( $event_json_id->id ) ) {
@@ -374,9 +375,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					if( $event->type == 'charge.succeeded' || $event->type == 'invoice.payment_succeeded' ) {
 
+						$account = \Stripe\Account::retrieve();
+						$payment_date = date_create( date( 'c', $event->created ), new DateTimeZone( $account->timezone ) );
+
 						// setup payment data
 						$payment_data = array(
-							'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
+							'date'              => get_date_from_gmt( $payment_date->format( 'c' ) ),
 							'payment_type' 		=> 'Credit Card',
 							'user_id' 			=> $member->ID,
 							'amount'            => '',
@@ -405,12 +409,23 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 							$payment_data['amount']         = $payment_event->amount_due / 100;
 							$payment_data['transaction_id'] = $payment_event->id;
+							$invoice                        = $payment_event;
 
 						}
 
 						if( ! empty( $payment_data['transaction_id'] ) && ! $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
 
-							$member->renew( $member->is_recurring() );
+							if ( ! empty( $invoice->subscription ) ) {
+								$customer = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
+								$subscription = $customer->subscriptions->retrieve( $invoice->subscription );
+
+								if ( ! empty( $subscription ) ) {
+									$expiration = date( 'Y-m-d 23:59:59', $subscription->current_period_end );
+								}
+
+							}
+
+							$member->renew( $member->is_recurring(), 'active', $expiration );
 
 							// These must be retrieved after the status is set to active in order for upgrades to work properly
 							$payment_data['subscription']     = $member->get_subscription_name();
