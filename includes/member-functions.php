@@ -552,7 +552,7 @@ function rcp_print_user_payments_formatted( $user_id ) {
 	} ?>
 
 	<table class="wp-list-table widefat fixed posts rcp-table rcp_payment_details" style="display: block; width: 100%;">
-		
+
 		<thead>
 			<tr>
 				<th><?php _e( 'Date', 'rcp' ); ?></th>
@@ -921,8 +921,19 @@ function rcp_cancel_member_payment_profile( $member_id = 0 ) {
 
 		try {
 
-			$cu = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
-			$cu->cancelSubscription( array( 'at_period_end' => false ) );
+			$subscription_id = $member->get_merchant_subscription_id();
+			$customer        = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
+
+			if( ! empty( $subscription_id ) ) {
+
+				$customer->subscriptions->retrieve( $subscription_id )->cancel( array( 'at_period_end' => false ) );
+
+			} else {
+
+				$customer->cancelSubscription( array( 'at_period_end' => false ) );
+
+			}
+
 
 			$success = true;
 

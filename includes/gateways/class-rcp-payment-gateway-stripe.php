@@ -145,8 +145,18 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// Save the card and any coupon
 				$customer->save();
 
-				// Update the customer's subscription in Stripe
-				$subscription = $customer->updateSubscription( array( 'plan' => $plan_id, 'prorate' => false ) );
+				$existing_sub_id = $member->get_merchant_subscription_id();
+
+				if( ! empty( $existing_sub_id ) ) {
+
+					// If we already have one, we need to cancel it
+
+					$customer->subscriptions->retrieve( $existing_sub_id )->cancel( array( 'at_period_end' => false ) );
+
+				}
+
+				// Set the customer's subscription in Stripe
+				$subscription = $customer->subscriptions->create( array( 'plan' => $plan_id, 'prorate' => false ) );
 
 				$member->set_payment_profile_id( $customer->id );
 				$member->set_merchant_subscription_id( $subscription->id );
@@ -159,28 +169,28 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$this->handle_processing_error( $e );
 
-			} catch (\Stripe\Error\InvalidRequest $e) {
+			} catch ( \Stripe\Error\InvalidRequest $e ) {
 
 				// Invalid parameters were supplied to Stripe's API
 				$this->handle_processing_error( $e );
 
-			} catch (\Stripe\Error\Authentication $e) {
+			} catch ( \Stripe\Error\Authentication $e ) {
 
 				// Authentication with Stripe's API failed
 				// (maybe you changed API keys recently)
 				$this->handle_processing_error( $e );
 
-			} catch (\Stripe\Error\ApiConnection $e) {
+			} catch ( \Stripe\Error\ApiConnection $e ) {
 
 				// Network communication with Stripe failed
 				$this->handle_processing_error( $e );
 
-			} catch (\Stripe\Error\Base $e) {
+			} catch ( \Stripe\Error\Base $e ) {
 
 				// Display a very generic error to the user
 				$this->handle_processing_error( $e );
 
-			} catch (Exception $e) {
+			} catch ( Exception $e ) {
 
 				// Something else happened, completely unrelated to Stripe
 
@@ -231,30 +241,30 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$this->handle_processing_error( $e );
 
-			} catch (\Stripe\Error\InvalidRequest $e) {
+			} catch ( \Stripe\Error\InvalidRequest $e ) {
 
 				// Invalid parameters were supplied to Stripe's API
 				$this->handle_processing_error( $e );
 
 
-			} catch (\Stripe\Error\Authentication $e) {
+			} catch ( \Stripe\Error\Authentication $e ) {
 
 				// Authentication with Stripe's API failed
 				// (maybe you changed API keys recently)
 				$this->handle_processing_error( $e );
 
-			} catch (\Stripe\Error\ApiConnection $e) {
+			} catch ( \Stripe\Error\ApiConnection $e ) {
 
 				// Network communication with Stripe failed
 				$this->handle_processing_error( $e );
 
 
-			} catch (\Stripe\Error\Base $e) {
+			} catch ( \Stripe\Error\Base $e ) {
 
 				// Display a very generic error to the user
 				$this->handle_processing_error( $e );
 
-			} catch (Exception $e) {
+			} catch ( Exception $e ) {
 
 				// Something else happened, completely unrelated to Stripe
 
