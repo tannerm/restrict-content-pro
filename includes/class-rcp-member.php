@@ -687,4 +687,17 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Get details about the member's card on file
+	 *
+	 * @since 2.5
+	 * @return string
+	 */
+	public function get_card_details() {
+
+		// Each gateway hooks in to retrieve the details from the merchant API
+		return apply_filters( 'rcp_get_card_details', array(), $this->ID, $this );
+
+	}
+
 }

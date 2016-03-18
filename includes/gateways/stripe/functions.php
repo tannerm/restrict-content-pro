@@ -607,3 +607,54 @@ function rcp_stripe_get_currency_multiplier( $currency = '' ) {
 
 	return apply_filters( 'rcp_stripe_get_currency_multiplier', $multiplier, $currency );
 }
+
+/**
+ * Query Stripe API to get customer's card details
+ *
+ * @param $card       array
+ * @param $member_id int
+ * @param $member    object
+ *
+ * @since 2.5
+ * @return array
+ */
+function rcp_stripe_get_card_details( $card, $member_id, $member ) {
+
+	global $rcp_options;
+
+	if( ! rcp_is_stripe_subscriber( $member_id ) ) {
+		return $card;
+	}
+
+	if( ! class_exists( 'Stripe\Stripe' ) ) {
+		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
+	}
+
+	if ( isset( $rcp_options['sandbox'] ) ) {
+		$secret_key = trim( $rcp_options['stripe_test_secret'] );
+	} else {
+		$secret_key = trim( $rcp_options['stripe_live_secret'] );
+	}
+
+	\Stripe\Stripe::setApiKey( $secret_key );
+
+	try {
+
+		$customer = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
+		$default  = $customer->sources->retrieve( $customer->default_source );
+
+		$card['name']      = $default->name;
+		$card['type']      = $default->brand;
+		$card['zip']       = $default->address_zip;
+		$card['exp_month'] = $default->exp_month;
+		$card['exp_year']  = $default->exp_year;
+		$card['last4']     = $default->last4;
+
+	} catch ( Exception $e ) {
+
+	}
+
+	return $card;
+
+}
+add_filter( 'rcp_get_card_details', 'rcp_stripe_get_card_details', 10, 3 );

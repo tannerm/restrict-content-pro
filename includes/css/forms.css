@@ -43,3 +43,4 @@
 p.rcp_error { -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #c00; margin: 0 0 10px; padding: 4px; background: #ffebe8; color: #333; }
 p.rcp_success span, p.rcp_error span { margin: 0 !important; padding:10px; }
 p.rcp_success { -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; border: 1px solid #E6DB55; margin: 0 0 10px; padding: 4px; background: #FFFFE0; color: #333; }
+#rcp_card_details span { display: block; }
