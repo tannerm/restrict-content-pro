@@ -657,7 +657,8 @@ function rcp_is_restricted_content( $post_id ) {
  */
 function rcp_get_currency() {
 	global $rcp_options;
-	return apply_filters( 'rcp_get_currency', $rcp_options['currency'] );
+	$currency = isset( $rcp_options['currency'] ) ? strtoupper( $rcp_options['currency'] ) : 'USD';
+	return apply_filters( 'rcp_get_currency', $currency );
 }
 
 /**
