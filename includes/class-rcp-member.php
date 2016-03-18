@@ -332,11 +332,11 @@ class RCP_Member extends WP_User {
 	*/
 	public function set_merchant_subscription_id( $subscription_id = '' ) {
 
-		do_action( 'rcp_member_pre_set_profile_payment_id', $this->ID, $subscription_id, $this );
+		do_action( 'rcp_member_pre_set_merchant_subscription_id', $this->ID, $subscription_id, $this );
 
 		update_user_meta( $this->ID, 'rcp_merchant_subscription_id', $subscription_id );
 
-		do_action( 'rcp_member_post_set_profile_payment_id', $this->ID, $subscription_id, $this );
+		do_action( 'rcp_member_post_set_merchant_subscription_id', $this->ID, $subscription_id, $this );
 
 	}
 
