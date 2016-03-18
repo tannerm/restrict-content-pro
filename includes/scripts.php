@@ -126,7 +126,8 @@ function rcp_print_scripts() {
 		array(
 			'ajaxurl'    => admin_url( 'admin-ajax.php' ),
 			'register'   => __( 'Register', 'rcp' ),
-			'pleasewait' => __( 'Please Wait . . . ', 'rcp' )
+			'pleasewait' => __( 'Please Wait . . . ', 'rcp' ),
+			'pay_now'    => __( 'Submit Payment', 'rcp' ),
 		)
 	);
 
