@@ -433,6 +433,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 								if ( ! empty( $subscription ) ) {
 									$expiration = date( 'Y-m-d 23:59:59', $subscription->current_period_end );
+									$member->set_recurring();
 								}
 
 								$member->set_merchant_subscription_id( $subscription->id );
