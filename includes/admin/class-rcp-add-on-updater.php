@@ -23,7 +23,7 @@ class RCP_Add_On_Updater {
 	 * @return void
 	 */
 	function __construct( $_addon_id, $_plugin_file, $_version ) {
-		$this->api_url    = 'http://restrictcontentpro.com';
+		$this->api_url    = 'https://restrictcontentpro.com';
 		$this->addon_id   = $_addon_id;
 		$this->name       = plugin_basename( $_plugin_file );
 		$this->slug       = basename( $_plugin_file, '.php');
@@ -141,7 +141,7 @@ class RCP_Add_On_Updater {
 
 		if ( ! is_object( $update_cache ) || empty( $update_cache->response ) || empty( $update_cache->response[ $this->name ] ) ) {
 
-			$cache_key    = md5( 'affwp_plugin_' . sanitize_key( $this->name ) . '_version_info' );
+			$cache_key    = md5( 'rcp_plugin_' . sanitize_key( $this->name ) . '_version_info' );
 			$version_info = get_transient( $cache_key );
 
 			if( false === $version_info ) {
