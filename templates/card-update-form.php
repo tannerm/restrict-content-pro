@@ -1,4 +1,19 @@
+<?php $member = new RCP_Member( get_current_user_id() ); ?>
 <form id="rcp_update_card_form" class="rcp_form" action="" method="POST">
+	
+	<?php $card = $member->get_card_details(); ?>
+
+	<?php if( ! empty( $card ) ) : ?>
+		<fieldset class="rcp_current_card_fieldset">
+			<p id="rcp_card_details">
+				<span class="rcp_card_details_name"><?php _e( 'Name:' ); ?> <?php echo $card['name']; ?></span>
+				<span class="rcp_card_details_type"><?php _e( 'Type:' ); ?> <?php echo $card['type']; ?></span>
+				<span class="rcp_card_details_last4"><?php _e( 'Last 4:' ); ?> <?php echo $card['last4']; ?></span>
+				<span class="rcp_card_details_exp"><?php _e( 'Exp:' ); ?> <?php echo $card['exp_month'] . ' / ' . $card['exp_year']; ?></span>
+			</p>
+		</fieldset>
+	<?php endif; ?>
+
 	<fieldset class="rcp_card_fieldset">
 		<p id="rcp_card_number_wrap">
 			<label><?php _e( 'Card Number', 'rcp' ); ?></label>
