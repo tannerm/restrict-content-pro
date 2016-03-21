@@ -78,7 +78,13 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_expiration_date( $formatted = true ) {
 
-		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+		$expiration = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
+
+		if( empty( $expiration ) ) {
+
+			$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+
+		}
 
 		if( $expiration ) {
 			$expiration = $expiration != 'none' ? $expiration : 'none';
@@ -100,7 +106,13 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_expiration_time() {
 
-		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+		$expiration = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
+
+		if( empty( $expiration ) ) {
+
+			$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+
+		}
 
 		return apply_filters( 'rcp_member_get_expiration_time', strtotime( $expiration ), $this->ID, $this );
 
@@ -117,7 +129,7 @@ class RCP_Member extends WP_User {
 	public function set_expiration_date( $new_date = '' ) {
 
 		$ret      = false;
-		$old_date = $this->get_expiration_date( false );
+		$old_date = get_user_meta( $this->ID, 'rcp_expiration', true ); // This calls user meta directly to avoid retrieving the pending date
 
 		if( $old_date !== $new_date ) {
 
@@ -128,6 +140,8 @@ class RCP_Member extends WP_User {
 				rcp_add_member_note( $this->ID, $note );
 
 			}
+
+			delete_user_meta( $this->ID, 'rcp_pending_expiration_date' );
 
 			do_action( 'rcp_set_expiration_date', $this->ID, $new_date, $old_date );
 
@@ -145,13 +159,19 @@ class RCP_Member extends WP_User {
 	 * @since   2.4
 	 * @return  String Date in Y-m-d H:i:s format or "none" if is a lifetime member
 	*/
-	public function calculate_expiration() {
+	public function calculate_expiration( $force_now = false ) {
+
+		$pending_exp = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
+
+		if( ! empty( $pending_exp ) ) {
+			return $pending_exp;
+		}
 
 		// Get the member's current expiration date
-		$expiration = $this->get_expiration_time();
+		$expiration  = $this->get_expiration_time();
 
 		// Determine what date to use as the start for the new expiration calculation
-		if( $expiration > current_time( 'timestamp' ) && ! $this->is_expired() && $this->get_status() == 'active' ) {
+		if( ! $force_now && $expiration > current_time( 'timestamp' ) && ! $this->is_expired() && $this->get_status() == 'active' ) {
 
 			$base_timestamp = $expiration;
 
@@ -211,14 +231,16 @@ class RCP_Member extends WP_User {
 	 * @access  public
 	 * @since   2.1
 	*/
-	public function renew( $recurring = false, $status = 'active' ) {
+	public function renew( $recurring = false, $status = 'active', $expiration = '' ) {
 
 		if( ! $this->get_subscription_id() ) {
 			return false;
 		}
 
-		$subscription = rcp_get_subscription_details( $this->get_subscription_id() );
-		$expiration   = apply_filters( 'rcp_member_renewal_expiration', $this->calculate_expiration(), $subscription, $this->ID );
+		if ( ! $expiration ) {
+			$subscription = rcp_get_subscription_details( $this->get_subscription_id() );
+			$expiration   = apply_filters( 'rcp_member_renewal_expiration', $this->calculate_expiration(), $subscription, $this->ID );
+		}
 
 		do_action( 'rcp_member_pre_renew', $this->ID, $expiration, $this );
 
@@ -285,6 +307,40 @@ class RCP_Member extends WP_User {
 	}
 
 	/**
+	 * Retrieves the subscription ID of the member from the merchant processor.
+	 *
+	 * This is used by payment gateways to retrieve the ID of the subscription.
+	 *
+	 * @access  public
+	 * @since   2.5
+	*/
+	public function get_merchant_subscription_id() {
+
+		$subscription_id = get_user_meta( $this->ID, 'rcp_merchant_subscription_id', true );
+
+		return apply_filters( 'rcp_member_get_merchant_subscription_id', $subscription_id, $this->ID, $this );
+
+	}
+
+	/**
+	 * Sets the payment profile ID for a member
+	 *
+	 * This is used by payment gateways to store the ID of the subscription.
+	 *
+	 * @access  public
+	 * @since   2.5
+	*/
+	public function set_merchant_subscription_id( $subscription_id = '' ) {
+
+		do_action( 'rcp_member_pre_set_merchant_subscription_id', $this->ID, $subscription_id, $this );
+
+		update_user_meta( $this->ID, 'rcp_merchant_subscription_id', $subscription_id );
+
+		do_action( 'rcp_member_post_set_merchant_subscription_id', $this->ID, $subscription_id, $this );
+
+	}
+
+	/**
 	 * Retrieves the subscription ID of the member
 	 *
 	 * @access  public
@@ -292,7 +348,13 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_subscription_id() {
 
-		$subscription_id = get_user_meta( $this->ID, 'rcp_subscription_level', true );
+		$subscription_id = get_user_meta( $this->ID, 'rcp_pending_subscription_level', true );
+
+		if( empty( $subscription_id ) ) {
+
+			$subscription_id = get_user_meta( $this->ID, 'rcp_subscription_level', true );
+
+		}
 
 		return apply_filters( 'rcp_member_get_subscription_id', $subscription_id, $this->ID, $this );
 
@@ -306,7 +368,13 @@ class RCP_Member extends WP_User {
 	*/
 	public function get_subscription_key() {
 
-		$subscription_key = get_user_meta( $this->ID, 'rcp_subscription_key', true );
+		$subscription_key = get_user_meta( $this->ID, 'rcp_pending_subscription_key', true );
+
+		if( empty( $subscription_id ) ) {
+
+			$subscription_key = get_user_meta( $this->ID, 'rcp_subscription_key', true );
+
+		}
 
 		return apply_filters( 'rcp_member_get_subscription_key', $subscription_key, $this->ID, $this );
 
@@ -563,6 +631,94 @@ class RCP_Member extends WP_User {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Get the prorate credit amount for the user's remaining subscription
+	 *
+	 * @since 2.5
+	 * @return int
+	 */
+	public function get_prorate_credit_amount() {
+
+		// make sure this is an active, paying subscriber
+		if ( ! $this->is_active() ) {
+			return 0;
+		}
+
+		if ( apply_filters( 'rcp_disable_prorate_credit', false, $this ) ) {
+			return 0;
+		}
+
+		// get the most recent payment
+		foreach( $this->get_payments() as $pmt ) {
+			if ( 'complete' != $pmt->status ) {
+				continue;
+			}
+
+			$payment = $pmt;
+			break;
+		}
+
+		if ( empty( $payment ) ) {
+			return 0;
+		}
+
+		$subscription    = rcp_get_subscription_details_by_name( $payment->subscription );
+		$subscription_id = $this->get_subscription_id();
+
+		// make sure the subscription payment matches the existing subscription
+		if ( empty( $subscription->id ) || empty( $subscription->duration ) || $subscription->id != $subscription_id ) {
+			return 0;
+		}
+
+		$exp_date = $this->get_expiration_date();
+
+		// if this is member does not have an expiration date, calculate it
+		if ( 'none' == $exp_date ) {
+			return 0;
+		}
+
+		// make sure we have a valid date
+		if ( ! $exp_date = strtotime( $exp_date ) ) {
+			return 0;
+		}
+
+		$exp_date_dt = date( 'Y-m-d', $exp_date ) . ' 23:59:59';
+		$exp_date    = strtotime( $exp_date_dt, current_time( 'timestamp' ) );
+
+		$time_remaining = $exp_date - current_time( 'timestamp' );
+
+		// Calculate the start date based on the expiration date
+		if ( ! $start_date = strtotime( $exp_date_dt . ' -' . $subscription->duration . $subscription->duration_unit, current_time( 'timestamp' ) ) ) {
+			return 0;
+		}
+
+		$total_time = $exp_date - $start_date;
+
+		if ( $time_remaining <= 0 ) {
+			return 0;
+		}
+
+		// calculate discount as percentage of subscription remaining
+		// use the previous payment amount
+		$payment_amount       = abs( $subscription->price );
+		$percentage_remaining = $time_remaining / $total_time;
+
+		// make sure we don't credit more than 100%
+		if ( $percentage_remaining > 1 ) {
+			$percentage_remaining = 1;
+		}
+
+		$discount = round( $payment_amount * $percentage_remaining, 2 );
+
+		// make sure they get a discount. This shouldn't ever run
+		if ( ! $discount > 0 ) {
+			$discount = $payment_amount;
+		}
+
+		return apply_filters( 'rcp_member_prorate_credit', number_format( (float) $discount, 2 ), $this->ID, $this );
+
 	}
 
 }

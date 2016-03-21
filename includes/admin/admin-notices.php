@@ -117,6 +117,12 @@ function rcp_admin_notices() {
 			$class = 'error';
 			break;
 
+		case 'level_missing_fields' :
+		
+			$text = __( 'Subscription level fields are required', 'rcp' );
+			$class = 'error';
+			break;		
+
 		case 'discount_added' :
 
 			$text = __( 'Discount code created', 'rcp' );

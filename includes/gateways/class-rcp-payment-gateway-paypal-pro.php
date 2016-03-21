@@ -65,12 +65,11 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'USER'               => $this->username,
 			'PWD'                => $this->password,
 			'SIGNATURE'          => $this->signature,
-			'VERSION'            => '121',
+			'VERSION'            => '124',
 			'METHOD'             => 'CreateRecurringPaymentsProfile',
 			'AMT'                => $this->amount,
-			'INITAMT'            => 0,
+			'INITAMT'            => round( $this->amount + $this->signup_fee, 2 ),
 			'CURRENCYCODE'       => strtoupper( $this->currency ),
-			'ITEMAMT'            => round( $this->amount + $this->signup_fee, 2 ),
 			'SHIPPINGAMT'        => 0,
 			'TAXAMT'             => 0,
 			'DESC'               => $this->subscription_name,
@@ -85,16 +84,23 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'CVV2'               => sanitize_text_field( $_POST['rcp_card_cvc'] ),
 			'ZIP'                => sanitize_text_field( $_POST['rcp_card_zip'] ),
 			'BUTTONSOURCE'       => 'EasyDigitalDownloads_SP',
-			'PROFILESTARTDATE'   => date( 'Y-m-d\Tg:i:s', strtotime( '+' . $this->length . ' ' . $this->length_unit, time() ) ),
+			'PROFILESTARTDATE'   => date( 'Y-m-d\TH:i:s', strtotime( '+' . $this->length . ' ' . $this->length_unit, time() ) ),
 			'BILLINGPERIOD'      => ucwords( $this->length_unit ),
 			'BILLINGFREQUENCY'   => $this->length,
 			'FAILEDINITAMTACTION'=> 'CancelOnFailure',
 			'TOTALBILLINGCYCLES' => $this->auto_renew ? 0 : 1
 		);
 
-		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'body' => $args ) );
+		// make sure the initial amount is not less than 0
+		if ( $args['INITAMT'] < 0 ) {
+			unset( $args['INITAMT'] );
+		}
+
+		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
 
 		if( is_wp_error( $request ) ) {
+
+			do_action( 'rcp_paypal_pro_signup_payment_failed', $request, $this );
 
 			$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
 			$error .= '<p>' . $request->get_error_message() . '</p>';
@@ -105,7 +111,9 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 			parse_str( $request['body'], $data );
 
-			if( 'failure' === strtolower( $data['ACK'] ) ) {
+			if( false !== strpos( strtolower( $data['ACK'] ), 'failure' ) ) {
+
+				do_action( 'rcp_paypal_pro_signup_payment_failed', $request, $this );
 
 				$error = '<p>' . __( 'PayPal subscription creation failed.', 'rcp' ) . '</p>';
 				$error .= '<p>' . __( 'Error message:', 'rcp' ) . ' ' . $data['L_LONGMESSAGE0'] . '</p>';
@@ -116,15 +124,12 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			} else {
 
 				// Successful signup
+				$member = new RCP_Member( $this->user_id );
+				$member->set_payment_profile_id( $data['PROFILEID'] );
 
 				if ( 'ActiveProfile' === $data['PROFILESTATUS'] ) {
-
 					// Confirm a one-time payment
-					$member = new RCP_Member( $this->user_id );
-
 					$member->renew( $this->auto_renew );
-					$member->set_payment_profile_id( $data['PROFILEID'] );
-
 				}
 
 				wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;

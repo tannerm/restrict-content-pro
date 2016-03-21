@@ -23,6 +23,11 @@ function rcp_process_data() {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
 
+			if( empty( $_POST['name'] ) ) {
+				$url = admin_url( 'admin.php?page=rcp-member-levels&rcp_message=level_missing_fields' );
+				wp_safe_redirect( esc_url_raw( $url ) ); exit;
+			}
+
 			$levels = new RCP_Levels();
 
 			$add = $levels->insert( $_POST );
@@ -78,6 +83,13 @@ function rcp_process_data() {
 				$level_id   = absint( $_POST['level'] );
 
 				rcp_set_expiration_date( $user->ID, $expiration );
+
+				$new_subscription = get_user_meta( $user->ID, '_rcp_new_subscription', true );
+
+				if ( empty( $new_subscription ) ) {
+					update_user_meta( $user->ID, '_rcp_new_subscription', '1' );
+				}
+
 				rcp_set_status( $user->ID, 'active' );
 
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
@@ -97,6 +109,7 @@ function rcp_process_data() {
 				} else {
 					delete_user_meta( $user->ID, 'rcp_recurring' );
 				}
+
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&rcp_message=user_added';
 				header( "Location:" .  $url);
 
@@ -149,12 +162,6 @@ function rcp_process_data() {
 						case 'mark-cancelled' :
 
 							$member->set_status( 'cancelled' );
-
-							break;
-
-						case 'delete' :
-
-							wp_delete_user( $member->ID );
 
 							break;
 
@@ -270,6 +277,10 @@ function rcp_process_data() {
 
 			$add = $discounts->insert( $data );
 
+			if ( is_wp_error( $add ) ) {
+				wp_die( $add );
+			}
+
 			if( $add ) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&rcp_message=discount_added';
 			} else {
@@ -302,6 +313,10 @@ function rcp_process_data() {
 			);
 
 			$update = $discounts->update( $_POST['discount_id'], $data );
+
+			if ( is_wp_error( $update ) ) {
+				wp_die( $update );
+			}
 
 			if( $update ) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-updated=1';
