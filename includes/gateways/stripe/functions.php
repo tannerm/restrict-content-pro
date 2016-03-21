@@ -262,7 +262,7 @@ add_action( 'rcp_update_billing_card', 'rcp_stripe_update_billing_card', 10, 2 )
  * @since       2.1
  */
 function rcp_stripe_create_discount() {
-	
+
 	if( ! is_admin() ) {
 		return;
 	}
@@ -648,12 +648,12 @@ function rcp_stripe_get_currency_multiplier( $currency = '' ) {
  * @since 2.5
  * @return array
  */
-function rcp_stripe_get_card_details( $card, $member_id, $member ) {
+function rcp_stripe_get_card_details( $cards, $member_id, $member ) {
 
 	global $rcp_options;
 
 	if( ! rcp_is_stripe_subscriber( $member_id ) ) {
-		return $card;
+		return $cards;
 	}
 
 	if( ! class_exists( 'Stripe\Stripe' ) ) {
@@ -673,18 +673,18 @@ function rcp_stripe_get_card_details( $card, $member_id, $member ) {
 		$customer = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
 		$default  = $customer->sources->retrieve( $customer->default_source );
 
-		$card['name']      = $default->name;
-		$card['type']      = $default->brand;
-		$card['zip']       = $default->address_zip;
-		$card['exp_month'] = $default->exp_month;
-		$card['exp_year']  = $default->exp_year;
-		$card['last4']     = $default->last4;
+		$cards['stripe']['name']      = $default->name;
+		$cards['stripe']['type']      = $default->brand;
+		$cards['stripe']['zip']       = $default->address_zip;
+		$cards['stripe']['exp_month'] = $default->exp_month;
+		$cards['stripe']['exp_year']  = $default->exp_year;
+		$cards['stripe']['last4']     = $default->last4;
 
 	} catch ( Exception $e ) {
 
 	}
 
-	return $card;
+	return $cards;
 
 }
 add_filter( 'rcp_get_card_details', 'rcp_stripe_get_card_details', 10, 3 );
