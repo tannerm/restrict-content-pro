@@ -241,13 +241,13 @@ class RCP_Registration {
 
 		$total = rcp_get_subscription_price( $this->subscription );
 
-		if ( $fees ) {
-			$total += $this->get_total_fees( $total );
-		}
-		
 		if ( $discounts ) {
 			$total -= $this->get_total_discounts( $total );
 		}
+
+		if ( $fees ) {
+			$total += $this->get_total_fees( $total );
+		}		
 
 		if ( 0 > $total ) {
 			$total = 0;
@@ -270,12 +270,12 @@ class RCP_Registration {
 
 		$total = rcp_get_subscription_price( $this->subscription );
 
-		if ( $fees ) {
-			$total += $this->get_total_fees( $total, true );
-		}
-
 		if ( $discounts ) {
 			$total -= $this->get_total_discounts( $total, true );
+		}
+
+		if ( $fees ) {
+			$total += $this->get_total_fees( $total, true );
 		}
 
 		if ( 0 > $total ) {
