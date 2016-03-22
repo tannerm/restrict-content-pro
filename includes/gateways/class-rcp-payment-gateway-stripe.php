@@ -160,14 +160,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// Save the card and any coupon
 				$customer->save();
 
-				$existing_sub_id = $member->get_merchant_subscription_id();
-
-				if( ! empty( $existing_sub_id ) ) {
-
-					// If we already have one, we need to cancel it
-
-					$customer->subscriptions->retrieve( $existing_sub_id )->cancel( array( 'at_period_end' => false ) );
-
+				// If the customer has an existing subscription, we need to cancel it
+				if( rcp_can_member_cancel( $member->ID ) ) {
+					$cancelled = rcp_cancel_member_payment_profile( $member->ID );
 				}
 
 				// Set the customer's subscription in Stripe

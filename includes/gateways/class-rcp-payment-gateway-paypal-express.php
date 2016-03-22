@@ -218,21 +218,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 						$member = new RCP_Member( $details['PAYMENTREQUEST_0_CUSTOM'] );
 
-						if( rcp_is_paypal_subscriber( $member->ID ) && $member->is_active() && $member->get_payment_profile_id() ) {
-
-							// If we have an existing subscription, cancel it
-							$args = array(
-								'USER'      => $this->username,
-								'PWD'       => $this->password,
-								'SIGNATURE' => $this->signature,
-								'VERSION'   => '124',
-								'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
-								'PROFILEID' => $member->get_payment_profile_id(),
-								'ACTION'    => 'Cancel'
-							);
-
-							$request = wp_remote_post( $api_endpoint, array( 'body' => $args, 'timeout' => 15, 'httpversion' => '1.1' ) );
-
+						if( rcp_can_member_cancel( $member->ID ) ) {
+							$cancelled = rcp_cancel_member_payment_profile( $member->ID );
 						}
 
 						$member->set_payment_profile_id( $data['PROFILEID'] );
