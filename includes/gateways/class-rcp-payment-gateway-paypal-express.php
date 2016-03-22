@@ -363,13 +363,13 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		$user_id = 0;
 		$posted  = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
 
-		if( ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
-
-			$user_id = absint( $posted['custom'] );
-
-		} else if( ! empty( $posted['recurring_payment_id'] ) ) {
+		if( ! empty( $posted['recurring_payment_id'] ) ) {
 
 			$user_id = rcp_get_member_id_from_profile_id( $posted['recurring_payment_id'] );
+
+		} else if( ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
+
+			$user_id = absint( $posted['custom'] );
 
 		} else if( ! empty( $posted['payer_email'] ) ) {
 
