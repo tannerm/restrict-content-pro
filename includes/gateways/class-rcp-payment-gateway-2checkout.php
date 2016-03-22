@@ -208,6 +208,10 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 			$member = new RCP_Member( $member_id );
 
+			if( ! rcp_is_2checkout_subscriber( $member->ID ) ) {
+				return;
+			}
+
 			$payments = new RCP_Payments();
 
 			switch( strtoupper( $_POST['message_type'] ) ) {
