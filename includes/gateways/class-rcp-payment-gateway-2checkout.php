@@ -124,11 +124,6 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 			if( $charge['response']['responseCode'] == 'APPROVED' ) {
 
-				// Look to see if we have an existing subscription to cancel
-				if( rcp_can_member_cancel( $member->ID ) ) {
-					$cancelled = rcp_cancel_member_payment_profile( $member->ID );
-				}
-
 				$payment_data = array(
 					'date'             => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 					'subscription'     => $this->subscription_name,
@@ -153,11 +148,16 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 		if ( $paid ) {
 
-			$member->set_payment_profile_id( '2co_' . $charge['response']['orderNumber'] );
-
 			// set this user to active
 			$member->renew( $this->auto_renew );
 			$member->add_note( __( 'Subscription started in 2Checkout', 'rcp' ) );
+
+			// Look to see if we have an existing subscription to cancel
+			if( rcp_can_member_cancel( $member->ID ) ) {
+				$cancelled = rcp_cancel_member_payment_profile( $member->ID );
+			}
+
+			$member->set_payment_profile_id( '2co_' . $charge['response']['orderNumber'] );
 
 			if ( ! is_user_logged_in() ) {
 
