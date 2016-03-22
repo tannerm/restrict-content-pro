@@ -145,9 +145,9 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 				$paid = true;
 			}
 
-		} catch ( Twocheckout_Error $e) {
+		} catch ( Twocheckout_Error $e ) {
 
-			rcp_errors()->add( '2checkout_error', $e->getMessage(), 'register' );
+			wp_die( $e->getMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 		}
 
@@ -320,14 +320,16 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			};
 			// Called when token creation fails.
 			var errorCallback = function(data) {
+				console.log(data)
 				if (data.errorCode === 200) {
 					tokenRequest();
 				} else {
-					alert(data.errorMsg);
+
+					jQuery('#rcp_registration_form').unblock();
+					jQuery('#rcp_submit').before( '<div class="rcp_message error"><p class="rcp_error"><span>' + data.errorMsg + '</span></p></div>' );
+					jQuery('#rcp_submit').val( rcp_script_options.register );
+
 				}
-				jQuery('#rcp_registration_form').unblock();
-				jQuery('#rcp_submit').before( '<div class="rcp_message error"><p class="rcp_error"><span>' + data.reponerrorCode + '</span></p></div>' );
-				jQuery('#rcp_submit').val( rcp_script_options.register );
 			};
 			var tokenRequest = function() {
 				// Setup token request arguments
