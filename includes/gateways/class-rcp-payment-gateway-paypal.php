@@ -11,6 +11,12 @@
 
 class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
+	private $api_endpoint;
+	private $checkout_url;
+	protected $username;
+	protected $password;
+	protected $signature;
+
 	/**
 	 * Get things going
 	 *
@@ -25,6 +31,28 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 		$this->supports[]  = 'fees';
 
 		$this->test_mode   = isset( $rcp_options['sandbox'] );
+
+		if( $this->test_mode ) {
+
+			$this->api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
+			$this->checkout_url = 'https://www.sandbox.paypal.com/webscr&cmd=_express-checkout&token=';
+
+		} else {
+
+			$this->api_endpoint = 'https://api-3t.paypal.com/nvp';
+			$this->checkout_url = 'https://www.paypal.com/webscr&cmd=_express-checkout&token=';
+
+		}
+
+		if( rcp_has_paypal_api_access() ) {
+
+			$creds = rcp_get_paypal_api_credentials();
+
+			$this->username  = $creds['username'];
+			$this->password  = $creds['password'];
+			$this->signature = $creds['signature'];
+
+		}
 
 	}
 
@@ -295,6 +323,28 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					// store the recurring payment ID
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
+
+					if(
+						rcp_is_paypal_subscriber( $member->ID )
+						&& $member->is_active()
+						&& $member->get_payment_profile_id()
+						&& rcp_has_paypal_api_access()
+					) {
+
+						// If we have an existing subscription, cancel it
+						$args = array(
+							'USER'      => $this->username,
+							'PWD'       => $this->password,
+							'SIGNATURE' => $this->signature,
+							'VERSION'   => '124',
+							'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
+							'PROFILEID' => $member->get_payment_profile_id(),
+							'ACTION'    => 'Cancel'
+						);
+
+						$request = wp_remote_post( $api_endpoint, array( 'body' => $args, 'timeout' => 15, 'httpversion' => '1.1' ) );
+
+					}
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
 
