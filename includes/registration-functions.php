@@ -751,7 +751,7 @@ function rcp_add_prorate_fee( $registration ) {
 		return;
 	}
 
-	$registration->add_fee( -1 * $amount, __( 'Proration Credit', 'rcp' ) );
+	$registration->add_fee( -1 * $amount, __( 'Proration Credit', 'rcp' ), false, true );
 }
 add_action( 'rcp_registration_init', 'rcp_add_prorate_fee' );
 
