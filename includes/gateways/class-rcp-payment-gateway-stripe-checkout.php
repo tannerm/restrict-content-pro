@@ -11,6 +11,18 @@
 
 class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 
+	/**
+	 * Process registration
+	 *
+	 * @since 2.5
+	 */
+	public function process_signup() {
+
+		$this->auto_renew = '2' === rcp_get_auto_renew_behavior() ? false : true;
+
+		parent::process_signup();
+
+	}
 
 	/**
 	 * Print fields for this gateway
