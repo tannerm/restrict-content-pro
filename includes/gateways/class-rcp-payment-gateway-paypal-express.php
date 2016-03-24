@@ -219,7 +219,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 						$member = new RCP_Member( $details['PAYMENTREQUEST_0_CUSTOM'] );
 
 						if( rcp_can_member_cancel( $member->ID ) ) {
-							$cancelled = rcp_cancel_member_payment_profile( $member->ID );
+							$cancelled = rcp_cancel_member_payment_profile( $member->ID, false);
 							if( $cancelled ) {
 								update_user_meta( $member->ID, '_rcp_just_upgraded', time() );
 							}

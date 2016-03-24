@@ -126,7 +126,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				// Look to see if we have an existing subscription to cancel
 				if( rcp_can_member_cancel( $member->ID ) ) {
-					$cancelled = rcp_cancel_member_payment_profile( $member->ID );
+					$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
 					if( $cancelled ) {
 						update_user_meta( $member->ID, '_rcp_just_upgraded', time() );
 					}

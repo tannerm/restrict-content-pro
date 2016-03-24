@@ -894,7 +894,7 @@ add_action( 'init', 'rcp_process_member_cancellation' );
  * @access      public
  * @since       2.1
  */
-function rcp_cancel_member_payment_profile( $member_id = 0 ) {
+function rcp_cancel_member_payment_profile( $member_id = 0, $set_status = true ) {
 
 	global $rcp_options;
 
@@ -1089,7 +1089,7 @@ function rcp_cancel_member_payment_profile( $member_id = 0 ) {
 		}
 	}
 
-	if( $success ) {
+	if( $success && $set_status ) {
 		$member->cancel();
 	}
 

@@ -325,7 +325,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
 					if( rcp_can_member_cancel( $member->ID ) ) {
-						$cancelled = rcp_cancel_member_payment_profile( $member->ID );
+						$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
 						if( $cancelled ) {
 							update_user_meta( $member->ID, '_rcp_just_upgraded', time() );
 						}
