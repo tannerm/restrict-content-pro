@@ -201,6 +201,11 @@ function rcp_register_form_stripe_checkout( $atts ) {
 
 	$member       = new RCP_Member( wp_get_current_user()->ID );
 	$subscription = rcp_get_subscription_details( $atts['id'] );
+	$amount       = $subscription->price + $subscription->fee;
+
+	if( $member->ID > 0 ) {
+		$amount -= $member->get_prorate_credit_amount();
+	}
 
 	$data = wp_parse_args( $atts, array(
 		'id'                     => 0,
@@ -209,7 +214,7 @@ function rcp_register_form_stripe_checkout( $atts ) {
 		'data-description'       => $subscription->description,
 		'data-label'             => sprintf( __( 'Join %s', 'rcp' ), $subscription->name ),
 		'data-panel-label'       => __( 'Register - {{amount}}', 'rcp' ),
-		'data-amount'            => ( $subscription->price + $subscription->fee ) * rcp_stripe_get_currency_multiplier(),
+		'data-amount'            => $amount * rcp_stripe_get_currency_multiplier(),
 		'data-local'             => 'auto',
 		'data-allow-remember-me' => true,
 	) );
