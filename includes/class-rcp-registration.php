@@ -305,12 +305,12 @@ class RCP_Registration {
 
 		$total = rcp_get_subscription_price( $this->subscription );
 
-		if ( $discounts ) {
-			$total -= $this->get_total_discounts( $total );
-		}
-
 		if ( $fees ) {
 			$total += $this->get_proration_credits();
+		}
+
+		if ( $discounts ) {
+			$total -= $this->get_total_discounts( $total );
 		}
 
 		if ( 0 > $total ) {
