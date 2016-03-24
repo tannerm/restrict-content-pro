@@ -226,11 +226,11 @@ function rcp_register_form_stripe_checkout( $atts ) {
 
 	ob_start();
 
-	if( $member->ID > 0 && $member->get_subscription_id() == $subscription->id && $member->is_active() ) {
+	if( $member->ID > 0 && $member->get_subscription_id() == $subscription->id && $member->is_active() ) : ?>
 
+		<div class="rcp-stripe-checkout-notice"><?php _e( 'You are already subscribed', 'rcp' ); ?></div>
 
-	} else {
-		?>
+	<?php else : ?>
 		<form action="" method="post">
 			<?php do_action( 'register_form_stripe_fields', $data ); ?>
 			<script src="https://checkout.stripe.com/checkout.js" class="stripe-button" <?php foreach( $data as $label => $value ) { printf( ' %s="%s" ', esc_attr( $label ), esc_attr( $value ) ); } ?> ></script>
@@ -239,8 +239,7 @@ function rcp_register_form_stripe_checkout( $atts ) {
 			<input type="hidden" name="rcp_gateway" value="stripe_checkout"/>
 			<input type="hidden" name="rcp_stripe_checkout" value="1"/>
 		</form>
-		<?php
-	}
+	<?php endif;
 
 	return apply_filters( 'register_form_stripe', ob_get_clean(), $atts );
 }
