@@ -207,6 +207,10 @@ function rcp_register_form_stripe_checkout( $atts ) {
 		$amount -= $member->get_prorate_credit_amount();
 	}
 
+	if( $amount < 0 ) {
+		$amount = 0;
+	}
+
 	$data = wp_parse_args( $atts, array(
 		'id'                     => 0,
 		'data-key'               => $key,
