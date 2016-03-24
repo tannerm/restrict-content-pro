@@ -163,6 +163,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// If the customer has an existing subscription, we need to cancel it
 				if( rcp_can_member_cancel( $member->ID ) ) {
 					$cancelled = rcp_cancel_member_payment_profile( $member->ID );
+					if( $cancelled ) {
+						update_user_meta( $member->ID, '_rcp_just_upgraded', time() );
+					}
 				}
 
 				// Set the customer's subscription in Stripe
@@ -483,9 +486,13 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// Cancelled / failed subscription
 					if( $event->type == 'customer.subscription.deleted' ) {
 
-						$member->set_status( 'cancelled' );
+						if( ! $member->just_upgraded() ) {
 
-						die( 'member cancelled successfully' );
+							$member->set_status( 'cancelled' );
+
+							die( 'member cancelled successfully' );
+
+						}
 
 					}
 

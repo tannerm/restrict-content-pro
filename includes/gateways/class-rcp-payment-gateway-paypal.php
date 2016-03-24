@@ -326,6 +326,9 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					if( rcp_can_member_cancel( $member->ID ) ) {
 						$cancelled = rcp_cancel_member_payment_profile( $member->ID );
+						if( $cancelled ) {
+							update_user_meta( $member->ID, '_rcp_just_upgraded', time() );
+						}
 					}
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
@@ -359,16 +362,19 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 				case "subscr_cancel" :
 
-					// user is marked as cancelled but retains access until end of term
-					$member->set_status( 'cancelled' );
+					if( ! $member->just_upgraded() ) {
 
-					// set the use to no longer be recurring
-					delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
+						// user is marked as cancelled but retains access until end of term
+						$member->set_status( 'cancelled' );
 
-					do_action( 'rcp_ipn_subscr_cancel', $user_id );
+						// set the use to no longer be recurring
+						delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
 
+						do_action( 'rcp_ipn_subscr_cancel', $user_id );
 
-					die( 'successful subscr_cancel' );
+						die( 'successful subscr_cancel' );
+
+					}
 
 					break;
 

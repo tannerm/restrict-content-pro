@@ -127,6 +127,9 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 				// Look to see if we have an existing subscription to cancel
 				if( rcp_can_member_cancel( $member->ID ) ) {
 					$cancelled = rcp_cancel_member_payment_profile( $member->ID );
+					if( $cancelled ) {
+						update_user_meta( $member->ID, '_rcp_just_upgraded', time() );
+					}
 				}
 
 				$payment_data = array(
@@ -258,8 +261,13 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				case 'RECURRING_STOPPED' :
 
-					$member->cancel();
-					$member->add_note( __( 'Subscription cancelled in 2Checkout', 'rcp' ) );
+					if( ! $member->just_upgraded() ) {
+
+						$member->cancel();
+						$member->add_note( __( 'Subscription cancelled in 2Checkout', 'rcp' ) );
+
+					}
+
 
 					break;
 

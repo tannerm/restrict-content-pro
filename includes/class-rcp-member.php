@@ -734,4 +734,29 @@ class RCP_Member extends WP_User {
 
 	}
 
+	/**
+	 * Determines if the customer just upgraded
+	 *
+	 * @since 2.5
+	 * @return int - Timestamp reflecting the date/time of the latest upgrade
+	 */
+	public function just_upgraded() {
+
+		$upgraded = get_user_meta( $this->ID, '_rcp_just_upgraded', true );
+
+		if( ! empty( $upgraded ) ) {
+
+			$limit = strtotime( '-5 minutes' );
+
+			if( $limit > $upgraded ) {
+
+				$upgraded = false;
+
+			}
+
+		}
+
+		return apply_filters( 'rcp_member_just_upgraded', $upgraded, $this->ID, $this );
+	}
+
 }

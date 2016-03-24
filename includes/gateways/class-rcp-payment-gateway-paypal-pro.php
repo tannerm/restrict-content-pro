@@ -128,6 +128,9 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 				if( rcp_can_member_cancel( $member->ID ) ) {
 					$cancelled = rcp_cancel_member_payment_profile( $member->ID );
+					if( $cancelled ) {
+						update_user_meta( $member->ID, '_rcp_just_upgraded', time() );
+					}
 				}
 
 				$member->set_payment_profile_id( $data['PROFILEID'] );
