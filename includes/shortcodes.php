@@ -232,6 +232,7 @@ function rcp_register_form_stripe_checkout( $atts ) {
 		<input type="hidden" name="rcp_level" value="<?php echo $subscription->id ?>" />
 		<input type="hidden" name="rcp_register_nonce" value="<?php echo wp_create_nonce('rcp-register-nonce' ); ?>"/>
 		<input type="hidden" name="rcp_gateway" value="stripe_checkout"/>
+		<input type="hidden" name="rcp_stripe_checkout" value="1"/>
 	</form>
 	<?php
 
