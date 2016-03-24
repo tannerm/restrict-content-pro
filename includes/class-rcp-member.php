@@ -702,7 +702,7 @@ class RCP_Member extends WP_User {
 
 		// calculate discount as percentage of subscription remaining
 		// use the previous payment amount
-		$payment_amount       = abs( $subscription->price );
+		$payment_amount       = abs( $payment->amount );
 		$percentage_remaining = $time_remaining / $total_time;
 
 		// make sure we don't credit more than 100%
