@@ -228,7 +228,7 @@ function rcp_register_form_stripe_checkout( $atts ) {
 
 	if( $member->ID > 0 && $member->get_subscription_id() == $subscription->id && $member->is_active() ) : ?>
 
-		<div class="rcp-stripe-checkout-notice"><?php _e( 'You are already subscribed', 'rcp' ); ?></div>
+		<div class="rcp-stripe-checkout-notice"><?php _e( 'You are already subscribed.', 'rcp' ); ?></div>
 
 	<?php else : ?>
 		<form action="" method="post">
