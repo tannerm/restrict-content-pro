@@ -107,4 +107,5 @@ $level->role = empty( $level->role ) ? 'subscriber' : $level->role;
 		<input type="hidden" name="subscription_id" value="<?php echo absint( urldecode( $_GET['edit_subscription'] ) ); ?>"/>
 		<input type="submit" value="<?php _e( 'Update Subscription', 'rcp' ); ?>" class="button-primary"/>
 	</p>
+	<?php wp_nonce_field( 'rcp_edit_level_nonce', 'rcp_edit_level_nonce' ); ?>
 </form>

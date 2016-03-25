@@ -119,7 +119,7 @@ function rcp_members_page() {
 					<input type="text" class="rcp-datepicker" name="expiration" placeholder="<?php esc_attr_e( 'New Expiration Date', 'rcp' ); ?>" id="rcp-bulk-expiration" value=""/>
 					<input type="submit" id="rcp-submit-bulk-action" class="button action" value="<?php _e( 'Apply', 'rcp' ); ?>"/>
 				</div>
-				<?php echo wp_nonce_field( 'rcp_bulk_edit_nonce', 'rcp_bulk_edit_nonce' ); ?>
+				<?php wp_nonce_field( 'rcp_bulk_edit_nonce', 'rcp_bulk_edit_nonce' ); ?>
 				<table class="wp-list-table widefat fixed posts">
 					<thead>
 						<tr>
@@ -278,6 +278,7 @@ function rcp_members_page() {
 					<input type="hidden" name="rcp-action" value="add-subscription"/>
 					<input type="submit" value="<?php _e('Add User Subscription', 'rcp'); ?>" class="button-primary"/>
 				</p>
+				<?php wp_nonce_field( 'rcp_add_member_nonce', 'rcp_add_member_nonce' ); ?>
 			</form>
 
 		<?php endif; ?>
