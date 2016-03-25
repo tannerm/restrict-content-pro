@@ -107,7 +107,6 @@ function rcp_member_levels_page()
 			<?php if( current_user_can( 'rcp_manage_levels' ) ) : ?>
 				<h3><?php _e('Add New Level', 'rcp'); ?></h3>
 				<form id="rcp-member-levels" action="" method="post">
-					<?php wp_nonce_field( 'rcp_add_level_nonce', 'rcp_add_level_nonce' ); ?>
 					<table class="form-table">
 						<tbody>
 							<tr class="form-field">
@@ -210,6 +209,7 @@ function rcp_member_levels_page()
 						<input type="hidden" name="rcp-action" value="add-level"/>
 						<input type="submit" value="<?php _e('Add Membership Level', 'rcp'); ?>" class="button-primary"/>
 					</p>
+					<?php wp_nonce_field( 'rcp_add_level_nonce', 'rcp_add_level_nonce' ); ?>
 				</form>
 			<?php endif; ?>
 		<?php endif; ?>

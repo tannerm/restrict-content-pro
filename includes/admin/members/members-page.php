@@ -230,7 +230,6 @@ function rcp_members_page() {
 			<?php do_action('rcp_members_below_table'); ?>
 			<h3><?php _e('Add New Subscription (for existing user)', 'rcp'); ?></h3>
 			<form id="rcp-add-new-member" action="" method="post">
-				<?php wp_nonce_field( 'rcp_add_member_nonce', 'rcp_add_member_nonce' ); ?>
 				<table class="form-table">
 					<tbody>
 						<tr class="form-field">
@@ -279,6 +278,7 @@ function rcp_members_page() {
 					<input type="hidden" name="rcp-action" value="add-subscription"/>
 					<input type="submit" value="<?php _e('Add User Subscription', 'rcp'); ?>" class="button-primary"/>
 				</p>
+				<?php wp_nonce_field( 'rcp_add_member_nonce', 'rcp_add_member_nonce' ); ?>
 			</form>
 
 		<?php endif; ?>

@@ -11,7 +11,6 @@ $user       = get_userdata( $payment->user_id );
 	</a>
 </h2>
 <form id="rcp-edit-payment" action="" method="post">
-	<?php wp_nonce_field( 'rcp_edit_payment_nonce', 'rcp_edit_payment_nonce' ); ?>
 	<table class="form-table">
 		<tbody>
 			<tr valign="top">
@@ -71,4 +70,5 @@ $user       = get_userdata( $payment->user_id );
 		<input type="hidden" name="payment-id" value="<?php echo esc_attr( $payment_id ); ?>"/>
 		<input type="submit" value="<?php _e( 'Update Payment', 'rcp' ); ?>" class="button-primary"/>
 	</p>
+	<?php wp_nonce_field( 'rcp_edit_payment_nonce', 'rcp_edit_payment_nonce' ); ?>
 </form>

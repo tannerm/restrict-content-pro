@@ -16,7 +16,6 @@ $member = new RCP_Member( $member_id );
 	<a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
 <?php } ?>
 <form id="rcp-edit-member" action="" method="post">
-	<?php wp_nonce_field( 'rcp_edit_member_nonce', 'rcp_edit_member_nonce' ); ?>
 	<table class="form-table">
 		<tbody>
 			<?php do_action( 'rcp_edit_member_before', $member->ID ); ?>
@@ -160,4 +159,5 @@ $member = new RCP_Member( $member_id );
 		<input type="hidden" name="user" value="<?php echo absint( urldecode( $_GET['edit_member'] ) ); ?>"/>
 		<input type="submit" value="<?php _e( 'Update User Subscription', 'rcp' ); ?>" class="button-primary"/>
 	</p>
+	<?php wp_nonce_field( 'rcp_edit_member_nonce', 'rcp_edit_member_nonce' ); ?>
 </form>

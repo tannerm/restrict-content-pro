@@ -107,7 +107,6 @@ function rcp_discounts_page()
 			<?php if( current_user_can( 'rcp_manage_levels' ) ) : ?>
 				<h3><?php _e( 'Add New Discount', 'rcp' ); ?></h3>
 				<form id="rcp-discounts" action="" method="POST">
-					<?php wp_nonce_field( 'rcp_add_discount_nonce', 'rcp_add_discount_nonce' ); ?>
 					<table class="form-table">
 						<tbody>
 							<tr class="form-field">
@@ -203,6 +202,7 @@ function rcp_discounts_page()
 						<input type="hidden" name="rcp-action" value="add-discount"/>
 						<input type="submit" value="<?php _e( 'Add Discount Code', 'rcp' ); ?>" class="button-primary"/>
 					</p>
+					<?php wp_nonce_field( 'rcp_add_discount_nonce', 'rcp_add_discount_nonce' ); ?>
 				</form>
 			<?php endif; ?>
 		<?php endif; ?>
