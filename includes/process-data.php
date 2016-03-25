@@ -90,13 +90,13 @@ function rcp_process_data() {
 					update_user_meta( $user->ID, '_rcp_new_subscription', '1' );
 				}
 
-				rcp_set_status( $user->ID, 'active' );
+				$status = $subscription->price == 0 ? 'free' : 'active';
+
+				rcp_set_status( $user->ID, $status );
 
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
 
 				// Add a role, if needed, to the user
-				$subscription = $levels->get_level( $level_id );
-
 				update_user_meta( $user->ID, 'rcp_subscription_level', $level_id );
 
 				// Add the new user role
