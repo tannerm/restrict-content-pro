@@ -7,7 +7,7 @@ if( isset( $_GET['edit_member'] ) ) {
 $member = new RCP_Member( $member_id );
 ?>
 <h2>
-	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $member->display_name; ?> - 
+	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $member->display_name; ?> -
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-members' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
@@ -16,6 +16,7 @@ $member = new RCP_Member( $member_id );
 	<a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
 <?php } ?>
 <form id="rcp-edit-member" action="" method="post">
+	<?php wp_nonce_field( 'rcp_edit_member_nonce', 'rcp_edit_member_nonce' ); ?>
 	<table class="form-table">
 		<tbody>
 			<?php do_action( 'rcp_edit_member_before', $member->ID ); ?>
@@ -28,7 +29,7 @@ $member = new RCP_Member( $member_id );
 						<?php
 							$statuses = array( 'active', 'expired', 'cancelled', 'pending', 'free' );
 							$current_status = rcp_get_status( $member->ID );
-							foreach( $statuses as $status ) : 
+							foreach( $statuses as $status ) :
 								echo '<option value="' . esc_attr( $status ) .  '"' . selected( $status, rcp_get_status( $member->ID ), false ) . '>' . ucwords( $status ) . '</option>';
 							endforeach;
 						?>

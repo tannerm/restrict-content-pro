@@ -9,6 +9,7 @@ $level->role = empty( $level->role ) ? 'subscriber' : $level->role;
 	</a>
 </h2>
 <form id="rcp-edit-subscription" action="" method="post">
+	<?php wp_nonce_field( 'rcp_edit_level_nonce', 'rcp_edit_level_nonce' ); ?>
 	<table class="form-table">
 		<tbody>
 			<tr class="form-field">

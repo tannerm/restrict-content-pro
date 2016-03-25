@@ -8,6 +8,7 @@ $code = rcp_get_discount_details( urldecode( $_GET['edit_discount'] ) );
 	</a>
 </h2>
 <form id="rcp-edit-discount" action="" method="post">
+	<?php wp_nonce_field( 'rcp_edit_discount_nonce', 'rcp_edit_discount_nonce' ); ?>
 	<table class="form-table">
 		<tbody>
 			<tr class="form-field">

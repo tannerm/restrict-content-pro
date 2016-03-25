@@ -4,7 +4,8 @@
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
 </h2>
-<form id="rcp-edit-member" action="" method="post">
+<form id="rcp-add-payment" action="" method="post">
+	<?php wp_nonce_field( 'rcp_add_payment_nonce', 'rcp_add_payment_nonce' ); ?>
 	<table class="form-table">
 		<tbody>
 			<tr valign="top">

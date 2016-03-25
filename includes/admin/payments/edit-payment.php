@@ -10,7 +10,8 @@ $user       = get_userdata( $payment->user_id );
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
 </h2>
-<form id="rcp-edit-member" action="" method="post">
+<form id="rcp-edit-payment" action="" method="post">
+	<?php wp_nonce_field( 'rcp_edit_payment_nonce', 'rcp_edit_payment_nonce' ); ?>
 	<table class="form-table">
 		<tbody>
 			<tr valign="top">
