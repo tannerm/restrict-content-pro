@@ -108,12 +108,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						'email' => $this->email
 					);
 
-					if ( ! empty( $this->discount_code ) ) {
-
-						$customer_args['coupon'] = $this->discount_code;
-
-					}
-
 					$customer = \Stripe\Customer::create( apply_filters( 'rcp_stripe_customer_create_args', $customer_args, $this ) );
 
 				} else {
@@ -126,12 +120,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				if ( ! empty( $this->signup_fee ) ) {
 
 					$customer->account_balance = $customer->account_balance + ( $this->signup_fee * rcp_stripe_get_currency_multiplier() ); // Add additional amount to initial payment (in cents)
-
-				}
-
-				if ( ! empty( $this->discount_code ) ) {
-
-					$customer->coupon = $this->discount_code;
 
 				}
 
@@ -168,8 +156,19 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					}
 				}
 
+				$sub_args = array(
+					'plan'    => $plan_id,
+					'prorate' => false
+				);
+
+				if ( ! empty( $this->discount_code ) ) {
+
+					$sub_args['coupon'] = $this->discount_code;
+
+				}
+
 				// Set the customer's subscription in Stripe
-				$subscription = $customer->subscriptions->create( array( 'plan' => $plan_id, 'prorate' => false ) );
+				$subscription = $customer->subscriptions->create( array( $sub_args ) );
 
 				$member->set_payment_profile_id( $customer->id );
 				$member->set_merchant_subscription_id( $subscription->id );
