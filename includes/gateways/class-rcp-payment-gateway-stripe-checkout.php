@@ -18,7 +18,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 	 */
 	public function process_signup() {
 
-		if( empty( $_POST['rcp_stripe_checkout'] ) ) {
+		if( ! empty( $_POST['rcp_stripe_checkout'] ) ) {
 
 			$this->auto_renew = '2' === rcp_get_auto_renew_behavior() ? false : true;
 	
