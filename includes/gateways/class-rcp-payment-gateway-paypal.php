@@ -11,6 +11,12 @@
 
 class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
+	private $api_endpoint;
+	private $checkout_url;
+	protected $username;
+	protected $password;
+	protected $signature;
+
 	/**
 	 * Get things going
 	 *
@@ -25,6 +31,28 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 		$this->supports[]  = 'fees';
 
 		$this->test_mode   = isset( $rcp_options['sandbox'] );
+
+		if( $this->test_mode ) {
+
+			$this->api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
+			$this->checkout_url = 'https://www.sandbox.paypal.com/webscr&cmd=_express-checkout&token=';
+
+		} else {
+
+			$this->api_endpoint = 'https://api-3t.paypal.com/nvp';
+			$this->checkout_url = 'https://www.paypal.com/webscr&cmd=_express-checkout&token=';
+
+		}
+
+		if( rcp_has_paypal_api_access() ) {
+
+			$creds = rcp_get_paypal_api_credentials();
+
+			$this->username  = $creds['username'];
+			$this->password  = $creds['password'];
+			$this->signature = $creds['signature'];
+
+		}
 
 	}
 
@@ -116,7 +144,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			// one time payment
 			$paypal_args['cmd'] = '_xclick';
-			$paypal_args['amount'] = $this->amount;
+			$paypal_args['amount'] = round( $this->amount + $this->signup_fee, 2 );
 
 		}
 
@@ -189,13 +217,13 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			$user_id = 0;
 			$posted  = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
 
-			if( ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
-
-				$user_id = absint( $posted['custom'] );
-
-			} else if( ! empty( $posted['subscr_id'] ) ) {
+			if( ! empty( $posted['subscr_id'] ) ) {
 
 				$user_id = rcp_get_member_id_from_profile_id( $posted['subscr_id'] );
+
+			} else if( ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
+
+				$user_id = absint( $posted['custom'] );
 
 			} else if( ! empty( $posted['payer_email'] ) ) {
 
@@ -232,7 +260,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			// setup the payment info in an array for storage
 			$payment_data = array(
-				'date'             => date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'], current_time( 'timestamp' ) ) ),
+				'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'], current_time( 'timestamp' ) ) ),
 				'subscription'     => $posted['item_name'],
 				'payment_type'     => $posted['txn_type'],
 				'subscription_key' => $subscription_key,
@@ -304,6 +332,13 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// store the recurring payment ID
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
+					if( rcp_can_member_cancel( $member->ID ) ) {
+						$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+						if( $cancelled ) {
+							update_user_meta( $member->ID, '_rcp_just_upgraded', time() );
+						}
+					}
+
 					$member->set_payment_profile_id( $posted['subscr_id'] );
 
 					do_action( 'rcp_ipn_subscr_signup', $user_id );
@@ -335,16 +370,19 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 				case "subscr_cancel" :
 
-					// user is marked as cancelled but retains access until end of term
-					$member->set_status( 'cancelled' );
+					if( ! $member->just_upgraded() ) {
 
-					// set the use to no longer be recurring
-					delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
+						// user is marked as cancelled but retains access until end of term
+						$member->set_status( 'cancelled' );
 
-					do_action( 'rcp_ipn_subscr_cancel', $user_id );
+						// set the use to no longer be recurring
+						delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
 
+						do_action( 'rcp_ipn_subscr_cancel', $user_id );
 
-					die( 'successful subscr_cancel' );
+						die( 'successful subscr_cancel' );
+
+					}
 
 					break;
 

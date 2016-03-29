@@ -7,7 +7,7 @@ if( isset( $_GET['edit_member'] ) ) {
 $member = new RCP_Member( $member_id );
 ?>
 <h2>
-	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $member->display_name; ?> - 
+	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $member->display_name; ?> -
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-members' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
@@ -28,7 +28,7 @@ $member = new RCP_Member( $member_id );
 						<?php
 							$statuses = array( 'active', 'expired', 'cancelled', 'pending', 'free' );
 							$current_status = rcp_get_status( $member->ID );
-							foreach( $statuses as $status ) : 
+							foreach( $statuses as $status ) :
 								echo '<option value="' . esc_attr( $status ) .  '"' . selected( $status, rcp_get_status( $member->ID ), false ) . '>' . ucwords( $status ) . '</option>';
 							endforeach;
 						?>
@@ -146,11 +146,9 @@ $member = new RCP_Member( $member_id );
 				</td>
 			</tr>
 			<tr class="form-field">
-				<th scope="row" valign="top">
-					<?php _e( 'Payments', 'rcp' ); ?>
-				</th>
-				<td>
-					<?php echo rcp_print_user_payments( $member->ID ); ?>
+				<td colspan="2" scope="row" valign="top" style="padding: 20px 10px 20px 0;">
+					<h4><?php _e( 'Payments', 'rcp' ); ?></h4>
+					<?php echo rcp_print_user_payments_formatted( $member->ID ); ?>
 				</td>
 			</tr>
 			<?php do_action( 'rcp_edit_member_after', $member->ID ); ?>
@@ -161,4 +159,5 @@ $member = new RCP_Member( $member_id );
 		<input type="hidden" name="user" value="<?php echo absint( urldecode( $_GET['edit_member'] ) ); ?>"/>
 		<input type="submit" value="<?php _e( 'Update User Subscription', 'rcp' ); ?>" class="button-primary"/>
 	</p>
+	<?php wp_nonce_field( 'rcp_edit_member_nonce', 'rcp_edit_member_nonce' ); ?>
 </form>

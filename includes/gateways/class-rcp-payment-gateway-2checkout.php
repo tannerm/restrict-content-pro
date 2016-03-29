@@ -124,8 +124,16 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 			if( $charge['response']['responseCode'] == 'APPROVED' ) {
 
+				// Look to see if we have an existing subscription to cancel
+				if( rcp_can_member_cancel( $member->ID ) ) {
+					$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+					if( $cancelled ) {
+						update_user_meta( $member->ID, '_rcp_just_upgraded', time() );
+					}
+				}
+
 				$payment_data = array(
-					'date'             => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
+					'date'             => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 					'subscription'     => $this->subscription_name,
 					'payment_type'     => $payment_type,
 					'subscription_key' => $this->subscription_key,
@@ -140,19 +148,19 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 				$paid = true;
 			}
 
-		} catch ( Twocheckout_Error $e) {
+		} catch ( Twocheckout_Error $e ) {
 
-			rcp_errors()->add( '2checkout_error', $e->getMessage(), 'register' );
+			wp_die( $e->getMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 		}
 
 		if ( $paid ) {
 
-			$member->set_payment_profile_id( '2co_' . $charge['response']['orderNumber'] );
-
 			// set this user to active
 			$member->renew( $this->auto_renew );
 			$member->add_note( __( 'Subscription started in 2Checkout', 'rcp' ) );
+
+			$member->set_payment_profile_id( '2co_' . $charge['response']['orderNumber'] );
 
 			if ( ! is_user_logged_in() ) {
 
@@ -203,6 +211,10 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 			$member = new RCP_Member( $member_id );
 
+			if( ! rcp_is_2checkout_subscriber( $member->ID ) ) {
+				return;
+			}
+
 			$payments = new RCP_Payments();
 
 			switch( strtoupper( $_POST['message_type'] ) ) {
@@ -227,7 +239,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 				case 'RECURRING_INSTALLMENT_SUCCESS' :
 
 					$payment_data = array(
-						'date'             => date( 'Y-m-d g:i:s', strtotime( $_POST['timestamp'], current_time( 'timestamp' ) ) ),
+						'date'             => date( 'Y-m-d H:i:s', strtotime( $_POST['timestamp'], current_time( 'timestamp' ) ) ),
 						'subscription'     => $member->get_subscription_name(),
 						'payment_type'     => sanitize_text_field( $_POST['payment_type'] ),
 						'subscription_key' => $subscription_key,
@@ -249,8 +261,13 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				case 'RECURRING_STOPPED' :
 
-					$member->cancel();
-					$member->add_note( __( 'Subscription cancelled in 2Checkout', 'rcp' ) );
+					if( ! $member->just_upgraded() ) {
+
+						$member->cancel();
+						$member->add_note( __( 'Subscription cancelled in 2Checkout', 'rcp' ) );
+
+					}
+
 
 					break;
 
@@ -315,14 +332,16 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			};
 			// Called when token creation fails.
 			var errorCallback = function(data) {
+				console.log(data)
 				if (data.errorCode === 200) {
 					tokenRequest();
 				} else {
-					alert(data.errorMsg);
+
+					jQuery('#rcp_registration_form').unblock();
+					jQuery('#rcp_submit').before( '<div class="rcp_message error"><p class="rcp_error"><span>' + data.errorMsg + '</span></p></div>' );
+					jQuery('#rcp_submit').val( rcp_script_options.register );
+
 				}
-				jQuery('#rcp_registration_form').unblock();
-				jQuery('#rcp_submit').before( '<div class="rcp_message error"><p class="rcp_error"><span>' + data.reponerrorCode + '</span></p></div>' );
-				jQuery('#rcp_submit').val( rcp_script_options.register );
 			};
 			var tokenRequest = function() {
 				// Setup token request arguments
