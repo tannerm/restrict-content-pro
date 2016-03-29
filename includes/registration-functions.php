@@ -503,7 +503,6 @@ function rcp_set_pending_subscription_on_upgrade( $status, $user_id ) {
 
 		delete_user_meta( $user_id, 'rcp_pending_subscription_level' );
 		delete_user_meta( $user_id, 'rcp_pending_subscription_key' );
-		delete_user_meta( $user_id, '_rcp_just_upgraded' );
 		
 	}
 }
