@@ -73,7 +73,7 @@ $level->role = empty( $level->role ) ? 'subscriber' : $level->role;
 				</th>
 				<td>
 					<input type="text" id="rcp-fee" name="fee" value="<?php echo esc_attr( $level->fee ); ?>" style="width: 40px;"/>
-					<p class="description"><?php _e( 'Optional signup fee to charge subscribers for the first billing cycle. Enter a negative number to give a discount on the first payment. This only applies to recurring subscriptions.', 'rcp' ); ?></p>
+					<p class="description"><?php _e( 'Optional signup fee to charge subscribers for the first billing cycle. Enter a negative number to give a discount on the first payment.', 'rcp' ); ?></p>
 				</td>
 			</tr>
 			<tr class="form-field">
@@ -107,4 +107,5 @@ $level->role = empty( $level->role ) ? 'subscriber' : $level->role;
 		<input type="hidden" name="subscription_id" value="<?php echo absint( urldecode( $_GET['edit_subscription'] ) ); ?>"/>
 		<input type="submit" value="<?php _e( 'Update Subscription', 'rcp' ); ?>" class="button-primary"/>
 	</p>
+	<?php wp_nonce_field( 'rcp_edit_level_nonce', 'rcp_edit_level_nonce' ); ?>
 </form>

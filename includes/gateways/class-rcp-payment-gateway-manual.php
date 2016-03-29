@@ -41,7 +41,7 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 			'subscription'     => $this->subscription_name,
 			'payment_type'     => 'manual',
 			'subscription_key' => $this->subscription_key,
-			'amount'           => $this->amount,
+			'amount'           => $this->amount + $this->signup_fee,
 			'user_id'          => $this->user_id,
 			'transaction_id'   => $this->generate_transaction_id()
 		);

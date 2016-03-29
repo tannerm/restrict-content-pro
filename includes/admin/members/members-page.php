@@ -115,12 +115,11 @@ function rcp_members_page() {
 						<option value="mark-active"><?php _e( 'Mark as Active', 'rcp' ); ?></option>
 						<option value="mark-expired"><?php _e( 'Mark as Expired', 'rcp' ); ?></option>
 						<option value="mark-cancelled"><?php _e( 'Revoke Access', 'rcp' ); ?></option>
-						<option value="delete"><?php _e( 'Delete', 'rcp' ); ?></option>
 					</select>
 					<input type="text" class="rcp-datepicker" name="expiration" placeholder="<?php esc_attr_e( 'New Expiration Date', 'rcp' ); ?>" id="rcp-bulk-expiration" value=""/>
 					<input type="submit" id="rcp-submit-bulk-action" class="button action" value="<?php _e( 'Apply', 'rcp' ); ?>"/>
 				</div>
-				<?php echo wp_nonce_field( 'rcp_bulk_edit_nonce', 'rcp_bulk_edit_nonce' ); ?>
+				<?php wp_nonce_field( 'rcp_bulk_edit_nonce', 'rcp_bulk_edit_nonce' ); ?>
 				<table class="wp-list-table widefat fixed posts">
 					<thead>
 						<tr>
@@ -183,7 +182,7 @@ function rcp_members_page() {
 								<td><?php echo rcp_get_expiration_date($member->ID); ?></td>
 								<td><?php echo rcp_get_user_role($member->ID); ?></td>
 								<?php do_action('rcp_members_page_table_column', $member->ID); ?>
-								<td>								
+								<td>
 									<?php if( current_user_can( 'rcp_manage_members' ) ) : ?>
 										<a href="<?php echo esc_url( add_query_arg('edit_member', $member->ID, $current_page) ); ?>"><?php _e('Edit', 'rcp'); ?></a>
 										<?php if(isset($_GET['status']) && $_GET['status'] == 'cancelled') { ?>
@@ -279,6 +278,7 @@ function rcp_members_page() {
 					<input type="hidden" name="rcp-action" value="add-subscription"/>
 					<input type="submit" value="<?php _e('Add User Subscription', 'rcp'); ?>" class="button-primary"/>
 				</p>
+				<?php wp_nonce_field( 'rcp_add_member_nonce', 'rcp_add_member_nonce' ); ?>
 			</form>
 
 		<?php endif; ?>
