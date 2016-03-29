@@ -227,6 +227,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 						$member->set_payment_profile_id( $data['PROFILEID'] );
 
+						$member->renew( true );
+						$member->set_payment_profile_id( $data['PROFILEID'] );
+
 						wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
 
 					}
@@ -357,11 +360,15 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			$user_id = rcp_get_member_id_from_profile_id( $posted['recurring_payment_id'] );
 
-		} else if( ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
+		}
+
+		if( empty( $user_id ) && ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
 
 			$user_id = absint( $posted['custom'] );
 
-		} else if( ! empty( $posted['payer_email'] ) ) {
+		}
+
+		if( empty( $user_id ) && ! empty( $posted['payer_email'] ) ) {
 
 			$user    = get_user_by( 'email', $posted['payer_email'] );
 			$user_id = $user ? $user->ID : false;
@@ -370,11 +377,23 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		$member = new RCP_Member( $user_id );
 
-		if( ! $member || ! $member->get_subscription_id() ) {
+		if( ! $member || ! $member->ID > 0 ) {
 			die( 'no member found' );
 		}
 
-		if( ! rcp_get_subscription_details( $member->get_subscription_id() ) ) {
+		$subscription_id = $member->get_pending_subscription_id();
+
+		if( empty( $subscription_id ) ) {
+
+			$subscription_id = $member->get_subscription_id();
+
+		}
+
+		if( ! $subscription_id ) {
+			die( 'no subscription for member found' );
+		}
+
+		if( ! rcp_get_subscription_details( $subscription_id ) ) {
 			die( 'no subscription level found' );
 		}
 
@@ -509,7 +528,15 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			parse_str( $request['body'], $data );
 
-			$data['subscription'] = (array) rcp_get_subscription_details( rcp_get_subscription_id( $_GET['user_id'] ) );
+			$member = new RCP_Member( absint( $_GET['user_id'] ) );
+
+			$subscription_id = $member->get_pending_subscription_id();
+
+			if( empty( $subscription_id ) ) {
+				$subscription_id = $member->get_subscription_id();
+			}
+
+			$data['subscription'] = (array) rcp_get_subscription_details( $subscription_id );
 
 			return $data;
 
