@@ -239,14 +239,14 @@ class RCP_Member extends WP_User {
 	*/
 	public function renew( $recurring = false, $status = 'active', $expiration = '' ) {
 
-		if( ! $this->get_subscription_id() ) {
-			return false;
-		}
-
 		$subscription_id = $this->get_pending_subscription_id();
 
 		if( empty( $subscription_id ) ) {
 			$subscription_id = $this->get_subscription_id();
+		}
+
+		if( ! $subscription_id ) {
+			return false;
 		}
 
 		if ( ! $expiration ) {
