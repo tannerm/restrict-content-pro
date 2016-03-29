@@ -201,7 +201,7 @@ function rcp_process_registration() {
 		$redirect = rcp_get_return_url( $user_data['id'] );
 
 		$subscription_data = array(
-			'price'             => rcp_get_registration()->get_total( true, $include_fees ), // get total without the fee
+			'price'             => rcp_get_registration()->get_total( true, false ), // get total without the fee
 			'discount'          => rcp_get_registration()->get_total_discounts(),
 			'discount_code'     => $discount,
 			'fee' 			    => rcp_get_registration()->get_total_fees(),
