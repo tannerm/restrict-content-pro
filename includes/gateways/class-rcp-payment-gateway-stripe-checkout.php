@@ -92,7 +92,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					$level = $form.find('input[name=rcp_level]');
 				}
 
-				if( ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100') ) {
+				if( jQuery('.rcp_gateway_fields').hasClass('rcp_discounted_100') ) {
 					return false;
 				}
 
