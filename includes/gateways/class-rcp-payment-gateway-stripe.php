@@ -220,7 +220,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			try {
 
 				$charge = \Stripe\Charge::create( apply_filters( 'rcp_stripe_charge_create_args', array(
-					'amount' 		 => $this->amount * rcp_stripe_get_currency_multiplier(), // amount in cents
+					'amount' 		 => ( $this->amount + $this->signup_fee ) * rcp_stripe_get_currency_multiplier(), // amount in cents
 					'currency' 		 => strtolower( $this->currency ),
 					'card' 			 => $_POST['stripeToken'],
 					'description' 	 => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
@@ -239,7 +239,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					'subscription'      => $this->subscription_name,
 					'payment_type' 		=> 'Credit Card One Time',
 					'subscription_key' 	=> $this->subscription_key,
-					'amount' 			=> $this->amount,
+					'amount' 			=> $this->amount + $this->signup_fee,
 					'user_id' 			=> $this->user_id,
 					'transaction_id'    => $charge->id
 				);

@@ -39,6 +39,7 @@ class RCP_Payment_Gateway {
 			$this->user_name           = $subscription_data['user_name'];
 			$this->currency            = $subscription_data['currency'];
 			$this->amount              = $subscription_data['price'];
+			$this->initial_amount      = $subscription_data['price'] + $subscription_data['fee'];
 			$this->discount            = $subscription_data['discount'];
 			$this->discount_code       = $subscription_data['discount_code'];
 			$this->length              = $subscription_data['length'];
