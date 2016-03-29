@@ -221,11 +221,15 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 				$user_id = rcp_get_member_id_from_profile_id( $posted['subscr_id'] );
 
-			} else if( ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
+			}
+
+			if( empty( $user_id ) && ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
 
 				$user_id = absint( $posted['custom'] );
 
-			} else if( ! empty( $posted['payer_email'] ) ) {
+			}
+
+			if( empty( $user_id ) && ! empty( $posted['payer_email'] ) ) {
 
 				$user    = get_user_by( 'email', $posted['payer_email'] );
 				$user_id = $user ? $user->ID : false;
@@ -233,6 +237,10 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			}
 
 			$member = new RCP_Member( $user_id );
+
+			if( ! $member || ! $member->ID > 0 ) {
+				die( 'no member found' );
+			}
 
 			$subscription_id = $member->get_pending_subscription_id();
 
@@ -242,8 +250,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			}
 
-			if( ! $member || ! $subscription_id ) {
-				die( 'no member found' );
+			if( ! $subscription_id ) {
+				die( 'no subscription for member found' );
 			}
 
 			if( ! rcp_get_subscription_details( $subscription_id ) ) {
