@@ -541,6 +541,10 @@ function rcp_registration_is_recurring() {
 		}
 	}
 
+	if( ! rcp_get_registration_recurring_total() > 0 ) {
+		$auto_renew = false;
+	}
+
 	return apply_filters( 'rcp_registration_is_recurring', $auto_renew );
 
 }
