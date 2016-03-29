@@ -73,7 +73,7 @@ $level->role = empty( $level->role ) ? 'subscriber' : $level->role;
 				</th>
 				<td>
 					<input type="text" id="rcp-fee" name="fee" value="<?php echo esc_attr( $level->fee ); ?>" style="width: 40px;"/>
-					<p class="description"><?php _e( 'Optional signup fee to charge subscribers for the first billing cycle. Enter a negative number to give a discount on the first payment. This only applies to recurring subscriptions.', 'rcp' ); ?></p>
+					<p class="description"><?php _e( 'Optional signup fee to charge subscribers for the first billing cycle. Enter a negative number to give a discount on the first payment.', 'rcp' ); ?></p>
 				</td>
 			</tr>
 			<tr class="form-field">
