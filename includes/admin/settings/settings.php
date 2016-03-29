@@ -70,7 +70,7 @@ function rcp_settings_page() {
 								<?php } elseif( ! empty( $rcp_options['license_key'] ) ) { ?>
 									<input type="submit" class="button-secondary" name="rcp_license_activate" value="<?php _e('Activate License', 'rcp'); ?>"/>
 								<?php } ?>
-								<p class="description"><?php printf( __( 'Enter license key for Restrict Content Pro. This is required for automatic updates and <a href="%s">support</a>.', 'rcp' ), 'http://pippinsplugins.com/plugin-support' ); ?></p>
+								<p class="description"><?php printf( __( 'Enter license key for Restrict Content Pro. This is required for automatic updates and <a href="%s">support</a>.', 'rcp' ), 'http://restrictcontentpro.com/support' ); ?></p>
 							</td>
 						</tr>
 						<?php do_action( 'rcp_license_settings', $rcp_options ); ?>
@@ -1131,7 +1131,7 @@ function rcp_activate_license() {
 	);
 
 	// Call the custom API.
-	$response = wp_remote_post( 'https://pippinsplugins.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+	$response = wp_remote_post( 'https://restrictcontentpro.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
 	// make sure the response came back okay
 	if ( is_wp_error( $response ) )
@@ -1176,7 +1176,7 @@ function rcp_deactivate_license() {
 		);
 
 		// Call the custom API.
-		$response = wp_remote_post( 'https://pippinsplugins.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+		$response = wp_remote_post( 'https://restrictcontentpro.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
 		// make sure the response came back okay
 		if ( is_wp_error( $response ) )
@@ -1216,7 +1216,7 @@ function rcp_check_license() {
 		);
 
 		// Call the custom API.
-		$response = wp_remote_post( 'https://pippinsplugins.com', array( 'timeout' => 35, 'sslverify' => false, 'body' => $api_params ) );
+		$response = wp_remote_post( 'https://restrictcontentpro.com', array( 'timeout' => 35, 'sslverify' => false, 'body' => $api_params ) );
 
 		// make sure the response came back okay
 		if ( is_wp_error( $response ) )
