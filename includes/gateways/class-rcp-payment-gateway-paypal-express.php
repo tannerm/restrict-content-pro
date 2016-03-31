@@ -177,10 +177,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'VERSION'             => '124',
 					'TOKEN'               => $_POST['token'],
 					'METHOD'              => 'CreateRecurringPaymentsProfile',
-					'PROFILESTARTDATE'    => date( 'Y-m-d\Tg:i:s', strtotime( '+' . $details['subscription']['duration'] . ' ' . $details['subscription']['duration_unit'], time() ) ),
+					'PROFILESTARTDATE'    => date( 'Y-m-d\TH:i:s', strtotime( '+' . $details['subscription']['duration'] . ' ' . $details['subscription']['duration_unit'], time() ) ),
 					'BILLINGPERIOD'       => ucwords( $details['subscription']['duration_unit'] ),
 					'BILLINGFREQUENCY'    => $details['subscription']['duration'],
 					'AMT'                 => $details['AMT'],
+					'INITAMT'             => round( $details['AMT'] + $details['subscription']['fee'], 2 ),
 					'CURRENCYCODE'        => $details['CURRENCYCODE'],
 					'FAILEDINITAMTACTION' => 'CancelOnFailure',
 					'L_BILLINGTYPE0'      => 'RecurringPayments',
@@ -188,12 +189,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'BUTTONSOURCE'        => 'EasyDigitalDownloads_SP'
 				);
 
-				$initial_amt = round( $details['AMT'] + $details['subscription']['fee'], 2 );
-
-				if ( $initial_amt > 0 ) {
-					$args['INITAMT'] = $initial_amt;
-				} else {
-					$initial_amt = 0;
+				if ( $args['INITAMT'] < 0 ) {
+					unset( $args['INITAMT'] );
 				}
 
 				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
@@ -221,21 +218,17 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 						$member = new RCP_Member( $details['PAYMENTREQUEST_0_CUSTOM'] );
 
-						$member->renew( true );
+						if( rcp_can_member_cancel( $member->ID ) ) {
+							$cancelled = rcp_cancel_member_payment_profile( $member->ID, false);
+							if( $cancelled ) {
+								update_user_meta( $member->ID, '_rcp_just_upgraded', time() );
+							}
+						}
+
 						$member->set_payment_profile_id( $data['PROFILEID'] );
 
-						$payment_data = array(
-							'date'             => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
-							'subscription'     => $member->get_subscription_name(),
-							'payment_type'     => 'PayPal Express',
-							'subscription_key' => $member->get_subscription_key(),
-							'amount'           => $initial_amt,
-							'user_id'          => $member->ID,
-							'transaction_id'   => $data['PROFILEID']
-						);
-
-						$rcp_payments = new RCP_Payments;
-						$rcp_payments->insert( $payment_data );
+						$member->renew( true );
+						$member->set_payment_profile_id( $data['PROFILEID'] );
 
 						wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
 
@@ -297,7 +290,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 						$member->renew( false );
 
 						$payment_data = array(
-							'date'             => date( 'Y-m-d g:i:s', strtotime( $data['PAYMENTINFO_0_ORDERTIME'] ) ),
+							'date'             => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 							'subscription'     => $member->get_subscription_name(),
 							'payment_type'     => 'PayPal Express One Time',
 							'subscription_key' => $member->get_subscription_key(),
@@ -363,15 +356,19 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		$user_id = 0;
 		$posted  = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
 
-		if( ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
-
-			$user_id = absint( $posted['custom'] );
-
-		} else if( ! empty( $posted['recurring_payment_id'] ) ) {
+		if( ! empty( $posted['recurring_payment_id'] ) ) {
 
 			$user_id = rcp_get_member_id_from_profile_id( $posted['recurring_payment_id'] );
 
-		} else if( ! empty( $posted['payer_email'] ) ) {
+		}
+
+		if( empty( $user_id ) && ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
+
+			$user_id = absint( $posted['custom'] );
+
+		}
+
+		if( empty( $user_id ) && ! empty( $posted['payer_email'] ) ) {
 
 			$user    = get_user_by( 'email', $posted['payer_email'] );
 			$user_id = $user ? $user->ID : false;
@@ -380,11 +377,23 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		$member = new RCP_Member( $user_id );
 
-		if( ! $member || ! $member->get_subscription_id() ) {
+		if( ! $member || ! $member->ID > 0 ) {
 			die( 'no member found' );
 		}
 
-		if( ! rcp_get_subscription_details( $member->get_subscription_id() ) ) {
+		$subscription_id = $member->get_pending_subscription_id();
+
+		if( empty( $subscription_id ) ) {
+
+			$subscription_id = $member->get_subscription_id();
+
+		}
+
+		if( ! $subscription_id ) {
+			die( 'no subscription for member found' );
+		}
+
+		if( ! rcp_get_subscription_details( $subscription_id ) ) {
 			die( 'no subscription level found' );
 		}
 
@@ -392,7 +401,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		// setup the payment info in an array for storage
 		$payment_data = array(
-			'date'             => date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'] ) ),
+			'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'] ) ),
 			'subscription'     => $member->get_subscription_name(),
 			'payment_type'     => $posted['txn_type'],
 			'subscription_key' => $member->get_subscription_key(),
@@ -414,6 +423,35 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		// Subscriptions
 		switch ( $posted['txn_type'] ) :
 
+			case "recurring_payment_profile_created":
+
+				if ( isset( $posted['initial_payment_txn_id'] ) ) {
+					$transaction_id = ( 'Completed' == $posted['initial_payment_status'] ) ? $posted['initial_payment_txn_id'] : '';
+				} else {
+					$transaction_id = $posted['ipn_track_id'];
+				}
+
+				if ( empty( $transaction_id ) || $rcp_payments->payment_exists( $transaction_id ) ) {
+					break;
+				}
+
+				// setup the payment info in an array for storage
+				$payment_data = array(
+					'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['time_created'] ) ),
+					'subscription'     => $member->get_subscription_name(),
+					'payment_type'     => $posted['txn_type'],
+					'subscription_key' => $member->get_subscription_key(),
+					'amount'           => number_format( (float) $posted['initial_payment_amount'], 2 ),
+					'user_id'          => $user_id,
+					'transaction_id'   => sanitize_text_field( $transaction_id ),
+				);
+
+				$rcp_payments->insert( $payment_data );
+
+				$expiration = date( 'Y-m-d 23:59:59', strtotime( $posted['next_payment_date'] ) );
+				$member->renew( $member->is_recurring(), 'active', $expiration );
+
+				break;
 			case "recurring_payment" :
 
 				// when a user makes a recurring payment
@@ -434,15 +472,19 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			case "recurring_payment_profile_cancel" :
 
-				// user is marked as cancelled but retains access until end of term
-				$member->set_status( 'cancelled' );
+				if( ! $member->just_upgraded() ) {
 
-				// set the use to no longer be recurring
-				delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
+					// user is marked as cancelled but retains access until end of term
+					$member->set_status( 'cancelled' );
 
-				do_action( 'rcp_ipn_subscr_cancel', $user_id );
+					// set the use to no longer be recurring
+					delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
 
-				die( 'successful recurring_payment_profile_cancel' );
+					do_action( 'rcp_ipn_subscr_cancel', $user_id );
+
+					die( 'successful recurring_payment_profile_cancel' );
+
+				}
 
 				break;
 
@@ -486,7 +528,15 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			parse_str( $request['body'], $data );
 
-			$data['subscription'] = (array) rcp_get_subscription_details( rcp_get_subscription_id( $_GET['user_id'] ) );
+			$member = new RCP_Member( absint( $_GET['user_id'] ) );
+
+			$subscription_id = $member->get_pending_subscription_id();
+
+			if( empty( $subscription_id ) ) {
+				$subscription_id = $member->get_subscription_id();
+			}
+
+			$data['subscription'] = (array) rcp_get_subscription_details( $subscription_id );
 
 			return $data;
 

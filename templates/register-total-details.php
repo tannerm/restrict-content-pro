@@ -30,7 +30,7 @@ if ( ! rcp_is_registration() ) {
 
 				<?php // Discounts ?>
 				<?php if ( rcp_get_registration()->get_discounts() ) : foreach( rcp_get_registration()->get_discounts() as $code => $recuring ) : if ( ! $discount = rcp_get_discount_details_by_code( $code ) ) continue; ?>
-					<tr>
+					<tr class="rcp-discount">
 						<td><?php echo esc_html( $discount->name ); ?></td>
 						<td><?php echo esc_html( $discount->description ); ?></td>
 						<td><?php echo esc_html( rcp_discount_sign_filter( $discount->amount, $discount->unit ) ); ?></td>
@@ -43,7 +43,7 @@ if ( ! rcp_is_registration() ) {
 					$amount = ( $fee['amount'] < 0 ) ? '-' : '' ;
 					$amount .= rcp_currency_filter( abs( $fee['amount'] ) )
 					?>
-					<tr>
+					<tr class="rcp-fee">
 						<td colspan="2"><?php echo esc_html( $fee['description'] ); ?></td>
 						<td><?php echo esc_html( $amount ); ?></td>
 					</tr>
@@ -52,7 +52,7 @@ if ( ! rcp_is_registration() ) {
 			<?php endif; ?>
 		<?php endif; ?>
 
-		<tr>
+		<tr class="rcp-total">
 			<th colspan="2"><?php _e( 'Total Today', 'rcp' ); ?></th>
 			<th><?php rcp_registration_total(); ?></th>
 		</tr>
@@ -67,7 +67,7 @@ if ( ! rcp_is_registration() ) {
 				$label = sprintf( __( 'Total Recurring Every %s %ss' ), $subscription->duration, ucwords( $subscription->duration_unit ) );
 			}
 			?>
-			<tr>
+			<tr class="rcp-recurring-total">
 				<th colspan="2"><?php echo $label; ?></th>
 				<th><?php rcp_registration_recurring_total(); ?></th>
 			</tr>

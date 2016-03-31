@@ -503,6 +503,7 @@ function rcp_set_pending_subscription_on_upgrade( $status, $user_id ) {
 
 		delete_user_meta( $user_id, 'rcp_pending_subscription_level' );
 		delete_user_meta( $user_id, 'rcp_pending_subscription_key' );
+		
 	}
 }
 add_action( 'rcp_set_status', 'rcp_set_pending_subscription_on_upgrade', 10, 2 );
@@ -537,6 +538,10 @@ function rcp_registration_is_recurring() {
 		if ( empty( $details->duration ) || empty( $details->price ) ) {
 			$auto_renew = false;
 		}
+	}
+
+	if( ! rcp_get_registration_recurring_total() > 0 ) {
+		$auto_renew = false;
 	}
 
 	return apply_filters( 'rcp_registration_is_recurring', $auto_renew );
@@ -751,7 +756,7 @@ function rcp_add_prorate_fee( $registration ) {
 		return;
 	}
 
-	$registration->add_fee( -1 * $amount, __( 'Proration Credit', 'rcp' ) );
+	$registration->add_fee( -1 * $amount, __( 'Proration Credit', 'rcp' ), false, true );
 }
 add_action( 'rcp_registration_init', 'rcp_add_prorate_fee' );
 

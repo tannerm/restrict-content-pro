@@ -83,7 +83,7 @@ function rcp_discounts_page()
 							<td><?php echo rcp_discount_has_uses_left( $code->id ) ? 'yes' : 'no'; ?></td>
 							<td><?php echo $code->expiration == '' ? __( 'none', 'rcp' ) : date_i18n( 'Y-m-d', strtotime( $code->expiration ) ); ?></td>
 							<?php do_action('rcp_discounts_page_table_column', $code->id); ?>
-							
+
 							<?php if( current_user_can( 'rcp_manage_discounts' ) ) : ?>
 							<td>
 								<a href="<?php echo esc_url( add_query_arg( 'edit_discount', $code->id, $page ) ); ?>"><?php _e( 'Edit', 'rcp' ); ?></a> |
@@ -202,6 +202,7 @@ function rcp_discounts_page()
 						<input type="hidden" name="rcp-action" value="add-discount"/>
 						<input type="submit" value="<?php _e( 'Add Discount Code', 'rcp' ); ?>" class="button-primary"/>
 					</p>
+					<?php wp_nonce_field( 'rcp_add_discount_nonce', 'rcp_add_discount_nonce' ); ?>
 				</form>
 			<?php endif; ?>
 		<?php endif; ?>

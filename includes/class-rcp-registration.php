@@ -116,12 +116,13 @@ class RCP_Registration {
 	 *
 	 * @return bool
 	 */
-	public function add_fee( $amount, $description = null, $recurring = false ) {
+	public function add_fee( $amount, $description = null, $recurring = false, $proration = false ) {
 
 		$fee = array(
 			'amount'     => number_format( (float) $amount, 2 ),
 			'description'=> sanitize_text_field( $description ),
 			'recurring'  => (bool) $recurring,
+			'proration'  => (bool) $proration,
 		);
 
 		$id = md5( serialize( $fee ) );
@@ -156,7 +157,7 @@ class RCP_Registration {
 	 * @param null $total
 	 * @param bool $only_recurring | set to only get fees that are recurring
 	 *
-	 * @return int
+	 * @return float
 	 */
 	public function get_total_fees( $total = null, $only_recurring = false ) {
 
@@ -185,6 +186,68 @@ class RCP_Registration {
 	}
 
 	/**
+	 * Get the signup fees
+	 *
+	 * @since 2.5
+	 * @param null $total
+	 *
+	 * @return float
+	 */
+	public function get_signup_fees( ) {
+
+		if ( ! $this->get_fees() ) {
+			return 0;
+		}
+
+		$fees = 0;
+
+		foreach( $this->get_fees() as $fee ) {
+
+			if ( $fee['proration'] ) {
+				continue;
+			}
+
+			if ( $fee['recurring'] ) {
+				continue;
+			}
+
+			$fees += $fee['amount'];
+		}
+
+		return apply_filters( 'rcp_registration_get_total_fees', (float) $fees, $this );
+
+	}
+
+	/**
+	 * Get the total proration amount
+	 *
+	 * @since 2.5
+	 *
+	 * @return float
+	 */
+	public function get_proration_credits() {
+
+		if ( ! $this->get_fees() ) {
+			return 0;
+		}
+
+		$proration = 0;
+
+		foreach( $this->get_fees() as $fee ) {
+
+			if ( ! $fee['proration'] ) {
+				continue;
+			}
+
+			$proration += $fee['amount'];
+
+		}
+
+		return apply_filters( 'rcp_registration_get_proration_fees', (float) $proration, $this );
+
+	}
+
+	/**
 	 * Get the total discounts
 	 *
 	 * @since 2.5
@@ -206,6 +269,7 @@ class RCP_Registration {
 		$original_total = $total;
 
 		foreach( $registration_discounts as $registration_discount => $recurring ) {
+
 			if ( $only_recurring && ! $recurring ) {
 				continue;
 			}
@@ -241,13 +305,21 @@ class RCP_Registration {
 
 		$total = rcp_get_subscription_price( $this->subscription );
 
+		if ( $fees ) {
+			$total += $this->get_proration_credits();
+		}
+
 		if ( $discounts ) {
 			$total -= $this->get_total_discounts( $total );
 		}
 
-		if ( $fees ) {
-			$total += $this->get_total_fees( $total );
+		if ( 0 > $total ) {
+			$total = 0;
 		}
+
+		if ( $fees ) {
+			$total += $this->get_signup_fees( $total );
+		}		
 
 		if ( 0 > $total ) {
 			$total = 0;

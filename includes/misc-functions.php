@@ -648,3 +648,52 @@ function rcp_is_restricted_content( $post_id ) {
 
 	return apply_filters( 'rcp_is_restricted_content', $restricted, $post_id );
 }
+
+/**
+ * Get RCP Currency
+ *
+ * @since 2.5
+ * @return mixed|void
+ */
+function rcp_get_currency() {
+	global $rcp_options;
+	$currency = isset( $rcp_options['currency'] ) ? strtoupper( $rcp_options['currency'] ) : 'USD';
+	return apply_filters( 'rcp_get_currency', $currency );
+}
+
+/**
+ * Determines if RCP is using a zero-decimal currency
+ *
+ * @param $currency
+ *
+ * @access      public
+ * @since       2.5
+ * @return      bool
+ */
+function rcp_is_zero_decimal_currency( $currency = '' ) {
+
+	if ( ! $currency ) {
+		$currency = strtoupper( rcp_get_currency() );
+	}
+
+	$zero_dec_currencies = array(
+		'BIF',
+		'CLP',
+		'DJF',
+		'GNF',
+		'JPY',
+		'KMF',
+		'KRW',
+		'MGA',
+		'PYG',
+		'RWF',
+		'VND',
+		'VUV',
+		'XAF',
+		'XOF',
+		'XPF'
+	);
+
+	return apply_filters( 'rcp_is_zero_decimal_currency', in_array( $currency, $zero_dec_currencies ) );
+
+}

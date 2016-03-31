@@ -104,16 +104,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				if( ! $customer_exists ) {
 
 					$customer_args = array(
-						'card' 			=> $_POST['stripeToken'],
-						'email' 		=> $this->email,
-						'description' 	=> 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
+						'card'  => $_POST['stripeToken'],
+						'email' => $this->email
 					);
-
-					if ( ! empty( $this->discount_code ) ) {
-
-						$customer_args['coupon'] = $this->discount_code;
-
-					}
 
 					$customer = \Stripe\Customer::create( apply_filters( 'rcp_stripe_customer_create_args', $customer_args, $this ) );
 
@@ -126,23 +119,59 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// Add fees before the plan is updated and charged
 				if ( ! empty( $this->signup_fee ) ) {
 
-					$customer->account_balance = $customer->account_balance + ( $this->signup_fee * 100 ); // Add additional amount to initial payment (in cents)	
+					$customer->account_balance = $customer->account_balance + ( $this->signup_fee * rcp_stripe_get_currency_multiplier() ); // Add additional amount to initial payment (in cents)
 
 				}
 
-				if ( ! empty( $this->discount_code ) ) {
+				// clean up any past due or unpaid subscriptions before upgrading/downgrading
+				foreach( $customer->subscriptions->all()->data as $subscription ) {
 
-					$customer->coupon = $this->discount_code;
+					// check if we are renewing an existing subscription. This should not ever be 'active', if it is Stripe
+					// will do nothing. If it is 'past_due' the most recent invoice will be paid and the subscription will become active
+					if ( $subscription->plan->id == $plan_id && in_array( $subscription->status, array( 'active', 'past_due' ) ) ) {
+						continue;
+					}
 
+					// remove any subscriptions that are past_due or inactive
+					if ( in_array( $subscription->status, array( 'past_due', 'unpaid' ) ) ) {
+						$subscription->cancel();
+					}
 				}
+
+				$customer->description = 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name;
+				$customer->metadata    = array(
+					'user_id'      => $this->user_id,
+					'email'        => $this->email,
+					'subscription' => $this->subscription_name
+				);
 
 				// Save the card and any coupon
 				$customer->save();
 
-				// Update the customer's subscription in Stripe
-				$customer->updateSubscription( array( 'plan' => $plan_id, 'prorate' => false ) );
+				// If the customer has an existing subscription, we need to cancel it
+				if( rcp_can_member_cancel( $member->ID ) ) {
+					$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+					if( $cancelled ) {
+						update_user_meta( $member->ID, '_rcp_just_upgraded', time() );
+					}
+				}
+
+				$sub_args = array(
+					'plan'    => $plan_id,
+					'prorate' => false
+				);
+
+				if ( ! empty( $this->discount_code ) ) {
+
+					$sub_args['coupon'] = $this->discount_code;
+
+				}
+
+				// Set the customer's subscription in Stripe
+				$subscription = $customer->subscriptions->create( array( $sub_args ) );
 
 				$member->set_payment_profile_id( $customer->id );
+				$member->set_merchant_subscription_id( $subscription->id );
 
 				// subscription payments are recorded via webhook
 
@@ -152,28 +181,28 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$this->handle_processing_error( $e );
 
-			} catch (\Stripe\Error\InvalidRequest $e) {
+			} catch ( \Stripe\Error\InvalidRequest $e ) {
 
 				// Invalid parameters were supplied to Stripe's API
 				$this->handle_processing_error( $e );
 
-			} catch (\Stripe\Error\Authentication $e) {
+			} catch ( \Stripe\Error\Authentication $e ) {
 
 				// Authentication with Stripe's API failed
 				// (maybe you changed API keys recently)
 				$this->handle_processing_error( $e );
 
-			} catch (\Stripe\Error\ApiConnection $e) {
+			} catch ( \Stripe\Error\ApiConnection $e ) {
 
 				// Network communication with Stripe failed
 				$this->handle_processing_error( $e );
 
-			} catch (\Stripe\Error\Base $e) {
+			} catch ( \Stripe\Error\Base $e ) {
 
 				// Display a very generic error to the user
 				$this->handle_processing_error( $e );
 
-			} catch (Exception $e) {
+			} catch ( Exception $e ) {
 
 				// Something else happened, completely unrelated to Stripe
 
@@ -191,7 +220,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			try {
 
 				$charge = \Stripe\Charge::create( apply_filters( 'rcp_stripe_charge_create_args', array(
-					'amount' 		 => $this->amount * 100, // amount in cents
+					'amount' 		 => ( $this->amount + $this->signup_fee ) * rcp_stripe_get_currency_multiplier(), // amount in cents
 					'currency' 		 => strtolower( $this->currency ),
 					'card' 			 => $_POST['stripeToken'],
 					'description' 	 => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
@@ -206,11 +235,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				), $this ) );
 
 				$payment_data = array(
-					'date'              => date( 'Y-m-d g:i:s', current_time( 'timestamp' ) ),
+					'date'              => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 					'subscription'      => $this->subscription_name,
 					'payment_type' 		=> 'Credit Card One Time',
 					'subscription_key' 	=> $this->subscription_key,
-					'amount' 			=> $this->amount,
+					'amount' 			=> $this->amount + $this->signup_fee,
 					'user_id' 			=> $this->user_id,
 					'transaction_id'    => $charge->id
 				);
@@ -224,30 +253,30 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$this->handle_processing_error( $e );
 
-			} catch (\Stripe\Error\InvalidRequest $e) {
+			} catch ( \Stripe\Error\InvalidRequest $e ) {
 
 				// Invalid parameters were supplied to Stripe's API
 				$this->handle_processing_error( $e );
 
 
-			} catch (\Stripe\Error\Authentication $e) {
+			} catch ( \Stripe\Error\Authentication $e ) {
 
 				// Authentication with Stripe's API failed
 				// (maybe you changed API keys recently)
 				$this->handle_processing_error( $e );
 
-			} catch (\Stripe\Error\ApiConnection $e) {
+			} catch ( \Stripe\Error\ApiConnection $e ) {
 
 				// Network communication with Stripe failed
 				$this->handle_processing_error( $e );
 
 
-			} catch (\Stripe\Error\Base $e) {
+			} catch ( \Stripe\Error\Base $e ) {
 
 				// Display a very generic error to the user
 				$this->handle_processing_error( $e );
 
-			} catch (Exception $e) {
+			} catch ( Exception $e ) {
 
 				// Something else happened, completely unrelated to Stripe
 
@@ -325,6 +354,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		// retrieve the request's body and parse it as JSON
 		$body          = @file_get_contents( 'php://input' );
 		$event_json_id = json_decode( $body );
+		$expiration    = '';
 
 		// for extra security, retrieve from the Stripe API
 		if ( isset( $event_json_id->id ) ) {
@@ -368,9 +398,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					if( $event->type == 'charge.succeeded' || $event->type == 'invoice.payment_succeeded' ) {
 
+						$account = \Stripe\Account::retrieve();
+						$payment_date = date_create( date( 'c', $event->created ), new DateTimeZone( $account->timezone ) );
+
 						// setup payment data
 						$payment_data = array(
-							'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
+							'date'              => get_date_from_gmt( $payment_date->format( 'c' ) ),
 							'payment_type' 		=> 'Credit Card',
 							'user_id' 			=> $member->ID,
 							'amount'            => '',
@@ -382,14 +415,14 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							// Successful one-time payment
 							if ( empty( $payment_event->invoice ) ) {
 
-								$payment_data['amount']         = $payment_event->amount / 100;
+								$payment_data['amount']         = $payment_event->amount / rcp_stripe_get_currency_multiplier();
 								$payment_data['transaction_id'] = $payment_event->id;
 
 							// Successful subscription payment
 							} else {
 
 								$invoice = \Stripe\Invoice::retrieve( $payment_event->invoice );
-								$payment_data['amount']         = $invoice->amount_due / 100;
+								$payment_data['amount']         = $invoice->amount_due / rcp_stripe_get_currency_multiplier();
 								$payment_data['transaction_id'] = $payment_event->id;
 
 							}
@@ -397,14 +430,29 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						// Successful subscription paid made with account credit where no charge is created
 						} elseif ( $event->type == 'invoice.payment_succeeded' && empty( $payment_event->charge ) ) {
 
-							$payment_data['amount']         = $payment_event->amount_due / 100;
+							$payment_data['amount']         = $payment_event->amount_due / rcp_stripe_get_currency_multiplier();
 							$payment_data['transaction_id'] = $payment_event->id;
+							$invoice                        = $payment_event;
 
 						}
 
 						if( ! empty( $payment_data['transaction_id'] ) && ! $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
 
-							$member->renew( $member->is_recurring() );
+							if ( ! empty( $invoice->subscription ) ) {
+
+								$customer = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
+								$subscription = $customer->subscriptions->retrieve( $invoice->subscription );
+
+								if ( ! empty( $subscription ) ) {
+									$expiration = date( 'Y-m-d 23:59:59', $subscription->current_period_end );
+									$member->set_recurring();
+								}
+
+								$member->set_merchant_subscription_id( $subscription->id );
+
+							}
+
+							$member->renew( $member->is_recurring(), 'active', $expiration );
 
 							// These must be retrieved after the status is set to active in order for upgrades to work properly
 							$payment_data['subscription']     = $member->get_subscription_name();
@@ -437,9 +485,13 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// Cancelled / failed subscription
 					if( $event->type == 'customer.subscription.deleted' ) {
 
-						$member->set_status( 'cancelled' );
+						if( ! $member->just_upgraded() ) {
 
-						die( 'member cancelled successfully' );
+							$member->set_status( 'cancelled' );
+
+							die( 'member cancelled successfully' );
+
+						}
 
 					}
 
@@ -519,9 +571,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						// get the subscription price
 						if( $('.rcp_level:checked').length ) {
-							var price = $('.rcp_level:checked').closest('li').find('span.rcp_price').attr('rel') * 100;
+							var price = $('.rcp_level:checked').closest('li').find('span.rcp_price').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
 						} else {
-							var price = $('.rcp_level').attr('rel') * 100;
+							var price = $('.rcp_level').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
 						}
 
 						if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]').val() == 'stripe') && price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100')) {
@@ -608,7 +660,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		// get all subscription level info for this plan
 		$plan           = rcp_get_subscription_details_by_name( $plan_name );
-		$price          = $plan->price * 100;
+		$price          = $plan->price * rcp_stripe_get_currency_multiplier();
 		$interval       = $plan->duration_unit;
 		$interval_count = $plan->duration;
 		$name           = $plan->name;

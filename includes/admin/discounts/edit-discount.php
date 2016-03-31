@@ -116,4 +116,5 @@ $code = rcp_get_discount_details( urldecode( $_GET['edit_discount'] ) );
 		<input type="hidden" name="discount_id" value="<?php echo absint( urldecode( $_GET['edit_discount'] ) ); ?>"/>
 		<input type="submit" value="<?php _e(' Update Discount', 'rcp' ); ?>" class="button-primary"/>
 	</p>
+	<?php wp_nonce_field( 'rcp_edit_discount_nonce', 'rcp_edit_discount_nonce' ); ?>
 </form>

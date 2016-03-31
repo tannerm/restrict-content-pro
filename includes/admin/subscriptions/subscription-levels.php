@@ -176,7 +176,7 @@ function rcp_member_levels_page()
 								</th>
 								<td>
 									<input type="text" id="rcp-fee" name="fee" value="" style="width: 40px;"/>
-									<p class="description"><?php _e('Optional signup fee to charge subscribers for the first billing cycle. Enter a negative number to give a discount on the first payment. This only applies to recurring subscriptions.', 'rcp'); ?></p>
+									<p class="description"><?php _e('Optional signup fee to charge subscribers for the first billing cycle. Enter a negative number to give a discount on the first payment.', 'rcp'); ?></p>
 								</td>
 							</tr>
 							<tr class="form-field">
@@ -209,6 +209,7 @@ function rcp_member_levels_page()
 						<input type="hidden" name="rcp-action" value="add-level"/>
 						<input type="submit" value="<?php _e('Add Membership Level', 'rcp'); ?>" class="button-primary"/>
 					</p>
+					<?php wp_nonce_field( 'rcp_add_level_nonce', 'rcp_add_level_nonce' ); ?>
 				</form>
 			<?php endif; ?>
 		<?php endif; ?>

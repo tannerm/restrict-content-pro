@@ -552,7 +552,7 @@ function rcp_print_user_payments_formatted( $user_id ) {
 	} ?>
 
 	<table class="wp-list-table widefat fixed posts rcp-table rcp_payment_details" style="display: block; width: 100%;">
-		
+
 		<thead>
 			<tr>
 				<th><?php _e( 'Date', 'rcp' ); ?></th>
@@ -682,7 +682,7 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
  * @return bool
  */
 function rcp_has_upgrade_path( $user_id = 0 ) {
-	return ( bool ) rcp_get_upgrade_paths( $user_id );
+	return apply_filters( 'rcp_has_upgrade_path', ( bool ) rcp_get_upgrade_paths( $user_id ), $user_id );
 }
 
 /**
@@ -700,7 +700,7 @@ function rcp_get_upgrade_paths( $user_id = 0 ) {
 	}
 
 	// make sure the user is active and get the subscription ID
-	$user_subscription = ( rcp_is_active( $user_id ) && 'cancelled' !== rcp_get_status() ) ? rcp_get_subscription_id( $user_id ) : '';
+	$user_subscription = ( rcp_is_recurring( $user_id ) && rcp_is_active( $user_id ) && 'cancelled' !== rcp_get_status() ) ? rcp_get_subscription_id( $user_id ) : '';
 	$subscriptions     = rcp_get_subscription_levels( 'active' );
 
 	// remove the user's current subscription from the list
@@ -712,71 +712,6 @@ function rcp_get_upgrade_paths( $user_id = 0 ) {
 
 	return apply_filters( 'rcp_get_upgrade_paths', array_values( $subscriptions ), $user_id );
 }
-
-
-/**
- * Determine if a member is a PayPal subscriber
- *
- * @since       v2.0
- * @access      public
- * @param       $user_id INT the ID of the user to check
- * @return      bool
-*/
-function rcp_is_paypal_subscriber( $user_id = 0 ) {
-
-	if( empty( $user_id ) ) {
-		$user_id = get_current_user_id();
-	}
-
-	$ret        = false;
-	$member     = new RCP_Member( $user_id );
-	$profile_id = $member->get_payment_profile_id();
-
-	// Check if the member is a PayPal customer
-	if( false !== strpos( $profile_id, 'I-' ) ) {
-
-		$ret = true;
-
-	} else {
-
-		// The old way of identifying PayPal subscribers
-		$ret = (bool) get_user_meta( $user_id, 'rcp_paypal_subscriber', true );
-
-	}
-
-	return (bool) apply_filters( 'rcp_is_paypal_subscriber', $ret, $user_id );
-}
-
-/**
- * Determine if a member is a Stripe subscriber
- *
- * @since       v2.1
- * @access      public
- * @param       $user_id INT the ID of the user to check
- * @return      bool
-*/
-function rcp_is_stripe_subscriber( $user_id = 0 ) {
-
-	if( empty( $user_id ) ) {
-		$user_id = get_current_user_id();
-	}
-
-	$ret = false;
-
-	$member = new RCP_Member( $user_id );
-
-	$profile_id = $member->get_payment_profile_id();
-
-	// Check if the member is a Stripe customer
-	if( false !== strpos( $profile_id, 'cus_' ) ) {
-
-		$ret = true;
-
-	}
-
-	return (bool) apply_filters( 'rcp_is_stripe_subscriber', $ret, $user_id );
-}
-
 
 /**
  * Process Profile Updater Form
@@ -959,7 +894,7 @@ add_action( 'init', 'rcp_process_member_cancellation' );
  * @access      public
  * @since       2.1
  */
-function rcp_cancel_member_payment_profile( $member_id = 0 ) {
+function rcp_cancel_member_payment_profile( $member_id = 0, $set_status = true ) {
 
 	global $rcp_options;
 
@@ -986,8 +921,19 @@ function rcp_cancel_member_payment_profile( $member_id = 0 ) {
 
 		try {
 
-			$cu = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
-			$cu->cancelSubscription( array( 'at_period_end' => false ) );
+			$subscription_id = $member->get_merchant_subscription_id();
+			$customer        = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
+
+			if( ! empty( $subscription_id ) ) {
+
+				$customer->subscriptions->retrieve( $subscription_id )->cancel( array( 'at_period_end' => false ) );
+
+			} else {
+
+				$customer->cancelSubscription( array( 'at_period_end' => false ) );
+
+			}
+
 
 			$success = true;
 
@@ -1143,7 +1089,7 @@ function rcp_cancel_member_payment_profile( $member_id = 0 ) {
 		}
 	}
 
-	if( $success ) {
+	if( $success && $set_status ) {
 		$member->cancel();
 	}
 
