@@ -325,7 +325,7 @@ class RCP_Registration {
 			$total = 0;
 		}
 
-		return apply_filters( 'rcp_registration_get_total', number_format( (float) $total, 2 ), $this );
+		return apply_filters( 'rcp_registration_get_total', floatval($total), $this );
 
 	}
 
