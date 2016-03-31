@@ -119,7 +119,7 @@ class RCP_Registration {
 	public function add_fee( $amount, $description = null, $recurring = false, $proration = false ) {
 
 		$fee = array(
-			'amount'     => number_format( (float) $amount, 2 ),
+			'amount'     => floatval( $amount ),
 			'description'=> sanitize_text_field( $description ),
 			'recurring'  => (bool) $recurring,
 			'proration'  => (bool) $proration,
