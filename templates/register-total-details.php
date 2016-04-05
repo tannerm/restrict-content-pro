@@ -12,27 +12,24 @@ if ( ! rcp_is_registration() ) {
 
 		<tr>
 			<th><?php _e( 'Subscription', 'rcp' ); ?></th>
-			<th><?php _e( 'Description', 'rcp' ); ?></th>
 			<th><?php _e( 'Amount', 'rcp' ); ?></th>
 		</tr>
 
 		<tr>
 			<td><?php echo rcp_get_subscription_name( rcp_get_registration()->get_subscription() ); ?></td>
-			<td><?php echo wpautop( wptexturize( rcp_get_subscription_description( rcp_get_registration()->get_subscription() ) ) ); ?></td>
 			<td><?php echo ( rcp_get_subscription_price( rcp_get_registration()->get_subscription() ) > 0 ) ? rcp_currency_filter( rcp_get_subscription_price( rcp_get_registration()->get_subscription() ) ) : __( 'free', 'rcp' ); ?></td>
 		</tr>
 
 		<?php if ( rcp_get_subscription_price( rcp_get_registration()->get_subscription() ) ) : ?>
 			<?php if ( rcp_get_registration()->get_fees() || rcp_get_registration()->get_discounts() ) : ?>
 				<tr>
-					<th colspan="3"><?php _e( 'Discounts and Fees', 'rcp' ); ?></th>
+					<th colspan="2"><?php _e( 'Discounts and Fees', 'rcp' ); ?></th>
 				</tr>
 
 				<?php // Discounts ?>
 				<?php if ( rcp_get_registration()->get_discounts() ) : foreach( rcp_get_registration()->get_discounts() as $code => $recuring ) : if ( ! $discount = rcp_get_discount_details_by_code( $code ) ) continue; ?>
 					<tr class="rcp-discount">
 						<td><?php echo esc_html( $discount->name ); ?></td>
-						<td><?php echo esc_html( $discount->description ); ?></td>
 						<td><?php echo esc_html( rcp_discount_sign_filter( $discount->amount, $discount->unit ) ); ?></td>
 					</tr>
 				<?php endforeach; endif; ?>
@@ -53,7 +50,7 @@ if ( ! rcp_is_registration() ) {
 		<?php endif; ?>
 
 		<tr class="rcp-total">
-			<th colspan="2"><?php _e( 'Total Today', 'rcp' ); ?></th>
+			<th><?php _e( 'Total Today', 'rcp' ); ?></th>
 			<th><?php rcp_registration_total(); ?></th>
 		</tr>
 
@@ -68,7 +65,7 @@ if ( ! rcp_is_registration() ) {
 			}
 			?>
 			<tr class="rcp-recurring-total">
-				<th colspan="2"><?php echo $label; ?></th>
+				<th><?php echo $label; ?></th>
 				<th><?php rcp_registration_recurring_total(); ?></th>
 			</tr>
 		<?php endif; ?>
