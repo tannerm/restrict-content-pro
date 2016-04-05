@@ -23,7 +23,7 @@ if ( ! rcp_is_registration() ) {
 		<?php if ( rcp_get_subscription_price( rcp_get_registration()->get_subscription() ) ) : ?>
 			<?php if ( rcp_get_registration()->get_fees() || rcp_get_registration()->get_discounts() ) : ?>
 				<tr>
-					<th colspan="3"><?php _e( 'Discounts and Fees', 'rcp' ); ?></th>
+					<th colspan="2"><?php _e( 'Discounts and Fees', 'rcp' ); ?></th>
 				</tr>
 
 				<?php // Discounts ?>
