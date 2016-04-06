@@ -41,7 +41,7 @@ if ( ! rcp_is_registration() ) {
 					$amount .= rcp_currency_filter( abs( $fee['amount'] ) )
 					?>
 					<tr class="rcp-fee">
-						<td colspan="2"><?php echo esc_html( $fee['description'] ); ?></td>
+						<td><?php echo esc_html( $fee['description'] ); ?></td>
 						<td><?php echo esc_html( $amount ); ?></td>
 					</tr>
 				<?php endforeach; endif; ?>
