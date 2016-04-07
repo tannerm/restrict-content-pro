@@ -398,12 +398,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					if( $event->type == 'charge.succeeded' || $event->type == 'invoice.payment_succeeded' ) {
 
-						$account = \Stripe\Account::retrieve();
-						$payment_date = date_create( date( 'c', $event->created ), new DateTimeZone( $account->timezone ) );
-
 						// setup payment data
 						$payment_data = array(
-							'date'              => get_date_from_gmt( $payment_date->format( 'c' ) ),
+							'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
 							'payment_type' 		=> 'Credit Card',
 							'user_id' 			=> $member->ID,
 							'amount'            => '',
