@@ -319,13 +319,13 @@ class RCP_Registration {
 
 		if ( $fees ) {
 			$total += $this->get_signup_fees( $total );
-		}		
+		}
 
 		if ( 0 > $total ) {
 			$total = 0;
 		}
 
-		return apply_filters( 'rcp_registration_get_total', floatval($total), $this );
+		return apply_filters( 'rcp_registration_get_total', number_format( floatval($total), rcp_currency_decimal_filter() ), $this );
 
 	}
 
@@ -354,7 +354,7 @@ class RCP_Registration {
 			$total = 0;
 		}
 
-		return apply_filters( 'rcp_registration_get_recurring_total', number_format( (float) $total, 2 ), $this );
+		return apply_filters( 'rcp_registration_get_recurring_total', number_format( (float) $total, rcp_currency_decimal_filter() ), $this );
 
 	}
 
