@@ -325,7 +325,7 @@ class RCP_Registration {
 			$total = 0;
 		}
 
-		return apply_filters( 'rcp_registration_get_total', number_format( floatval($total), rcp_currency_decimal_filter() ), $this );
+		return apply_filters( 'rcp_registration_get_total', floatval($total), $this );
 
 	}
 
@@ -354,7 +354,7 @@ class RCP_Registration {
 			$total = 0;
 		}
 
-		return apply_filters( 'rcp_registration_get_recurring_total', number_format( (float) $total, rcp_currency_decimal_filter() ), $this );
+		return apply_filters( 'rcp_registration_get_recurring_total', number_format( (float) $total, 2 ), $this );
 
 	}
 

@@ -503,7 +503,7 @@ function rcp_set_pending_subscription_on_upgrade( $status, $user_id ) {
 
 		delete_user_meta( $user_id, 'rcp_pending_subscription_level' );
 		delete_user_meta( $user_id, 'rcp_pending_subscription_key' );
-		
+
 	}
 }
 add_action( 'rcp_set_status', 'rcp_set_pending_subscription_on_upgrade', 10, 2 );
@@ -577,6 +577,7 @@ function rcp_registration_total( $echo = true ) {
 	}
 
 	if ( 0 < $total ) {
+		$total = number_format( $total, rcp_currency_decimal_filter() );
 		$total = rcp_currency_filter( $total );
 	} else {
 		$total = __( 'free', 'rcp' );
@@ -624,6 +625,7 @@ function rcp_registration_recurring_total( $echo = true ) {
 	}
 
 	if ( 0 < $total ) {
+		$total = number_format( $total, rcp_currency_decimal_filter() );
 		$total = rcp_currency_filter( $total );
 		$subscription = rcp_get_subscription_details( rcp_get_registration()->get_subscription() );
 
