@@ -319,7 +319,7 @@ class RCP_Registration {
 
 		if ( $fees ) {
 			$total += $this->get_signup_fees( $total );
-		}		
+		}
 
 		if ( 0 > $total ) {
 			$total = 0;

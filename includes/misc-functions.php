@@ -697,3 +697,21 @@ function rcp_is_zero_decimal_currency( $currency = '' ) {
 	return apply_filters( 'rcp_is_zero_decimal_currency', in_array( $currency, $zero_dec_currencies ) );
 
 }
+
+/**
+ * Sets the number of decimal places based on the currency.
+ *
+ * @since 2.5.2
+ * @param int $decimals The number of decimal places. Default is 2.
+ * @return int The number of decimal places.
+ */
+function rcp_currency_decimal_filter( $decimals = 2 ) {
+
+	$currency = rcp_get_currency();
+
+	if ( rcp_is_zero_decimal_currency( $currency ) ) {
+		$decimals = 0;
+	}
+
+	return apply_filters( 'rcp_currency_decimal_filter', $decimals, $currency );
+}
