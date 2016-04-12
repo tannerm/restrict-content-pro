@@ -632,7 +632,7 @@ function rcp_registration_recurring_total( $echo = true ) {
 		if ( $subscription->duration == 1 ) {
 			$total .= '/' . $subscription->duration_unit;
 		} else {
-			$total .= sprintf( ' every %s %ss', $subscription->duration, $subscription->duration_unit );
+			$total .= sprintf( __( ' every %s %ss', 'rcp' ), $subscription->duration, $subscription->duration_unit );
 		}
 	} else {
 		$total = __( 'free', 'rcp' );;
