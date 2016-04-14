@@ -66,7 +66,7 @@ function rcp_currency_filter( $price ) {
 		case "GBP" : return '&pound;' . $price; break;
 		case "USD" :
 		case "AUD" :
-		case "BRL" :
+		case "BRL" : return '&#82&#36;' . $price; break;
 		case "CAD" :
 		case "HKD" :
 		case "MXN" :
