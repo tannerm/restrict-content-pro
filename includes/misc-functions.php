@@ -9,7 +9,7 @@
 */
 
 function rcp_is_paid_content( $post_id ) {
-	if ( $post_id == '' || !is_int( $post_id ) )
+	if ( $post_id == '' || ! is_int( $post_id ) )
 		$post_id = get_the_ID();
 
 	$return = false;
@@ -33,12 +33,12 @@ function rcp_is_paid_content( $post_id ) {
 
 function rcp_get_paid_posts() {
 	$args = array(
-		'meta_key' => '_is_paid',
-		'meta_value' => 1,
-		'post_status' => 'publish',
+		'meta_key'       => '_is_paid',
+		'meta_value'     => 1,
+		'post_status'    => 'publish',
 		'posts_per_page' => -1,
-		'post_type' => 'any',
-		'fields' => 'ids'
+		'post_type'      => 'any',
+		'fields'         => 'ids'
 	);
 	$paid_ids = get_posts( $args );
 	if ( $paid_ids ) {
@@ -63,40 +63,70 @@ function rcp_currency_filter( $price ) {
 	$position = isset( $rcp_options['currency_position'] ) ? $rcp_options['currency_position'] : 'before';
 	if ( $position == 'before' ) :
 		switch ( $currency ) :
-		case "GBP" : return '&pound;' . $price; break;
-		case "USD" :
-		case "AUD" :
-		case "BRL" : return '&#82&#36;' . $price; break;
-		case "CAD" :
-		case "HKD" :
-		case "MXN" :
-		case "SGD" :
-			return '&#36;' . $price;
-			break;
-		case "JPY" : return '&yen;' . $price; break;
-		default :
-			$formatted = $currency . ' ' . $price;
-			return apply_filters( 'rcp_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
-			break;
-			endswitch;
-			else :
-				switch ( $currency ) :
-				case "GBP" : return $price . '&pound;'; break;
-		case "USD" :
-		case "AUD" :
-		case "BRL" :
-		case "CAD" :
-		case "HKD" :
-		case "MXN" :
-		case "SGD" :
-			return $price . '&#36;';
-			break;
-		case "JPY" : return $price . '&yen;'; break;
-		default :
-	$formatted = $price . ' ' . $currency;
-	return apply_filters( 'rcp_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
-	break;
-	endswitch;
+			case "USD" : return '&#36;' . $price; break;
+			case "EUR" : return '&#8364;' . $price; break;
+			case "GBP" : return '&#163;' . $price; break;
+			case "AUD" : return '&#36;' . $price; break;
+			case "BRL" : return '&#82;&#36;' . $price; break;
+			case "CAD" : return '&#36;' . $price; break;
+			case "CHF" : return '&#67;&#72;&#70;' . $price; break;
+			case "CZK" : return '&#75;&#269;' . $price; break;
+			case "DKK" : return '&#107;&#114;' . $price; break;
+			case "HKD" : return '&#36;' . $price; break;
+			case "HUF" : return '&#70;&#116;' . $price; break;
+			case "ILS" : return '&#8362;' . $price; break;
+			case "IRR" : return '&#65020;' . $price; break;
+			case "JPY" : return '&#165;' . $price; break;
+			case "MXN" : return '&#36;' . $price; break;
+			case "MYR" : return '&#82;&#77;' . $price; break;
+			case "NOK" : return '&#107;&#114;' . $price; break;
+			case "NZD" : return '&#36;' . $price; break;
+			case "PHP" : return '&#8369;' . $price; break;
+			case "PLN" : return '&#122;&#322;' . $price; break;
+			case "RUB" : return '&#1088;&#1091;&#1073;' . $price; break;
+			case "SEK" : return '&#107;&#114;' . $price; break;
+			case "SGD" : return '&#36;' . $price; break;
+			case "THB" : return '&#3647;' . $price; break;
+			case "TRY" : return '&#8356;' . $price; break;
+			case "TWD" : return '&#78;&#84;&#36;' . $price; break;
+			default :
+				$formatted = $currency . ' ' . $price;
+				return apply_filters( 'rcp_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
+				break;
+		endswitch;
+	else :
+		switch ( $currency ) :
+			case "USD" : return $price . '&#36;'; break;
+			case "EUR" : return $price . '&#8364;'; break;
+			case "GBP" : return $price . '&#163;'; break;
+			case "AUD" : return $price . '&#36;'; break;
+			case "BRL" : return $price . '&#82;&#36;'; break;
+			case "CAD" : return $price . '&#36;'; break;
+			case "CHF" : return $price . '&#67;&#72;&#70;'; break;
+			case "CZK" : return $price . '&#75;&#269;'; break;
+			case "DKK" : return $price . '&#107;&#114;'; break;
+			case "HKD" : return $price . '&#36;'; break;
+			case "HUF" : return $price . '&#70;&#116;'; break;
+			case "ILS" : return $price . '&#8362;'; break;
+			case "IRR" : return $price . '&#65020;'; break;
+			case "JPY" : return $price . '&#165;'; break;
+			case "MXN" : return $price . '&#36;'; break;
+			case "MYR" : return $price . '&#82;&#77;'; break;
+			case "NOK" : return $price . '&#107;&#114;'; break;
+			case "NZD" : return $price . '&#36;'; break;
+			case "PHP" : return $price . '&#8369;'; break;
+			case "PLN" : return $price . '&#122;&#322;'; break;
+			case "RUB" : return $price . '&#1088;&#1091;&#1073;'; break;
+			case "SEK" : return $price . '&#107;&#114;'; break;
+			case "SGD" : return $price . '&#36;'; break;
+			case "THB" : return $price . '&#3647;'; break;
+			case "TRY" : return $price . '&#8356;'; break;
+			case "TWD" : return $price . '&#78;&#84;&#36;'; break;
+			default :
+				$formatted = $price . ' ' . $currency;
+				return apply_filters( 'rcp_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
+				break;
+		endswitch;
 	endif;
 }
 
@@ -107,35 +137,34 @@ function rcp_currency_filter( $price ) {
  * @access      private
  * @return      array
 */
-
 function rcp_get_currencies() {
 	$currencies = array(
 		'USD' => __( 'US Dollars (&#36;)', 'rcp' ),
-		'EUR' => __( 'Euros (&euro;)', 'rcp' ),
-		'GBP' => __( 'Pounds Sterling (&pound;)', 'rcp' ),
+		'EUR' => __( 'Euros (&#8364;)', 'rcp' ),
+		'GBP' => __( 'Pounds Sterling (&#163;)', 'rcp' ),
 		'AUD' => __( 'Australian Dollars (&#36;)', 'rcp' ),
-		'BRL' => __( 'Brazilian Real (&#36;)', 'rcp' ),
+		'BRL' => __( 'Brazilian Real (&#82;&#36;)', 'rcp' ),
 		'CAD' => __( 'Canadian Dollars (&#36;)', 'rcp' ),
-		'CZK' => __( 'Czech Koruna', 'rcp' ),
-		'DKK' => __( 'Danish Krone', 'rcp' ),
+		'CZK' => __( 'Czech Koruna (&#75;&#269;)', 'rcp' ),
+		'DKK' => __( 'Danish Krone (&#107;&#114;)', 'rcp' ),
 		'HKD' => __( 'Hong Kong Dollar (&#36;)', 'rcp' ),
-		'HUF' => __( 'Hungarian Forint', 'rcp' ),
-		'ILS' => __( 'Israeli Shekel', 'rcp' ),
-		'JPY' => __( 'Japanese Yen (&yen;)', 'rcp' ),
-		'MYR' => __( 'Malaysian Ringgits', 'rcp' ),
+		'HUF' => __( 'Hungarian Forint (&#70;&#116;)', 'rcp' ),
+		'IRR' => __( 'Iranian Rial (&#65020;)', 'rcp' ),
+		'ILS' => __( 'Israeli Shekel (&#8362;)', 'rcp' ),
+		'JPY' => __( 'Japanese Yen (&#165;)', 'rcp' ),
+		'MYR' => __( 'Malaysian Ringgits (&#82;&#77;)', 'rcp' ),
 		'MXN' => __( 'Mexican Peso (&#36;)', 'rcp' ),
 		'NZD' => __( 'New Zealand Dollar (&#36;)', 'rcp' ),
-		'NOK' => __( 'Norwegian Krone', 'rcp' ),
-		'PHP' => __( 'Philippine Pesos', 'rcp' ),
-		'PLN' => __( 'Polish Zloty', 'rcp' ),
+		'NOK' => __( 'Norwegian Krone (&#107;&#114;)', 'rcp' ),
+		'PHP' => __( 'Philippine Pesos (&#8369;)', 'rcp' ),
+		'PLN' => __( 'Polish Zloty (&#122;&#322;)', 'rcp' ),
+		'RUB' => __( 'Russian Rubles (&#1088;&#1091;&#1073;)', 'rcp' ),
 		'SGD' => __( 'Singapore Dollar (&#36;)', 'rcp' ),
-		'SEK' => __( 'Swedish Krona', 'rcp' ),
-		'CHF' => __( 'Swiss Franc', 'rcp' ),
-		'TWD' => __( 'Taiwan New Dollars', 'rcp' ),
-		'THB' => __( 'Thai Baht', 'rcp' ),
-		'TRY' => __( 'Turkish Lira', 'rcp' ),
-		'RIAL'=> __( 'Iranian Rial (&#65020;)', 'rcp' ),
-		'RUB' => __( 'Russian Rubles', 'rcp' )
+		'SEK' => __( 'Swedish Krona (&#107;&#114;)', 'rcp' ),
+		'CHF' => __( 'Swiss Franc (&#67;&#72;&#70;)', 'rcp' ),
+		'TWD' => __( 'Taiwan New Dollars (&#78;&#84;&#36;)', 'rcp' ),
+		'THB' => __( 'Thai Baht (&#3647;)', 'rcp' ),
+		'TRY' => __( 'Turkish Lira (&#8356;)', 'rcp' )
 	);
 	return apply_filters( 'rcp_currencies', $currencies );
 }
