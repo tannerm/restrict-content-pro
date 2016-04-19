@@ -5,7 +5,7 @@
  * Checks whether the post is Paid Only.
  *
  * @access private
- * @return bool
+ * @return bool True if the post is paid only, false if not.
 */
 
 function rcp_is_paid_content( $post_id ) {
@@ -28,7 +28,7 @@ function rcp_is_paid_content( $post_id ) {
  * Retrieve a list of all Paid Only posts.
  *
  * @access public
- * @return array
+ * @return array Lists all paid only posts.
 */
 
 function rcp_get_paid_posts() {
@@ -53,7 +53,7 @@ function rcp_get_paid_posts() {
  * Apply the currency sign to a price.
  *
  * @access public
- * @return string
+ * @return string List of currency signs.
 */
 
 function rcp_currency_filter( $price ) {
@@ -446,6 +446,7 @@ add_action( 'init', 'rcp_can_user_be_logged_in' );
  *
  * @access public
  * @since  1.5
+ * @return array
 */
 function rcp_allowed_html_tags() {
 	$tags = array(
@@ -619,7 +620,7 @@ function rcp_get_payment_status_label( $payment ) {
  * Returns the IP address of the current visitor.
  *
  * @since  1.3
- * @return string $ip User's IP address
+ * @return string $ip User's IP address.
  */
 function rcp_get_ip() {
 
@@ -694,11 +695,11 @@ function rcp_get_currency() {
 /**
  * Determines if RCP is using a zero-decimal currency.
  *
- * @param  $currency
+ * @param  string $currency
  *
  * @access public
  * @since  2.5
- * @return bool
+ * @return bool True if currency set to a zero-decimal currency.
  */
 function rcp_is_zero_decimal_currency( $currency = '' ) {
 
