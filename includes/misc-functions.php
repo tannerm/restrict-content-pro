@@ -91,9 +91,9 @@ function rcp_currency_filter( $price ) {
 			case "TWD" : return '&#78;&#84;&#36;' . $price; break;
 			default :
 				$formatted = $currency . ' ' . $price;
-				return apply_filters( 'rcp_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 				break;
 		endswitch;
+		return apply_filters( 'rcp_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 	else :
 		switch ( $currency ) :
 			case "USD" : return $price . '&#36;'; break;
@@ -124,9 +124,9 @@ function rcp_currency_filter( $price ) {
 			case "TWD" : return $price . '&#78;&#84;&#36;'; break;
 			default :
 				$formatted = $price . ' ' . $currency;
-				return apply_filters( 'rcp_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
 				break;
 		endswitch;
+		return apply_filters( 'rcp_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
 	endif;
 }
 
