@@ -2,10 +2,10 @@
 
 
 /**
- * Checks whether the post is Paid Only
+ * Checks whether the post is Paid Only.
  *
- * @access      private
- * @return      bool
+ * @access private
+ * @return bool
 */
 
 function rcp_is_paid_content( $post_id ) {
@@ -25,10 +25,10 @@ function rcp_is_paid_content( $post_id ) {
 
 
 /**
- * Retrieve a list of all Paid Only posts
+ * Retrieve a list of all Paid Only posts.
  *
- * @access      public
- * @return      array
+ * @access public
+ * @return array
 */
 
 function rcp_get_paid_posts() {
@@ -50,10 +50,10 @@ function rcp_get_paid_posts() {
 
 
 /**
- * Apply the currency sign to a price
+ * Apply the currency sign to a price.
  *
- * @access      public
- * @return      string
+ * @access public
+ * @return string
 */
 
 function rcp_currency_filter( $price ) {
@@ -132,10 +132,10 @@ function rcp_currency_filter( $price ) {
 
 
 /**
- * Get the currency list
+ * Get the currency list.
  *
- * @access      private
- * @return      array
+ * @access private
+ * @return array List of currencies.
 */
 function rcp_get_currencies() {
 	$currencies = array(
@@ -173,8 +173,8 @@ function rcp_get_currencies() {
 /**
  * reverse of strstr()
  *
- * @access      private
- * @return      string
+ * @access private
+ * @return string
 */
 
 function rcp_rstrstr( $haystack, $needle ) {
@@ -185,10 +185,10 @@ function rcp_rstrstr( $haystack, $needle ) {
 /**
  * Is odd?
  *
- * Checks if a number is odd
+ * Checks if a number is odd.
  *
- * @access      private
- * @return      bool
+ * @access private
+ * @return bool
 */
 
 function rcp_is_odd( $int ) {
@@ -196,12 +196,13 @@ function rcp_is_odd( $int ) {
 }
 
 
-/*
-* Gets the excerpt of a specific post ID or object
-* @param - $post - object/int - the ID or object of the post to get the excerpt of
-* @param - $length - int - the length of the excerpt in words
-* @param - $tags - string - the allowed HTML tags. These will not be stripped out
-* @param - $extra - string - text to append to the end of the excerpt
+/**
+* Gets the excerpt of a specific post ID or object.
+*
+* @param object/int $post The ID or object of the post to get the excerpt of.
+* @param int $length The length of the excerpt in words.
+* @param string $tags The allowed HTML tags. These will not be stripped out.
+* @param string $extra Text to append to the end of the excerpt.
 */
 
 function rcp_excerpt_by_id( $post, $length = 50, $tags = '<a><em><strong><blockquote><ul><ol><li><p>', $extra = ' . . .' ) {
@@ -240,10 +241,10 @@ function rcp_excerpt_by_id( $post, $length = 50, $tags = '<a><em><strong><blockq
 
 
 /**
- * The default length for excerpts
+ * The default length for excerpts.
  *
- * @access      private
- * @return      string
+ * @access private
+ * @return string
 */
 
 function rcp_excerpt_length( $excerpt_length ) {
@@ -254,12 +255,12 @@ add_filter( 'rcp_filter_excerpt_length', 'rcp_excerpt_length' );
 
 
 /**
- * Get current URL
+ * Get current URL.
  *
- * Returns the URL to the current page, including detection for https
+ * Returns the URL to the current page, including detection for https.
  *
- * @access      private
- * @return      string
+ * @access private
+ * @return string
 */
 
 function rcp_get_current_url() {
@@ -289,13 +290,13 @@ function rcp_get_current_url() {
 
 
 /**
- * Log Types
+ * Log Types.
  *
- * Sets up the valid log types for WP_Logging
+ * Sets up the valid log types for WP_Logging.
  *
- * @access      private
- * @since       1.3.4
- * @return      array
+ * @access private
+ * @since  1.3.4
+ * @return array
 */
 
 function rcp_log_types( $types ) {
@@ -310,11 +311,11 @@ add_filter( 'wp_log_types', 'rcp_log_types' );
 
 
 /**
- * Check if "Prevent Account Sharing" is enabled
+ * Check if "Prevent Account Sharing" is enabled.
  *
- * @access      private
- * @since       1.4
- * @return      bool
+ * @access private
+ * @since  1.4
+ * @return bool
 */
 function rcp_no_account_sharing() {
 	global $rcp_options;
@@ -323,14 +324,14 @@ function rcp_no_account_sharing() {
 
 
 /**
- * Stores cookie value in a transient when a user logs in
+ * Stores cookie value in a transient when a user logs in.
  *
  * Transient IDs are based on the user ID so that we can track the number of
- * users logged into the same account
+ * users logged into the same account.
  *
- * @access      private
- * @since       1.5
- * @return      void
+ * @access private
+ * @since  1.5
+ * @return void
 */
 
 function rcp_set_user_logged_in_status( $logged_in_cookie, $expire, $expiration, $user_id, $status = 'logged_in' ) {
@@ -355,11 +356,11 @@ add_action( 'set_logged_in_cookie', 'rcp_set_user_logged_in_status', 10, 5 );
 
 
 /**
- * Removes the current user's auth cookie from the rcp_user_logged_in_# transient when logging out
+ * Removes the current user's auth cookie from the rcp_user_logged_in_# transient when logging out.
  *
- * @access      private
- * @since       1.5
- * @return      void
+ * @access private
+ * @since  1.5
+ * @return void
 */
 
 function rcp_clear_auth_cookie() {
@@ -389,18 +390,18 @@ add_action( 'clear_auth_cookie', 'rcp_clear_auth_cookie' );
 
 
 /**
- * Checks if a user is allowed to be logged-in
+ * Checks if a user is allowed to be logged-in.
  *
  * The transient related to the user is retrieved and the first cookie in the transient
  * is compared to the LOGGED_IN_COOKIE of the current user.
  *
- * The first cookie in the transient is the oldest, so it is the one that gets logged out
+ * The first cookie in the transient is the oldest, so it is the one that gets logged out.
  *
- * We only log a user out if there are more than 2 users logged into the same account
+ * We only log a user out if there are more than 2 users logged into the same account.
  *
- * @access      private
- * @since       1.5
- * @return      void
+ * @access private
+ * @since  1.5
+ * @return void
 */
 
 function rcp_can_user_be_logged_in() {
@@ -439,12 +440,12 @@ add_action( 'init', 'rcp_can_user_be_logged_in' );
 
 
 /**
- * Retrieve a list of the allowed HTML tags
+ * Retrieve a list of the allowed HTML tags.
  *
- * This is used for filtering HTML in subscription level descriptions and other places
+ * This is used for filtering HTML in subscription level descriptions and other places.
  *
- * @access  public
- * @since   1.5
+ * @access public
+ * @since  1.5
 */
 function rcp_allowed_html_tags() {
 	$tags = array(
@@ -517,10 +518,10 @@ if( ! function_exists( 'rcp_get_month_name' ) ) {
 }
 
 /**
- * Retrieve timezone
+ * Retrieve timezone.
  *
- * @since 1.8
- * @return string $timezone The timezone ID
+ * @since  1.8
+ * @return string $timezone The timezone ID.
  */
 function rcp_get_timezone_id() {
 
@@ -553,10 +554,10 @@ function rcp_get_timezone_id() {
 }
 
 /**
- * Get the number of days in a particular month
+ * Get the number of days in a particular month.
  *
- * @since 2.0.9
- * @return string $timezone The timezone ID
+ * @since  2.0.9
+ * @return string $timezone The timezone ID.
  */
 if ( ! function_exists( 'cal_days_in_month' ) ) {
 	// Fallback in case the calendar extension is not loaded in PHP
@@ -567,9 +568,9 @@ if ( ! function_exists( 'cal_days_in_month' ) ) {
 }
 
 /**
- * Retrieves the payment status label for a payment
+ * Retrieves the payment status label for a payment.
  *
- * @since 2.1
+ * @since  2.1
  * @return string
  */
 function rcp_get_payment_status_label( $payment ) {
@@ -613,11 +614,11 @@ function rcp_get_payment_status_label( $payment ) {
 }
 
 /**
- * Get User IP
+ * Get User IP.
  *
- * Returns the IP address of the current visitor
+ * Returns the IP address of the current visitor.
  *
- * @since 1.3
+ * @since  1.3
  * @return string $ip User's IP address
  */
 function rcp_get_ip() {
@@ -639,8 +640,8 @@ function rcp_get_ip() {
 /**
  * Checks to see if content is restricted in any way.
  *
- * @since 2.5
- * @param int $post_id The post ID to check for restrictions.
+ * @since  2.5
+ * @param  int $post_id The post ID to check for restrictions.
  * @return bool True if the content is restricted, false if not.
  */
 function rcp_is_restricted_content( $post_id ) {
@@ -679,9 +680,9 @@ function rcp_is_restricted_content( $post_id ) {
 }
 
 /**
- * Get RCP Currency
+ * Get RCP Currency.
  *
- * @since 2.5
+ * @since  2.5
  * @return mixed|void
  */
 function rcp_get_currency() {
@@ -691,13 +692,13 @@ function rcp_get_currency() {
 }
 
 /**
- * Determines if RCP is using a zero-decimal currency
+ * Determines if RCP is using a zero-decimal currency.
  *
- * @param $currency
+ * @param  $currency
  *
- * @access      public
- * @since       2.5
- * @return      bool
+ * @access public
+ * @since  2.5
+ * @return bool
  */
 function rcp_is_zero_decimal_currency( $currency = '' ) {
 
@@ -730,8 +731,8 @@ function rcp_is_zero_decimal_currency( $currency = '' ) {
 /**
  * Sets the number of decimal places based on the currency.
  *
- * @since 2.5.2
- * @param int $decimals The number of decimal places. Default is 2.
+ * @since  2.5.2
+ * @param  int $decimals The number of decimal places. Default is 2.
  * @return int The number of decimal places.
  */
 function rcp_currency_decimal_filter( $decimals = 2 ) {
