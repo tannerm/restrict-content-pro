@@ -20,8 +20,8 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 
 		if( ! empty( $_POST['rcp_stripe_checkout'] ) ) {
 
-			$this->auto_renew = '2' === rcp_get_auto_renew_behavior() ? false : true;
-	
+			$this->auto_renew = ( '2' === rcp_get_auto_renew_behavior() || '0' === $this->length ) ? false : true;
+
 		}
 
 		parent::process_signup();
@@ -75,7 +75,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			if( ! checkoutArgs.email ) {
 				checkoutArgs.email = jQuery('#rcp_registration_form #rcp_user_email' ).val();
 			}
-			
+
 			jQuery('#rcp_registration_form #rcp_submit').val( rcp_script_options.pay_now );
 
 			jQuery('body').on('rcp_stripe_checkout_submit', function(e, token){
