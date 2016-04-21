@@ -17,7 +17,7 @@ if ( ! rcp_is_registration() ) {
 
 		<tr>
 			<td><?php echo rcp_get_subscription_name( rcp_get_registration()->get_subscription() ); ?></td>
-			<td><?php echo ( rcp_get_subscription_price( rcp_get_registration()->get_subscription() ) > 0 ) ? rcp_currency_filter( rcp_get_subscription_price( rcp_get_registration()->get_subscription() ) ) : __( 'free', 'rcp' ); ?></td>
+			<td><?php echo ( rcp_get_subscription_price( rcp_get_registration()->get_subscription() ) > 0 ) ? rcp_currency_filter( number_format( rcp_get_subscription_price( rcp_get_registration()->get_subscription() ), rcp_currency_decimal_filter() ) ) : __( 'free', 'rcp' ); ?></td>
 		</tr>
 
 		<?php if ( rcp_get_subscription_price( rcp_get_registration()->get_subscription() ) ) : ?>
@@ -35,14 +35,15 @@ if ( ! rcp_is_registration() ) {
 				<?php endforeach; endif; ?>
 
 				<?php // Fees ?>
-				<?php if ( rcp_get_registration()->get_fees() ) : foreach( rcp_get_registration()->get_fees() as $fee ) : ?>
-					<?php
-					$amount = ( $fee['amount'] < 0 ) ? '-' : '' ;
-					$amount .= rcp_currency_filter( abs( $fee['amount'] ) )
-					?>
+				<?php if ( rcp_get_registration()->get_fees() ) : foreach( rcp_get_registration()->get_fees() as $fee ) :
+
+					$sign          = ( $fee['amount'] < 0 ) ? '-' : '';
+					$fee['amount'] = abs( $fee['amount'] );
+					$fee['amount'] = number_format( $fee['amount'], rcp_currency_decimal_filter() );
+				?>
 					<tr class="rcp-fee">
 						<td><?php echo esc_html( $fee['description'] ); ?></td>
-						<td><?php echo esc_html( $amount ); ?></td>
+						<td><?php echo esc_html( $sign . rcp_currency_filter( $fee['amount'] ) ); ?></td>
 					</tr>
 				<?php endforeach; endif; ?>
 
