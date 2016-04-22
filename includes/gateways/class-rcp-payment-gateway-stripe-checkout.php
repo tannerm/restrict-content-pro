@@ -92,15 +92,19 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					$level = $form.find('input[name=rcp_level]');
 				}
 
+				var $price = $level.parent().find('.rcp_price').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
+
 				if( jQuery('.rcp_gateway_fields').hasClass('rcp_discounted_100') ) {
 					return false;
 				}
 
 				// Open Checkout with further options
-				rcpStripeCheckout.open(rcpSubscriptions[$level.val()]);
-				e.preventDefault();
+				if ( $price > 0 ) {
+					rcpStripeCheckout.open(rcpSubscriptions[$level.val()]);
+					e.preventDefault();
 
-				return false;
+					return false;
+				}
 			});
 
 			// Close Checkout on page navigation
