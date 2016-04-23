@@ -2,15 +2,15 @@
 # This file is distributed under the same license as the Restrict Content Pro package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Restrict Content Pro 2.4.3\n"
+"Project-Id-Version: Restrict Content Pro 2.5.3\n"
 "Report-Msgid-Bugs-To: http://restrictcontentpro.com/support/\n"
-"POT-Creation-Date: 2016-04-07 16:17-0600\n"
-"PO-Revision-Date: 2016-04-07 16:17-0600\n"
+"POT-Creation-Date: 2016-04-23 07:57-0800\n"
+"PO-Revision-Date: 2016-04-23 07:58-0800\n"
 "Last-Translator: Chris Christoff <chriscct7@gmail.com>\n"
 "Language-Team: Restrict Content Pro <support@restrictcontentpro.com>\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.6.3\n"
 "X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;"
@@ -377,12 +377,12 @@ msgid "Invoice"
 msgstr ""
 
 #: includes/invoice-functions.php:85
-#: includes/admin/reports/reports-page.php:532
+#: includes/admin/reports/reports-page.php:770
 msgid "From"
 msgstr ""
 
 #: includes/invoice-functions.php:111
-#: includes/admin/reports/reports-page.php:543
+#: includes/admin/reports/reports-page.php:781
 msgid "To"
 msgstr ""
 
@@ -505,7 +505,7 @@ msgstr ""
 msgid "Expired"
 msgstr ""
 
-#: includes/member-functions.php:423 includes/misc-functions.php:564
+#: includes/member-functions.php:423 includes/misc-functions.php:595
 #: includes/admin/export.php:30 includes/admin/members/members-page.php:56
 msgid "Pending"
 msgstr ""
@@ -587,116 +587,116 @@ msgid ""
 "support. Error: %s"
 msgstr ""
 
-#: includes/misc-functions.php:113
+#: includes/misc-functions.php:142
 msgid "US Dollars (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:114
-msgid "Euros (&euro;)"
+#: includes/misc-functions.php:143
+msgid "Euros (&#8364;)"
 msgstr ""
 
-#: includes/misc-functions.php:115
-msgid "Pounds Sterling (&pound;)"
+#: includes/misc-functions.php:144
+msgid "Pounds Sterling (&#163;)"
 msgstr ""
 
-#: includes/misc-functions.php:116
+#: includes/misc-functions.php:145
 msgid "Australian Dollars (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:117
-msgid "Brazilian Real (&#36;)"
+#: includes/misc-functions.php:146
+msgid "Brazilian Real (&#82;&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:118
+#: includes/misc-functions.php:147
 msgid "Canadian Dollars (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:119
-msgid "Czech Koruna"
+#: includes/misc-functions.php:148
+msgid "Czech Koruna (&#75;&#269;)"
 msgstr ""
 
-#: includes/misc-functions.php:120
-msgid "Danish Krone"
+#: includes/misc-functions.php:149
+msgid "Danish Krone (&#107;&#114;)"
 msgstr ""
 
-#: includes/misc-functions.php:121
+#: includes/misc-functions.php:150
 msgid "Hong Kong Dollar (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:122
-msgid "Hungarian Forint"
+#: includes/misc-functions.php:151
+msgid "Hungarian Forint (&#70;&#116;)"
 msgstr ""
 
-#: includes/misc-functions.php:123
-msgid "Israeli Shekel"
-msgstr ""
-
-#: includes/misc-functions.php:124
-msgid "Japanese Yen (&yen;)"
-msgstr ""
-
-#: includes/misc-functions.php:125
-msgid "Malaysian Ringgits"
-msgstr ""
-
-#: includes/misc-functions.php:126
-msgid "Mexican Peso (&#36;)"
-msgstr ""
-
-#: includes/misc-functions.php:127
-msgid "New Zealand Dollar (&#36;)"
-msgstr ""
-
-#: includes/misc-functions.php:128
-msgid "Norwegian Krone"
-msgstr ""
-
-#: includes/misc-functions.php:129
-msgid "Philippine Pesos"
-msgstr ""
-
-#: includes/misc-functions.php:130
-msgid "Polish Zloty"
-msgstr ""
-
-#: includes/misc-functions.php:131
-msgid "Singapore Dollar (&#36;)"
-msgstr ""
-
-#: includes/misc-functions.php:132
-msgid "Swedish Krona"
-msgstr ""
-
-#: includes/misc-functions.php:133
-msgid "Swiss Franc"
-msgstr ""
-
-#: includes/misc-functions.php:134
-msgid "Taiwan New Dollars"
-msgstr ""
-
-#: includes/misc-functions.php:135
-msgid "Thai Baht"
-msgstr ""
-
-#: includes/misc-functions.php:136
-msgid "Turkish Lira"
-msgstr ""
-
-#: includes/misc-functions.php:137
+#: includes/misc-functions.php:152
 msgid "Iranian Rial (&#65020;)"
 msgstr ""
 
-#: includes/misc-functions.php:138
-msgid "Russian Rubles"
+#: includes/misc-functions.php:153
+msgid "Israeli Shekel (&#8362;)"
 msgstr ""
 
-#: includes/misc-functions.php:570 includes/admin/payments/edit-payment.php:61
+#: includes/misc-functions.php:154
+msgid "Japanese Yen (&#165;)"
+msgstr ""
+
+#: includes/misc-functions.php:155
+msgid "Malaysian Ringgits (&#82;&#77;)"
+msgstr ""
+
+#: includes/misc-functions.php:156
+msgid "Mexican Peso (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:157
+msgid "New Zealand Dollar (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:158
+msgid "Norwegian Krone (&#107;&#114;)"
+msgstr ""
+
+#: includes/misc-functions.php:159
+msgid "Philippine Pesos (&#8369;)"
+msgstr ""
+
+#: includes/misc-functions.php:160
+msgid "Polish Zloty (&#122;&#322;)"
+msgstr ""
+
+#: includes/misc-functions.php:161
+msgid "Russian Rubles (&#1088;&#1091;&#1073;)"
+msgstr ""
+
+#: includes/misc-functions.php:162
+msgid "Singapore Dollar (&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:163
+msgid "Swedish Krona (&#107;&#114;)"
+msgstr ""
+
+#: includes/misc-functions.php:164
+msgid "Swiss Franc (&#67;&#72;&#70;)"
+msgstr ""
+
+#: includes/misc-functions.php:165
+msgid "Taiwan New Dollars (&#78;&#84;&#36;)"
+msgstr ""
+
+#: includes/misc-functions.php:166
+msgid "Thai Baht (&#3647;)"
+msgstr ""
+
+#: includes/misc-functions.php:167
+msgid "Turkish Lira (&#8356;)"
+msgstr ""
+
+#: includes/misc-functions.php:601 includes/admin/payments/edit-payment.php:61
 #: includes/admin/payments/new-payment.php:55
 msgid "Refunded"
 msgstr ""
 
-#: includes/misc-functions.php:577 includes/admin/payments/edit-payment.php:60
+#: includes/misc-functions.php:608 includes/admin/payments/edit-payment.php:60
 #: includes/admin/payments/new-payment.php:54
 msgid "Complete"
 msgstr ""
@@ -774,17 +774,22 @@ msgstr ""
 msgid "Email already registered"
 msgstr ""
 
-#: includes/registration-functions.php:582
-#: includes/registration-functions.php:636
+#: includes/registration-functions.php:583
+#: includes/registration-functions.php:638
 #: templates/register-total-details.php:20 templates/register.php:69
 msgid "free"
 msgstr ""
 
-#: includes/registration-functions.php:759
+#: includes/registration-functions.php:635
+#, php-format
+msgid " every %s %ss"
+msgstr ""
+
+#: includes/registration-functions.php:761
 msgid "Proration Credit"
 msgstr ""
 
-#: includes/registration-functions.php:773
+#: includes/registration-functions.php:775
 #, php-format
 msgid ""
 "If you upgrade or downgrade your account, the new subscription will be "
@@ -1852,7 +1857,7 @@ msgid "Oldest First"
 msgstr ""
 
 #: includes/admin/members/members-page.php:107
-#: includes/admin/reports/reports-page.php:567
+#: includes/admin/reports/reports-page.php:805
 msgid "Filter"
 msgstr ""
 
@@ -2043,68 +2048,81 @@ msgid "No payments recorded yet"
 msgstr ""
 
 #: includes/admin/reports/reports-page.php:15
-#: includes/admin/reports/reports-page.php:189
+#: includes/admin/reports/reports-page.php:190
 msgid "Earnings"
 msgstr ""
 
 #: includes/admin/reports/reports-page.php:16
-#: includes/admin/reports/reports-page.php:417
+#: includes/admin/reports/reports-page.php:427
+msgid "Refunds"
+msgstr ""
+
+#: includes/admin/reports/reports-page.php:17
+#: includes/admin/reports/reports-page.php:655
 msgid "Signups"
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:254
+#: includes/admin/reports/reports-page.php:255
 msgid "Earnings Report"
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:260
+#: includes/admin/reports/reports-page.php:261
 msgid "Total earnings for period shown: "
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:478
+#: includes/admin/reports/reports-page.php:492
+msgid "Refunds Report"
+msgstr ""
+
+#: includes/admin/reports/reports-page.php:498
+msgid "Total refunds for period shown: "
+msgstr ""
+
+#: includes/admin/reports/reports-page.php:716
 msgid "Signups Report"
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:484
+#: includes/admin/reports/reports-page.php:722
 msgid "Total signups for period shown: "
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:501
+#: includes/admin/reports/reports-page.php:739
 msgid "This Week"
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:502
+#: includes/admin/reports/reports-page.php:740
 msgid "Last Week"
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:503
+#: includes/admin/reports/reports-page.php:741
 msgid "This Month"
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:504
+#: includes/admin/reports/reports-page.php:742
 msgid "Last Month"
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:505
+#: includes/admin/reports/reports-page.php:743
 msgid "This Quarter"
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:506
+#: includes/admin/reports/reports-page.php:744
 msgid "Last Quarter"
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:507
+#: includes/admin/reports/reports-page.php:745
 msgid "This Year"
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:508
+#: includes/admin/reports/reports-page.php:746
 msgid "Last Year"
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:509
+#: includes/admin/reports/reports-page.php:747
 msgid "Custom"
 msgstr ""
 
-#: includes/admin/reports/reports-page.php:558
+#: includes/admin/reports/reports-page.php:796
 msgid "All Subscription Levels"
 msgstr ""
 
@@ -3571,16 +3589,16 @@ msgstr ""
 msgid "Discounts and Fees"
 msgstr ""
 
-#: templates/register-total-details.php:53
+#: templates/register-total-details.php:54
 msgid "Total Today"
 msgstr ""
 
-#: templates/register-total-details.php:62
+#: templates/register-total-details.php:63
 #, php-format
 msgid "Total Recurring Per %s"
 msgstr ""
 
-#: templates/register-total-details.php:64
+#: templates/register-total-details.php:65
 #, php-format
 msgid "Total Recurring Every %s %ss"
 msgstr ""
