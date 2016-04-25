@@ -46,6 +46,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			'local'             => 'auto',
 			'allow-remember-me' => true,
 			'email'             => $email,
+			'currency'          => rcp_get_currency()
 		) );
 
 

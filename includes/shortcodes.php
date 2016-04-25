@@ -221,6 +221,7 @@ function rcp_register_form_stripe_checkout( $atts ) {
 		'data-amount'            => $amount * rcp_stripe_get_currency_multiplier(),
 		'data-local'             => 'auto',
 		'data-allow-remember-me' => true,
+		'data-currency'          => rcp_get_currency()
 	) );
 
 	if ( empty( $data['data-email'] ) && ! empty( $member->user_email ) ) {
