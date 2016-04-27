@@ -786,7 +786,7 @@ class RCP_Member extends WP_User {
 
 		if( ! empty( $upgraded ) ) {
 
-			$limit = strtotime( '-5 minutes' );
+			$limit = strtotime( '-5 minutes', current_time( 'timestamp' ) );
 
 			if( $limit > $upgraded ) {
 

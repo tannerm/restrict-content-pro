@@ -285,15 +285,15 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				if( rcp_check_for_existing_payment( $posted['txn_type'], $posted['payment_date'], $subscription_key ) ) {
 
 					$log_data = array(
-					    'post_title'    => __( 'Duplicate Payment', 'rcp' ),
-					    'post_content'  =>  __( 'A duplicate payment was detected. The new payment was still recorded, so you may want to check into both payments.', 'rcp' ),
-					    'post_parent'   => 0,
-					    'log_type'      => 'gateway_error'
+						'post_title'    => __( 'Duplicate Payment', 'rcp' ),
+						'post_content'  =>  __( 'A duplicate payment was detected. The new payment was still recorded, so you may want to check into both payments.', 'rcp' ),
+						'post_parent'   => 0,
+						'log_type'      => 'gateway_error'
 					);
 
 					$log_meta = array(
-					    'user_subscription' => $posted['item_name'],
-					    'user_id'           => $user_id
+						'user_subscription' => $posted['item_name'],
+						'user_id'           => $user_id
 					);
 					$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
 
@@ -305,15 +305,15 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// the currency code is invalid
 
 					$log_data = array(
-					    'post_title'    => __( 'Invalid Currency Code', 'rcp' ),
-					    'post_content'  =>  sprintf( __( 'The currency code in an IPN request did not match the site currency code. Payment data: %s', 'rcp' ), json_encode( $payment_data ) ),
-					    'post_parent'   => 0,
-					    'log_type'      => 'gateway_error'
+						'post_title'    => __( 'Invalid Currency Code', 'rcp' ),
+						'post_content'  =>  sprintf( __( 'The currency code in an IPN request did not match the site currency code. Payment data: %s', 'rcp' ), json_encode( $payment_data ) ),
+						'post_parent'   => 0,
+						'log_type'      => 'gateway_error'
 					);
 
 					$log_meta = array(
-					    'user_subscription' => $posted['item_name'],
-					    'user_id'           => $user_id
+						'user_subscription' => $posted['item_name'],
+						'user_id'           => $user_id
 					);
 					$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
 
@@ -340,11 +340,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// store the recurring payment ID
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
-					if( rcp_can_member_cancel( $member->ID ) ) {
+					if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
 						$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
-						if( $cancelled ) {
-							update_user_meta( $member->ID, '_rcp_just_upgraded', time() );
-						}
 					}
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
@@ -423,26 +420,35 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					switch ( strtolower( $payment_status ) ) :
 
-			            case 'completed' :
+						case 'completed' :
+
+							if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
+								$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+								if( $cancelled ) {
+
+									$member->set_payment_profile_id( '' );
+
+								}
+							}
 
 							// set this user to active
 							$member->renew();
 
 							$rcp_payments->insert( $payment_data );
 
-			           		break;
+							break;
 
-			            case 'denied' :
-			            case 'expired' :
-			            case 'failed' :
-			            case 'voided' :
+						case 'denied' :
+						case 'expired' :
+						case 'failed' :
+						case 'voided' :
 							$member->set_status( 'cancelled' );
-			            	break;
+							break;
 
-			        endswitch;
+					endswitch;
 
 
-			        die( 'successful web_accept' );
+					die( 'successful web_accept' );
 
 				break;
 

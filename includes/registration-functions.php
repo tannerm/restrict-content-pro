@@ -154,6 +154,9 @@ function rcp_process_registration() {
 		update_user_meta( $user_data['id'], 'rcp_pending_subscription_level', $subscription_id );
 		update_user_meta( $user_data['id'], 'rcp_pending_subscription_key', $subscription_key );
 
+		// Flag the member as having just upgraded
+		update_user_meta( $user_data['id'], '_rcp_just_upgraded', current_time( 'timestamp' ) );
+
 	}
 
 	// Calculate the expiration date for the member
