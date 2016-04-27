@@ -66,9 +66,9 @@ function rcp_settings_page() {
 								<?php if( $status !== false && $status == 'valid' ) { ?>
 									<?php wp_nonce_field( 'rcp_deactivate_license', 'rcp_deactivate_license' ); ?>
 									<input type="submit" class="button-secondary" name="rcp_license_deactivate" value="<?php _e('Deactivate License', 'rcp'); ?>"/>
-									<span style="color:green;"><?php _e('active'); ?></span>
+									<span style="color:green;"><?php _e('active', 'rcp' ); ?></span>
 								<?php } elseif( ! empty( $rcp_options['license_key'] ) ) { ?>
-									<input type="submit" class="button-secondary" name="rcp_license_activate" value="<?php _e('Activate License', 'rcp'); ?>"/>
+									<input type="submit" class="button-secondary" name="rcp_license_activate" value="<?php _e('Activate License', 'rcp' ); ?>"/>
 								<?php } ?>
 								<p class="description"><?php printf( __( 'Enter license key for Restrict Content Pro. This is required for automatic updates and <a href="%s">support</a>.', 'rcp' ), 'http://restrictcontentpro.com/support' ); ?></p>
 							</td>
@@ -1030,7 +1030,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[recaptcha_public_key]"><?php _e( 'reCaptcha Site Key' ); ?></label>
+								<label for="rcp_settings[recaptcha_public_key]"><?php _e( 'reCaptcha Site Key', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input id="rcp_settings[recaptcha_public_key]" style="width: 300px;" name="rcp_settings[recaptcha_public_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_public_key'] ) ) echo $rcp_options['recaptcha_public_key']; ?>" />
@@ -1039,7 +1039,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[recaptcha_private_key]"><?php _e( 'reCaptcha Secret Key' ); ?></label>
+								<label for="rcp_settings[recaptcha_private_key]"><?php _e( 'reCaptcha Secret Key', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input id="rcp_settings[recaptcha_private_key]" style="width: 300px;" name="rcp_settings[recaptcha_private_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_private_key'] ) ) echo $rcp_options['recaptcha_private_key']; ?>" />

@@ -290,7 +290,7 @@ function rcp_retrieve_password() {
 	$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );
 
 	if ( $message && ! wp_mail( $user_email, wp_specialchars_decode( $title ), $message ) ) {
-		wp_die( __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function.') );
+		wp_die( __('The e-mail could not be sent.', 'rcp' ) . "<br />\n" . __('Possible reason: your host may have disabled the mail() function.', 'rcp' ) );
 	}
 
 	return true;

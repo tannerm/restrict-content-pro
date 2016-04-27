@@ -481,7 +481,7 @@ function rcp_stripe_update_discount( $discount_id, $args ) {
 			}
 
 		} catch ( Exception $e ) {
-			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
+			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp' ) );
 		}
 
 	} else {
@@ -491,7 +491,7 @@ function rcp_stripe_update_discount( $discount_id, $args ) {
 			$cpn = \Stripe\Coupon::retrieve( $discount_id );
 			$cpn->delete();
 		} catch ( Exception $e ) {
-			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
+			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp' ) );
 		}
 
 		// now add a new one. This is a fake "update"
