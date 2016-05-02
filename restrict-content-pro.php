@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Restrict Content Pro
-Plugin URL: http://pippinsplugins.com/restrict-content-pro-premium-content-plugin
+Plugin URL: https://restrictcontentpro.com
 Description: Set up a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
-Version: 2.4.8
-Author: Pippin Williamson
-Author URI: http://pippinsplugins.com
+Version: 2.5.3
+Author: Restrict Content Pro Team
+Author URI: https://restrictcontentpro.com
 Contributors: mordauk
 Text Domain: rcp
 Domain Path: languages
@@ -21,7 +21,7 @@ if ( !defined( 'RCP_PLUGIN_FILE' ) ) {
 	define( 'RCP_PLUGIN_FILE', __FILE__ );
 }
 if ( !defined( 'RCP_PLUGIN_VERSION' ) ) {
-	define( 'RCP_PLUGIN_VERSION', '2.4.8' );
+	define( 'RCP_PLUGIN_VERSION', '2.5.3' );
 }
 
 
@@ -156,6 +156,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-member.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-payments.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-discounts.php' );
+	include( RCP_PLUGIN_DIR . 'includes/class-rcp-registration.php' );
 	include( RCP_PLUGIN_DIR . 'includes/scripts.php' );
 	include( RCP_PLUGIN_DIR . 'includes/ajax-actions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/cron-functions.php' );
@@ -168,6 +169,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-paypal-pro.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-paypal-express.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-stripe.php' );
+	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-stripe-checkout.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-2checkout.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateways.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/gateway-functions.php' );
@@ -193,6 +195,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 		include( RCP_PLUGIN_DIR . 'includes/admin/admin-pages.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/admin-notices.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/admin-ajax-actions.php' );
+		include( RCP_PLUGIN_DIR . 'includes/admin/class-rcp-add-on-updater.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/screen-options.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/members/members-page.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/settings/settings.php' );
@@ -202,6 +205,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 		include( RCP_PLUGIN_DIR . 'includes/admin/reports/reports-page.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/export.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/logs.php' );
+		include( RCP_PLUGIN_DIR . 'includes/admin/tools/tools-page.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/help/help-menus.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/metabox.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/categories.php' );
@@ -215,11 +219,11 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 
 		if( $license_key ) {
 			// setup the updater
-			$rcp_updater = new RCP_Plugin_Updater( 'https://pippinsplugins.com', RCP_PLUGIN_FILE, array(
+			$rcp_updater = new RCP_Plugin_Updater( 'https://restrictcontentpro.com', RCP_PLUGIN_FILE, array(
 					'version' 	=> RCP_PLUGIN_VERSION, // current version number
 					'license' 	=> $license_key, // license key (used get_option above to retrieve from DB)
-					'item_id'   => 7460, // Download ID
-					'author' 	=> 'Pippin Williamson' // author of this plugin
+					'item_id'   => 479, // Download ID
+					'author' 	=> 'Restrict Content Pro Team' // author of this plugin
 				)
 			);
 		}

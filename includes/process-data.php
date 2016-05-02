@@ -19,8 +19,17 @@ function rcp_process_data() {
 		// add a new subscription level
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'add-level' ) {
 
+			if( ! wp_verify_nonce( $_POST['rcp_add_level_nonce'], 'rcp_add_level_nonce' ) ) {
+				wp_die( __( 'Nonce verification failed.', 'rcp' ) );
+			}
+
 			if( ! current_user_can( 'rcp_manage_levels' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
+			}
+
+			if( empty( $_POST['name'] ) ) {
+				$url = admin_url( 'admin.php?page=rcp-member-levels&rcp_message=level_missing_fields' );
+				wp_safe_redirect( esc_url_raw( $url ) ); exit;
 			}
 
 			$levels = new RCP_Levels();
@@ -37,6 +46,10 @@ function rcp_process_data() {
 
 		// edit a subscription level
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-subscription') {
+
+			if( ! wp_verify_nonce( $_POST['rcp_edit_level_nonce'], 'rcp_edit_level_nonce' ) ) {
+				wp_die( __( 'Nonce verification failed.', 'rcp' ) );
+			}
 
 			if( ! current_user_can( 'rcp_manage_levels' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
@@ -59,8 +72,16 @@ function rcp_process_data() {
 		// add a subscription for an existing member
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'add-subscription' ) {
 
+			if( ! wp_verify_nonce( $_POST['rcp_add_member_nonce'], 'rcp_add_member_nonce' ) ) {
+				wp_die( __( 'Nonce verification failed.', 'rcp' ) );
+			}
+
 			if( ! current_user_can( 'rcp_manage_members' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
+			}
+
+			if ( empty( $_POST['level'] ) || empty( $_POST['user'] ) ) {
+				wp_die( __( 'Please fill out all fields.', 'rcp' ) );
 			}
 
 			if ( isset( $_POST['expiration'] ) &&  strtotime( 'NOW' ) > strtotime( $_POST['expiration'] ) && 'none' !== $_POST['expiration'] ) :
@@ -70,21 +91,39 @@ function rcp_process_data() {
 
 			else:
 
-				$levels     = new RCP_Levels();
+				$levels = new RCP_Levels();
 
-				$user       = get_user_by( 'login', $_POST['user'] );
+				$user   = get_user_by( 'login', $_POST['user'] );
+
+				if ( ! $user ) {
+					wp_die( __( 'You entered a username that does not exist.', 'rcp' ) );
+				}
 
 				$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
+
 				$level_id   = absint( $_POST['level'] );
 
+				$subscription = $levels->get_level( $level_id );
+
+				if ( ! $subscription ) {
+					wp_die( __( 'Please supply a valid subscription level.', 'rcp' ) );
+				}
+
 				rcp_set_expiration_date( $user->ID, $expiration );
-				rcp_set_status( $user->ID, 'active' );
+
+				$new_subscription = get_user_meta( $user->ID, '_rcp_new_subscription', true );
+
+				if ( empty( $new_subscription ) ) {
+					update_user_meta( $user->ID, '_rcp_new_subscription', '1' );
+				}
+
+				$status = $subscription->price == 0 ? 'free' : 'active';
+
+				rcp_set_status( $user->ID, $status );
 
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
 
 				// Add a role, if needed, to the user
-				$subscription = $levels->get_level( $level_id );
-
 				update_user_meta( $user->ID, 'rcp_subscription_level', $level_id );
 
 				// Add the new user role
@@ -97,6 +136,7 @@ function rcp_process_data() {
 				} else {
 					delete_user_meta( $user->ID, 'rcp_recurring' );
 				}
+
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&rcp_message=user_added';
 				header( "Location:" .  $url);
 
@@ -152,12 +192,6 @@ function rcp_process_data() {
 
 							break;
 
-						case 'delete' :
-
-							wp_delete_user( $member->ID );
-
-							break;
-
 					}
 
 				}
@@ -170,6 +204,10 @@ function rcp_process_data() {
 
 		// edit a member's subscription
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-member' ) {
+
+			if( ! wp_verify_nonce( $_POST['rcp_edit_member_nonce'], 'rcp_edit_member_nonce' ) ) {
+				wp_die( __( 'Nonce verification failed.', 'rcp' ) );
+			}
 
 			if( ! current_user_can( 'rcp_manage_members' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
@@ -249,6 +287,10 @@ function rcp_process_data() {
 		// add a new discount code
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'add-discount' ) {
 
+			if( ! wp_verify_nonce( $_POST['rcp_add_discount_nonce'], 'rcp_add_discount_nonce' ) ) {
+				wp_die( __( 'Nonce verification failed.', 'rcp' ) );
+			}
+
 			if( ! current_user_can( 'rcp_manage_discounts' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
@@ -270,6 +312,10 @@ function rcp_process_data() {
 
 			$add = $discounts->insert( $data );
 
+			if ( is_wp_error( $add ) ) {
+				wp_die( $add );
+			}
+
 			if( $add ) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&rcp_message=discount_added';
 			} else {
@@ -281,6 +327,10 @@ function rcp_process_data() {
 
 		// edit a discount code
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-discount' ) {
+
+			if( ! wp_verify_nonce( $_POST['rcp_edit_discount_nonce'], 'rcp_edit_discount_nonce' ) ) {
+				wp_die( __( 'Nonce verification failed.', 'rcp' ) );
+			}
 
 			if( ! current_user_can( 'rcp_manage_discounts' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
@@ -303,6 +353,10 @@ function rcp_process_data() {
 
 			$update = $discounts->update( $_POST['discount_id'], $data );
 
+			if ( is_wp_error( $update ) ) {
+				wp_die( $update );
+			}
+
 			if( $update ) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-discounts&discount-updated=1';
 			} else {
@@ -314,6 +368,10 @@ function rcp_process_data() {
 
 		// add a new manual payment
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'add-payment' ) {
+
+			if( ! wp_verify_nonce( $_POST['rcp_add_payment_nonce'], 'rcp_add_payment_nonce' ) ) {
+				wp_die( __( 'Nonce verification failed.', 'rcp' ) );
+			}
 
 			if( ! current_user_can( 'rcp_manage_payments' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
@@ -354,6 +412,10 @@ function rcp_process_data() {
 
 		// edit a payment
 		if( isset( $_POST['rcp-action'] ) && $_POST['rcp-action'] == 'edit-payment' ) {
+
+			if( ! wp_verify_nonce( $_POST['rcp_edit_payment_nonce'], 'rcp_edit_payment_nonce' ) ) {
+				wp_die( __( 'Nonce verification failed.', 'rcp' ) );
+			}
 
 			if( ! current_user_can( 'rcp_manage_payments' ) ) {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );

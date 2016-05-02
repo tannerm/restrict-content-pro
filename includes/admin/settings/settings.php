@@ -28,7 +28,7 @@ function rcp_settings_page() {
 		if ( ! isset( $_REQUEST['updated'] ) )
 			$_REQUEST['updated'] = false;
 		?>
-		
+
 		<h1><?php _e( 'Restrict Content Pro', 'rcp' ); ?></h1>
 		<h2 class="nav-tab-wrapper">
 			<a href="#general" class="nav-tab"><?php _e( 'General', 'rcp' ); ?></a>
@@ -66,11 +66,11 @@ function rcp_settings_page() {
 								<?php if( $status !== false && $status == 'valid' ) { ?>
 									<?php wp_nonce_field( 'rcp_deactivate_license', 'rcp_deactivate_license' ); ?>
 									<input type="submit" class="button-secondary" name="rcp_license_deactivate" value="<?php _e('Deactivate License', 'rcp'); ?>"/>
-									<span style="color:green;"><?php _e('active'); ?></span>
+									<span style="color:green;"><?php _e('active', 'rcp' ); ?></span>
 								<?php } elseif( ! empty( $rcp_options['license_key'] ) ) { ?>
-									<input type="submit" class="button-secondary" name="rcp_license_activate" value="<?php _e('Activate License', 'rcp'); ?>"/>
+									<input type="submit" class="button-secondary" name="rcp_license_activate" value="<?php _e('Activate License', 'rcp' ); ?>"/>
 								<?php } ?>
-								<p class="description"><?php printf( __( 'Enter license key for Restrict Content Pro. This is required for automatic updates and <a href="%s">support</a>.', 'rcp' ), 'http://pippinsplugins.com/plugin-support' ); ?></p>
+								<p class="description"><?php printf( __( 'Enter license key for Restrict Content Pro. This is required for automatic updates and <a href="%s">support</a>.', 'rcp' ), 'http://restrictcontentpro.com/support' ); ?></p>
 							</td>
 						</tr>
 						<?php do_action( 'rcp_license_settings', $rcp_options ); ?>
@@ -1030,7 +1030,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[recaptcha_public_key]"><?php _e( 'reCaptcha Site Key' ); ?></label>
+								<label for="rcp_settings[recaptcha_public_key]"><?php _e( 'reCaptcha Site Key', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input id="rcp_settings[recaptcha_public_key]" style="width: 300px;" name="rcp_settings[recaptcha_public_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_public_key'] ) ) echo $rcp_options['recaptcha_public_key']; ?>" />
@@ -1039,7 +1039,7 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[recaptcha_private_key]"><?php _e( 'reCaptcha Secret Key' ); ?></label>
+								<label for="rcp_settings[recaptcha_private_key]"><?php _e( 'reCaptcha Secret Key', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input id="rcp_settings[recaptcha_private_key]" style="width: 300px;" name="rcp_settings[recaptcha_private_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_private_key'] ) ) echo $rcp_options['recaptcha_private_key']; ?>" />
@@ -1131,7 +1131,7 @@ function rcp_activate_license() {
 	);
 
 	// Call the custom API.
-	$response = wp_remote_post( 'https://pippinsplugins.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+	$response = wp_remote_post( 'https://restrictcontentpro.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
 	// make sure the response came back okay
 	if ( is_wp_error( $response ) )
@@ -1176,7 +1176,7 @@ function rcp_deactivate_license() {
 		);
 
 		// Call the custom API.
-		$response = wp_remote_post( 'https://pippinsplugins.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+		$response = wp_remote_post( 'https://restrictcontentpro.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 
 		// make sure the response came back okay
 		if ( is_wp_error( $response ) )
@@ -1216,7 +1216,7 @@ function rcp_check_license() {
 		);
 
 		// Call the custom API.
-		$response = wp_remote_post( 'https://pippinsplugins.com', array( 'timeout' => 35, 'sslverify' => false, 'body' => $api_params ) );
+		$response = wp_remote_post( 'https://restrictcontentpro.com', array( 'timeout' => 35, 'sslverify' => false, 'body' => $api_params ) );
 
 		// make sure the response came back okay
 		if ( is_wp_error( $response ) )

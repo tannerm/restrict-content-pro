@@ -175,18 +175,18 @@ function rcp_filter_email_tags( $message, $user_id, $display_name ) {
 
 	$rcp_payments = new RCP_Payments();
 
-	$message = str_replace('%blogname%', $site_name, $message);
-	$message = str_replace('%username%', $user->user_login, $message);
-	$message = str_replace('%useremail%', $user->user_email, $message);
-	$message = str_replace('%firstname%', $user->user_firstname, $message);
-	$message = str_replace('%lastname%', $user->user_lastname, $message);
-	$message = str_replace('%displayname%', $display_name, $message);
-	$message = str_replace('%expiration%', rcp_get_expiration_date($user_id), $message);
-	$message = str_replace('%subscription_name%', rcp_get_subscription($user_id), $message);
-	$message = str_replace('%subscription_key%', rcp_get_subscription_key($user_id), $message);
-	$message = str_replace('%amount%', html_entity_decode( rcp_currency_filter( $rcp_payments->last_payment_of_user( $user_id ) ), ENT_COMPAT, 'UTF-8' ), $message);
+	$message = str_replace( '%blogname%', $site_name, $message );
+	$message = str_replace( '%username%', $user->user_login, $message );
+	$message = str_replace( '%useremail%', $user->user_email, $message );
+	$message = str_replace( '%firstname%', html_entity_decode( $user->user_firstname, ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%lastname%', html_entity_decode( $user->user_lastname, ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%displayname%', html_entity_decode( $display_name, ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%expiration%', rcp_get_expiration_date( $user_id ), $message );
+	$message = str_replace( '%subscription_name%', html_entity_decode( rcp_get_subscription($user_id), ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%subscription_key%', rcp_get_subscription_key($user_id), $message );
+	$message = str_replace( '%amount%', html_entity_decode( rcp_currency_filter( $rcp_payments->last_payment_of_user( $user_id ) ), ENT_COMPAT, 'UTF-8' ), $message );
 
-	return apply_filters( 'rcp_email_tags', htmlspecialchars( $message ), $user_id );
+	return apply_filters( 'rcp_email_tags', $message, $user_id );
 }
 
 /**
@@ -205,7 +205,7 @@ function rcp_email_on_expiration( $status, $user_id ) {
 	}
 
 }
-add_action( 'rcp_set_status', 'rcp_email_on_expiration', 10, 2 );
+add_action( 'rcp_set_status', 'rcp_email_on_expiration', 11, 2 );
 
 /**
  * Triggers the activation notice when an account is marked as active
@@ -224,7 +224,7 @@ function rcp_email_on_activation( $status, $user_id ) {
 	}
 
 }
-add_action( 'rcp_set_status', 'rcp_email_on_activation', 10, 2 );
+add_action( 'rcp_set_status', 'rcp_email_on_activation', 11, 2 );
 
 /**
  * Triggers the cancellation notice when an account is marked as active
@@ -243,7 +243,7 @@ function rcp_email_on_cancellation( $status, $user_id ) {
 	}
 
 }
-add_action( 'rcp_set_status', 'rcp_email_on_cancellation', 10, 2 );
+add_action( 'rcp_set_status', 'rcp_email_on_cancellation', 11, 2 );
 
 /**
  * Triggers a email to the member when a payment is received

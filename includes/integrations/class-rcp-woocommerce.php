@@ -1,7 +1,7 @@
 <?php
 
 class RCP_WooCommerce {
-	
+
 	/**
 	 * Get things started
 	 *
@@ -20,6 +20,7 @@ class RCP_WooCommerce {
 
 		add_filter( 'woocommerce_is_purchasable', array( $this, 'is_purchasable' ), 999999, 2 );
 		add_filter( 'woocommerce_product_is_visible', array( $this, 'is_visible' ), 999999, 2 );
+		add_filter( 'wc_get_template_part', array( $this, 'hide_template' ), 999999, 3 );
 	}
 
 	/**
@@ -35,7 +36,7 @@ class RCP_WooCommerce {
 			'target' => 'rcp_access_control',
 			'class'  => array(),
 		);
-	
+
 		return $tabs;
 
 	}
@@ -49,12 +50,12 @@ class RCP_WooCommerce {
 	public function data_display() {
 ?>
 		<div id="rcp_access_control" class="panel woocommerce_options_panel">
-			
+
 			<div class="options_group">
 				<p><?php _e( 'Restrict purchasing of this product to:', 'rcp' ); ?></p>
 				<?php
 
-				woocommerce_wp_checkbox( array( 
+				woocommerce_wp_checkbox( array(
 					'id'      => '_rcp_woo_active_to_purchase',
 					'label'   => __( 'Active subscribers only?', 'rcp' ),
 					'cbvalue' => 1
@@ -62,7 +63,7 @@ class RCP_WooCommerce {
 
 				$levels = (array) get_post_meta( get_the_ID(), '_rcp_woo_subscription_levels_to_purchase', true );
 				foreach ( rcp_get_subscription_levels( 'all' ) as $level ) {
-					woocommerce_wp_checkbox( array( 
+					woocommerce_wp_checkbox( array(
 						'name'    => '_rcp_woo_subscription_levels_to_purchase[]',
 						'id'      => '_rcp_woo_subscription_level_' . $level->id,
 						'label'   => $level->name,
@@ -71,7 +72,7 @@ class RCP_WooCommerce {
 					) );
 				}
 
-				woocommerce_wp_select( array( 
+				woocommerce_wp_select( array(
 					'id'      => '_rcp_woo_access_level_to_purchase',
 					'label'   => __( 'Access level required?', 'rcp' ),
 					'options' => rcp_get_access_levels()
@@ -83,7 +84,7 @@ class RCP_WooCommerce {
 				<p><?php _e( 'Restrict viewing of this product to:', 'rcp' ); ?></p>
 				<?php
 
-				woocommerce_wp_checkbox( array( 
+				woocommerce_wp_checkbox( array(
 					'id'      => '_rcp_woo_active_to_view',
 					'label'   => __( 'Active subscribers only?', 'rcp' ),
 					'cbvalue' => 1
@@ -91,7 +92,7 @@ class RCP_WooCommerce {
 
 				$levels = (array) get_post_meta( get_the_ID(), '_rcp_woo_subscription_levels_to_view', true );
 				foreach ( rcp_get_subscription_levels( 'all' ) as $level ) {
-					woocommerce_wp_checkbox( array( 
+					woocommerce_wp_checkbox( array(
 						'name'    => '_rcp_woo_subscription_levels_to_view[]',
 						'id'      => '_rcp_woo_subscription_level_to_view_' . $level->id,
 						'label'   => $level->name,
@@ -100,7 +101,7 @@ class RCP_WooCommerce {
 					) );
 				}
 
-				woocommerce_wp_select( array( 
+				woocommerce_wp_select( array(
 					'id'      => '_rcp_woo_access_level_to_view',
 					'label'   => __( 'Access level required?', 'rcp' ),
 					'options' => rcp_get_access_levels()
@@ -209,7 +210,7 @@ class RCP_WooCommerce {
 	}
 
 	/**
-	 * Restrict the abbility to purchase a product
+	 * Restrict the ability to purchase a product
 	 *
 	 * @access  public
 	 * @since   2.2
@@ -231,7 +232,7 @@ class RCP_WooCommerce {
 
 			}
 
-			if( is_array( $levels ) && ! empty( $array[0] ) ) {
+			if( is_array( $levels ) && ! empty( $levels[0] ) ) {
 
 				if( ! in_array( rcp_get_subscription_id(), $levels ) ) {
 					$has_access = false;
@@ -262,42 +263,121 @@ class RCP_WooCommerce {
 	*/
 	public function is_visible( $ret, $product_id ) {
 
-		if( $ret ) {
+		if( ! $ret ) {
+			return $ret;
+		}
 
-			$has_access   = true;
-			$active_only  = get_post_meta( $product_id, '_rcp_woo_active_to_view', true );
-			$levels       = (array) get_post_meta( $product_id, '_rcp_woo_subscription_levels_to_view', true );
-			$access_level = get_post_meta( $product_id, '_rcp_woo_access_level_to_view', true );
+		if ( current_user_can( 'edit_post', $product_id ) ) {
+			return true;
+		}
 
-			if( $active_only ) {
+		$active_only  = get_post_meta( $product_id, '_rcp_woo_active_to_view', true );
+		$levels       = (array) get_post_meta( $product_id, '_rcp_woo_subscription_levels_to_view', true );
+		$access_level = get_post_meta( $product_id, '_rcp_woo_access_level_to_view', true );
 
-				if( ! rcp_is_active() ) {
-					$has_access = false;
-				}
+		if( $active_only ) {
 
+			if( ! rcp_is_active() ) {
+				$ret = false;
 			}
-
-			if( is_array( $levels ) && ! empty( $array[0] ) ) {
-
-				if( ! in_array( rcp_get_subscription_id(), $levels ) ) {
-					$has_access = false;
-				}
-
-			}
-
-			if( $access_level ) {
-
-				if( ! rcp_user_has_access( get_current_user_id(), $access_level ) ) {
-					$has_access = false;
-				}
-
-			}
-
-			$ret = $has_access;
 
 		}
 
+		if( is_array( $levels ) && ! empty( $levels[0] ) ) {
+
+			if( ! in_array( rcp_get_subscription_id(), $levels ) ) {
+				$ret = false;
+			}
+
+		}
+
+		if( $access_level ) {
+
+			if( ! rcp_user_has_access( get_current_user_id(), $access_level ) ) {
+				$ret = false;
+			}
+
+		}
+
+		if ( true === rcp_is_post_taxonomy_restricted( $product_id, 'product_cat' ) ) {
+			$ret = false;
+		}
+
+		if ( true === rcp_is_post_taxonomy_restricted( $product_id, 'product_tag' ) ) {
+			$ret = false;
+		}
+
 		return $ret;
+	}
+
+	/**
+	 * Loads the restricted content template if required.
+	 *
+	 * @access  public
+	 * @since   2.5
+	 */
+	public function hide_template( $template, $slug, $name ) {
+
+		$product_id = get_the_ID();
+
+		if ( ! is_singular( 'product' ) ) {
+			return $template;
+		}
+
+		if( 'content-single-product' !== $slug . '-' . $name ) {
+			return $template;
+		}
+
+		if ( current_user_can( 'edit_post', $product_id ) ) {
+			return $template;
+		}
+
+
+		$active_only    = get_post_meta( $product_id, '_rcp_woo_active_to_view', true );
+		$levels         = (array) get_post_meta( $product_id, '_rcp_woo_subscription_levels_to_view', true );
+		$access_level   = get_post_meta( $product_id, '_rcp_woo_access_level_to_view', true );
+
+		$product_cat    = rcp_is_post_taxonomy_restricted( $product_id, 'product_cat' );
+		$product_tag    = rcp_is_post_taxonomy_restricted( $product_id, 'product_tag' );
+
+		/**
+		 * rcp_is_post_taxonomy_restricted() returns:
+		 * - true when restrictions are found for the current user
+		 * - false when restrictions are not found for the current user
+		 * - -1 when no terms are assigned, for which we don't care.
+		 * We're normalizing the value here. If the value is false,
+		 * the user has already passed the restriction checks.
+		 */
+		$cat_restricted = true === $product_cat ? true : false;
+		$tag_restricted = true === $product_tag ? true : false;
+
+		// Return early if no restrictions
+		if ( ! $active_only && empty( $levels[0] ) && ! $access_level && ! $cat_restricted && ! $tag_restricted ) {
+			return $template;
+		}
+
+		$visible = true;
+
+		// Active subscription setting
+		if ( $active_only && ! rcp_is_active() ) {
+			$visible = false;
+		}
+
+		// Subscription level setting
+		if ( ! in_array( rcp_get_subscription_id(), $levels ) ) {
+			$visible = false;
+		}
+
+		// User level setting
+		if ( $access_level && rcp_user_has_access( get_current_user_id(), $access_level ) ) {
+			$visible = false;
+		}
+
+		if ( $visible ) {
+			return $template;
+		}
+
+		return rcp_get_template_part( 'woocommerce', 'single-no-access', false );
 	}
 
 }

@@ -102,9 +102,12 @@ function rcp_payments_page() {
 							<tr class="rcp_payment <?php if( rcp_is_odd( $i ) ) echo 'alternate'; ?>">
 								<td><?php echo absint( $payment->id ); ?></td>
 								<td>
-									<a href="<?php echo esc_url( add_query_arg( 'user_id', $payment->user_id, menu_page_url( 'rcp-payments', false ) ) ); ?>" title="<?php _e( 'View payments by this user', 'rcp' ); ?>">
+									<strong><a href="<?php echo esc_url( add_query_arg( 'user_id', $payment->user_id, menu_page_url( 'rcp-payments', false ) ) ); ?>" title="<?php _e( 'View payments by this user', 'rcp' ); ?>">
 										<?php echo isset( $user->display_name ) ? esc_html( $user->display_name ) : ''; ?>
-									</a>
+									</a></strong>
+									<div class="row-actions">
+										<span class="view"><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'rcp-members', 'edit_member' => $user->ID ), $current_page) ); ?>"><?php _e('View Member', 'rcp'); ?></a></span>
+									</div>
 								</td>
 								<td><?php echo esc_html( $payment->subscription ); ?></td>
 								<td><?php echo esc_html( $payment->date ); ?></td>
@@ -141,8 +144,8 @@ function rcp_payments_page() {
 							echo paginate_links( array(
 								'base' 		=> $base,
 								'format' 	=> '&p=%#%',
-								'prev_text' => __( '&laquo; Previous' ),
-								'next_text' => __( 'Next &raquo;' ),
+								'prev_text' => __( '&laquo; Previous', 'rcp' ),
+								'next_text' => __( 'Next &raquo;', 'rcp' ),
 								'total' 	=> $total_pages,
 								'current' 	=> $page,
 								'end_size' 	=> 1,

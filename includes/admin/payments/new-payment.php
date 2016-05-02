@@ -4,7 +4,7 @@
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
 </h2>
-<form id="rcp-edit-member" action="" method="post">
+<form id="rcp-add-payment" action="" method="post">
 	<table class="form-table">
 		<tbody>
 			<tr valign="top">
@@ -63,4 +63,5 @@
 		<input type="hidden" name="rcp-action" value="add-payment"/>
 		<input type="submit" value="<?php _e( 'Create Payment', 'rcp' ); ?>" class="button-primary"/>
 	</p>
+	<?php wp_nonce_field( 'rcp_add_payment_nonce', 'rcp_add_payment_nonce' ); ?>
 </form>

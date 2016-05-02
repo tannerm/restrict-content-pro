@@ -11,6 +11,12 @@
 
 class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
+	private $api_endpoint;
+	private $checkout_url;
+	protected $username;
+	protected $password;
+	protected $signature;
+
 	/**
 	 * Get things going
 	 *
@@ -25,6 +31,28 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 		$this->supports[]  = 'fees';
 
 		$this->test_mode   = isset( $rcp_options['sandbox'] );
+
+		if( $this->test_mode ) {
+
+			$this->api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
+			$this->checkout_url = 'https://www.sandbox.paypal.com/webscr&cmd=_express-checkout&token=';
+
+		} else {
+
+			$this->api_endpoint = 'https://api-3t.paypal.com/nvp';
+			$this->checkout_url = 'https://www.paypal.com/webscr&cmd=_express-checkout&token=';
+
+		}
+
+		if( rcp_has_paypal_api_access() ) {
+
+			$creds = rcp_get_paypal_api_credentials();
+
+			$this->username  = $creds['username'];
+			$this->password  = $creds['password'];
+			$this->signature = $creds['signature'];
+
+		}
 
 	}
 
@@ -116,7 +144,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			// one time payment
 			$paypal_args['cmd'] = '_xclick';
-			$paypal_args['amount'] = $this->amount;
+			$paypal_args['amount'] = round( $this->amount + $this->signup_fee, 2 );
 
 		}
 
@@ -189,15 +217,19 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			$user_id = 0;
 			$posted  = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
 
-			if( ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
-
-				$user_id = absint( $posted['custom'] );
-
-			} else if( ! empty( $posted['subscr_id'] ) ) {
+			if( ! empty( $posted['subscr_id'] ) ) {
 
 				$user_id = rcp_get_member_id_from_profile_id( $posted['subscr_id'] );
 
-			} else if( ! empty( $posted['payer_email'] ) ) {
+			}
+
+			if( empty( $user_id ) && ! empty( $posted['custom'] ) && is_numeric( $posted['custom'] ) ) {
+
+				$user_id = absint( $posted['custom'] );
+
+			}
+
+			if( empty( $user_id ) && ! empty( $posted['payer_email'] ) ) {
 
 				$user    = get_user_by( 'email', $posted['payer_email'] );
 				$user_id = $user ? $user->ID : false;
@@ -206,11 +238,23 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			$member = new RCP_Member( $user_id );
 
-			if( ! $member || ! $member->get_subscription_id() ) {
+			if( ! $member || ! $member->ID > 0 ) {
 				die( 'no member found' );
 			}
 
-			if( ! rcp_get_subscription_details( $member->get_subscription_id() ) ) {
+			$subscription_id = $member->get_pending_subscription_id();
+
+			if( empty( $subscription_id ) ) {
+
+				$subscription_id = $member->get_subscription_id();
+
+			}
+
+			if( ! $subscription_id ) {
+				die( 'no subscription for member found' );
+			}
+
+			if( ! rcp_get_subscription_details( $subscription_id ) ) {
 				die( 'no subscription level found' );
 			}
 
@@ -220,11 +264,11 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			$amount2 			= number_format( (float) $posted['mc_amount3'], 2 );
 			$payment_status 	= $posted['payment_status'];
 			$currency_code		= $posted['mc_currency'];
-			$subscription_price = number_format( (float) rcp_get_subscription_price( $member->get_subscription_id() ), 2 );
+			$subscription_price = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
 
 			// setup the payment info in an array for storage
 			$payment_data = array(
-				'date'             => date( 'Y-m-d g:i:s', strtotime( $posted['payment_date'], current_time( 'timestamp' ) ) ),
+				'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'], current_time( 'timestamp' ) ) ),
 				'subscription'     => $posted['item_name'],
 				'payment_type'     => $posted['txn_type'],
 				'subscription_key' => $subscription_key,
@@ -241,15 +285,15 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				if( rcp_check_for_existing_payment( $posted['txn_type'], $posted['payment_date'], $subscription_key ) ) {
 
 					$log_data = array(
-					    'post_title'    => __( 'Duplicate Payment', 'rcp' ),
-					    'post_content'  =>  __( 'A duplicate payment was detected. The new payment was still recorded, so you may want to check into both payments.', 'rcp' ),
-					    'post_parent'   => 0,
-					    'log_type'      => 'gateway_error'
+						'post_title'    => __( 'Duplicate Payment', 'rcp' ),
+						'post_content'  =>  __( 'A duplicate payment was detected. The new payment was still recorded, so you may want to check into both payments.', 'rcp' ),
+						'post_parent'   => 0,
+						'log_type'      => 'gateway_error'
 					);
 
 					$log_meta = array(
-					    'user_subscription' => $posted['item_name'],
-					    'user_id'           => $user_id
+						'user_subscription' => $posted['item_name'],
+						'user_id'           => $user_id
 					);
 					$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
 
@@ -261,15 +305,15 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// the currency code is invalid
 
 					$log_data = array(
-					    'post_title'    => __( 'Invalid Currency Code', 'rcp' ),
-					    'post_content'  =>  sprintf( __( 'The currency code in an IPN request did not match the site currency code. Payment data: %s', 'rcp' ), json_encode( $payment_data ) ),
-					    'post_parent'   => 0,
-					    'log_type'      => 'gateway_error'
+						'post_title'    => __( 'Invalid Currency Code', 'rcp' ),
+						'post_content'  =>  sprintf( __( 'The currency code in an IPN request did not match the site currency code. Payment data: %s', 'rcp' ), json_encode( $payment_data ) ),
+						'post_parent'   => 0,
+						'log_type'      => 'gateway_error'
 					);
 
 					$log_meta = array(
-					    'user_subscription' => $posted['item_name'],
-					    'user_id'           => $user_id
+						'user_subscription' => $posted['item_name'],
+						'user_id'           => $user_id
 					);
 					$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
 
@@ -295,6 +339,10 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					// store the recurring payment ID
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
+
+					if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
+						$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+					}
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
 
@@ -327,16 +375,19 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 				case "subscr_cancel" :
 
-					// user is marked as cancelled but retains access until end of term
-					$member->set_status( 'cancelled' );
+					if( ! $member->just_upgraded() ) {
 
-					// set the use to no longer be recurring
-					delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
+						// user is marked as cancelled but retains access until end of term
+						$member->set_status( 'cancelled' );
 
-					do_action( 'rcp_ipn_subscr_cancel', $user_id );
+						// set the use to no longer be recurring
+						delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
 
+						do_action( 'rcp_ipn_subscr_cancel', $user_id );
 
-					die( 'successful subscr_cancel' );
+						die( 'successful subscr_cancel' );
+
+					}
 
 					break;
 
@@ -369,26 +420,35 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					switch ( strtolower( $payment_status ) ) :
 
-			            case 'completed' :
+						case 'completed' :
+
+							if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
+								$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+								if( $cancelled ) {
+
+									$member->set_payment_profile_id( '' );
+
+								}
+							}
 
 							// set this user to active
 							$member->renew();
 
 							$rcp_payments->insert( $payment_data );
 
-			           		break;
+							break;
 
-			            case 'denied' :
-			            case 'expired' :
-			            case 'failed' :
-			            case 'voided' :
+						case 'denied' :
+						case 'expired' :
+						case 'failed' :
+						case 'voided' :
 							$member->set_status( 'cancelled' );
-			            	break;
+							break;
 
-			        endswitch;
+					endswitch;
 
-			   
-			        die( 'successful web_accept' );
+
+					die( 'successful web_accept' );
 
 				break;
 

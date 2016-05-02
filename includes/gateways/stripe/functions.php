@@ -1,6 +1,36 @@
 <?php
 
 /**
+ * Determine if a member is a Stripe subscriber
+ *
+ * @since       v2.1
+ * @access      public
+ * @param       $user_id INT the ID of the user to check
+ * @return      bool
+*/
+function rcp_is_stripe_subscriber( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$ret = false;
+
+	$member = new RCP_Member( $user_id );
+
+	$profile_id = $member->get_payment_profile_id();
+
+	// Check if the member is a Stripe customer
+	if( false !== strpos( $profile_id, 'cus_' ) ) {
+
+		$ret = true;
+
+	}
+
+	return (bool) apply_filters( 'rcp_is_stripe_subscriber', $ret, $user_id );
+}
+
+/**
  * Add JS to the update card form
  *
  * @access      private
@@ -9,14 +39,14 @@
 function rcp_stripe_update_card_form_js() {
 	global $rcp_options;
 
-	if( ! rcp_is_gateway_enabled( 'stripe' ) ) {
+	if( ! rcp_is_gateway_enabled( 'stripe' ) && ! rcp_is_gateway_enabled( 'stripe_checkout' ) ) {
 		return;
 	}
 
 	if( isset( $rcp_options['sandbox'] ) ) {
-		$key = $rcp_options['stripe_test_publishable'];
+		$key = trim( $rcp_options['stripe_test_publishable'] );
 	} else {
-		$key = $rcp_options['stripe_live_publishable'];
+		$key = trim( $rcp_options['stripe_live_publishable'] );
 	}
 
 	if( empty( $key ) ) {
@@ -232,7 +262,7 @@ add_action( 'rcp_update_billing_card', 'rcp_stripe_update_billing_card', 10, 2 )
  * @since       2.1
  */
 function rcp_stripe_create_discount() {
-	
+
 	if( ! is_admin() ) {
 		return;
 	}
@@ -271,7 +301,7 @@ function rcp_stripe_create_discount() {
 			);
 		} else {
 			\Stripe\Coupon::create( array(
-					"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
+					"amount_off" => sanitize_text_field( $_POST['amount'] ) * rcp_stripe_get_currency_multiplier(),
 					"duration"   => "forever",
 					"id"         => sanitize_text_field( $_POST['code'] ),
 					"currency"   => strtolower( $rcp_options['currency'] )
@@ -377,13 +407,30 @@ add_action( 'rcp_pre_add_discount', 'rcp_stripe_create_discount' );
  * Update a discount in Stripe when a local code is updated
  *
  * @access      private
+ * @param       $discount_id int the id of the discount being updated
+ * @param       $args array the array of discount args
+ *              array(
+ *					'name',
+ *					'description',
+ *					'amount',
+ *					'unit',
+ *					'code',
+ *					'status',
+ *					'expiration',
+ *					'max_uses',
+ *					'subscription_id'
+ *				)
  * @since       2.1
  */
-function rcp_stripe_update_discount() {
+function rcp_stripe_update_discount( $discount_id, $args ) {
 
 	if( ! is_admin() ) {
 		return;
 	}
+
+	// bail if the discount id or args are empty
+	if ( empty( $discount_id ) || empty( $args )  )
+		return;
 
 	if( function_exists( 'rcp_stripe_add_discount' ) ) {
 		return; // Old Stripe gateway is active
@@ -411,58 +458,58 @@ function rcp_stripe_update_discount() {
 
 	\Stripe\Stripe::setApiKey( $secret_key );
 
-	if ( ! rcp_stripe_does_coupon_exists( $_POST['code'] ) ) {
+	if ( ! rcp_stripe_does_coupon_exists( $discount_id ) ) {
 
 		try {
 
-			if ( $_POST['unit'] == '%' ) {
+			if ( $args['unit'] == '%' ) {
 				\Stripe\Coupon::create( array(
-						"percent_off" => sanitize_text_field( $_POST['amount'] ),
+						"percent_off" => sanitize_text_field( $args['amount'] ),
 						"duration"    => "forever",
-						"id"          => sanitize_text_field( $_POST['code'] ),
+						"id"          => sanitize_text_field( $discount_id ),
 						"currency"    => strtolower( $rcp_options['currency'] )
 					)
 				);
 			} else {
 				\Stripe\Coupon::create( array(
-						"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
+						"amount_off" => sanitize_text_field( $args['amount'] ) * rcp_stripe_get_currency_multiplier(),
 						"duration"   => "forever",
-						"id"         => sanitize_text_field( $_POST['code'] ),
+						"id"         => sanitize_text_field( $discount_id ),
 						"currency"   => strtolower( $rcp_options['currency'] )
 					)
 				);
 			}
 
 		} catch ( Exception $e ) {
-			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
+			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp' ) );
 		}
 
 	} else {
 
 		// first delete the discount in Stripe
 		try {
-			$cpn = \Stripe\Coupon::retrieve( $_POST['code'] );
+			$cpn = \Stripe\Coupon::retrieve( $discount_id );
 			$cpn->delete();
 		} catch ( Exception $e ) {
-			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp_stripe' ) );
+			wp_die( '<pre>' . $e . '</pre>', __( 'Error', 'rcp' ) );
 		}
 
 		// now add a new one. This is a fake "update"
 		try {
 
-			if ( $_POST['unit'] == '%' ) {
+			if ( $args['unit'] == '%' ) {
 				\Stripe\Coupon::create( array(
-						"percent_off" => sanitize_text_field( $_POST['amount'] ),
+						"percent_off" => sanitize_text_field( $args['amount'] ),
 						"duration"    => "forever",
-						"id"          => sanitize_text_field( $_POST['code'] ),
+						"id"          => sanitize_text_field( $discount_id ),
 						"currency"    => strtolower( $rcp_options['currency'] )
 					)
 				);
 			} else {
 				\Stripe\Coupon::create( array(
-						"amount_off" => sanitize_text_field( $_POST['amount'] ) * 100,
+						"amount_off" => sanitize_text_field( $args['amount'] ) * rcp_stripe_get_currency_multiplier(),
 						"duration"   => "forever",
-						"id"         => sanitize_text_field( $_POST['code'] ),
+						"id"         => sanitize_text_field( $discount_id ),
 						"currency"   => strtolower( $rcp_options['currency'] )
 					)
 				);
@@ -544,7 +591,7 @@ function rcp_stripe_update_discount() {
 		}
 	}
 }
-add_action( 'rcp_edit_discount', 'rcp_stripe_update_discount' );
+add_action( 'rcp_edit_discount', 'rcp_stripe_update_discount', 10, 2 );
 
 /**
  * Check if a coupone exists in Stripe
@@ -575,3 +622,69 @@ function rcp_stripe_does_coupon_exists( $code ) {
 
 	return $exists;
 }
+
+/**
+ * Return the multiplier for the currency. Most currencies are multiplied by 100. Zere decimal
+ * currencies should not be multiplied so use 1.
+ *
+ * @param string $currency
+ *
+ * @since 2.5
+ * @return int
+ */
+function rcp_stripe_get_currency_multiplier( $currency = '' ) {
+	$multiplier = ( rcp_is_zero_decimal_currency( $currency ) ) ? 1 : 100;
+
+	return apply_filters( 'rcp_stripe_get_currency_multiplier', $multiplier, $currency );
+}
+
+/**
+ * Query Stripe API to get customer's card details
+ *
+ * @param $card       array
+ * @param $member_id int
+ * @param $member    object
+ *
+ * @since 2.5
+ * @return array
+ */
+function rcp_stripe_get_card_details( $cards, $member_id, $member ) {
+
+	global $rcp_options;
+
+	if( ! rcp_is_stripe_subscriber( $member_id ) ) {
+		return $cards;
+	}
+
+	if( ! class_exists( 'Stripe\Stripe' ) ) {
+		require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
+	}
+
+	if ( isset( $rcp_options['sandbox'] ) ) {
+		$secret_key = trim( $rcp_options['stripe_test_secret'] );
+	} else {
+		$secret_key = trim( $rcp_options['stripe_live_secret'] );
+	}
+
+	\Stripe\Stripe::setApiKey( $secret_key );
+
+	try {
+
+		$customer = \Stripe\Customer::retrieve( $member->get_payment_profile_id() );
+		$default  = $customer->sources->retrieve( $customer->default_source );
+
+		$cards['stripe']['name']      = $default->name;
+		$cards['stripe']['type']      = $default->brand;
+		$cards['stripe']['zip']       = $default->address_zip;
+		$cards['stripe']['exp_month'] = $default->exp_month;
+		$cards['stripe']['exp_year']  = $default->exp_year;
+		$cards['stripe']['last4']     = $default->last4;
+
+	} catch ( Exception $e ) {
+
+	}
+
+	return $cards;
+
+}
+add_filter( 'rcp_get_card_details', 'rcp_stripe_get_card_details', 10, 3 );
