@@ -4,6 +4,11 @@
 * Restrict Content Short Codes
 *******************************************/
 
+add_filter( 'rcp_restrict_shortcode_return', 'wpautop' );
+add_filter( 'rcp_restrict_shortcode_return', 'do_shortcode' );
+add_filter( 'widget_text', 'do_shortcode' );
+
+
 // shortcode or restricting content to registered users and or user roles
 function rcp_restrict_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
@@ -90,8 +95,6 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 	}
 }
 add_shortcode( 'restrict', 'rcp_restrict_shortcode' );
-add_filter( 'rcp_restrict_shortcode_return', 'wpautop' );
-add_filter( 'rcp_restrict_shortcode_return', 'do_shortcode' );
 
 // shows content only to active, paid users
 function rcp_is_paid_user_shortcode( $atts, $content = null ) {
@@ -336,8 +339,6 @@ function rcp_user_subscription_details( $atts, $content = null ) {
 	return ob_get_clean();
 }
 add_shortcode( 'subscription_details', 'rcp_user_subscription_details' );
-
-add_filter( 'widget_text', 'do_shortcode' );
 
 
 /**
