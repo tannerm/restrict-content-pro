@@ -1,10 +1,24 @@
 <?php
 
 /*******************************************
-* Restrict Content Short Codes
+* Restrict Content ShortCodes
 *******************************************/
 
-// shortcode or restricting content to registered users and or user roles
+add_filter( 'rcp_restrict_shortcode_return', 'wpautop' );
+add_filter( 'rcp_restrict_shortcode_return', 'do_shortcode' );
+add_filter( 'widget_text', 'do_shortcode' );
+
+
+/**
+ * Restricting content to registered users and or user roles
+ *
+ * @since 
+ * @access public
+ *
+ * @param $atts
+ * @param $content
+ * @return mixed|void
+ */
 function rcp_restrict_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 		'userlevel' 	=> 'none',
@@ -90,10 +104,18 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 	}
 }
 add_shortcode( 'restrict', 'rcp_restrict_shortcode' );
-add_filter( 'rcp_restrict_shortcode_return', 'wpautop' );
-add_filter( 'rcp_restrict_shortcode_return', 'do_shortcode' );
 
-// shows content only to active, paid users
+
+/**
+ * Shows content only to active, paid users
+ *
+ * @since 
+ * @access public
+ *
+ * @param $atts
+ * @param $content
+ * @return mixed|void
+ */
 function rcp_is_paid_user_shortcode( $atts, $content = null ) {
 
 	global $user_ID;
@@ -104,7 +126,17 @@ function rcp_is_paid_user_shortcode( $atts, $content = null ) {
 }
 add_shortcode( 'is_paid', 'rcp_is_paid_user_shortcode' );
 
-// shows content only to logged-in free users, and can hide from paid
+
+/**
+ * Shows content only to logged-in free users, and can hide from paid
+ *
+ * @since 
+ * @access public
+ *
+ * @param $atts
+ * @param $content
+ * @return mixed|void
+ */
 function rcp_is_free_user_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 		'hide_from_paid' => true
@@ -122,6 +154,17 @@ function rcp_is_free_user_shortcode( $atts, $content = null ) {
 }
 add_shortcode( 'is_free', 'rcp_is_free_user_shortcode' );
 
+
+/**
+ * Shows content only to not logged-in users
+ *
+ * @since 
+ * @access public
+ *
+ * @param $atts
+ * @param $content
+ * @return mixed|void
+ */
 function rcp_not_logged_in( $atts, $content = null ) {
 	if( !is_user_logged_in() ) {
 		return do_shortcode( $content );
@@ -129,7 +172,17 @@ function rcp_not_logged_in( $atts, $content = null ) {
 }
 add_shortcode( 'not_logged_in', 'rcp_not_logged_in' );
 
-// allows content to be shown to only users that don't have an active subscription
+
+/**
+ * Allows content to be shown to only users that don't have an active subscription
+ *
+ * @since 
+ * @access public
+ *
+ * @param $atts
+ * @param $content
+ * @return mixed|void
+ */
 function rcp_is_not_paid( $atts, $content = null ) {
 	global $user_ID;
 	if( rcp_is_active( $user_ID ) )
@@ -140,7 +193,17 @@ function rcp_is_not_paid( $atts, $content = null ) {
 }
 add_shortcode( 'is_not_paid', 'rcp_is_not_paid' );
 
-// shows the display name of the currently logged-in user
+
+/**
+ * Displays the currently logged-in user display-name
+ *
+ * @since 
+ * @access public
+ *
+ * @param $atts
+ * @param $content
+ * @return mixed|void
+ */
 function rcp_user_name( $atts, $content = null ) {
 	global $user_ID;
 	if(is_user_logged_in()) {
@@ -150,7 +213,17 @@ function rcp_user_name( $atts, $content = null ) {
 }
 add_shortcode( 'user_name', 'rcp_user_name' );
 
-// user registration login form
+
+/**
+ * Displays user registration form
+ *
+ * @since 
+ * @access public
+ *
+ * @param $atts
+ * @param $content
+ * @return mixed|void
+ */
 function rcp_registration_form( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 		'id' => null,
@@ -177,12 +250,14 @@ function rcp_registration_form( $atts, $content = null ) {
 }
 add_shortcode( 'register_form', 'rcp_registration_form' );
 
+
 /**
- * Shortcode for displaying stripe checkout
+ * Displays stripe checkout form
  *
  * @since 2.5
- * @param $atts
+ * @access public
  *
+ * @param $atts
  * @return mixed|void
  */
 function rcp_register_form_stripe_checkout( $atts ) {
@@ -255,7 +330,18 @@ function rcp_register_form_stripe_checkout( $atts ) {
 }
 add_shortcode( 'register_form_stripe', 'rcp_register_form_stripe_checkout' );
 
-// user login form
+
+/**
+ * Displays user login form
+ *
+ * @since 
+ * @access public
+ *
+ * @param $atts
+ * @param $content
+ *
+ * @return string
+ */
 function rcp_login_form( $atts, $content = null ) {
 
 	global $post;
@@ -279,7 +365,15 @@ function rcp_login_form( $atts, $content = null ) {
 }
 add_shortcode( 'login_form', 'rcp_login_form' );
 
-// password reset form
+
+/**
+ * Displays a password reset form
+ *
+ * @since 
+ * @access public
+ *
+ * @return string
+ */
 function rcp_reset_password_form() {
 	if( is_user_logged_in() ) {
 
@@ -298,7 +392,15 @@ function rcp_reset_password_form() {
 }
 add_shortcode( 'password_form', 'rcp_reset_password_form' );
 
-// displays a list of premium posts
+
+/**
+ * Displays a list of premium posts
+ *
+ * @since 
+ * @access public
+ *
+ * @return string
+ */
 function rcp_list_paid_posts() {
 	$paid_posts = rcp_get_paid_posts();
 	$list = '';
@@ -313,7 +415,16 @@ function rcp_list_paid_posts() {
 }
 add_shortcode( 'paid_posts', 'rcp_list_paid_posts' );
 
-// displays the current user's subscription details
+
+/**
+ * Displays the current user's subscription details
+ *
+ * @since 
+ * @access public
+ *
+ * @param $atts
+ * @param $content
+ */
 function rcp_user_subscription_details( $atts, $content = null ) {
 	extract( shortcode_atts( array(
 		'option' => ''
@@ -337,17 +448,17 @@ function rcp_user_subscription_details( $atts, $content = null ) {
 }
 add_shortcode( 'subscription_details', 'rcp_user_subscription_details' );
 
-add_filter( 'widget_text', 'do_shortcode' );
-
 
 /**
  * Profile Editor Shortcode
  *
- * Outputs the EDD Profile Editor to allow users to amend their details from the
- * front-end
+ * Outputs the EDD Profile Editor to allow users to amend their details from the front-end
  *
- * @access      public
- * @since       1.5
+ * @since 1.5
+ * @access public
+ *
+ * @param $atts
+ * @param $content
  */
 function rcp_profile_editor_shortcode( $atts, $content = null ) {
 
@@ -367,10 +478,13 @@ add_shortcode( 'rcp_profile_editor', 'rcp_profile_editor_shortcode' );
 /**
  * Update card form short code
  *
- * Displays a form to update the billing credit / debit card
+ * Displays a form to update the billing credit / debit card.
  *
- * @access      public
- * @since       2.1
+ * @since 2.1
+ * @access public
+ *
+ * @param $atts
+ * @param $content
  */
 function rcp_update_billing_card_shortcode( $atts, $content = null ) {
 	global $rcp_load_css, $rcp_load_scripts;
@@ -412,6 +526,8 @@ add_shortcode( 'rcp_update_card', 'rcp_update_billing_card_shortcode' );
  * Show User's Subscription ID Shortcode
  *
  * @since 2.5
+ * @access public
+ *
  * @return string
  */
 function rcp_user_subscription_id_shortcode() {
@@ -423,10 +539,13 @@ function rcp_user_subscription_id_shortcode() {
 }
 add_shortcode( 'subscription_id', 'rcp_user_subscription_id_shortcode' );
 
+
 /**
  * Show User's Subscription ID Shortcode
  *
  * @since 2.5
+ * @access public
+ *
  * @return string
  */
 function rcp_user_subscription_name_shortcode() {
@@ -442,10 +561,13 @@ function rcp_user_subscription_name_shortcode() {
 }
 add_shortcode( 'subscription_name', 'rcp_user_subscription_name_shortcode' );
 
+
 /**
  * Show User's Expiration Shortcode
  *
  * @since 2.5
+ * @access public
+ *
  * @return string
  */
 function rcp_user_expiration_shortcode() {
