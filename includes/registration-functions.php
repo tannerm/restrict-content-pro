@@ -633,9 +633,9 @@ function rcp_registration_recurring_total( $echo = true ) {
 		$subscription = rcp_get_subscription_details( rcp_get_registration()->get_subscription() );
 
 		if ( $subscription->duration == 1 ) {
-			$total .= '/' . $subscription->duration_unit;
+			$total .= '/' . rcp_filter_duration_unit( $subscription->duration_unit, 1 );
 		} else {
-			$total .= sprintf( __( ' every %s %ss', 'rcp' ), $subscription->duration, $subscription->duration_unit );
+			$total .= sprintf( __( ' every %s %s', 'rcp' ), $subscription->duration, rcp_filter_duration_unit( $subscription->duration_unit, $subscription->duration ) );
 		}
 	} else {
 		$total = __( 'free', 'rcp' );;
