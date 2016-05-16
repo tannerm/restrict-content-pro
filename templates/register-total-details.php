@@ -60,9 +60,9 @@ if ( ! rcp_is_registration() ) {
 			$subscription = rcp_get_subscription_details( rcp_get_registration()->get_subscription() );
 
 			if ( $subscription->duration == 1 ) {
-				$label = sprintf( __( 'Total Recurring Per %s', 'rcp' ), ucwords( $subscription->duration_unit ) );
+				$label = sprintf( __( 'Total Recurring Per %s', 'rcp' ), rcp_filter_duration_unit( $subscription->duration_unit, 1 ) );
 			} else {
-				$label = sprintf( __( 'Total Recurring Every %s %ss', 'rcp' ), $subscription->duration, ucwords( $subscription->duration_unit ) );
+				$label = sprintf( __( 'Total Recurring Every %s %s', 'rcp' ), $subscription->duration, rcp_filter_duration_unit( $subscription->duration_unit, $subscription->duration ) );
 			}
 			?>
 			<tr class="rcp-recurring-total">

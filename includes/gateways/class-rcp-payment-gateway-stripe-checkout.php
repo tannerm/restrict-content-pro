@@ -79,6 +79,12 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 
 			jQuery('#rcp_registration_form #rcp_submit').val( rcp_script_options.pay_now );
 
+			jQuery('body').on('rcp_level_change', function(event, target) {
+				jQuery('#rcp_registration_form #rcp_submit').val(
+					jQuery(target).attr('rel') > 0 ? rcp_script_options.pay_now : rcp_script_options.register
+				);
+			});
+
 			jQuery('body').on('rcp_stripe_checkout_submit', function(e, token){
 				jQuery('#rcp_registration_form').append('<input type="hidden" name="stripeToken" value="' + token.id + '" />').submit();
 			});
