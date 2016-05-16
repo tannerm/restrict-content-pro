@@ -12,7 +12,7 @@ add_filter( 'widget_text', 'do_shortcode' );
 /**
  * Restricting content to registered users and or user roles
  *
- * @since 
+ * @since
  * @access public
  *
  * @param $atts
@@ -20,87 +20,86 @@ add_filter( 'widget_text', 'do_shortcode' );
  * @return mixed|void
  */
 function rcp_restrict_shortcode( $atts, $content = null ) {
-	extract( shortcode_atts( array(
-		'userlevel' 	=> 'none',
-		'message' 		=> '',
-		'paid' 			=> false,
-		'level' 		=> 0,
-		'subscription' 	=> ''
-	), $atts ) );
+
+	$atts = shortcode_atts( array(
+		'userlevel'    => 'none',
+		'message'      => '',
+		'paid'         => false,
+		'level'        => 0,
+		'subscription' => ''
+	), $atts, 'restrict' );
 
 	global $rcp_options, $user_ID;
 
-	if( strlen( trim( $message ) ) > 0 ) {
-		$teaser = $message;
-	} elseif( $paid ) {
+	if ( strlen( trim( $atts['message'] ) ) > 0 ) {
+		$teaser = $atts['message'];
+	} elseif ( $atts['paid'] ) {
 		$teaser = $rcp_options['paid_message'];
 	} else {
 		$teaser = $rcp_options['free_message'];
 	}
 
-	$subscription = explode( ',', $subscription );
+	$subscription = array_map( 'trim', explode( ',', $atts['subscription'] ) );
 
-	if( $paid ) {
+	$has_access = false;
 
-		$has_access = false;
-		if( rcp_is_active( $user_ID ) && rcp_user_has_access( $user_ID, $level ) ) {
+	if( $atts['paid'] ) {
+
+		if ( rcp_is_active( $user_ID ) && rcp_user_has_access( $user_ID, $atts['level'] ) ) {
 			$has_access = true;
-
-			if( ! empty( $subscription ) && ! empty( $subscription[0] ) ) {
-				if( ! in_array( rcp_get_subscription_id( $user_ID ), $subscription ) ) {
-					$has_access = false;
-				}
-			}
 		}
 
-		if ( $userlevel == 'admin' && current_user_can( 'switch_themes' ) && $has_access ) {
-			return apply_filters( 'rcp_restrict_shortcode_return', $content );
-		}
-		if ( $userlevel == 'editor' && current_user_can( 'moderate_comments' ) && $has_access ) {
-			return apply_filters( 'rcp_restrict_shortcode_return', $content );
-		}
-		if ( $userlevel == 'author' && current_user_can( 'upload_files' ) && $has_access ) {
-			return do_shortcode(  wpautop( $content ) );
-		}
-		if ( $userlevel == 'contributor' && current_user_can( 'edit_posts' ) && $has_access ) {
-		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
-		}
-		if ( $userlevel == 'subscriber' && current_user_can( 'read' ) && $has_access ) {
-		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
-		}
-		if ( $userlevel == 'none' && is_user_logged_in() && $has_access ) {
-		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
-		} else {
-			return '<div class="rcp_restricted rcp_paid_only">' . rcp_format_teaser( $teaser ) . '</div>';
-		}
+		$classes = 'rcp_restricted rcp_paid_only';
 
 	} else {
 
-		$has_access = false;
-		if(rcp_user_has_access($user_ID, $level)) {
+		if ( rcp_user_has_access( $user_ID, $atts['level'] ) ) {
 			$has_access = true;
-			if( ! empty( $subscription ) && ! empty( $subscription[0] ) ) {
-				if( in_array( rcp_get_subscription_id( $user_ID ), $subscription ) ) {
-					$has_access = false;
-				}
-			}
 		}
 
-		if ( $userlevel == 'admin' && current_user_can( 'switch_themes' ) && $has_access ) {
-			return apply_filters( 'rcp_restrict_shortcode_return', $content );
-		} elseif ( $userlevel == 'editor' && current_user_can( 'moderate_comments' ) && $has_access ) {
-			return apply_filters( 'rcp_restrict_shortcode_return', $content );
-		} elseif ( $userlevel == 'author' && current_user_can( 'upload_files' ) && $has_access ) {
-			return apply_filters( 'rcp_restrict_shortcode_return', $content );
-		} elseif ( $userlevel == 'contributor' && current_user_can( 'edit_posts' ) && $has_access ) {
-		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
-		} elseif ( $userlevel == 'subscriber' && current_user_can( 'read' ) && $has_access ) {
-		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
-		} elseif ( $userlevel == 'none' && is_user_logged_in() && $has_access ) {
-		 	return apply_filters( 'rcp_restrict_shortcode_return', $content );
-		} else {
-			return '<div class="rcp_restricted">' . rcp_format_teaser( $teaser ) . '</div>';
+		$classes = 'rcp_restricted';
+	}
+
+	if ( ! empty( $subscription ) && ! empty( $subscription[0] ) ) {
+		if ( ! in_array( rcp_get_subscription_id( $user_ID ), $subscription ) || ( in_array( rcp_get_subscription_id( $user_ID ), $subscription ) && ! rcp_is_active( $user_ID ) ) ) {
+			$has_access = false;
 		}
+	}
+
+	if ( $atts['userlevel'] === 'admin' && ! current_user_can( 'switch_themes' ) ) {
+		$has_access = false;
+	}
+
+	if ( $atts['userlevel'] === 'editor' && ! current_user_can( 'moderate_comments' ) ) {
+		$has_access = false;
+	}
+
+	if ( $atts['userlevel'] === 'author' && ! current_user_can( 'upload_files' ) ) {
+		$has_access = false;
+	}
+
+	if ( $atts['userlevel'] === 'contributor' && ! current_user_can( 'edit_posts' ) ) {
+		$has_access = false;
+	}
+
+	if ( $atts['userlevel'] === 'subscriber' && ! current_user_can( 'read' ) ) {
+		$has_access = false;
+	}
+
+	if ( $atts['userlevel'] === 'none' && ! is_user_logged_in() ) {
+		$has_access = false;
+	}
+
+	if ( current_user_can( 'manage_options' ) ) {
+		$has_access = true;
+	}
+
+	$has_access = (bool) apply_filters( 'rcp_restrict_shortcode_has_access', $has_access, $user_ID, $atts );
+
+	if ( $has_access ) {
+		return apply_filters( 'rcp_restrict_shortcode_return', $content );
+	} else {
+		return '<div class="' . $classes . '">' . rcp_format_teaser( $teaser ) . '</div>';
 	}
 }
 add_shortcode( 'restrict', 'rcp_restrict_shortcode' );
@@ -109,7 +108,7 @@ add_shortcode( 'restrict', 'rcp_restrict_shortcode' );
 /**
  * Shows content only to active, paid users
  *
- * @since 
+ * @since
  * @access public
  *
  * @param $atts
@@ -130,7 +129,7 @@ add_shortcode( 'is_paid', 'rcp_is_paid_user_shortcode' );
 /**
  * Shows content only to logged-in free users, and can hide from paid
  *
- * @since 
+ * @since
  * @access public
  *
  * @param $atts
@@ -158,7 +157,7 @@ add_shortcode( 'is_free', 'rcp_is_free_user_shortcode' );
 /**
  * Shows content only to not logged-in users
  *
- * @since 
+ * @since
  * @access public
  *
  * @param $atts
@@ -176,7 +175,7 @@ add_shortcode( 'not_logged_in', 'rcp_not_logged_in' );
 /**
  * Allows content to be shown to only users that don't have an active subscription
  *
- * @since 
+ * @since
  * @access public
  *
  * @param $atts
@@ -197,7 +196,7 @@ add_shortcode( 'is_not_paid', 'rcp_is_not_paid' );
 /**
  * Displays the currently logged-in user display-name
  *
- * @since 
+ * @since
  * @access public
  *
  * @param $atts
@@ -217,7 +216,7 @@ add_shortcode( 'user_name', 'rcp_user_name' );
 /**
  * Displays user registration form
  *
- * @since 
+ * @since
  * @access public
  *
  * @param $atts
@@ -334,7 +333,7 @@ add_shortcode( 'register_form_stripe', 'rcp_register_form_stripe_checkout' );
 /**
  * Displays user login form
  *
- * @since 
+ * @since
  * @access public
  *
  * @param $atts
@@ -369,7 +368,7 @@ add_shortcode( 'login_form', 'rcp_login_form' );
 /**
  * Displays a password reset form
  *
- * @since 
+ * @since
  * @access public
  *
  * @return string
@@ -396,7 +395,7 @@ add_shortcode( 'password_form', 'rcp_reset_password_form' );
 /**
  * Displays a list of premium posts
  *
- * @since 
+ * @since
  * @access public
  *
  * @return string
@@ -419,7 +418,7 @@ add_shortcode( 'paid_posts', 'rcp_list_paid_posts' );
 /**
  * Displays the current user's subscription details
  *
- * @since 
+ * @since
  * @access public
  *
  * @param $atts
