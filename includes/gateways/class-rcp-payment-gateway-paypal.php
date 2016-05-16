@@ -258,13 +258,30 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				die( 'no subscription level found' );
 			}
 
-			$subscription_name 	= $posted['item_name'];
-			$subscription_key 	= $posted['item_number'];
-			$amount 			= number_format( (float) $posted['mc_gross'], 2 );
-			$amount2 			= number_format( (float) $posted['mc_amount3'], 2 );
-			$payment_status 	= $posted['payment_status'];
-			$currency_code		= $posted['mc_currency'];
+			$subscription_name  = $posted['item_name'];
+			$subscription_key   = $posted['item_number'];
+			$amount             = number_format( (float) $posted['mc_gross'], 2 );
+			$amount2            = number_format( (float) $posted['mc_amount3'], 2 );
+			$payment_status     = $posted['payment_status'];
+			$currency_code      = $posted['mc_currency'];
 			$subscription_price = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
+
+			$pending_amount = get_user_meta( $member->ID, 'rcp_pending_subscription_amount', true );
+
+			// Check for invalid amounts in the IPN data
+			if ( ! empty( $pending_amount ) && ! empty( $amount ) && in_array( $posted['txn_type'], array( 'web_accept', 'subscr_payment' ) ) ) {
+
+				if ( $amount < $pending_amount ) {
+
+					rcp_add_member_note( $member->ID, sprintf( __( 'Incorrect amount received in the IPN. Amount received was %s. The amount should have been %s. PayPal Transaction ID: %s', 'rcp' ), $amount, $pending_amount, sanitize_text_field( $posted['txn_id'] ) ) );
+
+					die( 'incorrect amount' );
+
+				} else {
+					delete_user_meta( $member->ID, 'rcp_pending_subscription_amount' );
+				}
+
+			}
 
 			// setup the payment info in an array for storage
 			$payment_data = array(
