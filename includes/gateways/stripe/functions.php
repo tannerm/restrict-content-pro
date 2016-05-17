@@ -271,7 +271,7 @@ function rcp_stripe_create_discount() {
 		return; // Old Stripe gateway is active
 	}
 
-	if( ! rcp_is_gateway_enabled( 'stripe' ) ) {
+	if( ! rcp_is_gateway_enabled( 'stripe' ) && ! rcp_is_gateway_enabled( 'stripe_checkout' ) ) {
 		return;
 	}
 
@@ -436,7 +436,7 @@ function rcp_stripe_update_discount( $discount_id, $args ) {
 		return; // Old Stripe gateway is active
 	}
 
-	if( ! rcp_is_gateway_enabled( 'stripe' ) ) {
+	if( ! rcp_is_gateway_enabled( 'stripe' ) && ! rcp_is_gateway_enabled( 'stripe_checkout' ) ) {
 		return;
 	}
 
