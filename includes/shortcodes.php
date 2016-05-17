@@ -295,7 +295,8 @@ function rcp_register_form_stripe_checkout( $atts ) {
 		'data-amount'            => $amount * rcp_stripe_get_currency_multiplier(),
 		'data-local'             => 'auto',
 		'data-allow-remember-me' => true,
-		'data-currency'          => rcp_get_currency()
+		'data-currency'          => rcp_get_currency(),
+		'data-alipay'            => isset( $rcp_options['stripe_alipay'] ) && '1' === $rcp_options['stripe_alipay'] && 'USD' === rcp_get_currency() ? true : false
 	) );
 
 	if ( empty( $data['data-email'] ) && ! empty( $member->user_email ) ) {
@@ -307,6 +308,10 @@ function rcp_register_form_stripe_checkout( $atts ) {
 	}
 
 	$data = apply_filters( 'rcp_stripe_checkout_data', $data );
+
+	if ( 'USD' !== rcp_get_currency() ) {
+		unset( $data['data-alipay'] );
+	}
 
 	ob_start();
 
