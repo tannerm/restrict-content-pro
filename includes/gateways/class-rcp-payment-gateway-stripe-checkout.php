@@ -34,6 +34,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 	 * @return string
 	 */
 	public function fields() {
+		global $rcp_options;
 
 		if( is_user_logged_in() ) {
 			$email = wp_get_current_user()->user_email;
@@ -46,7 +47,8 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			'local'             => 'auto',
 			'allow-remember-me' => true,
 			'email'             => $email,
-			'currency'          => rcp_get_currency()
+			'currency'          => rcp_get_currency(),
+			'alipay'            => isset( $rcp_options['stripe_alipay'] ) && '1' === $rcp_options['stripe_alipay'] && 'USD' === rcp_get_currency() ? true : false
 		) );
 
 
