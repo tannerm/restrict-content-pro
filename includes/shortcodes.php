@@ -21,17 +21,13 @@ add_filter( 'widget_text', 'do_shortcode' );
  */
 function rcp_restrict_shortcode( $atts, $content = null ) {
 
-	$atts = shortcode_atts(
-		array(
-			'userlevel'    => 'none',
-			'message'      => '',
-			'paid'         => false,
-			'level'        => 0,
-			'subscription' => ''
-		),
-		$atts,
-		'restrict'
-	);
+	$atts = shortcode_atts( array(
+		'userlevel'    => 'none',
+		'message'      => '',
+		'paid'         => false,
+		'level'        => 0,
+		'subscription' => ''
+	), $atts, 'restrict' );
 
 	global $rcp_options, $user_ID;
 
@@ -142,13 +138,9 @@ add_shortcode( 'is_paid', 'rcp_is_paid_user_shortcode' );
  */
 function rcp_is_free_user_shortcode( $atts, $content = null ) {
 
-	$atts = shortcode_atts(
-		array(
-			'hide_from_paid' => true
-		),
-		$atts,
-		'is_free'
-	);
+	$atts = shortcode_atts( array(
+		'hide_from_paid' => true
+	), $atts, 'is_free' );
 
 	global $user_ID;
 
@@ -234,14 +226,10 @@ add_shortcode( 'user_name', 'rcp_user_name' );
  */
 function rcp_registration_form( $atts, $content = null ) {
 
-	$atts = shortcode_atts(
-		array(
-			'id' => null,
-			'registered_message' => __( 'You are already registered and have an active subscription.', 'rcp' )
-		),
-		$atts,
-		'register_form'
-	);
+	$atts = shortcode_atts( array(
+		'id' => null,
+		'registered_message' => __( 'You are already registered and have an active subscription.', 'rcp' )
+	), $atts, 'register_form' );
 
 	global $user_ID;
 
@@ -366,14 +354,10 @@ function rcp_login_form( $atts, $content = null ) {
 
 	$current_page = rcp_get_current_url();
 
-	$atts = shortcode_atts(
-		array(
-			'redirect' 	=> $current_page,
-			'class' 	=> 'rcp_form'
-		),
-		$atts,
-		'login_form'
-	);
+	$atts = shortcode_atts( array(
+		'redirect' 	=> $current_page,
+		'class' 	=> 'rcp_form'
+	), $atts, 'login_form' );
 
 	$output = '';
 
@@ -449,13 +433,9 @@ add_shortcode( 'paid_posts', 'rcp_list_paid_posts' );
  */
 function rcp_user_subscription_details( $atts, $content = null ) {
 
-	$atts = shortcode_atts(
-		array(
-			'option' => ''
-		),
-		$atts,
-		'subscription_details'
-	);
+	$atts = shortcode_atts( array(
+		'option' => ''
+	), $atts, 'subscription_details' );
 
 	global $user_ID, $rcp_options;
 
