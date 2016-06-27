@@ -486,13 +486,13 @@ add_action( 'rcp_set_status', 'rcp_remove_new_subscription_flag', 999999999999, 
  * When upgrading subscriptions, the new level / key are stored as pending. Once payment is received, the pending
  * values are set as the permanent values.
  *
- * See https://github.com/pippinsplugins/restrict-content-pro/issues/294
+ * See https://github.com/restrictcontentpro/restrict-content-pro/issues/294
  *
  * @access      public
  * @since       2.4.3
  * @return      void
  */
-function rcp_set_pending_subscription_on_upgrade( $status, $user_id ) {
+function rcp_set_pending_subscription_on_upgrade( $status, $user_id, $old_status, $member ) {
 
 	if( 'active' !== $status ) {
 		return;
@@ -503,6 +503,9 @@ function rcp_set_pending_subscription_on_upgrade( $status, $user_id ) {
 
 	if( ! empty( $subscription_id ) && ! empty( $subscription_key ) ) {
 
+		// Decrement the count on the old level
+		rcp_decrement_subscription_member_count( $member->get_subscription_id(), $old_status );
+
 		update_user_meta( $user_id, 'rcp_subscription_level', $subscription_id );
 		update_user_meta( $user_id, 'rcp_subscription_key', $subscription_key );
 
@@ -511,7 +514,28 @@ function rcp_set_pending_subscription_on_upgrade( $status, $user_id ) {
 
 	}
 }
-add_action( 'rcp_set_status', 'rcp_set_pending_subscription_on_upgrade', 10, 2 );
+add_action( 'rcp_set_status', 'rcp_set_pending_subscription_on_upgrade', 10, 4 );
+
+/**
+ * Adjust subscription member counts on status changes
+ *
+ * @access      public
+ * @since       2.5.1
+ * @return      void
+ */
+function rcp_increment_subscription_member_count_on_status_change( $status, $user_id, $old_status, $member ) {
+
+	if( $status === $old_status ) {
+		return;
+	}
+
+	$sub_id = $member->get_subscription_id();
+
+	rcp_decrement_subscription_member_count( $sub_id, $old_status );
+	rcp_increment_subscription_member_count( $sub_id, $status );
+
+}
+add_action( 'rcp_set_status', 'rcp_increment_subscription_member_count_on_status_change', 999, 4 );
 
 /**
  * Determine if this registration is recurring
