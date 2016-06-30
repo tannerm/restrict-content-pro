@@ -44,7 +44,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 
 		$data = apply_filters( 'rcp_stripe_checkout_form_data', array(
 			'key'               => $this->publishable_key,
-			'local'             => 'auto',
+			'locale'             => 'auto',
 			'allow-remember-me' => true,
 			'email'             => $email,
 			'currency'          => rcp_get_currency(),
