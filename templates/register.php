@@ -2,11 +2,11 @@
 
 <?php if( ! is_user_logged_in() ) { ?>
 	<h3 class="rcp_header">
-		<?php echo apply_filters( 'rcp_registration_header_logged_in', __( 'Register New Account', 'rcp' ) ); ?>
+		<?php echo apply_filters( 'rcp_registration_header_logged_out', __( 'Register New Account', 'rcp' ) ); ?>
 	</h3>
 <?php } else { ?>
 	<h3 class="rcp_header">
-		<?php echo apply_filters( 'rcp_registration_header_logged_out', __( 'Upgrade Your Subscription', 'rcp' ) ); ?>
+		<?php echo apply_filters( 'rcp_registration_header_logged_in', __( 'Upgrade Your Subscription', 'rcp' ) ); ?>
 	</h3>
 <?php }
 
