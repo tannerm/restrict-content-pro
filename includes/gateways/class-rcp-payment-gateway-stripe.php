@@ -102,6 +102,18 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$customer = \Stripe\Customer::create( apply_filters( 'rcp_stripe_customer_create_args', $customer_args, $this ) );
 
+				// A temporary invoice is created to force the customer's currency to be set to the store currency. See https://github.com/restrictcontentpro/restrict-content-pro/issues/549
+				\Stripe\InvoiceItem::create( array(
+					'customer'    => $customer->id,
+					'amount'      => 0,
+					'currency'    => rcp_get_currency(),
+					'description' => 'Setting Customer Currency',
+				) );
+
+				$temp_invoice = \Stripe\Invoice::create( array(
+					'customer' => $customer->id,
+				) );
+
 				$member->set_payment_profile_id( $customer->id );
 
 			} catch ( Exception $e ) {
@@ -141,6 +153,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					$customer->account_balance = $customer->account_balance + ( $this->signup_fee * rcp_stripe_get_currency_multiplier() ); // Add additional amount to initial payment (in cents)
 					$customer->save();
 
+					if( isset( $temp_invoice ) ) {
+						$invoice = \Stripe\Invoice::retrieve( $temp_invoice->id );
+						$invoice->closed = true;
+						$invoice->save();
+						unset( $temp_invoice, $invoice );
+					}
 				}
 
 				// clean up any past due or unpaid subscriptions before upgrading/downgrading
@@ -679,7 +697,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		try {
 
-			\Stripe\Plan::create( array(
+			$plan = \Stripe\Plan::create( array(
 				"amount"         => $price,
 				"interval"       => $interval,
 				"interval_count" => $interval_count,
@@ -689,11 +707,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			) );
 
 			// plann successfully created
-			return $plan_id;
+			return $plan->id;
 
 		} catch ( Exception $e ) {
-			// there was a problem
-			return false;
+
+			$this->handle_processing_error( $e );
 		}
 
 	}
@@ -719,17 +737,19 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		// check if the plan new plan id structure exists
 		try {
-			\Stripe\Plan::retrieve( $new_plan_id );
-			return $new_plan_id;
+
+			$plan = \Stripe\Plan::retrieve( $new_plan_id );
+			return $plan->id;
+
 		} catch ( Exception $e ) {}
 
 		try {
 			// fall back to the old plan id structure and verify that the plan metadata also matches
 			$stripe_plan = \Stripe\Plan::retrieve( $old_plan_id );
 
-			if ( $stripe_plan->amount !== $plan->price * 100 ) {
+			if ( (int) $stripe_plan->amount !== (int) $plan->price * 100 ) {
 				return false;
-			};
+			}
 
 			if ( $stripe_plan->interval !== $plan->duration_unit ) {
 				return false;
@@ -740,6 +760,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			}
 
 			return $old_plan_id;
+
 		} catch ( Exception $e ) {
 			return false;
 		}

@@ -382,7 +382,7 @@ function rcp_get_expiration_date( $user_id = 0 ) {
 	}
 
 	$member = new RCP_Member( $user_id );
-	return $member->get_expiration_date();
+	return $member->get_expiration_date( true, false );
 }
 
 /**
@@ -1070,20 +1070,19 @@ function rcp_cancel_member_payment_profile( $member_id = 0, $set_status = true )
 
 			} else {
 
-				$body = wp_remote_retrieve_body( $request );
+				$body    = wp_remote_retrieve_body( $request );
+				$code    = wp_remote_retrieve_response_code( $request );
+				$message = wp_remote_retrieve_response_message( $request );
+
 				if( is_string( $body ) ) {
 					wp_parse_str( $body, $body );
 				}
 
-				if( empty( $request['response'] ) ) {
+				if( 200 !== (int) $code ) {
 					$success = false;
 				}
 
-				if( empty( $request['response']['code'] ) || 200 !== (int) $request['response']['code'] ) {
-					$success = false;
-				}
-
-				if( empty( $request['response']['message'] ) || 'OK' !== $request['response']['message'] ) {
+				if( 'OK' !== $message ) {
 					$success = false;
 				}
 
@@ -1297,8 +1296,11 @@ function rcp_member_can_update_billing_card( $user_id = 0 ) {
 
 		$ret = true;
 
-	}
+	} elseif ( rcp_is_paypal_subscriber( $user_id ) && rcp_has_paypal_api_access() ) {
 
+		$ret = true;
+
+	}
 
 	return apply_filters( 'rcp_member_can_update_billing_card', $ret, $user_id );
 }

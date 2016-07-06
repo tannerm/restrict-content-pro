@@ -22,7 +22,7 @@ function rcp_members_page() {
 			}
 
 			// Get subscriber count
-			if( ! empty( $search ) ) {
+			if( ! empty( $search ) || ! empty( $subscription_id ) ) {
 
 				// Query counts
 				$active_count    = rcp_count_members( $subscription_id, 'active', null, $search );
@@ -169,21 +169,26 @@ function rcp_members_page() {
 								</th>
 								<td class="has-row-actions column-primary" data-colname="<?php _e( 'User', 'rcp' ); ?>">
 									<strong>
-										<a href="<?php echo add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php echo $member->user_login; ?></a>
+										<a href="<?php echo esc_url( add_query_arg('edit_member', $member->ID, $current_page) ); ?>" title="<?php _e( 'Edit Member', 'rcp' ); ?>"><?php echo $member->user_login; ?></a>
 										<?php if( $member->user_login != $member->user_email ) : ?>
 											<?php echo '&nbsp;&ndash;&nbsp;' . $member->user_email; ?>
 										<?php endif; ?>
 									</strong>
 									<?php if( current_user_can( 'rcp_manage_members' ) ) : ?>
 										<div class="row-actions">
-											<span class="id"><?php echo __( 'ID:', 'rcp' ) . ' ' . $member->ID; ?></span>
-											<span class="edit"> | <a href="<?php echo esc_url( add_query_arg('edit_member', $member->ID, $current_page) ); ?>"><?php _e('Edit', 'rcp'); ?></a></span>
+											<span class="edit">
+												<a href="<?php echo esc_url( add_query_arg('edit_member', $member->ID, $current_page) ); ?>"><?php _e( 'Edit Member', 'rcp' ); ?></a>
+												<span class="rcp-separator"> | </span>
+												<a href="<?php echo esc_url( add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php _e( 'Edit User Account', 'rcp' ); ?></a>
+											</span>
 											<?php if( rcp_can_member_cancel( $member->ID ) ) { ?>
 												<span> | <a href="<?php echo wp_nonce_url( add_query_arg('cancel_member', $member->ID, $current_page ), 'rcp-cancel-nonce' ); ?>" class="trash rcp_cancel"><?php _e('Cancel', 'rcp'); ?></a></span>
 											<?php } ?>
 											<?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
 												<span> | <a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a></span>
 											<?php } ?>
+											<span class="rcp-separator"> | </span>
+											<span class="id rcp-member-id"><?php echo __( 'ID:', 'rcp' ) . ' ' . $member->ID; ?></span>
 											<?php do_action( 'rcp_member_row_actions', $member->ID ); ?>
 										</div>
 									<?php endif; ?>
@@ -240,7 +245,10 @@ function rcp_members_page() {
 				</div><!--end .tablenav-->
 			<?php endif; ?>
 			<?php do_action('rcp_members_below_table'); ?>
-			<h3><?php _e('Add New Subscription (for existing user)', 'rcp'); ?></h3>
+			<h3>
+				<?php _e('Add New Subscription (for existing user)', 'rcp'); ?>
+				<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( 'If you wish to create a brand new account, that may be done from Users &rarr; Add New. <br/><strong>Note</strong>: this will not create a payment profile for the member. That must be done manually through your merchant account.', 'rcp' ); ?>"></span>
+			</h3>
 			<form id="rcp-add-new-member" action="" method="post">
 				<table class="form-table">
 					<tbody>
@@ -268,7 +276,8 @@ function rcp_members_page() {
 										endforeach;
 									?>
 								</select>
-								<p class="description"><?php _e('Choose the subscription level for this user', 'rcp'); ?></p>
+								<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( 'The subscription level determines the content the member has access to. <strong>Note</strong>: adding a subscription level to a member will not create a payment profile in your merchant account.', 'rcp' ); ?>"></span>
+								<p class="description"><?php _e('Choose the subscription level for this user.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<tr class="form-field">

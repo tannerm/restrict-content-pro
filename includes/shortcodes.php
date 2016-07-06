@@ -293,7 +293,7 @@ function rcp_register_form_stripe_checkout( $atts ) {
 		'data-label'             => sprintf( __( 'Join %s', 'rcp' ), $subscription->name ),
 		'data-panel-label'       => __( 'Register - {{amount}}', 'rcp' ),
 		'data-amount'            => $amount * rcp_stripe_get_currency_multiplier(),
-		'data-local'             => 'auto',
+		'data-locale'             => 'auto',
 		'data-allow-remember-me' => true,
 		'data-currency'          => rcp_get_currency(),
 		'data-alipay'            => isset( $rcp_options['stripe_alipay'] ) && '1' === $rcp_options['stripe_alipay'] && 'USD' === rcp_get_currency() ? true : false
@@ -509,6 +509,18 @@ function rcp_update_billing_card_shortcode( $atts, $content = null ) {
 				case 'updated' :
 
 					echo '<p class="rcp_success"><span>' . __( 'Billing card updated successfully', 'rcp' ) . '</span></p>';
+
+					break;
+
+				case 'not-updated' :
+
+					if( isset( $_GET['msg'] ) ) {
+						$message = urldecode( $_GET['msg'] );
+					} else {
+						$message = __( 'Billing card could not be updated, please try again.', 'rcp' );
+					}
+
+					echo '<p class="rcp_error"><span>' . $message . '</span></p>';
 
 					break;
 

@@ -14,49 +14,7 @@ function rcp_get_metabox_fields() {
 		'title'    => __( 'Restrict this content', 'rcp' ),
 		'context'  => 'normal',
 		'priority' => apply_filters( 'rcp_metabox_priority', 'high' ),
-		'fields'   => array(
-			array(
-				'name' => __( 'Paid Only?', 'rcp' ),
-				'id'   => '_is_paid',
-				'type' => 'checkbox',
-				'desc' => __( 'Restrict this entry to active paid users only.', 'rcp' )
-			),
-			array(
-				'name' => __( 'Show Excerpt?', 'rcp' ),
-				'id'   => $rcp_prefix . 'show_excerpt',
-				'type' => 'checkbox',
-				'desc' => __( 'Allow non active users to view the excerpt? If left unchecked, the message defined in settings will be used.', 'rcp' )
-			),
-			array(
-				'name' => __( 'Hide from Feed?', 'rcp' ),
-				'id'   => $rcp_prefix . 'hide_from_feed',
-				'type' => 'checkbox',
-				'desc' => __( 'Hide the excerpt of this post / page from the Feed?', 'rcp' )
-			),
-			array(
-				'name' => __( 'Access Level', 'rcp' ),
-				'id'   => $rcp_prefix . 'access_level',
-				'type' => 'select',
-				'desc' => __( 'Choose the access level required see this content. The access level is determined by the subscription the member is subscribed to.', 'rcp' ),
-				'options' => rcp_get_access_levels(),
-				'std'  => 'All'
-			),
-			array(
-				'name' => __( 'Subscription Level', 'rcp' ),
-				'id'   => $rcp_prefix . 'subscription_level',
-				'type' => 'levels',
-				'desc' => __( 'Choose the subscription levels allowed to view this content.', 'rcp' ),
-				'std'  => 'All'
-			),
-			array(
-				'name' => __( 'User Level', 'rcp' ),
-				'id'   => $rcp_prefix . 'user_level',
-				'type' => 'select',
-				'desc' => __( 'Choose the user level that can see this post / page\'s content. Users of this level and higher will be the only ones able to view the content.', 'rcp' ),
-				'options' => array('All', 'Administrator', 'Editor', 'Author', 'Contributor', 'Subscriber'),
-				'std'  => 'All'
-			)
-		)
+		'fields'   => array() // No longer used
 	);
 
 	return apply_filters( 'rcp_metabox_fields', $rcp_meta_box );
@@ -122,6 +80,7 @@ function rcp_save_meta_data( $post_id ) {
 
 	}
 
+	$is_paid     = false;
 	$restrict_by = sanitize_text_field( $_POST['rcp_restrict_by'] );
 
 	switch( $restrict_by ) {
@@ -130,6 +89,7 @@ function rcp_save_meta_data( $post_id ) {
 
 			delete_post_meta( $post_id, 'rcp_access_level' );
 			delete_post_meta( $post_id, 'rcp_subscription_level' );
+			delete_post_meta( $post_id, 'rcp_user_level' );
 
 			break;
 
@@ -144,11 +104,22 @@ function rcp_save_meta_data( $post_id ) {
 
 					update_post_meta( $post_id, 'rcp_subscription_level', 'any' );
 
+					$levels = rcp_get_subscription_levels();
+					foreach( $levels as $level ) {
+
+						if( ! empty( $level->price ) ) {
+							$is_paid = true;
+							break;
+						}
+
+					}
+
 					break;
 
 
 				case 'any-paid' :
 
+					$is_paid = true;
 					update_post_meta( $post_id, 'rcp_subscription_level', 'any-paid' );
 
 					break;
@@ -156,6 +127,16 @@ function rcp_save_meta_data( $post_id ) {
 				case 'specific' :
 
 					$levels = array_map( 'absint', $_POST[ 'rcp_subscription_level' ] );
+
+					foreach( $levels as $level ) {
+
+						$price = rcp_get_subscription_price( $level );
+						if( ! empty( $price ) ) {
+							$is_paid = true;
+							break;
+						}
+
+					}
 
 					update_post_meta( $post_id, 'rcp_subscription_level', $levels );
 
@@ -173,6 +154,16 @@ function rcp_save_meta_data( $post_id ) {
 
 			update_post_meta( $post_id, 'rcp_access_level', absint( $_POST[ 'rcp_access_level' ] ) );
 
+			$levels = rcp_get_subscription_levels();
+			foreach( $levels as $level ) {
+
+				if( ! empty( $level->price ) ) {
+					$is_paid = true;
+					break;
+				}
+
+			}
+
 			// Remove unneeded fields
 			delete_post_meta( $post_id, 'rcp_subscription_level' );
 
@@ -186,9 +177,20 @@ function rcp_save_meta_data( $post_id ) {
 			// Remove unneeded fields
 			delete_post_meta( $post_id, 'rcp_subscription_level' );
 
+			$levels = rcp_get_subscription_levels();
+			foreach( $levels as $level ) {
+
+				if( ! empty( $level->price ) ) {
+					$is_paid = true;
+					break;
+				}
+
+			}
+
 			break;
 
 	}
+
 
 	$show_excerpt = isset( $_POST['rcp_show_excerpt'] );
 	$hide_in_feed = isset( $_POST['rcp_hide_from_feed'] );
@@ -196,9 +198,10 @@ function rcp_save_meta_data( $post_id ) {
 
 	update_post_meta( $post_id, 'rcp_show_excerpt', $show_excerpt );
 	update_post_meta( $post_id, 'rcp_hide_from_feed', $hide_in_feed );
-	update_post_meta( $post_id, 'rcp_user_level', $user_role );
-
-	delete_post_meta( $post_id, '_is_paid' );
+	if ( 'unrestricted' !== $_POST['rcp_restrict_by'] ) {
+		update_post_meta( $post_id, 'rcp_user_level', $user_role );
+	}
+	update_post_meta( $post_id, '_is_paid', $is_paid );
 
 }
 add_action( 'save_post', 'rcp_save_meta_data' );
