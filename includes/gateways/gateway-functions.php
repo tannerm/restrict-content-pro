@@ -265,6 +265,7 @@ function rcp_get_merchant_transaction_id_link( $payment ) {
 			case 'web_accept' :
 			case 'paypal express one time' :
 			case 'recurring_payment' :
+			case 'subscr_payment' :
 			case 'recurring_payment_profile_created' :
 
 				// PayPal
