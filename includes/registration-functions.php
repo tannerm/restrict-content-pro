@@ -137,9 +137,13 @@ function rcp_process_registration() {
 
 	$subscription_key = rcp_generate_subscription_key();
 
-	if( ! rcp_is_active( $user_data['id'] ) ) {
+	$old_subscription_id = $member->get_subscription_id();
 
-		rcp_set_status( $user_data['id'], 'pending' );
+	if( $old_subscription_id ) {
+		update_user_meta( $user_data['id'], '_rcp_old_subscription_id', $old_subscription_id );
+	}
+
+	if( ! rcp_is_active( $user_data['id'] ) ) {
 
 		update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
 		update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
@@ -147,6 +151,8 @@ function rcp_process_registration() {
 		// Ensure no pending level details are set
 		delete_user_meta( $user_data['id'], 'rcp_pending_subscription_level' );
 		delete_user_meta( $user_data['id'], 'rcp_pending_subscription_key' );
+
+		$member->set_status( 'pending' );
 
 	} else {
 
@@ -480,6 +486,7 @@ function rcp_remove_new_subscription_flag( $status, $user_id ) {
 		return;
 	}
 
+	delete_user_meta( $user_id, '_rcp_old_subscription_id' );
 	delete_user_meta( $user_id, '_rcp_new_subscription' );
 }
 add_action( 'rcp_set_status', 'rcp_remove_new_subscription_flag', 999999999999, 2 );
@@ -505,9 +512,6 @@ function rcp_set_pending_subscription_on_upgrade( $status, $user_id, $old_status
 
 	if( ! empty( $subscription_id ) && ! empty( $subscription_key ) ) {
 
-		// Decrement the count on the old level
-		rcp_decrement_subscription_member_count( $member->get_subscription_id(), $old_status );
-
 		update_user_meta( $user_id, 'rcp_subscription_level', $subscription_id );
 		update_user_meta( $user_id, 'rcp_subscription_key', $subscription_key );
 
@@ -522,22 +526,39 @@ add_action( 'rcp_set_status', 'rcp_set_pending_subscription_on_upgrade', 10, 4 )
  * Adjust subscription member counts on status changes
  *
  * @access      public
- * @since       2.5.1
+ * @since       2.6
  * @return      void
  */
 function rcp_increment_subscription_member_count_on_status_change( $status, $user_id, $old_status, $member ) {
 
-	if( $status === $old_status ) {
+	$pending_sub_id = $member->get_pending_subscription_id();
+	$old_sub_id     = get_user_meta( $user_id, '_rcp_old_subscription_id', true );
+	$sub_id         = $member->get_subscription_id();
+
+	if( $old_sub_id && (int) $sub_id === (int) $old_sub_id && $status === $old_status ) {
 		return;
 	}
 
-	$sub_id = $member->get_subscription_id();
+	if( ! empty( $pending_sub_id ) ) {
 
-	rcp_decrement_subscription_member_count( $sub_id, $old_status );
-	rcp_increment_subscription_member_count( $sub_id, $status );
+		rcp_increment_subscription_member_count( $pending_sub_id, $status );
+
+	} elseif( $status !== $old_status ) {
+
+		rcp_increment_subscription_member_count( $sub_id, $status );
+
+	}
+
+	if( ! empty( $old_status ) && $old_status !== $status ) {
+		rcp_decrement_subscription_member_count( $sub_id, $old_status );
+	}
+
+	if( $old_sub_id ) {
+		rcp_decrement_subscription_member_count( $old_sub_id, $old_status );
+	}
 
 }
-add_action( 'rcp_set_status', 'rcp_increment_subscription_member_count_on_status_change', 999, 4 );
+add_action( 'rcp_set_status', 'rcp_increment_subscription_member_count_on_status_change', 9, 4 );
 
 /**
  * Determine if this registration is recurring

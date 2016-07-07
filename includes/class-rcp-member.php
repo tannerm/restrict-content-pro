@@ -362,7 +362,11 @@ class RCP_Member extends WP_User {
 		do_action( 'rcp_member_pre_renew', $this->ID, $expiration, $this );
 
 		$this->set_expiration_date( $expiration );
-		$this->set_status( $status );
+
+		if( ! empty( $status ) ) {
+			$this->set_status( $status );
+		}
+
 		$this->set_recurring( $recurring );
 		$this->set_renewed_date();
 

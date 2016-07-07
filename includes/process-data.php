@@ -266,8 +266,8 @@ function rcp_process_data() {
 				update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
 			}
 
-			if( isset( $_POST['status'] ) ) {
-				rcp_set_status( $user_id, $status );
+			if( $status !== $member->get_status() ) {
+				$member->set_status( $status );
 			}
 
 			if( isset( $_POST['payment-profile-id'] ) ) {

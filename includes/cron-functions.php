@@ -126,7 +126,7 @@ function rcp_check_member_counts() {
 		return;
 	}
 
-	$statuses = array( 'active', 'pending', 'cancelled', 'expired' );
+	$statuses = array( 'active', 'pending', 'cancelled', 'expired', 'free' );
 
 	foreach( $levels as $level ) {
 

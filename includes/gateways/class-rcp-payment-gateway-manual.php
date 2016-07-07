@@ -22,7 +22,7 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'fees';
 
-		$this->test_mode   = isset( $rcp_options['sandbox'] );		
+		$this->test_mode   = isset( $rcp_options['sandbox'] );
 
 	}
 
@@ -34,7 +34,7 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 	public function process_signup() {
 
 		$member = new RCP_Member( $this->user_id );
-		$member->renew( false, 'pending' );
+		$member->renew( false, '' );
 
 		// setup the payment info in an array for storage
 		$payment_data = array(
