@@ -740,7 +740,7 @@ class RCP_Member extends WP_User {
 
 		if ( ! empty( $subscription_levels ) ) {
 
-			if( is_string( $subscription_levels ) && $this->get_subscription_id() ) {
+			if( is_string( $subscription_levels ) ) {
 
 				switch( $subscription_levels ) {
 
