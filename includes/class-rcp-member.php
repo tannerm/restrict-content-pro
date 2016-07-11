@@ -728,6 +728,7 @@ class RCP_Member extends WP_User {
 
 		$subscription_levels = rcp_get_content_subscription_levels( $post_id );
 		$access_level        = get_post_meta( $post_id, 'rcp_access_level', true );
+		$sub_id              = $this->get_subscription_id();
 
 		// Assume the user can until proven false
 		$ret = true;
@@ -746,7 +747,7 @@ class RCP_Member extends WP_User {
 
 					case 'any' :
 
-						$ret = is_user_logged_in() && ( $this->is_active() || 'free' === $this->get_status() );
+						$ret = ! empty( $sub_id ) && ! $this->is_expired();
 						break;
 
 					case 'any-paid' :
@@ -757,7 +758,7 @@ class RCP_Member extends WP_User {
 
 			} else {
 
-				if ( in_array( $this->get_subscription_id(), $subscription_levels ) ) {
+				if ( in_array( $sub_id, $subscription_levels ) ) {
 
 					$needs_paid = false;
 
