@@ -746,7 +746,7 @@ class RCP_Member extends WP_User {
 
 					case 'any' :
 
-						$ret = true;
+						$ret = is_user_logged_in() && ( $this->is_active() || 'free' === $this->get_status() );
 						break;
 
 					case 'any-paid' :
