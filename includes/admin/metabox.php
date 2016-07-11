@@ -104,18 +104,7 @@ function rcp_save_meta_data( $post_id ) {
 
 					update_post_meta( $post_id, 'rcp_subscription_level', 'any' );
 
-					$levels = rcp_get_subscription_levels();
-					foreach( $levels as $level ) {
-
-						if( ! empty( $level->price ) ) {
-							$is_paid = true;
-							break;
-						}
-
-					}
-
 					break;
-
 
 				case 'any-paid' :
 
