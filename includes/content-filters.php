@@ -9,10 +9,6 @@
 function rcp_filter_restricted_content( $content ) {
 	global $post, $user_ID, $rcp_options;
 
-	if ( ! rcp_is_restricted_content( $post->ID ) ) {
-		return $content;
-	}
-
 	if ( rcp_is_paid_content( $post->ID ) ) {
 
 		$message = ! empty( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : false; // message shown for premium content
