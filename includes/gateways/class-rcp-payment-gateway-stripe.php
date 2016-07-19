@@ -103,16 +103,20 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$customer = \Stripe\Customer::create( apply_filters( 'rcp_stripe_customer_create_args', $customer_args, $this ) );
 
 				// A temporary invoice is created to force the customer's currency to be set to the store currency. See https://github.com/restrictcontentpro/restrict-content-pro/issues/549
-				\Stripe\InvoiceItem::create( array(
-					'customer'    => $customer->id,
-					'amount'      => 0,
-					'currency'    => rcp_get_currency(),
-					'description' => 'Setting Customer Currency',
-				) );
+				if ( ! empty( $this->signup_fee ) ) {
 
-				$temp_invoice = \Stripe\Invoice::create( array(
-					'customer' => $customer->id,
-				) );
+					\Stripe\InvoiceItem::create( array(
+						'customer'    => $customer->id,
+						'amount'      => 0,
+						'currency'    => rcp_get_currency(),
+						'description' => 'Setting Customer Currency',
+					) );
+
+					$temp_invoice = \Stripe\Invoice::create( array(
+						'customer' => $customer->id,
+					) );
+
+				}
 
 				$member->set_payment_profile_id( $customer->id );
 
