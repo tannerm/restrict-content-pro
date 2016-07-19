@@ -217,6 +217,9 @@
 					<?php if ( ! empty( $rcp_options['invoice_city_state_zip'] ) ) : ?>
 						<p><strong><?php echo $rcp_options['invoice_city_state_zip']; ?></strong></p>
 					<?php endif; ?>
+					<?php if ( ! empty( $rcp_options['invoice_email'] ) ) : ?>
+						<p><strong><?php echo $rcp_options['invoice_email']; ?></strong></p>
+					<?php endif; ?>
 
 				</article>
 			</div>
