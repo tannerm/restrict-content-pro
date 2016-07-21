@@ -6,8 +6,8 @@
   "author": "Pippin Williamson <support@restrictcontentpro.com> (http://restrictcontentpro.com/)",
   "contributors": "Pippin Williamson",
   "repository": {
-    "type": "",
-    "url": ""
+    "type": "git",
+    "url": "git@github.com:restrictcontentpro/restrict-content-pro.git"
   },
   "bugs": {
     "url": "http://restrictcontentpro.com/support/"
