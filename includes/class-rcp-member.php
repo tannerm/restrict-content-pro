@@ -95,7 +95,7 @@ class RCP_Member extends WP_User {
 		}
 
 		if( $formatted && 'none' != $expiration ) {
-			$expiration = date_i18n( get_option( 'date_format' ), strtotime( $expiration ) );
+			$expiration = date_i18n( get_option( 'date_format' ), strtotime( $expiration, current_time( 'timestamp' ) ) );
 		}
 
 		return apply_filters( 'rcp_member_get_expiration_date', $expiration, $this->ID, $this );
@@ -118,7 +118,7 @@ class RCP_Member extends WP_User {
 
 		}
 
-		return apply_filters( 'rcp_member_get_expiration_time', strtotime( $expiration ), $this->ID, $this );
+		return apply_filters( 'rcp_member_get_expiration_time', strtotime( $expiration, current_time( 'timestamp' ) ), $this->ID, $this );
 
 	}
 
@@ -664,7 +664,7 @@ class RCP_Member extends WP_User {
 		$ret        = false;
 		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
 
-		if( $expiration && strtotime( 'NOW' ) > strtotime( $expiration ) ) {
+		if( $expiration && strtotime( 'NOW', current_time( 'timestamp' ) ) > strtotime( $expiration, current_time( 'timestamp' ) ) ) {
 			$ret = true;
 		}
 

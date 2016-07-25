@@ -182,7 +182,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'VERSION'             => '124',
 					'TOKEN'               => $_POST['token'],
 					'METHOD'              => 'CreateRecurringPaymentsProfile',
-					'PROFILESTARTDATE'    => date( 'Y-m-d\TH:i:s', strtotime( '+' . $details['subscription']['duration'] . ' ' . $details['subscription']['duration_unit'], time() ) ),
+					'PROFILESTARTDATE'    => date( 'Y-m-d\TH:i:s', strtotime( '+' . $details['subscription']['duration'] . ' ' . $details['subscription']['duration_unit'], current_time( 'timestamp' ) ) ),
 					'BILLINGPERIOD'       => ucwords( $details['subscription']['duration_unit'] ),
 					'BILLINGFREQUENCY'    => $details['subscription']['duration'],
 					'AMT'                 => $details['AMT'],

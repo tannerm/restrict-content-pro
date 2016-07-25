@@ -449,7 +449,7 @@ class RCP_Discounts {
 		// if no expiration is set, return true
 		if( ! empty( $expiration ) ) {
 
-			if ( strtotime( 'NOW' ) > strtotime( $expiration ) ) {
+			if ( strtotime( 'NOW', current_time( 'timestamp' ) ) > strtotime( $expiration, current_time( 'timestamp' ) ) ) {
 				$ret = true;
 			}
 		}

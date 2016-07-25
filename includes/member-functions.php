@@ -409,7 +409,7 @@ function rcp_set_expiration_date( $user_id = 0, $new_date = '' ) {
 */
 function rcp_get_expiration_timestamp( $user_id ) {
 	$expiration = get_user_meta( $user_id, 'rcp_expiration', true );
-	return $expiration && $expiration !== 'none' ? strtotime( $expiration ) : false;
+	return $expiration && $expiration !== 'none' ? strtotime( $expiration, current_time( 'timestamp' ) ) : false;
 }
 
 /*

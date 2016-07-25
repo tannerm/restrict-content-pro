@@ -184,10 +184,10 @@ function rcp_calc_member_expiration( $expiration_object ) {
 
 		$expiration_unit 	= $expiration_object->duration_unit;
 		$expiration_length 	= $expiration_object->duration;
-		$member_expires 	= date( 'Y-m-d H:i:s', strtotime( '+' . $expiration_length . ' ' . $expiration_unit . ' 23:59:59' ) );
+		$member_expires 	= date( 'Y-m-d H:i:s', strtotime( '+' . $expiration_length . ' ' . $expiration_unit . ' 23:59:59', current_time( 'timestamp' ) ) );
 
 		if( date( 'j', $current_time ) == $last_day && 'day' != $expiration_unit ) {
-			$member_expires = date( 'Y-m-d H:i:s', strtotime( $member_expires . ' +2 days' ) );
+			$member_expires = date( 'Y-m-d H:i:s', strtotime( $member_expires . ' +2 days', current_time( 'timestamp' ) ) );
 		}
 
 	}

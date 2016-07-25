@@ -148,7 +148,7 @@ function rcp_is_discount_not_expired( $code_id ) {
 		return true;
 
 	if( $expiration ) {
-		if ( strtotime( 'NOW' ) < strtotime( $expiration[0]->expiration ) ) {
+		if ( strtotime( 'NOW', current_time( 'timestamp' ) ) < strtotime( $expiration[0]->expiration, current_time( 'timestamp' ) ) ) {
 			return true;
 		}
 	}
@@ -209,13 +209,13 @@ function rcp_store_discount_use_for_user( $code, $user_id, $discount_object ) {
 * return boolean
 */
 function rcp_user_has_used_discount( $user_id, $code ) {
-	
+
 	$ret = false;
 
 	if( ! empty( $code ) ) {
 
 		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
-		
+
 		if( ! empty( $user_discounts ) ) {
 			if( in_array( $code, $user_discounts ) ) {
 				$ret = true;
