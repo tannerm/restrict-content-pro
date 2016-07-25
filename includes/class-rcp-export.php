@@ -144,7 +144,7 @@ class RCP_Export {
 			foreach ( $row as $col_id => $column ) {
 				// Make sure the column is valid
 				if ( array_key_exists( $col_id, $cols ) ) {
-					echo '"' . $column . '"';
+					echo '"' . $this->esc_field( $column ) . '"';
 					echo $i == count( $cols ) + 1 ? '' : ',';
 				}
 
@@ -152,6 +152,32 @@ class RCP_Export {
 			}
 			echo "\r\n";
 		}
+	}
+
+	/**
+	 * Escape a string to be used in a CSV context
+	 *
+	 * Malicious input can inject formulas into CSV files, opening up the possibility for phishing attacks,
+	 * information disclosure, and arbitrary command execution.
+	 *
+	 * @see http://www.contextis.com/resources/blog/comma-separated-vulnerabilities/
+	 * @see https://hackerone.com/reports/72785
+	 *
+	 * @param string $field
+	 *
+	 * @access      public
+	 * @since       2.6.4
+	 * @return      string
+	 */
+	public function esc_field( $field ) {
+
+		$active_content_triggers = array( '=', '+', '-', '@' );
+
+		if ( in_array( mb_substr( $field, 0, 1 ), $active_content_triggers, true ) ) {
+			$field = '"' . $field;
+		}
+
+		return $field;
 	}
 
 	/**
