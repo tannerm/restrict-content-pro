@@ -157,12 +157,6 @@ class RCP_Export {
 	/**
 	 * Escape a string to be used in a CSV context
 	 *
-	 * Malicious input can inject formulas into CSV files, opening up the possibility for phishing attacks,
-	 * information disclosure, and arbitrary command execution.
-	 *
-	 * @see http://www.contextis.com/resources/blog/comma-separated-vulnerabilities/
-	 * @see https://hackerone.com/reports/72785
-	 *
 	 * @param string $field
 	 *
 	 * @access      public
