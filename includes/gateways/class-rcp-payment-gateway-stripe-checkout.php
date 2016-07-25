@@ -94,14 +94,15 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			var rcpStripeCheckout = StripeCheckout.configure(checkoutArgs);
 
 			jQuery('#rcp_registration_form #rcp_submit').on('click', function(e) {
-				var $form = jQuery(this).closest('form');
+				var $form  = jQuery(this).closest('form');
 				var $level = $form.find('input[name=rcp_level]:checked');
+				var $price = $level.parent().find('.rcp_price').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
 
 				if ( ! $level.length ) {
 					$level = $form.find('input[name=rcp_level]');
+					$price = $form.find('.rcp_level').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
 				}
 
-				var $price = $level.parent().find('.rcp_price').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
 
 				if( jQuery('.rcp_gateway_fields').hasClass('rcp_discounted_100') ) {
 					return false;
