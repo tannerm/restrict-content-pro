@@ -939,7 +939,7 @@ function rcp_cancel_member_payment_profile( $member_id = 0, $set_status = true )
 			require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
 		}
 
-		if ( isset( $rcp_options['sandbox'] ) ) {
+		if ( rcp_is_sandbox() ) {
 			$secret_key = trim( $rcp_options['stripe_test_secret'] );
 		} else {
 			$secret_key = trim( $rcp_options['stripe_live_secret'] );
@@ -1045,10 +1045,10 @@ function rcp_cancel_member_payment_profile( $member_id = 0, $set_status = true )
 		if( rcp_has_paypal_api_access() && $member->get_payment_profile_id() ) {
 
 			// Set PayPal API key credentials.
-			$api_username  = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_username' : 'live_paypal_api_username';
-			$api_password  = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_password' : 'live_paypal_api_password';
-			$api_signature = isset( $rcp_options['sandbox'] ) ? 'test_paypal_api_signature' : 'live_paypal_api_signature';
-			$api_endpoint  = isset( $rcp_options['sandbox'] ) ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp';
+			$api_username  = rcp_is_sandbox() ? 'test_paypal_api_username' : 'live_paypal_api_username';
+			$api_password  = rcp_is_sandbox() ? 'test_paypal_api_password' : 'live_paypal_api_password';
+			$api_signature = rcp_is_sandbox() ? 'test_paypal_api_signature' : 'live_paypal_api_signature';
+			$api_endpoint  = rcp_is_sandbox() ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp';
 
 			$args = array(
 				'USER'      => trim( $rcp_options[ $api_username ] ),

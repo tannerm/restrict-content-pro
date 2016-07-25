@@ -10,7 +10,7 @@
 */
 
 class RCP_Payment_Gateway {
-	
+
 	public $supports = array();
 	public $email;
 	public $user_id;
@@ -30,6 +30,7 @@ class RCP_Payment_Gateway {
 
 	public function __construct( $subscription_data = array() ) {
 
+		$this->test_mode = rcp_is_sandbox();
 		$this->init();
 
 		if( ! empty( $subscription_data ) ) {

@@ -254,7 +254,7 @@ function rcp_get_merchant_transaction_id_link( $payment ) {
 
 	$url  = '';
 	$link = $payment->transaction_id;
-	$test = isset( $rcp_options['sandbox'] );
+	$test = rcp_is_sandbox();
 
 	if( ! empty( $payment->transaction_id ) ) {
 

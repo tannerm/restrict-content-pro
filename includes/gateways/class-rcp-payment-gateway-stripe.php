@@ -27,8 +27,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
 
-		$this->test_mode   = isset( $rcp_options['sandbox'] );
-
 		if( $this->test_mode ) {
 
 			$this->secret_key      = isset( $rcp_options['stripe_test_secret'] )      ? trim( $rcp_options['stripe_test_secret'] )      : '';

@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * Determines if we are in sandbox mode
+ *
+ * @access public
+ * @since 2.6.4
+ * @return bool True if we are in sandbox mode
+*/
+function rcp_is_sandbox(){
+    global $rcp_options;
+    return (bool) apply_filters( 'rcp_is_sandbox', isset( $rcp_options['sandbox'] ) );
+}
 
 /**
  * Checks whether the post is Paid Only.

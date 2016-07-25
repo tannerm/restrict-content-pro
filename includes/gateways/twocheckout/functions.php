@@ -21,8 +21,8 @@ function rcp_2checkout_cancel_member( $member_id = 0 ) {
 		require_once RCP_PLUGIN_DIR . 'includes/libraries/twocheckout/Twocheckout.php';
 	}
 
-	$secret_word = isset( $rcp_options['sandbox'] ) ? trim( $rcp_options['twocheckout_secret_word'] ) : '';;
-	$test_mode   = isset( $rcp_options['sandbox'] );
+	$secret_word = rcp_is_sandbox() ? trim( $rcp_options['twocheckout_secret_word'] ) : '';;
+	$test_mode   = rcp_is_sandbox();
 
 	if( $test_mode ) {
 
