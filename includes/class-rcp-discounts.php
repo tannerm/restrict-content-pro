@@ -539,7 +539,7 @@ class RCP_Discounts {
 			$discounted_price = $base_price - $discount_amount;
 		}
 
-		return number_format( (float) $discounted_price, 2 );
+		return $discounted_price;
 
 	}
 
