@@ -170,5 +170,17 @@ class RCP_Discount_Tests extends WP_UnitTestCase {
 		$this->assertEquals( 90, $this->db->calc_discounted_price( 100, 10, 'flat' ) );
 	}
 
+	function test_calc_discounted_price_with_high_price_and_flat_discount() {
+
+		$this->assertEquals( 1979, $this->db->calc_discounted_price( 1999, 20, 'flat' ) );
+
+	}
+
+	function test_calc_discounted_price_with_high_price_and_percentage_discount() {
+
+		$this->assertEquals( 1599.2, $this->db->calc_discounted_price( 1999, 20, '%' ) );
+
+	}
+
 }
 
