@@ -260,6 +260,13 @@ function rcp_process_registration() {
 
 		} else {
 
+			update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
+			update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
+
+			// Ensure no pending level details are set
+			delete_user_meta( $user_data['id'], 'rcp_pending_subscription_level' );
+			delete_user_meta( $user_data['id'], 'rcp_pending_subscription_key' );
+
 			// set the user's status to free
 			rcp_set_status( $user_data['id'], 'free' );
 			rcp_email_subscription_status( $user_data['id'], 'free' );

@@ -60,7 +60,7 @@ add_action( 'wp_ajax_nopriv_rcp_load_gateway_fields', 'rcp_load_gateway_fields' 
 function rcp_calc_total_ajax() {
 	$return = array(
 		'valid' => false,
-		'total' => __( 'An error occurred, please refresh the page and try again.', 'rcp' ),
+		'total' => __( 'No available subscription levels for your account.', 'rcp' ),
 	);
 
 	if ( ! rcp_is_registration() ) {
