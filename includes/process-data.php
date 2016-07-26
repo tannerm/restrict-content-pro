@@ -84,7 +84,7 @@ function rcp_process_data() {
 				wp_die( __( 'Please fill out all fields.', 'rcp' ) );
 			}
 
-			if ( isset( $_POST['expiration'] ) &&  strtotime( 'NOW' ) > strtotime( $_POST['expiration'] ) && 'none' !== $_POST['expiration'] ) :
+			if ( isset( $_POST['expiration'] ) &&  strtotime( 'NOW', current_time( 'timestamp' ) ) > strtotime( $_POST['expiration'], current_time( 'timestamp' ) ) && 'none' !== $_POST['expiration'] ) :
 
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-members&rcp_message=user_not_added';
 				header( "Location:" . $url );
@@ -167,7 +167,7 @@ function rcp_process_data() {
 				$member = new RCP_Member( $member_id );
 
 				if( ! empty( $_POST['expiration'] ) && 'delete' !== $action ) {
-					$member->set_expiration_date( date( 'Y-m-d H:i:s', strtotime( $_POST['expiration'] ) ) );
+					$member->set_expiration_date( date( 'Y-m-d H:i:s', strtotime( $_POST['expiration'], current_time( 'timestamp' ) ) ) );
 				}
 
 				if( $action ) {
@@ -219,7 +219,7 @@ function rcp_process_data() {
 			$status       = sanitize_text_field( $_POST['status'] );
 			$level_id     = absint( $_POST['level'] );
 			$expiration   = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
-			$expiration   = 'none' !== $expiration ? date( 'Y-m-d 23:59:59', strtotime( $_POST['expiration'] ) ) : $expiration;
+			$expiration   = 'none' !== $expiration ? date( 'Y-m-d 23:59:59', strtotime( $_POST['expiration'], current_time( 'timestamp' ) ) ) : $expiration;
 
 			if( ! empty( $_POST['expiration'] ) ) {
 				$member->set_expiration_date( $expiration );

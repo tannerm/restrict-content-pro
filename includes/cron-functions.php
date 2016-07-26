@@ -21,7 +21,7 @@ function rcp_check_for_expired_users() {
 
 	global $wpdb;
 
-	$current_time = date( 'Y-m-d H:i:s', strtotime( '-1 day' ) );
+	$current_time = date( 'Y-m-d H:i:s', strtotime( '-1 day', current_time( 'timestamp' ) ) );
 
 	$query = "SELECT ID FROM $wpdb->users
 		INNER JOIN $wpdb->usermeta ON ($wpdb->users.ID = $wpdb->usermeta.user_id)
@@ -74,7 +74,7 @@ function rcp_check_for_soon_to_expire_users() {
 			),
 			array(
 				'key'    => 'rcp_expiration',
-				'value'  => date( 'Y-m-d H:i:s', strtotime( $renewal_period ) ),
+				'value'  => date( 'Y-m-d H:i:s', strtotime( $renewal_period, current_time( 'timestamp' ) ) ),
 				'type'   => 'DATETIME',
 				'compare'=> '<='
 			),

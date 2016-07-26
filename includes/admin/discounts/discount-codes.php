@@ -74,7 +74,7 @@ function rcp_discounts_page()
 							</td>
 							<td data-colname="<?php _e( 'Uses', 'rcp' ); ?>"><?php if( $code->max_uses > 0 ) { echo rcp_count_discount_code_uses( $code->code ) . '/' . $code->max_uses; } else { echo rcp_count_discount_code_uses( $code->code ); }?></td>
 							<td data-colname="<?php _e( 'Uses Left', 'rcp' ); ?>"><?php echo rcp_discount_has_uses_left( $code->id ) ? 'yes' : 'no'; ?></td>
-							<td data-colname="<?php _e( 'Expiration', 'rcp' ); ?>"><?php echo $code->expiration == '' ? __( 'none', 'rcp' ) : date_i18n( 'Y-m-d', strtotime( $code->expiration ) ); ?></td>
+							<td data-colname="<?php _e( 'Expiration', 'rcp' ); ?>"><?php echo $code->expiration == '' ? __( 'none', 'rcp' ) : date_i18n( 'Y-m-d', strtotime( $code->expiration, current_time( 'timestamp' ) ) ); ?></td>
 							<?php do_action('rcp_discounts_page_table_column', $code->id); ?>
 						</tr>
 					<?php
