@@ -45,7 +45,7 @@ function rcp_has_paypal_api_access() {
 	$ret    = false;
 	$prefix = 'live_';
 
-	if( isset( $rcp_options['sandbox'] ) ) {
+	if( rcp_is_sandbox() ) {
 		$prefix = 'test_';
 	}
 
@@ -74,7 +74,7 @@ function rcp_get_paypal_api_credentials() {
 	$ret    = false;
 	$prefix = 'live_';
 
-	if( isset( $rcp_options['sandbox'] ) ) {
+	if( rcp_is_sandbox() ) {
 		$prefix = 'test_';
 	}
 
@@ -110,7 +110,7 @@ function rcp_paypal_update_billing_card( $member_id = 0, $member_obj ) {
 		return;
 	}
 
-	if( isset( $rcp_options['sandbox'] ) ) {
+	if( rcp_is_sandbox() ) {
 
 		$api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
 

@@ -271,7 +271,7 @@ function rcp_register_form_stripe_checkout( $atts ) {
 		$atts['data-label'] = $atts['button'];
 	}
 
-	$key = ( isset( $rcp_options['sandbox'] ) ) ? $rcp_options['stripe_test_publishable'] : $rcp_options['stripe_live_publishable'];
+	$key = ( rcp_is_sandbox() ) ? $rcp_options['stripe_test_publishable'] : $rcp_options['stripe_live_publishable'];
 
 	$member       = new RCP_Member( wp_get_current_user()->ID );
 	$subscription = rcp_get_subscription_details( $atts['id'] );

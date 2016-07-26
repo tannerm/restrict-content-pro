@@ -28,8 +28,6 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
 
-		$this->test_mode   = isset( $rcp_options['sandbox'] );
-
 		if( $this->test_mode ) {
 
 			$this->api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';

@@ -53,7 +53,7 @@ function rcp_tools_system_info_report() {
 	$return .= 'Auto Renew:                       ' . ( ! empty( $rcp_options['auto_renew'] ) && array_key_exists( $rcp_options['auto_renew'], $auto_renew_options ) ? $auto_renew_options[$rcp_options['auto_renew']] . "\n" : "Invalid Configuration\n" );
 	$return .= 'Currency:                         ' . ( ! empty( $rcp_options['currency'] ) ? $rcp_options['currency'] . "\n" : "Invalid Configuration\n" );
 	$return .= 'Currency Position:                ' . ( ! empty( $rcp_options['currency_position'] ) ? $rcp_options['currency_position'] . "\n" : "Invalid Configuration\n" );
-	$return .= 'Sandbox Mode:                     ' . ( ! empty( $rcp_options['sandbox'] ) ? "True" . "\n" : "False\n" );
+	$return .= 'Sandbox Mode:                     ' . ( rcp_is_sandbox() ? "True" . "\n" : "False\n" );
 
 
 	// RCP pages
