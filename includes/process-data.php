@@ -99,6 +99,8 @@ function rcp_process_data() {
 					wp_die( __( 'You entered a username that does not exist.', 'rcp' ) );
 				}
 
+				$member = new RCP_Member( $user->ID );
+
 				$expiration = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 
 				$level_id   = absint( $_POST['level'] );
@@ -109,7 +111,7 @@ function rcp_process_data() {
 					wp_die( __( 'Please supply a valid subscription level.', 'rcp' ) );
 				}
 
-				rcp_set_expiration_date( $user->ID, $expiration );
+				$member->set_expiration_date( $expiration );
 
 				$new_subscription = get_user_meta( $user->ID, '_rcp_new_subscription', true );
 
@@ -117,14 +119,13 @@ function rcp_process_data() {
 					update_user_meta( $user->ID, '_rcp_new_subscription', '1' );
 				}
 
-				$status = $subscription->price == 0 ? 'free' : 'active';
-
-				rcp_set_status( $user->ID, $status );
-
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
 
-				// Add a role, if needed, to the user
 				update_user_meta( $user->ID, 'rcp_subscription_level', $level_id );
+
+				$status = $subscription->price == 0 ? 'free' : 'active';
+
+				$member->set_status( $status );
 
 				// Add the new user role
 				$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
