@@ -1079,6 +1079,20 @@ function rcp_sanitize_settings( $data ) {
 		rcp_activate_license();
 	}
 
+	// Trim API key fields.
+	$api_key_fields = array(
+		'stripe_test_secret', 'stripe_test_publishable',
+		'stripe_live_secret', 'stripe_live_publishable',
+		'twocheckout_test_private', 'twocheckout_test_publishable',
+		'twocheckout_live_private', 'twocheckout_live_publishable'
+	);
+
+	foreach ( $api_key_fields as $field ) {
+		if ( ! empty( $_POST[ $field ] ) ) {
+			$data[ $field ] = trim( $_POST[ $field ] );
+		}
+	}
+
 	// Make sure the [login_form] short code is on the redirect page. Users get locked out if it is not
 	if( isset( $data['hijack_login_url'] ) ) {
 
