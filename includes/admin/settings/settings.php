@@ -1088,8 +1088,8 @@ function rcp_sanitize_settings( $data ) {
 	);
 
 	foreach ( $api_key_fields as $field ) {
-		if ( ! empty( $_POST[ $field ] ) ) {
-			$data[ $field ] = trim( $_POST[ $field ] );
+		if ( ! empty( $data[ $field ] ) ) {
+			$data[ $field ] = trim( $data[ $field ] );
 		}
 	}
 
