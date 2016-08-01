@@ -23,7 +23,9 @@ if ( !defined( 'RCP_PLUGIN_FILE' ) ) {
 if ( !defined( 'RCP_PLUGIN_VERSION' ) ) {
 	define( 'RCP_PLUGIN_VERSION', '2.6.4' );
 }
-
+if ( ! defined( 'CAL_GREGORIAN' ) ) {
+	define( 'CAL_GREGORIAN', 1 );
+}
 
 /*******************************************
 * setup DB names
