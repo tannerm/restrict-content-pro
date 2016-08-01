@@ -642,6 +642,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	 */
 	public function validate_fields() {
 
+		global $rcp_options;
+
 		if( empty( $_POST['rcp_card_number'] ) ) {
 			rcp_errors()->add( 'missing_card_number', __( 'The card number you have entered is invalid', 'rcp' ), 'register' );
 		}
@@ -664,6 +666,14 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		if( empty( $_POST['rcp_card_exp_year'] ) ) {
 			rcp_errors()->add( 'missing_card_exp_year', __( 'The card expiration year you have entered is invalid', 'rcp' ), 'register' );
+		}
+
+		if ( $this->test_mode && ( empty( $rcp_options['stripe_test_secret'] ) || empty( $rcp_options['stripe_test_publishable'] ) ) ) {
+			rcp_errors()->add( 'missing_stripe_test_keys', __( 'Missing Stripe test keys. Please enter your test keys to use Stripe in Sandbox Mode.', 'rcp' ), 'register' );
+		}
+
+		if ( ! $this->test_mode && ( empty( $rcp_options['stripe_live_secret'] ) || empty( $rcp_options['stripe_live_publishable'] ) ) ) {
+			rcp_errors()->add( 'missing_stripe_live_keys', __( 'Missing Stripe live keys. Please enter your live keys to use Stripe in Live Mode.', 'rcp' ), 'register' );
 		}
 
 	}
