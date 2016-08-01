@@ -44,7 +44,8 @@ class RCP_Members_Export extends RCP_Export {
 			'expiration'       => __( 'Expiration', 'rcp' ),
 			'status'           => __( 'Status', 'rcp' ),
 			'discount_codes'   => __( 'Discount Codes', 'rcp' ),
-			'profile_id'       => __( 'Payment Profile ID', 'rcp' )
+			'profile_id'       => __( 'Payment Profile ID', 'rcp' ),
+			'is_recurring'     => __( 'Recurring', 'rcp' )
 		);
 		return $cols;
 	}
@@ -94,7 +95,8 @@ class RCP_Members_Export extends RCP_Export {
 					'expiration'       => $member->get_expiration_date(),
 					'status'           => $member->get_status(),
 					'discount_codes'   => $discounts,
-					'profile_id'       => $member->get_payment_profile_id()
+					'profile_id'       => $member->get_payment_profile_id(),
+					'is_recurring'     => $member->is_recurring()
 				);
 
 			}
