@@ -64,9 +64,8 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'PWD'                => $this->password,
 			'SIGNATURE'          => $this->signature,
 			'VERSION'            => '124',
-			'METHOD'             => 'CreateRecurringPaymentsProfile',
+			'METHOD'             => $this->auto_renew ? 'CreateRecurringPaymentsProfile' : 'DoDirectPayment',
 			'AMT'                => $this->amount,
-			'INITAMT'            => round( $this->amount + $this->signup_fee, 2 ),
 			'CURRENCYCODE'       => strtoupper( $this->currency ),
 			'SHIPPINGAMT'        => 0,
 			'TAXAMT'             => 0,
@@ -88,6 +87,10 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'FAILEDINITAMTACTION'=> 'CancelOnFailure',
 			'TOTALBILLINGCYCLES' => $this->auto_renew ? 0 : 1
 		);
+
+		if ( $this->auto_renew ) {
+			$args['INITAMT'] = round( $this->amount + $this->signup_fee, 2 );
+		}
 
 		// make sure the initial amount is not less than 0
 		if ( $args['INITAMT'] < 0 ) {
