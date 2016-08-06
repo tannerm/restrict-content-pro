@@ -523,6 +523,51 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 				break;
 
+			case "web_accept" :
+
+				switch ( strtolower( $posted['payment_status'] ) ) :
+
+					case 'completed' :
+
+						if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
+							$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+							if( $cancelled ) {
+
+								$member->set_payment_profile_id( '' );
+
+							}
+						}
+
+						$payment_data = array(
+							'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'] ) ),
+							'subscription'     => $member->get_subscription_name(),
+							'payment_type'     => $posted['txn_type'],
+							'subscription_key' => $member->get_subscription_key(),
+							'amount'           => number_format( (float) $posted['mc_gross'], 2 ),
+							'user_id'          => $user_id,
+							'transaction_id'   => sanitize_text_field( $posted['txn_id'] ),
+						);
+
+						$rcp_payments->insert( $payment_data );
+
+						// set this user to active
+						$member->renew();
+
+						break;
+
+					case 'denied' :
+					case 'expired' :
+					case 'failed' :
+					case 'voided' :
+						$member->set_status( 'cancelled' );
+						break;
+
+				endswitch;
+
+
+				die( 'successful web_accept' );
+
+			break;
 
 		endswitch;
 
