@@ -338,8 +338,6 @@ class RCP_Levels {
 
 		$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM " . $this->db_name . " WHERE `id`='%d';", absint( $level_id ) ) );
 
-		$this->remove_all_meta_for_level_id( $level_id );
-
 		$args = array(
 			'status'  => 'all',
 			'limit'   => null,
