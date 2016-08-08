@@ -86,31 +86,46 @@ function rcp_locate_template( $template_names, $load = false, $require_once = tr
 	// No file found yet
 	$located = false;
 
+	$template_stack = array();
+
+	// check child theme first
+	$template_stack[] = trailingslashit( get_stylesheet_directory() ) . 'rcp/';
+
+	// check parent theme next
+	$template_stack[] = trailingslashit( get_template_directory() ) . 'rcp/';
+
+	// check custom directories
+	$template_stack = apply_filters( 'rcp_template_stack', $template_stack, $template_names );
+
+	// check theme compatibility last
+	$template_stack[] = trailingslashit( rcp_get_templates_dir() );
+
 	// Try to find a template file
 	foreach ( (array) $template_names as $template_name ) {
 
 		// Continue if template is empty
-		if ( empty( $template_name ) )
+		if ( empty( $template_name ) ) {
 			continue;
+		}
 
 		// Trim off any slashes from the template name
 		$template_name = ltrim( $template_name, '/' );
 
-		// Check child theme first
-		if ( file_exists( trailingslashit( get_stylesheet_directory() ) . 'rcp/' . $template_name ) ) {
-			$located = trailingslashit( get_stylesheet_directory() ) . 'rcp/' . $template_name;
-			break;
+		// Loop through template stack.
+		foreach ( (array) $template_stack as $template_location ) {
 
-		// Check parent theme next
-		} elseif ( file_exists( trailingslashit( get_template_directory() ) . 'rcp/' . $template_name ) ) {
-			$located = trailingslashit( get_template_directory() ) . 'rcp/' . $template_name;
-			break;
+			// Continue if $template_location is empty.
+			if ( empty( $template_location ) ) {
+				continue;
+			}
 
-		// Check theme compatibility last
-		} elseif ( file_exists( trailingslashit( rcp_get_templates_dir() ) . $template_name ) ) {
-			$located = trailingslashit( rcp_get_templates_dir() ) . $template_name;
-			break;
+			// Check child theme first.
+			if ( file_exists( trailingslashit( $template_location ) . $template_name ) ) {
+				$located = trailingslashit( $template_location ) . $template_name;
+				break 2;
+			}
 		}
+
 	}
 
 	if ( ( true == $load ) && ! empty( $located ) )
