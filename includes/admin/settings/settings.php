@@ -828,6 +828,9 @@ function rcp_settings_page() {
 							<li><em>%subscription_name%</em> - <?php _e( 'will be replaced with the name of the subscription', 'rcp' ); ?></li>
 							<li><em>%subscription_key%</em> - <?php _e( 'will be replaced with the unique, 32 character key created when the user is registered', 'rcp' ); ?></li>
 							<li><em>%amount%</em> - <?php _e( 'will be replaced with the amount of the users last payment', 'rcp' ); ?></li>
+
+							<?php do_action( 'rcp_available_template_tags' ); ?>
+
 						</ul>
 					</div><!--end #rcp_email_tags-->
 					<div class="clear"></div>
