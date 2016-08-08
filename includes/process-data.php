@@ -490,6 +490,7 @@ function rcp_process_data() {
 			}
 			$levels = new RCP_Levels();
 			$levels->remove( $_GET['delete_subscription'] );
+			$levels->remove_all_meta_for_level_id( $_GET['delete_subscription'] );
 
 		}
 		if( isset( $_GET['activate_subscription'] ) && $_GET['activate_subscription'] > 0) {

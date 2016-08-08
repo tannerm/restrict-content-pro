@@ -423,4 +423,25 @@ class RCP_Levels {
 		return delete_metadata( 'level', $level_id, $meta_key, $meta_value );
 	}
 
+	/**
+	 * Removes all metadata for the specified subscription level.
+	 *
+	 * @since 2.6.6
+	 * @uses wpdb::query()
+	 * @uses wpdb::prepare()
+	 *
+	 * @param  int $level_id Subscription level ID.
+	 * @return int|false Number of rows affected/selected or false on error.
+	 */
+	public function remove_all_meta_for_level_id( $level_id = 0 ) {
+
+		global $wpdb;
+
+		if ( empty( $level_id ) ) {
+			return;
+		}
+
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->levelmeta} WHERE level_id = %d", absint( $level_id ) ) );
+	}
+
 }
