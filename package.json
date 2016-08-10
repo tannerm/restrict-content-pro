@@ -15,7 +15,12 @@
   "license": "GPLv2+",
   "private": true,
   "directories": {
-    "test": "tests"
+      "tests": "tests",
+      "js": "",
+      "sass": "",
+      "css": "",
+      "build": "./build",
+      "languages": "./languages"
   },
   "pot": {
     "type": "wp-plugin",

@@ -96,9 +96,9 @@ module.exports = function( grunt ) {
 					},
 					files: [{
 						expand: true,
-						cwd: '<%= dirs.lang %>',
-						src: ['*.po'],
-						dest: '<%= dirs.lang %>',
+                        cwd: '<%= pkg.directories.languages %>',
+			            src: ['*.po'],
+			            dest: '<%=  pkg.directories.languages %>',
 						ext: '.mo',
 						nonull: true
 				}]
