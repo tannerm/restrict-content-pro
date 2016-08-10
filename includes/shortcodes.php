@@ -61,7 +61,7 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 	}
 
 	if ( ! empty( $subscription ) && ! empty( $subscription[0] ) ) {
-		if ( ! in_array( rcp_get_subscription_id( $user_ID ), $subscription ) || ( in_array( rcp_get_subscription_id( $user_ID ), $subscription ) && ! rcp_is_active( $user_ID ) ) ) {
+		if ( ! in_array( rcp_get_subscription_id( $user_ID ), $subscription ) || ( in_array( rcp_get_subscription_id( $user_ID ), $subscription ) && rcp_is_expired( $user_ID ) ) ) {
 			$has_access = false;
 		}
 	}
