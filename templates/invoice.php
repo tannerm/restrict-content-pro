@@ -169,6 +169,9 @@
 		margin: 60px 0 0 0;
 		text-align: right;
 	}
+	img {
+		max-width: 100%;
+	}
 	@media print  {
 		.print {
 			display: none;
