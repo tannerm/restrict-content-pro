@@ -315,6 +315,7 @@ class RCP_Levels {
 		$cache_key = md5( implode( '|', $cache_args ) );
 
 		wp_cache_delete( $cache_key, 'rcp' );
+		wp_cache_delete( 'level_' . $level_id, 'rcp' );
 
 		do_action( 'rcp_edit_subscription_level', absint( $args['id'] ), $args );
 
