@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Restrict Content Pro package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Restrict Content Pro 2.6.5\n"
-"Report-Msgid-Bugs-To: https://restrictcontentpro.com/\n"
-"POT-Creation-Date: 2016-08-01 14:52:51+00:00\n"
+"Project-Id-Version: Restrict Content Pro 2.6.6\n"
+"Report-Msgid-Bugs-To: http://restrictcontentpro.com/support/\n"
+"POT-Creation-Date: 2016-08-09 19:18:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: Restrict Content Pro <support@restrictcontentpro.com>\n"
 "Language-Team: Restrict Content Pro <support@restrictcontentpro.com>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
 "X-Poedit-KeywordsList: "
@@ -39,7 +39,7 @@ msgid "You do not have permission to install plugin updates"
 msgstr ""
 
 #: RCP_Plugin_Updater.php:337 includes/admin/class-rcp-add-on-updater.php:276
-#: includes/admin/settings/settings.php:1163 includes/class-rcp-export.php:187
+#: includes/admin/settings/settings.php:1166 includes/class-rcp-export.php:187
 #: includes/gateways/class-rcp-payment-gateway-2checkout.php:149
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:116
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:130
@@ -50,9 +50,9 @@ msgstr ""
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:279
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:293
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:333
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:112
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:128
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:155
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:113
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:129
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:158
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:62
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:123
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:238
@@ -352,7 +352,7 @@ msgstr ""
 #: includes/admin/discounts/discount-codes.php:37
 #: includes/admin/discounts/discount-codes.php:89
 #: includes/admin/discounts/discount-codes.php:111
-#: includes/admin/settings/settings.php:859
+#: includes/admin/settings/settings.php:862
 #: includes/admin/subscriptions/edit-subscription.php:16
 #: includes/admin/subscriptions/subscription-levels.php:16
 #: includes/admin/subscriptions/subscription-levels.php:33
@@ -1552,8 +1552,8 @@ msgstr ""
 #: includes/admin/settings/settings.php:140
 #: includes/admin/settings/settings.php:164
 #: includes/admin/settings/settings.php:188
-#: includes/admin/settings/settings.php:959
-#: includes/admin/settings/settings.php:990
+#: includes/admin/settings/settings.php:962
+#: includes/admin/settings/settings.php:993
 msgid "No pages found"
 msgstr ""
 
@@ -2170,142 +2170,142 @@ msgstr ""
 msgid "will be replaced with the amount of the users last payment"
 msgstr ""
 
-#: includes/admin/settings/settings.php:840
+#: includes/admin/settings/settings.php:843
 msgid "Invoice Logo"
 msgstr ""
 
-#: includes/admin/settings/settings.php:844
+#: includes/admin/settings/settings.php:847
 msgid "Choose Logo"
 msgstr ""
 
-#: includes/admin/settings/settings.php:845
+#: includes/admin/settings/settings.php:848
 msgid "Upload a logo to display on the invoices."
 msgstr ""
 
-#: includes/admin/settings/settings.php:850
+#: includes/admin/settings/settings.php:853
 msgid "Company Name"
 msgstr ""
 
-#: includes/admin/settings/settings.php:854
+#: includes/admin/settings/settings.php:857
 msgid "Enter the company name that will be shown on the invoice."
 msgstr ""
 
-#: includes/admin/settings/settings.php:863
+#: includes/admin/settings/settings.php:866
 msgid "Enter the personal name that will be shown on the invoice."
 msgstr ""
 
-#: includes/admin/settings/settings.php:868
+#: includes/admin/settings/settings.php:871
 msgid "Address Line 1"
 msgstr ""
 
-#: includes/admin/settings/settings.php:872
+#: includes/admin/settings/settings.php:875
 msgid "Enter the first address line that will appear on the invoice."
 msgstr ""
 
-#: includes/admin/settings/settings.php:877
+#: includes/admin/settings/settings.php:880
 msgid "Address Line 2"
 msgstr ""
 
-#: includes/admin/settings/settings.php:881
+#: includes/admin/settings/settings.php:884
 msgid "Enter the second address line that will appear on the invoice."
 msgstr ""
 
-#: includes/admin/settings/settings.php:886
+#: includes/admin/settings/settings.php:889
 msgid "City, State, and Zip"
 msgstr ""
 
-#: includes/admin/settings/settings.php:890
+#: includes/admin/settings/settings.php:893
 msgid "Enter the city, state and zip/postal code that will appear on the invoice."
 msgstr ""
 
-#: includes/admin/settings/settings.php:895 templates/register-single.php:33
+#: includes/admin/settings/settings.php:898 templates/register-single.php:33
 #: templates/register.php:32
 msgid "Email"
 msgstr ""
 
-#: includes/admin/settings/settings.php:899
+#: includes/admin/settings/settings.php:902
 msgid "Enter the email address that will appear on the invoice."
 msgstr ""
 
-#: includes/admin/settings/settings.php:904
+#: includes/admin/settings/settings.php:907
 msgid "Header Text"
 msgstr ""
 
-#: includes/admin/settings/settings.php:908
+#: includes/admin/settings/settings.php:911
 msgid "Enter the message you would like to be shown on the header of the invoice."
 msgstr ""
 
-#: includes/admin/settings/settings.php:913
+#: includes/admin/settings/settings.php:916
 msgid "Notes"
 msgstr ""
 
-#: includes/admin/settings/settings.php:917
+#: includes/admin/settings/settings.php:920
 msgid "Enter additional notes you would like displayed below the invoice totals."
 msgstr ""
 
-#: includes/admin/settings/settings.php:922
+#: includes/admin/settings/settings.php:925
 msgid "Footer Text"
 msgstr ""
 
-#: includes/admin/settings/settings.php:926
+#: includes/admin/settings/settings.php:929
 msgid "Enter the message you would like to be shown on the footer of the invoice."
 msgstr ""
 
-#: includes/admin/settings/settings.php:937
+#: includes/admin/settings/settings.php:940
 msgid "Hide Premium Posts"
 msgstr ""
 
-#: includes/admin/settings/settings.php:941
+#: includes/admin/settings/settings.php:944
 msgid ""
 "Check this to hide all premium posts from queries when user is not logged "
 "in. Note, this will only hide posts that are restricted to paid memberships."
 msgstr ""
 
-#: includes/admin/settings/settings.php:946
+#: includes/admin/settings/settings.php:949
 msgid "Redirect Page"
 msgstr ""
 
-#: includes/admin/settings/settings.php:963
+#: includes/admin/settings/settings.php:966
 msgid ""
 "This is the page non-subscribed users are redirected to when attempting to "
 "access a premium post or page."
 msgstr ""
 
-#: includes/admin/settings/settings.php:968
+#: includes/admin/settings/settings.php:971
 msgid "Redirect Default Login URL"
 msgstr ""
 
-#: includes/admin/settings/settings.php:972
+#: includes/admin/settings/settings.php:975
 msgid ""
 "Check this to force the default login URL to redirect to the page specified "
 "below."
 msgstr ""
 
-#: includes/admin/settings/settings.php:977
+#: includes/admin/settings/settings.php:980
 msgid "Login Page"
 msgstr ""
 
-#: includes/admin/settings/settings.php:994
+#: includes/admin/settings/settings.php:997
 msgid ""
 "This is the page the default login URL redirects to, if the option above is "
 "checked. This should be the page that contains the [login_form] short code."
 msgstr ""
 
-#: includes/admin/settings/settings.php:999
+#: includes/admin/settings/settings.php:1002
 msgid "Prevent Account Sharing"
 msgstr ""
 
-#: includes/admin/settings/settings.php:1003
+#: includes/admin/settings/settings.php:1006
 msgid ""
 "Check this if you'd like to prevent multiple users from logging into the "
 "same account simultaneously."
 msgstr ""
 
-#: includes/admin/settings/settings.php:1008
+#: includes/admin/settings/settings.php:1011
 msgid "Email IPN reports"
 msgstr ""
 
-#: includes/admin/settings/settings.php:1012
+#: includes/admin/settings/settings.php:1015
 msgid ""
 "Check this to send an email each time an IPN request is made with PayPal. "
 "The email will contain a list of all data sent. This is useful for "
@@ -2313,56 +2313,56 @@ msgid ""
 "integration."
 msgstr ""
 
-#: includes/admin/settings/settings.php:1017
+#: includes/admin/settings/settings.php:1020
 msgid "Disable Form CSS"
 msgstr ""
 
-#: includes/admin/settings/settings.php:1021
+#: includes/admin/settings/settings.php:1024
 msgid "Check this to disable all included form styling."
 msgstr ""
 
-#: includes/admin/settings/settings.php:1026
+#: includes/admin/settings/settings.php:1029
 msgid "Enable reCaptcha"
 msgstr ""
 
-#: includes/admin/settings/settings.php:1030
+#: includes/admin/settings/settings.php:1033
 msgid "Check this to enable reCaptcha on the registration form."
 msgstr ""
 
-#: includes/admin/settings/settings.php:1035
+#: includes/admin/settings/settings.php:1038
 msgid "reCaptcha Site Key"
 msgstr ""
 
-#: includes/admin/settings/settings.php:1039
+#: includes/admin/settings/settings.php:1042
 msgid "This your own personal reCaptcha Site key. Go to"
 msgstr ""
 
-#: includes/admin/settings/settings.php:1039
-#: includes/admin/settings/settings.php:1048
+#: includes/admin/settings/settings.php:1042
+#: includes/admin/settings/settings.php:1051
 msgid "your account"
 msgstr ""
 
-#: includes/admin/settings/settings.php:1039
+#: includes/admin/settings/settings.php:1042
 msgid "then click on your domain (or add a new one) to find your site key."
 msgstr ""
 
-#: includes/admin/settings/settings.php:1044
+#: includes/admin/settings/settings.php:1047
 msgid "reCaptcha Secret Key"
 msgstr ""
 
-#: includes/admin/settings/settings.php:1048
+#: includes/admin/settings/settings.php:1051
 msgid "This your own personal reCaptcha Secret key. Go to"
 msgstr ""
 
-#: includes/admin/settings/settings.php:1048
+#: includes/admin/settings/settings.php:1051
 msgid "then click on your domain (or add a new one) to find your secret key."
 msgstr ""
 
-#: includes/admin/settings/settings.php:1059
+#: includes/admin/settings/settings.php:1062
 msgid "Save Options"
 msgstr ""
 
-#: includes/admin/settings/settings.php:1163
+#: includes/admin/settings/settings.php:1166
 msgid "Your license key could not be activated. Error: %s"
 msgstr ""
 
@@ -2685,7 +2685,7 @@ msgid "Payment flagged as fraudulent in 2Checkout"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-2checkout.php:380
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:190
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:193
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:652
 msgid "The security code you have entered is invalid"
 msgstr ""
@@ -2707,7 +2707,7 @@ msgid "The country you have entered is invalid"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-2checkout.php:400
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:194
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:197
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:656
 msgid "The zip / postal code you have entered is invalid"
 msgstr ""
@@ -2715,7 +2715,7 @@ msgstr ""
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:113
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:206
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:276
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:109
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:110
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:235
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:309
 #: includes/gateways/stripe/functions.php:246
@@ -2731,14 +2731,14 @@ msgstr ""
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:127
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:220
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:290
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:125
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:126
 msgid "Error message:"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:128
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:221
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:291
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:126
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:127
 #: includes/member-functions.php:976 includes/member-functions.php:993
 #: includes/member-functions.php:1009 includes/member-functions.php:1025
 msgid "Error code:"
@@ -2747,13 +2747,13 @@ msgstr ""
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:142
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:244
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:333
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:155
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:158
 #: includes/gateways/paypal/functions.php:190
 msgid "Something has gone wrong, please try again"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:156
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:182
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:185
 msgid ""
 "You have not configured PayPal API access. Please configure it in Restrict "
 "&rarr; Settings"
@@ -2769,26 +2769,26 @@ msgstr ""
 msgid "IPN report"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:124
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:125
 msgid "PayPal subscription creation failed."
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:186
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:189
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:648
 msgid "The card number you have entered is invalid"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:198
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:201
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:660
 msgid "The card holder name you have entered is invalid"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:202
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:205
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:664
 msgid "The card expiration month you have entered is invalid"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:206
+#: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:209
 #: includes/gateways/class-rcp-payment-gateway-stripe.php:668
 msgid "The card expiration year you have entered is invalid"
 msgstr ""
@@ -2824,7 +2824,7 @@ msgid "Invalid IPN"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-stripe-checkout.php:60
-#: includes/shortcodes.php:293
+#: includes/shortcodes.php:295
 msgid "Join %s"
 msgstr ""
 
@@ -3252,10 +3252,10 @@ msgstr ""
 #: includes/process-data.php:214 includes/process-data.php:296
 #: includes/process-data.php:337 includes/process-data.php:378
 #: includes/process-data.php:422 includes/process-data.php:469
-#: includes/process-data.php:480 includes/process-data.php:498
-#: includes/process-data.php:508 includes/process-data.php:520
-#: includes/process-data.php:529 includes/process-data.php:538
-#: includes/process-data.php:547
+#: includes/process-data.php:480 includes/process-data.php:499
+#: includes/process-data.php:509 includes/process-data.php:521
+#: includes/process-data.php:530 includes/process-data.php:539
+#: includes/process-data.php:548
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -3367,23 +3367,23 @@ msgstr ""
 msgid "Submit Payment"
 msgstr ""
 
-#: includes/shortcodes.php:229
+#: includes/shortcodes.php:231
 msgid "You are already registered and have an active subscription."
 msgstr ""
 
-#: includes/shortcodes.php:294
+#: includes/shortcodes.php:296
 msgid "Register - {{amount}}"
 msgstr ""
 
-#: includes/shortcodes.php:320
+#: includes/shortcodes.php:322
 msgid "You are already subscribed."
 msgstr ""
 
-#: includes/shortcodes.php:511
+#: includes/shortcodes.php:514
 msgid "Billing card updated successfully"
 msgstr ""
 
-#: includes/shortcodes.php:520
+#: includes/shortcodes.php:523
 msgid "Billing card could not be updated, please try again."
 msgstr ""
 

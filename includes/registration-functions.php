@@ -172,6 +172,17 @@ function rcp_process_registration() {
 
 	update_user_meta( $user_data['id'], 'rcp_pending_expiration_date', $member_expires );
 
+
+	// remove the user's old role, if this is a new user, we need to replace the default role
+	$old_role = get_option( 'default_role', 'subscriber' );
+
+	if ( $old_subscription_id ) {
+		$old_level = rcp_get_subscription_details( $old_subscription_id );
+		$old_role  = ! empty( $old_level->role ) ? $old_level->role : $old_role;
+	}
+
+	$member->remove_role( $old_role );
+
 	// Set the user's role
 	$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
 	$user = new WP_User( $user_data['id'] );

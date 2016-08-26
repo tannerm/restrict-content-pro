@@ -61,7 +61,7 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 	}
 
 	if ( ! empty( $subscription ) && ! empty( $subscription[0] ) ) {
-		if ( ! in_array( rcp_get_subscription_id( $user_ID ), $subscription ) || ( in_array( rcp_get_subscription_id( $user_ID ), $subscription ) && ! rcp_is_active( $user_ID ) ) ) {
+		if ( ! in_array( rcp_get_subscription_id( $user_ID ), $subscription ) || ( in_array( rcp_get_subscription_id( $user_ID ), $subscription ) && rcp_is_expired( $user_ID ) ) ) {
 			$has_access = false;
 		}
 	}
@@ -137,13 +137,14 @@ add_shortcode( 'is_paid', 'rcp_is_paid_user_shortcode' );
  * @return mixed|void
  */
 function rcp_is_free_user_shortcode( $atts, $content = null ) {
-	extract( shortcode_atts( array(
+
+	$atts = shortcode_atts( array(
 		'hide_from_paid' => true
-	), $atts ) );
+	), $atts, 'is_free' );
 
 	global $user_ID;
 
-	if( $hide_from_paid ) {
+	if( $atts['hide_from_paid'] ) {
 		if( !rcp_is_active( $user_ID ) && is_user_logged_in() ) {
 			return do_shortcode( $content );
 		}
@@ -224,10 +225,11 @@ add_shortcode( 'user_name', 'rcp_user_name' );
  * @return mixed|void
  */
 function rcp_registration_form( $atts, $content = null ) {
-	extract( shortcode_atts( array(
+
+	$atts = shortcode_atts( array(
 		'id' => null,
 		'registered_message' => __( 'You are already registered and have an active subscription.', 'rcp' )
-	), $atts ) );
+	), $atts, 'register_form' );
 
 	global $user_ID;
 
@@ -240,10 +242,10 @@ function rcp_registration_form( $atts, $content = null ) {
 		$rcp_load_css = true;
 		$rcp_load_scripts = true;
 
-		$output = rcp_registration_form_fields( $id );
+		$output = rcp_registration_form_fields( $atts['id'] );
 
 	} else {
-		$output = $registered_message;
+		$output = $atts['registered_message'];
 	}
 	return $output;
 }
@@ -352,10 +354,10 @@ function rcp_login_form( $atts, $content = null ) {
 
 	$current_page = rcp_get_current_url();
 
-	extract( shortcode_atts( array(
+	$atts = shortcode_atts( array(
 		'redirect' 	=> $current_page,
 		'class' 	=> 'rcp_form'
-	), $atts ) );
+	), $atts, 'login_form' );
 
 	$output = '';
 
@@ -364,7 +366,7 @@ function rcp_login_form( $atts, $content = null ) {
 	// set this to true so the CSS is loaded
 	$rcp_load_css = true;
 
-	return rcp_login_form_fields( array( 'redirect' => $redirect, 'class' => $class ) );
+	return rcp_login_form_fields( array( 'redirect' => $atts['redirect'], 'class' => $atts['class'] ) );
 
 }
 add_shortcode( 'login_form', 'rcp_login_form' );
@@ -430,9 +432,10 @@ add_shortcode( 'paid_posts', 'rcp_list_paid_posts' );
  * @param $content
  */
 function rcp_user_subscription_details( $atts, $content = null ) {
-	extract( shortcode_atts( array(
+
+	$atts = shortcode_atts( array(
 		'option' => ''
-	), $atts ) );
+	), $atts, 'subscription_details' );
 
 	global $user_ID, $rcp_options;
 

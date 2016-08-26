@@ -315,6 +315,7 @@ class RCP_Levels {
 		$cache_key = md5( implode( '|', $cache_args ) );
 
 		wp_cache_delete( $cache_key, 'rcp' );
+		wp_cache_delete( 'level_' . $level_id, 'rcp' );
 
 		do_action( 'rcp_edit_subscription_level', absint( $args['id'] ), $args );
 
@@ -421,6 +422,27 @@ class RCP_Levels {
 	 */
 	public function delete_meta( $level_id = 0, $meta_key = '', $meta_value = '' ) {
 		return delete_metadata( 'level', $level_id, $meta_key, $meta_value );
+	}
+
+	/**
+	 * Removes all metadata for the specified subscription level.
+	 *
+	 * @since 2.6.6
+	 * @uses wpdb::query()
+	 * @uses wpdb::prepare()
+	 *
+	 * @param  int $level_id Subscription level ID.
+	 * @return int|false Number of rows affected/selected or false on error.
+	 */
+	public function remove_all_meta_for_level_id( $level_id = 0 ) {
+
+		global $wpdb;
+
+		if ( empty( $level_id ) ) {
+			return;
+		}
+
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->levelmeta} WHERE level_id = %d", absint( $level_id ) ) );
 	}
 
 }

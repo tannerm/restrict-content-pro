@@ -89,12 +89,13 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 		);
 
 		if ( $this->auto_renew ) {
-			$args['INITAMT'] = round( $this->amount + $this->signup_fee, 2 );
-		}
 
-		// make sure the initial amount is not less than 0
-		if ( $args['INITAMT'] < 0 ) {
-			unset( $args['INITAMT'] );
+			$initamt = round( $this->amount + $this->signup_fee, 2 );
+
+			if ( $initamt >= 0 ) {
+				$args['INITAMT'] = $initamt;
+			}
+
 		}
 
 		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
@@ -138,9 +139,11 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 				}
 
-				$member->set_payment_profile_id( $body['PROFILEID'] );
+				if ( isset( $body['PROFILEID'] ) ) {
+					$member->set_payment_profile_id( $body['PROFILEID'] );
+				}
 
-				if ( 'ActiveProfile' === $body['PROFILESTATUS'] ) {
+				if ( isset( $body['PROFILESTATUS'] ) && 'ActiveProfile' === $body['PROFILESTATUS'] ) {
 					// Confirm a one-time payment
 					$member->renew( $this->auto_renew );
 				}
