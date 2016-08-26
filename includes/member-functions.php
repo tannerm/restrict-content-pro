@@ -577,7 +577,10 @@ function rcp_print_user_payments_formatted( $user_id ) {
 
 	if ( ! $user_payments ) {
 		return $payments_list;
-	} ?>
+	}
+
+	ob_start();
+	?>
 
 	<table class="wp-list-table widefat fixed posts rcp-table rcp_payment_details" style="display: block; width: 100%;">
 
