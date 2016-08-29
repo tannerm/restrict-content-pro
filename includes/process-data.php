@@ -131,6 +131,8 @@ function rcp_process_data() {
 				$role = ! empty( $subscription->role ) ? $subscription->role : 'subscriber';
 				$user->add_role( $role );
 
+				// Set joined date for the new subscription
+				$member->set_joined_date( '', $level_id );
 
 				if( isset( $_POST['recurring'] ) ) {
 					update_user_meta( $user->ID, 'rcp_recurring', 'yes' );
@@ -243,6 +245,9 @@ function rcp_process_data() {
 					// Add the new user role
 					$role = ! empty( $new_level->role ) ? $new_level->role : 'subscriber';
 					$member->add_role( $role );
+
+					// Set joined date for the new subscription
+					$member->set_joined_date( '', $level_id );
 
 				}
 			}
