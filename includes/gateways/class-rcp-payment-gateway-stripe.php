@@ -246,7 +246,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			try {
 
 				$charge = \Stripe\Charge::create( apply_filters( 'rcp_stripe_charge_create_args', array(
-					'amount'         => ( $this->amount + $this->signup_fee ) * rcp_stripe_get_currency_multiplier(), // amount in cents
+					'amount'         => round( ( $this->amount + $this->signup_fee ) * rcp_stripe_get_currency_multiplier(), 0 ), // amount in cents
 					'currency'       => strtolower( $this->currency ),
 					'customer'       => $customer->id,
 					'description'    => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
@@ -700,7 +700,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		// get all subscription level info for this plan
 		$plan           = rcp_get_subscription_details_by_name( $plan_name );
-		$price          = $plan->price * rcp_stripe_get_currency_multiplier();
+		$price          = round( $plan->price * rcp_stripe_get_currency_multiplier(), 0 );
 		$interval       = $plan->duration_unit;
 		$interval_count = $plan->duration;
 		$name           = $plan->name;
