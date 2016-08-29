@@ -378,7 +378,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		}
 
 		// Ensure listener URL is not cached by W3TC
-		define( 'DONOTCACHEPAGE', true );
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			define( 'DONOTCACHEPAGE', true );
+		}
 
 		\Stripe\Stripe::setApiKey( $this->secret_key );
 
