@@ -72,7 +72,7 @@ function rcp_get_payment_meta_db_name() {
 
 	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
 
-	return apply_filters( 'rcp_payments_db_name', $prefix . 'rcp_payment_meta' );
+	return apply_filters( 'rcp_payment_meta_db_name', $prefix . 'rcp_payment_meta' );
 }
 
 
