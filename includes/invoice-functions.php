@@ -54,7 +54,7 @@ function rcp_generate_invoice( $payment_id = 0 ) {
 		wp_die( __( 'This payment record does not exist', 'rcp' ) );
 	}
 
-	if( $payment->user_id != get_current_user_id() && ! current_user_can( 'manage_options' ) ) {
+	if( $payment->user_id != get_current_user_id() && ! current_user_can( 'rcp_manage_payments' ) ) {
 		wp_die( __( 'You do not have permission to download this invoice', 'rcp' ) );
 	}
 
