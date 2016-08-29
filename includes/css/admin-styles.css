@@ -265,7 +265,9 @@ img.help-image {
 =======
 >>>>>>> master
 /* reports */
-
+#rcp-graphs-filter .actions {
+	width: 100%;
+}
 #rcp-graphs-date-options,
 #rcp-date-range-options {
 	float: left;

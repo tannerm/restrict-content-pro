@@ -752,7 +752,7 @@ function rcp_reports_graph_controls() {
 	$active_tab     = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'earnings';
 	$selected_level = isset( $_GET['subscription'] ) ? absint( $_GET['subscription'] ) : false;
 	?>
-	<form id="rcp-garphs-filter" method="get">
+	<form id="rcp-graphs-filter" method="get">
 		<div class="tablenav top">
 			<div class="alignleft actions">
 
