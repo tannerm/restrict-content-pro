@@ -28,14 +28,13 @@ function rcp_process_registration() {
 		return;
 	}
 
-	global $rcp_options;
+	global $rcp_options, $rcp_levels_db;
 
 	$subscription_id = rcp_get_registration()->get_subscription();
 	$discount        = isset( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : '';
-	$price           = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
+	$price           = number_format( (float) $rcp_levels_db->get_level_field( $subscription_id, 'price' ), 2 );
 	$price           = str_replace( ',', '', $price );
-	$expiration      = rcp_get_subscription_length( $subscription_id );
-	$subscription    = rcp_get_subscription_details( $subscription_id );
+	$subscription    = $rcp_levels_db->get_level( $subscription_id );
 	$auto_renew      = rcp_registration_is_recurring();
 
 	// if both today's total and the recurring total are 0, the there is a full discount
@@ -64,7 +63,7 @@ function rcp_process_registration() {
 		rcp_errors()->add( 'no_level', __( 'Please choose a subscription level', 'rcp' ), 'register' );
 	}
 
-	if( $subscription_id && $price == 0 && $expiration->duration > 0 && rcp_has_used_trial( $user_data['id'] ) ) {
+	if( $subscription_id && $price == 0 && $subscription->duration > 0 && rcp_has_used_trial( $user_data['id'] ) ) {
 		// this ensures that users only sign up for a free trial once
 		rcp_errors()->add( 'free_trial_used', __( 'You may only sign up for a free trial once', 'rcp' ), 'register' );
 	}
@@ -114,13 +113,13 @@ function rcp_process_registration() {
 	if( $user_data['need_new'] ) {
 
 		$user_data['id'] = wp_insert_user( array(
-				'user_login'		=> $user_data['login'],
-				'user_pass'	 		=> $user_data['password'],
-				'user_email'		=> $user_data['email'],
-				'first_name'		=> $user_data['first_name'],
-				'last_name'			=> $user_data['last_name'],
-				'display_name'      => $user_data['first_name'] . ' ' . $user_data['last_name'],
-				'user_registered'	=> date( 'Y-m-d H:i:s' )
+				'user_login'      => $user_data['login'],
+				'user_pass'       => $user_data['password'],
+				'user_email'      => $user_data['email'],
+				'first_name'      => $user_data['first_name'],
+				'last_name'       => $user_data['last_name'],
+				'display_name'    => $user_data['first_name'] . ' ' . $user_data['last_name'],
+				'user_registered' => date( 'Y-m-d H:i:s' )
 			)
 		);
 
@@ -143,7 +142,7 @@ function rcp_process_registration() {
 		update_user_meta( $user_data['id'], '_rcp_old_subscription_id', $old_subscription_id );
 	}
 
-	if( ! rcp_is_active( $user_data['id'] ) ) {
+	if( ! $member->is_active() ) {
 
 		update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
 		update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
@@ -177,7 +176,7 @@ function rcp_process_registration() {
 	$old_role = get_option( 'default_role', 'subscriber' );
 
 	if ( $old_subscription_id ) {
-		$old_level = rcp_get_subscription_details( $old_subscription_id );
+		$old_level = $rcp_levels_db->get_level( $old_subscription_id );
 		$old_role  = ! empty( $old_level->role ) ? $old_level->role : $old_role;
 	}
 
@@ -201,13 +200,13 @@ function rcp_process_registration() {
 			// record the usage of this discount code
 			$discounts->add_to_user( $user_data['id'], $discount );
 
-			// incrase the usage count for the code
+			// increase the usage count for the code
 			$discounts->increase_uses( $discount_obj->id );
 
 			// if the discount is 100%, log the user in and redirect to success page
 			if( $full_discount ) {
-				rcp_set_expiration_date( $user_data['id'], $member_expires );
-				rcp_set_status( $user_data['id'], 'active' );
+				$member->set_expiration_date( $member_expires );
+				$member->set_status( 'active' );
 				rcp_login_user_in( $user_data['id'], $user_data['login'] );
 				wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 			}
@@ -227,8 +226,8 @@ function rcp_process_registration() {
 			'discount'          => rcp_get_registration()->get_total_discounts(),
 			'discount_code'     => $discount,
 			'fee'               => rcp_get_registration()->get_total_fees(),
-			'length'            => $expiration->duration,
-			'length_unit'       => strtolower( $expiration->duration_unit ),
+			'length'            => $subscription->duration,
+			'length_unit'       => strtolower( $subscription->duration_unit ),
 			'subscription_id'   => $subscription->id,
 			'subscription_name' => $subscription->name,
 			'key'               => $subscription_key,
@@ -256,13 +255,13 @@ function rcp_process_registration() {
 	} else {
 
 		// This is a free user registration or trial
-		rcp_set_expiration_date( $user_data['id'], $member_expires );
+		$member->set_expiration_date( $member_expires );
 
 		// if the subscription is a free trial, we need to record it in the user meta
 		if( $member_expires != 'none' ) {
 
 			// activate the user's trial subscription
-			rcp_set_status( $user_data['id'], 'active' );
+			$member->set_status( 'active' );
 
 			// this is so that users can only sign up for one trial
 			update_user_meta( $user_data['id'], 'rcp_has_trialed', 'yes' );
@@ -279,7 +278,7 @@ function rcp_process_registration() {
 			delete_user_meta( $user_data['id'], 'rcp_pending_subscription_key' );
 
 			// set the user's status to free
-			rcp_set_status( $user_data['id'], 'free' );
+			$member->set_status( 'free' );
 			rcp_email_subscription_status( $user_data['id'], 'free' );
 
 		}
