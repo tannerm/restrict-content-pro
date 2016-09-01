@@ -20,6 +20,10 @@ function rcp_admin_notices() {
 		echo '<div class="updated fade"><p>' . __( 'The Restrict Content Pro database has been updated', 'rcp' ) . '</p></div>';
 	}
 
+	if( false !== get_transient( 'rcp_login_redirect_invalid' ) ) {
+		echo '<div class="error"><p>' . __( 'The page selected for log in redirect does not appear to contain a log in form. Please add [login_form] to the page then re-enable the log in redirect option.', 'rcp' ) . '</p></div>';
+	}
+
 	if ( 'expired' === rcp_check_license() ) {
 		echo '<div class="error info"><p>' . __( 'Your license key for Restrict Content Pro has expired. Please renew your license to re-enable automatic updates.', 'rcp' ) . '</p></div>';
 	} elseif ( 'valid' !== rcp_check_license() ) {
@@ -136,8 +140,8 @@ function rcp_admin_notices() {
 
 	endswitch;
 
-	if( $message )
+	if( $message ) {
 		echo '<div class="' . $class . '"><p>' . $text . '</p></div>';
-
+	}
 }
 add_action( 'admin_notices', 'rcp_admin_notices' );
