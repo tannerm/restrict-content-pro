@@ -1096,6 +1096,8 @@ function rcp_sanitize_settings( $data ) {
 		}
 	}
 
+	delete_transient( 'rcp_login_redirect_invalid' );
+
 	// Make sure the [login_form] short code is on the redirect page. Users get locked out if it is not
 	if( isset( $data['hijack_login_url'] ) ) {
 
@@ -1114,6 +1116,7 @@ function rcp_sanitize_settings( $data ) {
 			false === strpos( $page->post_content, '[login' )
 		) {
 			unset( $data['hijack_login_url'] );
+			set_transient( 'rcp_login_redirect_invalid', 1, MINUTE_IN_SECONDS );
 		}
 
 	}
