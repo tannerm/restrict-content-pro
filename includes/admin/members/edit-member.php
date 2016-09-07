@@ -7,10 +7,7 @@ if( isset( $_GET['edit_member'] ) ) {
 $member = new RCP_Member( $member_id );
 ?>
 <h2>
-	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $member->display_name; ?> -
-	<a href="<?php echo admin_url( '/admin.php?page=rcp-members' ); ?>" class="button-secondary">
-		<?php _e( 'Cancel', 'rcp' ); ?>
-	</a>
+	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $member->display_name; ?>
 </h2>
 <?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
 	<a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
