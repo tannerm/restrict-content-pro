@@ -120,7 +120,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			} catch ( Exception $e ) {
 
-				wp_die( __( 'Stripe customer could not be created, please try again or contact support if the issue persists.', 'rcp' ), __( 'Error', 'rcp' ), array( 'response' => 400 ) );
+				$this->handle_processing_error( $e );
 
 			}
 
