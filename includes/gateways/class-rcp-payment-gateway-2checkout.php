@@ -328,7 +328,6 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			};
 			// Called when token creation fails.
 			var errorCallback = function(data) {
-				console.log(data)
 				if (data.errorCode === 200) {
 					tokenRequest();
 				} else {
@@ -356,11 +355,23 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 				// Pull in the public encryption key for our environment
 				TCO.loadPubKey('<?php echo $this->environment; ?>');
 				jQuery("#rcp_registration_form").submit(function(e) {
-					// Call our token request function
-					tokenRequest();
 
-					// Prevent form from submitting
-					return false;
+					if( jQuery('.rcp_level:checked').length ) {
+						var price = jQuery('.rcp_level:checked').closest('.rcp_subscription_level').find('span.rcp_price').attr('rel');
+					} else {
+						var price = jQuery('.rcp_level').attr('rel');
+					}
+
+					if( price > 0 && ! jQuery('.rcp_gateway_fields').hasClass('rcp_discounted_100') ) {
+
+
+						// Call our token request function
+						tokenRequest();
+
+						// Prevent form from submitting
+						return false;
+
+					}
 				});
 			});
 		</script>
