@@ -54,6 +54,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		\Stripe\Stripe::setApiKey( $this->secret_key );
 
+		if ( method_exists( '\Stripe\Stripe', 'setAppInfo' ) ) {
+			\Stripe\Stripe::setAppInfo( 'Restrict Content Pro', RCP_PLUGIN_VERSION, 'https://restrictcontentpro.com/' );
+		}
+
 		$paid   = false;
 		$member = new RCP_Member( $this->user_id );
 		$customer_exists = false;
