@@ -296,7 +296,7 @@ function rcp_stripe_create_discount() {
 					"percent_off" => sanitize_text_field( $_POST['amount'] ),
 					"duration"    => "forever",
 					"id"          => sanitize_text_field( $_POST['code'] ),
-					"currency"   => strtolower( $rcp_options['currency'] )
+					"currency"   => strtolower( rcp_get_currency() )
 				)
 			);
 		} else {
@@ -304,7 +304,7 @@ function rcp_stripe_create_discount() {
 					"amount_off" => sanitize_text_field( $_POST['amount'] ) * rcp_stripe_get_currency_multiplier(),
 					"duration"   => "forever",
 					"id"         => sanitize_text_field( $_POST['code'] ),
-					"currency"   => strtolower( $rcp_options['currency'] )
+					"currency"   => strtolower( rcp_get_currency() )
 				)
 			);
 		}
@@ -470,7 +470,7 @@ function rcp_stripe_update_discount( $discount_id, $args ) {
 						"percent_off" => sanitize_text_field( $args['amount'] ),
 						"duration"    => "forever",
 						"id"          => sanitize_text_field( $discount_name ),
-						"currency"    => strtolower( $rcp_options['currency'] )
+						"currency"    => strtolower( rcp_get_currency() )
 					)
 				);
 			} else {
@@ -478,7 +478,7 @@ function rcp_stripe_update_discount( $discount_id, $args ) {
 						"amount_off" => sanitize_text_field( $args['amount'] ) * rcp_stripe_get_currency_multiplier(),
 						"duration"   => "forever",
 						"id"         => sanitize_text_field( $discount_name ),
-						"currency"   => strtolower( $rcp_options['currency'] )
+						"currency"   => strtolower( rcp_get_currency() )
 					)
 				);
 			}
@@ -505,7 +505,7 @@ function rcp_stripe_update_discount( $discount_id, $args ) {
 						"percent_off" => sanitize_text_field( $args['amount'] ),
 						"duration"    => "forever",
 						"id"          => sanitize_text_field( $discount_name ),
-						"currency"    => strtolower( $rcp_options['currency'] )
+						"currency"    => strtolower( rcp_get_currency() )
 					)
 				);
 			} else {
@@ -513,7 +513,7 @@ function rcp_stripe_update_discount( $discount_id, $args ) {
 						"amount_off" => sanitize_text_field( $args['amount'] ) * rcp_stripe_get_currency_multiplier(),
 						"duration"   => "forever",
 						"id"         => sanitize_text_field( $discount_name ),
-						"currency"   => strtolower( $rcp_options['currency'] )
+						"currency"   => strtolower( rcp_get_currency() )
 					)
 				);
 			}

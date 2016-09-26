@@ -234,7 +234,7 @@ function rcp_process_registration() {
 			'user_id'           => $user_data['id'],
 			'user_name'         => $user_data['login'],
 			'user_email'        => $user_data['email'],
-			'currency'          => $rcp_options['currency'],
+			'currency'          => rcp_get_currency(),
 			'auto_renew'        => $auto_renew,
 			'return_url'        => $redirect,
 			'new_user'          => $user_data['need_new'],

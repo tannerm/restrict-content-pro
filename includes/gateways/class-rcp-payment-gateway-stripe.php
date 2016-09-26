@@ -709,7 +709,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		$interval_count = $plan->duration;
 		$name           = $plan->name;
 		$plan_id        = sprintf( '%s-%s-%s', strtolower( str_replace( ' ', '', $plan_name ) ), $plan->price, $plan->duration . $plan->duration_unit );
-		$currency       = strtolower( $rcp_options['currency'] );
+		$currency       = strtolower( rcp_get_currency() );
 
 		\Stripe\Stripe::setApiKey( $this->secret_key );
 

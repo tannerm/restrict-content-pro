@@ -165,7 +165,7 @@ function rcp_member_levels_page()
 								<td>
 									<input type="text" id="rcp-price" name="price" value="" style="width: 40px;"/>
 									<select name="rcp-price-select" id="rcp-price-select">
-										<option value="normal"><?php echo isset( $rcp_options['currency'] ) ? $rcp_options['currency'] : 'USD'; ?></option>
+										<option value="normal"><?php echo rcp_get_currency(); ?></option>
 										<option value="free"><?php _e('Free', 'rcp'); ?></option>
 									</select>
 									<p class="description">
