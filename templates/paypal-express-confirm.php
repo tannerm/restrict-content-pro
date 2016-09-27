@@ -46,5 +46,5 @@
 	<input type="hidden" name="token" value="<?php echo esc_attr( $_GET['token'] ); ?>" />
 	<input type="hidden" name="payer_id" value="<?php echo esc_attr( $_GET['PayerID'] ); ?>" />
 	<input type="hidden" name="rcp_ppe_confirm_nonce" value="<?php echo wp_create_nonce( 'rcp-ppe-confirm-nonce' ); ?>"/>
-	<input type="submit" value="<?php _e( 'Confirm', 'rcp' ); ?>" />
+	<input type="submit" value="<?php esc_attr_e( 'Confirm', 'rcp' ); ?>" />
 </form>

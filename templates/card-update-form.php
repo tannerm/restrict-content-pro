@@ -55,6 +55,6 @@
 	</div>
 	<p id="rcp_submit_wrap">
 		<input type="hidden" name="rcp_update_card_nonce" value="<?php echo wp_create_nonce( 'rcp-update-card-nonce' ); ?>"/>
-		<input type="submit" name="rcp_submit_card_update" id="rcp_submit" value="<?php _e( 'Update Card', 'rcp' ); ?>"/>
+		<input type="submit" name="rcp_submit_card_update" id="rcp_submit" value="<?php esc_attr_e( 'Update Card', 'rcp' ); ?>"/>
 	</p>
 </form>
