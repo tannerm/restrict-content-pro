@@ -92,6 +92,8 @@ function rcp_payments_page() {
 										<span class="rcp-row-action-separator"> | </span>
 										<span class="view rcp-view-member"><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'rcp-members', 'edit_member' => $user->ID ), $current_page) ); ?>"><?php _e('View Member', 'rcp'); ?></a></span>
 										<span class="rcp-row-action-separator"> | </span>
+										<span class="view rcp-edit-user"><a href="<?php echo esc_url( add_query_arg( array( 'user_id' => $user->ID ), admin_url( 'user-edit.php' ) ) ); ?>"><?php _e( 'Edit User', 'rcp'); ?></a></span>
+										<span class="rcp-row-action-separator"> | </span>
 										<span class="rcp-view-invoice"><a href="<?php echo rcp_get_pdf_download_url( $payment->id ); ?>" class="rcp-payment-invoice"><?php _e( 'View Invoice', 'rcp' ); ?></a></span>
 										<span class="rcp-row-action-separator"> | </span>
 										<span class="rcp-edit-payment"><a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php _e( 'Edit', 'rcp' ); ?></a></span>
