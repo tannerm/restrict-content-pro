@@ -44,21 +44,18 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 
 		$data = apply_filters( 'rcp_stripe_checkout_form_data', array(
 			'key'               => $this->publishable_key,
-			'locale'             => 'auto',
-			'allow-remember-me' => true,
+			'locale'            => 'auto',
+			'allowRememberMe'   => true,
 			'email'             => $email,
 			'currency'          => rcp_get_currency(),
 			'alipay'            => isset( $rcp_options['stripe_alipay'] ) && '1' === $rcp_options['stripe_alipay'] && 'USD' === rcp_get_currency() ? true : false
 		) );
-
 
 		$subscriptions = array();
 		foreach ( rcp_get_subscription_levels( 'active' ) as $subscription ) {
 			$subscriptions[ $subscription->id ] = array(
 				'description' => $subscription->description,
 				'name'        => $subscription->name,
-				'label'       => sprintf( __( 'Join %s', 'rcp' ), $subscription->name ),
-				'amount'      => '',
 				'panelLabel'  => __( 'Register', 'rcp' ),
 			);
 		}
@@ -108,7 +105,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 				}
 
 				if( jQuery('.rcp_gateway_fields').hasClass('rcp_discounted_100') ) {
-					return false;
+					return true;
 				}
 
 				// Open Checkout with further options

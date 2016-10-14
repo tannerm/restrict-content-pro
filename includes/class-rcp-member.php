@@ -386,6 +386,10 @@ class RCP_Member extends WP_User {
 	*/
 	public function cancel() {
 
+		if( 'cancelled' === $this->get_status() ) {
+			return; // Bail if already set to cancelled
+		}
+
 		do_action( 'rcp_member_pre_cancel', $this->ID, $this );
 
 		$this->set_status( 'cancelled' );

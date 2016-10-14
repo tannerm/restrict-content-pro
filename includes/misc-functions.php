@@ -70,7 +70,7 @@ function rcp_get_paid_posts() {
 function rcp_currency_filter( $price ) {
 	global $rcp_options;
 
-	$currency = isset( $rcp_options['currency'] ) ? $rcp_options['currency'] : 'USD';
+	$currency = rcp_get_currency();
 	$position = isset( $rcp_options['currency_position'] ) ? $rcp_options['currency_position'] : 'before';
 	if ( $position == 'before' ) :
 		switch ( $currency ) :

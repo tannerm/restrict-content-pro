@@ -3,8 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Restrict Content Pro 2.4.3\n"
-"Report-Msgid-Bugs-To: http://restrictcontentpro.com/support/\n"
-"POT-Creation-Date: 2016-08-09 19:18:45+00:00\n"
+"Report-Msgid-Bugs-To: https://restrictcontentpro.com/support/\n"
+"POT-Creation-Date: 2016-10-06 09:34:23+00:00\n"
 "PO-Revision-Date: 2016-04-26 16:58+0300\n"
 "Last-Translator: Sami Keijonen <sami.keijonen@foxnet.fi>\n"
 "Language-Team: Restrict Content Pro <support@restrictcontentpro.com>\n"
@@ -41,7 +41,7 @@ msgid "You do not have permission to install plugin updates"
 msgstr "Sinulla ei ole oikeutta päivittää lisäosia"
 
 #: RCP_Plugin_Updater.php:337 includes/admin/class-rcp-add-on-updater.php:276
-#: includes/admin/settings/settings.php:1166 includes/class-rcp-export.php:187
+#: includes/admin/settings/settings.php:1169 includes/class-rcp-export.php:187
 #: includes/gateways/class-rcp-payment-gateway-2checkout.php:149
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:116
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:130
@@ -55,12 +55,11 @@ msgstr "Sinulla ei ole oikeutta päivittää lisäosia"
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:113
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:129
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:158
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:62
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:123
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:238
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:312
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:343
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:371
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:66
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:242
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:316
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:347
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:375
 #: includes/gateways/gateway-functions.php:230
 #: includes/gateways/stripe/functions.php:135
 #: includes/gateways/stripe/functions.php:174
@@ -84,9 +83,9 @@ msgstr "Sinulla ei ole oikeutta päivittää lisäosia"
 #: includes/gateways/stripe/functions.php:592
 #: includes/integrations/class-rcp-wp-approve-user.php:177
 #: includes/integrations/class-rcp-wp-approve-user.php:207
-#: includes/member-functions.php:981 includes/member-functions.php:998
-#: includes/member-functions.php:1014 includes/member-functions.php:1030
-#: includes/member-functions.php:1039 includes/member-functions.php:1112
+#: includes/member-functions.php:984 includes/member-functions.php:1001
+#: includes/member-functions.php:1017 includes/member-functions.php:1033
+#: includes/member-functions.php:1042 includes/member-functions.php:1115
 msgid "Error"
 msgstr "Virhe"
 
@@ -152,11 +151,18 @@ msgstr ""
 
 #: includes/admin/admin-notices.php:24
 msgid ""
+"The page selected for log in redirect does not appear to contain a log in "
+"form. Please add [login_form] to the page then re-enable the log in redirect "
+"option."
+msgstr ""
+
+#: includes/admin/admin-notices.php:28
+msgid ""
 "Your license key for Restrict Content Pro has expired. Please renew your "
 "license to re-enable automatic updates."
 msgstr ""
 
-#: includes/admin/admin-notices.php:26
+#: includes/admin/admin-notices.php:30
 msgid ""
 "Please <a href=\"%s\">enter and activate</a> your license key for Restrict "
 "Content Pro to enable automatic updates."
@@ -164,7 +170,7 @@ msgstr ""
 "<a href=\"%s\">Kirjoita ja aktivoi</a> lisenssiavain Restrict Content Pro -"
 "lisäosalle, jotta saat automaattipäivityksiä."
 
-#: includes/admin/admin-notices.php:31
+#: includes/admin/admin-notices.php:35
 msgid ""
 "You are using an outdated version of the Stripe integration for Restrict "
 "Content Pro. Please <a href=\"%s\">deactivate</a> the add-on version to "
@@ -174,7 +180,7 @@ msgstr ""
 "liitännäisestä. <a href=\"%s\">Poista liitännäinen käytöstä</a> ja "
 "konfiguroi uusi versio."
 
-#: includes/admin/admin-notices.php:36
+#: includes/admin/admin-notices.php:40
 msgid ""
 "You are using an outdated version of the PayPal Pro / Express integration "
 "for Restrict Content Pro. Please <a href=\"%s\">deactivate</a> the add-on "
@@ -184,83 +190,83 @@ msgstr ""
 "Express-liitännäisestä. <a href=\"%s\">Poista liitännäinen käytöstä</a> ja "
 "konfiguroi uusi versio."
 
-#: includes/admin/admin-notices.php:43
+#: includes/admin/admin-notices.php:47
 #, fuzzy
 msgid "Payment deleted"
 msgstr "Maksu on poistettu."
 
-#: includes/admin/admin-notices.php:48
+#: includes/admin/admin-notices.php:52
 msgid "Payment added"
 msgstr "Maksu lisätty"
 
-#: includes/admin/admin-notices.php:53
+#: includes/admin/admin-notices.php:57
 #, fuzzy
 msgid "Payment creation failed"
 msgstr ""
 "Payment creation failed while processing a manual (free or test) purchase. "
 "Oston tiedot: %s"
 
-#: includes/admin/admin-notices.php:59
+#: includes/admin/admin-notices.php:63
 #, fuzzy
 msgid "Payment updated"
 msgstr "Päivitetty"
 
-#: includes/admin/admin-notices.php:64
+#: includes/admin/admin-notices.php:68
 #, fuzzy
 msgid "Payment update failed"
 msgstr "Päivitä maksu"
 
-#: includes/admin/admin-notices.php:69
+#: includes/admin/admin-notices.php:73
 #, fuzzy
 msgid "Database upgrade complete"
 msgstr "Valmis"
 
-#: includes/admin/admin-notices.php:74
+#: includes/admin/admin-notices.php:78
 #, fuzzy
 msgid "The user's subscription has been added"
 msgstr "Maksumuistiinpano lisättiin onnistuneesti."
 
-#: includes/admin/admin-notices.php:79
+#: includes/admin/admin-notices.php:83
 msgid "The user's subscription could not be added"
 msgstr ""
 
-#: includes/admin/admin-notices.php:85
+#: includes/admin/admin-notices.php:89
 msgid "Member updated"
 msgstr "Jäsen päivitetty"
 
-#: includes/admin/admin-notices.php:90
+#: includes/admin/admin-notices.php:94
 msgid "Member accounts updated"
 msgstr "Jäsentiedot päivitetty"
 
-#: includes/admin/admin-notices.php:95
+#: includes/admin/admin-notices.php:99
 msgid "Member's payment profile cancelled successfully"
 msgstr ""
 
-#: includes/admin/admin-notices.php:100
+#: includes/admin/admin-notices.php:104
 msgid "Subscription level added"
 msgstr "Jäsentaso lisätty"
 
-#: includes/admin/admin-notices.php:105
+#: includes/admin/admin-notices.php:109
 msgid "Subscription level updated"
 msgstr "Jäsentaso päivitetty"
 
-#: includes/admin/admin-notices.php:110
+#: includes/admin/admin-notices.php:114
 msgid "Subscription level could not be added"
 msgstr ""
 
-#: includes/admin/admin-notices.php:116
+#: includes/admin/admin-notices.php:120
 msgid "Subscription level could not be updated"
 msgstr ""
 
-#: includes/admin/admin-notices.php:122
+#: includes/admin/admin-notices.php:126
 msgid "Subscription level fields are required"
 msgstr "Jäsentasokentät ovat pakollisia"
 
-#: includes/admin/admin-notices.php:128
+#: includes/admin/admin-notices.php:132
 msgid "Discount code created"
 msgstr "Alennuskoodi luotu"
 
-#: includes/admin/admin-notices.php:133
+#: includes/admin/admin-notices.php:137
 msgid "The discount code could not be created due to an error"
 msgstr ""
 
@@ -291,8 +297,7 @@ msgstr "Alennuskoodit"
 msgid "Discount Codes"
 msgstr "Alennuskoodit"
 
-#: includes/admin/admin-pages.php:18
-#: includes/admin/members/edit-member.php:155
+#: includes/admin/admin-pages.php:18 includes/admin/members/edit-member.php:152
 #: includes/admin/payments/payments-page.php:23
 #: includes/admin/settings/settings.php:35
 msgid "Payments"
@@ -314,8 +319,7 @@ msgstr "Vie käyttäjätiedot"
 msgid "Export"
 msgstr "Vie"
 
-#: includes/admin/admin-pages.php:22
-#: includes/libraries/class-wp-logging.php:69
+#: includes/admin/admin-pages.php:22 includes/libraries/class-wp-logging.php:69
 msgid "Logs"
 msgstr "Lokit"
 
@@ -422,7 +426,7 @@ msgstr "Koodi"
 #: includes/admin/payments/payments-page.php:122
 #: includes/class-rcp-export-members.php:42
 #: includes/class-rcp-export-payments.php:38 includes/member-functions.php:547
-#: includes/member-functions.php:587 includes/user-page-columns.php:4
+#: includes/member-functions.php:590 includes/user-page-columns.php:4
 #: templates/paypal-express-confirm.php:11
 #: templates/register-total-details.php:14 templates/subscription.php:16
 #: templates/subscription.php:57
@@ -439,7 +443,7 @@ msgstr "Jäsentaso"
 #: includes/admin/payments/payments-page.php:106
 #: includes/admin/payments/payments-page.php:124
 #: includes/class-rcp-export-payments.php:39 includes/member-functions.php:552
-#: includes/member-functions.php:554 includes/member-functions.php:591
+#: includes/member-functions.php:554 includes/member-functions.php:594
 #: templates/register-total-details.php:15 templates/subscription.php:58
 msgid "Amount"
 msgstr "Määrä"
@@ -457,7 +461,7 @@ msgstr "Tyyppi"
 #: includes/admin/discounts/discount-codes.php:23
 #: includes/admin/discounts/discount-codes.php:66
 #: includes/admin/discounts/discount-codes.php:95
-#: includes/admin/members/edit-member.php:24
+#: includes/admin/members/edit-member.php:21
 #: includes/admin/members/members-page.php:141
 #: includes/admin/members/members-page.php:198
 #: includes/admin/members/members-page.php:218
@@ -604,7 +608,7 @@ msgid "The subscription levels this discount code can be used for."
 msgstr "Valitse jäsentaso mihin tätä alennuskoodia voidaan käyttää."
 
 #: includes/admin/discounts/discount-codes.php:179
-#: includes/admin/members/edit-member.php:67
+#: includes/admin/members/edit-member.php:64
 #: includes/admin/members/members-page.php:285
 msgid "Expiration date"
 msgstr "Päättymispäivä"
@@ -639,7 +643,6 @@ msgid "Edit Discount Code:"
 msgstr "Muokkaa alennuskoodia:"
 
 #: includes/admin/discounts/edit-discount.php:7
-#: includes/admin/members/edit-member.php:12
 #: includes/admin/members/members-page.php:185
 #: includes/admin/payments/edit-payment.php:10
 #: includes/admin/payments/new-payment.php:4
@@ -974,7 +977,7 @@ msgstr "Käyttäjä"
 #: includes/admin/payments/payments-page.php:105
 #: includes/admin/payments/payments-page.php:123
 #: includes/class-rcp-export-payments.php:44 includes/class-rcp-export.php:68
-#: includes/member-functions.php:546 includes/member-functions.php:586
+#: includes/member-functions.php:546 includes/member-functions.php:589
 #: templates/subscription.php:59
 msgid "Date"
 msgstr "Päivämäärä"
@@ -989,76 +992,76 @@ msgstr "Lokit"
 msgid "Edit Member:"
 msgstr "Muokkaa jäsentiedotetta"
 
-#: includes/admin/members/edit-member.php:16
+#: includes/admin/members/edit-member.php:13
 #: includes/admin/members/members-page.php:188
 #, fuzzy
 msgid "Switch to User"
 msgstr "Vaihda pois"
 
-#: includes/admin/members/edit-member.php:36
+#: includes/admin/members/edit-member.php:33
 msgid ""
 "An Active status is required to access paid content. Members with a status "
 "of Cancelled may continue to access paid content until the expiration date "
 "on their account is reached."
 msgstr ""
 
-#: includes/admin/members/edit-member.php:37
+#: includes/admin/members/edit-member.php:34
 #, fuzzy
 msgid "The status of this user's subscription"
 msgstr "Käyttäjä"
 
-#: includes/admin/members/edit-member.php:42
+#: includes/admin/members/edit-member.php:39
 #: includes/admin/members/members-page.php:268
 msgid "Subscription Level"
 msgstr "Jäsentaso"
 
-#: includes/admin/members/edit-member.php:52
+#: includes/admin/members/edit-member.php:49
 msgid "Choose the subscription level for this user"
 msgstr "Valitse jäsentaso tälle käyttäjälle"
 
-#: includes/admin/members/edit-member.php:57
+#: includes/admin/members/edit-member.php:54
 #: includes/class-rcp-export-members.php:43
 #: includes/class-rcp-export-payments.php:43 includes/member-functions.php:549
-#: includes/member-functions.php:589
+#: includes/member-functions.php:592
 msgid "Subscription Key"
 msgstr "Jäsenavain"
 
-#: includes/admin/members/edit-member.php:61
+#: includes/admin/members/edit-member.php:58
 msgid ""
 "This key is used for reference purposes and may be shown on payment and "
 "subscription records in your merchant accounts."
 msgstr ""
 
-#: includes/admin/members/edit-member.php:62
+#: includes/admin/members/edit-member.php:59
 msgid "The member's subscription key. This cannot be changed."
 msgstr ""
 
-#: includes/admin/members/edit-member.php:73
+#: includes/admin/members/edit-member.php:70
 #: includes/admin/members/members-page.php:291
 msgid "Never expires?"
 msgstr "Ei vanhene koskaan?"
 
-#: includes/admin/members/edit-member.php:75
+#: includes/admin/members/edit-member.php:72
 msgid ""
 "This is the date the member will lose access to content if their membership "
 "is not renewed."
 msgstr ""
 
-#: includes/admin/members/edit-member.php:76
+#: includes/admin/members/edit-member.php:73
 #: includes/admin/members/members-page.php:293
 msgid "Enter the expiration date for this user in the format of yyyy-mm-dd"
 msgstr "Kirjoita päättymispäivä tälle käyttäjälle muodossa yyyy-mm-dd"
 
-#: includes/admin/members/edit-member.php:81
+#: includes/admin/members/edit-member.php:78
 #: includes/class-rcp-export-members.php:47
 msgid "Payment Profile ID"
 msgstr "Maksun ID"
 
-#: includes/admin/members/edit-member.php:85
+#: includes/admin/members/edit-member.php:82
 msgid "This is the customer's payment profile ID in the payment processor"
 msgstr ""
 
-#: includes/admin/members/edit-member.php:90
+#: includes/admin/members/edit-member.php:87
 #: includes/admin/members/members-page.php:142
 #: includes/admin/members/members-page.php:199
 #: includes/admin/members/members-page.php:219
@@ -1066,71 +1069,71 @@ msgstr ""
 msgid "Recurring"
 msgstr "Toistuva"
 
-#: includes/admin/members/edit-member.php:95
+#: includes/admin/members/edit-member.php:92
 #, fuzzy
 msgid "Is this user's subscription recurring?"
 msgstr "Käyttäjän ID:"
 
-#: includes/admin/members/edit-member.php:97
+#: includes/admin/members/edit-member.php:94
 msgid ""
 "If checked, this member has a recurring subscription. Only customers with "
 "recurring memberships will be given the option to cancel their membership on "
 "their subscription details page."
 msgstr ""
 
-#: includes/admin/members/edit-member.php:102
+#: includes/admin/members/edit-member.php:99
 msgid "Trialing"
 msgstr ""
 
-#: includes/admin/members/edit-member.php:107
+#: includes/admin/members/edit-member.php:104
 msgid "Does this user have a trial membership?"
 msgstr ""
 
-#: includes/admin/members/edit-member.php:109
+#: includes/admin/members/edit-member.php:106
 msgid ""
 "Members are limited to a single trial membership. Once a trial has been "
 "used, the member may not sign up for another trial membership."
 msgstr ""
 
-#: includes/admin/members/edit-member.php:114
+#: includes/admin/members/edit-member.php:111
 #, fuzzy
 msgid "Sign Up Method"
 msgstr "Ylös"
 
-#: includes/admin/members/edit-member.php:119
+#: includes/admin/members/edit-member.php:116
 #, fuzzy
 msgid "User Signup"
 msgstr "Käyttäjä"
 
-#: includes/admin/members/edit-member.php:120
+#: includes/admin/members/edit-member.php:117
 #, fuzzy
 msgid "Added by admin manually"
 msgstr "Päivämäärä"
 
-#: includes/admin/members/edit-member.php:122
+#: includes/admin/members/edit-member.php:119
 msgid "Was this a real signup or a membership given to the user"
 msgstr ""
 
-#: includes/admin/members/edit-member.php:127
+#: includes/admin/members/edit-member.php:124
 #, fuzzy
 msgid "User Notes"
 msgstr "Muistiinpanot"
 
-#: includes/admin/members/edit-member.php:131
+#: includes/admin/members/edit-member.php:128
 msgid "Use this area to record notes about this user if needed"
 msgstr ""
 
-#: includes/admin/members/edit-member.php:136
+#: includes/admin/members/edit-member.php:133
 #, fuzzy
 msgid "Discount codes used"
 msgstr "Alennuskoodit"
 
-#: includes/admin/members/edit-member.php:148
+#: includes/admin/members/edit-member.php:145
 #: includes/discount-functions.php:265
 msgid "None"
 msgstr "Ei mitään"
 
-#: includes/admin/members/edit-member.php:165
+#: includes/admin/members/edit-member.php:162
 #, fuzzy
 msgid "Update User Subscription"
 msgstr "Päivitä kategoria"
@@ -1226,8 +1229,8 @@ msgstr "Peruuta"
 msgid "New Expiration Date"
 msgstr "Viimeinen käyttöpäivä"
 
-#: includes/admin/members/members-page.php:129
-#: templates/register-single.php:67 templates/register.php:92
+#: includes/admin/members/members-page.php:129 templates/register-single.php:67
+#: templates/register.php:92
 #, fuzzy
 msgid "Apply"
 msgstr "Hakeutuminen"
@@ -1448,7 +1451,7 @@ msgstr ""
 #: includes/admin/payments/payments-page.php:70
 #: includes/admin/payments/payments-page.php:108
 #: includes/admin/payments/payments-page.php:126
-#: includes/member-functions.php:550 includes/member-functions.php:590
+#: includes/member-functions.php:550 includes/member-functions.php:593
 msgid "Transaction ID"
 msgstr "Tapahtuman ID"
 
@@ -2569,7 +2572,7 @@ msgstr ""
 msgid "Save Options"
 msgstr "Asetukset"
 
-#: includes/admin/settings/settings.php:1166
+#: includes/admin/settings/settings.php:1169
 msgid "Your license key could not be activated. Error: %s"
 msgstr ""
 
@@ -2781,7 +2784,7 @@ msgid "ID"
 msgstr "ID"
 
 #: includes/class-rcp-export-payments.php:42 includes/member-functions.php:548
-#: includes/member-functions.php:588
+#: includes/member-functions.php:591
 msgid "Payment Type"
 msgstr "Maksun tyyppi"
 
@@ -2801,8 +2804,7 @@ msgstr "Jäsenyyden päättymispäivä vaihdettu päivästä %s päivään %s"
 msgid "Signup Credit"
 msgstr "Rekisteröitymisen luotto"
 
-#: includes/content-filters.php:23
-#: templates/woocommerce-single-no-access.php:6
+#: includes/content-filters.php:23 templates/woocommerce-single-no-access.php:6
 msgid "This content is restricted to subscribers"
 msgstr "Tämä sisältö on vain jäsenille"
 
@@ -2897,36 +2899,36 @@ msgstr ""
 msgid "Payment flagged as fraudulent in 2Checkout"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:380
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:391
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:193
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:652
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:658
 #, fuzzy
 msgid "The security code you have entered is invalid"
 msgstr "Postinumero on virheellinen luottokortin tiedoissa"
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:384
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:395
 #, fuzzy
 msgid "The address you have entered is invalid"
 msgstr "Alennuskoodi on virheellinen"
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:388
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:399
 #, fuzzy
 msgid "The city you have entered is invalid"
 msgstr "Alennuskoodi on virheellinen"
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:392
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:403
 #, fuzzy
 msgid "The state you have entered is invalid"
 msgstr "Alennuskoodi on virheellinen"
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:396
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:407
 #, fuzzy
 msgid "The country you have entered is invalid"
 msgstr "Alennuskoodi on virheellinen"
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:400
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:411
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:197
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:656
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:662
 #, fuzzy
 msgid "The zip / postal code you have entered is invalid"
 msgstr "Postinumero on virheellinen"
@@ -2935,8 +2937,8 @@ msgstr "Postinumero on virheellinen"
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:206
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:276
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:110
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:235
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:309
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:239
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:313
 #: includes/gateways/stripe/functions.php:246
 #: includes/gateways/stripe/functions.php:396
 #: includes/gateways/stripe/functions.php:589
@@ -2960,8 +2962,8 @@ msgstr "Virheviesti:"
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:221
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:291
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:127
-#: includes/member-functions.php:976 includes/member-functions.php:993
-#: includes/member-functions.php:1009 includes/member-functions.php:1025
+#: includes/member-functions.php:979 includes/member-functions.php:996
+#: includes/member-functions.php:1012 includes/member-functions.php:1028
 msgid "Error code:"
 msgstr "Virhekoodi:"
 
@@ -2995,22 +2997,22 @@ msgid "PayPal subscription creation failed."
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:189
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:648
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:654
 msgid "The card number you have entered is invalid"
 msgstr "Kortin numero on virheellinen"
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:201
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:660
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:666
 msgid "The card holder name you have entered is invalid"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:205
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:664
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:670
 msgid "The card expiration month you have entered is invalid"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:209
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:668
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:674
 msgid "The card expiration year you have entered is invalid"
 msgstr ""
 
@@ -3044,34 +3046,22 @@ msgstr ""
 msgid "Invalid IPN"
 msgstr "Virheellinen IPN"
 
-#: includes/gateways/class-rcp-payment-gateway-stripe-checkout.php:60
-#: includes/shortcodes.php:295
-msgid "Join %s"
-msgstr ""
-
-#: includes/gateways/class-rcp-payment-gateway-stripe-checkout.php:62
+#: includes/gateways/class-rcp-payment-gateway-stripe-checkout.php:59
 #: includes/install.php:112 includes/scripts.php:129
-#: templates/register-single.php:112 templates/register.php:124
 msgid "Register"
 msgstr "Rekisteröidy"
 
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:62
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:66
 msgid ""
 "Missing Stripe token, please try again or contact support if the issue "
 "persists."
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:123
-msgid ""
-"Stripe customer could not be created, please try again or contact support if "
-"the issue persists."
-msgstr ""
-
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:343
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:347
 msgid "An error occurred, please contact the site administrator: "
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:364
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:368
 #: includes/gateways/stripe/functions.php:167
 #: includes/gateways/stripe/functions.php:184
 #: includes/gateways/stripe/functions.php:201
@@ -3085,14 +3075,13 @@ msgstr ""
 #: includes/gateways/stripe/functions.php:527
 #: includes/gateways/stripe/functions.php:544
 #: includes/gateways/stripe/functions.php:560
-#: includes/gateways/stripe/functions.php:576
-#: includes/member-functions.php:974 includes/member-functions.php:991
-#: includes/member-functions.php:1007 includes/member-functions.php:1023
-#: includes/member-functions.php:1036
+#: includes/gateways/stripe/functions.php:576 includes/member-functions.php:977
+#: includes/member-functions.php:994 includes/member-functions.php:1010
+#: includes/member-functions.php:1026 includes/member-functions.php:1039
 msgid "An error occurred"
 msgstr "Tapahtui jokin virhe"
 
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:366
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:370
 #: includes/gateways/stripe/functions.php:169
 #: includes/gateways/stripe/functions.php:186
 #: includes/gateways/stripe/functions.php:203
@@ -3110,13 +3099,13 @@ msgstr "Tapahtui jokin virhe"
 msgid "Error code: %s"
 msgstr "Virhekoodi: %s"
 
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:672
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:678
 msgid ""
 "Missing Stripe test keys. Please enter your test keys to use Stripe in "
 "Sandbox Mode."
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:676
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:682
 msgid ""
 "Missing Stripe live keys. Please enter your live keys to use Stripe in Live "
 "Mode."
@@ -3265,7 +3254,7 @@ msgstr "Sinulla ei ole oikeuksia ladata tätä kuittia"
 msgid "Invalid username or email"
 msgstr "Virheellinen käyttäjätunnus tai sähköposti"
 
-#: includes/login-functions.php:93 includes/registration-functions.php:389
+#: includes/login-functions.php:93 includes/registration-functions.php:399
 msgid "Please enter a password"
 msgstr "Kirjoita salasana"
 
@@ -3329,33 +3318,33 @@ msgstr ""
 msgid "No payments recorded"
 msgstr "Maksuja ei tallennettu"
 
-#: includes/member-functions.php:781
+#: includes/member-functions.php:784
 msgid "Please enter a valid email address"
 msgstr "Kirjoita kelvollinen sähköpostiosoite"
 
-#: includes/member-functions.php:786
+#: includes/member-functions.php:789
 msgid "The email you entered belongs to another user. Please use another."
 msgstr ""
 "Kirjoittamasi sähköposti on jo käytössä. Kokeile jotain muuta "
 "sähköpostiosoitetta."
 
-#: includes/member-functions.php:792
+#: includes/member-functions.php:795
 msgid "The passwords you entered do not match. Please try again."
 msgstr "Kirjoittamasi salasanat eivät ole samat. Kokeile uudelleen."
 
-#: includes/member-functions.php:814
+#: includes/member-functions.php:817
 msgid "There was an error updating your profile. Please try again."
 msgstr "Profiilin päivitys epäonnistui, kokeile uudelleen."
 
-#: includes/member-functions.php:847
+#: includes/member-functions.php:850
 msgid "Please enter a password, and confirm it"
 msgstr "Kirjoita salasana ja vahvista se"
 
-#: includes/member-functions.php:851 includes/registration-functions.php:393
+#: includes/member-functions.php:854 includes/registration-functions.php:403
 msgid "Passwords do not match"
 msgstr "Salasanat eivät täsmää"
 
-#: includes/member-functions.php:1101
+#: includes/member-functions.php:1104
 msgid ""
 "There was a problem cancelling the subscription, please contact customer "
 "support. Error: %s"
@@ -3466,23 +3455,23 @@ msgid "Turkish Lira (&#8356;)"
 msgstr "Turkin liira (&#8378;)"
 
 #: includes/process-data.php:23 includes/process-data.php:51
-#: includes/process-data.php:76 includes/process-data.php:152
-#: includes/process-data.php:210 includes/process-data.php:292
-#: includes/process-data.php:333 includes/process-data.php:374
-#: includes/process-data.php:418
+#: includes/process-data.php:76 includes/process-data.php:154
+#: includes/process-data.php:212 includes/process-data.php:297
+#: includes/process-data.php:338 includes/process-data.php:379
+#: includes/process-data.php:423
 #, fuzzy
 msgid "Nonce verification failed."
 msgstr "Palautteen vahvistus epäonnistui"
 
 #: includes/process-data.php:27 includes/process-data.php:55
-#: includes/process-data.php:80 includes/process-data.php:156
-#: includes/process-data.php:214 includes/process-data.php:296
-#: includes/process-data.php:337 includes/process-data.php:378
-#: includes/process-data.php:422 includes/process-data.php:469
-#: includes/process-data.php:480 includes/process-data.php:499
-#: includes/process-data.php:509 includes/process-data.php:521
-#: includes/process-data.php:530 includes/process-data.php:539
-#: includes/process-data.php:548
+#: includes/process-data.php:80 includes/process-data.php:158
+#: includes/process-data.php:216 includes/process-data.php:301
+#: includes/process-data.php:342 includes/process-data.php:383
+#: includes/process-data.php:427 includes/process-data.php:474
+#: includes/process-data.php:485 includes/process-data.php:504
+#: includes/process-data.php:514 includes/process-data.php:526
+#: includes/process-data.php:535 includes/process-data.php:544
+#: includes/process-data.php:553
 #, fuzzy
 msgid "You do not have permission to perform this action."
 msgstr "Sinulla ei ole oikeuksia lisätä sähköpostimuistutuksia"
@@ -3500,68 +3489,68 @@ msgstr ""
 msgid "Please supply a valid subscription level."
 msgstr "Valitse jäsentaso"
 
-#: includes/process-data.php:160
+#: includes/process-data.php:162
 msgid "Please select at least one member to edit."
 msgstr ""
 
-#: includes/registration-functions.php:64
+#: includes/registration-functions.php:63
 msgid "Please choose a subscription level"
 msgstr ""
 
-#: includes/registration-functions.php:69
+#: includes/registration-functions.php:68
 msgid "You may only sign up for a free trial once"
 msgstr ""
 
-#: includes/registration-functions.php:79
+#: includes/registration-functions.php:78
 msgid "You can only use the discount code once"
 msgstr ""
 
-#: includes/registration-functions.php:84
+#: includes/registration-functions.php:83
 #, fuzzy
 msgid "The discount you entered is invalid"
 msgstr "Alennuskoodi on virheellinen"
 
-#: includes/registration-functions.php:369
+#: includes/registration-functions.php:379
 #, fuzzy
 msgid "Username already taken"
 msgstr "Käyttäjätunnus on jo käytössä"
 
-#: includes/registration-functions.php:373
+#: includes/registration-functions.php:383
 #, fuzzy
 msgid "Invalid username"
 msgstr "Virheellinen käyttäjätunnus"
 
-#: includes/registration-functions.php:377
+#: includes/registration-functions.php:387
 #, fuzzy
 msgid "Please enter a username"
 msgstr "Kirjoita ensin käyttäjänimi ja sitten alennuskoodi"
 
-#: includes/registration-functions.php:381
+#: includes/registration-functions.php:391
 #, fuzzy
 msgid "Invalid email"
 msgstr "Virheellinen email"
 
-#: includes/registration-functions.php:385
+#: includes/registration-functions.php:395
 #, fuzzy
 msgid "Email already registered"
 msgstr " Sähköpostiosoite on jo käytössä"
 
-#: includes/registration-functions.php:642
-#: includes/registration-functions.php:697
+#: includes/registration-functions.php:652
+#: includes/registration-functions.php:707
 #: templates/register-total-details.php:20 templates/register.php:69
 msgid "free"
 msgstr "ilmainen"
 
-#: includes/registration-functions.php:694
+#: includes/registration-functions.php:704
 #, fuzzy
 msgid " every %s %s"
 msgstr "%s <span>(Sivu %d)</span>"
 
-#: includes/registration-functions.php:820
+#: includes/registration-functions.php:830
 msgid "Proration Credit"
 msgstr ""
 
-#: includes/registration-functions.php:834
+#: includes/registration-functions.php:844
 msgid ""
 "If you upgrade or downgrade your account, the new subscription will be "
 "prorated up to %s for the first payment. Prorated prices are shown below."
@@ -3612,6 +3601,10 @@ msgstr "Muokkaa maksua"
 
 #: includes/shortcodes.php:231
 msgid "You are already registered and have an active subscription."
+msgstr ""
+
+#: includes/shortcodes.php:295
+msgid "Join %s"
 msgstr ""
 
 #: includes/shortcodes.php:296
@@ -3820,46 +3813,41 @@ msgstr "Uusi salasana"
 msgid "Password Confirm"
 msgstr "Vahvista salasana"
 
-#: templates/change-password.php:24
-msgid "Change Password"
-msgstr "Vaihda salasana"
-
-#: templates/invoice.php:10 templates/invoice.php:192
-#: templates/invoice.php:202
+#: templates/invoice.php:10 templates/invoice.php:195 templates/invoice.php:205
 #, fuzzy
 msgid "Invoice %s"
 msgstr "Kuitti #%d"
 
-#: templates/invoice.php:229
+#: templates/invoice.php:232
 msgid "Bill To:"
 msgstr ""
 
-#: templates/invoice.php:242
+#: templates/invoice.php:245
 #, fuzzy
 msgid "Invoice Items:"
 msgstr "Kuitit"
 
-#: templates/invoice.php:254
+#: templates/invoice.php:257
 #, fuzzy
 msgid "Total Price:"
 msgstr "Tulot yhteensä"
 
-#: templates/invoice.php:260
+#: templates/invoice.php:263
 #, fuzzy
 msgid "Payment Status:"
 msgstr "PayPal tila:"
 
-#: templates/invoice.php:270
+#: templates/invoice.php:273
 #, fuzzy
 msgid "Additional Info:"
 msgstr "Muistiinpanot"
 
-#: templates/invoice.php:273
+#: templates/invoice.php:276
 #, fuzzy
 msgid "Payment Date:"
 msgstr "Ostopäivien suodatin"
 
-#: templates/invoice.php:289
+#: templates/invoice.php:292
 msgid "Print"
 msgstr ""
 
@@ -4066,6 +4054,9 @@ msgstr ""
 msgctxt "The payment amount shown in the user column on smaller devices"
 msgid " (%s) "
 msgstr ""
+
+#~ msgid "Change Password"
+#~ msgstr "Vaihda salasana"
 
 #~ msgid "Invoice Date"
 #~ msgstr "Kuitin päivämäärä"

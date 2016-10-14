@@ -317,7 +317,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					die( 'duplicate IPN detected' );
 				}
 
-				if( strtolower( $currency_code ) != strtolower( $rcp_options['currency'] ) ) {
+				if( strtolower( $currency_code ) != strtolower( rcp_get_currency() ) ) {
 					// the currency code is invalid
 
 					$log_data = array(
