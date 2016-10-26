@@ -159,12 +159,25 @@ function rcp_email_expiring_notice( $user_id = 0 ) {
 	$user_info = get_userdata( $user_id );
 	$message   = ! empty( $rcp_options['renew_notice_email'] ) ? $rcp_options['renew_notice_email'] : false;
 
-	if( ! $message )
+	if( ! $message ) {
 		return;
+	}
 
-	$message   = rcp_filter_email_tags( $message, $user_id, $user_info->display_name );
+	$site_name  = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
 
-	wp_mail( $user_info->user_email, $rcp_options['renewal_subject'], $message );
+	$from_name  = isset( $rcp_options['from_name'] ) ? $rcp_options['from_name'] : $site_name;
+	$from_name  = apply_filters( 'rcp_emails_from_name', $from_name, $user_id, 'active' );
+
+	$from_email = isset( $rcp_options['from_email'] ) ? $rcp_options['from_email'] : get_option( 'admin_email' );
+	$from_email = apply_filters( 'rcp_emails_from_address', $from_email );
+
+	$headers    = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
+	$headers    .= "Reply-To: ". $from_email . "\r\n";
+	$headers    = apply_filters( 'rcp_email_headers', $headers, $user_id, 'active' );
+
+	$message    = rcp_filter_email_tags( $message, $user_id, $user_info->display_name );
+
+	wp_mail( $user_info->user_email, $rcp_options['renewal_subject'], $message, $headers );
 }
 
 function rcp_filter_email_tags( $message, $user_id, $display_name ) {
