@@ -32,7 +32,7 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 	public function process_signup() {
 
 		$member = new RCP_Member( $this->user_id );
-		$member->renew( false, '' );
+		$member->renew( false, 'pending' );
 
 		// setup the payment info in an array for storage
 		$payment_data = array(
