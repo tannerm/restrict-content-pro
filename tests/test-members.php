@@ -312,6 +312,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 
 		$this->member->set_status( 'pending' );
 		update_post_meta( $this->post_id, '_is_paid', true );
+		update_post_meta( $this->post_id, 'rcp_subscription_level', 'any-paid' );
 
 		$this->assertFalse( $this->member->can_access( $this->post_id ) );
 
@@ -321,6 +322,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 
 		$this->member->set_status( 'expired' );
 		update_post_meta( $this->post_id, '_is_paid', true );
+		update_post_meta( $this->post_id, 'rcp_subscription_level', 'any-paid' );
 
 		$this->assertFalse( $this->member->can_access( $this->post_id ) );
 
@@ -331,6 +333,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 		$this->member->set_status( 'cancelled' );
 		$this->member->set_expiration( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
 		update_post_meta( $this->post_id, '_is_paid', true );
+		update_post_meta( $this->post_id, 'rcp_subscription_level', 'any-paid' );
 
 		$this->assertTrue( $this->member->can_access( $this->post_id ) );
 
@@ -340,6 +343,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 
 		$this->member->set_status( 'free' );
 		update_post_meta( $this->post_id, '_is_paid', true );
+		update_post_meta( $this->post_id, 'rcp_subscription_level', 'any-paid' );
 
 		$this->assertFalse( $this->member->can_access( $this->post_id ) );
 
@@ -350,6 +354,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 		$this->member->set_status( 'active' );
 		$this->member->set_expiration( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
 		update_post_meta( $this->post_id, '_is_paid', true );
+		update_post_meta( $this->post_id, 'rcp_subscription_level', 'any-paid' );
 
 		$this->assertTrue( $this->member->can_access( $this->post_id ) );
 
