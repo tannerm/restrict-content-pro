@@ -35,7 +35,7 @@ class RCP_Registration {
 		$this->set_subscription( $level_id );
 
 		if ( $discount ) {
-			$this->add_discount( $discount );
+			$this->add_discount( strtolower( $discount ) );
 		}
 
 		do_action( 'rcp_registration_init', $this );

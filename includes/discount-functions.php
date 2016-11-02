@@ -54,7 +54,7 @@ function rcp_get_discount_details( $id ) {
 */
 function rcp_get_discount_details_by_code( $code ) {
 	global $wpdb, $rcp_discounts_db_name;
-	$code = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_discounts_db_name . " WHERE code='%s';", $code ) );
+	$code = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM " . $rcp_discounts_db_name . " WHERE code='%s';", strtolower( $code ) ) );
 	return $code[0];
 }
 
@@ -67,7 +67,7 @@ function rcp_validate_discount( $code, $subscription_id = 0 ) {
 
 	$ret       = false;
 	$discounts = new RCP_Discounts();
-	$discount  = $discounts->get_by( 'code', $code );
+	$discount  = $discounts->get_by( 'code', strtolower( $code ) );
 
 	if( ! empty( $discount ) && $discount->status == 'active' ) {
 
@@ -83,8 +83,8 @@ function rcp_validate_discount( $code, $subscription_id = 0 ) {
 			}
 		}
 
-		// Ensure codes are identical, including case
-		if( strcmp( $code, $discount->code ) != 0 ) {
+		// Ensure codes match, case insensitive
+		if( strcasecmp( $code, $discount->code ) != 0 ) {
 			$ret = false;
 		}
 
