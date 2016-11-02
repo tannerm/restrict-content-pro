@@ -293,6 +293,8 @@ class RCP_Discounts {
 			$args['amount'] = $amount;
 		}
 
+		$args['code'] = strtolower( $args['code'] );
+
 		if( $this->get_by( 'code', $args['code'] ) ) {
 			return false; // this code already exists
 		}

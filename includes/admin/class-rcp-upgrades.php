@@ -24,6 +24,7 @@ class RCP_Upgrades {
 		$version = get_option( 'rcp_version' );
 
 		$this->v26_upgrades();
+		$this->v27_upgrades();
 
 		// If upgrades have occurred
 		if ( $this->upgraded ) {
@@ -39,6 +40,22 @@ class RCP_Upgrades {
 
 		if( version_compare( $version, '2.6', '<' ) ) {
 			@rcp_options_install();
+		}
+	}
+
+	private function v27_upgrades() {
+
+		$version = get_option( 'rcp_version' );
+
+		if( version_compare( $version, '2.7', '<' ) ) {
+
+			global $wpdb, $rcp_discounts_db_name;
+
+			$wpdb->query( "UPDATE $rcp_discounts_db_name SET code = LOWER(code)" );
+
+			@rcp_options_install();
+
+			$this->upgraded = true;
 		}
 	}
 
