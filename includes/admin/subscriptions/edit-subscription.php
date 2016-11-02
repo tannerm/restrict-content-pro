@@ -63,7 +63,7 @@ $level->role = empty( $level->role ) ? 'subscriber' : $level->role;
 					<label for="rcp-price"><?php _e( 'Price', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="rcp-price" name="price" value="<?php echo esc_attr( $level->price ); ?>" pattern="^[+]?[0-9]{1,3}(?:,?[0-9]{3})*\.[0-9]{2}$" style="width: 40px;"/>
+					<input type="text" id="rcp-price" name="price" value="<?php echo esc_attr( $level->price ); ?>" pattern="^(((\d{1,3})(,\d{3})*)|(\d+))(.\d+)?$" style="width: 40px;"/>
 					<p class="description"><?php _e( 'The price of this membership level. Enter 0 for free.', 'rcp' ); ?></p>
 				</td>
 			</tr>
