@@ -163,7 +163,7 @@ function rcp_member_levels_page()
 									<label for="rcp-price"><?php _e('Price', 'rcp'); ?></label>
 								</th>
 								<td>
-									<input type="text" id="rcp-price" name="price" value="" style="width: 40px;"/>
+									<input type="text" id="rcp-price" name="price" value="" pattern="^[+]?[0-9]{1,3}(?:,?[0-9]{3})*\.[0-9]{2}$" style="width: 40px;"/>
 									<select name="rcp-price-select" id="rcp-price-select">
 										<option value="normal"><?php echo rcp_get_currency(); ?></option>
 										<option value="free"><?php _e('Free', 'rcp'); ?></option>
