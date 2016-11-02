@@ -1356,3 +1356,20 @@ function rcp_get_member_prorate_credit( $user_id = 0 ) {
 
 	return $member->get_prorate_credit_amount();
 }
+
+/**
+ * Disable toolbar for non-admins if option is enabled
+ *
+ * @since 2.7
+ *
+ * @return void
+ */
+function rcp_maybe_disable_toolbar() {
+
+	global $rcp_options;
+
+	if ( isset( $rcp_options['disable_toolbar'] ) && ! current_user_can( 'manage_options' ) ) {
+		add_filter( 'show_admin_bar', '__return_false' );
+	}
+}
+add_action( 'init', 'rcp_maybe_disable_toolbar', 9999 );
