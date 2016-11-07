@@ -64,8 +64,11 @@ $role_set_display  = '' != $user_role ? '' : ' style="display:none;"';
 	</p>
 	<p>
 		<select name="rcp_user_level" id="rcp-user-level-field">
-			<?php foreach( array( 'All', 'Administrator', 'Editor', 'Author', 'Contributor', 'Subscriber' ) as $role ) : ?>
-				<option value="<?php echo esc_attr( $role ); ?>"<?php selected( $role, $user_role ); ?>><?php echo $role; ?></option>
+			<?php
+			$roles = get_editable_roles();
+			$roles = array_merge( array( 'all' => array( 'name' => 'All' ) ), $roles );
+			foreach(  $roles as $key => $role ) : ?>
+				<option value="<?php echo esc_attr( $role['name'] ); ?>"<?php selected( $role['name'], $user_role ); ?>><?php echo $role['name']; ?></option>
 			<?php endforeach; ?>
 		</select>
 	</p>
