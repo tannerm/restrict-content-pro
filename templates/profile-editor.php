@@ -2,8 +2,8 @@
 /**
  * This template is used to display the profile editor with [rcp_profile_editor]
  */
-global $current_user, $rcp_load_css;
-
+global $rcp_load_css;
+$current_user = wp_get_current_user();
 $rcp_load_css = true;
 
 if ( is_user_logged_in() ):
