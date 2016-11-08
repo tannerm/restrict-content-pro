@@ -154,17 +154,32 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			try {
 
 				// Add fees before the plan is updated and charged
-				if ( ! empty( $this->signup_fee ) ) {
 
-					$customer->account_balance = $customer->account_balance + ( $this->signup_fee * rcp_stripe_get_currency_multiplier() ); // Add additional amount to initial payment (in cents)
+				if( $this->initial_amount > $this->amount ) {
+					$save_balance   = true;
+					$amount         = $this->initial_amount - $this->amount;
+					$balance_amount = round( $customer->account_balance + ( $amount * rcp_stripe_get_currency_multiplier() ), 0 ); // Add additional amount to initial payment (in cents)
+				}
+
+				if( $this->initial_amount < $this->amount ) {
+					$save_balance   = true;
+					$amount         = $this->amount - $this->initial_amount;
+					$balance_amount = round( $customer->account_balance + ( $amount * rcp_stripe_get_currency_multiplier() ), 0 ); // Add additional amount to initial payment (in cents)
+				}
+
+				if ( ! empty( $save_balance ) ) {
+
+					$customer->account_balance = $balance_amount;
 					$customer->save();
 
-					if( isset( $temp_invoice ) ) {
-						$invoice = \Stripe\Invoice::retrieve( $temp_invoice->id );
-						$invoice->closed = true;
-						$invoice->save();
-						unset( $temp_invoice, $invoice );
-					}
+				}
+
+				// Remove the temporary invoice
+				if( isset( $temp_invoice ) ) {
+					$invoice = \Stripe\Invoice::retrieve( $temp_invoice->id );
+					$invoice->closed = true;
+					$invoice->save();
+					unset( $temp_invoice, $invoice );
 				}
 
 				// clean up any past due or unpaid subscriptions before upgrading/downgrading
