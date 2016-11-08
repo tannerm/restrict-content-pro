@@ -130,7 +130,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			// one time payment
 			$paypal_args['cmd'] = '_xclick';
-			$paypal_args['amount'] = round( $this->amount + $this->signup_fee, 2 );
+			$paypal_args['amount'] = $this->initial_amount;
 
 		}
 
