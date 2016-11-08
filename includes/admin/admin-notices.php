@@ -31,7 +31,7 @@ function rcp_admin_notices() {
 		echo '</div>';
 	} elseif ( 'valid' !== rcp_check_license() && ! get_user_meta( get_current_user_id(), '_rcp_missing_license_dismissed', true ) ) {
 		echo '<div class="notice notice-info">';
-			echo '<p>' . sprintf( __( 'Please <a href="%s">enter and activate</a> your license key for Restrict Content Pro to enable automatic updates.', 'rcp' ), admin_url( 'admin.php?page=rcp-settings' ) ) . '</p>';
+			echo '<p>' . sprintf( __( 'Please <a href="%s">enter and activate</a> your license key for Restrict Content Pro to enable automatic updates.', 'rcp' ), esc_url( admin_url( 'admin.php?page=rcp-settings' ) ) ) . '</p>';
 			echo '<p><a href="' . wp_nonce_url( add_query_arg( array( 'rcp_notice' => 'missing_license' ) ), 'rcp_dismiss_notice', 'rcp_dismiss_notice_nonce' ) . '">' . _x( 'Dismiss Notice', 'License', 'rcp' ) . '</a></p>';
 		echo '</div>';
 	}
