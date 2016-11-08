@@ -258,6 +258,8 @@ class RCP_Registration {
 	 */
 	public function get_total_discounts( $total = null, $only_recurring = false ) {
 
+		global $rcp_options;
+
 		if ( ! $registration_discounts = $this->get_discounts() ) {
 			return 0;
 		}
@@ -271,6 +273,10 @@ class RCP_Registration {
 		foreach( $registration_discounts as $registration_discount => $recurring ) {
 
 			if ( $only_recurring && ! $recurring ) {
+				continue;
+			}
+
+			if( $only_recurring && isset( $rcp_options['one_time_discounts'] ) ) {
 				continue;
 			}
 

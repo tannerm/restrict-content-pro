@@ -223,6 +223,7 @@ function rcp_process_registration() {
 
 		$subscription_data = array(
 			'price'             => rcp_get_registration()->get_total( true, false ), // get total without the fee
+			'recurring_price'   => rcp_get_registration()->get_recurring_total( true, false ), // get recurring total without the fee
 			'discount'          => rcp_get_registration()->get_total_discounts(),
 			'discount_code'     => $discount,
 			'fee'               => rcp_get_registration()->get_total_fees(),
@@ -245,6 +246,8 @@ function rcp_process_registration() {
 		if ( $subscription_data['fee'] < 0 && abs( $subscription_data['fee'] ) > $subscription_data['price'] ) {
 			$subscription_data['fee'] = -1 * $subscription_data['price'];
 		}
+
+		//echo '<pre>'; print_r( $subscription_data ); echo '</pre>'; exit;
 
 		update_user_meta( $user_data['id'], 'rcp_pending_subscription_amount', $subscription_data['price'] + $subscription_data['fee'] );
 

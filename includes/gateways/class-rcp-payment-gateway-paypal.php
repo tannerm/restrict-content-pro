@@ -99,41 +99,29 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			$paypal_args['src'] = '1';
 			$paypal_args['sra'] = '1';
 			$paypal_args['a3'] = $this->amount;
-
-			if( ! empty( $this->signup_fee ) ) {
-				$paypal_args['a1'] = number_format( $this->signup_fee + $this->amount, 2 );
-			}
+			$paypal_args['a1'] = $this->initial_amount;
 
 			$paypal_args['p3'] = $this->length;
-
-			if( ! empty( $this->signup_fee ) ) {
-				$paypal_args['p1'] = $this->length;
-			}
+			$paypal_args['p1'] = $this->length;
 
 			switch ( $this->length_unit ) {
 
 				case "day" :
 
 					$paypal_args['t3'] = 'D';
-					if( ! empty( $this->signup_fee ) ) {
-						$paypal_args['t1'] = 'D';
-					}
+					$paypal_args['t1'] = 'D';
 					break;
 
 				case "month" :
 
 					$paypal_args['t3'] = 'M';
-					if( ! empty( $this->signup_fee ) ) {
-						$paypal_args['t1'] = 'M';
-					}
+					$paypal_args['t1'] = 'M';
 					break;
 
 				case "year" :
 
 					$paypal_args['t3'] = 'Y';
-					if( ! empty( $this->signup_fee ) ) {
-						$paypal_args['t1'] = 'Y';
-					}
+					$paypal_args['t1'] = 'Y';
 					break;
 
 			}
