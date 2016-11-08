@@ -84,7 +84,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 				"name"        => $this->subscription_name,
 				"quantity"    => '1',
 				"tangible"    => 'N',
-				"startupFee"  => $this->signup_fee
+				"startupFee"  => $this->initial_amount - $this->amount
 			) );
 
 		} else {
@@ -98,7 +98,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 				"name"        => $this->subscription_name,
 				"quantity"    => '1',
 				"tangible"    => 'N',
-				"startupFee"  => $this->signup_fee
+				"startupFee"  => $this->initial_amount - $this->amount
 			) );
 
 		}
