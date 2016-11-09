@@ -434,8 +434,9 @@ function rcp_can_user_be_logged_in() {
 			}
 
 			// save modified data
-			if ( count( $data ) != $prev_data_count )
+			if ( count( $data ) != $prev_data_count ) {
 				set_transient( 'rcp_user_logged_in_' . $user_id, $data );
+			}
 
 			if( ! in_array( $_COOKIE[LOGGED_IN_COOKIE], $data ) ) :
 
