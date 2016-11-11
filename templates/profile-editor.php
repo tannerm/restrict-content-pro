@@ -2,8 +2,8 @@
 /**
  * This template is used to display the profile editor with [rcp_profile_editor]
  */
-global $current_user, $rcp_load_css;
-
+global $rcp_load_css;
+$current_user = wp_get_current_user();
 $rcp_load_css = true;
 
 if ( is_user_logged_in() ):
@@ -25,7 +25,7 @@ if ( is_user_logged_in() ):
 				<label for="rcp_first_name"><?php _e( 'First Name', 'rcp' ); ?></label>
 				<input name="rcp_first_name" id="rcp_first_name" class="text rcp-input" type="text" value="<?php echo esc_attr( $first_name ); ?>" />
 			</p>
-			<p id="rcp_profile_first_name_wrap">
+			<p id="rcp_profile_last_name_wrap">
 				<label for="rcp_last_name"><?php _e( 'Last Name', 'rcp' ); ?></label>
 				<input name="rcp_last_name" id="rcp_last_name" class="text rcp-input" type="text" value="<?php echo esc_attr( $last_name ); ?>" />
 			</p>

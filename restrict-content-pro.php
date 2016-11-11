@@ -261,6 +261,9 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 		include( RCP_PLUGIN_DIR . 'includes/redirects.php' );
 	}
 
+	// Set up database classes.
+	add_action( 'plugins_loaded', 'rcp_register_databases', 11 );
+
 }
 
 /**
@@ -282,4 +285,3 @@ function rcp_register_databases() {
 	$wpdb->paymentmeta = $rcp_payments_db->meta_db_name;
 
 }
-add_action( 'plugins_loaded', 'rcp_register_databases', 11 );
