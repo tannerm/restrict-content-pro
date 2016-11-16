@@ -798,6 +798,8 @@ function rcp_process_profile_editor_updates() {
 		}
 	}
 
+	do_action( 'rcp_edit_profile_form_errors', $_POST, $user_id );
+
 	// retrieve all error messages, if any
 	$errors = rcp_errors()->get_error_messages();
 
@@ -806,9 +808,10 @@ function rcp_process_profile_editor_updates() {
 
 		// Update the user
 		$updated = wp_update_user( $userdata );
+		$updated = apply_filters( 'rcp_edit_profile_update_user', $updated, $user_id, $_POST );
 
 		if( $updated ) {
-			do_action( 'rcp_user_profile_updated', $user_id, $userdata );
+			do_action( 'rcp_user_profile_updated', $user_id, $userdata, $old_data );
 
 			wp_safe_redirect( add_query_arg( 'updated', 'true', sanitize_text_field( $_POST['rcp_redirect'] ) ) );
 
