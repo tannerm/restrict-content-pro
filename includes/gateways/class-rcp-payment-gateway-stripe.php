@@ -614,7 +614,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							var price = $('.rcp_level').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
 						}
 
-						if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]').val() == 'stripe') && price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100')) {
+						if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]:checked').val() == 'stripe') && price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100')) {
 
 							event.preventDefault();
 
