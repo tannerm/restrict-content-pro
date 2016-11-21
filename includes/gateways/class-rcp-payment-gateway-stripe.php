@@ -329,8 +329,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
 			}
 
-			// set this user to active
-			$member->set_status( 'active' );
 			$member->set_recurring( $this->auto_renew );
 
 			if ( ! is_user_logged_in() ) {
@@ -343,6 +341,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			if( ! $this->auto_renew ) {
 				$member->set_expiration_date( $member->calculate_expiration() );
 			}
+
+			// set this user to active
+			$member->set_status( 'active' );
 
 			do_action( 'rcp_stripe_signup', $this->user_id, $this );
 
