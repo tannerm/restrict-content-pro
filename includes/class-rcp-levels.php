@@ -213,6 +213,16 @@ class RCP_Levels {
 
 		$args = apply_filters( 'rcp_add_subscription_args', $args );
 
+		// Validate price value
+		if ( ! $this->valid_amount( $args['price'] ) || $args['price'] < 0 ) {
+			return false;
+		}
+
+		// Validate fee value
+		if ( ! $this->valid_amount( $args['fee'] ) ) {
+			return false;
+		}
+
 		$add = $wpdb->query(
 			$wpdb->prepare(
 				"INSERT INTO {$this->db_name} SET
@@ -275,9 +285,19 @@ class RCP_Levels {
 		$level = $this->get_level( $level_id );
 		$level = get_object_vars( $level );
 
-		$args     = array_merge( $level, $args );
+		$args = array_merge( $level, $args );
 
 		do_action( 'rcp_pre_edit_subscription_level', absint( $args['id'] ), $args );
+
+		// Validate price value
+		if ( ! $this->valid_amount( $args['price'] ) || $args['price'] < 0 ) {
+			return false;
+		}
+
+		// Validate fee value
+		if ( ! $this->valid_amount( $args['fee'] ) ) {
+			return false;
+		}
 
 		$update = $wpdb->query(
 			$wpdb->prepare(
@@ -445,4 +465,16 @@ class RCP_Levels {
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->levelmeta} WHERE level_id = %d", absint( $level_id ) ) );
 	}
 
+	/**
+	 * Validates that the amount is a valid format.
+	 *
+	 * Private for now until we finish validation for all fields.
+	 *
+	 * @since 2.7
+	 * @access private
+	 * @return boolean true if valid, false if not.
+	 */
+	private function valid_amount( $amount ) {
+		return preg_match( '/^-?(((\d{1,3})(,\d{3})*)|(\d+))(.\d+)?$/', $amount );
+	}
 }
