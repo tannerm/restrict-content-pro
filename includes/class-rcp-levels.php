@@ -217,15 +217,16 @@ class RCP_Levels {
 			if ( empty( $args[$key] ) ) {
 				$args[$key] = '0';
 			}
+			$args[$key] = str_replace( ',', '', $args[$key] );
 		}
 
 		// Validate price value
-		if ( ! $this->valid_amount( $args['price'] ) || $args['price'] < 0 ) {
+		if ( false === $this->valid_amount( $args['price'] ) || $args['price'] < 0 ) {
 			return false;
 		}
 
 		// Validate fee value
-		if ( ! $this->valid_amount( $args['fee'] ) ) {
+		if ( false === $this->valid_amount( $args['fee'] ) ) {
 			return false;
 		}
 
@@ -299,15 +300,16 @@ class RCP_Levels {
 			if ( empty( $args[$key] ) ) {
 				$args[$key] = '0';
 			}
+			$args[$key] = str_replace( ',', '', $args[$key] );
 		}
 
 		// Validate price value
-		if ( ! $this->valid_amount( $args['price'] ) || $args['price'] < 0 ) {
+		if ( false === $this->valid_amount( $args['price'] ) || $args['price'] < 0 ) {
 			return false;
 		}
 
 		// Validate fee value
-		if ( ! $this->valid_amount( $args['fee'] ) ) {
+		if ( false === $this->valid_amount( $args['fee'] ) ) {
 			return false;
 		}
 
@@ -487,6 +489,6 @@ class RCP_Levels {
 	 * @return boolean true if valid, false if not.
 	 */
 	private function valid_amount( $amount ) {
-		return preg_match( '/^-?(((\d{1,3})(,\d{3})*)|(\d+))(.\d+)?$/', $amount );
+		return filter_var( $amount, FILTER_VALIDATE_FLOAT );
 	}
 }
