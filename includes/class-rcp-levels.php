@@ -202,7 +202,7 @@ class RCP_Levels {
 			'price'         => '0',
 			'fee'           => '0',
 			'list_order'    => '0',
-			'level' 	    => '0',
+			'level'         => '0',
 			'status'        => 'inactive',
 			'role'          => 'subscriber'
 		);
@@ -212,6 +212,12 @@ class RCP_Levels {
 		do_action( 'rcp_pre_add_subscription', $args );
 
 		$args = apply_filters( 'rcp_add_subscription_args', $args );
+
+		foreach( array( 'price', 'fee' ) as $key ) {
+			if ( empty( $args[$key] ) ) {
+				$args[$key] = '0';
+			}
+		}
 
 		// Validate price value
 		if ( ! $this->valid_amount( $args['price'] ) || $args['price'] < 0 ) {
@@ -288,6 +294,12 @@ class RCP_Levels {
 		$args = array_merge( $level, $args );
 
 		do_action( 'rcp_pre_edit_subscription_level', absint( $args['id'] ), $args );
+
+		foreach( array( 'price', 'fee' ) as $key ) {
+			if ( empty( $args[$key] ) ) {
+				$args[$key] = '0';
+			}
+		}
 
 		// Validate price value
 		if ( ! $this->valid_amount( $args['price'] ) || $args['price'] < 0 ) {
