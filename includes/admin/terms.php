@@ -163,3 +163,4 @@ function rcp_save_term_meta( $term_id, $tt_id, $taxonomy ) {
 
 }
 add_action( 'edited_term', 'rcp_save_term_meta', 10, 3 );
+add_action( 'created_term', 'rcp_save_term_meta', 10, 3 );
