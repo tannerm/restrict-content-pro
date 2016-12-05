@@ -96,7 +96,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 
 			jQuery('#rcp_registration_form #rcp_submit').on('click', function(e) {
 
-				if ( jQuery('#rcp_gateway option:selected').val() !== 'stripe_checkout' && jQuery('input[name=rcp_gateway]:checked').val() !== 'stripe_checkout' ) {
+				if ( jQuery('#rcp_gateway option:selected').val() !== 'stripe_checkout' && jQuery('input[name=rcp_gateway]').val() !== 'stripe_checkout' && jQuery('input[name=rcp_gateway]:checked').val() !== 'stripe_checkout' ) {
 					return;
 				}
 
