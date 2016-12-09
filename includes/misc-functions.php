@@ -347,8 +347,9 @@ function rcp_no_account_sharing() {
 
 function rcp_set_user_logged_in_status( $logged_in_cookie, $expire, $expiration, $user_id, $status = 'logged_in' ) {
 
-	if( ! rcp_no_account_sharing() )
+	if( ! rcp_no_account_sharing() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
 		return;
+	}
 
 	if ( ! empty( $user_id ) ) :
 
@@ -376,8 +377,9 @@ add_action( 'set_logged_in_cookie', 'rcp_set_user_logged_in_status', 10, 5 );
 
 function rcp_clear_auth_cookie() {
 
-	if( ! rcp_no_account_sharing() )
+	if( ! rcp_no_account_sharing() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
 		return;
+	}
 
 	$user_id = get_current_user_id();
 
@@ -416,13 +418,17 @@ add_action( 'clear_auth_cookie', 'rcp_clear_auth_cookie' );
 */
 
 function rcp_can_user_be_logged_in() {
-	if ( is_user_logged_in() && rcp_no_account_sharing() ) :
+	if ( is_user_logged_in() && rcp_no_account_sharing() ) {
+
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return;
+		}
 
 		$user_id = get_current_user_id();
 
 		$already_logged_in = get_transient( 'rcp_user_logged_in_' . $user_id );
 
-		if( $already_logged_in !== false ) :
+		if( $already_logged_in !== false ) {
 
 			$data = maybe_unserialize( $already_logged_in );
 
@@ -438,17 +444,15 @@ function rcp_can_user_be_logged_in() {
 				set_transient( 'rcp_user_logged_in_' . $user_id, $data );
 			}
 
-			if( ! in_array( $_COOKIE[LOGGED_IN_COOKIE], $data ) ) :
+			if( ! in_array( $_COOKIE[LOGGED_IN_COOKIE], $data ) ) {
 
 				// Log the user out - this is one of the oldest user logged into this account
 				wp_logout();
 				wp_safe_redirect( trailingslashit( get_bloginfo( 'wpurl' ) ) . 'wp-login.php?loggedout=true' );
+			}
 
-			endif;
-
-		endif;
-
-	endif;
+		}
+	}
 }
 add_action( 'init', 'rcp_can_user_be_logged_in' );
 
