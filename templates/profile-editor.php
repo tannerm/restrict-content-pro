@@ -50,6 +50,8 @@ if ( is_user_logged_in() ):
 				<input name="rcp_email" id="rcp_email" class="text rcp-input required" type="email" value="<?php echo esc_attr( $current_user->user_email ); ?>" />
 			</p>
 			<?php do_action( 'rcp_profile_editor_after', $current_user->ID ); ?>
+        </fieldset>
+        <fieldset>
 			<legend><?php _e( 'Change your Password', 'rcp' ); ?></legend>
 			<p id="rcp_profile_password_wrap">
 				<label for="rcp_user_pass"><?php _e( 'New Password', 'rcp' ); ?></label>
@@ -60,6 +62,8 @@ if ( is_user_logged_in() ):
 				<input name="rcp_new_user_pass2" id="rcp_new_user_pass2" class="password rcp-input" type="password"/>
 			</p>
 			<p class="rcp_password_change_notice"><?php _e( 'Please note after changing your password, you must log back in.', 'rcp' ); ?></p>
+        </fieldset>
+        <fieldset>
 			<p id="rcp_profile_submit_wrap">
 				<input type="hidden" name="rcp_profile_editor_nonce" value="<?php echo wp_create_nonce( 'rcp-profile-editor-nonce' ); ?>"/>
 				<input type="hidden" name="rcp_action" value="edit_user_profile" />

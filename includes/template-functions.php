@@ -133,3 +133,34 @@ function rcp_locate_template( $template_names, $load = false, $require_once = tr
 
 	return $located;
 }
+
+/**
+ * Add post classes to indicate whether content is restricted and if the
+ * current user has access.
+ *
+ * @param array        $classes Array of post classes.
+ * @param string|array $class Additional classes added to the post.
+ * @param int          $post_id ID of the current post.
+ *
+ * @since 2.7
+ * @return array
+ */
+function rcp_post_classes( $classes, $class = '', $post_id = false ) {
+
+	$user_id = get_current_user_id();
+
+	if ( ! $post_id || is_admin() ) {
+		return $classes;
+	}
+
+	if ( rcp_is_restricted_content( $post_id ) ) {
+		$classes[] = 'rcp-is-restricted';
+
+		$classes[] = rcp_user_can_access( $user_id, $post_id ) ? 'rcp-can-access' : 'rcp-no-access';
+	}
+
+	return $classes;
+
+}
+
+add_filter( 'post_class', 'rcp_post_classes', 10, 3 );

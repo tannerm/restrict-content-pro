@@ -786,7 +786,8 @@ function rcp_setup_registration_init() {
 	}
 
 	$level_id = abs( $_POST['rcp_level'] );
-	$discount = ( empty( $_POST['rcp_discount'] ) ) ? null : sanitize_text_field( $_POST['rcp_discount'] );
+	$discount = ! empty( $_REQUEST['discount'] ) ? sanitize_text_field( $_REQUEST['discount'] ) : null;
+	$discount = ! empty( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : $discount;
 
 	rcp_setup_registration( $level_id, $discount );
 }

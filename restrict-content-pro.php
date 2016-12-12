@@ -3,7 +3,7 @@
 Plugin Name: Restrict Content Pro
 Plugin URL: https://restrictcontentpro.com
 Description: Set up a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
-Version: 2.6.13
+Version: 2.7
 Author: Restrict Content Pro Team
 Author URI: https://restrictcontentpro.com
 Contributors: mordauk
@@ -21,7 +21,7 @@ if ( !defined( 'RCP_PLUGIN_FILE' ) ) {
 	define( 'RCP_PLUGIN_FILE', __FILE__ );
 }
 if ( !defined( 'RCP_PLUGIN_VERSION' ) ) {
-	define( 'RCP_PLUGIN_VERSION', '2.6.13' );
+	define( 'RCP_PLUGIN_VERSION', '2.7' );
 }
 if ( ! defined( 'CAL_GREGORIAN' ) ) {
 	define( 'CAL_GREGORIAN', 1 );
@@ -229,7 +229,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 		include( RCP_PLUGIN_DIR . 'includes/admin/help/help-menus.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/metabox.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/add-ons.php' );
-		include( RCP_PLUGIN_DIR . 'includes/admin/categories.php' );
+		include( RCP_PLUGIN_DIR . 'includes/admin/terms.php' );
 		include( RCP_PLUGIN_DIR . 'includes/user-page-columns.php' );
 		include( RCP_PLUGIN_DIR . 'includes/process-data.php' );
 		include( RCP_PLUGIN_DIR . 'includes/export-functions.php' );
