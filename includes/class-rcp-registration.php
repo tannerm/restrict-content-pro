@@ -214,7 +214,7 @@ class RCP_Registration {
 			$fees += $fee['amount'];
 		}
 
-		return apply_filters( 'rcp_registration_get_total_fees', (float) $fees, $this );
+		return apply_filters( 'rcp_registration_get_signup_fees', (float) $fees, $this );
 
 	}
 
