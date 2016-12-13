@@ -116,6 +116,17 @@ global $rcp_reports_page;
 global $rcp_export_page;
 global $rcp_help_page;
 
+
+/**
+ * Check WordPress version is at least $version.
+ * @since
+ * @param  string  $version WP version string to compare.
+ * @return bool             Result of comparison check.
+ */
+function rcp_compare_wp_version( $version ) {
+	return version_compare( get_bloginfo( 'version' ), $version, '>=' );
+}
+
 /*******************************************
 * plugin text domain for translations
 *******************************************/
@@ -128,7 +139,21 @@ function rcp_load_textdomain() {
 
 
 	// Traditional WordPress plugin locale filter
-	$locale        = apply_filters( 'plugin_locale',  get_locale(), 'rcp' );
+
+	$get_locale = get_locale();
+
+	if ( rcp_compare_wp_version( 4.7 ) ) {
+
+		$get_locale = get_user_locale();
+	}
+
+	/**
+	 * Defines the plugin language locale used in RCP.
+	 *
+	 * @var $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
+	 *                  otherwise uses `get_locale()`.
+	 */
+	$locale        = apply_filters( 'plugin_locale',  $get_locale, 'rcp' );
 	$mofile        = sprintf( '%1$s-%2$s.mo', 'rcp', $locale );
 
 	// Setup paths to current locale file
