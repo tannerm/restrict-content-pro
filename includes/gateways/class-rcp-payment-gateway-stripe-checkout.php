@@ -48,7 +48,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			'allowRememberMe'   => true,
 			'email'             => $email,
 			'currency'          => rcp_get_currency(),
-			'alipay'            => isset( $rcp_options['stripe_alipay'] ) && '1' === $rcp_options['stripe_alipay'] && 'USD' === rcp_get_currency() ? 'true' : 'false'
+			'alipay'            => isset( $rcp_options['stripe_alipay'] ) && '1' === $rcp_options['stripe_alipay'] && 'USD' === rcp_get_currency() ? true : false
 		) );
 
 		$subscriptions = array();
@@ -95,6 +95,11 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			var rcpStripeCheckout = StripeCheckout.configure(checkoutArgs);
 
 			jQuery('#rcp_registration_form #rcp_submit').on('click', function(e) {
+
+				if ( jQuery('#rcp_gateway option:selected').val() !== 'stripe_checkout' && jQuery('input[name=rcp_gateway]').val() !== 'stripe_checkout' && jQuery('input[name=rcp_gateway]:checked').val() !== 'stripe_checkout' ) {
+					return;
+				}
+
 				var $form = jQuery(this).closest('form');
 				var $level = $form.find('input[name=rcp_level]:checked');
 

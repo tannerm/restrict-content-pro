@@ -202,7 +202,7 @@ class RCP_Levels {
 			'price'         => '0',
 			'fee'           => '0',
 			'list_order'    => '0',
-			'level' 	    => '0',
+			'level'         => '0',
 			'status'        => 'inactive',
 			'role'          => 'subscriber'
 		);
@@ -212,6 +212,23 @@ class RCP_Levels {
 		do_action( 'rcp_pre_add_subscription', $args );
 
 		$args = apply_filters( 'rcp_add_subscription_args', $args );
+
+		foreach( array( 'price', 'fee' ) as $key ) {
+			if ( empty( $args[$key] ) ) {
+				$args[$key] = '0';
+			}
+			$args[$key] = str_replace( ',', '', $args[$key] );
+		}
+
+		// Validate price value
+		if ( false === $this->valid_amount( $args['price'] ) || $args['price'] < 0 ) {
+			return false;
+		}
+
+		// Validate fee value
+		if ( false === $this->valid_amount( $args['fee'] ) ) {
+			return false;
+		}
 
 		$add = $wpdb->query(
 			$wpdb->prepare(
@@ -275,9 +292,26 @@ class RCP_Levels {
 		$level = $this->get_level( $level_id );
 		$level = get_object_vars( $level );
 
-		$args     = array_merge( $level, $args );
+		$args = array_merge( $level, $args );
 
 		do_action( 'rcp_pre_edit_subscription_level', absint( $args['id'] ), $args );
+
+		foreach( array( 'price', 'fee' ) as $key ) {
+			if ( empty( $args[$key] ) ) {
+				$args[$key] = '0';
+			}
+			$args[$key] = str_replace( ',', '', $args[$key] );
+		}
+
+		// Validate price value
+		if ( false === $this->valid_amount( $args['price'] ) || $args['price'] < 0 ) {
+			return false;
+		}
+
+		// Validate fee value
+		if ( false === $this->valid_amount( $args['fee'] ) ) {
+			return false;
+		}
 
 		$update = $wpdb->query(
 			$wpdb->prepare(
@@ -445,4 +479,16 @@ class RCP_Levels {
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->levelmeta} WHERE level_id = %d", absint( $level_id ) ) );
 	}
 
+	/**
+	 * Validates that the amount is a valid format.
+	 *
+	 * Private for now until we finish validation for all fields.
+	 *
+	 * @since 2.7
+	 * @access private
+	 * @return boolean true if valid, false if not.
+	 */
+	private function valid_amount( $amount ) {
+		return filter_var( $amount, FILTER_VALIDATE_FLOAT );
+	}
 }
