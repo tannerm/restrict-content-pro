@@ -38,7 +38,11 @@ if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
 function rcp_get_levels_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
+
+	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
+		$prefix = $wpdb->prefix;
+	}
 
 	return apply_filters( 'rcp_levels_db_name', $prefix . 'restrict_content_pro' );
 }
@@ -46,7 +50,11 @@ function rcp_get_levels_db_name() {
 function rcp_get_level_meta_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
+
+	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
+		$prefix = $wpdb->prefix;
+	}
 
 	return apply_filters( 'rcp_level_meta_db_name', $prefix . 'rcp_subscription_level_meta' );
 }
@@ -54,7 +62,11 @@ function rcp_get_level_meta_db_name() {
 function rcp_get_discounts_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
+
+	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
+		$prefix = $wpdb->prefix;
+	}
 
 	return apply_filters( 'rcp_discounts_db_name', $prefix . 'rcp_discounts' );
 }
@@ -62,7 +74,11 @@ function rcp_get_discounts_db_name() {
 function rcp_get_payments_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
+
+	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
+		$prefix = $wpdb->prefix;
+	}
 
 	return apply_filters( 'rcp_payments_db_name', $prefix . 'rcp_payments' );
 }
@@ -70,7 +86,11 @@ function rcp_get_payments_db_name() {
 function rcp_get_payment_meta_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
+
+	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
+		$prefix = $wpdb->prefix;
+	}
 
 	return apply_filters( 'rcp_payment_meta_db_name', $prefix . 'rcp_payment_meta' );
 }
