@@ -31,7 +31,7 @@ $member = new RCP_Member( $member_id );
 				</th>
 				<td>
 					<input id="rcp-email" name="email" type="text" style="width: 200px;" value="<?php echo esc_attr( $member->user_email ); ?>"/>
-					<p class="description"><?php _e( 'The member\'s email address.', 'rcp' ); ?></p>
+					<p class="description"><?php _e( 'The member\'s email address.', 'rcp' ); ?> <a href="<?php echo esc_url( add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php _e( 'Edit User Account', 'rcp' ); ?></a></p>
 				</td>
 			</tr>
 			<tr valign="top">
