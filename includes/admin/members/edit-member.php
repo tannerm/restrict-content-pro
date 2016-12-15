@@ -18,6 +18,24 @@ $member = new RCP_Member( $member_id );
 			<?php do_action( 'rcp_edit_member_before', $member->ID ); ?>
 			<tr valign="top">
 				<th scope="row" valign="top">
+					<label for="rcp-userlogin"><?php _e( 'User Login', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<input id="rcp-userlogin" type="text" style="width: 200px;" value="<?php echo esc_attr( $member->user_login ); ?>" disabled="disabled"/>
+					<p class="description"><?php _e( 'The member\'s login name. This cannot be changed.', 'rcp' ); ?></p>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" valign="top">
+					<label for="rcp-email"><?php _e( 'User Email', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<input id="rcp-email" name="email" type="text" style="width: 200px;" value="<?php echo esc_attr( $member->user_email ); ?>"/>
+					<p class="description"><?php _e( 'The member\'s email address.', 'rcp' ); ?> <a href="<?php echo esc_url( add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php _e( 'Edit User Account', 'rcp' ); ?></a></p>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" valign="top">
 					<label for="rcp-status"><?php _e( 'Status', 'rcp' ); ?></label>
 				</th>
 				<td>
