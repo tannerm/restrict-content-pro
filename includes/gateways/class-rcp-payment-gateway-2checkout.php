@@ -253,6 +253,8 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				case 'RECURRING_INSTALLMENT_FAILED' :
 
+					do_action( 'rcp_recurring_payment_failed', $member, $this );
+
 					break;
 
 				case 'RECURRING_STOPPED' :
