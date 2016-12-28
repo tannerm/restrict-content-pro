@@ -1,12 +1,12 @@
 <?php
 /**
- * Payment Gateway Base Class
+ * Payment Gateway Authorize.net Class
  *
  * @package     Restrict Content Pro
  * @subpackage  Classes/Roles
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.3
+ * @since       2.7
 */
 
 class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
@@ -99,7 +99,7 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 	 */
 	public function process_webhooks() {
 
-		if ( isset( $_GET['listener'] ) && $_GET['listener'] == '2checkout' ) {
+		if ( isset( $_GET['listener'] ) && $_GET['listener'] == 'authnet' ) {
 
 			global $wpdb;
 
