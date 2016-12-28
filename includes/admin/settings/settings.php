@@ -18,6 +18,8 @@ function rcp_settings_page() {
 		'redirect'              => 0,
 		'redirect_from_premium' => 0,
 		'login_redirect'        => 0,
+		'email_header_img'      => '',
+		'email_header_text'     => __( 'Hello', 'rcp' )
 	);
 
 	$rcp_options = wp_parse_args( $rcp_options, $defaults );
@@ -553,6 +555,39 @@ function rcp_settings_page() {
 							</tr>
 							<tr>
 								<th>
+									<label for="rcp_settings[email_template]"><?php _e( 'Template', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<?php $emails = new RCP_Emails; $selected_template = isset( $rcp_options['email_template'] ) ? $rcp_options['email_template'] : ''; ?>
+									<select id="rcp_settings[email_template]" name="rcp_settings[email_template]">
+										<?php foreach( $emails->get_templates() as $id => $template ) : ?>
+											<option value="<?php echo esc_attr( $id ); ?>"<?php selected( $id, $selected_template ); ?>><?php echo $template; ?></option>
+										<?php endforeach; ?>
+									</select>
+									<p class="description"><?php _e( 'Select the template used for email design.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[email_header_text]"><?php _e( 'Email Header', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text" id="rcp_settings[email_header_text]" style="width: 300px;" name="rcp_settings[email_header_text]" value="<?php echo esc_attr( $rcp_options['email_header_text'] ); ?>"/>
+									<p class="description"><?php _e( 'Text shown at top of email notifications.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[email_header_img]"><?php _e( 'Email Logo', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text rcp-upload-field" id="rcp_settings[email_header_img]" style="width: 300px;" name="rcp_settings[email_header_img]" value="<?php echo esc_attr( $rcp_options['email_header_img'] ); ?>"/>
+									<button class="rcp-upload button"><?php _e( 'Choose Image', 'rcp' ); ?></button>
+									<p class="description"><?php _e( 'Image shown at top of email notifications.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th>
 									<label for="rcp_settings[from_name]"><?php _e( 'From Name', 'rcp' ); ?></label>
 								</th>
 								<td>
@@ -570,6 +605,28 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 
+							<tr>
+								<th>
+									<label><?php _e( 'Available Template Tags', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<p class="description"><?php _e( 'The following template tags are available for use in all of the email settings below.', 'rcp' ); ?></p>
+									<ul>
+										<li><em>%blogname%</em> - <?php _e( 'will be replaced with the name of your site', 'rcp' ); ?></li>
+										<li><em>%username%</em> - <?php _e( 'will be replaced with the user name of the person receiving the email', 'rcp' ); ?></li>
+										<li><em>%useremail%</em> - <?php _e( 'will be replaced with the email of the person receiving the email', 'rcp' ); ?></li>
+										<li><em>%firstname%</em> - <?php _e( 'will be replaced with the first name of the person receiving the email', 'rcp' ); ?></li>
+										<li><em>%lastname%</em> - <?php _e( 'will be replaced with the last name of the person receiving the email', 'rcp' ); ?></li>
+										<li><em>%displayname%</em> - <?php _e( 'will be replaced with the display name of the person receiving the email', 'rcp' ); ?></li>
+										<li><em>%expiration%</em> - <?php _e( 'will be replaced with the expiration date of subscription', 'rcp' ); ?></li>
+										<li><em>%subscription_name%</em> - <?php _e( 'will be replaced with the name of the subscription', 'rcp' ); ?></li>
+										<li><em>%subscription_key%</em> - <?php _e( 'will be replaced with the unique, 32 character key created when the user is registered', 'rcp' ); ?></li>
+										<li><em>%amount%</em> - <?php _e( 'will be replaced with the amount of the users last payment', 'rcp' ); ?></li>
+
+										<?php do_action( 'rcp_available_template_tags' ); ?>
+									</ul>
+								</td>
+							</tr>
 							<tr>
 								<th colspan=2><h3><?php _e( 'Active Subscription Email', 'rcp' ); ?></h3></th>
 							</tr>
@@ -596,7 +653,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[active_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[active_email]" style="width: 300px; height: 100px;" name="rcp_settings[active_email]"><?php if( isset( $rcp_options['active_email'] ) ) { echo $rcp_options['active_email']; } ?></textarea>
+									<?php
+									$active_email = isset( $rcp_options['active_email'] ) ? wptexturize( $rcp_options['active_email'] ) : '';
+									wp_editor( $active_email, 'rcp_settings_active_email', array( 'textarea_name' => 'rcp_settings[active_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users when their subscription becomes active.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -628,7 +688,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[cancelled_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[cancelled_email]" style="width: 300px; height: 100px;" name="rcp_settings[cancelled_email]"><?php if( isset( $rcp_options['cancelled_email'] ) ) { echo $rcp_options['cancelled_email']; } ?></textarea>
+									<?php
+									$cancelled_email = isset( $rcp_options['cancelled_email'] ) ? wptexturize( $rcp_options['cancelled_email'] ) : '';
+									wp_editor( $cancelled_email, 'rcp_settings_cancelled_email', array( 'textarea_name' => 'rcp_settings[cancelled_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users when their subscription is cancelled.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -660,7 +723,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[expired_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[expired_email]" style="width: 300px; height: 100px;" name="rcp_settings[expired_email]"><?php if( isset( $rcp_options['expired_email'] ) ) { echo $rcp_options['expired_email']; } ?></textarea>
+									<?php
+									$expired_email = isset( $rcp_options['expired_email'] ) ? wptexturize( $rcp_options['expired_email'] ) : '';
+									wp_editor( $expired_email, 'rcp_settings_expired_email', array( 'textarea_name' => 'rcp_settings[expired_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users when their subscription is expired.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -681,7 +747,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[renew_notice_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[renew_notice_email]" style="width: 300px; height: 100px;" name="rcp_settings[renew_notice_email]"><?php if( isset( $rcp_options['renew_notice_email'] ) ) { echo $rcp_options['renew_notice_email']; } ?></textarea>
+									<?php
+									$renew_notice_email = isset( $rcp_options['renew_notice_email'] ) ? wptexturize( $rcp_options['renew_notice_email'] ) : '';
+									wp_editor( $renew_notice_email, 'rcp_settings_renew_notice_email', array( 'textarea_name' => 'rcp_settings[renew_notice_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users before their subscription expires to encourage them to renew.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -731,7 +800,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[free_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[free_email]" style="width: 300px; height: 100px;" name="rcp_settings[free_email]"><?php if( isset( $rcp_options['free_email'] ) ) { echo $rcp_options['free_email']; } ?></textarea>
+									<?php
+									$free_email = isset( $rcp_options['free_email'] ) ? wptexturize( $rcp_options['free_email'] ) : '';
+									wp_editor( $free_email, 'rcp_settings_free_email', array( 'textarea_name' => 'rcp_settings[free_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users when they sign up for a free account.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -763,7 +835,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[trial_email]"><?php _e( 'Trial Email Message', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[trial_email]" style="width: 300px; height: 100px;" name="rcp_settings[trial_email]"><?php if( isset( $rcp_options['trial_email'] ) ) { echo $rcp_options['trial_email']; } ?></textarea>
+									<?php
+									$trial_email = isset( $rcp_options['trial_email'] ) ? wptexturize( $rcp_options['trial_email'] ) : '';
+									wp_editor( $trial_email, 'rcp_settings_trial_email', array( 'textarea_name' => 'rcp_settings[trial_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users when they sign up for a free trial.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -793,7 +868,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[payment_received_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[payment_received_email]" style="width: 300px; height: 100px;" name="rcp_settings[payment_received_email]"><?php if( isset( $rcp_options['payment_received_email'] ) ) { echo $rcp_options['payment_received_email']; } ?></textarea>
+									<?php
+									$payment_received_email = isset( $rcp_options['payment_received_email'] ) ? wptexturize( $rcp_options['payment_received_email'] ) : '';
+									wp_editor( $payment_received_email, 'rcp_settings_payment_received_email', array( 'textarea_name' => 'rcp_settings[payment_received_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users after a payment has been received from them.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -815,24 +893,6 @@ function rcp_settings_page() {
 						<?php do_action( 'rcp_email_settings', $rcp_options ); ?>
 
 					</div><!--end #rcp_email_options-->
-					<div id="rcp_email_tags">
-						<p><strong><?php _e( 'Available Template Tags', 'rcp' ); ?></strong></p>
-						<ul>
-							<li><em>%blogname%</em> - <?php _e( 'will be replaced with the name of your site', 'rcp' ); ?></li>
-							<li><em>%username%</em> - <?php _e( 'will be replaced with the user name of the person receiving the email', 'rcp' ); ?></li>
-							<li><em>%useremail%</em> - <?php _e( 'will be replaced with the email of the person receiving the email', 'rcp' ); ?></li>
-							<li><em>%firstname%</em> - <?php _e( 'will be replaced with the first name of the person receiving the email', 'rcp' ); ?></li>
-							<li><em>%lastname%</em> - <?php _e( 'will be replaced with the last name of the person receiving the email', 'rcp' ); ?></li>
-							<li><em>%displayname%</em> - <?php _e( 'will be replaced with the display name of the person receiving the email', 'rcp' ); ?></li>
-							<li><em>%expiration%</em> - <?php _e( 'will be replaced with the expiration date of subscription', 'rcp' ); ?></li>
-							<li><em>%subscription_name%</em> - <?php _e( 'will be replaced with the name of the subscription', 'rcp' ); ?></li>
-							<li><em>%subscription_key%</em> - <?php _e( 'will be replaced with the unique, 32 character key created when the user is registered', 'rcp' ); ?></li>
-							<li><em>%amount%</em> - <?php _e( 'will be replaced with the amount of the users last payment', 'rcp' ); ?></li>
-
-							<?php do_action( 'rcp_available_template_tags' ); ?>
-
-						</ul>
-					</div><!--end #rcp_email_tags-->
 					<div class="clear"></div>
 				</div><!--end #emails-->
 
@@ -1128,6 +1188,14 @@ function rcp_sanitize_settings( $data ) {
 			set_transient( 'rcp_login_redirect_invalid', 1, MINUTE_IN_SECONDS );
 		}
 
+	}
+
+	// Sanitize email bodies
+	$email_bodies = array( 'active_email', 'cancelled_email', 'expired_email', 'renew_notice_email', 'free_email', 'trial_email', 'payment_received_email' );
+	foreach ( $email_bodies as $email_body ) {
+		if ( ! empty( $data[$email_body] ) ) {
+			$data[$email_body] = wp_kses_post( $data[$email_body] );
+		}
 	}
 
 	do_action( 'rcp_save_settings', $data );
