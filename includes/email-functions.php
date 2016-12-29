@@ -463,3 +463,35 @@ function rcp_email_tag_amount( $member_id = 0, $payment_id = 0 ) {
 function rcp_email_tag_site_name() {
 	return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 }
+
+/**
+ * Emails a member when a renewal payment fails.
+ *
+ * @since 2.7
+ * @param object $member  The member (RCP_Member object).
+ * @param object $gateway The gateway used to process the renewal.
+ * @return void
+ */
+function rcp_email_member_on_renewal_payment_failure( RCP_Member $member, RCP_Payment_Gateway $gateway ) {
+
+	global $rcp_options;
+
+	if ( ! empty( $rcp_options['disable_renewal_payment_failed_email'] ) ) {
+		return;
+	}
+
+	$status    = $member->get_status();
+	$user_info = get_userdata( $member->ID );
+
+	$message = isset( $rcp_options['renewal_payment_failed_email'] ) ? $rcp_options['renewal_payment_failed_email'] : '';
+	$message = apply_filters( 'rcp_subscription_renewal_payment_failed_email', $message, $member->ID, $status );
+
+	$subject = isset( $rcp_options['renewal_payment_failed_subject'] ) ? $rcp_options['renewal_payment_failed_subject'] : '';
+	$subject = apply_filters( 'rcp_subscription_renewal_payment_failed_subject', $subject, $member->ID, $status );
+
+	$emails = new RCP_Emails;
+	$emails->member_id = $member->ID;
+
+	$emails->send( $user_info->user_email, $subject, $message );
+}
+add_action( 'rcp_recurring_payment_failed', 'rcp_email_member_on_renewal_payment_failure', 10, 2 );

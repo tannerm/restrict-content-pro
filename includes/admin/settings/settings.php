@@ -876,6 +876,39 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 							<tr valign="top">
+								<th colspan=2><h3><?php _e( 'Renewal Payment Failed Email', 'rcp' ); ?></h3></th>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[disable_renewal_payment_failed_email]"><?php _e( 'Disabled', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input type="checkbox" value="1" name="rcp_settings[disable_renewal_payment_failed_email]" id="rcp_settings[disable_renewal_payment_failed_email]" <?php checked( true, isset( $rcp_options['disable_renewal_payment_failed_email'] ) ); ?>/>
+									<span><?php _e( 'Check this to disable the email sent out when a renewal payment fails.', 'rcp' ); ?></span>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th>
+									<label for="rcp_settings[renewal_payment_failed_subject]"><?php _e( 'Subject', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text" id="rcp_settings[renewal_payment_failed_subject]" style="width: 300px;" name="rcp_settings[renewal_payment_failed_subject]" value="<?php if( isset( $rcp_options['renewal_payment_failed_subject'] ) ) { echo esc_attr( $rcp_options['renewal_payment_failed_subject'] ); } ?>"/>
+									<p class="description"><?php _e( 'The subject line for the email sent to users when a renewal payment fails.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th>
+									<label for="rcp_settings[renewal_payment_failed_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<?php
+									$renewal_payment_failed_email = isset( $rcp_options['renewal_payment_failed_email'] ) ? wptexturize( $rcp_options['renewal_payment_failed_email'] ) : '';
+									wp_editor( $renewal_payment_failed_email, 'rcp_settings_renewal_payment_failed_email', array( 'textarea_name' => 'rcp_settings[renewal_payment_failed_email]', 'teeny' => true ) );
+									?>
+									<p class="description"><?php _e( 'This is the email message that is sent to users when a renewal payment fails.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr valign="top">
 								<th colspan=2>
 									<h3><?php _e( 'New User Notifications', 'rcp' ); ?></h3>
 								</th>
