@@ -480,7 +480,7 @@ function rcp_email_member_on_renewal_payment_failure( RCP_Member $member, RCP_Pa
 		return;
 	}
 
-	$status    = $member->get_status();
+	$status = $member->get_status();
 
 	$message = isset( $rcp_options['renewal_payment_failed_email'] ) ? $rcp_options['renewal_payment_failed_email'] : '';
 	$message = apply_filters( 'rcp_subscription_renewal_payment_failed_email', $message, $member->ID, $status );
