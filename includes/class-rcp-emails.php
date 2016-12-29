@@ -318,6 +318,8 @@ class RCP_Emails {
 		 */
 		do_action( 'rcp_email_send_before', $this );
 
+		$subject = $this->parse_tags( $subject );
+
 		$message = $this->build_email( $message );
 
 		$message = $this->parse_tags( $message );
