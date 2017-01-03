@@ -109,6 +109,7 @@ function rcp_payments_page() {
 							<td data-colname="<?php _e( 'Type', 'rcp' ); ?>"><?php echo esc_html( $payment->payment_type ); ?></td>
 							<td data-colname="<?php _e( 'Transaction ID', 'rcp' ); ?>"><?php echo rcp_get_merchant_transaction_id_link( $payment ); ?></td>
 							<td data-colname="<?php _e( 'Status', 'rcp' ); ?>"><?php echo rcp_get_payment_status_label( $payment ); ?></td>
+							<?php do_action( 'rcp_payments_page_table_column', $payment->id ); ?>
 						</tr>
 					<?php
 					$i++;
