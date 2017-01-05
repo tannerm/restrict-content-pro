@@ -764,3 +764,127 @@ function rcp_currency_decimal_filter( $decimals = 2 ) {
 
 	return apply_filters( 'rcp_currency_decimal_filter', $decimals, $currency );
 }
+
+/**
+ * Gets the taxonomy term ids connected to the specified post ID.
+ *
+ * @since 2.7
+ * @param  int $post_id The post ID.
+ * @return array An array of taxonomy term IDs connected to the post.
+ */
+function rcp_get_connected_term_ids( $post_id = 0 ) {
+	global $wpdb;
+	return $wpdb->get_results( $wpdb->prepare( "SELECT term_taxonomy_id FROM {$wpdb->term_relationships} WHERE object_id = %d", absint( $post_id ) ), ARRAY_A );
+}
+
+/**
+ * Gets all post IDs that are assigned to restricted taxonomy terms.
+ *
+ * @since 2.7
+ * @return array An array of post IDs assigned to restricted taxonomy terms.
+ */
+function rcp_get_post_ids_assigned_to_restricted_terms() {
+
+	global $wpdb;
+
+	if ( false === ( $post_ids = get_transient( 'rcp_post_ids_assigned_to_restricted_terms' ) ) ) {
+		$post_ids = array();
+
+		$terms = get_terms(
+			array_values( get_taxonomies( array( 'public' => true ) ) ),
+			array(
+				'hide_empty' => false,
+				'meta_query' => array(
+					array(
+						'key' => 'rcp_restricted_meta'
+					)
+				)
+			)
+		);
+
+		if ( empty( $terms ) || is_wp_error( $terms ) ) {
+			set_transient( 'rcp_post_ids_assigned_to_restricted_terms', array(), DAY_IN_SECONDS );
+			return array();
+		}
+
+		foreach ( $terms as $term ) {
+			$p_ids = $wpdb->get_results( $wpdb->prepare( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", absint( $term->term_id ) ), ARRAY_A );
+			foreach( $p_ids as $p_id ) {
+				if ( ! in_array( $p_id['object_id'], $post_ids ) ) {
+					$post_ids[] = $p_id['object_id'];
+				}
+			}
+		}
+
+		set_transient( 'rcp_post_ids_assigned_to_restricted_terms', $post_ids, DAY_IN_SECONDS );
+	}
+
+	return $post_ids;
+}
+
+/**
+ * Gets a list of post IDs with post-level restrictions defined.
+ *
+ * @since 2.7
+ * @return array An array of post IDs.
+ */
+function rcp_get_restricted_post_ids() {
+
+	if ( false === ( $post_ids = get_transient( 'rcp_restricted_post_ids' ) ) ) {
+
+		$post_ids = get_posts( array(
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'post_type'      => 'any',
+			'fields'         => 'ids',
+			'meta_query'     => array(
+				'relation' => 'OR',
+				array(
+					'key'   => '_is_paid',
+					'value' => 1
+				),
+				array(
+					'key' => 'rcp_subscription_level'
+				),
+				array(
+					'key'     => 'rcp_user_level',
+					'value'   => 'All',
+					'compare' => '!='
+				),
+				array(
+					'key' => 'rcp_access_level'
+				)
+			)
+		) );
+
+		set_transient( 'rcp_restricted_post_ids', $post_ids, DAY_IN_SECONDS );
+	}
+
+	return $post_ids;
+}
+
+/**
+ * Clears the transient that holds the post IDs with post-level restrictions defined.
+ *
+ * @since 2.7
+ */
+function rcp_delete_transient_restricted_post_ids( $post_id ) {
+
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	delete_transient( 'rcp_restricted_post_ids' );
+	delete_transient( 'rcp_post_ids_assigned_to_restricted_terms' );
+}
+add_action( 'save_post', 'rcp_delete_transient_restricted_post_ids' );
+add_action( 'wp_trash_post', 'rcp_delete_transient_restricted_post_ids' );
+add_action( 'untrash_post', 'rcp_delete_transient_restricted_post_ids' );
+
+/**
+ * Clears the transient that holds the post IDs that are assigned to restricted taxonomy terms.
+ */
+function rcp_delete_transient_post_ids_assigned_to_restricted_terms( $term_id, $tt_id, $taxonomy ) {
+	delete_transient( 'rcp_post_ids_assigned_to_restricted_terms' );
+}
+add_action( 'edited_term', 'rcp_delete_transient_post_ids_assigned_to_restricted_terms', 10, 3 );

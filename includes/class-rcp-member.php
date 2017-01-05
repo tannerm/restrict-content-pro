@@ -612,7 +612,7 @@ class RCP_Member extends WP_User {
 
 		if( user_can( $this->ID, 'manage_options' ) ) {
 			$ret = true;
-		} else if( ! $this->is_expired() && ( $this->get_status() == 'active' || $this->get_status() == 'cancelled' ) ) {
+		} else if( ! $this->is_expired() && in_array( $this->get_status(), array( 'active', 'cancelled' ) ) ) {
 			$ret = true;
 		}
 
@@ -800,6 +800,98 @@ class RCP_Member extends WP_User {
 		if ( $ret && ! empty( $user_level ) && 'All' != $user_level ) {
 			if ( ! user_can( $this->ID, strtolower( $user_level ) ) ) {
 				$ret = false;
+			}
+		}
+
+		$is_restricted_content    = rcp_is_restricted_content( $post_id );
+		$term_restricted_post_ids = rcp_get_post_ids_assigned_to_restricted_terms();
+
+		// since no post-level restrictions, check to see if user is restricted via term
+		if ( $ret && ! $is_restricted_content && in_array( $post_id, $term_restricted_post_ids ) ) {
+
+			$restricted = false;
+
+			$terms = (array) rcp_get_connected_term_ids( $post_id );
+
+			if ( ! empty( $terms ) ) {
+
+				foreach( $terms as $term_id ) {
+
+					$restrictions = rcp_get_term_restrictions( $term_id['term_taxonomy_id'] );
+
+					if ( empty( $restrictions['paid_only'] ) && empty( $restrictions['subscriptions'] ) && ( empty( $restrictions['access_level'] ) || 'None' == $restrictions['access_level'] ) ) {
+						if ( count( $terms ) === 1 ) {
+							break;
+						}
+						continue;
+					}
+
+					// If only the Paid Only box is checked, check for active subscription and return early if so.
+					if ( ! $restricted && ! empty( $restrictions['paid_only'] ) && empty( $restrictions['subscriptions'] ) && empty( $restrictions['access_level'] ) && ! $this->is_active() ) {
+						$restricted = true;
+						break;
+					}
+
+					if ( ! $restricted && ! empty( $restrictions['subscriptions'] ) && ( ! in_array( $this->get_subscription_id(), $restrictions['subscriptions'] ) || ! in_array( $this->get_status(), array( 'active', 'free', 'cancelled' ) ) ) ) {
+						$restricted = true;
+						break;
+					}
+
+					if ( ! $restricted && ! empty( $restrictions['access_level'] ) && 'None' !== $restrictions['access_level'] ) {
+						if ( $restrictions['access_level'] > 0 && ( ! rcp_user_has_access( $this->ID, $restrictions['access_level'] ) || ! in_array( $this->get_status(), array( 'active', 'free', 'cancelled' ) ) ) ) {
+							$restricted = true;
+							break;
+						}
+					}
+				}
+			}
+
+			if ( $restricted ) {
+				$ret = false;
+			}
+
+		// since user doesn't pass post-level restrictions, see if user is allowed via term
+		} else if ( ! $ret && $is_restricted_content && in_array( $post_id, $term_restricted_post_ids ) ) {
+
+			$allowed = false;
+
+			$terms = (array) rcp_get_connected_term_ids( $post_id );
+
+			if ( ! empty( $terms ) ) {
+
+				foreach( $terms as $term_id ) {
+
+					$restrictions = rcp_get_term_restrictions( $term_id['term_taxonomy_id'] );
+
+					if ( empty( $restrictions['paid_only'] ) && empty( $restrictions['subscriptions'] ) && ( empty( $restrictions['access_level'] ) || 'None' == $restrictions['access_level'] ) ) {
+						if ( count( $terms ) === 1 ) {
+							break;
+						}
+						continue;
+					}
+
+					// If only the Paid Only box is checked, check for active subscription and return early if so.
+					if ( ! $allowed && ! empty( $restrictions['paid_only'] ) && empty( $restrictions['subscriptions'] ) && empty( $restrictions['access_level'] ) && $this->is_active() ) {
+						$allowed = true;
+						break;
+					}
+
+					if ( ! $allowed && ! empty( $restrictions['subscriptions'] ) && in_array( $this->get_subscription_id(), $restrictions['subscriptions'] ) && in_array( $this->get_status(), array( 'active', 'free', 'cancelled' ) ) ) {
+						$allowed = true;
+						break;
+					}
+
+					if ( ! $allowed && ! empty( $restrictions['access_level'] ) && 'None' !== $restrictions['access_level'] ) {
+						if ( $restrictions['access_level'] > 0 && rcp_user_has_access( $this->ID, $restrictions['access_level'] ) && in_array( $this->get_status(), array( 'active', 'free', 'cancelled' ) ) ) {
+							$allowed = true;
+							break;
+						}
+					}
+				}
+			}
+
+			if ( $allowed ) {
+				$ret = true;
 			}
 		}
 
