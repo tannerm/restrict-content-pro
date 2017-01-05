@@ -164,7 +164,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				if( $this->initial_amount < $this->amount ) {
 					$save_balance   = true;
 					$amount         = $this->amount - $this->initial_amount;
-					$balance_amount = round( $customer->account_balance + ( $amount * rcp_stripe_get_currency_multiplier() ), 0 ); // Add additional amount to initial payment (in cents)
+					$balance_amount = round( $customer->account_balance - ( $amount * rcp_stripe_get_currency_multiplier() ), 0 ); // Add additional amount to initial payment (in cents)
 				}
 
 				if ( ! empty( $save_balance ) ) {
@@ -207,7 +207,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					'prorate' => false
 				);
 
-				if ( ! empty( $this->discount_code ) ) {
+				if ( ! empty( $this->discount_code ) && ! isset( $rcp_options['one_time_discounts'] ) ) {
 
 					$sub_args['coupon'] = $this->discount_code;
 
