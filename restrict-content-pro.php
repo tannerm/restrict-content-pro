@@ -288,10 +288,11 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 		if( $license_key ) {
 			// setup the updater
 			$rcp_updater = new RCP_Plugin_Updater( 'https://restrictcontentpro.com', RCP_PLUGIN_FILE, array(
-					'version' 	=> RCP_PLUGIN_VERSION, // current version number
-					'license' 	=> $license_key, // license key (used get_option above to retrieve from DB)
-					'item_id'   => 479, // Download ID
-					'author' 	=> 'Restrict Content Pro Team' // author of this plugin
+					'version' => RCP_PLUGIN_VERSION, // current version number
+					'license' => $license_key, // license key (used get_option above to retrieve from DB)
+					'item_id' => 479, // Download ID
+					'author'  => 'Restrict Content Pro Team', // author of this plugin
+					'beta'    => ! empty( $rcp_options['show_beta_updates'] )
 				)
 			);
 		}
