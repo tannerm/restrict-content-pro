@@ -707,3 +707,17 @@ function rcp_stripe_get_card_details( $cards, $member_id, $member ) {
 
 }
 add_filter( 'rcp_get_card_details', 'rcp_stripe_get_card_details', 10, 3 );
+
+/**
+ * Sends a new user notification email when using the [register_form_stripe] shortcode.
+ *
+ * @since 2.7
+ */
+function rcp_stripe_checkout_new_user_notification( $user_id, $gateway ) {
+
+	if ( 'stripe_checkout' === $gateway->subscription_data['post_data']['rcp_gateway'] && ! empty( $gateway->subscription_data['post_data']['rcp_stripe_checkout'] ) && $gateway->subscription_data['new_user'] ) {
+		wp_new_user_notification( $user_id, null, 'user' );
+	}
+
+}
+add_action( 'rcp_stripe_signup', 'rcp_stripe_checkout_new_user_notification', 10, 2 );
