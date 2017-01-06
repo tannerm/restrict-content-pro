@@ -1051,6 +1051,15 @@ function rcp_settings_page() {
 								<p class="description"><?php _e( 'This your own personal reCaptcha Secret key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your secret key.', 'rcp' ); ?></p>
 							</td>
 						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[show_beta_updates]"><?php _e( 'Opt into beta versions?', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[show_beta_updates]" id="rcp_settings[show_beta_updates]" <?php checked( true, ! empty( $rcp_options['show_beta_updates'] ) ); ?>/>
+								<span class="description"><?php _e( 'Check this box if you would like to receive update notifications for beta releases. When beta versions are available, an update notification will be shown in your Plugins page.', 'rcp' ); ?></span>
+							</td>
+						</tr>
 					</table>
 					<?php do_action( 'rcp_misc_settings', $rcp_options ); ?>
 				</div><!--end #misc-->
