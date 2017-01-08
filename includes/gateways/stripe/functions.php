@@ -716,7 +716,35 @@ add_filter( 'rcp_get_card_details', 'rcp_stripe_get_card_details', 10, 3 );
 function rcp_stripe_checkout_new_user_notification( $user_id, $gateway ) {
 
 	if ( 'stripe_checkout' === $gateway->subscription_data['post_data']['rcp_gateway'] && ! empty( $gateway->subscription_data['post_data']['rcp_stripe_checkout'] ) && $gateway->subscription_data['new_user'] ) {
+
+		/**
+		 * After the password reset key is generated and before the email body is created,
+		 * add our filter to replace the URLs in the email body.
+		 */
+		add_action( 'retrieve_password_key', function() {
+
+			add_filter( 'wp_mail', function( $args ) {
+
+				global $rcp_options;
+
+				if ( ! empty( $rcp_options['login_redirect'] ) ) {
+
+					// Rewrite the password reset link
+					$args['message'] = str_replace( trailingslashit( network_site_url() ) . 'wp-login.php?action=rp', get_permalink( $rcp_options['login_redirect'] ) . '?rcp_action=lostpassword_reset', $args['message'] );
+
+					// Remove the hard-coded wp-login.php URL added to the end of the email body.
+					$args['message'] = str_replace( wp_login_url(), '', $args['message'] );
+
+				}
+
+				return $args;
+
+			});
+
+		});
+
 		wp_new_user_notification( $user_id, null, 'user' );
+
 	}
 
 }
