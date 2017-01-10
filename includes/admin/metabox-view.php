@@ -88,7 +88,7 @@ $role_set_display  = '' != $user_role ? '' : ' style="display:none;"';
 	<p>
 		<?php printf(
 			__( 'Optionally use [restrict paid="true"] ... [/restrict] shortcode to restrict partial content. %sView documentation for additional options%s.', 'rcp' ),
-			'<a href="' . esc_url( 'http://docs.pippinsplugins.com/article/36-restricting-post-and-page-content' ) . '" target="_blank">',
+			'<a href="' . esc_url( 'http://docs.restrictcontentpro.com/article/1593-restricting-post-and-page-content' ) . '" target="_blank">',
 			'</a>'
 		); ?>
 	</p>

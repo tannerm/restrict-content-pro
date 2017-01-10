@@ -50,7 +50,7 @@ function rcp_admin_help_url() {
 ?>
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
-		$('#adminmenu .toplevel_page_rcp-members .wp-submenu-wrap a[href="admin.php?page=rcp-help"]').prop('href', 'http://docs.pippinsplugins.com').prop('target', '_blank');
+		$('#adminmenu .toplevel_page_rcp-members .wp-submenu-wrap a[href="admin.php?page=rcp-help"]').prop('href', 'http://docs.restrictcontentpro.com/').prop('target', '_blank');
 	});
 	</script>
 <?php
