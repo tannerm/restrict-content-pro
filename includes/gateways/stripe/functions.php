@@ -727,13 +727,10 @@ function rcp_stripe_checkout_new_user_notification( $user_id, $gateway ) {
 
 				global $rcp_options;
 
-				if ( ! empty( $rcp_options['login_redirect'] ) ) {
+				if ( ! empty( $rcp_options['hijack_login_url'] ) && ! empty( $rcp_options['login_redirect'] ) ) {
 
 					// Rewrite the password reset link
 					$args['message'] = str_replace( trailingslashit( network_site_url() ) . 'wp-login.php?action=rp', get_permalink( $rcp_options['login_redirect'] ) . '?rcp_action=lostpassword_reset', $args['message'] );
-
-					// Remove the hard-coded wp-login.php URL added to the end of the email body.
-					$args['message'] = str_replace( wp_login_url(), '', $args['message'] );
 
 				}
 
