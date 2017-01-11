@@ -27,6 +27,7 @@ class RCP_Payment_Gateway {
 	public $auto_renew;
 	public $return_url;
 	public $test_mode;
+	public $subscription_data;
 
 	public function __construct( $subscription_data = array() ) {
 
@@ -51,6 +52,7 @@ class RCP_Payment_Gateway {
 			$this->subscription_name   = $subscription_data['subscription_name'];
 			$this->auto_renew          = $this->supports( 'recurring' ) ? $subscription_data['auto_renew'] : false;;
 			$this->return_url          = $subscription_data['return_url'];
+			$this->subscription_data   = $subscription_data;
 
 		}
 
