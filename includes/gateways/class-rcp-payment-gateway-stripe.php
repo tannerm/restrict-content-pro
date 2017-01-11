@@ -52,6 +52,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	 */
 	public function process_signup() {
 
+		global $rcp_options;
+
 		\Stripe\Stripe::setApiKey( $this->secret_key );
 
 		if ( method_exists( '\Stripe\Stripe', 'setAppInfo' ) ) {
