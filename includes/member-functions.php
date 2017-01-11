@@ -833,7 +833,7 @@ function rcp_change_password() {
 		global $user_ID;
 
 		list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
-		$rp_cookie = 'rcp-resetpass-' . COOKIEHASH;
+		$rp_cookie = apply_filters( 'rcp_resetpass_cookie_name', 'rcp-resetpass-' . COOKIEHASH );
 
 		$user = rcp_get_user_resetting_password( $rp_cookie );
 
