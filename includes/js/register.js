@@ -89,9 +89,16 @@ jQuery(document).ready(function($) {
 			$('.rcp_message.error', form).remove();
 
 		}).success(function( response ) {
+
 			if ( response.success ) {
 				$('body').trigger( 'rcp_register_form_submission', [event, response, form, submission_form] );
+
+				// Submit the form if the total is 0, since the gateway-specific script doesn't run.
+				if ( response.data.total == 0 ) {
+					submission_form.submit();
+				}
 			} else {
+
 				$('#rcp_submit', form).val( submit_register_text );
 				$('#rcp_submit', form).before( response.data.errors );
 				$('#rcp_register_nonce', form).val( response.data.nonce );
