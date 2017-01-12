@@ -108,20 +108,20 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					checkoutArgs.email = jQuery('#rcp_user_email' ).val();
 				}
 
-				var got_token = false;
+				var rcpStripeCheckoutGotToken = false;
 
-				var handler = StripeCheckout.configure({
+				var rcpStripeCheckout = StripeCheckout.configure({
 					key: checkoutArgs.key,
 					locale: checkoutArgs.locale,
 					token: function(token) {
-						got_token = true;
+						rcpStripeCheckoutGotToken = true;
 						// Add the token to the form and submit it
 						submission_form.append('<input type="hidden" name="stripeToken" value="' + token.id + '" />').submit();
 					},
 					// 'closed' runs when the modal closes, whether the token was successful or not
 					closed: function() {
 						// Unblock the form if the Checkout modal is closed without a successful payment
-						if (! got_token) {
+						if (! rcpStripeCheckoutGotToken) {
 							submission_form.unblock();
 						}
 					},
@@ -131,7 +131,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					amount: form.data.total * <?php echo rcp_stripe_get_currency_multiplier(); ?>
 				});
 
-				handler.open(
+				rcpStripeCheckout.open(
 					rcpSubscriptions[$level.val()]
 				);
 			});
