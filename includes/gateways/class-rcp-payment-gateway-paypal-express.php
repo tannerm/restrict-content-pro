@@ -521,7 +521,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				do_action( 'rcp_ipn_subscr_failed' );
 
 				do_action( 'rcp_recurring_payment_failed', $member, $this );
-				
+
 				die( 'successful recurring_payment_failed or recurring_payment_suspended_due_to_max_failed_payment' );
 
 				break;
@@ -620,4 +620,15 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 	}
 
+	public function scripts() {
+		wp_add_inline_script(
+			'rcp-register',
+			"jQuery('body').on('rcp_register_form_submission', function(e, response, form, submission_form) {
+				if (form.data.gateway !== 'paypal_express') {
+					return;
+				}
+				submission_form.submit();
+			});"
+		);
+	}
 }

@@ -697,6 +697,15 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	 */
 	public function scripts() {
 		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v2/', array( 'jquery' ) );
+		wp_add_inline_script(
+			'rcp-register',
+			"jQuery('body').on('rcp_register_form_submission', function(e, response, form, submission_form) {
+				if (form.data.gateway !== 'stripe') {
+					return;
+				}
+				submission_form.submit();
+			});"
+		);
 	}
 
 	/**
