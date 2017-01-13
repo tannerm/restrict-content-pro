@@ -11,6 +11,11 @@
 
 class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 
+	public function init() {
+		$this->supports[] = 'gateway-submits-form';
+		parent::init();
+	}
+
 	/**
 	 * Process registration
 	 *
@@ -87,7 +92,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			 */
 			jQuery('body').on('rcp_register_form_submission', function(e, response, form, submission_form) {
 
-				if ( form.data.gateway !== 'stripe_checkout' ) {
+				if ( form.data.gateway.slug !== 'stripe_checkout' ) {
 					return;
 				}
 

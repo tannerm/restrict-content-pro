@@ -100,9 +100,26 @@ function rcp_process_registration() {
 	$errors = rcp_errors()->get_error_messages();
 
 	if ( ! empty( $errors ) && $is_ajax ) {
-		wp_send_json_error( array( 'success' => false, 'errors' => rcp_get_error_messages_html( 'register' ), 'nonce' => wp_create_nonce( 'rcp-register-nonce' ) ) );
+		wp_send_json_error( array(
+			'success'          => false,
+			'errors'           => rcp_get_error_messages_html( 'register' ),
+			'nonce'            => wp_create_nonce( 'rcp-register-nonce' ),
+			'gateway'          => array(
+				'slug'     => $gateway,
+				'supports' => $gateway_obj->supports
+			)
+		) );
+
 	} elseif( $is_ajax ) {
-		wp_send_json_success( array( 'success' => true, 'total' => rcp_get_registration()->get_total(), 'gateway' => $gateway ) );
+		wp_send_json_success( array(
+			'success'          => true,
+			'total'            => rcp_get_registration()->get_total(),
+			'gateway'          => array(
+				'slug'     => $gateway,
+				'supports' => $gateway_obj->supports
+			)
+		) );
+
 	}
 
 	// only create the user if there are no errors

@@ -3,6 +3,7 @@ var rcp_validating_gateway  = false;
 var rcp_validating_level    = false;
 var rcp_processing          = false;
 var rcp_calculating_total   = false;
+var gateway_submits_form    = false;
 
 jQuery(document).ready(function($) {
 
@@ -91,12 +92,17 @@ jQuery(document).ready(function($) {
 		}).success(function( response ) {
 
 			if ( response.success ) {
-				$('body').trigger( 'rcp_register_form_submission', [event, response, form, submission_form] );
 
-				// Submit the form if the total is 0, since the gateway-specific script doesn't run.
-				if ( response.data.total == 0 ) {
-					submission_form.submit();
-				}
+				setTimeout( function() {
+					$('body').trigger( 'rcp_register_form_submission', [event, response, form, submission_form] );
+
+					// Submit the form if the total is 0 or if the gateway doesn't handle the submission.
+					if ( response.data.total == 0 || ! gateway_submits_form ) {
+						submission_form.submit();
+					}
+				}, 1 );
+
+
 			} else {
 
 				$('#rcp_submit', form).val( submit_register_text );
@@ -110,6 +116,27 @@ jQuery(document).ready(function($) {
 			console.log( response );
 		}).always(function( response ) {
 		});
+
+	});
+
+	$(document).ajaxComplete( function( event, xhr, settings ) {
+
+		// Check for the desired ajax event
+		if ( ! settings.hasOwnProperty('data') || settings.data.indexOf('rcp_process_register_form') === -1 ) {
+			return;
+		}
+
+		// Check for the required properties
+		if ( ! xhr.hasOwnProperty('responseJSON') || ! xhr.responseJSON.hasOwnProperty('data') || xhr.responseJSON.data.success !== true ) {
+			return;
+		}
+
+		// Check if gateway supports form submission
+		if ( xhr.responseJSON.data.gateway.supports.indexOf('gateway-submits-form') !== -1 ) {
+			gateway_submits_form = true;
+		} else {
+			gateway_submits_form = false;
+		}
 
 	});
 

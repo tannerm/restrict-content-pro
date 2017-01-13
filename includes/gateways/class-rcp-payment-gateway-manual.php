@@ -60,16 +60,4 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 
 	}
 
-	public function scripts() {
-		wp_add_inline_script(
-			'rcp-register',
-			"jQuery('body').on('rcp_register_form_submission', function(e, response, form, submission_form) {
-				if (form.data.gateway !== 'manual') {
-					return;
-				}
-				submission_form.submit();
-			});"
-		);
-	}
-
 }
