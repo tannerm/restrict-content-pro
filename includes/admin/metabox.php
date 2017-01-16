@@ -28,9 +28,10 @@ function rcp_get_metabox_fields() {
 function rcp_add_meta_boxes() {
 	$rcp_meta_box = rcp_get_metabox_fields();
 	$post_types   = get_post_types( array( 'public' => true, 'show_ui' => true ) );
+	$post_types   = (array) apply_filters( 'rcp_metabox_post_types', $post_types );
 	$exclude      = apply_filters( 'rcp_metabox_excluded_post_types', array( 'forum', 'topic', 'reply', 'product', 'attachment' ) );
 
-	foreach ( apply_filters( 'rcp_metabox_post_types', $post_types ) as $post_type ) {
+	foreach ( $post_types as $post_type ) {
 		if( ! in_array( $post_type, $exclude ) ) {
 			add_meta_box( $rcp_meta_box['id'], $rcp_meta_box['title'], 'rcp_render_meta_box', $post_type, $rcp_meta_box['context'], $rcp_meta_box['priority'] );
 		}
