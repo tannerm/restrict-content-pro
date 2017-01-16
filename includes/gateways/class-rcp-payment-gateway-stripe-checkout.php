@@ -127,6 +127,8 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					closed: function() {
 						// Unblock the form if the Checkout modal is closed without a successful payment
 						if (! rcpStripeCheckoutGotToken) {
+							jQuery('#rcp_submit').val(rcp_script_options.register);
+							rcp_processing = false;
 							submission_form.unblock();
 						}
 					},
