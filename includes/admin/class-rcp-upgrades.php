@@ -26,8 +26,8 @@ class RCP_Upgrades {
 		$this->v26_upgrades();
 		$this->v27_upgrades();
 
-		// If upgrades have occurred
-		if ( $this->upgraded ) {
+		// If upgrades have occurred or the DB version is differnt from the version constant
+		if ( $this->upgraded || $version <> RCP_PLUGIN_VERSION ) {
 			update_option( 'rcp_version_upgraded_from', $version );
 			update_option( 'rcp_version', RCP_PLUGIN_VERSION );
 		}
