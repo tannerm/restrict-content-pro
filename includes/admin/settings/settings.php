@@ -508,7 +508,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[twocheckout_test_seller_id]" style="width: 300px;" name="rcp_settings[twocheckout_test_seller_id]" value="<?php if(isset($rcp_options['twocheckout_test_seller_id'])) { echo $rcp_options['twocheckout_test_seller_id']; } ?>"/>
-								<p class="description"><?php _e('Enter your live Seller ID. <a href="http://help.2checkout.com/articles/FAQ/Where-is-my-Seller-ID" target="_blank">Where is my Seller ID?</a>.', 'rcp'); ?></p>
+								<p class="description"><?php _e('Enter your test Seller ID. <a href="http://help.2checkout.com/articles/FAQ/Where-is-my-Seller-ID" target="_blank">Where is my Seller ID?</a>.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<?php // 2checkout Live Private Key ?>
