@@ -95,11 +95,13 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			 * 'rcp_register_form_submission' is triggered in register.js
 			 * if the form data is successfully validated.
 			 */
-			jQuery('body').on('rcp_register_form_submission', function(e, response, form, submission_form) {
+			jQuery('body').on('rcp_register_form_submission', function(e, response, form_id) {
 
-				if ( form.data.gateway.slug !== 'stripe_checkout' ) {
+				if ( response.data.gateway.slug !== 'stripe_checkout' ) {
 					return;
 				}
+
+				var submission_form = jQuery('#'+form_id);
 
 				var $level = submission_form.find('input[name=rcp_level]:checked');
 
@@ -109,7 +111,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					return true;
 				}
 
-				if ( ! $price > 0 || ! form.data.total > 0 ) {
+				if ( ! $price > 0 || ! response.data.total > 0 ) {
 					submission_form.submit();
 					return true;
 				}
@@ -140,7 +142,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					email: checkoutArgs.email,
 					currency: checkoutArgs.currency,
 					alipay: checkoutArgs.alipay,
-					amount: form.data.total * <?php echo rcp_stripe_get_currency_multiplier(); ?>
+					amount: response.data.total * <?php echo rcp_stripe_get_currency_multiplier(); ?>
 				});
 
 				rcpStripeCheckout.open(

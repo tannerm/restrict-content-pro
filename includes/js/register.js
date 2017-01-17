@@ -53,6 +53,7 @@ jQuery(document).ready(function($) {
 
 		var submission_form = document.getElementById('rcp_registration_form');
 		var form = $('#rcp_registration_form');
+		var form_id = form.attr('id');
 
 		if( typeof submission_form.checkValidity === "function" && false === submission_form.checkValidity() ) {
 			return;
@@ -94,7 +95,7 @@ jQuery(document).ready(function($) {
 			if ( response.success ) {
 
 				setTimeout( function() {
-					$('body').trigger( 'rcp_register_form_submission', [event, response, form, submission_form] );
+					$('body').trigger( 'rcp_register_form_submission', [response, form_id] );
 
 					// Submit the form if the total is 0 or if the gateway doesn't handle the submission.
 					if ( response.data.total == 0 || ! gateway_submits_form ) {
