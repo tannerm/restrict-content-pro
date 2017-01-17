@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Restrict Content Pro\n"
 "Report-Msgid-Bugs-To: https://restrictcontentpro.com/support/\n"
 "POT-Creation-Date: 2016-10-06 09:34:23+00:00\n"
-"PO-Revision-Date: 2016-12-13 17:11+0100\n"
+"PO-Revision-Date: 2017-01-17 15:40-0000\n"
 "Last-Translator: Fernando Tellado <fernando@tellado.es>\n"
 "Language-Team: Fernando Tellado <admin@ayudawordpress.com>\n"
 "Language: es\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: ..\n"
-"X-Generator: Poedit 1.8.6\n"
+"X-Generator: Poedit 1.6.10\n"
 "X-Poedit-SearchPath-0: includes\n"
 
 #: RCP_Plugin_Updater.php:186
@@ -297,7 +297,8 @@ msgstr "Descuentos"
 msgid "Discount Codes"
 msgstr "Códigos de descuento"
 
-#: includes/admin/admin-pages.php:18 includes/admin/members/edit-member.php:152
+#: includes/admin/admin-pages.php:18
+#: includes/admin/members/edit-member.php:152
 #: includes/admin/payments/payments-page.php:23
 #: includes/admin/settings/settings.php:35
 msgid "Payments"
@@ -319,7 +320,8 @@ msgstr "Exportar datos del miembro"
 msgid "Export"
 msgstr "Exportar"
 
-#: includes/admin/admin-pages.php:22 includes/libraries/class-wp-logging.php:69
+#: includes/admin/admin-pages.php:22
+#: includes/libraries/class-wp-logging.php:69
 msgid "Logs"
 msgstr "Registros"
 
@@ -380,8 +382,7 @@ msgid ""
 "\">update now</a>."
 msgstr ""
 "Hay disponible una nueva versión de %1$s. <a target=\"_blank\" class="
-"\"thickbox\" href=\"%2$s\">Ver detalles de la versión %3$s</a> o <a "
-href=\"%4$s"
+"\"thickbox\" href=\"%2$s\">Ver detalles de la versión %3$s</a> o <a href=\"%4$s"
 "\">actualiza ahora</a>."
 
 #: includes/admin/discounts/discount-codes.php:17
@@ -1208,8 +1209,8 @@ msgstr "Revocar acceso"
 msgid "New Expiration Date"
 msgstr "Nueva fecha de expiración"
 
-#: includes/admin/members/members-page.php:129 templates/register-single.php:67
-#: templates/register.php:92
+#: includes/admin/members/members-page.php:129
+#: templates/register-single.php:67 templates/register.php:92
 msgid "Apply"
 msgstr "Aplicar"
 
@@ -1677,8 +1678,8 @@ msgid ""
 "a>."
 msgstr ""
 "Esta página muestra la información de cuenta y membresía de los usuarios. "
-"Contiene el shortcode <a href=\"%s\" target=\"_blank\">[subscription_details]</"
-"a>."
+"Contiene el shortcode <a href=\"%s\" target=\"_blank"
+"\">[subscription_details]</a>."
 
 #: includes/admin/settings/settings.php:149
 msgid "Edit Profile Page"
@@ -1690,8 +1691,8 @@ msgid ""
 "href=\"%s\" target=\"_blank\">[rcp_profile_editor] shortcode."
 msgstr ""
 "Esta página muestra un  formulario de modificación del perfil a los usuarios "
-"conectados. Contiene el shortcode <a "
-"href=\"%s\" target=\"_blank\">[rcp_profile_editor]</a>."
+"conectados. Contiene el shortcode <a href=\"%s\" target=\"_blank"
+"\">[rcp_profile_editor]</a>."
 
 #: includes/admin/settings/settings.php:173
 msgid "Update Billing Card Page"
@@ -1703,8 +1704,8 @@ msgid ""
 "href=\"%s\" target=\"_blank\">[rcp_update_card] short code</a>."
 msgstr ""
 "Esta página muestra un formulario de modificación del perfil a los usuarios "
-"conectados. Contiene el shortcode <a "
-"href=\"%s\" target=\"_blank\">[rcp_update_card]</a>."
+"conectados. Contiene el shortcode <a href=\"%s\" target=\"_blank"
+"\">[rcp_update_card]</a>."
 
 #: includes/admin/settings/settings.php:197 includes/member-forms.php:128
 msgid "Auto Renew"
@@ -1820,8 +1821,8 @@ msgid ""
 "account settings</a>."
 msgstr ""
 "Introduce tu clave secreta de pruebas. Tus claves API las puedes obtener en "
-"tu <a href="
-"\"https://dashboard.stripe.com/account/apikeys\" target=\"_blank\">ajustes de cuenta de Stripe</a>."
+"tu <a href=\"https://dashboard.stripe.com/account/apikeys\" target=\"_blank"
+"\">ajustes de cuenta de Stripe</a>."
 
 #: includes/admin/settings/settings.php:323
 #: includes/admin/settings/settings.php:495
@@ -1876,9 +1877,9 @@ msgid ""
 "Settings:"
 msgstr ""
 "para realizar un seguimiento de las suscripciones de pagos realizadas con "
-"Stripe debes introducir las siguientes URLs en tus <a href=\"https://dashboard.stripe.com/"
-"account/webhooks\" target=\"_blank\">webhooks de Stripe</"
-"a> en los ajustes de tu cuenta:"
+"Stripe debes introducir las siguientes URLs en tus <a href=\"https://"
+"dashboard.stripe.com/account/webhooks\" target=\"_blank\">webhooks de "
+"Stripe</a> en los ajustes de tu cuenta:"
 
 #: includes/admin/settings/settings.php:367
 msgid "PayPal Settings"
@@ -1907,9 +1908,9 @@ msgstr ""
 "Las credenciales de la API de PayPal son obligatorias para usar PayPal "
 "Express, PayPal Pro, y para compatibilidad con las opciones avanzadas de "
 "cancelación de suscripciones en PayPal Estándar. Las credenciales de prueba "
-"de la API puedes obtenerlas en <a href=\"http://"
-"docs.pippinsplugins.com/article/826-setting-up-paypal-sandbox-accounts\" "
-"target=\"_blank\">developer.paypal.com</a>."
+"de la API puedes obtenerlas en <a href=\"http://docs.pippinsplugins.com/"
+"article/826-setting-up-paypal-sandbox-accounts\" target=\"_blank\">developer."
+"paypal.com</a>."
 
 #: includes/admin/settings/settings.php:387
 msgid "Test API Username"
@@ -2006,8 +2007,7 @@ msgid ""
 msgstr ""
 "Introduce tu palabras secreta. Puedes obtenrla en la <a href=\"https://"
 "sandbox.2checkout.com/sandbox/acct/detail_company_info\" target=\"_blank"
-"\">zona "
-"de pruebas de 2Checkout</a>."
+"\">zona de pruebas de 2Checkout</a>."
 
 #: includes/admin/settings/settings.php:485
 msgid "Test Private Key"
@@ -2033,9 +2033,9 @@ msgid ""
 "Enter your live Seller ID. <a href=\"http://help.2checkout.com/articles/FAQ/"
 "Where-is-my-Seller-ID\" target=\"_blank\">Where is my Seller ID?</a>."
 msgstr ""
-"Introduce tu ID de vendedor de producción. <a href=\"http://help.2checkout.com/articles/FAQ/"
-"Where-is-my-Seller-ID\" target=\"_blank\">¿Dónde está mi ID de "
-"vendedor?</a>."
+"Introduce tu ID de vendedor de producción. <a href=\"http://help.2checkout."
+"com/articles/FAQ/Where-is-my-Seller-ID\" target=\"_blank\">¿Dónde está mi ID "
+"de vendedor?</a>."
 
 #: includes/admin/settings/settings.php:515
 msgid "Live Private Key"
@@ -2048,9 +2048,8 @@ msgid ""
 "Program</a>."
 msgstr ""
 "Introduce tu clave secreta de producción. Puedes obtener tus claves API en "
-"el <a href="
-"\"https://pci.trustwave.com/2checkout\" target=\"_blank\">>programa "
-"PCI de 2Checkout</a>."
+"el <a href=\"https://pci.trustwave.com/2checkout\" target=\"_blank"
+"\">>programa PCI de 2Checkout</a>."
 
 #: includes/admin/settings/settings.php:535
 msgid "Live Seller ID"
@@ -2848,7 +2847,8 @@ msgstr "La expiración del miembro cambió de %s a %s"
 msgid "Signup Credit"
 msgstr "Crédito en el registro"
 
-#: includes/content-filters.php:23 templates/woocommerce-single-no-access.php:6
+#: includes/content-filters.php:23
+#: templates/woocommerce-single-no-access.php:6
 msgid "This content is restricted to subscribers"
 msgstr "Este contenido está restringido a suscriptores"
 
@@ -3121,9 +3121,10 @@ msgstr "Ocurrió un error, por favor, contacta con el administrador del sitio: "
 #: includes/gateways/stripe/functions.php:527
 #: includes/gateways/stripe/functions.php:544
 #: includes/gateways/stripe/functions.php:560
-#: includes/gateways/stripe/functions.php:576 includes/member-functions.php:977
-#: includes/member-functions.php:994 includes/member-functions.php:1010
-#: includes/member-functions.php:1026 includes/member-functions.php:1039
+#: includes/gateways/stripe/functions.php:576
+#: includes/member-functions.php:977 includes/member-functions.php:994
+#: includes/member-functions.php:1010 includes/member-functions.php:1026
+#: includes/member-functions.php:1039
 msgid "An error occurred"
 msgstr "Ocurrió un error"
 
@@ -3852,7 +3853,8 @@ msgstr "Nueva contraseña"
 msgid "Password Confirm"
 msgstr "Confirmar contraseña"
 
-#: templates/invoice.php:10 templates/invoice.php:195 templates/invoice.php:205
+#: templates/invoice.php:10 templates/invoice.php:195
+#: templates/invoice.php:205
 msgid "Invoice %s"
 msgstr "Factura %s"
 
@@ -4031,7 +4033,8 @@ msgstr "Total recurrentes cada %s %s"
 #: templates/register.php:21
 msgid ""
 "<a href=\"%s\">Log in</a> if you wish to renew an existing subscription."
-msgstr "<a href=\"%s\">Accede</a> si quieres renovar una suscripción existente."
+msgstr ""
+"<a href=\"%s\">Accede</a> si quieres renovar una suscripción existente."
 
 #: templates/register.php:62
 msgid "Choose your subscription level"
