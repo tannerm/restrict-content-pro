@@ -11,6 +11,11 @@
 
 class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 
+	/**
+	 * Initializes the gateway.
+	 *
+	 * @since 2.7
+	 */
 	public function init() {
 		$this->supports[] = 'gateway-submits-form';
 		parent::init();
