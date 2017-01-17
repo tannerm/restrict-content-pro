@@ -261,7 +261,7 @@ add_action( 'rcp_update_billing_card', 'rcp_stripe_update_billing_card', 10, 2 )
  * @access      private
  * @since       2.1
  */
-function rcp_stripe_create_discount() {
+function rcp_stripe_create_discount( $args ) {
 
 	if( ! is_admin() ) {
 		return;
@@ -291,19 +291,19 @@ function rcp_stripe_create_discount() {
 
 	try {
 
-		if ( $_POST['unit'] == '%' ) {
+		if ( $args['unit'] == '%' ) {
 			\Stripe\Coupon::create( array(
-					"percent_off" => sanitize_text_field( $_POST['amount'] ),
+					"percent_off" => sanitize_text_field( $args['amount'] ),
 					"duration"    => "forever",
-					"id"          => sanitize_text_field( $_POST['code'] ),
+					"id"          => sanitize_text_field( $args['code'] ),
 					"currency"   => strtolower( rcp_get_currency() )
 				)
 			);
 		} else {
 			\Stripe\Coupon::create( array(
-					"amount_off" => sanitize_text_field( $_POST['amount'] ) * rcp_stripe_get_currency_multiplier(),
+					"amount_off" => sanitize_text_field( $args['amount'] ) * rcp_stripe_get_currency_multiplier(),
 					"duration"   => "forever",
-					"id"         => sanitize_text_field( $_POST['code'] ),
+					"id"         => sanitize_text_field( $args['code'] ),
 					"currency"   => strtolower( rcp_get_currency() )
 				)
 			);
