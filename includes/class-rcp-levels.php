@@ -258,6 +258,8 @@ class RCP_Levels {
 
 		if( $add ) {
 
+			$level_id = $wpdb->insert_id;
+
 			$args = array(
 				'status'  => 'all',
 				'limit'   => null,
@@ -268,9 +270,9 @@ class RCP_Levels {
 
 			wp_cache_delete( $cache_key, 'rcp' );
 
-			do_action( 'rcp_add_subscription', $wpdb->insert_id, $args );
+			do_action( 'rcp_add_subscription', $level_id, $args );
 
-			return $wpdb->insert_id;
+			return $level_id;
 		}
 
 		return false;

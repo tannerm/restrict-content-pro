@@ -73,21 +73,23 @@ class RCP_Payments {
 			return;
 		}
 
-		$wpdb->insert( $this->db_name, $args, array( '%s', '%s', '%s', '%d', '%s', '%s', '%s' ) );
+		$add = $wpdb->insert( $this->db_name, $args, array( '%s', '%s', '%s', '%d', '%s', '%s', '%s' ) );
 
 		// if insert was succesful, return the payment ID
-		if( $wpdb->insert_id ) {
-			// clear the payment caches
+		if( $add ) {
 
+			$payment_id = $wpdb->insert_id;
+
+			// clear the payment caches
 			delete_transient( 'rcp_earnings' );
 			delete_transient( 'rcp_payments_count' );
 
 			// Remove trialing status, if it exists
 			delete_user_meta( $args['user_id'], 'rcp_is_trialing' );
 
-			do_action( 'rcp_insert_payment', $wpdb->insert_id, $args, $args['amount'] );
+			do_action( 'rcp_insert_payment', $payment_id, $args, $args['amount'] );
 
-			return $wpdb->insert_id;
+			return $payment_id;
 
 		}
 
