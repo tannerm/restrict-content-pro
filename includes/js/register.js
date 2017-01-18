@@ -3,6 +3,7 @@ var rcp_validating_gateway  = false;
 var rcp_validating_level    = false;
 var rcp_processing          = false;
 var rcp_calculating_total   = false;
+var gateway_submits_form    = false;
 
 jQuery(document).ready(function($) {
 
@@ -36,7 +37,7 @@ jQuery(document).ready(function($) {
 
 	// Validate discount code
 	$('#rcp_apply_discount').on( 'click', function(e) {
-		
+
 		e.preventDefault();
 
 		$('body').trigger( 'rcp_discount_change' );
@@ -52,6 +53,7 @@ jQuery(document).ready(function($) {
 
 		var submission_form = document.getElementById('rcp_registration_form');
 		var form = $('#rcp_registration_form');
+		var form_id = form.attr('id');
 
 		if( typeof submission_form.checkValidity === "function" && false === submission_form.checkValidity() ) {
 			return;
@@ -87,10 +89,23 @@ jQuery(document).ready(function($) {
 
 			$('.rcp-submit-ajax', form).remove();
 			$('.rcp_message.error', form).remove();
+
+		}).success(function( response ) {
+
 			if ( response.success ) {
-				$('body').trigger( 'rcp_register_form_submission' );
-				$(submission_form).submit();
+
+				setTimeout( function() {
+					$('body').trigger( 'rcp_register_form_submission', [response, form_id] );
+
+					// Submit the form if the total is 0 or if the gateway doesn't handle the submission.
+					if ( response.data.total == 0 || ! gateway_submits_form ) {
+						submission_form.submit();
+					}
+				}, 1 );
+
+
 			} else {
+
 				$('#rcp_submit', form).val( submit_register_text );
 				$('#rcp_submit', form).before( response.data.errors );
 				$('#rcp_register_nonce', form).val( response.data.nonce );
@@ -102,6 +117,27 @@ jQuery(document).ready(function($) {
 			console.log( response );
 		}).always(function( response ) {
 		});
+
+	});
+
+	$(document).ajaxComplete( function( event, xhr, settings ) {
+
+		// Check for the desired ajax event
+		if ( ! settings.hasOwnProperty('data') || settings.data.indexOf('rcp_process_register_form') === -1 ) {
+			return;
+		}
+
+		// Check for the required properties
+		if ( ! xhr.hasOwnProperty('responseJSON') || ! xhr.responseJSON.hasOwnProperty('data') || xhr.responseJSON.data.success !== true ) {
+			return;
+		}
+
+		// Check if gateway supports form submission
+		if ( xhr.responseJSON.data.gateway.supports.indexOf('gateway-submits-form') !== -1 ) {
+			gateway_submits_form = true;
+		} else {
+			gateway_submits_form = false;
+		}
 
 	});
 
@@ -233,13 +269,13 @@ function rcp_validate_gateways() {
 			form.block({
 				message: rcp_script_options.pleasewait,
 				css: {
-					border: 'none', 
-					padding: '15px', 
-					backgroundColor: '#000', 
-					'-webkit-border-radius': '10px', 
-					'-moz-border-radius': '10px', 
-					opacity: .5, 
-					color: '#fff' 
+					border: 'none',
+					padding: '15px',
+					backgroundColor: '#000',
+					'-webkit-border-radius': '10px',
+					'-moz-border-radius': '10px',
+					opacity: .5,
+					color: '#fff'
 				}
 			});
 
@@ -252,7 +288,7 @@ function rcp_validate_gateways() {
 					if( $('.rcp_gateway_fields' ).length ) {
 
 						$( '<div class="rcp_gateway_' + gateway.val() + '_fields" id="rcp_gateway_extra_fields">' + response.data.fields + '</div>' ).insertAfter('.rcp_gateway_fields');
-					
+
 					} else {
 
 						// Pre 2.1 template files
@@ -267,12 +303,12 @@ function rcp_validate_gateways() {
 		if( 'yes' == gateway.data( 'supports-recurring' ) && ! full && ! lifetime ) {
 
 			$('#rcp_auto_renew_wrap').show();
-		
+
 		} else {
-		
+
 			$('#rcp_auto_renew_wrap').hide();
 			$('#rcp_auto_renew_wrap input').attr('checked', false);
-		
+
 		}
 
 		$('#rcp_discount_code_wrap').show();
