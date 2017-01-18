@@ -23,9 +23,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		global $rcp_options;
 
-		$this->supports[]  = 'one-time';
-		$this->supports[]  = 'recurring';
-		$this->supports[]  = 'fees';
+		$this->supports[] = 'one-time';
+		$this->supports[] = 'recurring';
+		$this->supports[] = 'fees';
+		$this->supports[] = 'gateway-submits-form';
 
 		if( $this->test_mode ) {
 
@@ -603,7 +604,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			jQuery(document).ready(function($) {
 
-				$("#rcp_registration_form").on('submit', function(event) {
+				$('body').on('rcp_register_form_submission', function(event, response, form_id) {
 
 					if( ! rcp_stripe_processing ) {
 
