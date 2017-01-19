@@ -1,6 +1,20 @@
 <?php
+/**
+ * Install Functions
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Install Functions
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
-// function to create the DB / Options / Defaults
+/**
+ * Runs on plugin install to create the database, options, and defaults.
+ *
+ * @param bool $network_wide Whether the plugin is being network activated.
+ *
+ * @return void
+ */
 function rcp_options_install( $network_wide = false ) {
    	global $wpdb, $rcp_db_name, $rcp_db_version, $rcp_discounts_db_name, $rcp_discounts_db_version,
    	$rcp_payments_db_name, $rcp_payments_db_version;
@@ -155,6 +169,11 @@ function rcp_options_install( $network_wide = false ) {
 // run the install scripts upon plugin activation
 register_activation_hook( RCP_PLUGIN_FILE, 'rcp_options_install' );
 
+/**
+ * Check if RCP is installed and if not, run installation
+ *
+ * @return void
+ */
 function rcp_check_if_installed() {
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {

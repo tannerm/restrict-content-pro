@@ -1,11 +1,23 @@
 <?php
+/**
+ * Content Filters
+ *
+ * Filters for hiding restricted post and page content.
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Content Filters
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
-/*******************************************
-* Restrict Content Pro Content Filters for
-* User Level Checks
-*******************************************/
 
-// filter the content based upon the "Restrict this content" metabox configuration
+/**
+ * Filter the content based upon the "Restrict this content" metabox configuration.
+ *
+ * @param string $content Existing post content.
+ *
+ * @return string Newly modified post content (possibly with teaser).
+ */
 function rcp_filter_restricted_content( $content ) {
 	global $post, $rcp_options;
 
@@ -78,9 +90,9 @@ function rcp_filter_restricted_category_content( $content ) {
  * Check the provided taxonomy along with the given post id to see if any restrictions are found
  *
  * @since      2.5
- * @param      $post_id
- * @param      $taxonomy
- * @param null $user_id
+ * @param int      $post_id ID of the post to check.
+ * @param string   $taxonomy
+ * @param null|int $user_id User ID or leave as null to use curently logged in user.
  *
  * @return int|bool true if tax is restricted, false if user can access, -1 if unrestricted or invalid
  */
@@ -148,7 +160,7 @@ function rcp_is_post_taxonomy_restricted( $post_id, $taxonomy, $user_id = null )
  * Remove comments from posts/pages if user does not have access
  *
  * @since 2.6
- * @param $template Path to template file to load
+ * @param string $template Path to template file to load
  *
  * @return string Path to template file to load
  */
@@ -170,7 +182,15 @@ function rcp_hide_comments( $template ) {
 }
 add_filter( 'comments_template', 'rcp_hide_comments', 9999999 );
 
-// formats the teaser message
+/**
+ * Format the teaser message. Default excerpt length is 50 words.
+ *
+ * @uses  rcp_excerpt_by_id()
+ *
+ * @param string $message Message to add to the end of the excerpt.
+ *
+ * @return string Formatted teaser with message appended.
+ */
 function rcp_format_teaser( $message ) {
 	global $post;
 	if ( get_post_meta( $post->ID, 'rcp_show_excerpt', true ) ) {
@@ -187,7 +207,13 @@ function rcp_format_teaser( $message ) {
 	return $message;
 }
 
-// wraps the restricted message in paragraph tags. This is the default filter
+/**
+ * Wrap the restricted message in paragraph tags and allow for shortcodes to be used.
+ *
+ * @param string $message Restricted content message.
+ *
+ * @return string
+ */
 function rcp_restricted_message_filter( $message ) {
 	return do_shortcode( wpautop( $message ) );
 }

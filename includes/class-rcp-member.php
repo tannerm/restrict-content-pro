@@ -2,8 +2,12 @@
 /**
  * RCP Member class
  *
- * @since 2.1
-*/
+ * @package     Restrict Content Pro
+ * @subpackage  Classes/Member
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.1
+ */
 
 class RCP_Member extends WP_User {
 
@@ -12,7 +16,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  string
+	 */
 	public function get_status() {
 
 		$status = get_user_meta( $this->ID, 'rcp_status', true );
@@ -36,9 +41,12 @@ class RCP_Member extends WP_User {
 	/**
 	 * Sets the status of a member
 	 *
+	 * @param  string $new_status New status to set.
+	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  bool Whether or not the status was updated.
+	 */
 	public function set_status( $new_status = '' ) {
 
 		$ret        = false;
@@ -73,9 +81,13 @@ class RCP_Member extends WP_User {
 	/**
 	 * Retrieves the expiration date of the member
 	 *
+	 * @param  bool $formatted Whether or not the returned value should be formatted.
+	 * @param  bool $pending   Whether or not to check the pending expiration date.
+	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  string
+	 */
 	public function get_expiration_date( $formatted = true, $pending = true ) {
 
 		if( $pending ) {
@@ -107,7 +119,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  int
+	 */
 	public function get_expiration_time() {
 
 		$expiration = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
@@ -127,9 +140,12 @@ class RCP_Member extends WP_User {
 	 *
 	 * Should be passed as a MYSQL date string.
 	 *
+	 * @param   string $new_date New date as a MySQL date string.
+	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  bool Whether or not the expiration date was updated.
+	 */
 	public function set_expiration_date( $new_date = '' ) {
 
 		$ret      = false;
@@ -159,10 +175,12 @@ class RCP_Member extends WP_User {
 	/**
 	 * Calculates the new expiration date for a member
 	 *
+	 * @param   bool $force_now Whether or not to force an update.
+	 *
 	 * @access  public
 	 * @since   2.4
 	 * @return  String Date in Y-m-d H:i:s format or "none" if is a lifetime member
-	*/
+	 */
 	public function calculate_expiration( $force_now = false ) {
 
 		$pending_exp = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
@@ -236,9 +254,13 @@ class RCP_Member extends WP_User {
 	/**
 	 * Sets the joined date for a member
 	 *
+	 * @param  string $date            Join date in MySQL date format.
+	 * @param  int    $subscription_id ID of the subscription level.
+	 *
 	 * @access  public
 	 * @since   2.6
-	*/
+	 * @return  int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
+	 */
 	public function set_joined_date( $date = '', $subscription_id = 0 ) {
 
 		if( empty( $date ) ) {
@@ -260,10 +282,12 @@ class RCP_Member extends WP_User {
 	/**
 	 * Retrieves the joined date for a subscription
 	 *
+	 * @param   int $subscription_id ID of the subscription level.
+	 *
 	 * @access  public
 	 * @since   2.6
 	 * @return  string Joined date
-	*/
+	 */
 	public function get_joined_date( $subscription_id = 0 ) {
 
 		if( empty( $subscription_id ) ) {
@@ -294,9 +318,12 @@ class RCP_Member extends WP_User {
 	/**
 	 * Sets the renewed date for a member
 	 *
+	 * @param   string $date Renewed date in MySQL format.
+	 *
 	 * @access  public
 	 * @since   2.6
-	*/
+	 * @return  int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
+	 */
 	public function set_renewed_date( $date = '' ) {
 
 		if( get_user_meta( $this->ID, '_rcp_new_subscription', true ) ) {
@@ -318,6 +345,8 @@ class RCP_Member extends WP_User {
 	/**
 	 * Retrieves the renewed date for a subscription
 	 *
+	 * @param   int $subscription_id ID of the subscription level.
+	 *
 	 * @access  public
 	 * @since   2.6
 	 * @return  string Renewed date
@@ -337,11 +366,16 @@ class RCP_Member extends WP_User {
 	/**
 	 * Renews a member's membership by updating status and expiration date
 	 *
-	 * Does NOT handle payment processing for the renewal. This should be called after receiving a renewal payment
+	 * Does NOT handle payment processing for the renewal. This should be called after receiving a renewal payment.
+	 *
+	 * @param   bool   $recurring  Whether or not the membership is recurring.
+	 * @param   string $status     Membership status.
+	 * @param   string $expiration Membership expiration date in MySQL format.
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  void|false
+	 */
 	public function renew( $recurring = false, $status = 'active', $expiration = '' ) {
 
 		$subscription_id = $this->get_pending_subscription_id();
@@ -383,7 +417,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  void
+	 */
 	public function cancel() {
 
 		if( 'cancelled' === $this->get_status() ) {
@@ -405,6 +440,7 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
+	 * @return  string
 	*/
 	public function get_payment_profile_id() {
 
@@ -417,10 +453,13 @@ class RCP_Member extends WP_User {
 	/**
 	 * Sets the payment profile ID for a member
 	 *
-	 * This is used by payment gateways to store customer IDs and other identifiers for payment profiles
+	 * This is used by payment gateways to store customer IDs and other identifiers for payment profiles.
+	 *
+	 * @param  string $profile_id Payment profile ID.
 	 *
 	 * @access  public
 	 * @since   2.1
+	 * @return  void
 	*/
 	public function set_payment_profile_id( $profile_id = '' ) {
 
@@ -439,7 +478,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.5
-	*/
+	 * @return  string
+	 */
 	public function get_merchant_subscription_id() {
 
 		$subscription_id = get_user_meta( $this->ID, 'rcp_merchant_subscription_id', true );
@@ -453,9 +493,12 @@ class RCP_Member extends WP_User {
 	 *
 	 * This is used by payment gateways to store the ID of the subscription.
 	 *
+	 * @param  string $subscription_id
+	 *
 	 * @access  public
 	 * @since   2.5
-	*/
+	 * @return  void
+	 */
 	public function set_merchant_subscription_id( $subscription_id = '' ) {
 
 		do_action( 'rcp_member_pre_set_merchant_subscription_id', $this->ID, $subscription_id, $this );
@@ -471,7 +514,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  int|false
+	 */
 	public function get_subscription_id() {
 
 		$subscription_id = get_user_meta( $this->ID, 'rcp_subscription_level', true );
@@ -485,7 +529,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.4.12
-	*/
+	 * @return  int|false
+	 */
 	public function get_pending_subscription_id() {
 
 		return get_user_meta( $this->ID, 'rcp_pending_subscription_level', true );
@@ -497,7 +542,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  string
+	 */
 	public function get_subscription_key() {
 
 		$subscription_key = get_user_meta( $this->ID, 'rcp_subscription_key', true );
@@ -511,7 +557,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.4.12
-	*/
+	 * @return  string
+	 */
 	public function get_pending_subscription_key() {
 
 		return get_user_meta( $this->ID, 'rcp_pending_subscription_key', true );
@@ -521,9 +568,12 @@ class RCP_Member extends WP_User {
 	/**
 	 * Retrieves the current subscription name of the member
 	 *
+	 * @uses    rcp_get_subscription_name()
+	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  string
+	 */
 	public function get_subscription_name() {
 
 		$sub_name = rcp_get_subscription_name( $this->get_subscription_id() );
@@ -533,11 +583,14 @@ class RCP_Member extends WP_User {
 	}
 
 	/**
-	 * Retrieves the pending subscription name of the member
+	 * Retrieves the pending subscription name of the member.
+	 *
+	 * @uses    rcp_get_subscription_name()
 	 *
 	 * @access  public
 	 * @since   2.4.12
-	*/
+	 * @return  string
+	 */
 	public function get_pending_subscription_name() {
 
 		$sub_name = rcp_get_subscription_name( $this->get_pending_subscription_id() );
@@ -551,7 +604,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  array|null Array of objects.
+	 */
 	public function get_payments() {
 
 		$payments = new RCP_Payments;
@@ -565,7 +619,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  string
+	 */
 	public function get_notes() {
 
 		$notes = get_user_meta( $this->ID, 'rcp_notes', true );
@@ -577,9 +632,12 @@ class RCP_Member extends WP_User {
 	/**
 	 * Adds a new note to a member
 	 *
+	 * @param   string $note Note to add to the member.
+	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  true
+	 */
 	public function add_note( $note = '' ) {
 
 		$notes = $this->get_notes();
@@ -605,7 +663,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  bool
+	 */
 	public function is_active() {
 
 		$ret = false;
@@ -625,7 +684,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  bool
+	 */
 	public function is_recurring() {
 
 		$ret       = false;
@@ -642,9 +702,12 @@ class RCP_Member extends WP_User {
 	/**
 	 * Sets whether a member is recurring
 	 *
+	 * @param   bool $yes True if recurring, false if not.
+	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  void
+	 */
 	public function set_recurring( $yes = true ) {
 
 		if( $yes ) {
@@ -662,7 +725,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  bool
+	 */
 	public function is_expired() {
 
 		$ret        = false;
@@ -685,7 +749,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  bool
+	 */
 	public function is_trialing() {
 
 		$ret      = false;
@@ -707,7 +772,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  bool
+	 */
 	public function has_trialed() {
 
 		$ret = false;
@@ -725,9 +791,12 @@ class RCP_Member extends WP_User {
 	/**
 	 * Determines if the member can access current content
 	 *
+	 * @param   int $post_id ID of the post to check the permissions on.
+	 *
 	 * @access  public
 	 * @since   2.1
-	*/
+	 * @return  bool
+	 */
 	public function can_access( $post_id = 0 ) {
 
 		$subscription_levels = rcp_get_content_subscription_levels( $post_id );
@@ -909,7 +978,8 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access public
 	 * @since 2.1
-	*/
+	 * @return string|false
+	 */
 	public function get_switch_to_url() {
 
 		if( ! class_exists( 'user_switching' ) ) {
@@ -1020,7 +1090,7 @@ class RCP_Member extends WP_User {
 	 * Get details about the member's card on file
 	 *
 	 * @since 2.5
-	 * @return string
+	 * @return array
 	 */
 	public function get_card_details() {
 
@@ -1033,7 +1103,7 @@ class RCP_Member extends WP_User {
 	 * Determines if the customer just upgraded
 	 *
 	 * @since 2.5
-	 * @return int - Timestamp reflecting the date/time of the latest upgrade
+	 * @return int|false - Timestamp reflecting the date/time of the latest upgrade, or false.
 	 */
 	public function just_upgraded() {
 

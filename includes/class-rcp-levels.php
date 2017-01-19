@@ -1,13 +1,16 @@
 <?php
-
 /**
  * RCP Subscription Levels class
  *
  * This class handles querying, inserting, updating, and removing subscription levels
  * Also includes other discount helper functions
  *
- * @since 1.5
-*/
+ * @package     Restrict Content Pro
+ * @subpackage  Classes/Subscription Levels
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.5
+ */
 
 class RCP_Levels {
 
@@ -41,7 +44,8 @@ class RCP_Levels {
 	 * Get things started
 	 *
 	 * @since   1.5
-	*/
+	 * @return  void
+	 */
 	function __construct() {
 
 		$this->db_name      = rcp_get_levels_db_name();
@@ -54,10 +58,12 @@ class RCP_Levels {
 	/**
 	 * Retrieve a specific subscription level from the database
 	 *
+	 * @param   int $level_id ID of the level to retrieve.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  object
+	 */
 	public function get_level( $level_id = 0 ) {
 		global $wpdb;
 
@@ -78,10 +84,13 @@ class RCP_Levels {
 	/**
 	 * Retrieve a specific subscription level from the database
 	 *
+	 * @param   string $field Name of the field to check against.
+	 * @param   mixed  $value Value of the field.
+	 *
 	 * @access  public
 	 * @since   1.8.2
-	*/
-
+	 * @return  object
+	 */
 	public function get_level_by( $field = 'name', $value = '' ) {
 		global $wpdb;
 
@@ -104,10 +113,12 @@ class RCP_Levels {
 	/**
 	 * Retrieve all subscription levels from the database
 	 *
+	 * @param  array $args Query arguments to override the defaults.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  array|false Array of level objects or false if none are found.
+	 */
 	public function get_levels( $args = array() ) {
 		global $wpdb;
 
@@ -157,10 +168,13 @@ class RCP_Levels {
 	/**
 	 * Retrieve a field for a subscription level
 	 *
+	 * @param   int    $level_id ID of the level.
+	 * @param   string $field    Name of the field to retrieve the value for.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  mixed
+	 */
 	public function get_level_field( $level_id = 0, $field = '' ) {
 
 		global $wpdb;
@@ -186,10 +200,12 @@ class RCP_Levels {
 	/**
 	 * Insert a subscription level into the database
 	 *
+	 * @param   array $args Arguments to override the defaults.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  int|false ID of the newly created level or false on failure.
+	 */
 	public function insert( $args = array() ) {
 
 		global $wpdb;
@@ -283,10 +299,13 @@ class RCP_Levels {
 	/**
 	 * Update an existing subscription level
 	 *
+	 * @param   int   $level_id ID of the level to update.
+	 * @param   array $args     Fields and values to update.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  bool Whether or not the update was successful.
+	 */
 	public function update( $level_id = 0, $args = array() ) {
 
 		global $wpdb;
@@ -365,10 +384,12 @@ class RCP_Levels {
 	/**
 	 * Delete a subscription level
 	 *
+	 * @param   int $level_id ID of the level to delete.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  void
+	 */
 	public function remove( $level_id = 0 ) {
 
 		global $wpdb;
@@ -395,10 +416,10 @@ class RCP_Levels {
 	 * @param   int    $level_id      Subscription level ID.
 	 * @param   string $meta_key      The meta key to retrieve.
 	 * @param   bool   $single        Whether to return a single value.
-	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 *
 	 * @access  public
 	 * @since   2.6
+	 * @return  mixed  Single metadata value, or array of values
 	 */
 	public function get_meta( $level_id = 0, $meta_key = '', $single = false ) {
 		return get_metadata( 'level', $level_id, $meta_key, $single );
@@ -411,10 +432,10 @@ class RCP_Levels {
 	 * @param   string $meta_key      Metadata name.
 	 * @param   mixed  $meta_value    Metadata value.
 	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
-	 * @return  bool                  False for failure. True for success.
 	 *
 	 * @access  public
 	 * @since   2.6
+	 * @return  int|false             The meta ID on success, false on failure.
 	 */
 	public function add_meta( $level_id = 0, $meta_key = '', $meta_value, $unique = false ) {
 		return add_metadata( 'level', $level_id, $meta_key, $meta_value, $unique );
@@ -432,10 +453,10 @@ class RCP_Levels {
 	 * @param   string $meta_key      Metadata key.
 	 * @param   mixed  $meta_value    Metadata value.
 	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
-	 * @return  bool                  False on failure, true if success.
 	 *
 	 * @access  public
 	 * @since   2.6
+	 * @return  int|bool              Meta ID if the key didn't exist, true on successful update, false on failure.
 	 */
 	public function update_meta( $level_id = 0, $meta_key = '', $meta_value, $prev_value = '' ) {
 		return update_metadata( 'level', $level_id, $meta_key, $meta_value, $prev_value );
@@ -451,10 +472,10 @@ class RCP_Levels {
 	 * @param   int    $level_id      Subscription level ID.
 	 * @param   string $meta_key      Metadata name.
 	 * @param   mixed  $meta_value    Optional. Metadata value.
-	 * @return  bool                  False for failure. True for success.
 	 *
 	 * @access  public
 	 * @since   2.6
+	 * @return  bool                  True on successful delete, false on failure.
 	 */
 	public function delete_meta( $level_id = 0, $meta_key = '', $meta_value = '' ) {
 		return delete_metadata( 'level', $level_id, $meta_key, $meta_value );

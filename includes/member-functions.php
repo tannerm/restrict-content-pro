@@ -1,20 +1,26 @@
 <?php
+/**
+ * Member Functions
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Member Functions
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
-/****************************************
-* Functions for getting member info
-*****************************************/
-
-/*
-* Returns an array of all members, based on subscription status
-* @param string $status - the subscription status of users to retrieve
-* @param int $subscription - the subscription ID to retrieve users from
-* @param int $offset - the number of users to skip, used for pagination
-* @param int $number - the total users to retrieve, used for pagination
-* @param string $order - the order in which to display users: ASC / DESC
-* @param string $recurring - retrieve recurring (or non recurring) only
-* @param string $search - seach parameter
-* Return array
-*/
+/**
+ * Returns an array of all members, based on subscription status
+ *
+ * @param string $status       The subscription status of users to retrieve
+ * @param int    $subscription The subscription ID to retrieve users from
+ * @param int    $offset       The number of users to skip, used for pagination
+ * @param int    $number       The total users to retrieve, used for pagination
+ * @param string $order        The order in which to display users: ASC / DESC
+ * @param string $recurring    Retrieve recurring (or non recurring) only
+ * @param string $search       Seach parameter
+ *
+ * @return array|bool          Array of users or false if none.
+ */
 function rcp_get_members( $status = 'active', $subscription = null, $offset = 0, $number = 999999, $order = 'DESC', $recurring = null, $search = '' ) {
 
 	global $wpdb;
@@ -76,8 +82,9 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
  *
  * Use rcp_count_members() to retrieve a count based on level, status, recurring, and search terms.
  *
- * @access      public
- * @since       2.6
+ * @access public
+ * @since  2.6
+ * @return int
  */
 function rcp_get_member_count( $status = 'active' ) {
 
@@ -99,12 +106,16 @@ function rcp_get_member_count( $status = 'active' ) {
 
 }
 
-/*
-* Counts the number of members by subscription level and status
-* @param string/int $level - the ID of the subscription level to count members of
-* @param string - the status to count
-* return int - the number of members for the specified subscription level and status
-*/
+/**
+ * Counts the number of members by subscription level and status
+ *
+ * @param int    $level ID of the subscription level to count the members of.
+ * @param string $status The status to count.
+ * @param string $recurring    Retrieve recurring (or non recurring) only
+ * @param string $search       Seach parameter
+ *
+ * @return int The number of members for the specified subscription level and status
+ */
 function rcp_count_members( $level = '', $status = 'active', $recurring = null, $search = '' ) {
 	global $wpdb;
 
@@ -196,10 +207,13 @@ function rcp_count_members( $level = '', $status = 'active', $recurring = null, 
 	return $users->get_total();
 }
 
-/*
-* Retrieves the total number of members by subscription status
-* return array - an array of counts
-*/
+/**
+ * Retrieves the total number of members by subscription status
+ *
+ * @uses   rcp_count_members()
+ *
+ * @return array Array of all counts.
+ */
 function rcp_count_all_members() {
 	$counts = array(
 		'active' 	=> rcp_count_members('', 'active'),
@@ -211,12 +225,14 @@ function rcp_count_all_members() {
 	return $counts;
 }
 
-/*
-* Gets all members of a particular subscription level
-* @param int $id - the ID of the subscription level to retrieve users for
-* @param mixed $fields - the user fields to restrieve. String or array
-* return array - an array of user objects
-*/
+/**
+ * Gets all members of a particular subscription level
+ *
+ * @param int          $id     The ID of the subscription level to retrieve users for.
+ * @param string|array $fields String or array of the user fields to retrieve.
+ *
+ * @return array An array of user objects
+ */
 function rcp_get_members_of_subscription( $id = 1, $fields = 'ID') {
 	$members = get_users(array(
 			'meta_key' 		=> 'rcp_subscription_level',
@@ -229,11 +245,13 @@ function rcp_get_members_of_subscription( $id = 1, $fields = 'ID') {
 	return $members;
 }
 
-/*
-* Gets a user's subscription level ID
-* @param int $user_id - the ID of the user to return the subscription level of
-* return int - the ID of the user's subscription level
-*/
+/**
+ * Gets a user's subscription level ID
+ *
+ * @param int $user_id The ID of the user to return the subscription level of, or 0 for current user.
+ *
+ * @return int The ID of the user's subscription level
+ */
 function rcp_get_subscription_id( $user_id = 0 ) {
 
 	if( empty( $user_id ) && is_user_logged_in() ) {
@@ -245,11 +263,13 @@ function rcp_get_subscription_id( $user_id = 0 ) {
 
 }
 
-/*
-* Gets a user's subscription level name
-* @param int $user_id - the ID of the user to return the subscription level of
-* return string - the name of the user's subscription level
-*/
+/**
+ * Gets a user's subscription level name
+ *
+ * @param int $user_id The ID of the user to return the subscription level of, or 0 for current user.
+ *
+ * @return string The name of the user's subscription level
+ */
 function rcp_get_subscription( $user_id = 0 ) {
 
 	if( empty( $user_id ) && is_user_logged_in() ) {
@@ -262,11 +282,13 @@ function rcp_get_subscription( $user_id = 0 ) {
 }
 
 
-/*
-* Checks whether a user has a recurring subscription
-* @param int $user_id - the ID of the user to return the subscription level of
-* return bool - TRUE if the user is recurring, false otherwise
-*/
+/**
+ * Checks whether a user has a recurring subscription
+ *
+ * @param int $user_id The ID of the user to return the subscription level of, or 0 for current user.
+ *
+ * @return bool True if the user is recurring, false otherwise
+ */
 function rcp_is_recurring( $user_id = 0 ) {
 
 	if( empty( $user_id ) && is_user_logged_in() ) {
@@ -279,11 +301,13 @@ function rcp_is_recurring( $user_id = 0 ) {
 }
 
 
-/*
-* Checks whether a user is expired
-* @param int $user_id - the ID of the user to return the subscription level of
-* return bool - TRUE if the user is expired, false otherwise
-*/
+/**
+ * Checks whether a user is expired
+ *
+ * @param int $user_id The ID of the user to return the subscription level of, or 0 for current user.
+ *
+ * @return bool True if the user is expired, false otherwise
+ */
 function rcp_is_expired( $user_id = 0 ) {
 
 	if( empty( $user_id ) && is_user_logged_in() ) {
@@ -295,11 +319,13 @@ function rcp_is_expired( $user_id = 0 ) {
 
 }
 
-/*
-* Checks whether a user has an active subscription
-* @param int $user_id - the ID of the user to return the subscription level of
-* return bool - TRUE if the user has an active, paid subscription (or is trialing), false otherwise
-*/
+/**
+ * Checks whether a user has an active subscription
+ *
+ * @param int $user_id The ID of the user to return the subscription level of, or 0 for current user.
+ *
+ * @return bool True if the user has an active, paid subscription (or is trialing), false otherwise
+ */
 function rcp_is_active( $user_id = 0 ) {
 
 	if( empty( $user_id ) && is_user_logged_in() ) {
@@ -311,11 +337,13 @@ function rcp_is_active( $user_id = 0 ) {
 
 }
 
-/*
-* Just a wrapper function for rcp_is_active()
-* @param int $user_id - the ID of the user to return the subscription level of
-* return bool - TRUE if the user has an active, paid subscription (or is trialing), false otherwise
-*/
+/**
+ * Just a wrapper function for rcp_is_active()
+ *
+ * @param int $user_id - the ID of the user to return the subscription level of, or 0 for current user.
+ *
+ * @return bool True if the user has an active, paid subscription (or is trialing), false otherwise
+ */
 function rcp_is_paid_user( $user_id = 0) {
 
 	$ret = false;
@@ -330,9 +358,14 @@ function rcp_is_paid_user( $user_id = 0) {
 	return apply_filters( 'rcp_is_paid_user', $ret, $user_id );
 }
 
-/*
-* returns true if the user's subscription gives access to the provided access level
-*/
+/**
+ * Checks if a user's subscription grants access to the provided access level.
+ *
+ * @param int $user_id             ID of the user to check, or 0 for the current user.
+ * @param int $access_level_needed Access level needed.
+ *
+ * @return bool True if they have access, false if not.
+ */
 function rcp_user_has_access( $user_id = 0, $access_level_needed ) {
 
 	$subscription_level = rcp_get_subscription_id( $user_id );
@@ -352,8 +385,8 @@ function rcp_user_has_access( $user_id = 0, $access_level_needed ) {
  *
  * Returns true if user can access the current content
  *
- * @access      public
- * @since       2.1
+ * @since  2.1
+ * @return bool
  */
 function rcp_user_can_access( $user_id = 0, $post_id = 0 ) {
 
@@ -370,11 +403,13 @@ function rcp_user_can_access( $user_id = 0, $post_id = 0 ) {
 	return $member->can_access( $post_id );
 }
 
-/*
-* Gets the date of a user's expiration in a nice format
-* @param int $user_id - the ID of the user to return the subscription level of
-* return string - The date of the user's expiration, in the format specified in settings
-*/
+/**
+ * Gets the date of a user's expiration in a nice format
+ *
+ * @param int $user_id The ID of the user to return the subscription level of, or 0 for the current user.
+ *
+ * @return string The date of the user's expiration, in the format specified in settings
+ */
 function rcp_get_expiration_date( $user_id = 0 ) {
 
 	if( empty( $user_id ) ) {
@@ -387,10 +422,12 @@ function rcp_get_expiration_date( $user_id = 0 ) {
 
 /**
  * Sets the users expiration date
- * @param int $user_id - the ID of the user to return the subscription level of
- * @param string $date - the expiration date in YYYY-MM-DD H:i:s
+ *
+ * @param int    $user_id The ID of the user to return the subscription level of, or 0 for the current user.
+ * @param string $date    The expiration date in YYYY-MM-DD H:i:s
+ *
  * @since 2.0
- * @return string - The date of the user's expiration, in the format specified in settings
+ * @return string The date of the user's expiration, in the format specified in settings
  */
 function rcp_set_expiration_date( $user_id = 0, $new_date = '' ) {
 
@@ -402,21 +439,25 @@ function rcp_set_expiration_date( $user_id = 0, $new_date = '' ) {
 	return $member->set_expiration_date( $new_date );
 }
 
-/*
-* Gets the date of a user's expiration in a unix time stamp
-* @param int $user_id - the ID of the user to return the subscription level of
-* return mixed - Timestamp of expiration of false if no expiration
-*/
+/**
+ * Gets the date of a user's expiration in a unix time stamp
+ *
+ * @param int $user_id The ID of the user to return the subscription level of
+ *
+ * @return int|false Timestamp of expiration of false if no expiration
+ */
 function rcp_get_expiration_timestamp( $user_id ) {
 	$expiration = get_user_meta( $user_id, 'rcp_expiration', true );
 	return $expiration && $expiration !== 'none' ? strtotime( $expiration, current_time( 'timestamp' ) ) : false;
 }
 
-/*
-* Gets the status of a user's subscription. If a user is expired, this will update their status to "expired"
-* @param int $user_id - the ID of the user to return the subscription level of
-* return string - The status of the user's subscription
-*/
+/**
+ * Gets the status of a user's subscription. If a user is expired, this will update their status to "expired".
+ *
+ * @param int $user_id The ID of the user to return the subscription level of, or 0 for the current user.
+ *
+ * @return string The status of the user's subscription
+ */
 function rcp_get_status( $user_id = 0 ) {
 
 	if( empty( $user_id ) ) {
@@ -427,11 +468,13 @@ function rcp_get_status( $user_id = 0 ) {
 	return $member->get_status();
 }
 
-/*
-* Gets a user's subscription status in a nice format that is localized
-* @param int $user_id - the ID of the user to return the subscription level of
-* return string - The user's subscription status
-*/
+/**
+ * Gets a user's subscription status in a nice format that is localized
+ *
+ * @param int $user_id The ID of the user to return the subscription level of, or 0 for the current user.
+ *
+ * @return string The user's subscription status
+ */
 function rcp_print_status( $user_id = 0, $echo = true  ) {
 
 	if( empty( $user_id ) ) {
@@ -466,12 +509,14 @@ function rcp_print_status( $user_id = 0, $echo = true  ) {
 	return $print_status;
 }
 
-/*
-* Sets a user's status to the specified status
-* @param int $user_id - the ID of the user to return the subscription level of
-* @param string $new_status - the status to set the user to
-* return bool - TRUE on a successful status change, false otherwise
-*/
+/**
+ * Sets a user's status to the specified status
+ *
+ * @param int    $user_id    The ID of the user to return the subscription level of
+ * @param string $new_status The status to set the user to
+ *
+ * @return bool True on a successful status change, false otherwise
+ */
 function rcp_set_status( $user_id = 0, $new_status = '' ) {
 
 	if( empty( $user_id ) || empty( $new_status ) ) {
@@ -483,11 +528,13 @@ function rcp_set_status( $user_id = 0, $new_status = '' ) {
 
 }
 
-/*
-* Gets the user's unique subscription key
-* @param int $user_id - the ID of the user to return the subscription level of
-* return string/bool - string if the the key is retrieved successfully, false on failure
-*/
+/**
+ * Gets the user's unique subscription key
+ *
+ * @param int $user_id The ID of the user to return the subscription level of, or 0 for the current user
+ *
+ * @return string/bool Key string if it is retrieved successfully, false on failure
+ */
 function rcp_get_subscription_key( $user_id = 0 ) {
 
 	if( empty( $user_id ) ) {
@@ -498,11 +545,13 @@ function rcp_get_subscription_key( $user_id = 0 ) {
 	return $member->get_subscription_key();
 }
 
-/*
-* Checks whether a user has trialed
-* @param int $user_id - the ID of the user to return the subscription level of
-* return bool - TRUE if the user has trialed, false otherwise
-*/
+/**
+ * Checks whether a user has trialed
+ *
+ * @param int $user_id The ID of the user to return the subscription level of, or 0 for the current user
+ *
+ * @return bool True if the user has trialed, false otherwise
+ */
 function rcp_has_used_trial( $user_id = 0) {
 
 	if( empty( $user_id ) ) {
@@ -517,6 +566,8 @@ function rcp_has_used_trial( $user_id = 0) {
 
 /**
  * Checks if a user is currently trialing
+ *
+ * @param int $user_id ID of the user to check, or 0 for the current user.
  *
  * @access      public
  * @since       1.5
@@ -564,10 +615,10 @@ function rcp_print_user_payments( $user_id ) {
 /**
  * Prints payment history for the specific user in a formatted table
  *
- * @since 2.5
- * @param $user_id
+ * @param int $user_id ID of the user to get the history for.
  *
- * @return mixed|string|void
+ * @since  2.5
+ * @return string
  */
 function rcp_print_user_payments_formatted( $user_id ) {
 
@@ -620,10 +671,10 @@ function rcp_print_user_payments_formatted( $user_id ) {
 /**
  * Retrieve the payments for a specific user
  *
- * @since       v1.5
- * @access      public
- * @param       $user_id INT the ID of the user to get payments for
- * @return      array
+ * @param int $user_id The ID of the user to get payments for
+ *
+ * @since  1.5
+ * @return array
 */
 function rcp_get_user_payments( $user_id = 0 ) {
 
@@ -635,8 +686,13 @@ function rcp_get_user_payments( $user_id = 0 ) {
 	return $payments->get_payments( array( 'user_id' => $user_id ) );
 }
 
-
-// returns the role of the specified user
+/**
+ * Returns the role of the specified user
+ *
+ * @param int $user_id The ID of the user to get the role of
+ *
+ * @return int|string
+ */
 function rcp_get_user_role( $user_id ) {
 
 	global $wpdb;
@@ -665,9 +721,11 @@ function rcp_get_user_role( $user_id ) {
 /**
  * Inserts a new note for a user
  *
- * @access      public
- * @since       2.0
- * @return      void
+ * @param int    $user_id ID of the user to add a note to.
+ * @param string $note    Note to add.
+ *
+ * @since  2.0
+ * @return void
  */
 function rcp_add_member_note( $user_id = 0, $note = '' ) {
 	$notes = get_user_meta( $user_id, 'rcp_notes', true );
@@ -683,10 +741,10 @@ function rcp_add_member_note( $user_id = 0, $note = '' ) {
 /**
  * Determine if it's possible to upgrade a user's subscription
  *
- * @since       v1.5
- * @access      public
- * @param       $user_id INT the ID of the user to check
- * @return      bool
+ * @param int $user_id The ID of the user to check, or 0 for the current user.
+ *
+ * @since  1.5
+ * @return bool
 */
 
 function rcp_subscription_upgrade_possible( $user_id = 0 ) {
@@ -709,10 +767,12 @@ function rcp_subscription_upgrade_possible( $user_id = 0 ) {
 /**
  * Does this user have an upgrade path?
  *
- * @since 2.5
- * @param int $user_id the ID of the user to check
+ * @uses  rcp_get_upgrade_paths()
  *
- * @return bool
+ * @param int $user_id the ID of the user to check, or 0 for the current user.
+ *
+ * @since  2.5
+ * @return bool True if an upgrade path is available, false if not.
  */
 function rcp_has_upgrade_path( $user_id = 0 ) {
 	return apply_filters( 'rcp_has_upgrade_path', ( bool ) rcp_get_upgrade_paths( $user_id ), $user_id );
@@ -721,10 +781,10 @@ function rcp_has_upgrade_path( $user_id = 0 ) {
 /**
  * Get subscriptions to which this user can upgrade
  *
- * @since 2.5
- * @param int $user_id the ID of the user to check
+ * @param int $user_id the ID of the user to check, or 0 for the current user.
  *
- * @return mixed|void
+ * @since 2.5
+ * @return array Array of subscriptions.
  */
 function rcp_get_upgrade_paths( $user_id = 0 ) {
 
@@ -751,8 +811,9 @@ function rcp_get_upgrade_paths( $user_id = 0 ) {
  *
  * Processes the profile updater form by updating the necessary fields
  *
- * @access      private
- * @since       1.5
+ * @access  private
+ * @since   1.5
+ * @return  void
 */
 function rcp_process_profile_editor_updates() {
 
@@ -828,8 +889,9 @@ add_action( 'init', 'rcp_process_profile_editor_updates' );
 /**
  * Change a user password
  *
- * @access      public
- * @since       1.0
+ * @access  public
+ * @since   1.0
+ * @return  void
  */
 function rcp_change_password() {
 	// reset a users password
@@ -885,8 +947,9 @@ add_action( 'init', 'rcp_change_password' );
 /**
  * Process a member cancellation request
  *
- * @access      public
- * @since       2.1
+ * @access  public
+ * @since   2.1
+ * @return  void
  */
 function rcp_process_member_cancellation() {
 
@@ -927,8 +990,12 @@ add_action( 'init', 'rcp_process_member_cancellation' );
 /**
  * Cancel a member's payment profile
  *
- * @access      public
- * @since       2.1
+ * @param int  $member_id  ID of the member to cancel.
+ * @param bool $set_status Whether or not to update the status to 'cancelled'.
+ *
+ * @access  public
+ * @since   2.1
+ * @return  bool Whether or not the cancellation was successful.
  */
 function rcp_cancel_member_payment_profile( $member_id = 0, $set_status = true ) {
 
@@ -1134,8 +1201,13 @@ function rcp_cancel_member_payment_profile( $member_id = 0, $set_status = true )
 /**
  * Updates member payment profile ID meta keys with old versions from pre 2.1 gateways
  *
- * @access      public
- * @since       2.1
+ * @param string     $profile_id
+ * @param int        $user_id
+ * @param RCP_Member $member_object
+ *
+ * @access  public
+ * @since   2.1
+ * @return  string   The profile ID.
  */
 function rcp_backfill_payment_profile_ids( $profile_id, $user_id, $member_object ) {
 
@@ -1170,9 +1242,11 @@ add_filter( 'rcp_member_get_payment_profile_id', 'rcp_backfill_payment_profile_i
 /**
  * Retrieves the member's ID from their payment profile ID
  *
- * @access      public
- * @since       2.1
- * @return      int
+ * @param   string $profile_id Profile ID.
+ *
+ * @access  public
+ * @since   2.1
+ * @return  int|false User ID if found, false if not.
  */
 function rcp_get_member_id_from_profile_id( $profile_id = '' ) {
 
@@ -1190,8 +1264,11 @@ function rcp_get_member_id_from_profile_id( $profile_id = '' ) {
 /**
  * Determines if a member can renew their subscription
  *
- * @access      public
- * @since       2.3
+ * @param int $user_id The user ID to check, or 0 for the current user.
+ *
+ * @access public
+ * @since  2.3
+ * @return bool True if the user can renew, false if not.
  */
 function rcp_can_member_renew( $user_id = 0 ) {
 
@@ -1225,8 +1302,11 @@ function rcp_can_member_renew( $user_id = 0 ) {
 /**
  * Determines if a member can cancel their subscription on site
  *
- * @access      public
- * @since       2.1
+ * @param int $user_id The user ID to check, or 0 for the current user.
+ *
+ * @access  public
+ * @since   2.1
+ * @return  bool True if the member can cancel, false if not.
  */
 function rcp_can_member_cancel( $user_id = 0 ) {
 
@@ -1264,8 +1344,11 @@ function rcp_can_member_cancel( $user_id = 0 ) {
 /**
  * Gets the cancellation URL for a member
  *
- * @access      public
- * @since       2.1
+ * @param int $user_id The user ID to get the link for, or 0 for the current user.
+ *
+ * @access  public
+ * @since   2.1
+ * @return  string Cancellation URL.
  */
 function rcp_get_member_cancel_url( $user_id = 0 ) {
 
@@ -1288,8 +1371,11 @@ function rcp_get_member_cancel_url( $user_id = 0 ) {
 /**
  * Determines if a member can update the credit / debit card attached to their account
  *
- * @access      public
- * @since       2.1
+ * @param int $user_id The ID of the user to check, or 0 for the current user.
+ *
+ * @access  public
+ * @since   2.1
+ * @return  bool
  */
 function rcp_member_can_update_billing_card( $user_id = 0 ) {
 
@@ -1316,8 +1402,11 @@ function rcp_member_can_update_billing_card( $user_id = 0 ) {
 /**
  * Wrapper for RCP_Member->get_switch_to_url()
  *
+ * @param int $user_id ID of the user to get the switch to URL for.
+ *
  * @access public
- * @since 2.1
+ * @since  2.1
+ * @return string|false The URL if available, false if not.
  */
 function rcp_get_switch_to_url( $user_id = 0 ) {
 
@@ -1333,9 +1422,10 @@ function rcp_get_switch_to_url( $user_id = 0 ) {
 /**
  * Validate a potential username
  *
+ * @param       string $username The username to validate
+ *
  * @access      public
  * @since       2.2
- * @param       string $username The username to validate
  * @return      bool
  */
 function rcp_validate_username( $username = '' ) {
@@ -1347,9 +1437,9 @@ function rcp_validate_username( $username = '' ) {
 /**
  * Get the prorate amount for this member
  *
- * @since 2.5
  * @param int $user_id
  *
+ * @since 2.5
  * @return int
  */
 function rcp_get_member_prorate_credit( $user_id = 0 ) {
@@ -1382,7 +1472,13 @@ add_action( 'init', 'rcp_maybe_disable_toolbar', 9999 );
 /**
  * Removes the subscription-assigned role from a member when the member expires.
  *
- * @since 2.7
+ * @param string     $status     Status that was just set.
+ * @param int        $member_id  ID of the member.
+ * @param string     $old_status Previous status.
+ * @param RCP_Member $member     Member object.
+ *
+ * @since  2.7
+ * @return void
  */
 function rcp_update_expired_member_role( $status, $member_id, $old_status, $member ) {
 

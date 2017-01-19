@@ -1,15 +1,15 @@
 <?php
-/*
-Plugin Name: Restrict Content Pro
-Plugin URL: https://restrictcontentpro.com
-Description: Set up a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
-Version: 2.7
-Author: Restrict Content Pro Team
-Author URI: https://restrictcontentpro.com
-Contributors: mordauk
-Text Domain: rcp
-Domain Path: languages
-*/
+/**
+ * Plugin Name: Restrict Content Pro
+ * Plugin URL: https://restrictcontentpro.com
+ * Description: Set up a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
+ * Version: 2.7
+ * Author: Restrict Content Pro Team
+ * Author URI: https://restrictcontentpro.com
+ * Contributors: mordauk
+ * Text Domain: rcp
+ * Domain Path: languages
+ */
 
 if ( !defined( 'RCP_PLUGIN_DIR' ) ) {
 	define( 'RCP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
@@ -35,6 +35,11 @@ if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
 	require_once ABSPATH . '/wp-admin/includes/plugin.php';
 }
 
+/**
+ * Get the name of the subscription levels database table.
+ *
+ * @return string
+ */
 function rcp_get_levels_db_name() {
 	global $wpdb;
 
@@ -47,6 +52,11 @@ function rcp_get_levels_db_name() {
 	return apply_filters( 'rcp_levels_db_name', $prefix . 'restrict_content_pro' );
 }
 
+/**
+ * Get the name of the subscription level meta database table.
+ *
+ * @return string
+ */
 function rcp_get_level_meta_db_name() {
 	global $wpdb;
 
@@ -59,6 +69,11 @@ function rcp_get_level_meta_db_name() {
 	return apply_filters( 'rcp_level_meta_db_name', $prefix . 'rcp_subscription_level_meta' );
 }
 
+/**
+ * Get the name of the discount codes database table.
+ *
+ * @return string
+ */
 function rcp_get_discounts_db_name() {
 	global $wpdb;
 
@@ -71,6 +86,11 @@ function rcp_get_discounts_db_name() {
 	return apply_filters( 'rcp_discounts_db_name', $prefix . 'rcp_discounts' );
 }
 
+/**
+ * Get the name of the payments database table.
+ *
+ * @return string
+ */
 function rcp_get_payments_db_name() {
 	global $wpdb;
 
@@ -83,6 +103,11 @@ function rcp_get_payments_db_name() {
 	return apply_filters( 'rcp_payments_db_name', $prefix . 'rcp_payments' );
 }
 
+/**
+ * Get the name of the payment meta database table.
+ *
+ * @return string
+ */
 function rcp_get_payment_meta_db_name() {
 	global $wpdb;
 
@@ -139,18 +164,20 @@ global $rcp_help_page;
 
 /**
  * Check WordPress version is at least $version.
- * @since
+ *
  * @param  string  $version WP version string to compare.
+ *
  * @return bool             Result of comparison check.
  */
 function rcp_compare_wp_version( $version ) {
 	return version_compare( get_bloginfo( 'version' ), $version, '>=' );
 }
 
-/*******************************************
-* plugin text domain for translations
-*******************************************/
-
+/**
+ * Load plugin text domain for translations.
+ *
+ * @return void
+ */
 function rcp_load_textdomain() {
 
 	// Set filter for plugin's languages directory
@@ -170,7 +197,7 @@ function rcp_load_textdomain() {
 	/**
 	 * Defines the plugin language locale used in RCP.
 	 *
-	 * @var $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
+	 * @var string $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
 	 *                  otherwise uses `get_locale()`.
 	 */
 	$locale        = apply_filters( 'plugin_locale',  $get_locale, 'rcp' );
@@ -200,10 +227,15 @@ add_action( 'init', 'rcp_load_textdomain' );
 
 if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 
-	add_action( 'admin_notices', 'rcp_below_php_version_notice' );
+	/**
+	 * Display an error notice if the PHP version is lower than 5.3.
+	 *
+	 * @return void
+	 */
 	function rcp_below_php_version_notice() {
 		echo '<div class="error"><p>' . __( 'Your version of PHP is below the minimum version of PHP required by Restrict Content Pro. Please contact your host and request that your version be upgraded to 5.3 or later.', 'rcp' ) . '</p></div>';
 	}
+	add_action( 'admin_notices', 'rcp_below_php_version_notice' );
 
 } else {
 
@@ -316,10 +348,9 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 /**
  * Register / set up our databases classes
  *
- * @return  void
- *
  * @access  private
  * @since   2.6
+ * @return  void
  */
 function rcp_register_databases() {
 

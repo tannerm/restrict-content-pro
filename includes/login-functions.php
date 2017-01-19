@@ -17,8 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Retrieves the login URl with an optional redirect
  *
- * @access      public
- * @since       2.1
+ * @param string $redirect URL to redirect to after login (optional).
+ *
+ * @since  2.1
+ * @return string
  */
 function rcp_get_login_url( $redirect = '' ) {
 
@@ -41,8 +43,12 @@ function rcp_get_login_url( $redirect = '' ) {
 /**
  * Log a user in
  *
- * @access      public
- * @since       1.0
+ * @param int    $user_id    ID of the user to login.
+ * @param string $user_login Login name of the user.
+ * @param bool   $remember   Whether or not to remember the user.
+ *
+ * @since  1.0
+ * @return void
  */
 function rcp_login_user_in( $user_id, $user_login, $remember = false ) {
 	$user = get_userdata( $user_id );
@@ -55,10 +61,12 @@ function rcp_login_user_in( $user_id, $user_login, $remember = false ) {
 
 
 /**
- *Process the login form
+ * Process the login form
  *
- * @access      public
- * @since       1.0
+ * @uses rcp_login_user_in()
+ *
+ * @since  1.0
+ * @return void
  */
 function rcp_process_login_form() {
 
@@ -137,8 +145,8 @@ add_action('init', 'rcp_process_login_form');
 /**
  * Process the password reset. adapted from wp-login.php
  *
- * @access      public
- * @since       2.3
+ * @since  2.3
+ * @return void
  */
 function rcp_process_lostpassword_reset() {
 
@@ -183,8 +191,10 @@ add_action('init', 'rcp_process_lostpassword_reset');
 /**
  * Process the lost password form
  *
- * @access      public
- * @since       2.3
+ * @uses rcp_retrieve_password()
+ *
+ * @since  2.3
+ * @return void
  */
 function rcp_process_lostpassword_form() {
 
@@ -209,8 +219,8 @@ add_action('init', 'rcp_process_lostpassword_form');
 /**
  * Send password reset email to user. Adapted from wp-login.php
  *
- * @access      public
- * @since       2.3
+ * @since  2.3
+ * @return WP_Error|bool True if successful.
  */
 function rcp_retrieve_password() {
 	global $wpdb, $wp_hasher, $wp_db_version;
