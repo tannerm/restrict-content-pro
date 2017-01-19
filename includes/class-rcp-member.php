@@ -779,7 +779,7 @@ class RCP_Member extends WP_User {
 
 					} else {
 
-						$ret = true;
+						$ret = ! $this->is_expired();
 					}
 
 				} else {
