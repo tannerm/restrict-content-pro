@@ -541,6 +541,43 @@ function rcp_settings_page() {
 								<p class="description"><?php _e('Enter your live Seller ID. <a href="http://help.2checkout.com/articles/FAQ/Where-is-my-Seller-ID" target="_blank">Where is my Seller ID?</a>.', 'rcp'); ?></p>
 							</td>
 						</tr>
+
+						<tr valign="top">
+							<th colspan=2>
+								<h3><?php _e('Authorize.net Settings', 'rcp'); ?></h3>
+							</th>
+						</tr>
+						<?php // 2checkout Secret Word ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[authorize_api_login]"><?php _e( 'API Login ID', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[authorize_api_login]" style="width: 300px;" name="rcp_settings[authorize_api_login]" value="<?php if(isset($rcp_options['authorize_api_login'])) { echo $rcp_options['authorize_api_login']; } ?>"/>
+								<p class="description"><?php _e('Enter your authorize.net API login ID.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // 2checkout Test Private Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[authorize_txn_key]"><?php _e( 'Transaction Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[authorize_txn_key]" style="width: 300px;" name="rcp_settings[authorize_txn_key]" value="<?php if(isset($rcp_options['authorize_txn_key'])) { echo $rcp_options['authorize_txn_key']; } ?>"/>
+								<p class="description"><?php _e('Enter your authorize.net transaction key', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // 2checkout Test Publishable Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[authorize_hash_value]"><?php _e( 'MD5-Hash Verification Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[authorize_hash_value]" style="width: 300px;" name="rcp_settings[authorize_hash_value]" value="<?php if(isset($rcp_options['authorize_hash_value'])) { echo $rcp_options['authorize_hash_value']; } ?>"/>
+								<p class="description"><?php _e('Enter the MD5 Hash verification key for your Silent Post URL.', 'rcp'); ?></p>
+							</td>
+						</tr>
+
 					</table>
 					<?php do_action( 'rcp_payments_settings', $rcp_options ); ?>
 
