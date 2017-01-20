@@ -27,17 +27,12 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
 
-		$this->secret_word = isset( $rcp_options['twocheckout_secret_word'] ) ? trim( $rcp_options['twocheckout_secret_word'] ) : '';
-
-		// Load Authorize SDK and define its contants
-
-		if( ! class_exists( 'AuthnetXML' ) ) {
-			require_once RCP_PLUGIN_DIR . 'includes/libraries/authorize/AuthnetXML/AuthnetXML.class.php';
-		}
-
+		$this->secret_word     = isset( $rcp_options['twocheckout_secret_word'] ) ? trim( $rcp_options['twocheckout_secret_word'] ) : '';
 		$this->api_login_id    = isset( $rcp_options['authorize_api_login'] )  ? sanitize_text_field( $rcp_options['authorize_api_login'] )  : '';
 		$this->transaction_key = isset( $rcp_options['authorize_txn_key'] )    ? sanitize_text_field( $rcp_options['authorize_txn_key'] )    : '';
 		$this->md5_hash_value  = isset( $rcp_options['authorize_hash_value'] ) ? sanitize_text_field( $rcp_options['authorize_hash_value'] ) : '';
+
+		require_once RCP_PLUGIN_DIR . 'includes/libraries/anet_php_sdk/AuthorizeNet.php';
 
 	} // end init
 
@@ -48,92 +43,80 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 	 */
 	public function process_signup() {
 
-		if ( ! class_exists( 'AuthnetXML' ) ) {
-			rcp_errors()->add( 'missing_api_files', __( 'Missing Authorize.net API files, please try again or contact support if the issue persists.', 'rcp' ), 'register' );
-		}
-
 		if ( empty( $this->api_login_id ) || empty( $this->transaction_key ) ) {
 			rcp_errors()->add( 'missing_authorize_settings', __( 'Authorize.net API Login ID or Transaction key is missing.', 'rcp' ) );
 		}
 
 		$member = new RCP_Member( $this->user_id );
 
-		$paid = false;
-
-		// Set date to same timezone as Authorize's servers (Mountain Time) to prevent conflicts
-		date_default_timezone_set( 'America/Denver' );
-
-		$length = $this->length . 's';
-		$unit   = $this->length_unit;
+		$length = $this->length;
+		$unit   = $this->length_unit . 's';
 
 		if( 'years' == $unit && 1 == $length ) {
 			$unit   = 'months';
 			$length = 12;
 		}
 
-		$args = array(
-			'subscription' 	=> array(
-				'name'            => $this->subscription_name . ' - ' . $this->subscription_id,
-				'paymentSchedule' => array(
-					'interval'         => array(
-						'length' => $length,
-						'unit'   => $unit,
-					),
-					'startDate'        => date( 'Y-m-d' ),
-					'totalOccurrences' => $this->auto_renew ? 9999 : 1,
-					'trialOccurrences' => 1, // TODO update with free trial support
-				),
-				'amount'      => $this->amount,
-				'trialAmount' => $this->initial_amount,
-				'payment'     => array(
-					'creditCard' => array(
-						'cardNumber'     => sanitize_text_field( $_POST['rcp_card_number'] ),
-						'expirationDate' => sanitize_text_field( $_POST['rcp_card_exp_year'] ) . '-' . sanitize_text_field( $_POST['rcp_card_exp_month'] ),
-						'cardCode'       => sanitize_text_field( $_POST['rcp_card_cvc'] ),
-					),
-				),
-				'billTo'      => array(
-					'firstName' => sanitize_text_field( $_POST['rcp_user_first'] ),
-					'lastName'  => sanitize_text_field( $_POST['rcp_user_last'] ),
-					'zip'       => sanitize_text_field( $_POST['rcp_card_zip'] ),
-				),
-			),
-		);
+		$names = explode( ' ', sanitize_text_field( $_POST['rcp_card_name'] ) );
+		$fname = isset( $names[0] ) ? $names[0] : $member->user_first;
 
-		$authnet_xml = new AuthnetXML( $this->api_login_id, $this->transaction_key, $this->test_mode );
-		$authnet_xml->ARBCreateSubscriptionRequest( $args );
-
-		if ( $authnet_xml->isSuccessful() ) {
-
-			// set this user to active
-			$member->renew( $this->auto_renew );
-			$member->add_note( __( 'Subscription started in Authorize.net', 'rcp' ) );
-
-			$member->set_payment_profile_id( $authnet_xml->subscriptionId );
-
-			if ( ! is_user_logged_in() ) {
-
-				// log the new user in
-				rcp_login_user_in( $this->user_id, $this->user_name, $_POST['rcp_user_pass'] );
-
-			}
-
-			do_action( 'rcp_authorizenet_signup', $this->user_id, $this );
-
+		if( ! empty( $names[1] ) ) {
+			unset( $names[0] );
+			$lname = implode( ' ', $names );
 		} else {
+			$lname = $member->user_last;
+		}
 
-			if( isset( $authnet_xml->messages->message ) ) {
+		try {
 
-				$error = $authnet_xml->messages->message->code . ': ' . $authnet_xml->messages->message->text;
+			$subscription = new AuthorizeNet_Subscription;
+			$subscription->name = substr( $this->subscription_name . ' - ' . $this->subscription_key, 0, 50 ); // Max of 50 characters
+			$subscription->intervalLength = $length;
+			$subscription->intervalUnit = $unit;
+			$subscription->startDate = date( 'Y-m-d' );
+			$subscription->totalOccurrences = $this->auto_renew ? 9999 : 1;
+			$subscription->trialOccurrences = $this->auto_renew ? 1 : 0;
+			$subscription->amount = $this->amount;
+			$subscription->trialAmount = $this->initial_amount;
+			$subscription->creditCardCardNumber = sanitize_text_field( $_POST['rcp_card_number'] );
+			$subscription->creditCardExpirationDate = sanitize_text_field( $_POST['rcp_card_exp_year'] ) . '-' . sanitize_text_field( $_POST['rcp_card_exp_month'] );
+			$subscription->creditCardCardCode = sanitize_text_field( $_POST['rcp_card_cvc'] );
+			$subscription->orderDescription = $this->subscription_key;
+			$subscription->customerEmail = $this->email;
+			$subscription->billToFirstName = $fname;
+			$subscription->billToLastName = $lname;
+			$subscription->billToZip = sanitize_text_field( $_POST['rcp_card_zip'] );
+
+
+			$arb = new AuthorizeNetARB( $this->api_login_id, $this->transaction_key );
+			$response = $arb->createSubscription( $subscription );
+
+			if ( $response->isOK() ) {
+
+				// set this user to active
+				$member->renew( $this->auto_renew );
+				$member->add_note( __( 'Subscription started in Authorize.net', 'rcp' ) );
+				$member->set_payment_profile_id( $response->getSubscriptionId() );
+
+				if ( ! is_user_logged_in() ) {
+
+					// log the new user in
+					rcp_login_user_in( $this->user_id, $this->user_name, $_POST['rcp_user_pass'] );
+
+				}
+
+				do_action( 'rcp_authorizenet_signup', $this->user_id, $this, $response );
 
 			} else {
 
-				$error = __( 'Your subscription cannot be created due to an error at the gateway.', 'rcp' );
+				$error = $response->getMessages()->getMessage()[0]->getCode() . ' ' . $response->getMessages()->getMessage()[0]->getText();
+
+				wp_die( $response->getErrorMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			}
 
-			wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => '401' ) );
-
+		} catch ( AuthorizeNetException $e ) {
+			wp_die( $e->getMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 		}
 
 		// redirect to the success page, or error page if something went wrong
@@ -224,7 +207,7 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 	 */
 	public function fields() {
 		ob_start();
-		rcp_get_template_part( 'card-form', 'full' );
+		rcp_get_template_part( 'card-form' );
 		return ob_get_clean();
 	}
 
