@@ -611,22 +611,7 @@ function rcp_settings_page() {
 								</th>
 								<td>
 									<p class="description"><?php _e( 'The following template tags are available for use in all of the email settings below.', 'rcp' ); ?></p>
-									<ul>
-										<?php
-										$emails = new RCP_Emails;
-										$email_tags = $emails->get_tags();
-
-										if ( is_array( $email_tags ) ) {
-											foreach ( $email_tags as $tag_info ) {
-												?>
-												<li><em>%<?php echo $tag_info['tag']; ?>%</em> - <?php echo $tag_info['description']; ?></li>
-												<?php
-											}
-										}
-
-										do_action( 'rcp_available_template_tags' );
-										?>
-									</ul>
+									<?php echo rcp_get_emails_tags_list(); ?>
 								</td>
 							</tr>
 							<tr>
