@@ -838,7 +838,7 @@ function rcp_change_password() {
 		global $user_ID;
 
 		list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
-		$rp_cookie = 'rcp-resetpass-' . COOKIEHASH;
+		$rp_cookie = apply_filters( 'rcp_resetpass_cookie_name', 'rcp-resetpass-' . COOKIEHASH );
 
 		$user = rcp_get_user_resetting_password( $rp_cookie );
 
@@ -1378,3 +1378,24 @@ function rcp_maybe_disable_toolbar() {
 	}
 }
 add_action( 'init', 'rcp_maybe_disable_toolbar', 9999 );
+
+/**
+ * Removes the subscription-assigned role from a member when the member expires.
+ *
+ * @since 2.7
+ */
+function rcp_update_expired_member_role( $status, $member_id, $old_status, $member ) {
+
+	if ( 'expired' !== $status ) {
+		return;
+	}
+
+	$subscription = rcp_get_subscription_details( $member->get_subscription_id() );
+
+	$default_role = get_option( 'default_role', 'subscriber' );
+
+	if ( ! empty( $subscription ) && is_object( $subscription ) && $subscription->role !== $default_role ) {
+		$member->remove_role( $subscription->role );
+	}
+}
+add_action( 'rcp_set_status', 'rcp_update_expired_member_role', 10, 4 );

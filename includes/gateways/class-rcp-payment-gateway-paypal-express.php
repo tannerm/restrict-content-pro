@@ -519,6 +519,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				}
 
 				do_action( 'rcp_ipn_subscr_failed' );
+
+				do_action( 'rcp_recurring_payment_failed', $member, $this );
+
 				die( 'successful recurring_payment_failed or recurring_payment_suspended_due_to_max_failed_payment' );
 
 				break;

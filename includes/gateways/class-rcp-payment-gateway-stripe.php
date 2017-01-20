@@ -23,9 +23,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		global $rcp_options;
 
-		$this->supports[]  = 'one-time';
-		$this->supports[]  = 'recurring';
-		$this->supports[]  = 'fees';
+		$this->supports[] = 'one-time';
+		$this->supports[] = 'recurring';
+		$this->supports[] = 'fees';
+		$this->supports[] = 'gateway-submits-form';
 
 		if( $this->test_mode ) {
 
@@ -329,8 +330,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
 			}
 
-			// set this user to active
-			$member->set_status( 'active' );
 			$member->set_recurring( $this->auto_renew );
 
 			if ( ! is_user_logged_in() ) {
@@ -343,6 +342,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			if( ! $this->auto_renew ) {
 				$member->set_expiration_date( $member->calculate_expiration() );
 			}
+
+			// set this user to active
+			$member->set_status( 'active' );
 
 			do_action( 'rcp_stripe_signup', $this->user_id, $this );
 
@@ -514,6 +516,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// failed payment
 					if ( $event->type == 'charge.failed' ) {
 
+						do_action( 'rcp_recurring_payment_failed', $member, $this );
 						do_action( 'rcp_stripe_charge_failed', $invoice );
 
 						die( 'rcp_stripe_charge_failed action fired successfully' );
@@ -601,7 +604,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			jQuery(document).ready(function($) {
 
-				$("#rcp_registration_form").on('submit', function(event) {
+				$('body').on('rcp_register_form_submission', function(event, response, form_id) {
 
 					if( ! rcp_stripe_processing ) {
 

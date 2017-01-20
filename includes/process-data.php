@@ -219,6 +219,7 @@ function rcp_process_data() {
 			$levels       = new RCP_Levels();
 			$user_id      = absint( $_POST['user'] );
 			$member       = new RCP_Member( $user_id );
+			$email        = sanitize_text_field( $_POST['email'] );
 			$status       = sanitize_text_field( $_POST['status'] );
 			$level_id     = absint( $_POST['level'] );
 			$expiration   = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
@@ -278,6 +279,10 @@ function rcp_process_data() {
 
 			if( isset( $_POST['payment-profile-id'] ) ) {
 				$member->set_payment_profile_id( $_POST['payment-profile-id'] );
+			}
+
+			if( $email != $member->user_email ) {
+				wp_update_user( array( 'ID' => $user_id, 'user_email' => $email ) );
 			}
 
 			do_action( 'rcp_edit_member', $user_id );

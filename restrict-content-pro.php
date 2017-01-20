@@ -38,7 +38,11 @@ if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
 function rcp_get_levels_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
+
+	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
+		$prefix = $wpdb->prefix;
+	}
 
 	return apply_filters( 'rcp_levels_db_name', $prefix . 'restrict_content_pro' );
 }
@@ -46,7 +50,11 @@ function rcp_get_levels_db_name() {
 function rcp_get_level_meta_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
+
+	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
+		$prefix = $wpdb->prefix;
+	}
 
 	return apply_filters( 'rcp_level_meta_db_name', $prefix . 'rcp_subscription_level_meta' );
 }
@@ -54,7 +62,11 @@ function rcp_get_level_meta_db_name() {
 function rcp_get_discounts_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
+
+	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
+		$prefix = $wpdb->prefix;
+	}
 
 	return apply_filters( 'rcp_discounts_db_name', $prefix . 'rcp_discounts' );
 }
@@ -62,7 +74,11 @@ function rcp_get_discounts_db_name() {
 function rcp_get_payments_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
+
+	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
+		$prefix = $wpdb->prefix;
+	}
 
 	return apply_filters( 'rcp_payments_db_name', $prefix . 'rcp_payments' );
 }
@@ -70,7 +86,11 @@ function rcp_get_payments_db_name() {
 function rcp_get_payment_meta_db_name() {
 	global $wpdb;
 
-	$prefix = is_plugin_active_for_network( 'restrict-content-pro/restrict-content-pro.php' ) ? '' : $wpdb->prefix;
+	$prefix = is_plugin_active_for_network( plugin_basename( RCP_PLUGIN_FILE ) ) ? '' : $wpdb->prefix;
+
+	if ( defined( 'RCP_NETWORK_SEPARATE_SITES' ) && RCP_NETWORK_SEPARATE_SITES ) {
+		$prefix = $wpdb->prefix;
+	}
 
 	return apply_filters( 'rcp_payment_meta_db_name', $prefix . 'rcp_payment_meta' );
 }
@@ -116,6 +136,17 @@ global $rcp_reports_page;
 global $rcp_export_page;
 global $rcp_help_page;
 
+
+/**
+ * Check WordPress version is at least $version.
+ * @since
+ * @param  string  $version WP version string to compare.
+ * @return bool             Result of comparison check.
+ */
+function rcp_compare_wp_version( $version ) {
+	return version_compare( get_bloginfo( 'version' ), $version, '>=' );
+}
+
 /*******************************************
 * plugin text domain for translations
 *******************************************/
@@ -128,7 +159,21 @@ function rcp_load_textdomain() {
 
 
 	// Traditional WordPress plugin locale filter
-	$locale        = apply_filters( 'plugin_locale',  get_locale(), 'rcp' );
+
+	$get_locale = get_locale();
+
+	if ( rcp_compare_wp_version( 4.7 ) ) {
+
+		$get_locale = get_user_locale();
+	}
+
+	/**
+	 * Defines the plugin language locale used in RCP.
+	 *
+	 * @var $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
+	 *                  otherwise uses `get_locale()`.
+	 */
+	$locale        = apply_filters( 'plugin_locale',  $get_locale, 'rcp' );
 	$mofile        = sprintf( '%1$s-%2$s.mo', 'rcp', $locale );
 
 	// Setup paths to current locale file
@@ -170,6 +215,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	// global includes
 	require( RCP_PLUGIN_DIR . 'includes/install.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-capabilities.php' );
+	include( RCP_PLUGIN_DIR . 'includes/class-rcp-emails.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-integrations.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-levels.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-member.php' );
@@ -243,10 +289,11 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 		if( $license_key ) {
 			// setup the updater
 			$rcp_updater = new RCP_Plugin_Updater( 'https://restrictcontentpro.com', RCP_PLUGIN_FILE, array(
-					'version' 	=> RCP_PLUGIN_VERSION, // current version number
-					'license' 	=> $license_key, // license key (used get_option above to retrieve from DB)
-					'item_id'   => 479, // Download ID
-					'author' 	=> 'Restrict Content Pro Team' // author of this plugin
+					'version' => RCP_PLUGIN_VERSION, // current version number
+					'license' => $license_key, // license key (used get_option above to retrieve from DB)
+					'item_id' => 479, // Download ID
+					'author'  => 'Restrict Content Pro Team', // author of this plugin
+					'beta'    => ! empty( $rcp_options['show_beta_updates'] )
 				)
 			);
 		}

@@ -167,3 +167,177 @@ function rcp_calc_member_expiration( $expiration_object ) {
 function rcp_get_pdf_download_url( $payment_id = 0 ) {
 	return rcp_get_invoice_url( $payment_id );
 }
+
+function rcp_user_level_checks() {
+	if ( current_user_can( 'read' ) ) {
+		if ( current_user_can( 'edit_posts' ) ) {
+			if ( current_user_can( 'upload_files' ) ) {
+				if ( current_user_can( 'moderate_comments' ) ) {
+					if ( current_user_can( 'switch_themes' ) ) {
+						//do nothing here for admin
+					} else {
+						add_filter( 'the_content', 'rcp_display_message_to_editors' );
+					}
+				} else {
+					add_filter( 'the_content', 'rcp_display_message_authors' );
+				}
+			} else {
+				add_filter( 'the_content', 'rcp_display_message_to_contributors' );
+			}
+		} else {
+			add_filter( 'the_content', 'rcp_display_message_to_subscribers' );
+		}
+	} else {
+		add_filter( 'the_content', 'rcp_display_message_to_non_loggged_in_users' );
+	}
+}
+// add_action( 'loop_start', 'rcp_user_level_checks' );
+
+function rcp_display_message_to_editors( $content ) {
+	global $rcp_options, $post, $user_ID;
+
+	$message = $rcp_options['free_message'];
+	$paid_message = $rcp_options['paid_message'];
+	if ( rcp_is_paid_content( $post->ID ) ) {
+		$message = $paid_message;
+	}
+
+	$user_level = get_post_meta( $post->ID, 'rcp_user_level', true );
+	$access_level = get_post_meta( $post->ID, 'rcp_access_level', true );
+
+	$has_access = false;
+	if ( rcp_user_has_access( $user_ID, $access_level ) ) {
+		$has_access = true;
+	}
+
+	if ( $user_level == 'Administrator' && $has_access ) {
+		return rcp_format_teaser( $message );
+	}
+	return $content;
+}
+
+function rcp_display_message_authors( $content ) {
+	global $rcp_options, $post, $user_ID;
+
+	$message = $rcp_options['free_message'];
+	$paid_message = $rcp_options['paid_message'];
+	if ( rcp_is_paid_content( $post->ID ) ) {
+		$message = $paid_message;
+	}
+
+	$user_level = get_post_meta( $post->ID, 'rcp_user_level', true );
+	$access_level = get_post_meta( $post->ID, 'rcp_access_level', true );
+
+	$has_access = false;
+	if ( rcp_user_has_access( $user_ID, $access_level ) ) {
+		$has_access = true;
+	}
+
+	if ( ( $user_level == 'Administrator' || $user_level == 'Editor' )  && $has_access ) {
+		return rcp_format_teaser( $message );
+	}
+	// return the content unfilitered
+	return $content;
+}
+
+function rcp_display_message_to_contributors( $content ) {
+	global $rcp_options, $post, $user_ID;
+
+	$message = $rcp_options['free_message'];
+	$paid_message = $rcp_options['paid_message'];
+	if ( rcp_is_paid_content( $post->ID ) ) {
+		$message = $paid_message;
+	}
+
+	$user_level = get_post_meta( $post->ID, 'rcp_user_level', true );
+	$access_level = get_post_meta( $post->ID, 'rcp_access_level', true );
+
+	$has_access = false;
+	if ( rcp_user_has_access( $user_ID, $access_level ) ) {
+		$has_access = true;
+	}
+
+	if ( ( $user_level == 'Administrator' || $user_level == 'Editor' || $user_level == 'Author' ) && $has_access ) {
+		return rcp_format_teaser( $message );
+	}
+	// return the content unfilitered
+	return $content;
+}
+
+function rcp_display_message_to_subscribers( $content ) {
+	global $rcp_options, $post, $user_ID;
+
+	$message      = isset( $rcp_options['free_message'] ) ? $rcp_options['free_message'] : '';
+ 	$paid_message = isset( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : '';
+
+	if ( rcp_is_paid_content( $post->ID ) ) {
+		$message = $paid_message;
+	}
+
+	$user_level = get_post_meta( $post->ID, 'rcp_user_level', true );
+	$access_level = get_post_meta( $post->ID, 'rcp_access_level', true );
+
+	$has_access = false;
+	if ( rcp_user_has_access( $user_ID, $access_level ) ) {
+		$has_access = true;
+	}
+	if ( $user_level == 'Administrator' || $user_level == 'Editor' || $user_level == 'Author' || $user_level == 'Contributor' || !$has_access ) {
+		return rcp_format_teaser( $message );
+	}
+	// return the content unfilitered
+	return $content;
+}
+
+// this is the function used to display the error message to non-logged in users
+function rcp_display_message_to_non_loggged_in_users( $content ) {
+	global $rcp_options, $post, $user_ID;
+
+	$message      = isset( $rcp_options['free_message'] ) ? $rcp_options['free_message'] : '';
+	$paid_message = isset( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : '';
+
+	if ( rcp_is_paid_content( $post->ID ) ) {
+		$message = $paid_message;
+	}
+
+	$user_level   = get_post_meta( $post->ID, 'rcp_user_level', true );
+	$access_level = get_post_meta( $post->ID, 'rcp_access_level', true );
+	$has_access   = false;
+
+	if ( rcp_user_has_access( $user_ID, $access_level ) ) {
+		$has_access = true;
+	}
+
+	if ( ! is_user_logged_in() && ( $user_level == 'Administrator' || $user_level == 'Editor' || $user_level == 'Author' || $user_level == 'Contributor' || $user_level == 'Subscriber' ) && $has_access ) {
+		return rcp_format_teaser( $message );
+	}
+
+	// return the content unfilitered
+	return $content;
+}
+
+/**
+ * Parses email template tags
+ *
+ * @deprecated 2.7
+*/
+function rcp_filter_email_tags( $message, $user_id, $display_name ) {
+
+	$user = get_userdata( $user_id );
+
+	$site_name = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
+
+	$rcp_payments = new RCP_Payments();
+
+	$message = str_replace( '%blogname%', $site_name, $message );
+	$message = str_replace( '%username%', $user->user_login, $message );
+	$message = str_replace( '%useremail%', $user->user_email, $message );
+	$message = str_replace( '%firstname%', html_entity_decode( $user->first_name, ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%lastname%', html_entity_decode( $user->last_name, ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%displayname%', html_entity_decode( $display_name, ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%expiration%', rcp_get_expiration_date( $user_id ), $message );
+	$message = str_replace( '%subscription_name%', html_entity_decode( rcp_get_subscription($user_id), ENT_COMPAT, 'UTF-8' ), $message );
+	$message = str_replace( '%subscription_key%', rcp_get_subscription_key( $user_id ), $message );
+	$message = str_replace( '%amount%', html_entity_decode( rcp_currency_filter( $rcp_payments->last_payment_of_user( $user_id ) ), ENT_COMPAT, 'UTF-8' ), $message );
+
+	return apply_filters( 'rcp_email_tags', $message, $user_id );
+}

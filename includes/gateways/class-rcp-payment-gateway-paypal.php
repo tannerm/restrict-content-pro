@@ -148,7 +148,11 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 		$paypal_args = apply_filters( 'rcp_paypal_args', $paypal_args, $this );
 
+		// Build query
 		$paypal_redirect .= http_build_query( $paypal_args );
+
+		// Fix for some sites that encode the entities
+		$paypal_redirect = str_replace( '&amp;', '&', $paypal_redirect );
 
 		// Redirect to paypal
 		header( 'Location: ' . $paypal_redirect );
@@ -409,6 +413,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 				case "subscr_failed" :
 
+					do_action( 'rcp_recurring_payment_failed', $member, $this );
 					do_action( 'rcp_ipn_subscr_failed' );
 
 					die( 'successful subscr_failed' );

@@ -146,7 +146,7 @@ function rcp_member_levels_page()
 									<label for="rcp-duration"><?php _e('Duration', 'rcp'); ?></label>
 								</th>
 								<td>
-									<input type="text" id="rcp-duration" style="width: 40px;" name="duration" value=""/>
+									<input type="text" id="rcp-duration" style="width: 40px;" name="duration" value="0"/>
 									<select name="duration_unit" id="rcp-duration-unit">
 										<option value="day"><?php _e('Day(s)', 'rcp'); ?></option>
 										<option value="month"><?php _e('Month(s)', 'rcp'); ?></option>
@@ -163,11 +163,7 @@ function rcp_member_levels_page()
 									<label for="rcp-price"><?php _e('Price', 'rcp'); ?></label>
 								</th>
 								<td>
-									<input type="text" id="rcp-price" name="price" value="" style="width: 40px;"/>
-									<select name="rcp-price-select" id="rcp-price-select">
-										<option value="normal"><?php echo rcp_get_currency(); ?></option>
-										<option value="free"><?php _e('Free', 'rcp'); ?></option>
-									</select>
+									<input type="text" id="rcp-price" name="price" value="0" pattern="^(\d+\.\d{2})|(\d+)$" style="width: 40px;"/>
 									<p class="description">
 										<?php _e('The price of this membership level. Enter 0 for free.', 'rcp'); ?>
 										<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( 'This price refers to the amount paid per duration period. For example, if duration period is set to 1 month, this would be the amount charged each month.', 'rcp' ); ?>"></span>
@@ -179,7 +175,7 @@ function rcp_member_levels_page()
 									<label for="rcp-fee"><?php _e('Signup Fee', 'rcp'); ?></label>
 								</th>
 								<td>
-									<input type="text" id="rcp-fee" name="fee" value="" style="width: 40px;"/>
+									<input type="text" id="rcp-fee" name="fee" value="0" style="width: 40px;"/>
 									<p class="description"><?php _e('Optional signup fee to charge subscribers for the first billing cycle. Enter a negative number to give a discount on the first payment.', 'rcp'); ?></p>
 								</td>
 							</tr>

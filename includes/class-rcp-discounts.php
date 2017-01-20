@@ -326,10 +326,16 @@ class RCP_Discounts {
 			)
 		);
 
-		do_action( 'rcp_add_discount', $args, $wpdb->insert_id );
+		if( $add ) {
 
-		if( $add )
-			return $wpdb->insert_id;
+			$discount_id = $wpdb->insert_id;
+
+			do_action( 'rcp_add_discount', $args, $discount_id );
+
+			return $discount_id;
+
+		}
+
 		return false;
 	}
 

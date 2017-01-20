@@ -347,8 +347,9 @@ function rcp_no_account_sharing() {
 
 function rcp_set_user_logged_in_status( $logged_in_cookie, $expire, $expiration, $user_id, $status = 'logged_in' ) {
 
-	if( ! rcp_no_account_sharing() )
+	if( ! rcp_no_account_sharing() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
 		return;
+	}
 
 	if ( ! empty( $user_id ) ) :
 
@@ -376,8 +377,9 @@ add_action( 'set_logged_in_cookie', 'rcp_set_user_logged_in_status', 10, 5 );
 
 function rcp_clear_auth_cookie() {
 
-	if( ! rcp_no_account_sharing() )
+	if( ! rcp_no_account_sharing() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
 		return;
+	}
 
 	$user_id = get_current_user_id();
 
@@ -416,13 +418,17 @@ add_action( 'clear_auth_cookie', 'rcp_clear_auth_cookie' );
 */
 
 function rcp_can_user_be_logged_in() {
-	if ( is_user_logged_in() && rcp_no_account_sharing() ) :
+	if ( is_user_logged_in() && rcp_no_account_sharing() ) {
+
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return;
+		}
 
 		$user_id = get_current_user_id();
 
 		$already_logged_in = get_transient( 'rcp_user_logged_in_' . $user_id );
 
-		if( $already_logged_in !== false ) :
+		if( $already_logged_in !== false ) {
 
 			$data = maybe_unserialize( $already_logged_in );
 
@@ -438,17 +444,15 @@ function rcp_can_user_be_logged_in() {
 				set_transient( 'rcp_user_logged_in_' . $user_id, $data );
 			}
 
-			if( ! in_array( $_COOKIE[LOGGED_IN_COOKIE], $data ) ) :
+			if( ! in_array( $_COOKIE[LOGGED_IN_COOKIE], $data ) ) {
 
 				// Log the user out - this is one of the oldest user logged into this account
 				wp_logout();
 				wp_safe_redirect( trailingslashit( get_bloginfo( 'wpurl' ) ) . 'wp-login.php?loggedout=true' );
+			}
 
-			endif;
-
-		endif;
-
-	endif;
+		}
+	}
 }
 add_action( 'init', 'rcp_can_user_be_logged_in' );
 
@@ -760,3 +764,127 @@ function rcp_currency_decimal_filter( $decimals = 2 ) {
 
 	return apply_filters( 'rcp_currency_decimal_filter', $decimals, $currency );
 }
+
+/**
+ * Gets the taxonomy term ids connected to the specified post ID.
+ *
+ * @since 2.7
+ * @param  int $post_id The post ID.
+ * @return array An array of taxonomy term IDs connected to the post.
+ */
+function rcp_get_connected_term_ids( $post_id = 0 ) {
+	global $wpdb;
+	return $wpdb->get_results( $wpdb->prepare( "SELECT term_taxonomy_id FROM {$wpdb->term_relationships} WHERE object_id = %d", absint( $post_id ) ), ARRAY_A );
+}
+
+/**
+ * Gets all post IDs that are assigned to restricted taxonomy terms.
+ *
+ * @since 2.7
+ * @return array An array of post IDs assigned to restricted taxonomy terms.
+ */
+function rcp_get_post_ids_assigned_to_restricted_terms() {
+
+	global $wpdb;
+
+	if ( false === ( $post_ids = get_transient( 'rcp_post_ids_assigned_to_restricted_terms' ) ) ) {
+		$post_ids = array();
+
+		$terms = get_terms(
+			array_values( get_taxonomies( array( 'public' => true ) ) ),
+			array(
+				'hide_empty' => false,
+				'meta_query' => array(
+					array(
+						'key' => 'rcp_restricted_meta'
+					)
+				)
+			)
+		);
+
+		if ( empty( $terms ) || is_wp_error( $terms ) ) {
+			set_transient( 'rcp_post_ids_assigned_to_restricted_terms', array(), DAY_IN_SECONDS );
+			return array();
+		}
+
+		foreach ( $terms as $term ) {
+			$p_ids = $wpdb->get_results( $wpdb->prepare( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", absint( $term->term_id ) ), ARRAY_A );
+			foreach( $p_ids as $p_id ) {
+				if ( ! in_array( $p_id['object_id'], $post_ids ) ) {
+					$post_ids[] = $p_id['object_id'];
+				}
+			}
+		}
+
+		set_transient( 'rcp_post_ids_assigned_to_restricted_terms', $post_ids, DAY_IN_SECONDS );
+	}
+
+	return $post_ids;
+}
+
+/**
+ * Gets a list of post IDs with post-level restrictions defined.
+ *
+ * @since 2.7
+ * @return array An array of post IDs.
+ */
+function rcp_get_restricted_post_ids() {
+
+	if ( false === ( $post_ids = get_transient( 'rcp_restricted_post_ids' ) ) ) {
+
+		$post_ids = get_posts( array(
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'post_type'      => 'any',
+			'fields'         => 'ids',
+			'meta_query'     => array(
+				'relation' => 'OR',
+				array(
+					'key'   => '_is_paid',
+					'value' => 1
+				),
+				array(
+					'key' => 'rcp_subscription_level'
+				),
+				array(
+					'key'     => 'rcp_user_level',
+					'value'   => 'All',
+					'compare' => '!='
+				),
+				array(
+					'key' => 'rcp_access_level'
+				)
+			)
+		) );
+
+		set_transient( 'rcp_restricted_post_ids', $post_ids, DAY_IN_SECONDS );
+	}
+
+	return $post_ids;
+}
+
+/**
+ * Clears the transient that holds the post IDs with post-level restrictions defined.
+ *
+ * @since 2.7
+ */
+function rcp_delete_transient_restricted_post_ids( $post_id ) {
+
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	delete_transient( 'rcp_restricted_post_ids' );
+	delete_transient( 'rcp_post_ids_assigned_to_restricted_terms' );
+}
+add_action( 'save_post', 'rcp_delete_transient_restricted_post_ids' );
+add_action( 'wp_trash_post', 'rcp_delete_transient_restricted_post_ids' );
+add_action( 'untrash_post', 'rcp_delete_transient_restricted_post_ids' );
+
+/**
+ * Clears the transient that holds the post IDs that are assigned to restricted taxonomy terms.
+ */
+function rcp_delete_transient_post_ids_assigned_to_restricted_terms( $term_id, $tt_id, $taxonomy ) {
+	delete_transient( 'rcp_post_ids_assigned_to_restricted_terms' );
+}
+add_action( 'edited_term', 'rcp_delete_transient_post_ids_assigned_to_restricted_terms', 10, 3 );

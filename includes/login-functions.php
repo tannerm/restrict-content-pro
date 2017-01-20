@@ -149,7 +149,7 @@ function rcp_process_lostpassword_reset() {
 	nocache_headers();
 
 	list( $rp_path ) = explode( '?', wp_unslash( $_SERVER['REQUEST_URI'] ) );
-	$rp_cookie = 'rcp-resetpass-' . COOKIEHASH;
+	$rp_cookie = apply_filters( 'rcp_resetpass_cookie_name', 'rcp-resetpass-' . COOKIEHASH );
 
 	// store reset key and login name in cookie & remove from URL
 	if ( isset( $_GET['key'] ) ) {

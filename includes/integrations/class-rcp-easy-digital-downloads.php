@@ -72,9 +72,11 @@ class RCP_EDD {
 		global $rcp_options;
 
 		if ( isset( $rcp_options['hide_premium'] ) && ! rcp_is_active( get_current_user_id() ) ) {
-			$premium_ids = rcp_get_paid_posts();
-			if ( ! empty( $premium_ids ) ) {
-				$query['post__not_in'] = $premium_ids;
+			$premium_ids              = rcp_get_restricted_post_ids();
+			$term_restricted_post_ids = rcp_get_post_ids_assigned_to_restricted_terms();
+			$post_ids                 = array_unique( array_merge( $premium_ids, $term_restricted_post_ids ) );
+			if ( ! empty( $post_ids ) ) {
+				$query['post__not_in'] = $post_ids;
 			}
 		}
 
