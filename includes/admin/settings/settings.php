@@ -612,18 +612,20 @@ function rcp_settings_page() {
 								<td>
 									<p class="description"><?php _e( 'The following template tags are available for use in all of the email settings below.', 'rcp' ); ?></p>
 									<ul>
-										<li><em>%blogname%</em> - <?php _e( 'will be replaced with the name of your site', 'rcp' ); ?></li>
-										<li><em>%username%</em> - <?php _e( 'will be replaced with the user name of the person receiving the email', 'rcp' ); ?></li>
-										<li><em>%useremail%</em> - <?php _e( 'will be replaced with the email of the person receiving the email', 'rcp' ); ?></li>
-										<li><em>%firstname%</em> - <?php _e( 'will be replaced with the first name of the person receiving the email', 'rcp' ); ?></li>
-										<li><em>%lastname%</em> - <?php _e( 'will be replaced with the last name of the person receiving the email', 'rcp' ); ?></li>
-										<li><em>%displayname%</em> - <?php _e( 'will be replaced with the display name of the person receiving the email', 'rcp' ); ?></li>
-										<li><em>%expiration%</em> - <?php _e( 'will be replaced with the expiration date of subscription', 'rcp' ); ?></li>
-										<li><em>%subscription_name%</em> - <?php _e( 'will be replaced with the name of the subscription', 'rcp' ); ?></li>
-										<li><em>%subscription_key%</em> - <?php _e( 'will be replaced with the unique, 32 character key created when the user is registered', 'rcp' ); ?></li>
-										<li><em>%amount%</em> - <?php _e( 'will be replaced with the amount of the users last payment', 'rcp' ); ?></li>
+										<?php
+										$emails = new RCP_Emails;
+										$email_tags = $emails->get_tags();
 
-										<?php do_action( 'rcp_available_template_tags' ); ?>
+										if ( is_array( $email_tags ) ) {
+											foreach ( $email_tags as $tag_info ) {
+												?>
+												<li><em>%<?php echo $tag_info['tag']; ?>%</em> - <?php echo $tag_info['description']; ?></li>
+												<?php
+											}
+										}
+
+										do_action( 'rcp_available_template_tags' );
+										?>
 									</ul>
 								</td>
 							</tr>
