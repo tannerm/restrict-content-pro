@@ -1122,6 +1122,17 @@ function rcp_cancel_member_payment_profile( $member_id = 0, $set_status = true )
 		} else {
 			$success = true;
 		}
+	} elseif( rcp_is_authnet_subscriber( $member_id ) ) {
+
+		$cancelled = rcp_authnet_cancel_member( $member_id );
+
+		if( is_wp_error( $cancelled ) ) {
+
+			wp_die( $cancelled->get_error_message(), __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+		} else {
+			$success = true;
+		}
 	}
 
 	if( $success && $set_status ) {
@@ -1230,6 +1241,8 @@ function rcp_can_member_renew( $user_id = 0 ) {
  */
 function rcp_can_member_cancel( $user_id = 0 ) {
 
+	global $rcp_options;
+
 	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
@@ -1252,7 +1265,11 @@ function rcp_can_member_cancel( $user_id = 0 ) {
 
 		} elseif ( rcp_is_2checkout_subscriber( $user_id ) && defined( 'TWOCHECKOUT_ADMIN_USER' ) && defined( 'TWOCHECKOUT_ADMIN_PASSWORD' ) ) {
 
-				$ret = true;
+			$ret = true;
+
+		} elseif ( rcp_is_authnet_subscriber( $user_id ) && ! empty( $rcp_options['authorize_api_login'] ) && ! empty( $rcp_options['authorize_txn_key'] ) ) {
+
+			$ret = true;
 
 		}
 

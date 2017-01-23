@@ -27,7 +27,6 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
 
-		$this->secret_word     = isset( $rcp_options['twocheckout_secret_word'] ) ? trim( $rcp_options['twocheckout_secret_word'] ) : '';
 		$this->api_login_id    = isset( $rcp_options['authorize_api_login'] )  ? sanitize_text_field( $rcp_options['authorize_api_login'] )  : '';
 		$this->transaction_key = isset( $rcp_options['authorize_txn_key'] )    ? sanitize_text_field( $rcp_options['authorize_txn_key'] )    : '';
 		$this->md5_hash_value  = isset( $rcp_options['authorize_hash_value'] ) ? sanitize_text_field( $rcp_options['authorize_hash_value'] ) : '';
@@ -122,14 +121,15 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 
 
 			$arb = new AuthorizeNetARB( $this->api_login_id, $this->transaction_key );
+			$arb->setSandbox( rcp_is_sandbox() );
 			$response = $arb->createSubscription( $subscription );
 
-			if ( $response->isOK() ) {
+			if ( $response->isOK() && ! $response->isError() ) {
 
 				// set this user to active
 				$member->renew( $this->auto_renew );
 				$member->add_note( __( 'Subscription started in Authorize.net', 'rcp' ) );
-				$member->set_payment_profile_id( $response->getSubscriptionId() );
+				$member->set_payment_profile_id( 'anet_' . $response->getSubscriptionId() );
 
 				if ( ! is_user_logged_in() ) {
 
@@ -142,7 +142,7 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 
 			} else {
 
-				$error = $response->getMessages()->getMessage()[0]->getCode() . ' ' . $response->getMessages()->getMessage()[0]->getText();
+				$error = $response->getErrorMessage();
 
 				wp_die( $response->getErrorMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
@@ -180,7 +180,7 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 			$response_code = intval( $_POST['x_response_code'] );
 			$reason_code   = intval( $_POST['x_response_reason_code'] );
 
-			$member_id = rcp_get_member_id_from_profile_id( $anet_subscription_id );
+			$member_id = rcp_get_member_id_from_profile_id( 'anet_' . $anet_subscription_id );
 
 			if( empty( $member_id ) ) {
 				die( 'no member found' );
