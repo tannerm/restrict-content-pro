@@ -65,3 +65,76 @@ function rcp_is_authnet_subscriber( $user_id = 0 ) {
 
 	return (bool) apply_filters( 'rcp_is_authorizenet_subscriber', $ret, $user_id );
 }
+
+/**
+ * Process an update card form request for Authorize.net
+ *
+ * @access      private
+ * @since       2.7
+ */
+function rcp_authorizenet_update_billing_card( $member_id = 0, $member_obj ) {
+
+	global $rcp_options;
+
+	if( empty( $member_id ) ) {
+		return;
+	}
+
+	if( ! is_a( $member_obj, 'RCP_Member' ) ) {
+		return;
+	}
+
+	if( ! rcp_is_authnet_subscriber( $member_id ) ) {
+		return;
+	}
+
+	require_once RCP_PLUGIN_DIR . 'includes/libraries/anet_php_sdk/AuthorizeNet.php';
+
+	$api_login_id    = isset( $rcp_options['authorize_api_login'] )  ? sanitize_text_field( $rcp_options['authorize_api_login'] )  : '';
+	$transaction_key = isset( $rcp_options['authorize_txn_key'] )    ? sanitize_text_field( $rcp_options['authorize_txn_key'] )    : '';
+	$md5_hash_value  = isset( $rcp_options['authorize_hash_value'] ) ? sanitize_text_field( $rcp_options['authorize_hash_value'] ) : '';
+
+	$error          = '';
+	$card_number    = isset( $_POST['rcp_card_number'] )    && is_numeric( $_POST['rcp_card_number'] )    ? sanitize_text_field( $_POST['rcp_card_number'] )    : '';
+	$card_exp_month = isset( $_POST['rcp_card_exp_month'] ) && is_numeric( $_POST['rcp_card_exp_month'] ) ? sanitize_text_field( $_POST['rcp_card_exp_month'] ) : '';
+	$card_exp_year  = isset( $_POST['rcp_card_exp_year'] )  && is_numeric( $_POST['rcp_card_exp_year'] )  ? sanitize_text_field( $_POST['rcp_card_exp_year'] )  : '';
+	$card_cvc       = isset( $_POST['rcp_card_cvc'] )       && is_numeric( $_POST['rcp_card_cvc'] )       ? sanitize_text_field( $_POST['rcp_card_cvc'] )       : '';
+	$card_zip       = isset( $_POST['rcp_card_zip'] ) ? sanitize_text_field( $_POST['rcp_card_zip'] ) : '' ;
+
+	if ( empty( $card_number ) || empty( $card_exp_month ) || empty( $card_exp_year ) || empty( $card_cvc ) || empty( $card_zip ) ) {
+		$error = __( 'Please enter all required fields.', 'rcp' );
+	}
+
+	if ( empty( $error ) ) {
+
+		$member     = new RCP_Member( $member_id );
+		$profile_id = str_replace( 'anet_', '', $member->get_payment_profile_id() );
+
+		$arb        = new AuthorizeNetARB( $api_login_id, $transaction_key );
+		$arb->setSandbox( rcp_is_sandbox() );
+
+		$subscription = new AuthorizeNet_Subscription;
+		$subscription->creditCardCardNumber     = $card_number;
+		$subscription->creditCardExpirationDate = $card_exp_year . '-' . $card_exp_month;
+		$subscription->creditCardCardCode       = $card_cvc;
+
+		$response = $arb->updateSubscription( $profile_id, $subscription );
+
+		if( ! $response->isOK() || $response->isError() ) {
+
+			$error = $response->getErrorMessage();
+
+		}
+
+	}
+
+	if( ! empty( $error ) ) {
+
+		wp_redirect( add_query_arg( array( 'card' => 'not-updated', 'msg' => urlencode( $error ) ) ) ); exit;
+
+	}
+
+	wp_redirect( add_query_arg( array( 'card' => 'updated', 'msg' => '' ) ) ); exit;
+
+}
+add_action( 'rcp_update_billing_card', 'rcp_authorizenet_update_billing_card', 10, 2 );

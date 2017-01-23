@@ -1310,6 +1310,8 @@ function rcp_get_member_cancel_url( $user_id = 0 ) {
  */
 function rcp_member_can_update_billing_card( $user_id = 0 ) {
 
+	global $rcp_options;
+
 	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
@@ -1322,6 +1324,10 @@ function rcp_member_can_update_billing_card( $user_id = 0 ) {
 		$ret = true;
 
 	} elseif ( rcp_is_paypal_subscriber( $user_id ) && rcp_has_paypal_api_access() ) {
+
+		$ret = true;
+
+	} elseif ( rcp_is_authnet_subscriber( $user_id ) && ! empty( $rcp_options['authorize_api_login'] ) && ! empty( $rcp_options['authorize_txn_key'] ) ) {
 
 		$ret = true;
 
