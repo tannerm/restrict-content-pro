@@ -37,6 +37,39 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 	} // end init
 
 	/**
+	 * Validate additional fields during registration submission
+	 *
+	 * @since 2.7
+	 */
+	public function validate_fields() {
+
+		if( empty( $_POST['rcp_card_cvc'] ) ) {
+			rcp_errors()->add( 'missing_card_code', __( 'The security code you have entered is invalid', 'rcp' ), 'register' );
+		}
+
+		if( empty( $_POST['rcp_card_zip'] ) ) {
+			rcp_errors()->add( 'missing_card_zip', __( 'Please enter a Zip / Postal Code code', 'rcp' ), 'register' );
+		}
+
+		if ( empty( $this->api_login_id ) || empty( $this->transaction_key ) ) {
+			rcp_errors()->add( 'missing_authorize_settings', __( 'Authorize.net API Login ID or Transaction key is missing.', 'rcp' ), 'register' );
+		}
+
+		$sub_id = ! empty( $_POST['rcp_level'] ) ? absint( $_POST['rcp_level'] ) : false;
+
+		if( $sub_id ) {
+
+			$sub = rcp_get_subscription_length( $sub_id );
+
+			if( 'day' == $sub->duration_unit && $sub->duration < 7 ) {
+				rcp_errors()->add( 'invalid_authorize_length', __( 'Authorize.net does not permit subscriptions with renewal periods less than 7 days.', 'rcp' ), 'register' );
+			}
+
+		}
+
+	}
+
+	/**
 	 * Process registration
 	 *
 	 * @since 2.7
@@ -210,24 +243,6 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 		rcp_get_template_part( 'card-form' );
 		return ob_get_clean();
 	}
-
-	/**
-	 * Validate additional fields during registration submission
-	 *
-	 * @since 2.7
-	 */
-	public function validate_fields() {
-
-		if( empty( $_POST['rcp_card_cvc'] ) ) {
-			rcp_errors()->add( 'missing_card_code', __( 'The security code you have entered is invalid', 'rcp' ), 'register' );
-		}
-
-		if( empty( $_POST['rcp_card_zip'] ) ) {
-			rcp_errors()->add( 'missing_card_zip', __( 'Please enter a Zip / Postal Code code', 'rcp' ), 'register' );
-		}
-
-	}
-
 
 	/**
 	 * Determines if the silent post is valid by verifying the MD5 Hash
