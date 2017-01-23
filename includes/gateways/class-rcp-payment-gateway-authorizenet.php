@@ -204,7 +204,7 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 					'transaction_id'   => $transaction_id
 				);
 
-				$member->renew( $true );
+				$member->renew( true );
 				$payments->insert( $payment_data );
 				$member->add_note( __( 'Subscription renewed in Authorize.net', 'rcp' ) );
 
