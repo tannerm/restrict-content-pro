@@ -160,6 +160,23 @@ function rcp_member_levels_page()
 							</tr>
 							<tr class="form-field">
 								<th scope="row" valign="top">
+									<label for="trial_duration"><?php _e('Free Trial Duration', 'rcp'); ?></label>
+								</th>
+								<td>
+									<input type="text" id="trial_duration" style="width: 40px;" name="trial_duration" value="0"/>
+									<select name="trial_duration_unit" id="trial_duration_unit">
+										<option value="day"><?php _e('Day(s)', 'rcp'); ?></option>
+										<option value="month"><?php _e('Month(s)', 'rcp'); ?></option>
+										<option value="year"><?php _e('Year(s)', 'rcp'); ?></option>
+									</select>
+									<p class="description">
+										<?php _e('Length of time the free trial should last. Enter 0 for no free trial.', 'rcp'); ?>
+										<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Example</strong>: setting this to 7 days would give the member a 7-day free trial. The member would be billed at the end of the trial.', 'rcp' ); ?>"></span>
+									</p>
+								</td>
+							</tr>
+							<tr class="form-field">
+								<th scope="row" valign="top">
 									<label for="rcp-price"><?php _e('Price', 'rcp'); ?></label>
 								</th>
 								<td>

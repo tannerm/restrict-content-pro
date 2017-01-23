@@ -163,12 +163,13 @@ function rcp_validate_subscription_level() {
 		return;
 	}
 
-	var $        = jQuery;
-	var is_free  = false;
-	var options  = [];
-	var level    = $( '#rcp_subscription_levels input:checked' );
-	var full     = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
-	var lifetime = level.data( 'duration' ) == 'forever';
+	var $         = jQuery;
+	var is_free   = false;
+	var options   = [];
+	var level     = $( '#rcp_subscription_levels input:checked' );
+	var full      = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
+	var lifetime  = level.data( 'duration' ) == 'forever';
+	var has_trial = level.data( 'has-trial' ) == true;
 
 	rcp_validating_level = true;
 
@@ -194,6 +195,11 @@ function rcp_validate_subscription_level() {
 			$('#rcp_auto_renew_wrap').hide();
 		} else {
 			$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
+		}
+
+		if( has_trial ) {
+			$('#rcp_auto_renew_wrap input').prop('checked', true);
+			$('#rcp_auto_renew_wrap').hide();
 		}
 
 		$('#rcp_discount_code_wrap').show();
@@ -241,6 +247,7 @@ function rcp_validate_gateways() {
 	var level    = $( '#rcp_subscription_levels input:checked' );
 	var full     = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
 	var lifetime = level.data( 'duration' ) == 'forever';
+	var has_trial = level.data( 'has-trial' ) == true;
 	var gateway  = rcp_get_gateway();
 
 	rcp_validating_gateway = true;
@@ -300,14 +307,18 @@ function rcp_validate_gateways() {
 			});
 		}
 
-		if( 'yes' == gateway.data( 'supports-recurring' ) && ! full && ! lifetime ) {
+		if( 'yes' == gateway.data( 'supports-recurring' ) && ! full && ! lifetime && ! has_trial ) {
 
 			$('#rcp_auto_renew_wrap').show();
 
 		} else {
 
 			$('#rcp_auto_renew_wrap').hide();
-			$('#rcp_auto_renew_wrap input').attr('checked', false);
+			if ( has_trial ) {
+				$('#rcp_auto_renew_wrap input').prop('checked', true);
+			} else {
+				$('#rcp_auto_renew_wrap input').prop('checked', false);
+			}
 
 		}
 

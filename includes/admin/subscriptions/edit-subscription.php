@@ -1,6 +1,10 @@
 <?php
 $level = rcp_get_subscription_details( absint( urldecode( $_GET['edit_subscription'] ) ) );
 $level->role = empty( $level->role ) ? 'subscriber' : $level->role;
+
+global $rcp_levels_db;
+$trial_duration = ! empty( $level->trial_duration ) ? $level->trial_duration : 0;
+$trial_duration_unit = in_array( $level->trial_duration_unit, array( 'day', 'month', 'year' ) ) ? $level->trial_duration_unit : 'day'
 ?>
 <h2>
 	<?php _e( 'Edit Subscription Level:', 'rcp' ); echo ' ' . stripslashes( $level->name ); ?>
@@ -58,6 +62,24 @@ $level->role = empty( $level->role ) ? 'subscriber' : $level->role;
 					<p class="description"><?php _e( 'Length of time for this membership level. Enter 0 for unlimited.', 'rcp' ); ?></p>
 				</td>
 			</tr>
+			<tr class="form-field">
+				<th scope="row" valign="top">
+					<label for="trial_duration"><?php _e('Free Trial Duration', 'rcp'); ?></label>
+				</th>
+				<td>
+					<input type="text" id="trial_duration" style="width: 40px;" name="trial_duration" value="<?php echo absint( $trial_duration ); ?>"/>
+					<select name="trial_duration_unit" id="trial_duration_unit">
+						<option value="day" <?php selected( $trial_duration_unit, 'day' ); ?>><?php _e('Day(s)', 'rcp'); ?></option>
+						<option value="month" <?php selected( $trial_duration_unit, 'month' ); ?>><?php _e('Month(s)', 'rcp'); ?></option>
+						<option value="year" <?php selected( $trial_duration_unit, 'year' ); ?>><?php _e('Year(s)', 'rcp'); ?></option>
+					</select>
+					<p class="description">
+						<?php _e('Length of time the free trial should last. Enter 0 for no free trial.', 'rcp'); ?>
+						<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Example</strong>: setting this to 7 days would give the member a 7-day free trial. The member would be billed at the end of the trial.', 'rcp' ); ?>"></span>
+					</p>
+				</td>
+			</tr>
+
 			<tr class="form-field">
 				<th scope="row" valign="top">
 					<label for="rcp-price"><?php _e( 'Price', 'rcp' ); ?></label>
