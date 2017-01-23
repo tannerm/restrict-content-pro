@@ -131,8 +131,9 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 					$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
 				}
 
-				// set this user to active
-				$member->renew( $this->auto_renew );
+				$member->set_recurring( $this->auto_renew );
+				$member->set_expiration_date( $member->calculate_expiration() );
+				$member->set_status( 'active' );
 				$member->add_note( __( 'Subscription started in Authorize.net', 'rcp' ) );
 				$member->set_payment_profile_id( 'anet_' . $response->getSubscriptionId() );
 
@@ -211,7 +212,7 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 
 				$member->renew( true );
 				$payments->insert( $payment_data );
-				$member->add_note( __( 'Subscription renewed in Authorize.net', 'rcp' ) );
+				$member->add_note( __( 'Subscription processed in Authorize.net', 'rcp' ) );
 
 				do_action( 'rcp_authorizenet_silent_post_payment', $member, $this );
 
