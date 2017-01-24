@@ -474,14 +474,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						} elseif ( $event->type == 'invoice.payment_succeeded' ) {
 
-							$invoice                        = $payment_event;
+							$invoice = $payment_event;
 
 							// Successful subscription paid made with account credit where no charge is created
 							if ( empty( $payment_event->charge ) ) {
-								if ( 'in_' !== substr( $payment_event->id, 0, 3 ) ) {
-									$payment_data['amount']         = $payment_event->amount_due / rcp_stripe_get_currency_multiplier();
-									$payment_data['transaction_id'] = $payment_event->id;
-								}
+								$payment_data['amount']         = $payment_event->amount_due / rcp_stripe_get_currency_multiplier();
+								$payment_data['transaction_id'] = $payment_event->id;
 							} else {
 								$payment_data['amount']         = $payment_event->lines->data[0]->amount / rcp_stripe_get_currency_multiplier();
 								$payment_data['transaction_id'] = $payment_event->charge;
