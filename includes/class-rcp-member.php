@@ -163,7 +163,7 @@ class RCP_Member extends WP_User {
 	 * @since   2.4
 	 * @return  String Date in Y-m-d H:i:s format or "none" if is a lifetime member
 	*/
-	public function calculate_expiration( $force_now = false ) {
+	public function calculate_expiration( $force_now = false, $trial = false ) {
 
 		$pending_exp = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
 
@@ -195,7 +195,12 @@ class RCP_Member extends WP_User {
 
 		if( $subscription->duration > 0 ) {
 
-			$expire_timestamp  = strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59', $base_timestamp );
+			if ( $subscription->trial_duration > 0 && $trial ) {
+				$expire_timestamp  = strtotime( '+' . $subscription->trial_duration . ' ' . $subscription->trial_duration_unit . ' 23:59:59', $base_timestamp );
+			} else {
+				$expire_timestamp  = strtotime( '+' . $subscription->duration . ' ' . $subscription->duration_unit . ' 23:59:59', $base_timestamp );
+			}
+
 			$extension_days    = array( '29', '30', '31' );
 
 			if( in_array( date( 'j', $expire_timestamp ), $extension_days ) && 'day' !== $subscription->duration_unit ) {
