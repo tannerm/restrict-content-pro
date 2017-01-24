@@ -192,7 +192,8 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 				die( 'no member found' );
 			}
 
-			$member = new RCP_Member( $member_id );
+			$member   = new RCP_Member( $member_id );
+			$payments = new RCP_Payments();
 
 			if ( 1 == $response_code ) {
 
@@ -204,7 +205,7 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 					'date'             => date( 'Y-m-d H:i:s', strtotime( $_POST['timestamp'], current_time( 'timestamp' ) ) ),
 					'subscription'     => $member->get_subscription_name(),
 					'payment_type'     => 'Credit Card',
-					'subscription_key' => $member->subscription_key,
+					'subscription_key' => $member->get_subscription_key(),
 					'amount'           => $renewal_amount,
 					'user_id'          => $member->ID,
 					'transaction_id'   => $transaction_id
