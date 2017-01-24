@@ -1,9 +1,9 @@
 <?php
-global $rcp_options, $rcp_level, $post;
+global $rcp_options, $rcp_level, $post, $rcp_levels_db;
 
 $level = rcp_get_subscription_details( $rcp_level );
 $discount = ! empty( $_REQUEST['discount'] ) ? sanitize_text_field( $_REQUEST['discount'] ) : '';
-
+$has_trial = $rcp_levels_db->has_trial( $level->id );
 ?>
 
 <?php if( ! is_user_logged_in() ) { ?>
@@ -84,9 +84,11 @@ rcp_show_error_messages( 'register' ); ?>
 				<fieldset class="rcp_gateways_fieldset">
 					<legend><?php _e( 'Choose Your Payment Method', 'rcp' ); ?></legend>
 					<p id="rcp_payment_gateways"<?php echo $display; ?>>
-						<?php foreach( $gateways as $key => $gateway ) : $recurring = rcp_gateway_supports( $key, 'recurring' ) ? 'yes' : 'no'; ?>
+						<?php foreach( $gateways as $key => $gateway ) :
+							$recurring = rcp_gateway_supports( $key, 'recurring' ) ? 'yes' : 'no';
+							$trial    = rcp_gateway_supports( $key, 'trial' ) ? 'yes' : 'no'; ?>
 							<label class="rcp_gateway_option_label">
-								<input name="rcp_gateway" type="radio" class="rcp_gateway_option_input" value="<?php echo esc_attr( $key ); ?>" data-supports-recurring="<?php echo esc_attr( $recurring ); ?>">
+								<input name="rcp_gateway" type="radio" class="rcp_gateway_option_input" value="<?php echo esc_attr( $key ); ?>" data-supports-recurring="<?php echo esc_attr( $recurring ); ?>" data-supports-trial="<?php echo esc_attr( $trial ); ?>">
 								<?php echo esc_html( $gateway ); ?>
 							</label>
 						<?php endforeach; ?>
@@ -112,7 +114,7 @@ rcp_show_error_messages( 'register' ); ?>
 	<?php do_action( 'rcp_before_registration_submit_field' ); ?>
 
 	<p id="rcp_submit_wrap">
-		<input type="hidden" name="rcp_level" value="<?php echo absint( $rcp_level ); ?>"/>
+		<input type="hidden" name="rcp_level" value="<?php echo absint( $rcp_level ); ?>" <?php if ( ! empty( $has_trial ) ) { echo 'data-has-trial="true"'; } ?> />
 		<input type="hidden" name="rcp_register_nonce" value="<?php echo wp_create_nonce('rcp-register-nonce' ); ?>"/>
 		<input type="submit" name="rcp_submit_registration" id="rcp_submit" value="<?php esc_attr_e( apply_filters ( 'rcp_registration_register_button', __( 'Register', 'rcp' ) ) ); ?>"/>
 	</p>

@@ -108,9 +108,11 @@ rcp_show_error_messages( 'register' ); ?>
 			<fieldset class="rcp_gateways_fieldset">
 				<legend><?php _e( 'Choose Your Payment Method', 'rcp' ); ?></legend>
 				<p id="rcp_payment_gateways"<?php echo $display; ?>>
-					<?php foreach( $gateways as $key => $gateway ) : $recurring = rcp_gateway_supports( $key, 'recurring' ) ? 'yes' : 'no'; ?>
+					<?php foreach( $gateways as $key => $gateway ) :
+						$recurring = rcp_gateway_supports( $key, 'recurring' ) ? 'yes' : 'no';
+						$trial    = rcp_gateway_supports( $key, 'trial' ) ? 'yes' : 'no'; ?>
 						<label for="rcp_gateway_<?php echo esc_attr( $key ); ?>" class="rcp_gateway_option_label">
-							<input id="rcp_gateway_<?php echo esc_attr( $key );?>" name="rcp_gateway" type="radio" class="rcp_gateway_option_input" value="<?php echo esc_attr( $key ); ?>" data-supports-recurring="<?php echo esc_attr( $recurring ); ?>">
+							<input id="rcp_gateway_<?php echo esc_attr( $key );?>" name="rcp_gateway" type="radio" class="rcp_gateway_option_input" value="<?php echo esc_attr( $key ); ?>" data-supports-recurring="<?php echo esc_attr( $recurring ); ?>" data-supports-trial="<?php echo esc_attr( $trial ); ?>">
 							<?php echo esc_html( $gateway ); ?>
 						</label>
 					<?php endforeach; ?>

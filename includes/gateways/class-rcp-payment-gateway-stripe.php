@@ -27,6 +27,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		$this->supports[] = 'recurring';
 		$this->supports[] = 'fees';
 		$this->supports[] = 'gateway-submits-form';
+		$this->supports[] = 'trial';
 
 		if( $this->test_mode ) {
 
@@ -477,7 +478,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							$invoice = $payment_event;
 
 							// Successful subscription paid made with account credit, or free trial, where no charge is created
-							if ( 'in_' !== substr( $payment_event->id, 0, 3 ) ) {
+							if ( 'in_' !== substr( $invoice->id, 0, 3 ) ) {
 								$payment_data['amount']         = $invoice->amount_due / rcp_stripe_get_currency_multiplier();
 								$payment_data['transaction_id'] = $invoice->id;
 							} else {
