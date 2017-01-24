@@ -171,7 +171,7 @@ function rcp_member_levels_page()
 									</select>
 									<p class="description">
 										<?php _e('Length of time the free trial should last. Enter 0 for no free trial.', 'rcp'); ?>
-										<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Example</strong>: setting this to 7 days would give the member a 7-day free trial. The member would be billed at the end of the trial.', 'rcp' ); ?>"></span>
+										<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Example</strong>: setting this to 7 days would give the member a 7-day free trial. The member would be billed at the end of the trial.<p><strong>Note:</strong> If you enable a free trial, the regular subscription duration and price must be greater than 0.</p>', 'rcp' ); ?>"></span>
 									</p>
 								</td>
 							</tr>

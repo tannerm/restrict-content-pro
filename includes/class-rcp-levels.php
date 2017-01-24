@@ -232,6 +232,16 @@ class RCP_Levels {
 			return false;
 		}
 
+		/**
+		 * Validate the trial settings.
+		 * If a trial is enabled, the level's regular price and duration must be > 0.
+		 */
+		if ( $args['trial_duration'] > 0 ) {
+			if ( $args['price'] <= 0 || $args['duration'] <= 0 ) {
+				return false;
+			}
+		}
+
 		$add = $wpdb->query(
 			$wpdb->prepare(
 				"INSERT INTO {$this->db_name} SET
@@ -319,6 +329,16 @@ class RCP_Levels {
 		// Validate fee value
 		if ( false === $this->valid_amount( $args['fee'] ) ) {
 			return false;
+		}
+
+		/**
+		 * Validate the trial settings.
+		 * If a trial is enabled, the level's regular price and duration must be > 0.
+		 */
+		if ( $args['trial_duration'] > 0 ) {
+			if ( $args['price'] <= 0 || $args['duration'] <= 0 ) {
+				return false;
+			}
 		}
 
 		$update = $wpdb->query(
