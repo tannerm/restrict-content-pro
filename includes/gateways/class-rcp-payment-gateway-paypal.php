@@ -390,7 +390,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					$member->set_payment_profile_id( $posted['subscr_id'] );
 
 					if ( $has_trial ) {
-						// @todo expiration date
+						$trial_expires = $member->calculate_expiration( true, true );
+						$member->set_expiration_date( $trial_expires );
 						$member->set_status( 'active' );
 						$member->set_recurring( true );
 					}
