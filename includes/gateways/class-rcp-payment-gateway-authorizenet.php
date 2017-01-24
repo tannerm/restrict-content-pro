@@ -192,7 +192,8 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 				die( 'no member found' );
 			}
 
-			$member = new RCP_Member( $member_id );
+			$member   = new RCP_Member( $member_id );
+			$payments = new RCP_Payments();
 
 			if ( 1 == $response_code ) {
 
