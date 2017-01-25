@@ -273,7 +273,7 @@ function rcp_get_email_templates() {
  */
 function rcp_get_emails_tags_list() {
 	// The list
-	$list = '';
+	$list = '<ul>';
 
 	// Get all tags
 	$emails = new RCP_Emails;
@@ -282,9 +282,16 @@ function rcp_get_emails_tags_list() {
 	// Check
 	if( count( $email_tags ) > 0 ) {
 		foreach( $email_tags as $email_tag ) {
-			$list .= '{' . $email_tag['tag'] . '} - ' . $email_tag['description'] . '<br />';
+			$list .= '<li><em>%' . $email_tag['tag'] . '%</em> - ' . $email_tag['description'] . '</li>';
 		}
 	}
+
+	// Backwards compatibility for displaying extra tags from add-ons, etc.
+	ob_start();
+	do_action( 'rcp_available_template_tags' );
+	$list .= ob_get_clean();
+
+	$list .= '</ul>';
 
 	// Return the list
 	return $list;
