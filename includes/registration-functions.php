@@ -684,7 +684,7 @@ function rcp_registration_total( $echo = true ) {
 	$trial_duration_unit = $rcp_levels_db->trial_duration_unit( $level->id );
 
 	if ( ! empty( $trial_duration ) ) {
-		$total = sprintf( __( 'Free trial - %s', 'rcp' ), $trial_duration . ' ' .  $trial_duration_unit );
+		$total = sprintf( __( 'Free trial - %s', 'rcp' ), $trial_duration . ' ' .  rcp_filter_duration_unit( $trial_duration_unit, $trial_duration ) );
 	}
 
 	$total = apply_filters( 'rcp_registration_total', $total );
