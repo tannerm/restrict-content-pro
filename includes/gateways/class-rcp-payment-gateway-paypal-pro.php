@@ -99,6 +99,13 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		}
 
+		if ( $this->auto_renew && ! empty( $this->subscription_data['trial_duration'] ) ) {
+			$args['TRIALBILLINGPERIOD']      = ucwords( $this->subscription_data['trial_duration_unit'] );
+			$args['TRIALBILLINGFREQUENCY']   = $this->subscription_data['trial_duration'];
+			$args['TRIALTOTALBILLINGCYCLES'] = 1;
+			$args['TRIALAMT']                = 0;
+		}
+
 		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
 		$body    = wp_remote_retrieve_body( $request );
 		$code    = wp_remote_retrieve_response_code( $request );
