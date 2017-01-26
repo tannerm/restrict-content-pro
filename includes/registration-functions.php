@@ -159,6 +159,8 @@ function rcp_process_registration() {
 
 	$old_subscription_id = $member->get_subscription_id();
 
+	$member_has_trialed = $member->has_trialed();
+
 	if( $old_subscription_id ) {
 		update_user_meta( $user_data['id'], '_rcp_old_subscription_id', $old_subscription_id );
 	}
@@ -235,7 +237,7 @@ function rcp_process_registration() {
 		}
 
 		// Remove trialing status, if it exists
-		if ( ! $trial_duration || $trial_duration && $member->has_trialed() ) {
+		if ( ! $trial_duration || $trial_duration && $member_has_trialed ) {
 			delete_user_meta( $user_data['id'], 'rcp_is_trialing' );
 		} else {
 			update_user_meta( $user_data['id'], 'rcp_has_trialed', 'yes' );
@@ -266,6 +268,7 @@ function rcp_process_registration() {
 			'new_user'            => $user_data['need_new'],
 			'trial_duration'      => $trial_duration,
 			'trial_duration_unit' => $trial_duration_unit,
+			'trial_eligible'      => ! $member_has_trialed,
 			'post_data'           => $_POST
 		);
 

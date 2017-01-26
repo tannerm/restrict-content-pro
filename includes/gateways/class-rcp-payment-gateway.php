@@ -88,4 +88,11 @@ class RCP_Payment_Gateway {
 		rcp_errors()->add( $code, $message, 'register' );
 	}
 
+	public function is_trial() {
+		return ! empty( $this->subscription_data['trial_eligible'] )
+			&& ! empty( $this->subscription_data['trial_duration'] )
+			&& ! empty( $this->subscription_data['trial_duration_unit'] )
+		;
+	}
+
 }

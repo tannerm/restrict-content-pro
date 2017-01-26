@@ -66,7 +66,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			$subscriptions[ $subscription->id ] = array(
 				'description' => $subscription->description,
 				'name'        => $subscription->name,
-				'panelLabel'  => ! empty( $subscription->trial_duration ) && ! rcp_has_used_trial() ? __( 'Start Trial', 'rcp' ) : __( 'Register', 'rcp' ),
+				'panelLabel'  => $this->is_trial() ? __( 'Start Trial', 'rcp' ) : __( 'Register', 'rcp' ),
 			);
 		}
 

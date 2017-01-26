@@ -99,7 +99,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		}
 
-		if ( $this->auto_renew && ! empty( $this->subscription_data['trial_duration'] ) && ! rcp_has_used_trial() ) {
+		if ( $this->auto_renew && $this->is_trial() ) {
 			$args['TRIALBILLINGPERIOD']      = ucwords( $this->subscription_data['trial_duration_unit'] );
 			$args['TRIALBILLINGFREQUENCY']   = $this->subscription_data['trial_duration'];
 			$args['TRIALTOTALBILLINGCYCLES'] = 1;
