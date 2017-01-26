@@ -232,7 +232,7 @@ function rcp_process_registration() {
 		}
 
 		// Remove trialing status, if it exists
-		if ( ! $trial_duration ) {
+		if ( ! $trial_duration || $trial_duration && $member->has_trialed() ) {
 			delete_user_meta( $user_data['id'], 'rcp_is_trialing' );
 		} else {
 			update_user_meta( $user_data['id'], 'rcp_has_trialed', 'yes' );
@@ -683,7 +683,7 @@ function rcp_registration_total( $echo = true ) {
 	$trial_duration      = $rcp_levels_db->trial_duration( $level->id );
 	$trial_duration_unit = $rcp_levels_db->trial_duration_unit( $level->id );
 
-	if ( ! empty( $trial_duration ) ) {
+	if ( ! empty( $trial_duration ) && ! rcp_has_used_trial() ) {
 		$total = sprintf( __( 'Free trial - %s', 'rcp' ), $trial_duration . ' ' .  rcp_filter_duration_unit( $trial_duration_unit, $trial_duration ) );
 	}
 

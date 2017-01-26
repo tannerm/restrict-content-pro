@@ -323,7 +323,7 @@ function rcp_validate_gateways() {
 			}
 
 			// Check and hide if both level and gateway support trial
-			if ( level_has_trial && 'yes' == gateway.data( 'supports-trial' ) ) {
+			if ( level_has_trial && 'yes' == gateway.data( 'supports-trial' ) && ! rcp_script_options.user_has_trialed ) {
 				$('#rcp_auto_renew_wrap input').prop('checked', true);
 				$('#rcp_auto_renew_wrap').hide();
 			}

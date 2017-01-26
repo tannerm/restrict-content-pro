@@ -205,7 +205,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				}
 
 				// Is this a free trial?
-				if ( ! empty( $this->subscription_data['trial_duration'] ) ) {
+				if ( ! empty( $this->subscription_data['trial_duration'] ) && ! $member->has_trialed() ) {
 					$sub_args['trial_end'] = strtotime( $this->subscription_data['trial_duration'] . ' ' . $this->subscription_data['trial_duration_unit'], current_time( 'timestamp' ) );
 				}
 

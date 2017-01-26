@@ -197,7 +197,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					unset( $args['INITAMT'] );
 				}
 
-				if ( $this->auto_renew && ! empty( $this->subscription_data['trial_duration'] ) ) {
+				if ( $this->auto_renew && ! empty( $this->subscription_data['trial_duration'] ) && ! rcp_has_used_trial() ) {
 					$args['TRIALBILLINGPERIOD']      = ucwords( $this->subscription_data['trial_duration_unit'] );
 					$args['TRIALBILLINGFREQUENCY']   = $this->subscription_data['trial_duration'];
 					$args['TRIALTOTALBILLINGCYCLES'] = 1;

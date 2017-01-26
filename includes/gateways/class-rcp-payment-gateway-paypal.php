@@ -139,7 +139,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			}
 
-			if ( ! empty( $this->subscription_data['trial_duration'] ) ) {
+			if ( ! empty( $this->subscription_data['trial_duration'] ) && ! rcp_has_used_trial() ) {
 
 				$paypal_args['a1'] = 0;
 				$paypal_args['p1'] = $this->subscription_data['trial_duration'];

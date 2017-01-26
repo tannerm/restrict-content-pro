@@ -327,7 +327,7 @@ function rcp_show_subscription_level( $level_id = 0, $user_id = 0 ) {
 		||
 		( $sub_price == '0' && $user_level == $level_id )
 		||
-		( ! empty( $trial_duration ) && $used_trial )
+		( ! empty( $trial_duration ) && $used_trial && ( $user_level == $level_id && ! rcp_is_expired( $user_id ) ) )
 	) {
 		$ret = false;
 	}
