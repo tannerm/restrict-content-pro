@@ -120,8 +120,7 @@ function rcp_process_registration() {
 				'supports' => $gateway_obj->supports
 			),
 			'level'            => array(
-				'trial'        => ! empty( $trial_duration ),
-				'trial_period' => $trial_duration . ' ' .  rcp_filter_duration_unit( $trial_duration_unit, $trial_duration )
+				'trial'        => ! empty( $trial_duration )
 			)
 		) );
 
