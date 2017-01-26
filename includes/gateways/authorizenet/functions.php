@@ -11,8 +11,13 @@ function rcp_authnet_cancel_member( $member_id = 0 ) {
 	global $rcp_options;
 
 	$ret             = true;
-	$api_login_id    = isset( $rcp_options['authorize_api_login'] )  ? sanitize_text_field( $rcp_options['authorize_api_login'] )  : '';
-	$transaction_key = isset( $rcp_options['authorize_txn_key'] )    ? sanitize_text_field( $rcp_options['authorize_txn_key'] )    : '';
+	if ( rcp_is_sandbox() ) {
+		$api_login_id    = isset( $rcp_options['authorize_test_api_login'] ) ? sanitize_text_field( $rcp_options['authorize_test_api_login'] ) : '';
+		$transaction_key = isset( $rcp_options['authorize_test_txn_key'] ) ? sanitize_text_field( $rcp_options['authorize_test_txn_key'] ) : '';
+	} else {
+		$api_login_id    = isset( $rcp_options['authorize_api_login'] ) ? sanitize_text_field( $rcp_options['authorize_api_login'] ) : '';
+		$transaction_key = isset( $rcp_options['authorize_txn_key'] ) ? sanitize_text_field( $rcp_options['authorize_txn_key'] ) : '';
+	}
 	$md5_hash_value  = isset( $rcp_options['authorize_hash_value'] ) ? sanitize_text_field( $rcp_options['authorize_hash_value'] ) : '';
 
 	require_once RCP_PLUGIN_DIR . 'includes/libraries/anet_php_sdk/AuthorizeNet.php';
@@ -90,8 +95,13 @@ function rcp_authorizenet_update_billing_card( $member_id = 0, $member_obj ) {
 
 	require_once RCP_PLUGIN_DIR . 'includes/libraries/anet_php_sdk/AuthorizeNet.php';
 
-	$api_login_id    = isset( $rcp_options['authorize_api_login'] )  ? sanitize_text_field( $rcp_options['authorize_api_login'] )  : '';
-	$transaction_key = isset( $rcp_options['authorize_txn_key'] )    ? sanitize_text_field( $rcp_options['authorize_txn_key'] )    : '';
+	if ( rcp_is_sandbox() ) {
+		$api_login_id    = isset( $rcp_options['authorize_test_api_login'] ) ? sanitize_text_field( $rcp_options['authorize_test_api_login'] ) : '';
+		$transaction_key = isset( $rcp_options['authorize_test_txn_key'] ) ? sanitize_text_field( $rcp_options['authorize_test_txn_key'] ) : '';
+	} else {
+		$api_login_id    = isset( $rcp_options['authorize_api_login'] ) ? sanitize_text_field( $rcp_options['authorize_api_login'] ) : '';
+		$transaction_key = isset( $rcp_options['authorize_txn_key'] ) ? sanitize_text_field( $rcp_options['authorize_txn_key'] ) : '';
+	}
 	$md5_hash_value  = isset( $rcp_options['authorize_hash_value'] ) ? sanitize_text_field( $rcp_options['authorize_hash_value'] ) : '';
 
 	$error          = '';

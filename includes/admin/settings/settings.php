@@ -547,33 +547,53 @@ function rcp_settings_page() {
 								<h3><?php _e('Authorize.net Settings', 'rcp'); ?></h3>
 							</th>
 						</tr>
-						<?php // 2checkout Secret Word ?>
+						<?php // Authorize.net Test Login ID ?>
 						<tr>
 							<th>
-								<label for="rcp_settings[authorize_api_login]"><?php _e( 'API Login ID', 'rcp' ); ?></label>
+								<label for="rcp_settings[authorize_test_api_login]"><?php _e( 'Test API Login ID', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<input class="regular-text" id="rcp_settings[authorize_api_login]" style="width: 300px;" name="rcp_settings[authorize_api_login]" value="<?php if(isset($rcp_options['authorize_api_login'])) { echo $rcp_options['authorize_api_login']; } ?>"/>
-								<p class="description"><?php _e('Enter your authorize.net API login ID.', 'rcp'); ?></p>
+								<input class="regular-text" id="rcp_settings[authorize_test_api_login]" style="width: 300px;" name="rcp_settings[authorize_test_api_login]" value="<?php if(isset($rcp_options['authorize_test_api_login'])) { echo esc_attr( $rcp_options['authorize_test_api_login'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your authorize.net test API login ID.', 'rcp'); ?></p>
 							</td>
 						</tr>
-						<?php // 2checkout Test Private Key ?>
+						<?php // Authorize.net Test Transaction Key ?>
 						<tr>
 							<th>
-								<label for="rcp_settings[authorize_txn_key]"><?php _e( 'Transaction Key', 'rcp' ); ?></label>
+								<label for="rcp_settings[authorize_test_txn_key]"><?php _e( 'Test Transaction Key', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<input class="regular-text" id="rcp_settings[authorize_txn_key]" style="width: 300px;" name="rcp_settings[authorize_txn_key]" value="<?php if(isset($rcp_options['authorize_txn_key'])) { echo $rcp_options['authorize_txn_key']; } ?>"/>
-								<p class="description"><?php _e('Enter your authorize.net transaction key', 'rcp'); ?></p>
+								<input class="regular-text" id="rcp_settings[authorize_test_txn_key]" style="width: 300px;" name="rcp_settings[authorize_test_txn_key]" value="<?php if(isset($rcp_options['authorize_test_txn_key'])) { echo esc_attr( $rcp_options['authorize_test_txn_key'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your authorize.net test transaction key', 'rcp'); ?></p>
 							</td>
 						</tr>
-						<?php // 2checkout Test Publishable Key ?>
+						<?php // Authorize.net Live Login ID ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[authorize_api_login]"><?php _e( 'Live API Login ID', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[authorize_api_login]" style="width: 300px;" name="rcp_settings[authorize_api_login]" value="<?php if(isset($rcp_options['authorize_api_login'])) { echo esc_attr( $rcp_options['authorize_api_login'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your authorize.net live API login ID.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // Authorize.net Live Transaction Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[authorize_txn_key]"><?php _e( 'Live Transaction Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[authorize_txn_key]" style="width: 300px;" name="rcp_settings[authorize_txn_key]" value="<?php if(isset($rcp_options['authorize_txn_key'])) { echo  esc_attr( $rcp_options['authorize_txn_key'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your authorize.net live transaction key', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // Authorize.net MD5 Hash ?>
 						<tr>
 							<th>
 								<label for="rcp_settings[authorize_hash_value]"><?php _e( 'MD5-Hash Verification Key', 'rcp' ); ?></label>
 							</th>
 							<td>
-								<input class="regular-text" id="rcp_settings[authorize_hash_value]" style="width: 300px;" name="rcp_settings[authorize_hash_value]" value="<?php if(isset($rcp_options['authorize_hash_value'])) { echo $rcp_options['authorize_hash_value']; } ?>"/>
+								<input class="regular-text" id="rcp_settings[authorize_hash_value]" style="width: 300px;" name="rcp_settings[authorize_hash_value]" value="<?php if(isset($rcp_options['authorize_hash_value'])) { echo esc_attr( $rcp_options['authorize_hash_value'] ); } ?>"/>
 								<p class="description"><?php _e('Enter the MD5 Hash verification key for your Silent Post URL.', 'rcp'); ?></p>
 							</td>
 						</tr>

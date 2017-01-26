@@ -27,8 +27,14 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
 
-		$this->api_login_id    = isset( $rcp_options['authorize_api_login'] )  ? sanitize_text_field( $rcp_options['authorize_api_login'] )  : '';
-		$this->transaction_key = isset( $rcp_options['authorize_txn_key'] )    ? sanitize_text_field( $rcp_options['authorize_txn_key'] )    : '';
+		if ( $this->test_mode ) {
+			$this->api_login_id    = isset( $rcp_options['authorize_test_api_login'] ) ? sanitize_text_field( $rcp_options['authorize_test_api_login'] ) : '';
+			$this->transaction_key = isset( $rcp_options['authorize_test_txn_key'] ) ? sanitize_text_field( $rcp_options['authorize_test_txn_key'] ) : '';
+		} else {
+			$this->api_login_id    = isset( $rcp_options['authorize_api_login'] ) ? sanitize_text_field( $rcp_options['authorize_api_login'] ) : '';
+			$this->transaction_key = isset( $rcp_options['authorize_txn_key'] ) ? sanitize_text_field( $rcp_options['authorize_txn_key'] ) : '';
+		}
+
 		$this->md5_hash_value  = isset( $rcp_options['authorize_hash_value'] ) ? sanitize_text_field( $rcp_options['authorize_hash_value'] ) : '';
 
 		require_once RCP_PLUGIN_DIR . 'includes/libraries/anet_php_sdk/AuthorizeNet.php';
