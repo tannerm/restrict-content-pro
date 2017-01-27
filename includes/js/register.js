@@ -91,27 +91,6 @@ jQuery(document).ready(function($) {
 			$('.rcp_message.error', form).remove();
 
 		}).success(function( response ) {
-
-			if ( response.success ) {
-
-				setTimeout( function() {
-					$('body').trigger( 'rcp_register_form_submission', [response, form_id] );
-
-					// Submit the form if the total is 0 or if the gateway doesn't handle the submission.
-					if ( response.data.total == 0 || ! gateway_submits_form ) {
-						submission_form.submit();
-					}
-				}, 1 );
-
-
-			} else {
-
-				$('#rcp_submit', form).val( submit_register_text );
-				$('#rcp_submit', form).before( response.data.errors );
-				$('#rcp_register_nonce', form).val( response.data.nonce );
-				form.unblock();
-				rcp_processing = false;
-			}
 		}).done(function( response ) {
 		}).fail(function( response ) {
 			console.log( response );
@@ -128,15 +107,30 @@ jQuery(document).ready(function($) {
 		}
 
 		// Check for the required properties
-		if ( ! xhr.hasOwnProperty('responseJSON') || ! xhr.responseJSON.hasOwnProperty('data') || xhr.responseJSON.data.success !== true ) {
+		if ( ! xhr.hasOwnProperty('responseJSON') || ! xhr.responseJSON.hasOwnProperty('data') ) {
+			return;
+		}
+
+		if ( xhr.responseJSON.data.success !== true ) {
+			$('#rcp_registration_form #rcp_submit').val( rcp_script_options.register );
+			$('#rcp_registration_form #rcp_submit').before( xhr.responseJSON.data.errors );
+			$('#rcp_registration_form #rcp_register_nonce').val( xhr.responseJSON.data.nonce );
+			$('#rcp_registration_form').unblock();
+			rcp_processing = false;
 			return;
 		}
 
 		// Check if gateway supports form submission
-		if ( xhr.responseJSON.data.gateway.supports.indexOf('gateway-submits-form') !== -1 ) {
+		if ( xhr.responseJSON.data.gateway.supports && xhr.responseJSON.data.gateway.supports.indexOf('gateway-submits-form') !== -1 ) {
 			gateway_submits_form = true;
 		} else {
 			gateway_submits_form = false;
+		}
+
+		$('body').trigger('rcp_register_form_submission', [xhr.responseJSON.data, event.target.forms.rcp_registration_form.id] );
+
+		if ( xhr.responseJSON.data.total == 0 || ! gateway_submits_form ) {
+			document.getElementById('rcp_registration_form').submit();
 		}
 
 	});
@@ -163,12 +157,13 @@ function rcp_validate_subscription_level() {
 		return;
 	}
 
-	var $        = jQuery;
-	var is_free  = false;
-	var options  = [];
-	var level    = $( '#rcp_subscription_levels input:checked' );
-	var full     = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
-	var lifetime = level.data( 'duration' ) == 'forever';
+	var $         = jQuery;
+	var is_free   = false;
+	var options   = [];
+	var level     = $( '#rcp_subscription_levels input:checked' );
+	var full      = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
+	var lifetime  = level.data( 'duration' ) == 'forever';
+	var level_has_trial = level.data( 'has-trial' ) == true;
 
 	rcp_validating_level = true;
 
@@ -194,6 +189,11 @@ function rcp_validate_subscription_level() {
 			$('#rcp_auto_renew_wrap').hide();
 		} else {
 			$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
+		}
+
+		if( level_has_trial ) {
+			$('#rcp_auto_renew_wrap input').prop('checked', true);
+			$('#rcp_auto_renew_wrap').hide();
 		}
 
 		$('#rcp_discount_code_wrap').show();
@@ -239,8 +239,13 @@ function rcp_validate_gateways() {
 	var is_free  = false;
 	var options  = [];
 	var level    = $( '#rcp_subscription_levels input:checked' );
+	// register-single.php template loaded
+	if ( ! level.val() ) {
+		var level = $('#rcp_submit_wrap input[name="rcp_level"]');
+	}
 	var full     = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
 	var lifetime = level.data( 'duration' ) == 'forever';
+	var level_has_trial = level.data( 'has-trial' ) == true;
 	var gateway  = rcp_get_gateway();
 
 	rcp_validating_gateway = true;
@@ -254,8 +259,6 @@ function rcp_validate_gateways() {
 	if( is_free ) {
 
 		$('.rcp_gateway_fields').hide();
-		$('#rcp_auto_renew_wrap').hide();
-		$('#rcp_auto_renew_wrap input').attr('checked', false);
 		$('#rcp_gateway_extra_fields').remove();
 
 	} else {
@@ -300,16 +303,31 @@ function rcp_validate_gateways() {
 			});
 		}
 
-		if( 'yes' == gateway.data( 'supports-recurring' ) && ! full && ! lifetime ) {
-
+		// Auto Renew checkbox
+		if ( 'yes' == gateway.data('supports-recurring') ) {
+			// Set up defaults
+			$('#rcp_auto_renew_wrap input').prop('checked', false);
 			$('#rcp_auto_renew_wrap').show();
 
+			// Uncheck and hide if free level, lifetime level, or 100% discount applied
+			// @todo one-time discounts
+			if ( full || lifetime || is_free ) {
+				$('#rcp_auto_renew_wrap input').prop('checked', false);
+				$('#rcp_auto_renew_wrap').hide();
+			}
+
+			// Check and hide if both level and gateway support trial
+			if ( level_has_trial && 'yes' == gateway.data( 'supports-trial' ) && ! rcp_script_options.user_has_trialed ) {
+				$('#rcp_auto_renew_wrap input').prop('checked', true);
+				$('#rcp_auto_renew_wrap').hide();
+			}
+
 		} else {
-
+			// Uncheck and hide since gateway doesn't support recurring
+			$('#rcp_auto_renew_wrap input').prop('checked', false);
 			$('#rcp_auto_renew_wrap').hide();
-			$('#rcp_auto_renew_wrap input').attr('checked', false);
-
 		}
+
 
 		$('#rcp_discount_code_wrap').show();
 

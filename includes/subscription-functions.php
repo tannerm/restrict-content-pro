@@ -306,6 +306,8 @@ function rcp_generate_subscription_key() {
  */
 function rcp_show_subscription_level( $level_id = 0, $user_id = 0 ) {
 
+	global $rcp_levels_db;
+
 	if( empty( $user_id ) )
 		$user_id = get_current_user_id();
 
@@ -314,9 +316,19 @@ function rcp_show_subscription_level( $level_id = 0, $user_id = 0 ) {
 	$user_level = rcp_get_subscription_id( $user_id );
 	$sub_length = rcp_get_subscription_length( $level_id );
 	$sub_price 	= rcp_get_subscription_price( $level_id );
+	$used_trial = rcp_has_used_trial( $user_id );
+	$trial_duration = $rcp_levels_db->trial_duration( $level_id );
 
 	// Don't show free trial if user has already used it. Don't show if sub is free and user is already free
-	if( ( is_user_logged_in() && $sub_price == '0' && $sub_length->duration > 0 && rcp_has_used_trial( $user_id ) ) || ( is_user_logged_in() && $sub_price == '0' && $user_level == $level_id ) ) {
+	if (
+		is_user_logged_in()
+		&&
+		( $sub_price == '0' && $sub_length->duration > 0 && $used_trial )
+		||
+		( $sub_price == '0' && $user_level == $level_id )
+		||
+		( ! empty( $trial_duration ) && $used_trial && ( $user_level == $level_id && ! rcp_is_expired( $user_id ) ) )
+	) {
 		$ret = false;
 	}
 

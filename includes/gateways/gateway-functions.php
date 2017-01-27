@@ -100,7 +100,7 @@ function rcp_gateway_supports( $gateway = 'paypal', $item = 'recurring' ) {
 	if( is_array( $gateway ) && isset( $gateway['class'] ) ) {
 
 		$gateway = new $gateway['class'];
-		$ret     = $gateway->supports( 'recurring' );
+		$ret     = $gateway->supports( sanitize_text_field( $item ) );
 
 	}
 

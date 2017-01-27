@@ -27,6 +27,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
+		$this->supports[] = 'trial';
 
 		if( $this->test_mode ) {
 
@@ -59,6 +60,15 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		global $rcp_options;
 
+		if ( is_user_logged_in() ) {
+			$user_data  = get_userdata( $this->user_id );
+			$first_name = $user_data->first_name;
+			$last_name  = $user_data->last_name;
+		} else {
+			$first_name = $_POST['rcp_user_first'];
+			$last_name  = $_POST['rcp_user_last'];
+		}
+
 		$args = array(
 			'USER'               => $this->username,
 			'PWD'                => $this->password,
@@ -75,6 +85,12 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'CUSTOM'             => $this->user_id,
 			'NOTIFYURL'          => add_query_arg( 'listener', 'EIPN', home_url( 'index.php' ) ),
 			'EMAIL'              => $this->email,
+			'FIRSTNAME'          => sanitize_text_field( $first_name ),
+			'LASTNAME'           => sanitize_text_field( $last_name ),
+			'STREET'             => sanitize_text_field( $_POST['rcp_card_address'] ),
+			'CITY'               => sanitize_text_field( $_POST['rcp_card_city'] ),
+			'STATE'              => sanitize_text_field( $_POST['rcp_card_state'] ),
+			'COUNTRYCODE'        => sanitize_text_field( $_POST['rcp_card_country'] ),
 			'CREDITCARDTYPE'     => '',
 			'ACCT'               => sanitize_text_field( $_POST['rcp_card_number'] ),
 			'EXPDATE'            => sanitize_text_field( $_POST['rcp_card_exp_month'] . $_POST['rcp_card_exp_year'] ), // needs to be in the format 062019
@@ -96,6 +112,13 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 				$args['INITAMT'] = $initamt;
 			}
 
+		}
+
+		if ( $this->auto_renew && $this->is_trial() ) {
+			$args['TRIALBILLINGPERIOD']      = ucwords( $this->subscription_data['trial_duration_unit'] );
+			$args['TRIALBILLINGFREQUENCY']   = $this->subscription_data['trial_duration'];
+			$args['TRIALTOTALBILLINGCYCLES'] = 1;
+			$args['TRIALAMT']                = 0;
 		}
 
 		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
@@ -170,7 +193,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 	public function fields() {
 
 		ob_start();
-		rcp_get_template_part( 'card-form' );
+		rcp_get_template_part( 'card-form', 'full' );
 		return ob_get_clean();
 	}
 
@@ -183,6 +206,22 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		if( ! rcp_has_paypal_api_access() ) {
 			$this->add_error( 'no_paypal_api', __( 'You have not configured PayPal API access. Please configure it in Restrict &rarr; Settings', 'rcp' ) );
+		}
+
+		if( empty( $_POST['rcp_card_address'] ) ) {
+			$this->add_error( 'missing_card_address', __( 'The address you have entered is invalid', 'rcp' ) );
+		}
+
+		if( empty( $_POST['rcp_card_city'] ) ) {
+			$this->add_error( 'missing_card_city', __( 'The city you have entered is invalid', 'rcp' ) );
+		}
+
+		if( empty( $_POST['rcp_card_state'] ) ) {
+			$this->add_error( 'missing_card_state', __( 'The state you have entered is invalid', 'rcp' ) );
+		}
+
+		if( empty( $_POST['rcp_card_country'] ) ) {
+			$this->add_error( 'missing_card_country', __( 'The country you have entered is invalid', 'rcp' ) );
 		}
 
 		if( empty( $_POST['rcp_card_number'] ) ) {
