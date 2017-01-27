@@ -26,6 +26,7 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
+		$this->supports[]  = 'trial';
 
 		if ( $this->test_mode ) {
 			$this->api_login_id    = isset( $rcp_options['authorize_test_api_login'] ) ? sanitize_text_field( $rcp_options['authorize_test_api_login'] ) : '';
@@ -124,6 +125,11 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 			$subscription->billToFirstName = $fname;
 			$subscription->billToLastName = $lname;
 			$subscription->billToZip = sanitize_text_field( $_POST['rcp_card_zip'] );
+
+			// Delay start date for free trials.
+			if ( $this->is_trial() ) {
+				$subscription->startDate = date( 'Y-m-d', strtotime( $this->subscription_data['trial_duration'] . ' ' . $this->subscription_data['trial_duration_unit'], current_time( 'timestamp' ) ) );
+			}
 
 
 			$arb = new AuthorizeNetARB( $this->api_login_id, $this->transaction_key );
