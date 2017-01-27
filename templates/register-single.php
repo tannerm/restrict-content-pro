@@ -100,8 +100,11 @@ rcp_show_error_messages( 'register' ); ?>
 					</p>
 				</fieldset>
 			<?php else: ?>
-				<?php foreach( $gateways as $key => $gateway ) : $recurring = rcp_gateway_supports( $key, 'recurring' ) ? 'yes' : 'no'; ?>
-					<input type="hidden" name="rcp_gateway" value="<?php echo esc_attr( $key ); ?>" data-supports-recurring="<?php echo esc_attr( $recurring ); ?>"/>
+				<?php foreach( $gateways as $key => $gateway ) :
+					$recurring = rcp_gateway_supports( $key, 'recurring' ) ? 'yes' : 'no';
+					$trial = rcp_gateway_supports( $key, 'trial' ) ? 'yes' : 'no';
+					?>
+					<input type="hidden" name="rcp_gateway" value="<?php echo esc_attr( $key ); ?>" data-supports-recurring="<?php echo esc_attr( $recurring ); ?>" data-supports-trial="<?php echo esc_attr( $trial ); ?>"/>
 				<?php endforeach; ?>
 			<?php endif; ?>
 		</div>
