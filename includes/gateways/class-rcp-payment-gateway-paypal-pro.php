@@ -27,6 +27,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
+		$this->supports[] = 'trial';
 
 		if( $this->test_mode ) {
 
@@ -111,6 +112,13 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 				$args['INITAMT'] = $initamt;
 			}
 
+		}
+
+		if ( $this->auto_renew && $this->is_trial() ) {
+			$args['TRIALBILLINGPERIOD']      = ucwords( $this->subscription_data['trial_duration_unit'] );
+			$args['TRIALBILLINGFREQUENCY']   = $this->subscription_data['trial_duration'];
+			$args['TRIALTOTALBILLINGCYCLES'] = 1;
+			$args['TRIALAMT']                = 0;
 		}
 
 		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );

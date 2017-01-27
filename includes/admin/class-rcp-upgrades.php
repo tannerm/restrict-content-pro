@@ -55,6 +55,8 @@ class RCP_Upgrades {
 
 			@rcp_options_install();
 
+			@rcp_create_tables();
+
 			$this->upgraded = true;
 		}
 	}
