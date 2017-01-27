@@ -91,7 +91,7 @@ function rcp_has_authnet_api_access() {
 		$transation_key = $rcp_options['authorize_txn_key'];
 	}
 
-	if ( ! empty( $api_login_id) && ! empty( $transation_key ) ) {
+	if ( ! empty( $api_login_id ) && ! empty( $transation_key ) ) {
 		$ret = true;
 	}
 
