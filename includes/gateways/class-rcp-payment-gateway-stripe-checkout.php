@@ -66,7 +66,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			$subscriptions[ $subscription->id ] = array(
 				'description' => $subscription->description,
 				'name'        => $subscription->name,
-				'panelLabel'  => __( 'Register', 'rcp' ),
+				'panelLabel'  => $this->is_trial() ? __( 'Start Trial', 'rcp' ) : __( 'Register', 'rcp' ),
 			);
 		}
 
@@ -79,10 +79,10 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			var rcpSubscriptions = <?php echo json_encode( $subscriptions ); ?>;
 			var checkoutArgs     = <?php echo json_encode( $data ); ?>;
 
-			jQuery('#rcp_submit').val( rcp_script_options.pay_now );
+			jQuery('#rcp_registration_form #rcp_submit').val( rcp_script_options.pay_now );
 
 			jQuery('body').on('rcp_level_change', function(event, target) {
-				jQuery('#rcp_submit').val(
+				jQuery('#rcp_registration_form #rcp_submit').val(
 					jQuery(target).attr('rel') > 0 ? rcp_script_options.pay_now : rcp_script_options.register
 				);
 			});
@@ -97,7 +97,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			 */
 			jQuery('body').on('rcp_register_form_submission', function(e, response, form_id) {
 
-				if ( response.data.gateway.slug !== 'stripe_checkout' ) {
+				if ( response.gateway.slug !== 'stripe_checkout' ) {
 					return;
 				}
 
@@ -111,7 +111,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					return true;
 				}
 
-				if ( ! $price > 0 || ! response.data.total > 0 ) {
+				if ( ! $price > 0 || ! response.total > 0 ) {
 					submission_form.submit();
 					return true;
 				}
@@ -122,28 +122,26 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 
 				var rcpStripeCheckoutGotToken = false;
 
-				var rcpStripeCheckout = StripeCheckout.configure({
-					key: checkoutArgs.key,
-					locale: checkoutArgs.locale,
-					token: function(token) {
-						rcpStripeCheckoutGotToken = true;
-						// Add the token to the form and submit it
-						submission_form.append('<input type="hidden" name="stripeToken" value="' + token.id + '" />').submit();
-					},
-					// 'closed' runs when the modal closes, whether the token was successful or not
-					closed: function() {
-						// Unblock the form if the Checkout modal is closed without a successful payment
-						if (! rcpStripeCheckoutGotToken) {
-							jQuery('#rcp_submit').val(rcp_script_options.register);
-							rcp_processing = false;
-							submission_form.unblock();
-						}
-					},
-					email: checkoutArgs.email,
-					currency: checkoutArgs.currency,
-					alipay: checkoutArgs.alipay,
-					amount: response.data.total * <?php echo rcp_stripe_get_currency_multiplier(); ?>
-				});
+				checkoutArgs.token = function(token) {
+					rcpStripeCheckoutGotToken = true;
+					// Add the token to the form and submit it
+					submission_form.append('<input type="hidden" name="stripeToken" value="' + token.id + '" />').submit();
+				}
+
+				checkoutArgs.closed = function() {
+					// Unblock the form if the Checkout modal is closed without a successful payment
+					if (! rcpStripeCheckoutGotToken) {
+						jQuery('#rcp_submit').val(rcp_script_options.register);
+						rcp_processing = false;
+						submission_form.unblock();
+					}
+				}
+
+				if ( ! response.data.level.trial || checkoutArgs.alipay ) {
+					checkoutArgs.amount = response.data.total * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
+				}
+
+				var rcpStripeCheckout = StripeCheckout.configure( checkoutArgs );
 
 				rcpStripeCheckout.open(
 					rcpSubscriptions[$level.val()]

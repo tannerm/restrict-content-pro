@@ -27,6 +27,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		$this->supports[] = 'recurring';
 		$this->supports[] = 'fees';
 		$this->supports[] = 'gateway-submits-form';
+		$this->supports[] = 'trial';
 
 		if( $this->test_mode ) {
 
@@ -201,6 +202,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					$sub_args['coupon'] = $this->discount_code;
 
+				}
+
+				// Is this a free trial?
+				if ( $this->is_trial() ) {
+					$sub_args['trial_end'] = strtotime( $this->subscription_data['trial_duration'] . ' ' . $this->subscription_data['trial_duration_unit'], current_time( 'timestamp' ) );
 				}
 
 				// Set the customer's subscription in Stripe
@@ -467,12 +473,19 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 							}
 
-						// Successful subscription paid made with account credit where no charge is created
 						} elseif ( $event->type == 'invoice.payment_succeeded' && empty( $payment_event->charge ) ) {
 
-							$payment_data['amount']         = $payment_event->amount_due / rcp_stripe_get_currency_multiplier();
-							$payment_data['transaction_id'] = $payment_event->id;
-							$invoice                        = $payment_event;
+							$invoice = $payment_event;
+
+							// Successful subscription paid made with account credit, or free trial, where no charge is created
+							if ( 'in_' !== substr( $invoice->id, 0, 3 ) ) {
+								$payment_data['amount']         = $invoice->amount_due / rcp_stripe_get_currency_multiplier();
+								$payment_data['transaction_id'] = $invoice->id;
+							} else {
+								$payment_data['amount']           = $invoice->lines->data[0]->amount / rcp_stripe_get_currency_multiplier();
+								$payment_data['transaction_id']   = $invoice->subscription; // trials don't get a charge ID. set the subscription ID.
+								$payment_data['is_trial_invoice'] = true;
+							}
 
 						}
 
@@ -498,8 +511,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							$payment_data['subscription']     = $member->get_subscription_name();
 							$payment_data['subscription_key'] = $member->get_subscription_key();
 
-							// record this payment if it hasn't been recorded yet
-							$rcp_payments->insert( $payment_data );
+							// record this payment if it hasn't been recorded yet and it's not a trial invoice
+							if ( empty( $payment_data['is_trial_invoice'] ) ) {
+								$rcp_payments->insert( $payment_data );
+							}
 
 							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
 
@@ -617,7 +632,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							var price = $('.rcp_level').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
 						}
 
-						if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]:checked').val() == 'stripe') && price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100')) {
+						if( response.gateway.slug === 'stripe' && price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100')) {
 
 							event.preventDefault();
 

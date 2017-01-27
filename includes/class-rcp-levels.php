@@ -195,16 +195,18 @@ class RCP_Levels {
 		global $wpdb;
 
 		$defaults = array(
-			'name'          => '',
-			'description'   => '',
-			'duration'      => 'unlimited',
-			'duration_unit' => 'month',
-			'price'         => '0',
-			'fee'           => '0',
-			'list_order'    => '0',
-			'level'         => '0',
-			'status'        => 'inactive',
-			'role'          => 'subscriber'
+			'name'                => '',
+			'description'         => '',
+			'duration'            => 'unlimited',
+			'duration_unit'       => 'month',
+			'trial_duration'      => '0',
+			'trial_duration_unit' => 'day',
+			'price'               => '0',
+			'fee'                 => '0',
+			'list_order'          => '0',
+			'level'               => '0',
+			'status'              => 'inactive',
+			'role'                => 'subscriber'
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -230,24 +232,38 @@ class RCP_Levels {
 			return false;
 		}
 
+		/**
+		 * Validate the trial settings.
+		 * If a trial is enabled, the level's regular price and duration must be > 0.
+		 */
+		if ( $args['trial_duration'] > 0 ) {
+			if ( $args['price'] <= 0 || $args['duration'] <= 0 ) {
+				return false;
+			}
+		}
+
 		$add = $wpdb->query(
 			$wpdb->prepare(
 				"INSERT INTO {$this->db_name} SET
-					`name`          = '%s',
-					`description`   = '%s',
-					`duration`      = '%d',
-					`duration_unit` = '%s',
-					`price`         = '%s',
-					`fee`           = '%s',
-					`list_order`    = '0',
-					`level`         = '%d',
-					`status`        = '%s',
-					`role`          = '%s'
+					`name`                = '%s',
+					`description`         = '%s',
+					`duration`            = '%d',
+					`duration_unit`       = '%s',
+					`trial_duration`      = '%d',
+					`trial_duration_unit` = '%s',
+					`price`               = '%s',
+					`fee`                 = '%s',
+					`list_order`          = '0',
+					`level`               = '%d',
+					`status`              = '%s',
+					`role`                = '%s'
 				;",
 				sanitize_text_field( $args['name'] ),
 				sanitize_text_field( $args['description'] ),
 				sanitize_text_field( $args['duration'] ),
 				sanitize_text_field( $args['duration_unit'] ),
+				absint( $args['trial_duration'] ),
+				in_array( $args['trial_duration_unit'], array( 'day', 'month', 'year' ) ) ? $args['trial_duration_unit'] : 'day',
 				sanitize_text_field( $args['price'] ),
 				sanitize_text_field( $args['fee'] ),
 				absint( $args['level'] ),
@@ -315,24 +331,38 @@ class RCP_Levels {
 			return false;
 		}
 
+		/**
+		 * Validate the trial settings.
+		 * If a trial is enabled, the level's regular price and duration must be > 0.
+		 */
+		if ( $args['trial_duration'] > 0 ) {
+			if ( $args['price'] <= 0 || $args['duration'] <= 0 ) {
+				return false;
+			}
+		}
+
 		$update = $wpdb->query(
 			$wpdb->prepare(
 				"UPDATE {$this->db_name} SET
-					`name`          = '%s',
-					`description`   = '%s',
-					`duration`      = '%d',
-					`duration_unit` = '%s',
-					`price`         = '%s',
-					`fee`           = '%s',
-					`level`         = '%d',
-					`status`        = '%s',
-					`role`          = '%s'
-					WHERE `id`      = '%d'
+					`name`                = '%s',
+					`description`         = '%s',
+					`duration`            = '%d',
+					`duration_unit`       = '%s',
+					`trial_duration`      = '%d',
+					`trial_duration_unit` = '%s',
+					`price`               = '%s',
+					`fee`                 = '%s',
+					`level`               = '%d',
+					`status`              = '%s',
+					`role`                = '%s'
+					WHERE `id`            = '%d'
 				;",
 				sanitize_text_field( $args['name'] ),
 				wp_kses( $args['description'], rcp_allowed_html_tags() ),
 				sanitize_text_field( $args['duration'] ),
 				sanitize_text_field( $args['duration_unit'] ),
+				absint( $args['trial_duration'] ),
+				in_array( $args['trial_duration_unit'], array( 'day', 'month', 'year' ) ) ? $args['trial_duration_unit'] : 'day',
 				sanitize_text_field( $args['price'] ),
 				sanitize_text_field( $args['fee'] ),
 				absint( $args['level'] ),
@@ -493,4 +523,72 @@ class RCP_Levels {
 	private function valid_amount( $amount ) {
 		return filter_var( $amount, FILTER_VALIDATE_FLOAT );
 	}
+
+	/**
+	 * Determines if the specified subscription level has a trial option.
+	 *
+	 * @access public
+	 * @since 2.7
+	 *
+	 * @param int $level_id The subscription level ID.
+	 * @return boolean true if the level has a trial option, false if not.
+	 */
+	public function has_trial( $level_id = 0 ) {
+
+		if ( empty( $level_id ) ) {
+			return;
+		}
+
+		$level_id = absint( $level_id );
+
+		$level = $this->get_level( $level_id );
+
+		return ! empty( $level->trial_duration );
+	}
+
+	/**
+	 * Retrieves the trial duration for the specified subscription level.
+	 *
+	 * @access public
+	 * @since 2.7
+	 *
+	 * @param int $level_id The subscription level ID.
+	 * @return int The duration of the trial. 0 if there is no trial.
+	 */
+	public function trial_duration( $level_id = 0 ) {
+
+		if ( empty( $level_id ) ) {
+			return;
+		}
+
+		$level_id = absint( $level_id );
+
+		$level = $this->get_level( $level_id );
+
+		return ! empty( $level->trial_duration ) ? $level->trial_duration : 0;
+
+	}
+
+	/**
+	 * Retrieves the trial duration unit for the specified subscription level.
+	 *
+	 * @access public
+	 * @since 2.7
+	 *
+	 * @param int $level_id The subscription level ID.
+	 * @return string The duration unit of the trial.
+	 */
+	public function trial_duration_unit( $level_id = 0 ) {
+
+		if ( empty( $level_id ) ) {
+			return;
+		}
+
+		$level_id = absint( $level_id );
+
+		$level = $this->get_level( $level_id );
+
+		return in_array( $level->trial_duration_unit, array( 'day', 'month', 'year' ) ) ? $level->trial_duration_unit : 'day';
+	}
+
 }

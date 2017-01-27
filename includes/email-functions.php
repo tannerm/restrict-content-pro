@@ -60,7 +60,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('has cancelled their subscription to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Their subscription level was', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters('rcp_before_admin_email_cancelled_thanks', $admin_message, $user_id);
 				$admin_message .= __('Thank you', 'rcp');
-				$admin_subject = sprintf( __( 'Cacnelled subscription on %s', 'rcp' ), $site_name );
+				$admin_subject = sprintf( __( 'Cancelled subscription on %s', 'rcp' ), $site_name );
 			}
 
 		break;
@@ -273,7 +273,7 @@ function rcp_get_email_templates() {
  */
 function rcp_get_emails_tags_list() {
 	// The list
-	$list = '';
+	$list = '<ul>';
 
 	// Get all tags
 	$emails = new RCP_Emails;
@@ -282,9 +282,16 @@ function rcp_get_emails_tags_list() {
 	// Check
 	if( count( $email_tags ) > 0 ) {
 		foreach( $email_tags as $email_tag ) {
-			$list .= '{' . $email_tag['tag'] . '} - ' . $email_tag['description'] . '<br />';
+			$list .= '<li><em>%' . $email_tag['tag'] . '%</em> - ' . $email_tag['description'] . '</li>';
 		}
 	}
+
+	// Backwards compatibility for displaying extra tags from add-ons, etc.
+	ob_start();
+	do_action( 'rcp_available_template_tags' );
+	$list .= ob_get_clean();
+
+	$list .= '</ul>';
 
 	// Return the list
 	return $list;

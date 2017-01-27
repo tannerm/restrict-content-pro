@@ -88,4 +88,17 @@ class RCP_Payment_Gateway {
 		rcp_errors()->add( $code, $message, 'register' );
 	}
 
+	/**
+	 * Determines if the subscription is eligible for a trial.
+	 *
+	 * @since 2.7
+	 * @return bool True if the subscription is eligible for a trial, false if not.
+	 */
+	public function is_trial() {
+		return ! empty( $this->subscription_data['trial_eligible'] )
+			&& ! empty( $this->subscription_data['trial_duration'] )
+			&& ! empty( $this->subscription_data['trial_duration_unit'] )
+		;
+	}
+
 }
