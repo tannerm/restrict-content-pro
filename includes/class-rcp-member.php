@@ -804,8 +804,11 @@ class RCP_Member extends WP_User {
 		$user_level          = get_post_meta( $post_id, 'rcp_user_level', true );
 		$sub_id              = $this->get_subscription_id();
 
-		// Assume the user can until proven false
-		$ret = true;
+		if ( rcp_is_restricted_content( $post_id ) ) {
+			$ret = in_array( rcp_get_status(), array( 'active', 'free', 'cancelled' ) );
+		} else {
+			$ret = true;
+		}
 
 		if ( rcp_is_paid_content( $post_id ) && $this->is_expired() ) {
 
@@ -849,7 +852,7 @@ class RCP_Member extends WP_User {
 
 					} else {
 
-						$ret = true;
+						$ret = ! $this->is_expired();
 					}
 
 				} else {

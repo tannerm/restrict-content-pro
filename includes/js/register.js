@@ -91,27 +91,6 @@ jQuery(document).ready(function($) {
 			$('.rcp_message.error', form).remove();
 
 		}).success(function( response ) {
-
-			if ( response.success ) {
-
-				setTimeout( function() {
-					$('body').trigger( 'rcp_register_form_submission', [response, form_id] );
-
-					// Submit the form if the total is 0 or if the gateway doesn't handle the submission.
-					if ( response.data.total == 0 || ! gateway_submits_form ) {
-						submission_form.submit();
-					}
-				}, 1 );
-
-
-			} else {
-
-				$('#rcp_submit', form).val( submit_register_text );
-				$('#rcp_submit', form).before( response.data.errors );
-				$('#rcp_register_nonce', form).val( response.data.nonce );
-				form.unblock();
-				rcp_processing = false;
-			}
 		}).done(function( response ) {
 		}).fail(function( response ) {
 			console.log( response );
@@ -128,15 +107,30 @@ jQuery(document).ready(function($) {
 		}
 
 		// Check for the required properties
-		if ( ! xhr.hasOwnProperty('responseJSON') || ! xhr.responseJSON.hasOwnProperty('data') || xhr.responseJSON.data.success !== true ) {
+		if ( ! xhr.hasOwnProperty('responseJSON') || ! xhr.responseJSON.hasOwnProperty('data') ) {
+			return;
+		}
+
+		if ( xhr.responseJSON.data.success !== true ) {
+			$('#rcp_registration_form #rcp_submit').val( rcp_script_options.register );
+			$('#rcp_registration_form #rcp_submit').before( xhr.responseJSON.data.errors );
+			$('#rcp_registration_form #rcp_register_nonce').val( xhr.responseJSON.data.nonce );
+			$('#rcp_registration_form').unblock();
+			rcp_processing = false;
 			return;
 		}
 
 		// Check if gateway supports form submission
-		if ( xhr.responseJSON.data.gateway.supports.indexOf('gateway-submits-form') !== -1 ) {
+		if ( xhr.responseJSON.data.gateway.supports && xhr.responseJSON.data.gateway.supports.indexOf('gateway-submits-form') !== -1 ) {
 			gateway_submits_form = true;
 		} else {
 			gateway_submits_form = false;
+		}
+
+		$('body').trigger('rcp_register_form_submission', [xhr.responseJSON.data, event.target.forms.rcp_registration_form.id] );
+
+		if ( xhr.responseJSON.data.total == 0 || ! gateway_submits_form ) {
+			document.getElementById('rcp_registration_form').submit();
 		}
 
 	});
