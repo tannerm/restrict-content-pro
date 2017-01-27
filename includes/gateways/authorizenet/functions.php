@@ -84,14 +84,14 @@ function rcp_has_authnet_api_access() {
 	$ret = false;
 
 	if ( rcp_is_sandbox() ) {
-		$api_login_id   = $rcp_options['authorize_test_api_login'];
-		$transation_key = $rcp_options['authorize_test_txn_key'];
+		$api_login_id    = $rcp_options['authorize_test_api_login'];
+		$transaction_key = $rcp_options['authorize_test_txn_key'];
 	} else {
-		$api_login_id   = $rcp_options['authorize_api_login'];
-		$transation_key = $rcp_options['authorize_txn_key'];
+		$api_login_id    = $rcp_options['authorize_api_login'];
+		$transaction_key = $rcp_options['authorize_txn_key'];
 	}
 
-	if ( ! empty( $api_login_id ) && ! empty( $transation_key ) ) {
+	if ( ! empty( $api_login_id ) && ! empty( $transaction_key ) ) {
 		$ret = true;
 	}
 
