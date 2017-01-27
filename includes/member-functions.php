@@ -1267,7 +1267,7 @@ function rcp_can_member_cancel( $user_id = 0 ) {
 
 			$ret = true;
 
-		} elseif ( rcp_is_authnet_subscriber( $user_id ) && ! empty( $rcp_options['authorize_api_login'] ) && ! empty( $rcp_options['authorize_txn_key'] ) ) {
+		} elseif ( rcp_is_authnet_subscriber( $user_id ) && rcp_has_authnet_api_access() ) {
 
 			$ret = true;
 

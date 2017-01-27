@@ -72,6 +72,34 @@ function rcp_is_authnet_subscriber( $user_id = 0 ) {
 }
 
 /**
+ * Determine if all necessary API credentials are filled in
+ *
+ * @since  2.7
+ * @return bool
+ */
+function rcp_has_authnet_api_access() {
+
+	global $rcp_options;
+
+	$ret = false;
+
+	if ( rcp_is_sandbox() ) {
+		$api_login_id   = $rcp_options['authorize_test_api_login'];
+		$transation_key = $rcp_options['authorize_test_txn_key'];
+	} else {
+		$api_login_id   = $rcp_options['authorize_api_login'];
+		$transation_key = $rcp_options['authorize_txn_key'];
+	}
+
+	if ( ! empty( $api_login_id) && ! empty( $transation_key ) ) {
+		$ret = true;
+	}
+
+	return $ret;
+
+}
+
+/**
  * Process an update card form request for Authorize.net
  *
  * @access      private
