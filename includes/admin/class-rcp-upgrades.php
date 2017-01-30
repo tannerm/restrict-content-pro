@@ -11,9 +11,12 @@
  */
 class RCP_Upgrades {
 
+	private $version = '';
 	private $upgraded = false;
 
 	public function __construct() {
+
+		$this->version = preg_replace( '/[^0-9.].*/', '', get_option( 'rcp_version' ) );
 
 		add_action( 'admin_init', array( $this, 'init' ), -9999 );
 
@@ -21,14 +24,12 @@ class RCP_Upgrades {
 
 	public function init() {
 
-		$version = get_option( 'rcp_version' );
-
 		$this->v26_upgrades();
 		$this->v27_upgrades();
 
 		// If upgrades have occurred or the DB version is differnt from the version constant
-		if ( $this->upgraded || $version <> RCP_PLUGIN_VERSION ) {
-			update_option( 'rcp_version_upgraded_from', $version );
+		if ( $this->upgraded || $this->version <> RCP_PLUGIN_VERSION ) {
+			update_option( 'rcp_version_upgraded_from', $this->version );
 			update_option( 'rcp_version', RCP_PLUGIN_VERSION );
 		}
 
@@ -36,18 +37,14 @@ class RCP_Upgrades {
 
 	private function v26_upgrades() {
 
-		$version = get_option( 'rcp_version' );
-
-		if( version_compare( $version, '2.6', '<' ) ) {
+		if( version_compare( $this->version, '2.6', '<' ) ) {
 			@rcp_options_install();
 		}
 	}
 
 	private function v27_upgrades() {
 
-		$version = get_option( 'rcp_version' );
-
-		if( version_compare( $version, '2.7', '<' ) ) {
+		if( version_compare( $this->version, '2.7', '<' ) ) {
 
 			global $wpdb, $rcp_discounts_db_name;
 
@@ -55,11 +52,10 @@ class RCP_Upgrades {
 
 			@rcp_options_install();
 
-			@rcp_create_tables();
-
 			$this->upgraded = true;
 		}
 	}
+
 
 }
 new RCP_Upgrades;
