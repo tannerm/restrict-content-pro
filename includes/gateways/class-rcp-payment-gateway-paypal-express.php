@@ -561,8 +561,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 						$rcp_payments->insert( $payment_data );
 
-						// set this user to active
-						$member->renew();
+						// Member was already activated.
 
 						break;
 
