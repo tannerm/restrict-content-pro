@@ -30,13 +30,14 @@ function rcp_process_registration() {
 
 	global $rcp_options, $rcp_levels_db;
 
-	$subscription_id = rcp_get_registration()->get_subscription();
-	$discount        = isset( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : '';
-	$price           = number_format( (float) $rcp_levels_db->get_level_field( $subscription_id, 'price' ), 2 );
-	$price           = str_replace( ',', '', $price );
-	$subscription    = $rcp_levels_db->get_level( $subscription_id );
-	$auto_renew      = rcp_registration_is_recurring();
-
+	$subscription_id     = rcp_get_registration()->get_subscription();
+	$discount            = isset( $_POST['rcp_discount'] ) ? sanitize_text_field( $_POST['rcp_discount'] ) : '';
+	$price               = number_format( (float) $rcp_levels_db->get_level_field( $subscription_id, 'price' ), 2 );
+	$price               = str_replace( ',', '', $price );
+	$subscription        = $rcp_levels_db->get_level( $subscription_id );
+	$auto_renew          = rcp_registration_is_recurring();
+	$trial_duration      = $rcp_levels_db->trial_duration( $subscription_id );
+	$trial_duration_unit = $rcp_levels_db->trial_duration_unit( $subscription_id );
 	// if both today's total and the recurring total are 0, the there is a full discount
 	// if this is not a recurring subscription only check today's total
 	$full_discount = ( $auto_renew ) ? ( rcp_get_registration()->get_total() == 0 && rcp_get_registration()->get_recurring_total() == 0 ) : ( rcp_get_registration()->get_total() == 0 );
@@ -117,6 +118,9 @@ function rcp_process_registration() {
 			'gateway'          => array(
 				'slug'     => $gateway,
 				'supports' => $gateway_obj->supports
+			),
+			'level'            => array(
+				'trial'        => ! empty( $trial_duration )
 			)
 		) );
 
@@ -155,6 +159,8 @@ function rcp_process_registration() {
 
 	$old_subscription_id = $member->get_subscription_id();
 
+	$member_has_trialed = $member->has_trialed();
+
 	if( $old_subscription_id ) {
 		update_user_meta( $user_data['id'], '_rcp_old_subscription_id', $old_subscription_id );
 	}
@@ -184,7 +190,7 @@ function rcp_process_registration() {
 	$member->set_joined_date( '', $subscription_id );
 
 	// Calculate the expiration date for the member
-	$member_expires = $member->calculate_expiration( $auto_renew );
+	$member_expires = $member->calculate_expiration( $auto_renew, $trial_duration );
 
 	update_user_meta( $user_data['id'], 'rcp_pending_expiration_date', $member_expires );
 
@@ -207,7 +213,7 @@ function rcp_process_registration() {
 	do_action( 'rcp_form_processing', $_POST, $user_data['id'], $price );
 
 	// process a paid subscription
-	if( $price > '0' ) {
+	if( $price > '0' || $trial_duration ) {
 
 		if( ! empty( $discount ) ) {
 
@@ -231,7 +237,12 @@ function rcp_process_registration() {
 		}
 
 		// Remove trialing status, if it exists
-		delete_user_meta( $user_data['id'], 'rcp_is_trialing' );
+		if ( ! $trial_duration || $trial_duration && $member_has_trialed ) {
+			delete_user_meta( $user_data['id'], 'rcp_is_trialing' );
+		} else {
+			update_user_meta( $user_data['id'], 'rcp_has_trialed', 'yes' );
+			update_user_meta( $user_data['id'], 'rcp_is_trialing', 'yes' );
+		}
 
 		// log the new user in
 		rcp_login_user_in( $user_data['id'], $user_data['login'] );
@@ -239,23 +250,26 @@ function rcp_process_registration() {
 		$redirect = rcp_get_return_url( $user_data['id'] );
 
 		$subscription_data = array(
-			'price'             => rcp_get_registration()->get_total( true, false ), // get total without the fee
-			'discount'          => rcp_get_registration()->get_total_discounts(),
-			'discount_code'     => $discount,
-			'fee'               => rcp_get_registration()->get_total_fees(),
-			'length'            => $subscription->duration,
-			'length_unit'       => strtolower( $subscription->duration_unit ),
-			'subscription_id'   => $subscription->id,
-			'subscription_name' => $subscription->name,
-			'key'               => $subscription_key,
-			'user_id'           => $user_data['id'],
-			'user_name'         => $user_data['login'],
-			'user_email'        => $user_data['email'],
-			'currency'          => rcp_get_currency(),
-			'auto_renew'        => $auto_renew,
-			'return_url'        => $redirect,
-			'new_user'          => $user_data['need_new'],
-			'post_data'         => $_POST
+			'price'               => rcp_get_registration()->get_total( true, false ), // get total without the fee
+			'discount'            => rcp_get_registration()->get_total_discounts(),
+			'discount_code'       => $discount,
+			'fee'                 => rcp_get_registration()->get_total_fees(),
+			'length'              => $subscription->duration,
+			'length_unit'         => strtolower( $subscription->duration_unit ),
+			'subscription_id'     => $subscription->id,
+			'subscription_name'   => $subscription->name,
+			'key'                 => $subscription_key,
+			'user_id'             => $user_data['id'],
+			'user_name'           => $user_data['login'],
+			'user_email'          => $user_data['email'],
+			'currency'            => rcp_get_currency(),
+			'auto_renew'          => $auto_renew,
+			'return_url'          => $redirect,
+			'new_user'            => $user_data['need_new'],
+			'trial_duration'      => $trial_duration,
+			'trial_duration_unit' => $trial_duration_unit,
+			'trial_eligible'      => ! $member_has_trialed,
+			'post_data'           => $_POST
 		);
 
 		// if giving the user a credit, make sure the credit does not exceed the first payment
@@ -667,6 +681,16 @@ function rcp_registration_total( $echo = true ) {
 		$total = rcp_currency_filter( $total );
 	} else {
 		$total = __( 'free', 'rcp' );
+	}
+
+	global $rcp_levels_db;
+
+	$level               = $rcp_levels_db->get_level( rcp_get_registration()->get_subscription() );
+	$trial_duration      = $rcp_levels_db->trial_duration( $level->id );
+	$trial_duration_unit = $rcp_levels_db->trial_duration_unit( $level->id );
+
+	if ( ! empty( $trial_duration ) && ! rcp_has_used_trial() ) {
+		$total = sprintf( __( 'Free trial - %s', 'rcp' ), $trial_duration . ' ' .  rcp_filter_duration_unit( $trial_duration_unit, $trial_duration ) );
 	}
 
 	$total = apply_filters( 'rcp_registration_total', $total );

@@ -1,5 +1,5 @@
 <?php
-global $rcp_options, $post;
+global $rcp_options, $post, $rcp_levels_db;
 $discount = ! empty( $_REQUEST['discount'] ) ? sanitize_text_field( $_REQUEST['discount'] ) : '';
 ?>
 
@@ -65,9 +65,11 @@ rcp_show_error_messages( 'register' ); ?>
 		<p class="rcp_subscription_message"><?php echo apply_filters ( 'rcp_registration_choose_subscription', __( 'Choose your subscription level', 'rcp' ) ); ?></p>
 		<ul id="rcp_subscription_levels">
 			<?php foreach( $levels as $key => $level ) : ?>
-				<?php if( rcp_show_subscription_level( $level->id ) ) : ?>
+				<?php if( rcp_show_subscription_level( $level->id ) ) :
+					$has_trial = $rcp_levels_db->has_trial( $level->id );
+				?>
 				<li class="rcp_subscription_level rcp_subscription_level_<?php echo $level->id; ?>">
-					<input type="radio" id="rcp_subscription_level_<?php echo $level->id; ?>" class="required rcp_level" <?php if ( $key == 0 || ( isset( $_GET['level'] ) && $_GET['level'] == $level->id ) ) { echo 'checked="checked"'; } ?> name="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>" value="<?php echo esc_attr( absint( $level->id ) ); ?>" <?php if( $level->duration == 0 ) { echo 'data-duration="forever"'; } ?>/>
+					<input type="radio" id="rcp_subscription_level_<?php echo $level->id; ?>" class="required rcp_level" <?php if ( $key == 0 || ( isset( $_GET['level'] ) && $_GET['level'] == $level->id ) ) { echo 'checked="checked"'; } ?> name="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>" value="<?php echo esc_attr( absint( $level->id ) ); ?>" <?php if( $level->duration == 0 ) { echo 'data-duration="forever"'; } if ( ! empty( $has_trial ) ) { echo 'data-has-trial="true"'; } ?>/>
 					<label for="rcp_subscription_level_<?php echo $level->id; ?>">
 						<span class="rcp_subscription_level_name"><?php echo rcp_get_subscription_name( $level->id ); ?></span><span class="rcp_separator">&nbsp;-&nbsp;</span><span class="rcp_price" rel="<?php echo esc_attr( $level->price ); ?>"><?php echo $level->price > 0 ? rcp_currency_filter( $level->price ) : __( 'free', 'rcp' ); ?><span class="rcp_separator">&nbsp;-&nbsp;</span></span>
 						<span class="rcp_level_duration"><?php echo $level->duration > 0 ? $level->duration . '&nbsp;' . rcp_filter_duration_unit( $level->duration_unit, $level->duration ) : __( 'unlimited', 'rcp' ); ?></span>
@@ -106,9 +108,11 @@ rcp_show_error_messages( 'register' ); ?>
 			<fieldset class="rcp_gateways_fieldset">
 				<legend><?php _e( 'Choose Your Payment Method', 'rcp' ); ?></legend>
 				<p id="rcp_payment_gateways"<?php echo $display; ?>>
-					<?php foreach( $gateways as $key => $gateway ) : $recurring = rcp_gateway_supports( $key, 'recurring' ) ? 'yes' : 'no'; ?>
+					<?php foreach( $gateways as $key => $gateway ) :
+						$recurring = rcp_gateway_supports( $key, 'recurring' ) ? 'yes' : 'no';
+						$trial    = rcp_gateway_supports( $key, 'trial' ) ? 'yes' : 'no'; ?>
 						<label for="rcp_gateway_<?php echo esc_attr( $key ); ?>" class="rcp_gateway_option_label">
-							<input id="rcp_gateway_<?php echo esc_attr( $key );?>" name="rcp_gateway" type="radio" class="rcp_gateway_option_input" value="<?php echo esc_attr( $key ); ?>" data-supports-recurring="<?php echo esc_attr( $recurring ); ?>">
+							<input id="rcp_gateway_<?php echo esc_attr( $key );?>" name="rcp_gateway" type="radio" class="rcp_gateway_option_input" value="<?php echo esc_attr( $key ); ?>" data-supports-recurring="<?php echo esc_attr( $recurring ); ?>" data-supports-trial="<?php echo esc_attr( $trial ); ?>">
 							<?php echo esc_html( $gateway ); ?>
 						</label>
 					<?php endforeach; ?>

@@ -34,9 +34,9 @@ function rcp_process_data() {
 
 			$levels = new RCP_Levels();
 
-			$add = $levels->insert( $_POST );
+			$level_id = $levels->insert( $_POST );
 
-			if( $add ) {
+			if( $level_id ) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&rcp_message=level_added';
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&rcp_message=level_not_added';
@@ -55,12 +55,13 @@ function rcp_process_data() {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
 
+			$level_id = absint( $_POST['subscription_id'] );
+
 			$levels = new RCP_Levels();
 
 			$update = $levels->update( $_POST['subscription_id'], $_POST );
 
 			if($update) {
-				// clear the cache
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&rcp_message=level_updated';
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&rcp_message=level_not_updated';

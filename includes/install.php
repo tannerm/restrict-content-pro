@@ -203,6 +203,8 @@ function rcp_create_tables() {
 		description longtext NOT NULL,
 		duration smallint NOT NULL,
 		duration_unit tinytext NOT NULL,
+		trial_duration smallint NOT NULL,
+		trial_duration_unit tinytext NOT NULL,
 		price tinytext NOT NULL,
 		fee tinytext NOT NULL,
 		list_order mediumint NOT NULL,
