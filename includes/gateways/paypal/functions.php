@@ -23,11 +23,6 @@ function rcp_is_paypal_subscriber( $user_id = 0 ) {
 
 		$ret = true;
 
-	} else {
-
-		// The old way of identifying PayPal subscribers
-		$ret = (bool) get_user_meta( $user_id, 'rcp_paypal_subscriber', true );
-
 	}
 
 	return (bool) apply_filters( 'rcp_is_paypal_subscriber', $ret, $user_id );

@@ -3,7 +3,7 @@
  * Plugin Name: Restrict Content Pro
  * Plugin URL: https://restrictcontentpro.com
  * Description: Set up a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
- * Version: 2.7
+ * Version: 2.7-beta1
  * Author: Restrict Content Pro Team
  * Author URI: https://restrictcontentpro.com
  * Contributors: mordauk
@@ -21,7 +21,7 @@ if ( !defined( 'RCP_PLUGIN_FILE' ) ) {
 	define( 'RCP_PLUGIN_FILE', __FILE__ );
 }
 if ( !defined( 'RCP_PLUGIN_VERSION' ) ) {
-	define( 'RCP_PLUGIN_VERSION', '2.7' );
+	define( 'RCP_PLUGIN_VERSION', '2.7-beta1' );
 }
 if ( ! defined( 'CAL_GREGORIAN' ) ) {
 	define( 'CAL_GREGORIAN', 1 );
@@ -261,6 +261,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/discount-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/email-functions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway.php' );
+	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-authorizenet.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-manual.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-paypal.php' );
 	include( RCP_PLUGIN_DIR . 'includes/gateways/class-rcp-payment-gateway-paypal-pro.php' );
