@@ -13,12 +13,24 @@ class RCP_Upgrades {
 
 	private $upgraded = false;
 
+	/**
+	 * RCP_Upgrades constructor.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function __construct() {
 
 		add_action( 'admin_init', array( $this, 'init' ), -9999 );
 
 	}
 
+	/**
+	 * Trigger updates and maybe update the RCP version number
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function init() {
 
 		$version = get_option( 'rcp_version' );
@@ -34,6 +46,12 @@ class RCP_Upgrades {
 
 	}
 
+	/**
+	 * Process 2.6 upgrades
+	 *
+	 * @access private
+	 * @return void
+	 */
 	private function v26_upgrades() {
 
 		$version = get_option( 'rcp_version' );
@@ -43,6 +61,12 @@ class RCP_Upgrades {
 		}
 	}
 
+	/**
+	 * Process 2.7 upgrades
+	 *
+	 * @access private
+	 * @return void
+	 */
 	private function v27_upgrades() {
 
 		$version = get_option( 'rcp_version' );

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Misc. Functions
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Misc Functions
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
 /**
  * Determines if we are in sandbox mode
@@ -6,7 +14,7 @@
  * @access public
  * @since 2.6.4
  * @return bool True if we are in sandbox mode
-*/
+ */
 function rcp_is_sandbox(){
     global $rcp_options;
     return (bool) apply_filters( 'rcp_is_sandbox', isset( $rcp_options['sandbox'] ) );
@@ -15,10 +23,11 @@ function rcp_is_sandbox(){
 /**
  * Checks whether the post is Paid Only.
  *
+ * @param int $post_id ID of the post to check.
+ *
  * @access private
  * @return bool True if the post is paid only, false if not.
-*/
-
+ */
 function rcp_is_paid_content( $post_id ) {
 	if ( $post_id == '' || ! is_int( $post_id ) )
 		$post_id = get_the_ID();
@@ -40,8 +49,7 @@ function rcp_is_paid_content( $post_id ) {
  *
  * @access public
  * @return array Lists all paid only posts.
-*/
-
+ */
 function rcp_get_paid_posts() {
 	$args = array(
 		'meta_key'       => '_is_paid',
@@ -63,10 +71,11 @@ function rcp_get_paid_posts() {
 /**
  * Apply the currency sign to a price.
  *
+ * @param float $price Price to add the currency sign to.
+ *
  * @access public
  * @return string List of currency signs.
-*/
-
+ */
 function rcp_currency_filter( $price ) {
 	global $rcp_options;
 
@@ -147,7 +156,7 @@ function rcp_currency_filter( $price ) {
  *
  * @access private
  * @return array List of currencies.
-*/
+ */
 function rcp_get_currencies() {
 	$currencies = array(
 		'USD' => __( 'US Dollars (&#36;)', 'rcp' ),
@@ -184,10 +193,12 @@ function rcp_get_currencies() {
 /**
  * reverse of strstr()
  *
+ * @param string $haystack
+ * @param string $needle
+ *
  * @access private
  * @return string
-*/
-
+ */
 function rcp_rstrstr( $haystack, $needle ) {
 	return substr( $haystack, 0, strpos( $haystack, $needle ) );
 }
@@ -198,24 +209,26 @@ function rcp_rstrstr( $haystack, $needle ) {
  *
  * Checks if a number is odd.
  *
+ * @param int $int Number to check.
+ *
  * @access private
  * @return bool
-*/
-
+ */
 function rcp_is_odd( $int ) {
 	return $int & 1;
 }
 
 
 /**
-* Gets the excerpt of a specific post ID or object.
-*
-* @param object/int $post The ID or object of the post to get the excerpt of.
-* @param int $length The length of the excerpt in words.
-* @param string $tags The allowed HTML tags. These will not be stripped out.
-* @param string $extra Text to append to the end of the excerpt.
-*/
-
+ * Gets the excerpt of a specific post ID or object.
+ *
+ * @param object/int $post The ID or object of the post to get the excerpt of.
+ * @param int $length The length of the excerpt in words.
+ * @param string $tags The allowed HTML tags. These will not be stripped out.
+ * @param string $extra Text to append to the end of the excerpt.
+ *
+ * @return string Post excerpt.
+ */
 function rcp_excerpt_by_id( $post, $length = 50, $tags = '<a><em><strong><blockquote><ul><ol><li><p>', $extra = ' . . .' ) {
 
 	if ( is_int( $post ) ) {
@@ -254,10 +267,11 @@ function rcp_excerpt_by_id( $post, $length = 50, $tags = '<a><em><strong><blockq
 /**
  * The default length for excerpts.
  *
+ * @param int $excerpt_length Number of words to show in the excerpt.
+ *
  * @access private
  * @return string
-*/
-
+ */
 function rcp_excerpt_length( $excerpt_length ) {
 	// the number of words to show in the excerpt
 	return 100;
@@ -272,8 +286,7 @@ add_filter( 'rcp_filter_excerpt_length', 'rcp_excerpt_length' );
  *
  * @access private
  * @return string
-*/
-
+ */
 function rcp_get_current_url() {
 	global $post;
 
@@ -305,11 +318,12 @@ function rcp_get_current_url() {
  *
  * Sets up the valid log types for WP_Logging.
  *
+ * @param array $types Existing log types.
+ *
  * @access private
  * @since  1.3.4
  * @return array
-*/
-
+ */
 function rcp_log_types( $types ) {
 
     $types = array(
@@ -327,7 +341,7 @@ add_filter( 'wp_log_types', 'rcp_log_types' );
  * @access private
  * @since  1.4
  * @return bool
-*/
+ */
 function rcp_no_account_sharing() {
 	global $rcp_options;
 	return (bool) apply_filters( 'rcp_no_account_sharing', isset( $rcp_options['no_login_sharing'] ) );
@@ -340,11 +354,18 @@ function rcp_no_account_sharing() {
  * Transient IDs are based on the user ID so that we can track the number of
  * users logged into the same account.
  *
+ * @param string $logged_in_cookie The logged-in cookie.
+ * @param int    $expire           The time the login grace period expires as a UNIX timestamp.
+ *                                 Default is 12 hours past the cookie's expiration time.
+ * @param int    $expiration       The time when the logged-in authentication cookie expires as a UNIX timestamp.
+ *                                 Default is 14 days from now.
+ * @param int    $user_id          User ID.
+ * @param string $status           Authentication scheme. Default 'logged_in'.
+ *
  * @access private
  * @since  1.5
  * @return void
-*/
-
+ */
 function rcp_set_user_logged_in_status( $logged_in_cookie, $expire, $expiration, $user_id, $status = 'logged_in' ) {
 
 	if( ! rcp_no_account_sharing() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
@@ -373,8 +394,7 @@ add_action( 'set_logged_in_cookie', 'rcp_set_user_logged_in_status', 10, 5 );
  * @access private
  * @since  1.5
  * @return void
-*/
-
+ */
 function rcp_clear_auth_cookie() {
 
 	if( ! rcp_no_account_sharing() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
@@ -415,8 +435,7 @@ add_action( 'clear_auth_cookie', 'rcp_clear_auth_cookie' );
  * @access private
  * @since  1.5
  * @return void
-*/
-
+ */
 function rcp_can_user_be_logged_in() {
 	if ( is_user_logged_in() && rcp_no_account_sharing() ) {
 
@@ -465,7 +484,7 @@ add_action( 'init', 'rcp_can_user_be_logged_in' );
  * @access public
  * @since  1.5
  * @return array
-*/
+ */
 function rcp_allowed_html_tags() {
 	$tags = array(
 		'p' => array(
@@ -477,8 +496,7 @@ function rcp_allowed_html_tags() {
 		'a' => array(
        		'href' => array(),
         	'title' => array(),
-        	'class' => array(),
-        	'title' => array()
+        	'class' => array()
         ),
 		'strong' => array(),
 		'em' => array(),
@@ -506,10 +524,10 @@ function rcp_allowed_html_tags() {
 /**
  * Checks whether function is disabled.
  *
+ * @param  string $function Name of the function.
+ *
  * @access public
  * @since  1.5
- *
- * @param  string $function Name of the function.
  * @return bool Whether or not function is disabled.
  */
 function rcp_is_func_disabled( $function ) {
@@ -522,10 +540,10 @@ function rcp_is_func_disabled( $function ) {
 /**
  * Converts the month number to the month name
  *
+ * @param  int $n Month number.
+ *
  * @access public
  * @since  1.8
- *
- * @param  int $n Month number.
  * @return string The name of the month.
  */
 if( ! function_exists( 'rcp_get_month_name' ) ) {
@@ -575,6 +593,10 @@ function rcp_get_timezone_id() {
 /**
  * Get the number of days in a particular month.
  *
+ * @param int $calendar Calendar to use for calculation.
+ * @param int $month    Month in the selected calendar.
+ * @param int $year     Year in the selected calendar.
+ *
  * @since  2.0.9
  * @return string $timezone The timezone ID.
  */
@@ -588,6 +610,8 @@ if ( ! function_exists( 'cal_days_in_month' ) ) {
 
 /**
  * Retrieves the payment status label for a payment.
+ *
+ * @param int|object $payment Payment ID or database object.
  *
  * @since  2.1
  * @return string
@@ -659,8 +683,9 @@ function rcp_get_ip() {
 /**
  * Checks to see if content is restricted in any way.
  *
- * @since  2.5
  * @param  int $post_id The post ID to check for restrictions.
+ *
+ * @since  2.5
  * @return bool True if the content is restricted, false if not.
  */
 function rcp_is_restricted_content( $post_id ) {
@@ -702,7 +727,7 @@ function rcp_is_restricted_content( $post_id ) {
  * Get RCP Currency.
  *
  * @since  2.5
- * @return mixed|void
+ * @return string
  */
 function rcp_get_currency() {
 	global $rcp_options;
@@ -750,8 +775,9 @@ function rcp_is_zero_decimal_currency( $currency = '' ) {
 /**
  * Sets the number of decimal places based on the currency.
  *
- * @since  2.5.2
  * @param  int $decimals The number of decimal places. Default is 2.
+ *
+ * @since  2.5.2
  * @return int The number of decimal places.
  */
 function rcp_currency_decimal_filter( $decimals = 2 ) {
@@ -768,8 +794,9 @@ function rcp_currency_decimal_filter( $decimals = 2 ) {
 /**
  * Gets the taxonomy term ids connected to the specified post ID.
  *
- * @since 2.7
  * @param  int $post_id The post ID.
+ *
+ * @since 2.7
  * @return array An array of taxonomy term IDs connected to the post.
  */
 function rcp_get_connected_term_ids( $post_id = 0 ) {
@@ -866,6 +893,8 @@ function rcp_get_restricted_post_ids() {
 /**
  * Clears the transient that holds the post IDs with post-level restrictions defined.
  *
+ * @param int $post_id
+ *
  * @since 2.7
  */
 function rcp_delete_transient_restricted_post_ids( $post_id ) {
@@ -883,6 +912,12 @@ add_action( 'untrash_post', 'rcp_delete_transient_restricted_post_ids' );
 
 /**
  * Clears the transient that holds the post IDs that are assigned to restricted taxonomy terms.
+ *
+ * @param int    $term_id  Term ID.
+ * @param int    $tt_id    Term taxonomy ID.
+ * @param string $taxonomy Taxonomy slug.
+ *
+ * @return void
  */
 function rcp_delete_transient_post_ids_assigned_to_restricted_terms( $term_id, $tt_id, $taxonomy ) {
 	delete_transient( 'rcp_post_ids_assigned_to_restricted_terms' );

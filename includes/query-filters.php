@@ -1,8 +1,20 @@
 <?php
+/**
+ * Query Filters
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Query Filters
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
-/*
-* Hides all premium posts from non active subscribers
-*/
+/**
+ * Hides all premium posts from non active subscribers
+ *
+ * @param WP_Query $query
+ *
+ * @return void
+ */
 function rcp_hide_premium_posts( $query ) {
 
 	if ( ! $query->is_main_query() ) {

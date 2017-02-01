@@ -1,6 +1,20 @@
 <?php
+/**
+ * Scripts
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Scripts
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
-
+/**
+ * Load admin scripts
+ *
+ * @param string $hook Page hook.
+ *
+ * @return void
+ */
 function rcp_admin_scripts( $hook ) {
 
 	global $rcp_options, $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_help_page, $rcp_tools_page, $rcp_logs_page;
@@ -57,6 +71,13 @@ function rcp_admin_help_url() {
 }
 add_action( 'admin_head', 'rcp_admin_help_url' );
 
+/**
+ * Load admin stylesheets
+ *
+ * @param string $hook Page hook.
+ *
+ * @return void
+ */
 function rcp_admin_styles( $hook ) {
 	global $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_logs_page, $rcp_help_page, $rcp_tools_page, $rcp_add_ons_page;
 	$pages = array(
@@ -84,13 +105,21 @@ function rcp_admin_styles( $hook ) {
 add_action( 'admin_enqueue_scripts', 'rcp_admin_styles' );
 
 
-// register our form css
+/**
+ * Register form CSS
+ *
+ * @return void
+ */
 function rcp_register_css() {
 	wp_register_style('rcp-form-css',  RCP_PLUGIN_URL . 'includes/css/forms.css', array(), RCP_PLUGIN_VERSION );
 }
 add_action('init', 'rcp_register_css');
 
-// register our front end scripts
+/**
+ * Register front-end scripts
+ *
+ * @return void
+ */
 function rcp_register_scripts() {
 
 	global $rcp_options;
@@ -103,7 +132,11 @@ function rcp_register_scripts() {
 }
 add_action( 'init', 'rcp_register_scripts' );
 
-// load our form css
+/**
+ * Load form CSS
+ *
+ * @return void
+ */
 function rcp_print_css() {
 	global $rcp_load_css, $rcp_options;
 
@@ -115,7 +148,11 @@ function rcp_print_css() {
 }
 add_action( 'wp_footer', 'rcp_print_css' );
 
-// load our form scripts
+/**
+ * Load form scripts
+ *
+ * @return void
+ */
 function rcp_print_scripts() {
 	global $rcp_load_scripts, $rcp_options;
 

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Edit Discount Code
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Edit Discount
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 $code = rcp_get_discount_details( urldecode( $_GET['edit_discount'] ) );
 ?>
 <h2>

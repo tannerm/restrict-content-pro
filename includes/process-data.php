@@ -1,10 +1,26 @@
 <?php
+/**
+ * Process Data
+ *
+ * This file processes all new subscription creations and updates.
+ * It also manages adding/editing subscriptions to users.
+ * The user registration and login is handled in registration-functions.php
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Process Data
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
-/*************************************************************************
-* this file processes all new subscription creations and updates
-* also manages adding/editings subscriptions to users
-* User registration and login is handled in registration-functions.php
-**************************************************************************/
+/**
+ * Handles admin processing for:
+ *
+ * New subscription creations and updates
+ * Adding/editing subscriptions to users
+ * Adding/editing discount codes
+ *
+ * @return void
+ */
 function rcp_process_data() {
 
 	if( ! is_admin() )

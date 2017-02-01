@@ -1,10 +1,24 @@
 <?php
+/**
+ * Easy Digital Downloads Integration
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Integrations/EDD
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.7
+ */
 
 class RCP_EDD {
 
 	private $user;
 	private $member;
 
+	/**
+	 * RCP_EDD constructor.
+	 *
+	 * @return void
+	 */
 	public function __construct() {
 		$this->user = wp_get_current_user();
 		$this->member = new RCP_Member( $this->user->ID );
@@ -19,8 +33,12 @@ class RCP_EDD {
 	/**
 	 * Restricts the ability to purchase a product if the user doesn't have access to it.
 	 *
+	 * @param bool         $can_purchase
+	 * @param EDD_Download $download
+	 *
 	 * @access public
-	 * @since 2.7
+	 * @since  2.7
+	 * @return bool
 	 */
 	public function can_purchase( $can_purchase, $download ) {
 
@@ -34,8 +52,12 @@ class RCP_EDD {
 	/**
 	 * Overrides the purchase form if the user doesn't have access to the product.
 	 *
+	 * @param string $purchase_form Purchase form HTML.
+	 * @param array  $args          Array of arguments for display.
+	 *
 	 * @access public
-	 * @since 2.7
+	 * @since  2.7
+	 * @return string
 	 */
 	public function download_form( $purchase_form, $args ) {
 
@@ -49,8 +71,13 @@ class RCP_EDD {
 	/**
 	 * Prevents downloading files if the member doesn't have access.
 	 *
+	 * @param bool  $has_access Whether or not the member has access.
+	 * @param int   $payment_id ID of the payment to check.
+	 * @param array $args       Array of arguments.
+	 *
 	 * @access public
-	 * @since 2.7
+	 * @since  2.7
+	 * @return bool
 	 */
 	public function file_download_has_access( $has_access, $payment_id, $args ) {
 
@@ -64,8 +91,12 @@ class RCP_EDD {
 	/**
 	 * Removes restricted downloads from the [downloads] shortcode query.
 	 *
+	 * @param array $query Query arguments.
+	 * @param array $atts  Shortcode attributes.
+	 *
 	 * @access public
 	 * @since 2.7
+	 * @return array
 	 */
 	public function edd_downloads_query( $query, $atts ) {
 
@@ -86,8 +117,11 @@ class RCP_EDD {
 	/**
 	 * Filters the excerpt in the [downloads] shortcode if the member doesn't have access.
 	 *
+	 * @param string $excerpt
+	 *
 	 * @access public
-	 * @since 2.7
+	 * @since  2.7
+	 * @return string
 	 */
 	public function edd_downloads_excerpt( $excerpt ) {
 
@@ -113,7 +147,12 @@ class RCP_EDD {
 	}
 }
 
-
+/**
+ * Initialize the EDD integration if the plugin is activated.
+ *
+ * @since 2.7
+ * @return void
+ */
 function rcp_edd_init() {
 
 	if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {

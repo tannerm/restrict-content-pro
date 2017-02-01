@@ -1,5 +1,16 @@
 <?php
+/**
+ * Help Menus Setup
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Help Menus Setup
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
+/**
+ * Setup help tabs
+ */
 function rcp_help_tabs() {
 	global $rcp_members_page;
 	global $rcp_subscriptions_page;

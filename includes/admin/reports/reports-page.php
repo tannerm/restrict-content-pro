@@ -1,11 +1,20 @@
 <?php
+/**
+ * Reports Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Reports
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
 /**
  * Renders the reports page
  *
  * @access  public
  * @since   1.8
-*/
+ * @return  void
+ */
 function rcp_reports_page() {
 	$current_page = admin_url( 'admin.php?page=rcp-reports' );
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'earnings';
@@ -30,8 +39,11 @@ function rcp_reports_page() {
 /**
  * Displays the earnings graph.
  *
+ * @uses rcp_get_report_dates()
+ *
  * @access  public
  * @since   1.8
+ * @return  void
 */
 function rcp_earnings_graph() {
 	global $rcp_options, $wpdb;
@@ -272,7 +284,8 @@ add_action( 'rcp_reports_tab_earnings', 'rcp_earnings_graph' );
  *
  * @access  public
  * @since   2.5
-*/
+ * @return  void
+ */
 function rcp_refunds_graph() {
 	global $rcp_options, $wpdb;
 
@@ -509,7 +522,8 @@ add_action( 'rcp_reports_tab_refunds', 'rcp_refunds_graph' );
  *
  * @access  public
  * @since   1.8
-*/
+ * @return  void
+ */
 function rcp_signups_graph() {
 	global $rcp_options, $wpdb;
 
@@ -733,7 +747,7 @@ add_action( 'rcp_reports_tab_signups', 'rcp_signups_graph' );
  *
  * @since 1.8
  * @return void
-*/
+ */
 function rcp_reports_graph_controls() {
 	$date_options = apply_filters( 'rcp_report_date_options', array(
 		'this_week' 	=> __( 'This Week', 'rcp' ),
@@ -816,8 +830,8 @@ function rcp_reports_graph_controls() {
  * selected date-range (if any)
  *
  * @since 1.8
- * @return void
-*/
+ * @return array
+ */
 function rcp_get_report_dates() {
 
 	$dates = array();
@@ -997,7 +1011,7 @@ function rcp_get_report_dates() {
  *
  * @since 1.8
  * @return void
-*/
+ */
 function rcp_parse_report_dates() {
 
 	if( ! isset( $_GET['rcp_action'] ) )

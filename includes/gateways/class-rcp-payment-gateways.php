@@ -3,7 +3,7 @@
  * Payment Gateways Class
  *
  * @package     Restrict Content Pro
- * @subpackage  Classes/Roles
+ * @subpackage  Classes/Payment Gateways
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
@@ -31,7 +31,7 @@ class RCP_Payment_Gateways {
 	 * Retrieve a gateway by ID
 	 *
 	 * @since 2.1
-	 * @return object|false
+	 * @return array|false
 	 */
 	public function get_gateway( $id = '' ) {
 
@@ -133,6 +133,8 @@ class RCP_Payment_Gateways {
 
 	/**
 	 * Determine if a gateway is enabled
+	 *
+	 * @param string $id ID of the gateway to check.
 	 *
 	 * @since 2.1
 	 * @return bool

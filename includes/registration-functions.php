@@ -5,7 +5,7 @@
  * Processes the registration form
  *
  * @package     Restrict Content Pro
- * @subpackage  Login Functions
+ * @subpackage  Registration Functions
  * @copyright   Copyright (c) 2013, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
@@ -18,8 +18,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Register a new user
  *
- * @access      public
- * @since       1.0
+ * @access public
+ * @since  1.0
+ * @return void
  */
 function rcp_process_registration() {
 
@@ -339,6 +340,8 @@ add_action( 'wp_ajax_nopriv_rcp_process_register_form', 'rcp_process_registratio
 
 /**
  * Provide the default registration values when checking out with Stripe Checkout.
+ *
+ * @return void
  */
 function rcp_handle_stripe_checkout() {
 
@@ -442,10 +445,11 @@ function rcp_validate_user_data() {
 /**
  * Get the registration success/return URL
  *
+ * @param       $user_id int The user ID we have just registered
+ *
  * @access      public
  * @since       1.5
- * @param       $user_id int The user ID we have just registered
- * @return      array
+ * @return      string
  */
 function rcp_get_return_url( $user_id = 0 ) {
 
@@ -524,6 +528,9 @@ function rcp_get_auto_renew_behavior() {
  * This removes the flag as late as possible so other systems can hook into
  * rcp_set_status and perform actions on new subscriptions
  *
+ * @param string $status  User's membership status.
+ * @param int    $user_id ID of the member.
+ *
  * @access      public
  * @since       2.3.6
  * @return      void
@@ -544,6 +551,11 @@ add_action( 'rcp_set_status', 'rcp_remove_new_subscription_flag', 999999999999, 
  * values are set as the permanent values.
  *
  * See https://github.com/restrictcontentpro/restrict-content-pro/issues/294
+ *
+ * @param string     $status     User's membership status.
+ * @param int        $user_id    ID of the user.
+ * @param string     $old_status Previous membership status.
+ * @param RCP_Member $member     Member object.
  *
  * @access      public
  * @since       2.4.3
@@ -572,6 +584,11 @@ add_action( 'rcp_set_status', 'rcp_set_pending_subscription_on_upgrade', 10, 4 )
 
 /**
  * Adjust subscription member counts on status changes
+ *
+ * @param string     $status     User's membership status.
+ * @param int        $user_id    ID of the user.
+ * @param string     $old_status Previous membership status.
+ * @param RCP_Member $member     Member object.
  *
  * @access      public
  * @since       2.6
@@ -652,6 +669,7 @@ function rcp_registration_is_recurring() {
  * Add the registration total before the gateway fields
  *
  * @since 2.5
+ * @return void
  */
 function rcp_registration_total_field() {
 	?>
@@ -663,10 +681,10 @@ add_action( 'rcp_after_register_form_fields', 'rcp_registration_total_field' );
 /**
  * Get formatted total for this registration
  *
- * @since      2.5
- * @param bool $echo
+ * @param bool $echo Whether or not to echo the value.
  *
- * @return mixed|string|void
+ * @since      2.5
+ * @return string|bool|void
  */
 function rcp_registration_total( $echo = true ) {
 	$total = rcp_get_registration_total();
@@ -705,9 +723,8 @@ function rcp_registration_total( $echo = true ) {
 /**
  * Get the total for this registration
  *
- * @since 2.5
- *
- * @return mixed|void
+ * @since  2.5
+ * @return float|false
  */
 function rcp_get_registration_total() {
 
@@ -721,10 +738,10 @@ function rcp_get_registration_total() {
 /**
  * Get formatted recurring total for this registration
  *
- * @since      2.5
- * @param bool $echo
+ * @param bool $echo Whether or not to echo the value.
  *
- * @return mixed|string|void
+ * @since  2.5
+ * @return string|bool|void
  */
 function rcp_registration_recurring_total( $echo = true ) {
 	$total = rcp_get_registration_recurring_total();
@@ -761,7 +778,7 @@ function rcp_registration_recurring_total( $echo = true ) {
  * Get the recurring total payment
  *
  * @since 2.5
- * @return bool|Int
+ * @return bool|int
  */
 function rcp_get_registration_recurring_total() {
 
@@ -804,11 +821,11 @@ function rcp_get_registration() {
  *
  * Auto setup cart on page load if $_POST parameters are found
  *
- * @since      2.5
- * @param      $level_id
- * @param null $discount
+ * @param int|null    $level_id ID of the subscription level for this registration.
+ * @param string|null $discount Discount code to apply to this registration.
  *
- * @return mixed|void
+ * @since  2.5
+ * @return void
  */
 function rcp_setup_registration( $level_id = null, $discount = null ) {
 	global $rcp_registration;
@@ -819,6 +836,10 @@ function rcp_setup_registration( $level_id = null, $discount = null ) {
 
 /**
  * Automatically setup the registration object
+ *
+ * @uses rcp_setup_registration()
+ *
+ * @return void
  */
 function rcp_setup_registration_init() {
 
@@ -839,7 +860,7 @@ add_action( 'init', 'rcp_setup_registration_init' );
  * Filter levels to only show valid upgrade levels
  *
  * @since 2.5
- * @return mixed|void
+ * @return array Array of subscriptions.
  */
 function rcp_filter_registration_upgrade_levels() {
 
@@ -861,8 +882,10 @@ add_action( 'rcp_before_subscription_form_fields', 'rcp_filter_registration_upgr
 /**
  * Add prorate credit to member registration
  *
+ * @param RCP_Registration $registration
+ *
  * @since 2.5
- * @param $registration
+ * @return void
  */
 function rcp_add_prorate_fee( $registration ) {
 	if ( ! $amount = rcp_get_member_prorate_credit() ) {
@@ -877,6 +900,7 @@ add_action( 'rcp_registration_init', 'rcp_add_prorate_fee' );
  * Add message to checkout specifying proration credit
  *
  * @since 2.5
+ * @return void
  */
 function rcp_add_prorate_message() {
 	if ( ! $amount = rcp_get_member_prorate_credit() ) {
@@ -891,6 +915,9 @@ add_action( 'rcp_before_subscription_form_fields', 'rcp_add_prorate_message' );
 
 /**
  * Removes the _rcp_expiring_soon_email_sent user meta flag when the member's status is set to active.
+ *
+ * @param string $status  User's membership status.
+ * @param int    $user_id ID of the user.
  *
  * @since 2.5.5
  * @return void

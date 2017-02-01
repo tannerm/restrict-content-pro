@@ -1,22 +1,24 @@
 <?php
-
 /**
- * Deprecated functions
+ * Deprecated Functions
  *
  * These are kept here for backwards compatibility with extensions that might be using them
  *
- * @since 1.5
-*/
-
-
+ * @package     Restrict Content Pro
+ * @subpackage  Deprecated Functions
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.5
+ */
 
 /**
  * Retrieve all payments from database
  *
  * @deprecated  1.5
  * @access      private
- * @param       $offset INT The number to skip
- * @param       $number INT The number to retrieve
+ * @param       int $offset The number to skip
+ * @param       int $number The number to retrieve
+ *
  * @return      array
 */
 function rcp_get_payments( $offset = 0, $number = 20 ) {
@@ -83,7 +85,8 @@ function rcp_get_earnings() {
  *
  * @deprecated  1.5
  * @access      private
- * @param       $payment_data ARRAY The data to store
+ * @param       array $payment_data The data to store
+ *
  * @return      INT the ID of the new payment, or false if insertion fails
 */
 function rcp_insert_payment( $payment_data = array() ) {
@@ -117,7 +120,7 @@ function rcp_check_for_existing_payment( $type, $date, $subscription_key ) {
  * Retrieves the amount for the lat payment made by a user
  *
  * @access      private
- * @param       $user_id INT The ID of the user to retrieve a payment amount for
+ * @param       int $user_id The ID of the user to retrieve a payment amount for
  * @return      float
 */
 function rcp_get_users_last_payment_amount( $user_id = 0 ) {
@@ -161,13 +164,19 @@ function rcp_calc_member_expiration( $expiration_object ) {
  * Generate URL to download a PDF invoice
  *
  * @since 2.0
- * @deprecated 2.6
+ * @deprecated 2.6 Use rcp_get_invoice_url() instead.
  * @return string
 */
 function rcp_get_pdf_download_url( $payment_id = 0 ) {
 	return rcp_get_invoice_url( $payment_id );
 }
 
+/**
+ * User level checks
+ *
+ * @deprecated 2.7
+ * @return void
+ */
 function rcp_user_level_checks() {
 	if ( current_user_can( 'read' ) ) {
 		if ( current_user_can( 'edit_posts' ) ) {
@@ -193,6 +202,15 @@ function rcp_user_level_checks() {
 }
 // add_action( 'loop_start', 'rcp_user_level_checks' );
 
+/**
+ * Display message to editors
+ *
+ * @deprecated 2.7
+ *
+ * @param string $content
+ *
+ * @return string
+ */
 function rcp_display_message_to_editors( $content ) {
 	global $rcp_options, $post, $user_ID;
 
@@ -216,6 +234,15 @@ function rcp_display_message_to_editors( $content ) {
 	return $content;
 }
 
+/**
+ * Display message to authors
+ *
+ * @deprecated 2.7
+ *
+ * @param string $content
+ *
+ * @return string
+ */
 function rcp_display_message_authors( $content ) {
 	global $rcp_options, $post, $user_ID;
 
@@ -240,6 +267,15 @@ function rcp_display_message_authors( $content ) {
 	return $content;
 }
 
+/**
+ * Display message to contributors
+ *
+ * @deprecated 2.7
+ *
+ * @param string $content
+ *
+ * @return string
+ */
 function rcp_display_message_to_contributors( $content ) {
 	global $rcp_options, $post, $user_ID;
 
@@ -264,6 +300,15 @@ function rcp_display_message_to_contributors( $content ) {
 	return $content;
 }
 
+/**
+ * Display message to subscribers
+ *
+ * @deprecated 2.7
+ *
+ * @param string $content
+ *
+ * @return string
+ */
 function rcp_display_message_to_subscribers( $content ) {
 	global $rcp_options, $post, $user_ID;
 
@@ -288,7 +333,15 @@ function rcp_display_message_to_subscribers( $content ) {
 	return $content;
 }
 
-// this is the function used to display the error message to non-logged in users
+/**
+ * Display error message to non-logged in users
+ *
+ * @deprecated 2.7
+ *
+ * @param string $content
+ *
+ * @return string
+ */
 function rcp_display_message_to_non_loggged_in_users( $content ) {
 	global $rcp_options, $post, $user_ID;
 

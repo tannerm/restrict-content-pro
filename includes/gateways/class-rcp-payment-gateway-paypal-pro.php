@@ -1,8 +1,9 @@
 <?php
 /**
- * PayPal Express Gateway class
+ * PayPal Pro Gateway class
  *
  * @package     Restrict Content Pro
+ * @subpackage  Classes/Gateways/PayPal Pro
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
@@ -18,7 +19,9 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 	/**
 	 * Get things going
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function init() {
 
@@ -54,7 +57,9 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 	/**
 	 * Process registration
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_signup() {
 
@@ -200,7 +205,9 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 	/**
 	 * Validate additional fields during registration submission
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function validate_fields() {
 
@@ -253,7 +260,9 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 	/**
 	 * Process webhooks
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_webhooks() {
 

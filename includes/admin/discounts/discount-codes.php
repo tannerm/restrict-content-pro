@@ -1,7 +1,19 @@
 <?php
+/**
+ * Discount Codes Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Discount Codes
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
-function rcp_discounts_page()
-{
+/**
+ * Render the discounts table
+ *
+ * @return void
+ */
+function rcp_discounts_page() {
 	global $rcp_options, $rcp_discounts_db_name, $wpdb;
 	$page = admin_url( '/admin.php?page=rcp-discounts' );
 	?>
@@ -160,7 +172,7 @@ function rcp_discounts_page()
 								</th>
 								<td>
 									<?php
-									$levels = rcp_get_subscription_levels('all', false);
+									$levels = rcp_get_subscription_levels( 'all' );
 									if( $levels ) : ?>
 										<select name="subscription" id="rcp-subscription">
 											<option value="0"><?php _e( 'All Levels', 'rcp' ); ?></option>

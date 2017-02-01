@@ -1,5 +1,18 @@
 <?php
+/**
+ * Upgrades
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Upgrades
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
+/**
+ * Check if upgrade is needed
+ *
+ * @return bool
+ */
 function rcp_check_if_upgrade_needed() {
 	global $rcp_db_version, $rcp_discounts_db_version, $rcp_payments_db_version;
 
@@ -26,6 +39,13 @@ function rcp_check_if_upgrade_needed() {
 }
 add_action( 'admin_init', 'rcp_check_if_upgrade_needed' );
 
+/**
+ * Run upgrade
+ *
+ * @uses rcp_check_if_upgrade_needed()
+ *
+ * @return void
+ */
 function rcp_run_upgrade() {
 	if( isset( $_GET['rcp-action'] ) && $_GET['rcp-action'] == 'upgrade' && rcp_check_if_upgrade_needed() ) {
 		rcp_options_upgrade();
@@ -34,6 +54,13 @@ function rcp_run_upgrade() {
 }
 add_action( 'admin_init', 'rcp_run_upgrade' );
 
+/**
+ * Options upgrade
+ *
+ * @param bool $network_wide Whether the plugin is being network activated.
+ *
+ * @return void
+ */
 function rcp_options_upgrade( $network_wide = false ) {
 
 	/**
@@ -49,7 +76,11 @@ function rcp_options_upgrade( $network_wide = false ) {
 }
 register_activation_hook( RCP_PLUGIN_FILE, 'rcp_options_upgrade' );
 
-// this is a one-time function to upgrade database table collation
+/**
+ * This is a one-time function to upgrade database table collation
+ *
+ * @return void
+ */
 function rcp_upgrade_table_collation() {
 	if( isset( $_GET['rcp-action'] ) && $_GET['rcp-action'] == 'db-collate' ) {
 		global $wpdb, $rcp_db_name, $rcp_db_version, $rcp_discounts_db_name, $rcp_discounts_db_version, $rcp_payments_db_name, $rcp_payments_db_version;

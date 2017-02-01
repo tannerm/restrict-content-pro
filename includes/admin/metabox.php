@@ -1,9 +1,18 @@
 <?php
+/**
+ * Meta Box
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Meta Box
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
-/*******************************************
-* Restrict Content Meta Box
-*******************************************/
-
+/**
+ * Get metabox fields
+ *
+ * @return array
+ */
 function rcp_get_metabox_fields() {
 
 	//custom meta boxes
@@ -23,6 +32,8 @@ function rcp_get_metabox_fields() {
 /**
  * Add meta box to supported post types
  *
+ * @uses rcp_get_metabox_fields()
+ *
  * @return void
  */
 function rcp_add_meta_boxes() {
@@ -40,7 +51,11 @@ function rcp_add_meta_boxes() {
 add_action( 'add_meta_boxes', 'rcp_add_meta_boxes' );
 
 
-// Callback function to show fields in meta box
+/**
+ * Callback function to show fields in meta box
+ *
+ * @return void
+ */
 function rcp_render_meta_box() {
 	global $post;
 
@@ -57,7 +72,13 @@ function rcp_render_meta_box() {
 
 }
 
-// Save data from meta box
+/**
+ * Save data from meta box
+ *
+ * @param int $post_id ID of the post being saved.
+ *
+ * @return void
+ */
 function rcp_save_meta_data( $post_id ) {
 
 	// verify nonce

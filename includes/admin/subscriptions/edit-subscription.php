@@ -1,4 +1,13 @@
 <?php
+/**
+ * Edit Subscription Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Edit Subscription
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 $level = rcp_get_subscription_details( absint( urldecode( $_GET['edit_subscription'] ) ) );
 $level->role = empty( $level->role ) ? 'subscriber' : $level->role;
 

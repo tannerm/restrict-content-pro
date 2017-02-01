@@ -1,4 +1,15 @@
 <?php
+/**
+ * Meta Box View
+ *
+ * HTML display of the meta box.
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Meta Box View
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 $is_paid           = get_post_meta( get_the_ID(), '_is_paid', true );
 $sub_levels        = get_post_meta( get_the_ID(), 'rcp_subscription_level', true );
 $set_level         = is_array( $sub_levels ) ? '' : $sub_levels;

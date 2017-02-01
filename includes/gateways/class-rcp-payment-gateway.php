@@ -3,7 +3,7 @@
  * Payment Gateway Base Class
  *
  * @package     Restrict Content Pro
- * @subpackage  Classes/Roles
+ * @subpackage  Classes/Gateway
  * @copyright   Copyright (c) 2012, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1

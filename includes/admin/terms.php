@@ -18,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Setup actions for taxonomy restricted fields
  *
  * @since 2.5
+ * @return void
  */
 function rcp_setup_taxonomy_edit_fields() {
 	$taxonomies = rcp_get_restricted_taxonomies();
@@ -85,6 +86,8 @@ function rcp_term_edit_meta_fields( $term ) {
 /**
  * Add restriction options to the add term page
  *
+ * @param string $taxonomy
+ *
  * @access      public
  * @since       2.7
  * @return      void
@@ -126,6 +129,10 @@ function rcp_term_add_meta_fields( $taxonomy ) {
 
 /**
  * Save our custom term meta
+ *
+ * @param int    $term_id  Term ID.
+ * @param int    $tt_id    Term taxonomy ID.
+ * @param string $taxonomy Taxonomy slug.
  *
  * @access      public
  * @since       2.0

@@ -1,7 +1,19 @@
 <?php
+/**
+ * Subscription Levels Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Subscription Levels
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
-function rcp_member_levels_page()
-{
+/**
+ * Render subscription levels page
+ *
+ * @return void
+ */
+function rcp_member_levels_page() {
 	global $rcp_options, $rcp_db_name, $wpdb;
 	$page = admin_url( '/admin.php?page=rcp-member-levels' );
 	?>

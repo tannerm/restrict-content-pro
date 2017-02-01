@@ -1,4 +1,12 @@
 <?php
+/**
+ * Logs List Table
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Logs List Table
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
 if( ! class_exists( 'WP_List_Table' ) ) {
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
@@ -14,7 +22,11 @@ if( ! class_exists( 'WP_List_Table' ) ) {
 */
 class RCP_Logs_List_Table extends WP_List_Table {
 
-
+	/**
+	 * RCP_Logs_List_Table constructor.
+	 *
+	 * @return void
+	 */
     function __construct(){
         global $status, $page;
 

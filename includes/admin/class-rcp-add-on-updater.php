@@ -1,4 +1,12 @@
 <?php
+/**
+ * RCP Add-On Updater
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Add-On Updater
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
 //set_site_transient( 'update_plugins', null );
 	
