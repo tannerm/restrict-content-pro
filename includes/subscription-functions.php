@@ -427,3 +427,22 @@ function rcp_get_term_restrictions( $term_id ) {
 
 	return apply_filters( 'rcp_get_term_restrictions', $restrictions, $term_id );
 }
+
+/**
+ * Gets the IDs of subscription levels with trial periods.
+ *
+ * @since 2.7
+ * @return array An array of numeric subscription level IDs. An empty array if none are found.
+ */
+function rcp_get_trial_level_ids() {
+
+	$ids = array();
+
+	foreach( rcp_get_subscription_levels() as $level ) {
+		if( ! empty( $level->trial_duration ) && $level->trial_duration > 0 ) {
+			$ids[] = $level->id;
+		}
+	}
+
+	return $ids;
+}

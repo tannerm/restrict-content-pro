@@ -163,7 +163,7 @@ function rcp_validate_subscription_level() {
 	var level     = $( '#rcp_subscription_levels input:checked' );
 	var full      = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
 	var lifetime  = level.data( 'duration' ) == 'forever';
-	var level_has_trial = level.data( 'has-trial' ) == true;
+	var level_has_trial = rcp_script_options.trial_levels.indexOf(level.val()) !== -1;
 
 	rcp_validating_level = true;
 
@@ -245,7 +245,7 @@ function rcp_validate_gateways() {
 	}
 	var full     = $('.rcp_gateway_fields').hasClass( 'rcp_discounted_100' );
 	var lifetime = level.data( 'duration' ) == 'forever';
-	var level_has_trial = level.data( 'has-trial' ) == true;
+	var level_has_trial = rcp_script_options.trial_levels.indexOf(level.val()) !== -1;
 	var gateway  = rcp_get_gateway();
 
 	rcp_validating_gateway = true;
