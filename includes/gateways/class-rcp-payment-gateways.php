@@ -87,6 +87,11 @@ class RCP_Payment_Gateways {
 				'label'        => __( 'Credit / Debit Card', 'rcp' ),
 				'admin_label'  => __( '2Checkout', 'rcp' ),
 				'class'        => 'RCP_Payment_Gateway_2Checkout'
+			),
+			'authorizenet' => array(
+				'label'        => __( 'Credit / Debit Card', 'rcp' ),
+				'admin_label'  => __( 'Authorize.net', 'rcp' ),
+				'class'        => 'RCP_Payment_Gateway_Authorizenet'
 			)
 		);
 
