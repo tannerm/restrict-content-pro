@@ -296,6 +296,14 @@ function rcp_get_merchant_transaction_id_link( $payment ) {
 
 				break;
 
+			case 'braintree credit card one time' :
+
+				$mode        = $test ? 'sandbox.' : '';
+				$merchant_id = $test ? $rcp_options['braintree_sandbox_merchantId'] : $rcp_options['braintree_live_merchantId'];
+
+				$url         = 'https://' . $mode . 'braintreegateway.com/merchants/' . $merchant_id . '/transactions/' . $payment->transaction_id;
+
+				break;
 		}
 
 		if( ! empty( $url ) ) {
