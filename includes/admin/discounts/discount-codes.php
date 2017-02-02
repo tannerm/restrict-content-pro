@@ -101,7 +101,7 @@ function rcp_discounts_page()
 				</tfoot>
 			</table>
 			<?php do_action( 'rcp_discounts_below_table' ); ?>
-			<?php if( current_user_can( 'rcp_manage_levels' ) ) : ?>
+			<?php if( current_user_can( 'rcp_manage_discounts' ) ) : ?>
 				<h3><?php _e( 'Add New Discount', 'rcp' ); ?></h3>
 				<form id="rcp-discounts" action="" method="POST">
 					<table class="form-table">
