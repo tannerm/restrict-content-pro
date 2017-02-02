@@ -250,7 +250,7 @@ function rcp_get_members_of_subscription( $id = 1, $fields = 'ID') {
  *
  * @param int $user_id The ID of the user to return the subscription level of, or 0 for current user.
  *
- * @return int The ID of the user's subscription level
+ * @return int|false The ID of the user's subscription level or false if none.
  */
 function rcp_get_subscription_id( $user_id = 0 ) {
 

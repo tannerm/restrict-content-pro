@@ -45,6 +45,8 @@ add_filter( 'the_content', 'rcp_filter_restricted_content' , 100 );
 /**
  * Filter restricted content based on category restrictions
  *
+ * @deprecated 2.7 This is now covered by rcp_filter_restricted_content()
+ *
  * @access      public
  * @since       2.0
  * @return      $content
