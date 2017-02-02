@@ -129,7 +129,8 @@ function rcp_print_scripts() {
 			'register'   => __( 'Register', 'rcp' ),
 			'pleasewait' => __( 'Please Wait . . . ', 'rcp' ),
 			'pay_now'    => __( 'Submit Payment', 'rcp' ),
-			'user_has_trialed'  => is_user_logged_in() && rcp_has_used_trial()
+			'user_has_trialed'  => is_user_logged_in() && rcp_has_used_trial(),
+			'trial_levels' => rcp_get_trial_level_ids()
 		)
 	);
 
