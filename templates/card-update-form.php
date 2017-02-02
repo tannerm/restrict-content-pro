@@ -1,3 +1,19 @@
+<?php
+/**
+ * Card Update Form
+ *
+ * This form is displayed with the [rcp_update_card] shortcode.
+ * @link http://docs.restrictcontentpro.com/article/1608-rcpupdatecard
+ *
+ * For modifying this template, please see: http://docs.restrictcontentpro.com/article/1738-template-files
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Templates/Card Update Form
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+?>
+
 <?php $member = new RCP_Member( get_current_user_id() ); ?>
 <form id="rcp_update_card_form" class="rcp_form" action="" method="POST">
 

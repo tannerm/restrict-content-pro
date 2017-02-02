@@ -1,4 +1,18 @@
 <?php
+/**
+ * Registration Form - Total Details
+ *
+ * This template is loaded into register.php and register-single.php to display the total
+ * subscription cost, fees, and any recurring costs.
+ * @link http://docs.restrictcontentpro.com/article/1597-registerform
+ *
+ * For modifying this template, please see: http://docs.restrictcontentpro.com/article/1738-template-files
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Templates/Register/Total Details
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
 if ( ! rcp_is_registration() ) {
 	return;

@@ -2,8 +2,13 @@
 /**
  * Email Header for the Default Template
  *
- * @package Restrict Content Pro/Templates/Emails
- * @version 2.7
+ * For modifying this template, please see: http://docs.restrictcontentpro.com/article/1738-template-files
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Templates/Emails/Header
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.7
  */
 
 

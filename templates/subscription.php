@@ -1,4 +1,17 @@
 <?php
+/**
+ * Subscription Details
+ *
+ * This template displays the current user's membership details with [subscription_details]
+ * @link http://docs.restrictcontentpro.com/article/1600-subscriptiondetails
+ *
+ * For modifying this template, please see: http://docs.restrictcontentpro.com/article/1738-template-files
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Templates/Subscription
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
 global $user_ID, $rcp_options, $rcp_load_css;
 

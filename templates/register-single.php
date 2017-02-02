@@ -1,4 +1,19 @@
 <?php
+/**
+ * Registration Form - Single
+ *
+ * This template is used to display the registration form for a single
+ * subscription level with [register_form id="3"]
+ * @link http://docs.restrictcontentpro.com/article/1597-registerform
+ *
+ * For modifying this template, please see: http://docs.restrictcontentpro.com/article/1738-template-files
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Templates/Register/Single
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 global $rcp_options, $rcp_level, $post, $rcp_levels_db;
 
 $level = rcp_get_subscription_details( $rcp_level );

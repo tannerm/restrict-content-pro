@@ -1,7 +1,18 @@
 <?php
 /**
+ * Profile Editor Form
+ *
  * This template is used to display the profile editor with [rcp_profile_editor]
+ * @link http://docs.restrictcontentpro.com/article/1602-rcpprofileeditor
+ *
+ * For modifying this template, please see: http://docs.restrictcontentpro.com/article/1738-template-files
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Templates/Profile Editor
+ * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
+
 global $rcp_load_css;
 $current_user = wp_get_current_user();
 $rcp_load_css = true;
