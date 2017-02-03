@@ -324,6 +324,10 @@ class RCP_Emails {
 
 		$message = $this->parse_tags( $message );
 
+		if ( 'text/html' === $this->content_type || true === $this->html ) {
+			$message = make_clickable( $message );
+		}
+
 		$attachments = apply_filters( 'rcp_email_attachments', $attachments, $this );
 
 		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
