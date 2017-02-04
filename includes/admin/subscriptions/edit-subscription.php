@@ -6,12 +6,12 @@ global $rcp_levels_db;
 $trial_duration = ! empty( $level->trial_duration ) ? $level->trial_duration : 0;
 $trial_duration_unit = in_array( $level->trial_duration_unit, array( 'day', 'month', 'year' ) ) ? $level->trial_duration_unit : 'day'
 ?>
-<h2>
+<h1>
 	<?php _e( 'Edit Subscription Level:', 'rcp' ); echo ' ' . stripslashes( $level->name ); ?>
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-member-levels' ); ?>" class="add-new-h2">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
-</h2>
+</h1>
 <form id="rcp-edit-subscription" action="" method="post">
 	<table class="form-table">
 		<tbody>

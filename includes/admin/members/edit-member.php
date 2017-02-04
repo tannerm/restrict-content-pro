@@ -6,9 +6,9 @@ if( isset( $_GET['edit_member'] ) ) {
 }
 $member = new RCP_Member( $member_id );
 ?>
-<h2>
+<h1>
 	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $member->display_name; ?>
-</h2>
+</h1>
 <?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
 	<a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
 <?php } ?>

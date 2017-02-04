@@ -1,9 +1,9 @@
-<h2>
+<h1>
 	<?php _e( 'Create Payment', 'rcp' ); ?> -
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-payments' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
-</h2>
+</h1>
 <form id="rcp-add-payment" action="" method="post">
 	<table class="form-table">
 		<tbody>
