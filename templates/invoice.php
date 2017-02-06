@@ -1,4 +1,18 @@
-<?php global $rcp_options, $rcp_payment, $rcp_member; ?>
+<?php
+/**
+ * Invoice
+ *
+ * Template for displaying invoice details.
+ *
+ * For modifying this template, please see: http://docs.restrictcontentpro.com/article/1738-template-files
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Templates/Invoice
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
+global $rcp_options, $rcp_payment, $rcp_member; ?>
 <!DOCTYPE html>
 <html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
 <head>

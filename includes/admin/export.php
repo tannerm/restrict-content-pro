@@ -1,5 +1,18 @@
 <?php
+/**
+ * Export Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Export
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
+/**
+ * Render the export page
+ *
+ * @return void
+ */
 function rcp_export_page() {
 	global $rcp_options, $rcp_db_name, $wpdb;
 	$current_page = admin_url( '/admin.php?page=rcp-export' );

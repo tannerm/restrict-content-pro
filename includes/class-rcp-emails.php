@@ -6,7 +6,7 @@
  *
  * @package     Restrict Content Pro
  * @subpackage  Classes/Emails
- * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
  * @license     http://opensource.org/license/gpl-2.1.php GNU Public License
  * @since       2.7
  */
@@ -285,6 +285,8 @@ class RCP_Emails {
 	 * @param string $subject The subject line of the email
 	 * @param string $message The body of the email
 	 * @param string|array $attachments Attachments to the email
+	 *
+	 * @return bool Whether the email contents were sent successfully.
 	 */
 	public function send( $to, $subject, $message, $attachments = '' ) {
 
@@ -367,6 +369,7 @@ class RCP_Emails {
 	 * Converts text formatted HTML. This is primarily for turning line breaks into <p> and <br/> tags.
 	 *
 	 * @since 2.7
+	 * @return string
 	 */
 	public function text_to_html( $message ) {
 		if ( 'text/html' === $this->content_type || true === $this->html ) {

@@ -1,5 +1,18 @@
 <?php
+/**
+ * Admin Notices
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Notices
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
+/**
+ * Display admin notices
+ *
+ * @return void
+ */
 function rcp_admin_notices() {
 	global $rcp_options;
 
@@ -156,7 +169,7 @@ add_action( 'admin_notices', 'rcp_admin_notices' );
  * Dismiss an admin notice for current user
  *
  * @access      private
- * @return      array
+ * @return      void
 */
 function rcp_dismiss_notices() {
 

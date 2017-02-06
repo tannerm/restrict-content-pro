@@ -1,4 +1,13 @@
 <?php
+/**
+ * Edit Payment Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Edit Payment
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 $payment_id = ! empty( $_GET['payment_id'] ) ? absint( $_GET['payment_id'] ) : 0;
 $payments   = new RCP_Payments;
 $payment    = $payments->get_payment( $payment_id );

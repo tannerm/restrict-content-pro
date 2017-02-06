@@ -1,4 +1,13 @@
 <?php
+/**
+ * Edit Member Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Edit Member
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 if( isset( $_GET['edit_member'] ) ) {
 	$member_id = absint( $_GET['edit_member'] );
 } elseif( isset( $_GET['view_member'] ) ) {

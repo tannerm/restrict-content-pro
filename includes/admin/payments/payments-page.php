@@ -1,12 +1,19 @@
 <?php
+/**
+ * Payments Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Payments Page
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
 /**
  * Renders the Restrict > Payments page
  *
  * @since  1.0
  * @return void
-*/
-
+ */
 function rcp_payments_page() {
 	global $rcp_options;
 	$current_page = admin_url( '/admin.php?page=rcp-payments' ); ?>

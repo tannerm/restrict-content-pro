@@ -1,4 +1,13 @@
 <?php
+/**
+ * RCP Registration Class
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Classes/Registration
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.5
+ */
 
 class RCP_Registration {
 
@@ -26,6 +35,14 @@ class RCP_Registration {
 	 */
 	protected $fees = array();
 
+	/**
+	 * Get things started.
+	 *
+	 * @param int         $level_id ID of the subscription level for this registration.
+	 * @param null|string $discount Discount code to apply to this registration.
+	 *
+	 * @return void
+	 */
 	public function __construct( $level_id = 0, $discount = null ) {
 
 		if ( ! $level_id ) {
@@ -110,9 +127,10 @@ class RCP_Registration {
 	 * Add fee to the registration. Use negative fee for credit.
 	 *
 	 * @since      2.5
-	 * @param      $amount
+	 * @param float $amount
 	 * @param null $description
 	 * @param bool $recurring
+	 * @param bool $proration
 	 *
 	 * @return bool
 	 */
@@ -254,7 +272,7 @@ class RCP_Registration {
 	 * @param null $total
 	 * @param bool $only_recurring | set to only get discounts that are recurring
 	 *
-	 * @return int|mixed|void
+	 * @return int|mixed
 	 */
 	public function get_total_discounts( $total = null, $only_recurring = false ) {
 
@@ -299,7 +317,7 @@ class RCP_Registration {
 	 * @param bool $fees      | Include fees?
 	 *
 	 * @since 2.5
-	 * @return mixed|void
+	 * @return float
 	 */
 	public function get_total( $discounts = true, $fees = true ) {
 
@@ -336,7 +354,7 @@ class RCP_Registration {
 	 * @param bool $fees      | Include fees?
 	 *
 	 * @since 2.5
-	 * @return mixed|void
+	 * @return float
 	 */
 	public function get_recurring_total( $discounts = true, $fees = true  ) {
 

@@ -3,7 +3,8 @@
  * PayPal Express Gateway class
  *
  * @package     Restrict Content Pro
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @subpackage  Classes/Gateways/PayPal Express
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
 */
@@ -19,7 +20,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 	/**
 	 * Get things going
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function init() {
 
@@ -57,7 +60,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 	/**
 	 * Process registration
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_signup() {
 
@@ -149,7 +154,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 	/**
 	 * Validate additional fields during registration submission
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function validate_fields() {
 
@@ -162,7 +169,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 	/**
 	 * Process payment confirmation after returning from PayPal
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_confirmation() {
 
@@ -374,7 +383,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 	/**
 	 * Process PayPal IPN
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_webhooks() {
 
@@ -583,6 +594,13 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Get checkout details
+	 *
+	 * @param string $token
+	 *
+	 * @return array|bool|string|WP_Error
+	 */
 	public function get_checkout_details( $token = '' ) {
 
 		$args = array(

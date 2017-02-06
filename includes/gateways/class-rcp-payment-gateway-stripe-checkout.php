@@ -3,8 +3,8 @@
  * Payment Gateway For Stripe Checkout
  *
  * @package     Restrict Content Pro
- * @subpackage  Classes/Roles
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @subpackage  Classes/Gateways/Stripe Checkout
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.5
 */
@@ -25,6 +25,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 	 * Process registration
 	 *
 	 * @since 2.5
+	 * @return void
 	 */
 	public function process_signup() {
 
@@ -162,6 +163,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 	 * Load Stripe JS
 	 *
 	 * @since 2.5
+	 * @return void
 	 */
 	public function scripts() {
 		parent::scripts();
@@ -172,7 +174,8 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 	/**
 	 * Validate fields
 	 *
-	 * @since 2.5
+	 * @since  2.5
+	 * @return void
 	 */
 	public function validate_fields() {}
 

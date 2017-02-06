@@ -1,4 +1,18 @@
-<?php global $rcp_password_form_args; ?>
+<?php
+/**
+ * Change Password Form
+ *
+ * This form is for changing an account password.
+ *
+ * For modifying this template, please see: http://docs.restrictcontentpro.com/article/1738-template-files
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Templates/Change Password Form
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
+global $rcp_password_form_args; ?>
 
 <?php rcp_show_error_messages( 'password' ); ?>
 

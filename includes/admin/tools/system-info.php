@@ -1,5 +1,14 @@
 <?php
 /**
+ * System Info
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/System Info
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
+/**
  * Displays the system info report
  *
  * @since 2.5
