@@ -5,7 +5,7 @@
  * Adds CAPTCHA to the registration form and validates the submission.
  *
  * @package     Restrict Content Pro
- * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
  * @license     http://opensource.org/license/gpl-2.1.php GNU Public License
  */
 

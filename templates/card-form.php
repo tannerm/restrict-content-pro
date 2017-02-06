@@ -9,7 +9,7 @@
  *
  * @package     Restrict Content Pro
  * @subpackage  Templates/Card Form
- * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 ?>

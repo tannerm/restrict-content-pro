@@ -1,10 +1,22 @@
 <?php
+/**
+ * Authorize.net Functions
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Gateways/Authorize.net/Functions
+ * @copyright   Copyright (c) 2017, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.7
+ */
 
 /**
  * Cancel an Authorize.net subscriber
  *
+ * @param int $member_id ID of the member to cancel.
+ *
  * @access      private
  * @since       2.7
+ * @return      bool|WP_Error
  */
 function rcp_authnet_cancel_member( $member_id = 0 ) {
 
@@ -44,9 +56,10 @@ function rcp_authnet_cancel_member( $member_id = 0 ) {
 /**
  * Determine if a member is an Authorize.net Customer
  *
+ * @param int $user_id The ID of the user to check
+ *
  * @since       2.7
  * @access      public
- * @param       $user_id INT the ID of the user to check
  * @return      bool
 */
 function rcp_is_authnet_subscriber( $user_id = 0 ) {
@@ -102,8 +115,12 @@ function rcp_has_authnet_api_access() {
 /**
  * Process an update card form request for Authorize.net
  *
+ * @param int        $member_id  ID of the member.
+ * @param RCP_Member $member_obj Member object.
+ *
  * @access      private
  * @since       2.7
+ * @return      void
  */
 function rcp_authorizenet_update_billing_card( $member_id = 0, $member_obj ) {
 

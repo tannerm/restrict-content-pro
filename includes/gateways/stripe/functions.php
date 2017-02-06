@@ -1,11 +1,20 @@
 <?php
+/**
+ * Stripe Functions
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Gateways/Stripe/Functions
+ * @copyright   Copyright (c) 2017, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
 /**
  * Determine if a member is a Stripe subscriber
  *
- * @since       v2.1
+ * @param int $user_id The ID of the user to check
+ *
+ * @since       2.1
  * @access      public
- * @param       $user_id INT the ID of the user to check
  * @return      bool
 */
 function rcp_is_stripe_subscriber( $user_id = 0 ) {
@@ -35,6 +44,7 @@ function rcp_is_stripe_subscriber( $user_id = 0 ) {
  *
  * @access      private
  * @since       2.1
+ * @return      void
  */
 function rcp_stripe_update_card_form_js() {
 	global $rcp_options;
@@ -114,8 +124,12 @@ add_action( 'rcp_before_update_billing_card_form', 'rcp_stripe_update_card_form_
 /**
  * Process an update card form request
  *
+ * @param int        $member_id  ID of the member.
+ * @param RCP_Member $member_obj Member object.
+ *
  * @access      private
  * @since       2.1
+ * @return      void
  */
 function rcp_stripe_update_billing_card( $member_id = 0, $member_obj ) {
 
@@ -258,8 +272,11 @@ add_action( 'rcp_update_billing_card', 'rcp_stripe_update_billing_card', 10, 2 )
 /**
  * Create discount code in Stripe when one is created in RCP
  *
+ * @param array $args
+ *
  * @access      private
  * @since       2.1
+ * @return      void
  */
 function rcp_stripe_create_discount( $args ) {
 
@@ -410,9 +427,8 @@ add_action( 'rcp_pre_add_discount', 'rcp_stripe_create_discount' );
 /**
  * Update a discount in Stripe when a local code is updated
  *
- * @access      private
- * @param       $discount_id int the id of the discount being updated
- * @param       $args array the array of discount args
+ * @param int $discount_id The id of the discount being updated
+ * @param array $args The array of discount args
  *              array(
  *					'name',
  *					'description',
@@ -424,7 +440,10 @@ add_action( 'rcp_pre_add_discount', 'rcp_stripe_create_discount' );
  *					'max_uses',
  *					'subscription_id'
  *				)
+ *
+ * @access      private
  * @since       2.1
+ * @return      void
  */
 function rcp_stripe_update_discount( $discount_id, $args ) {
 
@@ -607,8 +626,11 @@ add_action( 'rcp_edit_discount', 'rcp_stripe_update_discount', 10, 2 );
 /**
  * Check if a coupone exists in Stripe
  *
+ * @param string $code Discount code.
+ *
  * @access      private
  * @since       2.1
+ * @return      bool|void
  */
 function rcp_stripe_does_coupon_exists( $code ) {
 	global $rcp_options;
@@ -656,9 +678,9 @@ function rcp_stripe_get_currency_multiplier( $currency = '' ) {
 /**
  * Query Stripe API to get customer's card details
  *
- * @param $card       array
- * @param $member_id int
- * @param $member    object
+ * @param array      $cards     Array of card information.
+ * @param int        $member_id ID of the member.
+ * @param RCP_Member $member    RCP member object.
  *
  * @since 2.5
  * @return array
@@ -711,7 +733,11 @@ add_filter( 'rcp_get_card_details', 'rcp_stripe_get_card_details', 10, 3 );
 /**
  * Sends a new user notification email when using the [register_form_stripe] shortcode.
  *
+ * @param int                        $user_id ID of the user.
+ * @param RCP_Payment_Gateway_Stripe $gateway Stripe gateway object.
+ *
  * @since 2.7
+ * @return void
  */
 function rcp_stripe_checkout_new_user_notification( $user_id, $gateway ) {
 

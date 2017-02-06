@@ -7,7 +7,7 @@
  *
  * @package     Restrict Content Pro
  * @subpackage  Classes/Subscription Levels
- * @copyright   Copyright (c) 2016, Restrict Content Pro
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
