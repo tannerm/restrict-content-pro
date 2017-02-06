@@ -21,7 +21,7 @@ function rcp_discounts_page() {
 		<?php if( isset( $_GET['edit_discount'] ) ) :
 			include('edit-discount.php');
 		else : ?>
-			<h2><?php _e( 'Discount Codes', 'rcp' ); ?></h2>
+			<h1><?php _e( 'Discount Codes', 'rcp' ); ?></h1>
 
 			<table class="wp-list-table widefat posts">
 				<thead>
@@ -113,8 +113,8 @@ function rcp_discounts_page() {
 				</tfoot>
 			</table>
 			<?php do_action( 'rcp_discounts_below_table' ); ?>
-			<?php if( current_user_can( 'rcp_manage_levels' ) ) : ?>
-				<h3><?php _e( 'Add New Discount', 'rcp' ); ?></h3>
+			<?php if( current_user_can( 'rcp_manage_discounts' ) ) : ?>
+				<h2><?php _e( 'Add New Discount', 'rcp' ); ?></h2>
 				<form id="rcp-discounts" action="" method="POST">
 					<table class="form-table">
 						<tbody>

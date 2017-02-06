@@ -13,12 +13,12 @@ $payments   = new RCP_Payments;
 $payment    = $payments->get_payment( $payment_id );
 $user       = get_userdata( $payment->user_id );
 ?>
-<h2>
+<h1>
 	<?php _e( 'Edit Payment', 'rcp' ); ?> -
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-payments' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
-</h2>
+</h1>
 <form id="rcp-edit-payment" action="" method="post">
 	<table class="form-table">
 		<tbody>

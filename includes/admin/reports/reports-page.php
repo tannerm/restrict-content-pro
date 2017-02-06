@@ -264,7 +264,7 @@ function rcp_earnings_graph() {
 			});
 	   });
 	</script>
-	<h2><?php _e( 'Earnings Report', 'rcp' ); ?></h2>
+	<h1><?php _e( 'Earnings Report', 'rcp' ); ?></h1>
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
 			<div class="inside">
@@ -502,7 +502,7 @@ function rcp_refunds_graph() {
 		    });
 	   });
     </script>
-	<h2><?php _e( 'Refunds Report', 'rcp' ); ?></h2>
+	<h1><?php _e( 'Refunds Report', 'rcp' ); ?></h1>
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
 			<div class="inside">
@@ -727,7 +727,7 @@ function rcp_signups_graph() {
 
 	   });
 	</script>
-	<h2><?php _e( 'Signups Report', 'rcp' ); ?></h2>
+	<h1><?php _e( 'Signups Report', 'rcp' ); ?></h1>
 	<div class="metabox-holder" style="padding-top: 0;">
 		<div class="postbox">
 			<div class="inside">

@@ -21,7 +21,7 @@ function rcp_member_levels_page() {
 		<?php if(isset($_GET['edit_subscription'])) :
 			include('edit-subscription.php');
 		else : ?>
-			<h2><?php _e('Subscription Levels', 'rcp'); ?></h2>
+			<h1><?php _e('Subscription Levels', 'rcp'); ?></h1>
 			<table class="wp-list-table widefat fixed posts rcp-subscriptions">
 				<thead>
 					<tr>
@@ -112,7 +112,7 @@ function rcp_member_levels_page() {
 			</table>
 			<?php do_action('rcp_levels_below_table'); ?>
 			<?php if( current_user_can( 'rcp_manage_levels' ) ) : ?>
-				<h3><?php _e('Add New Level', 'rcp'); ?></h3>
+				<h2><?php _e('Add New Level', 'rcp'); ?></h2>
 				<form id="rcp-member-levels" action="" method="post">
 					<table class="form-table">
 						<tbody>
