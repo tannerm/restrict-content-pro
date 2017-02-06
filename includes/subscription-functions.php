@@ -270,7 +270,7 @@ function rcp_filter_duration_unit( $unit, $length ) {
 /**
  * Checks to see if there are any paid subscription levels created
  *
- * @sincei 1.1.0
+ * @since 1.1.0
  * @return bool True if paid levels exist, false if only free.
  */
 function rcp_has_paid_levels() {
