@@ -176,7 +176,7 @@ class RCP_Member extends WP_User {
 	 * Calculates the new expiration date for a member
 	 *
 	 * @param   bool $force_now Whether or not to force an update.
-     * @param   bool $trial     Whether or not this is for a free trial.
+	 * @param   bool $trial     Whether or not this is for a free trial.
 	 *
 	 * @access  public
 	 * @since   2.4
@@ -795,7 +795,7 @@ class RCP_Member extends WP_User {
 	}
 
 	/**
-	 * Determines if the member can access current content
+	 * Determines if the member can access specified content
 	 *
 	 * @param   int $post_id ID of the post to check the permissions on.
 	 *
