@@ -240,6 +240,8 @@ class RCP_Emails {
 			return apply_filters( 'rcp_email_message', wp_strip_all_tags( $message ), $this );
 		}
 
+		$message = $this->parse_tags( $message );
+
 		$message = $this->text_to_html( $message );
 
 		ob_start();
@@ -324,8 +326,6 @@ class RCP_Emails {
 
 		$message = $this->build_email( $message );
 
-		$message = $this->parse_tags( $message );
-
 		$attachments = apply_filters( 'rcp_email_attachments', $attachments, $this );
 
 		$sent = wp_mail( $to, $subject, $message, $this->get_headers(), $attachments );
@@ -373,7 +373,7 @@ class RCP_Emails {
 	 */
 	public function text_to_html( $message ) {
 		if ( 'text/html' === $this->content_type || true === $this->html ) {
-			$message = wpautop( $message );
+			$message = wpautop( make_clickable( $message ) );
 		}
 
 		return $message;
