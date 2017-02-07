@@ -1,4 +1,19 @@
-<?php global $rcp_login_form_args; ?>
+<?php
+/**
+ * Login Form
+ *
+ * Template for displaying the login form. This is used in the [login_form] shortcode.
+ * @link http://docs.restrictcontentpro.com/article/1598-loginform
+ *
+ * For modifying this template, please see: http://docs.restrictcontentpro.com/article/1738-template-files
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Templates/Login
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
+global $rcp_login_form_args; ?>
 <?php if( ! is_user_logged_in() ) : ?>
 
 	<?php rcp_show_error_messages( 'login' ); ?>

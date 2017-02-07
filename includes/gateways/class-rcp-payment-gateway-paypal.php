@@ -1,10 +1,10 @@
 <?php
 /**
- * Payment Gateway Base Class
+ * PayPal Standard Payment Gateway
  *
  * @package     Restrict Content Pro
- * @subpackage  Classes/Roles
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @subpackage  Classes/Gateways/PayPal
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
 */
@@ -20,7 +20,9 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 	/**
 	 * Get things going
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function init() {
 
@@ -58,7 +60,9 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 	/**
 	 * Process registration
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_signup() {
 
@@ -185,7 +189,9 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 	/**
 	 * Process PayPal IPN
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_webhooks() {
 

@@ -6,7 +6,7 @@
  *
  * @package     Restrict Content Pro
  * @subpackage  Template Functions
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -37,16 +37,17 @@ function rcp_get_templates_url() {
 /**
  * Retrieves a template part
  *
- * @since v1.5
- *
  * Taken from bbPress
  *
- * @param string $slug
+ * @param string $slug Template slug.
  * @param string $name Optional. Default null
  *
  * @uses  rcp_locate_template()
  * @uses  load_template()
  * @uses  get_template_part()
+ *
+ * @since  1.5
+ * @return string The template filename if one is located.
  */
 function rcp_get_template_part( $slug, $name = null, $load = true ) {
 	// Execute code for this part
@@ -74,12 +75,12 @@ function rcp_get_template_part( $slug, $name = null, $load = true ) {
  *
  * Taken from bbPress
  *
- * @since v1.5
- *
  * @param string|array $template_names Template file(s) to search for, in order.
  * @param bool $load If true the template file will be loaded if it is found.
  * @param bool $require_once Whether to require_once or require. Default true.
  *                            Has no effect if $load is false.
+ *
+ * @since  1.5
  * @return string The template filename if one is located.
  */
 function rcp_locate_template( $template_names, $load = false, $require_once = true ) {

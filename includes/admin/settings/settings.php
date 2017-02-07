@@ -1,13 +1,29 @@
 <?php
+/**
+ * Settings
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Settings
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
-// register the plugin settings
+/**
+ * Register the plugins ettings
+ *
+ * @return void
+ */
 function rcp_register_settings() {
 	// create whitelist of options
 	register_setting( 'rcp_settings_group', 'rcp_settings', 'rcp_sanitize_settings' );
 }
-//call register settings function
 add_action( 'admin_init', 'rcp_register_settings' );
 
+/**
+ * Render the settings page
+ *
+ * @return void
+ */
 function rcp_settings_page() {
 	global $rcp_options;
 
@@ -239,7 +255,7 @@ function rcp_settings_page() {
 					<table class="form-table">
 						<tr>
 							<th>
-								<label fo="rcp_settings[currency]"><?php _e( 'Currency', 'rcp' ); ?></label>
+								<label for="rcp_settings[currency]"><?php _e( 'Currency', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<select id="rcp_settings[currency]" name="rcp_settings[currency]">
@@ -1312,7 +1328,13 @@ function rcp_settings_page() {
 	<?php
 }
 
-
+/**
+ * Sanitize settings.
+ *
+ * @param array $data
+ *
+ * @return array Sanitized data.
+ */
 function rcp_sanitize_settings( $data ) {
 
 	if( empty( $data['license_key'] ) ) {
@@ -1377,6 +1399,11 @@ function rcp_sanitize_settings( $data ) {
 	return $data;
 }
 
+/**
+ * Activate license key
+ *
+ * @return bool|void
+ */
 function rcp_activate_license() {
 	if( ! isset( $_POST['rcp_license_activate'] ) )
 		return;
@@ -1422,6 +1449,11 @@ function rcp_activate_license() {
 
 }
 
+/**
+ * Deactivate license key
+ *
+ * @return bool|void
+ */
 function rcp_deactivate_license() {
 
 	// listen for our activate button to be clicked
@@ -1467,6 +1499,11 @@ function rcp_deactivate_license() {
 	}
 }
 
+/**
+ * Check license key to see if it's valid
+ *
+ * @return string|false|void
+ */
 function rcp_check_license() {
 
 	if( ! empty( $_POST['rcp_settings'] ) ) {

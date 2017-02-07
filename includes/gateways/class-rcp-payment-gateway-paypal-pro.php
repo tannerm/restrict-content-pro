@@ -1,9 +1,10 @@
 <?php
 /**
- * PayPal Express Gateway class
+ * PayPal Pro Gateway class
  *
  * @package     Restrict Content Pro
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @subpackage  Classes/Gateways/PayPal Pro
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
 */
@@ -18,7 +19,9 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 	/**
 	 * Get things going
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function init() {
 
@@ -54,7 +57,9 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 	/**
 	 * Process registration
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_signup() {
 
@@ -121,7 +126,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			$args['TRIALAMT']                = 0;
 		}
 
-		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
+		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => apply_filters( 'rcp_paypal_pro_args', $args, $this ) ) );
 		$body    = wp_remote_retrieve_body( $request );
 		$code    = wp_remote_retrieve_response_code( $request );
 		$message = wp_remote_retrieve_response_message( $request );
@@ -166,7 +171,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 					$member->set_payment_profile_id( $body['PROFILEID'] );
 				}
 
-				if ( isset( $body['PROFILESTATUS'] ) && 'ActiveProfile' === $body['PROFILESTATUS'] ) {
+				if ( isset( $body['TRANSACTIONID'] ) && false !== strpos( strtolower( $body['ACK'] ), 'success' ) ) {
 					// Confirm a one-time payment
 					$member->renew( $this->auto_renew );
 				}
@@ -200,7 +205,9 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 	/**
 	 * Validate additional fields during registration submission
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function validate_fields() {
 
@@ -253,7 +260,9 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 	/**
 	 * Process webhooks
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_webhooks() {
 

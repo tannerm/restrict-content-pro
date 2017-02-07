@@ -1,5 +1,23 @@
 <?php
+/**
+ * Email Functions
+ *
+ * Functions for sending emails to members.
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Email Functions
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
+/**
+ * Send emails to members based on subscription status changes.
+ *
+ * @param int    $user_id ID of the user to send the email to.
+ * @param string $status  User's status, to determine which email to send.
+ *
+ * @return void
+ */
 function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 
 	global $rcp_options;
@@ -144,6 +162,15 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 	}
 }
 
+/**
+ * Sends "expiring soon" notice to user.
+ *
+ * @see rcp_check_for_soon_to_expire_users()
+ *
+ * @param int $user_id ID of the user to send the email to.
+ *
+ * @return void
+ */
 function rcp_email_expiring_notice( $user_id = 0 ) {
 
 	global $rcp_options;
@@ -162,6 +189,9 @@ function rcp_email_expiring_notice( $user_id = 0 ) {
 
 /**
  * Triggers the expiration notice when an account is marked as expired.
+ *
+ * @param string $status  User's status.
+ * @param int    $user_id ID of the user to email.
  *
  * @access  public
  * @since   2.0.9
@@ -182,6 +212,9 @@ add_action( 'rcp_set_status', 'rcp_email_on_expiration', 11, 2 );
 /**
  * Triggers the activation notice when an account is marked as active.
  *
+ * @param string $status  User's status.
+ * @param int    $user_id ID of the user to email.
+ *
  * @access  public
  * @since   2.1
  * @return  void
@@ -201,6 +234,9 @@ add_action( 'rcp_set_status', 'rcp_email_on_activation', 11, 2 );
 /**
  * Triggers the cancellation notice when an account is marked as cancelled.
  *
+ * @param string $status  User's status.
+ * @param int    $user_id ID of the user to email.
+ *
  * @access  public
  * @since   2.1
  * @return  void
@@ -219,6 +255,10 @@ add_action( 'rcp_set_status', 'rcp_email_on_cancellation', 11, 2 );
 
 /**
  * Triggers an email to the member when a payment is received.
+ *
+ * @param int   $payment_id ID of the payment.
+ * @param array $args       Array of payment data.
+ * @param float $amount     Amount of the payment.
  *
  * @access  public
  * @since   2.3
@@ -365,7 +405,7 @@ function rcp_email_tag_last_name( $member_id = 0 ) {
 
 /**
  * Email template tag: displayname
- * The member's last name
+ * The member's display name
  *
  * @since 2.7
  * @param int $member_id
@@ -378,7 +418,7 @@ function rcp_email_tag_display_name( $member_id = 0 ) {
 
 /**
  * Email template tag: expiration
- * The member's last name
+ * The member's expiration date
  *
  * @since 2.7
  * @param int $member_id
@@ -391,7 +431,7 @@ function rcp_email_tag_expiration( $member_id = 0 ) {
 
 /**
  * Email template tag: subscription_name
- * The member's last name
+ * The name of the member's subscription level
  *
  * @since 2.7
  * @param int $member_id
@@ -404,7 +444,7 @@ function rcp_email_tag_subscription_name( $member_id = 0 ) {
 
 /**
  * Email template tag: subscription_key
- * The member's last name
+ * The member's subscription key
  *
  * @since 2.7
  * @param int $member_id
@@ -417,7 +457,7 @@ function rcp_email_tag_subscription_key( $member_id = 0 ) {
 
 /**
  * Email template tag: member_id
- * The member's last name
+ * The member's user ID number
  *
  * @since 2.7
  * @param int $member_id

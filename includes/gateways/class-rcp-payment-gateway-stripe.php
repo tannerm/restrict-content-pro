@@ -1,10 +1,10 @@
 <?php
 /**
- * Payment Gateway Base Class
+ * Stripe Payment Gateway
  *
  * @package     Restrict Content Pro
- * @subpackage  Classes/Roles
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @subpackage  Classes/Gateways/Stripe
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
 */
@@ -17,7 +17,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Get things going
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function init() {
 
@@ -50,7 +52,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Process registration
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_signup() {
 
@@ -368,8 +372,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Handle Stripe processing error
 	 *
-	 * @since 2.5
 	 * @param $e
+	 *
+	 * @access protected
+	 * @since  2.5
+	 * @return void
 	 */
 	protected function handle_processing_error( $e ) {
 		$body = $e->getJsonBody();
@@ -387,6 +394,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 	}
 
+	/**
+	 * Process webhooks
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function process_webhooks() {
 
 		if( ! isset( $_GET['listener'] ) || strtolower( $_GET['listener'] ) != 'stripe' ) {
@@ -666,7 +679,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Validate additional fields during registration submission
 	 *
-	 * @since 2.1
+	 * @since  2.1
+	 * @return void
 	 */
 	public function validate_fields() {
 
@@ -710,6 +724,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	 * Load Stripe JS
 	 *
 	 * @since 2.1
+	 * @return void
 	 */
 	public function scripts() {
 		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v2/', array( 'jquery' ) );
@@ -718,8 +733,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Create plan in Stripe
 	 *
+	 * @param string $plan_name Name of the plan.
+	 *
 	 * @since 2.1
-	 * @return bool | string - plan_id if successful, false if not
+	 * @return bool|string - plan_id if successful, false if not
 	 */
 	private function create_plan( $plan_name = '' ) {
 		global $rcp_options;
@@ -759,9 +776,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Determine if a plan exists
 	 *
+	 * @param string $plan The name of the plan to check
+	 *
 	 * @since 2.1
-	 * @param $plan | The name of the plan to check
-	 * @return bool | string false if the plan doesn't exist, plan id if it does
+	 * @return bool|string false if the plan doesn't exist, plan id if it does
 	 */
 	private function plan_exists( $plan ) {
 

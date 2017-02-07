@@ -5,7 +5,7 @@
  * This class handles database upgrade routines between versions
  *
  * @package     Restrict Content Pro
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.6
  */
@@ -14,6 +14,12 @@ class RCP_Upgrades {
 	private $version = '';
 	private $upgraded = false;
 
+	/**
+	 * RCP_Upgrades constructor.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function __construct() {
 
 		$this->version = preg_replace( '/[^0-9.].*/', '', get_option( 'rcp_version' ) );
@@ -22,6 +28,12 @@ class RCP_Upgrades {
 
 	}
 
+	/**
+	 * Trigger updates and maybe update the RCP version number
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function init() {
 
 		$this->v26_upgrades();
@@ -35,6 +47,12 @@ class RCP_Upgrades {
 
 	}
 
+	/**
+	 * Process 2.6 upgrades
+	 *
+	 * @access private
+	 * @return void
+	 */
 	private function v26_upgrades() {
 
 		if( version_compare( $this->version, '2.6', '<' ) ) {
@@ -42,6 +60,12 @@ class RCP_Upgrades {
 		}
 	}
 
+	/**
+	 * Process 2.7 upgrades
+	 *
+	 * @access private
+	 * @return void
+	 */
 	private function v27_upgrades() {
 
 		if( version_compare( $this->version, '2.7', '<' ) ) {
