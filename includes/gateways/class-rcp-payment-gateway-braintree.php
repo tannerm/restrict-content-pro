@@ -46,11 +46,12 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		}
 
 		require_once RCP_PLUGIN_DIR . 'includes/libraries/braintree/lib/Braintree.php';
-
+// @todo only run this when needed
 		Braintree_Configuration::environment( $this->environment );
 		Braintree_Configuration::merchantId( $this->merchantId );
 		Braintree_Configuration::publicKey( $this->publicKey );
 		Braintree_Configuration::privateKey( $this->privateKey );
+// error_log('bt init');
 
 	}
 
@@ -80,7 +81,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			'paymentMethodNonce' => $_POST['payment_method_nonce']
 		);
 
-		if ( $this->is_trial() ) {
+		if ( $this->auto_renew && $this->is_trial() ) {
 
 			// Braintree only supports 'day' and 'month' units
 			$duration      = $this->subscription_data['trial_duration'];
@@ -102,7 +103,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		 * Get the customer record from Braintree if it already exists,
 		 * otherwise create a new customer record.
 		 */
-		// $customer = false;
+		$customer = false;
 		try {
 			$customer = Braintree_Customer::find( $this->subscription_data['user_id'] );
 
@@ -123,7 +124,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 					)
 				);
 
-				if ( $result->success ) {
+				if ( $result->success && $result->customer ) {
 					$customer = $result->customer;
 				}
 
@@ -131,6 +132,10 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 				// Customer lookup/creation failed
 				$this->handle_processing_error( $e );
 			}
+		}
+
+		if ( empty( $customer ) ) {
+			$this->handle_processing_error( __( 'Unable to locate or create customer record. Please try again. Contact support is the problem persists.', 'rcp' ) );
 		}
 
 		/**
@@ -195,15 +200,19 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			$rcp_payments->insert( $payment_data );
 
 			// Update the user account
-			rcp_set_status( $this->subscription_data['user_id'], 'active' );
+			$member->set_recurring( false );
+
+			$member->set_expiration_date( $member->calculate_expiration() );
+
+			$member->set_status( 'active' );
 
 		}
 
 		// Update the user account
 		if ( $paid && $this->auto_renew ) {
 			$member->set_merchant_subscription_id( $result->subscription->id );
-			update_user_meta( $this->subscription_data['user_id'], 'rcp_recurring_payment_id', $result->subscription->id );
-			$member->renew( true, 'active', $result->subscription->billingPeriodEndDate->format( 'Y-m-d 23:59:59' ) );
+			$member->set_payment_profile_id( $this->user_id );
+			// $member->renew( true, 'active', $result->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
 		}
 
 		wp_redirect( $this->return_url ); exit;
@@ -213,22 +222,150 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 	public function process_webhooks() {
 
 		if ( isset( $_GET['bt_challenge'] ) ) {
-			$verify = Braintree_WebhookNotification::verify( $_GET['bt_challenge'] );
-			die( $verify );
+			try {
+				$verify = Braintree_WebhookNotification::verify( $_GET['bt_challenge'] );
+				die( $verify );
+			} catch ( Exception $e ) {
+				wp_die( 'Verification failed' );
+			}
 		}
 
-		if ( isset( $_POST['bt_signature'] ) && isset( $_POST['bt_payload'] ) ) {
-			$webhook = Braintree_WebhookNotification::parse( $_POST['bt_signature'], $_POST['bt_payload'] );
-echo '<pre>'; print_r($webhook); echo '</pre>';
-			if ( empty( $webhook->kind ) ) {
-				die( 'Invalid webhook' );
-			}
+		if ( ! isset( $_POST['bt_signature'] ) || ! isset( $_POST['bt_payload'] ) ) {
+			return;
+		}
 
-			if ( 'check' === $webhook->kind ) {
-				die(200);
-			}
+		$data = false;
 
+		try {
+			$data = Braintree_WebhookNotification::parse( $_POST['bt_signature'], $_POST['bt_payload'] );
+// echo '<pre>'; print_r($data); echo '</pre>';
+// die(200);
+		} catch ( Exception $e ) {
+			die( 'Invalid signature' );
+		}
 
+		if ( empty( $data->kind ) ) {
+			die( 'Invalid webhook' );
+		}
+
+		/**
+		 * Return early if this is a test webhook.
+		 */
+		if ( 'check' === $data->kind ) {
+			die(200);
+		}
+
+		$transaction = $data->subscription->transactions[0];
+
+		$user_id = rcp_get_member_id_from_profile_id( $transaction->customer['id'] );
+
+		if ( empty( $user_id ) ) {
+			die( 'no user ID found' );
+		}
+
+		$member = new RCP_Member( $user_id );
+
+		if ( ! $member->get_subscription_id() ) {
+			die( 'no subscription ID for member' );
+		}
+
+		$rcp_payments = new RCP_Payments;
+
+		/**
+		 * Process the webhook.
+		 *
+		 * Descriptions of the webhook kinds below come from the Braintree developer docs.
+		 * @see https://developers.braintreepayments.com/reference/general/webhooks/subscription/php
+		 */
+		switch ( $data->kind ) {
+
+			/**
+			 * A subscription is canceled.
+			 */
+			case 'subscription_canceled':
+				$member->cancel();
+				$member->set_expiration_date( $data->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
+				$member->add_note( __( 'Subscription cancelled in Braintree', 'rcp' ) );
+				die( 'braintree subscription cancelled' );
+				break;
+
+			/**
+			 * A subscription successfully moves to the next billing cycle.
+			 * This occurs if a new transaction is created. It will also occur
+			 * when a billing cycle is skipped due to the presence of a
+			 * negative balance that covers the cost of the subscription.
+			 */
+			case 'subscription_charged_successfully':
+
+				if ( $rcp_payments->payment_exists( $transaction->id ) ) {
+					die( 'duplicate payment found' );
+				}
+
+				$member->renew( true, 'active', $data->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
+
+				$payment_id = $rcp_payments->insert( array(
+					'date'             => date_i18n( $transaction->createdAt->format( 'Y-m-d g:i:s' ) ),
+					'payment_type'     => 'Braintree Credit Card',
+					'user_id'          => $member->ID,
+					'amount'           => $transaction->amount,
+					'transaction_id'   => $transaction->id,
+					'subscription'     => $member->get_subscription_name(),
+					'subscription_key' => $member->get_subscription_key()
+				) );
+
+				$member->add_note( sprintf( __( 'Payment %s collected in Braintree', 'rcp' ), $payment_id ) );
+
+				die( 'braintree payment recorded' );
+				break;
+
+			/**
+			 * A subscription already exists and fails to create a successful charge.
+			 * This will not trigger on manual retries or if the attempt to create a
+			 * subscription fails due to an unsuccessful transaction.
+			 */
+			case 'subscription_charged_unsuccessfully':
+				# code...
+				break;
+
+			/**
+			 * A subscription reaches the specified number of billing cycles and expires.
+			 */
+			case 'subscription_expired':
+				$member->set_status( 'expired' );
+				$member->add_note( __( 'Subscription expired in Braintree', 'rcp' ) );
+				die( 'member expired' );
+				break;
+
+			/**
+			 * A subscription's trial period ends.
+			 */
+			case 'subscription_trial_ended':
+				//@todo verify this
+				$member->renew( $member->is_recurring(), '', $data->subscription->paidThroughDate->format( 'Y-m-d g:i:s' ) );
+				$member->add_note( __( 'Trial ended in Braintree', 'rcp' ) );
+				break;
+
+			/**
+			 * A subscription's first authorized transaction is created.
+			 * Subscriptions with trial periods will never trigger this notification.
+			 */
+			case 'subscription_went_active':
+				# code...
+				break;
+
+			/**
+			 * A subscription has moved from the active status to the past due status.
+			 * This occurs when a subscription’s initial transaction is declined.
+			 */
+			case 'subscription_went_past_due':
+				$member->set_status( 'pending' );
+				$member->add_note( __( 'Subscription went past due in Braintree', 'rcp' ) );
+				die( 'subscription past due: member pending' );
+				break;
+
+			default:
+				die( 'unrecognized webhook kind' );
+				break;
 		}
 	}
 
