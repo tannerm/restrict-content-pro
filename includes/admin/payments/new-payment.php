@@ -1,9 +1,20 @@
-<h2>
+<?php
+/**
+ * New Payment Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/New Payment
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+?>
+
+<h1>
 	<?php _e( 'Create Payment', 'rcp' ); ?> -
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-payments' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
-</h2>
+</h1>
 <form id="rcp-add-payment" action="" method="post">
 	<table class="form-table">
 		<tbody>

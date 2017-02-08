@@ -1,10 +1,10 @@
 <?php
 /**
- * Payment Gateway Base Class
+ * Stripe Payment Gateway
  *
  * @package     Restrict Content Pro
- * @subpackage  Classes/Roles
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @subpackage  Classes/Gateways/Stripe
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
 */
@@ -17,15 +17,19 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Get things going
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function init() {
 
 		global $rcp_options;
 
-		$this->supports[]  = 'one-time';
-		$this->supports[]  = 'recurring';
-		$this->supports[]  = 'fees';
+		$this->supports[] = 'one-time';
+		$this->supports[] = 'recurring';
+		$this->supports[] = 'fees';
+		$this->supports[] = 'gateway-submits-form';
+		$this->supports[] = 'trial';
 
 		if( $this->test_mode ) {
 
@@ -48,7 +52,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Process registration
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_signup() {
 
@@ -200,6 +206,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					$sub_args['coupon'] = $this->discount_code;
 
+				}
+
+				// Is this a free trial?
+				if ( $this->is_trial() ) {
+					$sub_args['trial_end'] = strtotime( $this->subscription_data['trial_duration'] . ' ' . $this->subscription_data['trial_duration_unit'], current_time( 'timestamp' ) );
 				}
 
 				// Set the customer's subscription in Stripe
@@ -361,8 +372,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Handle Stripe processing error
 	 *
-	 * @since 2.5
 	 * @param $e
+	 *
+	 * @access protected
+	 * @since  2.5
+	 * @return void
 	 */
 	protected function handle_processing_error( $e ) {
 		$body = $e->getJsonBody();
@@ -380,6 +394,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 	}
 
+	/**
+	 * Process webhooks
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function process_webhooks() {
 
 		if( ! isset( $_GET['listener'] ) || strtolower( $_GET['listener'] ) != 'stripe' ) {
@@ -466,12 +486,19 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 							}
 
-						// Successful subscription paid made with account credit where no charge is created
 						} elseif ( $event->type == 'invoice.payment_succeeded' && empty( $payment_event->charge ) ) {
 
-							$payment_data['amount']         = $payment_event->amount_due / rcp_stripe_get_currency_multiplier();
-							$payment_data['transaction_id'] = $payment_event->id;
-							$invoice                        = $payment_event;
+							$invoice = $payment_event;
+
+							// Successful subscription paid made with account credit, or free trial, where no charge is created
+							if ( 'in_' !== substr( $invoice->id, 0, 3 ) ) {
+								$payment_data['amount']         = $invoice->amount_due / rcp_stripe_get_currency_multiplier();
+								$payment_data['transaction_id'] = $invoice->id;
+							} else {
+								$payment_data['amount']           = $invoice->lines->data[0]->amount / rcp_stripe_get_currency_multiplier();
+								$payment_data['transaction_id']   = $invoice->subscription; // trials don't get a charge ID. set the subscription ID.
+								$payment_data['is_trial_invoice'] = true;
+							}
 
 						}
 
@@ -497,8 +524,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							$payment_data['subscription']     = $member->get_subscription_name();
 							$payment_data['subscription_key'] = $member->get_subscription_key();
 
-							// record this payment if it hasn't been recorded yet
-							$rcp_payments->insert( $payment_data );
+							// record this payment if it hasn't been recorded yet and it's not a trial invoice
+							if ( empty( $payment_data['is_trial_invoice'] ) ) {
+								$rcp_payments->insert( $payment_data );
+							}
 
 							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
 
@@ -515,6 +544,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// failed payment
 					if ( $event->type == 'charge.failed' ) {
 
+						do_action( 'rcp_recurring_payment_failed', $member, $this );
 						do_action( 'rcp_stripe_charge_failed', $invoice );
 
 						die( 'rcp_stripe_charge_failed action fired successfully' );
@@ -602,7 +632,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			jQuery(document).ready(function($) {
 
-				$("#rcp_registration_form").on('submit', function(event) {
+				$('body').on('rcp_register_form_submission', function(event, response, form_id) {
 
 					if( ! rcp_stripe_processing ) {
 
@@ -615,7 +645,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							var price = $('.rcp_level').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
 						}
 
-						if( ( $('select#rcp_gateway option:selected').val() == 'stripe' || $('input[name=rcp_gateway]').val() == 'stripe') && price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100')) {
+						if( response.gateway.slug === 'stripe' && price > 0 && ! $('.rcp_gateway_fields').hasClass('rcp_discounted_100')) {
 
 							event.preventDefault();
 
@@ -649,7 +679,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Validate additional fields during registration submission
 	 *
-	 * @since 2.1
+	 * @since  2.1
+	 * @return void
 	 */
 	public function validate_fields() {
 
@@ -693,6 +724,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	 * Load Stripe JS
 	 *
 	 * @since 2.1
+	 * @return void
 	 */
 	public function scripts() {
 		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v2/', array( 'jquery' ) );
@@ -701,8 +733,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Create plan in Stripe
 	 *
+	 * @param string $plan_name Name of the plan.
+	 *
 	 * @since 2.1
-	 * @return bool | string - plan_id if successful, false if not
+	 * @return bool|string - plan_id if successful, false if not
 	 */
 	private function create_plan( $plan_name = '' ) {
 		global $rcp_options;
@@ -742,9 +776,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Determine if a plan exists
 	 *
+	 * @param string $plan The name of the plan to check
+	 *
 	 * @since 2.1
-	 * @param $plan | The name of the plan to check
-	 * @return bool | string false if the plan doesn't exist, plan id if it does
+	 * @return bool|string false if the plan doesn't exist, plan id if it does
 	 */
 	private function plan_exists( $plan ) {
 

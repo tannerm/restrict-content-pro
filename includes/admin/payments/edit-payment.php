@@ -1,15 +1,24 @@
 <?php
+/**
+ * Edit Payment Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Edit Payment
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 $payment_id = ! empty( $_GET['payment_id'] ) ? absint( $_GET['payment_id'] ) : 0;
 $payments   = new RCP_Payments;
 $payment    = $payments->get_payment( $payment_id );
 $user       = get_userdata( $payment->user_id );
 ?>
-<h2>
+<h1>
 	<?php _e( 'Edit Payment', 'rcp' ); ?> -
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-payments' ); ?>" class="button-secondary">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
-</h2>
+</h1>
 <form id="rcp-edit-payment" action="" method="post">
 	<table class="form-table">
 		<tbody>
@@ -48,7 +57,7 @@ $user       = get_userdata( $payment->user_id );
 				</th>
 				<td>
 					<input name="transaction-id" id="rcp-transaction-id" type="text" class="regular-text" value="<?php echo esc_attr( $payment->transaction_id ); ?>"/>
-					<p class="description"><?php _e( 'The transaction ID for this payment, if any', 'rcp' ); ?></p>
+					<p class="description"><?php _e( 'The transaction ID for this payment, if any. Click to view in merchant account:', 'rcp' ); echo '&nbsp;' . rcp_get_merchant_transaction_id_link( $payment ); ?></p>
 				</td>
 			</tr>
 			<tr valign="top">

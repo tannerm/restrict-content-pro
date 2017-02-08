@@ -1,4 +1,13 @@
 <?php
+/**
+ * WooCommerce Integration
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Integrations/WooCommerce
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.2
+ */
 
 class RCP_WooCommerce {
 
@@ -7,7 +16,7 @@ class RCP_WooCommerce {
 	 *
 	 * @access  public
 	 * @since   2.2
-	*/
+	 */
 	public function __construct() {
 
 		if( ! class_exists( 'WooCommerce' ) ) {
@@ -26,9 +35,12 @@ class RCP_WooCommerce {
 	/**
 	 * Register the product settings tab
 	 *
+	 * @param array $tabs
+	 *
 	 * @access  public
 	 * @since   2.2
-	*/
+	 * @return  array
+	 */
 	public function data_tab( $tabs ) {
 
 		$tabs['access'] = array(
@@ -46,9 +58,10 @@ class RCP_WooCommerce {
 	 *
 	 * @access  public
 	 * @since   2.2
-	*/
+	 * @return  void
+	 */
 	public function data_display() {
-?>
+        ?>
 		<div id="rcp_access_control" class="panel woocommerce_options_panel">
 
 			<div class="options_group">
@@ -110,15 +123,18 @@ class RCP_WooCommerce {
 			</div>
 
 		</div>
-<?php
+		<?php
 	}
 
 	/**
 	 * Saves product access settings
 	 *
+	 * @param int $post_id ID of the post being saved.
+	 *
 	 * @access  public
 	 * @since   2.2
-	*/
+	 * @return  int|void
+	 */
 	public function save_meta( $post_id = 0 ) {
 
 		// If this is an autosave, our form has not been submitted, so we don't want to do anything.
@@ -212,9 +228,13 @@ class RCP_WooCommerce {
 	/**
 	 * Restrict the ability to purchase a product
 	 *
+	 * @param bool   $ret
+	 * @param object $product
+	 *
 	 * @access  public
 	 * @since   2.2
-	*/
+	 * @return  bool
+	 */
 	public function is_purchasable( $ret, $product ) {
 
 		if( $ret ) {
@@ -258,9 +278,13 @@ class RCP_WooCommerce {
 	/**
 	 * Restrict the visibility of a product
 	 *
+	 * @param bool $ret
+	 * @param int $product_id
+	 *
 	 * @access  public
 	 * @since   2.2
-	*/
+	 * @return  bool
+	 */
 	public function is_visible( $ret, $product_id ) {
 
 		if( ! $ret ) {
@@ -313,8 +337,13 @@ class RCP_WooCommerce {
 	/**
 	 * Loads the restricted content template if required.
 	 *
+	 * @param string $template
+	 * @param string $slug
+	 * @param string $name
+	 *
 	 * @access  public
 	 * @since   2.5
+	 * @return  string
 	 */
 	public function hide_template( $template, $slug, $name ) {
 

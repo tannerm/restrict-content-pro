@@ -41,6 +41,10 @@
     display: block;
     cursor: pointer;
 }
+.rcp_form .rcp_gateway_option_label {
+    display: inline-block;
+    margin-right: 10px;
+}
 .rcp_form input[type="text"], .rcp_form input[type="password"],
 .rcp_form input[type="email"] {
     padding: 4px 8px;
@@ -85,7 +89,7 @@
     min-height:30px;
 }
 .rcp_subscription_level label {
-    width: auto; 
+    width: auto;
     display: inline-block;
 }
 .rcp_subscription_level .rcp_level {
@@ -133,3 +137,35 @@ p.rcp_success {
 .rcp_current_cards_fieldset span {
     display: block;
 }
+/* RCP-Table for or small screen */
+@media only screen and (max-width: 480px) {
+	.rcp-table{
+		overflow: hidden;
+	}
+	.rcp-table th {
+		display: none;
+	}
+	#content .rcp-table tr td{
+		display: block;
+		text-align: left;
+		padding-left: 50%;
+	}
+	.rcp-table td:first-child {
+		padding-top: .5em;
+	}
+	.rcp-table td:last-child {
+		padding-bottom: .5em;
+	}
+	.rcp-table td:before {
+		content: attr(data-th) ": ";
+		font-weight: bold;
+		display: inline-block;
+		height:100%;
+		line-height: 100%;
+		width: 100%;
+		margin-left: -100%;
+	}
+	.rcp-table td:first-child {
+		background-color: rgba(0, 0, 0, 0.1);
+	}
+ }

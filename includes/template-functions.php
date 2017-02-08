@@ -6,7 +6,7 @@
  *
  * @package     Restrict Content Pro
  * @subpackage  Template Functions
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -37,16 +37,17 @@ function rcp_get_templates_url() {
 /**
  * Retrieves a template part
  *
- * @since v1.5
- *
  * Taken from bbPress
  *
- * @param string $slug
+ * @param string $slug Template slug.
  * @param string $name Optional. Default null
  *
  * @uses  rcp_locate_template()
  * @uses  load_template()
  * @uses  get_template_part()
+ *
+ * @since  1.5
+ * @return string The template filename if one is located.
  */
 function rcp_get_template_part( $slug, $name = null, $load = true ) {
 	// Execute code for this part
@@ -74,12 +75,12 @@ function rcp_get_template_part( $slug, $name = null, $load = true ) {
  *
  * Taken from bbPress
  *
- * @since v1.5
- *
  * @param string|array $template_names Template file(s) to search for, in order.
  * @param bool $load If true the template file will be loaded if it is found.
  * @param bool $require_once Whether to require_once or require. Default true.
  *                            Has no effect if $load is false.
+ *
+ * @since  1.5
  * @return string The template filename if one is located.
  */
 function rcp_locate_template( $template_names, $load = false, $require_once = true ) {
@@ -133,3 +134,34 @@ function rcp_locate_template( $template_names, $load = false, $require_once = tr
 
 	return $located;
 }
+
+/**
+ * Add post classes to indicate whether content is restricted and if the
+ * current user has access.
+ *
+ * @param array        $classes Array of post classes.
+ * @param string|array $class Additional classes added to the post.
+ * @param int          $post_id ID of the current post.
+ *
+ * @since 2.7
+ * @return array
+ */
+function rcp_post_classes( $classes, $class = '', $post_id = false ) {
+
+	$user_id = get_current_user_id();
+
+	if ( ! $post_id || is_admin() ) {
+		return $classes;
+	}
+
+	if ( rcp_is_restricted_content( $post_id ) ) {
+		$classes[] = 'rcp-is-restricted';
+
+		$classes[] = rcp_user_can_access( $user_id, $post_id ) ? 'rcp-can-access' : 'rcp-no-access';
+	}
+
+	return $classes;
+
+}
+
+add_filter( 'post_class', 'rcp_post_classes', 10, 3 );

@@ -150,12 +150,6 @@ jQuery(document).ready(function($) {
 		}
 		return true;
 	});
-	$('#rcp-price-select').change(function() {
-		var free = $('option:selected', this).val();
-		if(free == 'free') {
-			$('#rcp-price').val(0);
-		}
-	});
 	// make columns sortable via drag and drop
 	if( $('.rcp-subscriptions tbody').length ) {
 		$(".rcp-subscriptions tbody").sortable({

@@ -1,10 +1,10 @@
 <?php
 /**
- * Payment Gateway Base Class
+ * PayPal Standard Payment Gateway
  *
  * @package     Restrict Content Pro
- * @subpackage  Classes/Roles
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @subpackage  Classes/Gateways/PayPal
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
 */
@@ -20,7 +20,9 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 	/**
 	 * Get things going
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function init() {
 
@@ -29,6 +31,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
+		$this->supports[] = 'trial';
 
 		if( $this->test_mode ) {
 
@@ -57,7 +60,9 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 	/**
 	 * Process registration
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_signup() {
 
@@ -138,6 +143,27 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			}
 
+			if ( $this->is_trial() ) {
+
+				$paypal_args['a1'] = 0;
+				$paypal_args['p1'] = $this->subscription_data['trial_duration'];
+
+				switch ( $this->subscription_data['trial_duration_unit'] ) {
+
+					case 'day':
+						$paypal_args['t1'] = 'D';
+						break;
+
+					case 'month':
+						$paypal_args['t1'] = 'M';
+						break;
+
+					case 'year':
+						$paypal_args['t1'] = 'Y';
+						break;
+				}
+			}
+
 		} else {
 
 			// one time payment
@@ -163,7 +189,9 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 	/**
 	 * Process PayPal IPN
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_webhooks() {
 
@@ -262,9 +290,11 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			$subscription_name  = $posted['item_name'];
 			$subscription_key   = $posted['item_number'];
-			$amount             = number_format( (float) $posted['mc_gross'], 2 );
-			$amount2            = number_format( (float) $posted['mc_amount3'], 2 );
-			$payment_status     = $posted['payment_status'];
+			$has_trial          = ! empty( $posted['period1'] );
+			$amount             = ! $has_trial ? number_format( (float) $posted['mc_gross'], 2 ) : number_format( (float) $posted['mc_amount1'], 2 );
+			// not used anywhere?
+			// $amount2            = number_format( (float) $posted['mc_amount3'], 2 );
+			$payment_status     = ! empty( $posted['payment_status'] ) ? $posted['payment_status'] : false;
 			$currency_code      = $posted['mc_currency'];
 			$subscription_price = number_format( (float) rcp_get_subscription_price( $subscription_id ), 2 );
 
@@ -288,13 +318,13 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			// setup the payment info in an array for storage
 			$payment_data = array(
-				'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'], current_time( 'timestamp' ) ) ),
+				'date'             => ! empty( $posted['payment_date'] ) ? date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'], current_time( 'timestamp' ) ) ) : date( 'Y-m-d H:i:s', strtotime( 'now', current_time( 'timestamp' ) ) ),
 				'subscription'     => $posted['item_name'],
 				'payment_type'     => $posted['txn_type'],
 				'subscription_key' => $subscription_key,
 				'amount'           => $amount,
 				'user_id'          => $user_id,
-				'transaction_id'   => $posted['txn_id']
+				'transaction_id'   => ! empty( $posted['txn_id'] ) ? $posted['txn_id'] : false
 			);
 
 			do_action( 'rcp_valid_ipn', $payment_data, $user_id, $posted );
@@ -366,6 +396,13 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
 
+					if ( $has_trial ) {
+						$trial_expires = $member->calculate_expiration( true, true );
+						$member->set_expiration_date( $trial_expires );
+						$member->set_status( 'active' );
+						$member->set_recurring( true );
+					}
+
 					do_action( 'rcp_ipn_subscr_signup', $user_id );
 
 
@@ -413,6 +450,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 				case "subscr_failed" :
 
+					do_action( 'rcp_recurring_payment_failed', $member, $this );
 					do_action( 'rcp_ipn_subscr_failed' );
 
 					die( 'successful subscr_failed' );

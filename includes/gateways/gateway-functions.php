@@ -1,10 +1,21 @@
 <?php
+/**
+ * Gateway Functions
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Gateways/Functions
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
 /**
  * Load additional gateway include files
  *
- * @access      private
- * @since       2.1
+ * @uses rcp_get_payment_gateways()
+ *
+ * @access private
+ * @since  2.1
+ * @return void
 */
 function rcp_load_gateway_files() {
 	foreach( rcp_get_payment_gateways() as $key => $gateway ) {
@@ -16,7 +27,7 @@ function rcp_load_gateway_files() {
 add_action( 'plugins_loaded', 'rcp_load_gateway_files', 9999 );
 
 /**
- * Register default payment gateways
+ * Get all available payment gateways
  *
  * @access      private
  * @return      array
@@ -52,9 +63,11 @@ function rcp_get_enabled_payment_gateways() {
 /**
  * Determine if a gateway is enabled
  *
- * @access      public
- * @return      bool
-*/
+ * @param string $id ID of the gateway to check.
+ *
+ * @access public
+ * @return bool
+ */
 function rcp_is_gateway_enabled( $id = '' ) {
 	$gateways = new RCP_Payment_Gateways;
 	return $gateways->is_gateway_enabled( $id );
@@ -63,9 +76,12 @@ function rcp_is_gateway_enabled( $id = '' ) {
 /**
  * Send payment / subscription data to gateway
  *
+ * @param string $gateway           ID of the gateway.
+ * @param array  $subscription_data Subscription data.
+ *
  * @access      private
- * @return      array
-*/
+ * @return      void
+ */
 function rcp_send_to_gateway( $gateway, $subscription_data ) {
 
 	if( has_action( 'rcp_gateway_' . $gateway ) ) {
@@ -87,10 +103,13 @@ function rcp_send_to_gateway( $gateway, $subscription_data ) {
 /**
  * Determines if a gateway supports recurring payments
  *
- * @access      public
- * @since      2.1
- * @return      bool
-*/
+ * @param string $gateway ID of the gateway to check.
+ * @param string $item    Feature to check support for.
+ *
+ * @access  public
+ * @since   2.1
+ * @return  bool
+ */
 function rcp_gateway_supports( $gateway = 'paypal', $item = 'recurring' ) {
 
 	$ret      = true;
@@ -100,7 +119,7 @@ function rcp_gateway_supports( $gateway = 'paypal', $item = 'recurring' ) {
 	if( is_array( $gateway ) && isset( $gateway['class'] ) ) {
 
 		$gateway = new $gateway['class'];
-		$ret     = $gateway->supports( 'recurring' );
+		$ret     = $gateway->supports( sanitize_text_field( $item ) );
 
 	}
 
@@ -176,7 +195,7 @@ function rcp_process_gateway_confirmations() {
 add_action( 'template_redirect', 'rcp_process_gateway_confirmations', -99999 );
 
 /**
- * Load webhook processor for all gateways
+ * Load gateway scripts on registration page
  *
  * @access      public
  * @since       2.1
@@ -209,8 +228,11 @@ add_action( 'wp_enqueue_scripts', 'rcp_load_gateway_scripts', 100 );
 /**
  * Process an update card form request
  *
+ * @uses rcp_member_can_update_billing_card()
+ *
  * @access      private
  * @since       2.1
+ * @return      void
  */
 function rcp_process_update_card_form_post() {
 
@@ -244,9 +266,11 @@ add_action( 'init', 'rcp_process_update_card_form_post' );
 /**
  * Retrieve the full HTML link for the transaction ID on the merchant site
  *
+ * @param object  $payment Payment object
+ *
  * @access public
- * @param  $payment Payment object
  * @since  2.6
+ * @return string HTML link, or just the transaction ID.
  */
 function rcp_get_merchant_transaction_id_link( $payment ) {
 
