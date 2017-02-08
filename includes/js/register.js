@@ -51,6 +51,8 @@ jQuery(document).ready(function($) {
 
 	$(document).on('click', '#rcp_registration_form #rcp_submit', function(e) {
 
+		e.preventDefault();
+
 		var submission_form = document.getElementById('rcp_registration_form');
 		var form = $('#rcp_registration_form');
 		var form_id = form.attr('id');
@@ -58,8 +60,6 @@ jQuery(document).ready(function($) {
 		if( typeof submission_form.checkValidity === "function" && false === submission_form.checkValidity() ) {
 			return;
 		}
-
-		e.preventDefault();
 
 		var submit_register_text = $(this).val();
 

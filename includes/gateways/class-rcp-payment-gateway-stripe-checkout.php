@@ -112,7 +112,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					return true;
 				}
 
-				if ( ! $price > 0 || ! response.total > 0 ) {
+				if ( ( $price && ! $price > 0 ) || ! response.total > 0 ) {
 					submission_form.submit();
 					return true;
 				}
