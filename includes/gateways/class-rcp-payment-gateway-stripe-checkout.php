@@ -138,8 +138,8 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					}
 				}
 
-				if ( ! response.data.level.trial || checkoutArgs.alipay ) {
-					checkoutArgs.amount = response.data.total * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
+				if ( ! response.level.trial || checkoutArgs.alipay ) {
+					checkoutArgs.amount = response.total * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
 				}
 
 				var rcpStripeCheckout = StripeCheckout.configure( checkoutArgs );
