@@ -515,7 +515,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				if( ! $member->just_upgraded() ) {
 
 					// user is marked as cancelled but retains access until end of term
-					$member->set_status( 'cancelled' );
+					$member->cancel();
 
 					// set the use to no longer be recurring
 					delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
@@ -580,7 +580,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					case 'expired' :
 					case 'failed' :
 					case 'voided' :
-						$member->set_status( 'cancelled' );
+						$member->cancel();
 						break;
 
 				endswitch;

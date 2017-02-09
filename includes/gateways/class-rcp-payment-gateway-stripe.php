@@ -556,7 +556,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						if( ! $member->just_upgraded() ) {
 
-							$member->set_status( 'cancelled' );
+							$member->cancel();
 
 							die( 'member cancelled successfully' );
 
