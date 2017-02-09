@@ -140,7 +140,7 @@ function rcp_process_registration() {
 				'user_email'      => $user_data['email'],
 				'first_name'      => $user_data['first_name'],
 				'last_name'       => $user_data['last_name'],
-				'display_name'    => $user_data['first_name'] . ' ' . $user_data['last_name'],
+				'display_name'    => ! empty( trim( $user_data['first_name'] . ' ' . $user_data['last_name'] ) ) ? $user_data['first_name'] . ' ' . $user_data['last_name'] : $user_data['login'],
 				'user_registered' => date( 'Y-m-d H:i:s' )
 			)
 		);
