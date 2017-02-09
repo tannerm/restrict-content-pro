@@ -144,6 +144,7 @@ function rcp_check_for_soon_to_expire_users() {
 
 			rcp_email_expiring_notice( $member );
 			add_user_meta( $member, '_rcp_expiring_soon_email_sent', 'yes' );
+			rcp_add_member_note( $member, __( 'Expiration notice was emailed to the member.', 'rcp' ) );
 
 		}
 	}
