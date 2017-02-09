@@ -985,7 +985,7 @@ function rcp_process_member_cancellation() {
 
 	}
 }
-add_action( 'init', 'rcp_process_member_cancellation' );
+add_action( 'template_redirect', 'rcp_process_member_cancellation' );
 
 /**
  * Cancel a member's payment profile
