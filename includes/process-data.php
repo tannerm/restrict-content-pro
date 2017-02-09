@@ -208,7 +208,7 @@ function rcp_process_data() {
 
 						case 'mark-cancelled' :
 
-							$member->set_status( 'cancelled' );
+							$member->cancel();
 
 							break;
 
