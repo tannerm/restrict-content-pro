@@ -134,13 +134,15 @@ function rcp_process_registration() {
 
 	if( $user_data['need_new'] ) {
 
+		$display_name = trim( $user_data['first_name'] . ' ' . $user_data['last_name'] );
+
 		$user_data['id'] = wp_insert_user( array(
 				'user_login'      => $user_data['login'],
 				'user_pass'       => $user_data['password'],
 				'user_email'      => $user_data['email'],
 				'first_name'      => $user_data['first_name'],
 				'last_name'       => $user_data['last_name'],
-				'display_name'    => $user_data['first_name'] . ' ' . $user_data['last_name'],
+				'display_name'    => ! empty( $display_name ) ? $display_name : $user_data['login'],
 				'user_registered' => date( 'Y-m-d H:i:s' )
 			)
 		);
