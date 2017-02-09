@@ -112,7 +112,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					return true;
 				}
 
-				if ( ! $price > 0 || ! response.total > 0 ) {
+				if ( ( $price && ! $price > 0 ) || ! response.total > 0 ) {
 					submission_form.submit();
 					return true;
 				}
@@ -138,8 +138,8 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					}
 				}
 
-				if ( ! response.data.level.trial || checkoutArgs.alipay ) {
-					checkoutArgs.amount = response.data.total * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
+				if ( ! response.level.trial || checkoutArgs.alipay ) {
+					checkoutArgs.amount = response.total * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
 				}
 
 				var rcpStripeCheckout = StripeCheckout.configure( checkoutArgs );
