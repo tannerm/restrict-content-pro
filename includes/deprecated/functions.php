@@ -394,3 +394,17 @@ function rcp_filter_email_tags( $message, $user_id, $display_name ) {
 
 	return apply_filters( 'rcp_email_tags', $message, $user_id );
 }
+
+/**
+ * reverse of strstr()
+ *
+ * @deprecated 2.7.2
+ *
+ * @param string $haystack
+ * @param string $needle
+ *
+ * @return string
+ */
+function rcp_rstrstr( $haystack, $needle ) {
+	return substr( $haystack, 0, strpos( $haystack, $needle ) );
+}

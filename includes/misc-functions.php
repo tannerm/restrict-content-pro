@@ -189,21 +189,6 @@ function rcp_get_currencies() {
 	return apply_filters( 'rcp_currencies', $currencies );
 }
 
-
-/**
- * reverse of strstr()
- *
- * @param string $haystack
- * @param string $needle
- *
- * @access private
- * @return string
- */
-function rcp_rstrstr( $haystack, $needle ) {
-	return substr( $haystack, 0, strpos( $haystack, $needle ) );
-}
-
-
 /**
  * Is odd?
  *
