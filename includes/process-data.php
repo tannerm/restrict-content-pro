@@ -242,6 +242,10 @@ function rcp_process_data() {
 			$expiration   = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 			$expiration   = 'none' !== $expiration ? date( 'Y-m-d 23:59:59', strtotime( $_POST['expiration'], current_time( 'timestamp' ) ) ) : $expiration;
 
+			if( isset( $_POST['notes'] ) ) {
+				update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
+			}
+
 			if( ! empty( $_POST['expiration'] ) ) {
 				$member->set_expiration_date( $expiration );
 			}
@@ -284,10 +288,6 @@ function rcp_process_data() {
 
 			if( isset( $_POST['signup_method'] ) ) {
 				update_user_meta( $user_id, 'rcp_signup_method', $_POST['signup_method'] );
-			}
-
-			if( isset( $_POST['notes'] ) ) {
-				update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
 			}
 
 			if( $status !== $member->get_status() ) {
