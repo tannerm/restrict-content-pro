@@ -78,7 +78,7 @@ function rcp_process_login_form() {
 		return;
 	}
 
-	if( is_email( $_POST['rcp_user_login'] ) ) {
+	if( is_email( $_POST['rcp_user_login'] ) && ! username_exists( $_POST['rcp_user_login'] ) ) {
 
 		$user = get_user_by( 'email', $_POST['rcp_user_login'] );
 
