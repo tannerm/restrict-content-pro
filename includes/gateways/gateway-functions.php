@@ -136,6 +136,10 @@ function rcp_gateway_supports( $gateway = 'paypal', $item = 'recurring' ) {
 */
 function rcp_process_gateway_webooks() {
 
+	if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ( defined( 'DOING_CRON' ) && DOING_CRON ) || is_admin() ) {
+		return;
+	}
+
 	$gateways = new RCP_Payment_Gateways;
 
 	foreach( $gateways->available_gateways  as $key => $gateway ) {
