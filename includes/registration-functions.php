@@ -108,7 +108,7 @@ function rcp_process_registration() {
 			'nonce'            => wp_create_nonce( 'rcp-register-nonce' ),
 			'gateway'          => array(
 				'slug'     => $gateway,
-				'supports' => $gateway_obj->supports
+				'supports' => ! empty( $gateway_obj->supports ) ? $gateway_obj->supports : false
 			)
 		) );
 
@@ -118,7 +118,7 @@ function rcp_process_registration() {
 			'total'            => rcp_get_registration()->get_total(),
 			'gateway'          => array(
 				'slug'     => $gateway,
-				'supports' => $gateway_obj->supports
+				'supports' => ! empty( $gateway_obj->supports ) ? $gateway_obj->supports : false
 			),
 			'level'            => array(
 				'trial'        => ! empty( $trial_duration )
