@@ -294,12 +294,13 @@ function rcp_process_registration() {
 		// if the subscription is a free trial, we need to record it in the user meta
 		if( $member_expires != 'none' ) {
 
-			// activate the user's trial subscription
-			$member->set_status( 'active' );
-
 			// this is so that users can only sign up for one trial
 			update_user_meta( $user_data['id'], 'rcp_has_trialed', 'yes' );
 			update_user_meta( $user_data['id'], 'rcp_is_trialing', 'yes' );
+
+			// activate the user's trial subscription
+			$member->set_status( 'active' );
+
 			rcp_email_subscription_status( $user_data['id'], 'trial' );
 
 		} else {
