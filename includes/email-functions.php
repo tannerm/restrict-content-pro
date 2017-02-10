@@ -143,7 +143,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$admin_message = __( 'Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters( 'rcp_before_admin_email_trial_thanks', $admin_message, $user_id );
 				$admin_message .= __( 'Thank you', 'rcp' );
-				$admin_subject = __( 'New trial subscription on ', 'rcp' );
+				$admin_subject = sprintf( __( 'New trial subscription on %s', 'rcp' ), $site_name );
 			}
 
 		break;
