@@ -541,3 +541,14 @@ function rcp_email_member_on_renewal_payment_failure( RCP_Member $member, RCP_Pa
 	$emails->send( $member->user_email, $subject, $message );
 }
 add_action( 'rcp_recurring_payment_failed', 'rcp_email_member_on_renewal_payment_failure', 10, 2 );
+
+/**
+ * Disable the mandrill_nl2br filter while sending RCP emails
+ *
+ * @since 2.7.2
+ * @return void
+ */
+function rcp_disable_mandrill_nl2br() {
+	add_filter( 'mandrill_nl2br', '__return_false' );
+}
+add_action( 'rcp_email_send_before', 'rcp_disable_mandrill_nl2br' );
