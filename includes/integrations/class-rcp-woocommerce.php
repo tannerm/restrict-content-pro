@@ -25,7 +25,7 @@ class RCP_WooCommerce {
 
 		add_filter( 'woocommerce_product_data_tabs', array( $this, 'data_tab' ) );
 		add_action( 'woocommerce_product_data_panels', array( $this, 'data_display' ) );
-		add_action( 'save_post', array( $this, 'save_meta' ) );
+		add_action( 'save_post_product', array( $this, 'save_meta' ) );
 
 		add_filter( 'woocommerce_is_purchasable', array( $this, 'is_purchasable' ), 999999, 2 );
 		add_filter( 'woocommerce_product_is_visible', array( $this, 'is_visible' ), 999999, 2 );
@@ -121,7 +121,7 @@ class RCP_WooCommerce {
 				) );
 				?>
 			</div>
-
+			<input type="hidden" name="rcp_woocommerce_product_meta_box_nonce" value="<?php echo wp_create_nonce( 'rcp_woocommerce_product_meta_box_nonce' ); ?>" />
 		</div>
 		<?php
 	}
@@ -142,19 +142,12 @@ class RCP_WooCommerce {
 			return $post_id;
 		}
 
+		if ( ! isset( $_POST['rcp_woocommerce_product_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['rcp_woocommerce_product_meta_box_nonce'], 'rcp_woocommerce_product_meta_box_nonce' ) ) {
+			return;
+		}
+
 		// Don't save revisions and autosaves
 		if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
-			return $post_id;
-		}
-
-		$post = get_post( $post_id );
-
-		if( ! $post ) {
-			return $post_id;
-		}
-
-		// Check post type is product
-		if ( 'product' != $post->post_type ) {
 			return $post_id;
 		}
 
