@@ -726,6 +726,20 @@ function rcp_get_currency() {
 }
 
 /**
+ * Determines if a given currency code matches the currency selected in the settings.
+ *
+ * @param string $currency_code Currency code to check.
+ *
+ * @since  2.7.2
+ * @return bool
+ */
+function rcp_is_valid_currency( $currency_code ) {
+	$valid = strtolower( $currency_code ) == strtolower( rcp_get_currency() );
+
+	return (bool) apply_filters( 'rcp_is_valid_currency', $valid, $currency_code );
+}
+
+/**
  * Determines if RCP is using a zero-decimal currency.
  *
  * @param  string $currency
