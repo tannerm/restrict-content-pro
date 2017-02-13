@@ -236,11 +236,11 @@ class RCP_Emails {
 	 */
 	public function build_email( $message ) {
 
+		$message = $this->parse_tags( $message );
+
 		if ( false === $this->html ) {
 			return apply_filters( 'rcp_email_message', wp_strip_all_tags( $message ), $this );
 		}
-
-		$message = $this->parse_tags( $message );
 
 		$message = $this->text_to_html( $message );
 
