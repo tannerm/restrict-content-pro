@@ -281,16 +281,21 @@ function rcp_get_current_url() {
 
 	else :
 
-		$current_url = 'http';
-		if ( is_ssl() ) $current_url .= "s";
+		global $wp;
 
-		$current_url .= "://";
+		if( get_option( 'permalink_structure' ) ) {
 
-		if ( $_SERVER["SERVER_PORT"] != "80" ) {
-			$current_url .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+			$base = trailingslashit( home_url( $wp->request ) );
+
 		} else {
-			$current_url .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+
+			$base = add_query_arg( $wp->query_string, '', trailingslashit( home_url( $wp->request ) ) );
+			$base = remove_query_arg( array( 'post_type', 'name' ), $base );
+
 		}
+
+		$scheme      = is_ssl() ? 'https' : 'http';
+		$current_url = set_url_scheme( $base, $scheme );
 
 	endif;
 
