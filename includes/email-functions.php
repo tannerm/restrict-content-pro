@@ -232,6 +232,28 @@ function rcp_email_on_activation( $status, $user_id ) {
 add_action( 'rcp_set_status', 'rcp_email_on_activation', 11, 2 );
 
 /**
+ * Triggers the free trial notice when an account is marked as active.
+ *
+ * @param string $status  User's status.
+ * @param int    $user_id ID of the user to email.
+ *
+ * @access  public
+ * @since   2.7.2
+ * @return  void
+ */
+function rcp_email_on_free_trial( $status, $user_id ) {
+
+	if( 'active' == $status && rcp_is_trialing( $user_id ) ) {
+
+		// Send free trial welcome email.
+		rcp_email_subscription_status( $user_id, 'trial' );
+
+	}
+
+}
+add_action( 'rcp_set_status', 'rcp_email_on_free_trial', 11, 2 );
+
+/**
  * Triggers the cancellation notice when an account is marked as cancelled.
  *
  * @param string $status  User's status.
