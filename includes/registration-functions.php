@@ -301,8 +301,6 @@ function rcp_process_registration() {
 			// activate the user's trial subscription
 			$member->set_status( 'active' );
 
-			rcp_email_subscription_status( $user_data['id'], 'trial' );
-
 		} else {
 
 			update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
