@@ -139,8 +139,8 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 			if ( $response->isOK() && ! $response->isError() ) {
 
 				// If the customer has an existing subscription, we need to cancel it
-				if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-					$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+				if( $member->just_upgraded() && $member->can_cancel() ) {
+					$cancelled = $member->cancel_payment_profile( false );
 				}
 
 				$member->set_recurring( $this->auto_renew );

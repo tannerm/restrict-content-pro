@@ -390,8 +390,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// store the recurring payment ID
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
-					if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-						$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+					if( $member->just_upgraded() && $member->can_cancel() ) {
+						$cancelled = $member->cancel_payment_profile( false );
 					}
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
@@ -480,8 +480,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 						case 'completed' :
 
-							if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-								$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+							if( $member->just_upgraded() && $member->can_cancel() ) {
+								$cancelled = $member->cancel_payment_profile( false );
 								if( $cancelled ) {
 
 									$member->set_payment_profile_id( '' );

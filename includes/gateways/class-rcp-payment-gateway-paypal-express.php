@@ -243,8 +243,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 						$member = new RCP_Member( $details['PAYMENTREQUEST_0_CUSTOM'] );
 
-						if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-							$cancelled = rcp_cancel_member_payment_profile( $member->ID, false);
+						if( $member->just_upgraded() && $member->can_cancel() ) {
+							$cancelled = $member->cancel_payment_profile( false );
 						}
 
 						$member->set_payment_profile_id( $body['PROFILEID'] );
@@ -314,9 +314,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 						// Confirm a one-time payment
 						$member = new RCP_Member( $details['CUSTOM'] );
 
-						if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
+						if( $member->just_upgraded() && $member->can_cancel() ) {
 
-							$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+							$cancelled = $member->cancel_payment_profile( false );
 
 							if( $cancelled ) {
 
@@ -551,8 +551,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 					case 'completed' :
 
-						if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-							$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+						if( $member->just_upgraded() && $member->can_cancel() ) {
+							$cancelled = $member->cancel_payment_profile( false );
 							if( $cancelled ) {
 
 								$member->set_payment_profile_id( '' );
