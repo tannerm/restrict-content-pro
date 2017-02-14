@@ -28,8 +28,8 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 	$site_name     = stripslashes_deep( html_entity_decode( get_bloginfo('name'), ENT_COMPAT, 'UTF-8' ) );
 
 	$admin_emails  = ! empty( $rcp_options['admin_notice_emails'] ) ? $rcp_options['admin_notice_emails'] : get_option('admin_email');
-	$admin_emails  = array_map( 'sanitize_email', explode( ',', $admin_emails ) );
-	$admin_emails  = apply_filters( 'rcp_admin_notice_emails', $admin_emails );
+	$admin_emails  = apply_filters( 'rcp_admin_notice_emails', explode( ',', $admin_emails ) );
+	$admin_emails  = array_map( 'sanitize_email', $admin_emails );
 
 	// Allow add-ons to add file attachments
 
