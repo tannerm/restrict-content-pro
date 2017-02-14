@@ -677,6 +677,15 @@ function rcp_settings_page() {
 									<p class="description"><?php _e( 'The email address that emails are sent from.', 'rcp' ); ?></p>
 								</td>
 							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[admin_notice_emails]"><?php _e( 'Admin Notification Email', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text" id="rcp_settings[admin_notice_emails]" style="width: 300px;" name="rcp_settings[admin_notice_emails]" value="<?php if( isset( $rcp_options['admin_notice_emails'] ) ) { echo $rcp_options['admin_notice_emails']; } else { echo get_bloginfo( 'admin_email' ); } ?>"/>
+									<p class="description"><?php _e( 'Admin notices are sent to this email address. Separate multiple emails with a comma.', 'rcp' ); ?></p>
+								</td>
+							</tr>
 
 							<tr>
 								<th>
@@ -692,11 +701,20 @@ function rcp_settings_page() {
 							</tr>
 							<tr>
 								<th>
-									<label for="rcp_settings[disable_active_email]"><?php _e( 'Disabled', 'rcp' ); ?></label>
+									<label for="rcp_settings[disable_active_email]"><?php _e( 'Disable for Member', 'rcp' ); ?></label>
 								</th>
 								<td>
 									<input type="checkbox" value="1" name="rcp_settings[disable_active_email]" id="rcp_settings[disable_active_email]" <?php checked( true, isset( $rcp_options['disable_active_email'] ) ); ?>/>
-									<span><?php _e( 'Check this to disable the email sent out when a member becomes active.', 'rcp' ); ?></span>
+									<span><?php _e( 'Check this to disable the email sent out to the member when their subscription becomes active.', 'rcp' ); ?></span>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[disable_active_email_admin]"><?php _e( 'Disable for Admin', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input type="checkbox" value="1" name="rcp_settings[disable_active_email_admin]" id="rcp_settings[disable_active_email_admin]" <?php checked( true, isset( $rcp_options['disable_active_email_admin'] ) ); ?>/>
+									<span><?php _e( 'Check this to disable the email sent out to the administrator when a new member becomes active.', 'rcp' ); ?></span>
 								</td>
 							</tr>
 							<tr>
@@ -727,11 +745,20 @@ function rcp_settings_page() {
 							</tr>
 							<tr>
 								<th>
-									<label for="rcp_settings[disable_cancelled_email]"><?php _e( 'Disabled', 'rcp' ); ?></label>
+									<label for="rcp_settings[disable_cancelled_email]"><?php _e( 'Disable for Member', 'rcp' ); ?></label>
 								</th>
 								<td>
 									<input type="checkbox" value="1" name="rcp_settings[disable_cancelled_email]" id="rcp_settings[disable_cancelled_email]" <?php checked( true, isset( $rcp_options['disable_cancelled_email'] ) ); ?>/>
-									<span><?php _e( 'Check this to disable the email sent out when a member is cancelled.', 'rcp' ); ?></span>
+									<span><?php _e( 'Check this to disable the email sent to a member when their subscription is cancelled.', 'rcp' ); ?></span>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[disable_cancelled_email_admin]"><?php _e( 'Disable for Admin', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input type="checkbox" value="1" name="rcp_settings[disable_cancelled_email_admin]" id="rcp_settings[disable_cancelled_email_admin]" <?php checked( true, isset( $rcp_options['disable_cancelled_email_admin'] ) ); ?>/>
+									<span><?php _e( 'Check this to disable the email sent to the administrator when a member\'s subscription is cancelled.', 'rcp' ); ?></span>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -762,11 +789,20 @@ function rcp_settings_page() {
 							</tr>
 							<tr>
 								<th>
-									<label for="rcp_settings[disable_expired_email]"><?php _e( 'Disabled', 'rcp' ); ?></label>
+									<label for="rcp_settings[disable_expired_email]"><?php _e( 'Disable for Member', 'rcp' ); ?></label>
 								</th>
 								<td>
 									<input type="checkbox" value="1" name="rcp_settings[disable_expired_email]" id="rcp_settings[disable_expired_email]" <?php checked( true, isset( $rcp_options['disable_expired_email'] ) ); ?>/>
-									<span><?php _e( 'Check this to disable the email sent out when a member expires.', 'rcp' ); ?></span>
+									<span><?php _e( 'Check this to disable the email sent out to a member when their subscription expires.', 'rcp' ); ?></span>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[disable_expired_email_admin]"><?php _e( 'Disable for Admin', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input type="checkbox" value="1" name="rcp_settings[disable_expired_email_admin]" id="rcp_settings[disable_expired_email_admin]" <?php checked( true, isset( $rcp_options['disable_expired_email_admin'] ) ); ?>/>
+									<span><?php _e( 'Check this to disable the email sent to the administrator when a member\'s subscription expires.', 'rcp' ); ?></span>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -839,11 +875,20 @@ function rcp_settings_page() {
 							</tr>
 							<tr>
 								<th>
-									<label for="rcp_settings[disable_free_email]"><?php _e( 'Disabled', 'rcp' ); ?></label>
+									<label for="rcp_settings[disable_free_email]"><?php _e( 'Disable for Member', 'rcp' ); ?></label>
 								</th>
 								<td>
 									<input type="checkbox" value="1" name="rcp_settings[disable_free_email]" id="rcp_settings[disable_free_email]" <?php checked( true, isset( $rcp_options['disable_free_email'] ) ); ?>/>
-									<span><?php _e( 'Check this to disable the email sent out when a free member registers.', 'rcp' ); ?></span>
+									<span><?php _e( 'Check this to disable the email sent to a member when they register for a free subscription.', 'rcp' ); ?></span>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[disable_free_email_admin]"><?php _e( 'Disable for Admin', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input type="checkbox" value="1" name="rcp_settings[disable_free_email_admin]" id="rcp_settings[disable_free_email_admin]" <?php checked( true, isset( $rcp_options['disable_free_email_admin'] ) ); ?>/>
+									<span><?php _e( 'Check this to disable the email sent to the administrator when a member registers for a free subscription.', 'rcp' ); ?></span>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -874,11 +919,20 @@ function rcp_settings_page() {
 							</tr>
 							<tr>
 								<th>
-									<label for="rcp_settings[disable_trial_email]"><?php _e( 'Disabled', 'rcp' ); ?></label>
+									<label for="rcp_settings[disable_trial_email]"><?php _e( 'Disable for Member', 'rcp' ); ?></label>
 								</th>
 								<td>
 									<input type="checkbox" value="1" name="rcp_settings[disable_trial_email]" id="rcp_settings[disable_trial_email]" <?php checked( true, isset( $rcp_options['disable_trial_email'] ) ); ?>/>
-									<span><?php _e( 'Check this to disable the email sent out when a member signs up with a trial.', 'rcp' ); ?></span>
+									<span><?php _e( 'Check this to disable the email sent to a member when they sign up with a trial.', 'rcp' ); ?></span>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[disable_trial_email_admin]"><?php _e( 'Disable for Admin', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input type="checkbox" value="1" name="rcp_settings[disable_trial_email_admin]" id="rcp_settings[disable_trial_email_admin]" <?php checked( true, isset( $rcp_options['disable_trial_email_admin'] ) ); ?>/>
+									<span><?php _e( 'Check this to disable the email sent to the administrator when a member signs up with a trial.', 'rcp' ); ?></span>
 								</td>
 							</tr>
 							<tr valign="top">
