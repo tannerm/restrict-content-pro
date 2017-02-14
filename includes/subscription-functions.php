@@ -101,6 +101,39 @@ function rcp_calculate_subscription_expiration( $id ) {
 }
 
 /**
+ * Calculates an expiration date for a given subscription level
+ *
+ * Note: If wanting to calculate an expiration date for a member, use
+ * RCP_Member::calculate_expiration() instead.
+ *
+ * @param object $subscription_level Subscription level object from the database.
+ *
+ * @access private
+ * @return string
+ */
+function rcp_calc_member_expiration( $subscription_level ) {
+
+	$expiration_date = 'none';
+
+	if( $subscription_level->duration > 0 ) {
+
+		$current_time       = current_time( 'timestamp' );
+		$last_day           = cal_days_in_month( CAL_GREGORIAN, date( 'n', $current_time ), date( 'Y', $current_time ) );
+
+		$expiration_unit 	= $subscription_level->duration_unit;
+		$expiration_length 	= $subscription_level->duration;
+		$expiration_date 	= date( 'Y-m-d H:i:s', strtotime( '+' . $expiration_length . ' ' . $expiration_unit . ' 23:59:59', current_time( 'timestamp' ) ) );
+
+		if( date( 'j', $current_time ) == $last_day && 'day' != $expiration_unit ) {
+			$expiration_date = date( 'Y-m-d H:i:s', strtotime( $expiration_date . ' +2 days', current_time( 'timestamp' ) ) );
+		}
+
+	}
+
+	return apply_filters( 'rcp_calc_member_expiration', $expiration_date, $subscription_level );
+}
+
+/**
  * Gets the price of a subscription level
  *
  * @param int $id The ID of the subscription level to retrieve
