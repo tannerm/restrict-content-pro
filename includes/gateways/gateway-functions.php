@@ -209,18 +209,17 @@ function rcp_load_gateway_scripts() {
 
 	global $rcp_options;
 
-	if( ! rcp_is_registration_page() && ! defined( 'RCP_LOAD_SCRIPTS_GLOBALLY' ) ) {
-		return;
-	}
-
-	$gateways = new RCP_Payment_Gateways;
+	$load_scripts = rcp_is_registration_page() || defined( 'RCP_LOAD_SCRIPTS_GLOBALLY' );
+	$gateways     = new RCP_Payment_Gateways;
 
 	foreach( $gateways->enabled_gateways  as $key => $gateway ) {
 
 		if( is_array( $gateway ) && isset( $gateway['class'] ) ) {
 
-			$gateway = new $gateway['class'];
-			$gateway->scripts();
+			if ( $load_scripts || in_array( $key, array( 'stripe', 'stripe_checkout' ) ) ) {
+				$gateway = new $gateway['class'];
+				$gateway->scripts();
+			}
 
 		}
 
