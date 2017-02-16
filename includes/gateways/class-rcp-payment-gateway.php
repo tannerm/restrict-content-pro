@@ -3,8 +3,8 @@
  * Payment Gateway Base Class
  *
  * @package     Restrict Content Pro
- * @subpackage  Classes/Roles
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @subpackage  Classes/Gateway
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
 */
@@ -27,6 +27,7 @@ class RCP_Payment_Gateway {
 	public $auto_renew;
 	public $return_url;
 	public $test_mode;
+	public $subscription_data;
 
 	public function __construct( $subscription_data = array() ) {
 
@@ -51,6 +52,7 @@ class RCP_Payment_Gateway {
 			$this->subscription_name   = $subscription_data['subscription_name'];
 			$this->auto_renew          = $this->supports( 'recurring' ) ? $subscription_data['auto_renew'] : false;;
 			$this->return_url          = $subscription_data['return_url'];
+			$this->subscription_data   = $subscription_data;
 
 		}
 
@@ -84,6 +86,19 @@ class RCP_Payment_Gateway {
 
 	public function add_error( $code = '', $message = '' ) {
 		rcp_errors()->add( $code, $message, 'register' );
+	}
+
+	/**
+	 * Determines if the subscription is eligible for a trial.
+	 *
+	 * @since 2.7
+	 * @return bool True if the subscription is eligible for a trial, false if not.
+	 */
+	public function is_trial() {
+		return ! empty( $this->subscription_data['trial_eligible'] )
+			&& ! empty( $this->subscription_data['trial_duration'] )
+			&& ! empty( $this->subscription_data['trial_duration_unit'] )
+		;
 	}
 
 }

@@ -3,7 +3,8 @@
  * PayPal Express Gateway class
  *
  * @package     Restrict Content Pro
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @subpackage  Classes/Gateways/PayPal Express
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
 */
@@ -19,7 +20,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 	/**
 	 * Get things going
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function init() {
 
@@ -28,6 +31,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
+		$this->supports[] = 'trial';
 
 		if( $this->test_mode ) {
 
@@ -56,7 +60,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 	/**
 	 * Process registration
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_signup() {
 
@@ -148,7 +154,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 	/**
 	 * Validate additional fields during registration submission
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function validate_fields() {
 
@@ -161,7 +169,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 	/**
 	 * Process payment confirmation after returning from PayPal
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_confirmation() {
 
@@ -196,6 +206,13 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					unset( $args['INITAMT'] );
 				}
 
+				if ( $this->auto_renew && $this->is_trial() ) {
+					$args['TRIALBILLINGPERIOD']      = ucwords( $this->subscription_data['trial_duration_unit'] );
+					$args['TRIALBILLINGFREQUENCY']   = $this->subscription_data['trial_duration'];
+					$args['TRIALTOTALBILLINGCYCLES'] = 1;
+					$args['TRIALAMT']                = 0;
+				}
+
 				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
 				$body    = wp_remote_retrieve_body( $request );
 				$code    = wp_remote_retrieve_response_code( $request );
@@ -226,8 +243,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 						$member = new RCP_Member( $details['PAYMENTREQUEST_0_CUSTOM'] );
 
-						if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-							$cancelled = rcp_cancel_member_payment_profile( $member->ID, false);
+						if( $member->just_upgraded() && $member->can_cancel() ) {
+							$cancelled = $member->cancel_payment_profile( false );
 						}
 
 						$member->set_payment_profile_id( $body['PROFILEID'] );
@@ -297,9 +314,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 						// Confirm a one-time payment
 						$member = new RCP_Member( $details['CUSTOM'] );
 
-						if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
+						if( $member->just_upgraded() && $member->can_cancel() ) {
 
-							$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+							$cancelled = $member->cancel_payment_profile( false );
 
 							if( $cancelled ) {
 
@@ -366,7 +383,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 	/**
 	 * Process PayPal IPN
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_webhooks() {
 
@@ -496,7 +515,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				if( ! $member->just_upgraded() ) {
 
 					// user is marked as cancelled but retains access until end of term
-					$member->set_status( 'cancelled' );
+					$member->cancel();
 
 					// set the use to no longer be recurring
 					delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
@@ -519,6 +538,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				}
 
 				do_action( 'rcp_ipn_subscr_failed' );
+
+				do_action( 'rcp_recurring_payment_failed', $member, $this );
+
 				die( 'successful recurring_payment_failed or recurring_payment_suspended_due_to_max_failed_payment' );
 
 				break;
@@ -529,8 +551,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 					case 'completed' :
 
-						if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-							$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+						if( $member->just_upgraded() && $member->can_cancel() ) {
+							$cancelled = $member->cancel_payment_profile( false );
 							if( $cancelled ) {
 
 								$member->set_payment_profile_id( '' );
@@ -550,8 +572,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 						$rcp_payments->insert( $payment_data );
 
-						// set this user to active
-						$member->renew();
+						// Member was already activated.
 
 						break;
 
@@ -559,7 +580,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					case 'expired' :
 					case 'failed' :
 					case 'voided' :
-						$member->set_status( 'cancelled' );
+						$member->cancel();
 						break;
 
 				endswitch;
@@ -573,6 +594,13 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 	}
 
+	/**
+	 * Get checkout details
+	 *
+	 * @param string $token
+	 *
+	 * @return array|bool|string|WP_Error
+	 */
 	public function get_checkout_details( $token = '' ) {
 
 		$args = array(

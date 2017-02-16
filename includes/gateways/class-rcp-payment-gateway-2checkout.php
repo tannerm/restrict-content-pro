@@ -1,13 +1,13 @@
 <?php
 /**
- * Payment Gateway Base Class
+ * 2Checkout Payment Gateway
  *
  * @package     Restrict Content Pro
- * @subpackage  Classes/Roles
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @subpackage  Classes/Gateways/2Checkout
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.3
-*/
+ */
 
 class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
@@ -18,10 +18,12 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 	private $environment;
 
 	/**
-	* get things going
-	*
-	* @since      2.3
-	*/
+	 * Get things going
+	 *
+	 * @access public
+	 * @since  2.3
+	 * @return void
+	 */
 	public function init() {
 		global $rcp_options;
 
@@ -56,7 +58,9 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 	/**
 	 * Process registration
 	 *
-	 * @since 2.3
+	 * @access public
+	 * @since  2.3
+	 * @return void
 	 */
 	public function process_signup() {
 
@@ -124,8 +128,8 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			if( $charge['response']['responseCode'] == 'APPROVED' ) {
 
 				// Look to see if we have an existing subscription to cancel
-				if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-					$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+				if( $member->just_upgraded() && $member->can_cancel() ) {
+					$cancelled = $member->cancel_payment_profile( false );
 				}
 
 				$payment_data = array(
@@ -176,7 +180,9 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 	/**
 	 * Proccess webhooks
 	 *
-	 * @since 2.3
+	 * @access public
+	 * @since  2.3
+	 * @return void
 	 */
 	public function process_webhooks() {
 
@@ -253,6 +259,8 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				case 'RECURRING_INSTALLMENT_FAILED' :
 
+					do_action( 'rcp_recurring_payment_failed', $member, $this );
+
 					break;
 
 				case 'RECURRING_STOPPED' :
@@ -303,9 +311,11 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 	}
 
 	/**
-	 * Process registration
+	 * Display fields and add extra JavaScript
 	 *
-	 * @since 2.3
+	 * @access public
+	 * @since  2.3
+	 * @return void
 	 */
 	public function fields() {
 		ob_start();
@@ -383,7 +393,9 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 	/**
 	 * Validate additional fields during registration submission
 	 *
-	 * @since 2.3
+	 * @access public
+	 * @since  2.3
+	 * @return void
 	 */
 	public function validate_fields() {
 
@@ -416,7 +428,9 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 	/**
 	 * Load 2Checkout JS
 	 *
-	 * @since 2.3
+	 * @access public
+	 * @since  2.3
+	 * @return void
 	 */
 	public function scripts() {
 		wp_enqueue_script( 'twocheckout', 'https://www.2checkout.com/checkout/api/2co.min.js', array( 'jquery' ) );
@@ -425,7 +439,9 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 	/**
 	 * Determine if zip / state are required
 	 *
-	 * @since 2.3
+	 * @access private
+	 * @since  2.3
+	 * @return bool
 	 */
 	private function card_needs_state_and_zip() {
 

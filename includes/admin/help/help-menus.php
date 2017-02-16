@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Help Menus
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Help Menus
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
 if ( get_bloginfo('version') < 3.3 ) {
 	// use old help tab format for WP version less than 3.3
@@ -9,6 +16,13 @@ if ( get_bloginfo('version') < 3.3 ) {
 	include('help-menus-setup.php');
 }
 
+/**
+ * Render members tab content
+ *
+ * @param string $id
+ *
+ * @return string
+ */
 function rcp_render_members_tab_content( $id ) {
 	switch( $id ) :
 

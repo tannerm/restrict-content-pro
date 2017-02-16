@@ -1,13 +1,29 @@
 <?php
+/**
+ * Settings
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Settings
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
-// register the plugin settings
+/**
+ * Register the plugins ettings
+ *
+ * @return void
+ */
 function rcp_register_settings() {
 	// create whitelist of options
 	register_setting( 'rcp_settings_group', 'rcp_settings', 'rcp_sanitize_settings' );
 }
-//call register settings function
 add_action( 'admin_init', 'rcp_register_settings' );
 
+/**
+ * Render the settings page
+ *
+ * @return void
+ */
 function rcp_settings_page() {
 	global $rcp_options;
 
@@ -18,6 +34,8 @@ function rcp_settings_page() {
 		'redirect'              => 0,
 		'redirect_from_premium' => 0,
 		'login_redirect'        => 0,
+		'email_header_img'      => '',
+		'email_header_text'     => __( 'Hello', 'rcp' )
 	);
 
 	$rcp_options = wp_parse_args( $rcp_options, $defaults );
@@ -94,7 +112,7 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
-								<p class="description"><?php printf( __( 'Choose the primary registration page. This must contain the [register_form] short code. Additional registration forms may be added to other pages with [register_form id="x"]. <a href="%s" target="_blank">See documentation</a>.', 'rcp' ), 'http://docs.pippinsplugins.com/article/442-registerform' ); ?></p>
+								<p class="description"><?php printf( __( 'Choose the primary registration page. This must contain the [register_form] short code. Additional registration forms may be added to other pages with [register_form id="x"]. <a href="%s" target="_blank">See documentation</a>.', 'rcp' ), 'http://docs.restrictcontentpro.com/article/1597-registerform' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -141,7 +159,7 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
-								<p class="description"><?php printf( __( 'This page displays the account and membership information for members. Contains <a href="%s" target="_blank">[subscription_details] short code</a>.', 'rcp' ), 'http://docs.pippinsplugins.com/article/447-subscriptiondetails' ); ?></p>
+								<p class="description"><?php printf( __( 'This page displays the account and membership information for members. Contains <a href="%s" target="_blank">[subscription_details] short code</a>.', 'rcp' ), 'http://docs.restrictcontentpro.com/article/1600-subscriptiondetails' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -165,7 +183,7 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
-								<p class="description"><?php printf( __( 'This page displays a profile edit form for logged-in members. Contains <a href="%s" target="_blank">[rcp_profile_editor] shortcode.', 'rcp' ), 'http://docs.pippinsplugins.com/article/446-rcpprofileeditor' ); ?></p>
+								<p class="description"><?php printf( __( 'This page displays a profile edit form for logged-in members. Contains <a href="%s" target="_blank">[rcp_profile_editor] shortcode.', 'rcp' ), 'http://docs.restrictcontentpro.com/article/1602-rcpprofileeditor' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -189,7 +207,7 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
-								<p class="description"><?php printf( __( 'This page displays a profile edit form for logged-in members. Contains <a href="%s" target="_blank">[rcp_update_card] short code</a>.', 'rcp' ), 'http://docs.pippinsplugins.com/article/820-rcpupdatecard' ); ?></p>
+								<p class="description"><?php printf( __( 'This page displays a profile edit form for logged-in members. Contains <a href="%s" target="_blank">[rcp_update_card] short code</a>.', 'rcp' ), 'http://docs.restrictcontentpro.com/article/1608-rcpupdatecard' ); ?></p>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -237,7 +255,7 @@ function rcp_settings_page() {
 					<table class="form-table">
 						<tr>
 							<th>
-								<label fo="rcp_settings[currency]"><?php _e( 'Currency', 'rcp' ); ?></label>
+								<label for="rcp_settings[currency]"><?php _e( 'Currency', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<select id="rcp_settings[currency]" name="rcp_settings[currency]">
@@ -378,7 +396,7 @@ function rcp_settings_page() {
 						<tr>
 							<th><?php _e( 'PayPal API Credentials', 'rcp' ); ?></th>
 							<td>
-								<p><?php _e( 'The PayPal API credentials are required in order to use PayPal Express, PayPal Pro, and to support advanced subscription cancellation options in PayPal Standard. Test API credentials can be obtained at <a href="http://docs.pippinsplugins.com/article/826-setting-up-paypal-sandbox-accounts" target="_blank">developer.paypal.com</a>.', 'rcp' ); ?></p>
+								<p><?php _e( 'The PayPal API credentials are required in order to use PayPal Express, PayPal Pro, and to support advanced subscription cancellation options in PayPal Standard. Test API credentials can be obtained at <a href="http://docs.restrictcontentpro.com/article/1548-setting-up-paypal-sandbox-accounts" target="_blank">developer.paypal.com</a>.', 'rcp' ); ?></p>
 							</td>
 						</tr>
 						<?php if( ! function_exists( 'rcp_register_paypal_pro_express_gateway' ) ) : ?>
@@ -506,7 +524,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input class="regular-text" id="rcp_settings[twocheckout_test_seller_id]" style="width: 300px;" name="rcp_settings[twocheckout_test_seller_id]" value="<?php if(isset($rcp_options['twocheckout_test_seller_id'])) { echo $rcp_options['twocheckout_test_seller_id']; } ?>"/>
-								<p class="description"><?php _e('Enter your live Seller ID. <a href="http://help.2checkout.com/articles/FAQ/Where-is-my-Seller-ID" target="_blank">Where is my Seller ID?</a>.', 'rcp'); ?></p>
+								<p class="description"><?php _e('Enter your test Seller ID. <a href="http://help.2checkout.com/articles/FAQ/Where-is-my-Seller-ID" target="_blank">Where is my Seller ID?</a>.', 'rcp'); ?></p>
 							</td>
 						</tr>
 						<?php // 2checkout Live Private Key ?>
@@ -539,6 +557,63 @@ function rcp_settings_page() {
 								<p class="description"><?php _e('Enter your live Seller ID. <a href="http://help.2checkout.com/articles/FAQ/Where-is-my-Seller-ID" target="_blank">Where is my Seller ID?</a>.', 'rcp'); ?></p>
 							</td>
 						</tr>
+
+						<tr valign="top">
+							<th colspan=2>
+								<h3><?php _e('Authorize.net Settings', 'rcp'); ?></h3>
+							</th>
+						</tr>
+						<?php // Authorize.net Test Login ID ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[authorize_test_api_login]"><?php _e( 'Test API Login ID', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[authorize_test_api_login]" style="width: 300px;" name="rcp_settings[authorize_test_api_login]" value="<?php if(isset($rcp_options['authorize_test_api_login'])) { echo esc_attr( $rcp_options['authorize_test_api_login'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your authorize.net test API login ID.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // Authorize.net Test Transaction Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[authorize_test_txn_key]"><?php _e( 'Test Transaction Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[authorize_test_txn_key]" style="width: 300px;" name="rcp_settings[authorize_test_txn_key]" value="<?php if(isset($rcp_options['authorize_test_txn_key'])) { echo esc_attr( $rcp_options['authorize_test_txn_key'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your authorize.net test transaction key', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // Authorize.net Live Login ID ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[authorize_api_login]"><?php _e( 'Live API Login ID', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[authorize_api_login]" style="width: 300px;" name="rcp_settings[authorize_api_login]" value="<?php if(isset($rcp_options['authorize_api_login'])) { echo esc_attr( $rcp_options['authorize_api_login'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your authorize.net live API login ID.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // Authorize.net Live Transaction Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[authorize_txn_key]"><?php _e( 'Live Transaction Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[authorize_txn_key]" style="width: 300px;" name="rcp_settings[authorize_txn_key]" value="<?php if(isset($rcp_options['authorize_txn_key'])) { echo  esc_attr( $rcp_options['authorize_txn_key'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your authorize.net live transaction key', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // Authorize.net MD5 Hash ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[authorize_hash_value]"><?php _e( 'MD5-Hash Verification Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[authorize_hash_value]" style="width: 300px;" name="rcp_settings[authorize_hash_value]" value="<?php if(isset($rcp_options['authorize_hash_value'])) { echo esc_attr( $rcp_options['authorize_hash_value'] ); } ?>"/>
+								<p class="description"><?php _e('Enter the MD5 Hash verification key for your Silent Post URL.', 'rcp'); ?></p>
+							</td>
+						</tr>
+
 					</table>
 					<?php do_action( 'rcp_payments_settings', $rcp_options ); ?>
 
@@ -550,6 +625,39 @@ function rcp_settings_page() {
 						<table class="form-table">
 							<tr>
 								<th colspan=2><h3><?php _e( 'General', 'rcp' ); ?></h3></th>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[email_template]"><?php _e( 'Template', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<?php $emails = new RCP_Emails; $selected_template = isset( $rcp_options['email_template'] ) ? $rcp_options['email_template'] : ''; ?>
+									<select id="rcp_settings[email_template]" name="rcp_settings[email_template]">
+										<?php foreach( $emails->get_templates() as $id => $template ) : ?>
+											<option value="<?php echo esc_attr( $id ); ?>"<?php selected( $id, $selected_template ); ?>><?php echo $template; ?></option>
+										<?php endforeach; ?>
+									</select>
+									<p class="description"><?php _e( 'Select the template used for email design.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[email_header_text]"><?php _e( 'Email Header', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text" id="rcp_settings[email_header_text]" style="width: 300px;" name="rcp_settings[email_header_text]" value="<?php echo esc_attr( $rcp_options['email_header_text'] ); ?>"/>
+									<p class="description"><?php _e( 'Text shown at top of email notifications.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[email_header_img]"><?php _e( 'Email Logo', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text rcp-upload-field" id="rcp_settings[email_header_img]" style="width: 300px;" name="rcp_settings[email_header_img]" value="<?php echo esc_attr( $rcp_options['email_header_img'] ); ?>"/>
+									<button class="rcp-upload button"><?php _e( 'Choose Image', 'rcp' ); ?></button>
+									<p class="description"><?php _e( 'Image shown at top of email notifications.', 'rcp' ); ?></p>
+								</td>
 							</tr>
 							<tr>
 								<th>
@@ -570,6 +678,15 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 
+							<tr>
+								<th>
+									<label><?php _e( 'Available Template Tags', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<p class="description"><?php _e( 'The following template tags are available for use in all of the email settings below.', 'rcp' ); ?></p>
+									<?php echo rcp_get_emails_tags_list(); ?>
+								</td>
+							</tr>
 							<tr>
 								<th colspan=2><h3><?php _e( 'Active Subscription Email', 'rcp' ); ?></h3></th>
 							</tr>
@@ -596,7 +713,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[active_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[active_email]" style="width: 300px; height: 100px;" name="rcp_settings[active_email]"><?php if( isset( $rcp_options['active_email'] ) ) { echo $rcp_options['active_email']; } ?></textarea>
+									<?php
+									$active_email = isset( $rcp_options['active_email'] ) ? wptexturize( $rcp_options['active_email'] ) : '';
+									wp_editor( $active_email, 'rcp_settings_active_email', array( 'textarea_name' => 'rcp_settings[active_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users when their subscription becomes active.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -628,7 +748,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[cancelled_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[cancelled_email]" style="width: 300px; height: 100px;" name="rcp_settings[cancelled_email]"><?php if( isset( $rcp_options['cancelled_email'] ) ) { echo $rcp_options['cancelled_email']; } ?></textarea>
+									<?php
+									$cancelled_email = isset( $rcp_options['cancelled_email'] ) ? wptexturize( $rcp_options['cancelled_email'] ) : '';
+									wp_editor( $cancelled_email, 'rcp_settings_cancelled_email', array( 'textarea_name' => 'rcp_settings[cancelled_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users when their subscription is cancelled.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -660,7 +783,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[expired_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[expired_email]" style="width: 300px; height: 100px;" name="rcp_settings[expired_email]"><?php if( isset( $rcp_options['expired_email'] ) ) { echo $rcp_options['expired_email']; } ?></textarea>
+									<?php
+									$expired_email = isset( $rcp_options['expired_email'] ) ? wptexturize( $rcp_options['expired_email'] ) : '';
+									wp_editor( $expired_email, 'rcp_settings_expired_email', array( 'textarea_name' => 'rcp_settings[expired_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users when their subscription is expired.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -681,7 +807,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[renew_notice_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[renew_notice_email]" style="width: 300px; height: 100px;" name="rcp_settings[renew_notice_email]"><?php if( isset( $rcp_options['renew_notice_email'] ) ) { echo $rcp_options['renew_notice_email']; } ?></textarea>
+									<?php
+									$renew_notice_email = isset( $rcp_options['renew_notice_email'] ) ? wptexturize( $rcp_options['renew_notice_email'] ) : '';
+									wp_editor( $renew_notice_email, 'rcp_settings_renew_notice_email', array( 'textarea_name' => 'rcp_settings[renew_notice_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users before their subscription expires to encourage them to renew.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -731,7 +860,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[free_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[free_email]" style="width: 300px; height: 100px;" name="rcp_settings[free_email]"><?php if( isset( $rcp_options['free_email'] ) ) { echo $rcp_options['free_email']; } ?></textarea>
+									<?php
+									$free_email = isset( $rcp_options['free_email'] ) ? wptexturize( $rcp_options['free_email'] ) : '';
+									wp_editor( $free_email, 'rcp_settings_free_email', array( 'textarea_name' => 'rcp_settings[free_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users when they sign up for a free account.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -763,7 +895,10 @@ function rcp_settings_page() {
 									<label for="rcp_settings[trial_email]"><?php _e( 'Trial Email Message', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[trial_email]" style="width: 300px; height: 100px;" name="rcp_settings[trial_email]"><?php if( isset( $rcp_options['trial_email'] ) ) { echo $rcp_options['trial_email']; } ?></textarea>
+									<?php
+									$trial_email = isset( $rcp_options['trial_email'] ) ? wptexturize( $rcp_options['trial_email'] ) : '';
+									wp_editor( $trial_email, 'rcp_settings_trial_email', array( 'textarea_name' => 'rcp_settings[trial_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users when they sign up for a free trial.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -793,8 +928,44 @@ function rcp_settings_page() {
 									<label for="rcp_settings[payment_received_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp_settings[payment_received_email]" style="width: 300px; height: 100px;" name="rcp_settings[payment_received_email]"><?php if( isset( $rcp_options['payment_received_email'] ) ) { echo $rcp_options['payment_received_email']; } ?></textarea>
+									<?php
+									$payment_received_email = isset( $rcp_options['payment_received_email'] ) ? wptexturize( $rcp_options['payment_received_email'] ) : '';
+									wp_editor( $payment_received_email, 'rcp_settings_payment_received_email', array( 'textarea_name' => 'rcp_settings[payment_received_email]', 'teeny' => true ) );
+									?>
 									<p class="description"><?php _e( 'This is the email message that is sent to users after a payment has been received from them.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th colspan=2><h3><?php _e( 'Renewal Payment Failed Email', 'rcp' ); ?></h3></th>
+							</tr>
+							<tr>
+								<th>
+									<label for="rcp_settings[disable_renewal_payment_failed_email]"><?php _e( 'Disabled', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input type="checkbox" value="1" name="rcp_settings[disable_renewal_payment_failed_email]" id="rcp_settings[disable_renewal_payment_failed_email]" <?php checked( true, isset( $rcp_options['disable_renewal_payment_failed_email'] ) ); ?>/>
+									<span><?php _e( 'Check this to disable the email sent out when a renewal payment fails.', 'rcp' ); ?></span>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th>
+									<label for="rcp_settings[renewal_payment_failed_subject]"><?php _e( 'Subject', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text" id="rcp_settings[renewal_payment_failed_subject]" style="width: 300px;" name="rcp_settings[renewal_payment_failed_subject]" value="<?php if( isset( $rcp_options['renewal_payment_failed_subject'] ) ) { echo esc_attr( $rcp_options['renewal_payment_failed_subject'] ); } ?>"/>
+									<p class="description"><?php _e( 'The subject line for the email sent to users when a renewal payment fails.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr valign="top">
+								<th>
+									<label for="rcp_settings[renewal_payment_failed_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<?php
+									$renewal_payment_failed_email = isset( $rcp_options['renewal_payment_failed_email'] ) ? wptexturize( $rcp_options['renewal_payment_failed_email'] ) : '';
+									wp_editor( $renewal_payment_failed_email, 'rcp_settings_renewal_payment_failed_email', array( 'textarea_name' => 'rcp_settings[renewal_payment_failed_email]', 'teeny' => true ) );
+									?>
+									<p class="description"><?php _e( 'This is the email message that is sent to users when a renewal payment fails.', 'rcp' ); ?></p>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -815,24 +986,6 @@ function rcp_settings_page() {
 						<?php do_action( 'rcp_email_settings', $rcp_options ); ?>
 
 					</div><!--end #rcp_email_options-->
-					<div id="rcp_email_tags">
-						<p><strong><?php _e( 'Available Template Tags', 'rcp' ); ?></strong></p>
-						<ul>
-							<li><em>%blogname%</em> - <?php _e( 'will be replaced with the name of your site', 'rcp' ); ?></li>
-							<li><em>%username%</em> - <?php _e( 'will be replaced with the user name of the person receiving the email', 'rcp' ); ?></li>
-							<li><em>%useremail%</em> - <?php _e( 'will be replaced with the email of the person receiving the email', 'rcp' ); ?></li>
-							<li><em>%firstname%</em> - <?php _e( 'will be replaced with the first name of the person receiving the email', 'rcp' ); ?></li>
-							<li><em>%lastname%</em> - <?php _e( 'will be replaced with the last name of the person receiving the email', 'rcp' ); ?></li>
-							<li><em>%displayname%</em> - <?php _e( 'will be replaced with the display name of the person receiving the email', 'rcp' ); ?></li>
-							<li><em>%expiration%</em> - <?php _e( 'will be replaced with the expiration date of subscription', 'rcp' ); ?></li>
-							<li><em>%subscription_name%</em> - <?php _e( 'will be replaced with the name of the subscription', 'rcp' ); ?></li>
-							<li><em>%subscription_key%</em> - <?php _e( 'will be replaced with the unique, 32 character key created when the user is registered', 'rcp' ); ?></li>
-							<li><em>%amount%</em> - <?php _e( 'will be replaced with the amount of the users last payment', 'rcp' ); ?></li>
-
-							<?php do_action( 'rcp_available_template_tags' ); ?>
-
-						</ul>
-					</div><!--end #rcp_email_tags-->
 					<div class="clear"></div>
 				</div><!--end #emails-->
 
@@ -937,11 +1090,11 @@ function rcp_settings_page() {
 					<table class="form-table">
 						<tr valign="top">
 							<th>
-								<label for="rcp_settings[hide_premium]"><?php _e( 'Hide Premium Posts', 'rcp' ); ?></label>
+								<label for="rcp_settings[hide_premium]"><?php _e( 'Hide Restricted Posts', 'rcp' ); ?></label>
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[hide_premium]" id="rcp_settings[hide_premium]" <?php if( isset( $rcp_options['hide_premium'] ) ) checked('1', $rcp_options['hide_premium']); ?>/>
-								<span class="description"><?php _e( 'Check this to hide all premium posts from queries when user is not logged in. Note, this will only hide posts that are restricted to paid memberships.', 'rcp' ); ?></span>
+								<span class="description"><?php _e( 'Check this to hide all restricted posts from queries when the user does not have access.', 'rcp' ); ?></span>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -1069,6 +1222,15 @@ function rcp_settings_page() {
 								<p class="description"><?php _e( 'This your own personal reCaptcha Secret key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your secret key.', 'rcp' ); ?></p>
 							</td>
 						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[show_beta_updates]"><?php _e( 'Opt into beta versions?', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[show_beta_updates]" id="rcp_settings[show_beta_updates]" <?php checked( true, ! empty( $rcp_options['show_beta_updates'] ) ); ?>/>
+								<span class="description"><?php _e( 'Check this box if you would like to receive update notifications for beta releases. When beta versions are available, an update notification will be shown in your Plugins page.', 'rcp' ); ?></span>
+							</td>
+						</tr>
 					</table>
 					<?php do_action( 'rcp_misc_settings', $rcp_options ); ?>
 				</div><!--end #misc-->
@@ -1087,7 +1249,13 @@ function rcp_settings_page() {
 	<?php
 }
 
-
+/**
+ * Sanitize settings.
+ *
+ * @param array $data
+ *
+ * @return array Sanitized data.
+ */
 function rcp_sanitize_settings( $data ) {
 
 	if( empty( $data['license_key'] ) ) {
@@ -1139,11 +1307,24 @@ function rcp_sanitize_settings( $data ) {
 
 	}
 
+	// Sanitize email bodies
+	$email_bodies = array( 'active_email', 'cancelled_email', 'expired_email', 'renew_notice_email', 'free_email', 'trial_email', 'payment_received_email' );
+	foreach ( $email_bodies as $email_body ) {
+		if ( ! empty( $data[$email_body] ) ) {
+			$data[$email_body] = wp_kses_post( $data[$email_body] );
+		}
+	}
+
 	do_action( 'rcp_save_settings', $data );
 
 	return $data;
 }
 
+/**
+ * Activate license key
+ *
+ * @return bool|void
+ */
 function rcp_activate_license() {
 	if( ! isset( $_POST['rcp_license_activate'] ) )
 		return;
@@ -1189,6 +1370,11 @@ function rcp_activate_license() {
 
 }
 
+/**
+ * Deactivate license key
+ *
+ * @return bool|void
+ */
 function rcp_deactivate_license() {
 
 	// listen for our activate button to be clicked
@@ -1234,6 +1420,11 @@ function rcp_deactivate_license() {
 	}
 }
 
+/**
+ * Check license key to see if it's valid
+ *
+ * @return string|false|void
+ */
 function rcp_check_license() {
 
 	if( ! empty( $_POST['rcp_settings'] ) ) {

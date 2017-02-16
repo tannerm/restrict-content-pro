@@ -1,4 +1,17 @@
 <?php
+/**
+ * Subscription Details
+ *
+ * This template displays the current user's membership details with [subscription_details]
+ * @link http://docs.restrictcontentpro.com/article/1600-subscriptiondetails
+ *
+ * For modifying this template, please see: http://docs.restrictcontentpro.com/article/1738-template-files
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Templates/Subscription
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
 global $user_ID, $rcp_options, $rcp_load_css;
 
@@ -24,10 +37,10 @@ if( isset( $_GET['profile'] ) && 'cancelled' == $_GET['profile'] ) : ?>
 	</thead>
 	<tbody>
 		<tr>
-			<td><?php rcp_print_status(); ?></td>
-			<td><?php echo rcp_get_subscription(); ?></td>
-			<td><?php echo rcp_get_expiration_date(); ?></td>
-			<td>
+			<td data-th="<?php esc_attr_e( 'Status', 'rcp' ); ?>"><?php rcp_print_status(); ?></td>
+			<td data-th="<?php esc_attr_e( 'Subscription', 'rcp' ); ?>"><?php echo rcp_get_subscription(); ?></td>
+			<td data-th="<?php ( rcp_is_recurring() && ! rcp_is_expired() ) ? esc_attr_e( 'Renewal Date', 'rcp' ) : esc_attr_e( 'Expiration', 'rcp' ); ?>"><?php echo rcp_get_expiration_date(); ?></td>
+			<td data-th="<?php esc_attr_e( 'Actions', 'rcp' ); ?>">
 				<?php
 				$links = array();
 				if ( rcp_can_member_renew() ) {
@@ -56,6 +69,7 @@ if( isset( $_GET['profile'] ) && 'cancelled' == $_GET['profile'] ) : ?>
 			<th><?php _e( 'Invoice #', 'rcp' ); ?></th>
 			<th><?php _e( 'Subscription', 'rcp' ); ?></th>
 			<th><?php _e( 'Amount', 'rcp' ); ?></th>
+			<th><?php _e( 'Payment Status', 'rcp' ); ?></th>
 			<th><?php _e( 'Date', 'rcp' ); ?></th>
 			<th><?php _e( 'Actions', 'rcp' ); ?></th>
 		</tr>
@@ -64,15 +78,16 @@ if( isset( $_GET['profile'] ) && 'cancelled' == $_GET['profile'] ) : ?>
 	<?php if( rcp_get_user_payments() ) : ?>
 		<?php foreach( rcp_get_user_payments() as $payment ) : ?>
 			<tr>
-				<td><?php echo $payment->id; ?></td>
-				<td><?php echo $payment->subscription; ?></td>
-				<td><?php echo rcp_currency_filter( $payment->amount ); ?></td>
-				<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->date, current_time( 'timestamp' ) ) ); ?></td>
-				<td><a href="<?php echo rcp_get_pdf_download_url( $payment->id ); ?>"><?php _e( 'View Receipt', 'rcp' ); ?></td>
+				<td data-th="<?php esc_attr_e( 'Invoice #', 'rcp' ); ?>"><?php echo $payment->id; ?></td>
+				<td data-th="<?php esc_attr_e( 'Subscription', 'rcp' ); ?>"><?php echo $payment->subscription; ?></td>
+				<td data-th="<?php esc_attr_e( 'Amount', 'rcp' ); ?>"><?php echo rcp_currency_filter( $payment->amount ); ?></td>
+				<td data-th="<?php esc_attr_e( 'Payment Status', 'rcp' ); ?>"><?php echo rcp_get_payment_status_label( $payment ); ?></td>
+				<td data-th="<?php esc_attr_e( 'Date', 'rcp' ); ?>"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->date, current_time( 'timestamp' ) ) ); ?></td>
+				<td data-th="<?php esc_attr_e( 'Actions', 'rcp' ); ?>"><a href="<?php echo rcp_get_pdf_download_url( $payment->id ); ?>"><?php _e( 'View Receipt', 'rcp' ); ?></td>
 			</tr>
 		<?php endforeach; ?>
 	<?php else : ?>
-		<tr><td colspan="5"><?php _e( 'You have not made any payments.', 'rcp' ); ?></td></tr>
+		<tr><td data-th="<?php _e( 'Subscription', 'rcp' ); ?>" colspan="6"><?php _e( 'You have not made any payments.', 'rcp' ); ?></td></tr>
 	<?php endif; ?>
 	</tbody>
 </table>

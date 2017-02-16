@@ -3,8 +3,8 @@
  * Payment Gateway For Stripe Checkout
  *
  * @package     Restrict Content Pro
- * @subpackage  Classes/Roles
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @subpackage  Classes/Gateways/Stripe Checkout
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.5
 */
@@ -12,9 +12,20 @@
 class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 
 	/**
+	 * Initializes the gateway.
+	 *
+	 * @since 2.7
+	 */
+	public function init() {
+		$this->supports[] = 'gateway-submits-form';
+		parent::init();
+	}
+
+	/**
 	 * Process registration
 	 *
 	 * @since 2.5
+	 * @return void
 	 */
 	public function process_signup() {
 
@@ -56,7 +67,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			$subscriptions[ $subscription->id ] = array(
 				'description' => $subscription->description,
 				'name'        => $subscription->name,
-				'panelLabel'  => __( 'Register', 'rcp' ),
+				'panelLabel'  => $this->is_trial() ? __( 'Start Trial', 'rcp' ) : __( 'Register', 'rcp' ),
 			);
 		}
 
@@ -69,13 +80,6 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 			var rcpSubscriptions = <?php echo json_encode( $subscriptions ); ?>;
 			var checkoutArgs     = <?php echo json_encode( $data ); ?>;
 
-			// define the token function
-			checkoutArgs.token = function(token){ jQuery('body').trigger('rcp_stripe_checkout_submit', token); };
-
-			if( ! checkoutArgs.email ) {
-				checkoutArgs.email = jQuery('#rcp_registration_form #rcp_user_email' ).val();
-			}
-
 			jQuery('#rcp_registration_form #rcp_submit').val( rcp_script_options.pay_now );
 
 			jQuery('body').on('rcp_level_change', function(event, target) {
@@ -84,37 +88,65 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 				);
 			});
 
-			jQuery('body').on('rcp_stripe_checkout_submit', function(e, token){
-				jQuery('#rcp_registration_form').append('<input type="hidden" name="stripeToken" value="' + token.id + '" />').submit();
+			jQuery('#rcp_user_email' ).focusout(function() {
+				checkoutArgs.email = jQuery(this).val();
 			});
 
-			jQuery('#rcp_registration_form #rcp_user_email' ).focusout(function() {
-				checkoutArgs.email = jQuery('#rcp_registration_form #rcp_user_email' ).val();
-			});
+			/**
+			 * 'rcp_register_form_submission' is triggered in register.js
+			 * if the form data is successfully validated.
+			 */
+			jQuery('body').on('rcp_register_form_submission', function(e, response, form_id) {
 
-			var rcpStripeCheckout = StripeCheckout.configure(checkoutArgs);
+				if ( response.gateway.slug !== 'stripe_checkout' ) {
+					return;
+				}
 
-			jQuery('#rcp_registration_form #rcp_submit').on('click', function(e) {
-				var $form = jQuery(this).closest('form');
-				var $level = $form.find('input[name=rcp_level]:checked');
+				var submission_form = jQuery('#'+form_id);
+
+				var $level = submission_form.find('input[name=rcp_level]:checked');
 
 				var $price = $level.parent().find('.rcp_price').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
-				if ( ! $level.length ) {
-					$level = $form.find('input[name=rcp_level]');
-					$price = $form.find('.rcp_level').attr('rel') * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
-				}
 
 				if( jQuery('.rcp_gateway_fields').hasClass('rcp_discounted_100') ) {
 					return true;
 				}
 
-				// Open Checkout with further options
-				if ( $price > 0 ) {
-					rcpStripeCheckout.open(rcpSubscriptions[$level.val()]);
-					e.preventDefault();
-
-					return false;
+				if ( ( $price && ! $price > 0 ) || ! response.total > 0 ) {
+					submission_form.submit();
+					return true;
 				}
+
+				if ( ! checkoutArgs.email ) {
+					checkoutArgs.email = jQuery('#rcp_user_email' ).val();
+				}
+
+				var rcpStripeCheckoutGotToken = false;
+
+				checkoutArgs.token = function(token) {
+					rcpStripeCheckoutGotToken = true;
+					// Add the token to the form and submit it
+					submission_form.append('<input type="hidden" name="stripeToken" value="' + token.id + '" />').submit();
+				}
+
+				checkoutArgs.closed = function() {
+					// Unblock the form if the Checkout modal is closed without a successful payment
+					if (! rcpStripeCheckoutGotToken) {
+						jQuery('#rcp_submit').val(rcp_script_options.register);
+						rcp_processing = false;
+						submission_form.unblock();
+					}
+				}
+
+				if ( ! response.level.trial || checkoutArgs.alipay ) {
+					checkoutArgs.amount = response.total * <?php echo rcp_stripe_get_currency_multiplier(); ?>;
+				}
+
+				var rcpStripeCheckout = StripeCheckout.configure( checkoutArgs );
+
+				rcpStripeCheckout.open(
+					rcpSubscriptions[$level.val()]
+				);
 			});
 
 			// Close Checkout on page navigation
@@ -131,6 +163,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 	 * Load Stripe JS
 	 *
 	 * @since 2.5
+	 * @return void
 	 */
 	public function scripts() {
 		parent::scripts();
@@ -141,7 +174,8 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 	/**
 	 * Validate fields
 	 *
-	 * @since 2.5
+	 * @since  2.5
+	 * @return void
 	 */
 	public function validate_fields() {}
 

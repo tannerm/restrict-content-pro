@@ -1,9 +1,9 @@
 {
   "name": "restrict-content-pro",
-  "version": "2.6.8",
+  "version": "2.7.1",
   "description": "Set up a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.",
-  "homepage": "http://restrictcontentpro.com/",
-  "author": "Pippin Williamson <support@restrictcontentpro.com> (http://restrictcontentpro.com/)",
+  "homepage": "https://restrictcontentpro.com/",
+  "author": "Pippin Williamson <support@restrictcontentpro.com> (https://restrictcontentpro.com/)",
   "contributors": "Pippin Williamson",
   "repository": {
     "type": "git",

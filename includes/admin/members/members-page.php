@@ -1,5 +1,18 @@
 <?php
+/**
+ * Members Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Members Page
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
+/**
+ * Render members table
+ *
+ * @return void
+ */
 function rcp_members_page() {
 	global $rcp_options, $rcp_db_name, $wpdb;
 	$current_page = admin_url( '/admin.php?page=rcp-members' ); ?>
@@ -8,7 +21,7 @@ function rcp_members_page() {
 		<?php if( isset( $_GET['edit_member'] ) || isset( $_GET['view_member'] ) ) :
 			include( 'edit-member.php' );
 		else : ?>
-			<h2><?php _e(' Paid Subscribers', 'rcp' ); ?></h2>
+			<h1><?php _e(' Paid Subscribers', 'rcp' ); ?></h1>
 			<?php
 
 			$subscription_id = isset( $_GET['subscription'] ) && $_GET['subscription'] != 'all' ? urldecode( $_GET['subscription'] ) : null;
@@ -162,7 +175,18 @@ function rcp_members_page() {
 					}
 					if($members) :
 						$i = 1;
-						foreach( $members as $key => $member) : ?>
+						foreach( $members as $key => $member ) :
+
+							$rcp_member = new RCP_Member( $member->ID );
+
+							// Show pending expiration date for members with a pending status. See https://github.com/restrictcontentpro/restrict-content-pro/issues/708.
+							if ( 'pending' === $status ) {
+								$expiration = $rcp_member->get_expiration_date( true, true );
+							} else {
+								$expiration = $rcp_member->get_expiration_date( true, false );
+							}
+
+							?>
 							<tr class="rcp_row <?php do_action( 'rcp_member_row_class', $member ); if( rcp_is_odd( $i ) ) { echo ' alternate'; } ?>">
 								<th scope="row" class="check-column">
 									<input type="checkbox" class="rcp-member-cb" name="member-ids[]" value="<?php echo absint( $member->ID ); ?>"/>
@@ -197,7 +221,7 @@ function rcp_members_page() {
 								<td data-colname="<?php _e( 'Subscription', 'rcp' ); ?>"><?php echo rcp_get_subscription($member->ID); ?></td>
 								<td data-colname="<?php _e( 'Status', 'rcp' ); ?>"><?php echo rcp_print_status($member->ID, false); ?></td>
 								<td data-colname="<?php _e( 'Recurring', 'rcp' ); ?>"><?php echo rcp_is_recurring($member->ID) ? __('yes', 'rcp') : __('no', 'rcp'); ?></td>
-								<td data-colname="<?php _e( 'Expiration', 'rcp' ); ?>"><?php echo rcp_get_expiration_date($member->ID); ?></td>
+								<td data-colname="<?php _e( 'Expiration', 'rcp' ); ?>"><?php echo $expiration; ?></td>
 								<td data-colname="<?php _e( 'User Role', 'rcp' ); ?>"><?php echo rcp_get_user_role($member->ID); ?></td>
 								<?php do_action('rcp_members_page_table_column', $member->ID); ?>
 							</tr>
@@ -245,10 +269,10 @@ function rcp_members_page() {
 				</div><!--end .tablenav-->
 			<?php endif; ?>
 			<?php do_action('rcp_members_below_table'); ?>
-			<h3>
+			<h2>
 				<?php _e('Add New Subscription (for existing user)', 'rcp'); ?>
 				<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( 'If you wish to create a brand new account, that may be done from Users &rarr; Add New. <br/><strong>Note</strong>: this will not create a payment profile for the member. That must be done manually through your merchant account.', 'rcp' ); ?>"></span>
-			</h3>
+			</h2>
 			<form id="rcp-add-new-member" action="" method="post">
 				<table class="form-table">
 					<tbody>

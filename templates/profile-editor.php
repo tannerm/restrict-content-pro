@@ -1,9 +1,20 @@
 <?php
 /**
+ * Profile Editor Form
+ *
  * This template is used to display the profile editor with [rcp_profile_editor]
+ * @link http://docs.restrictcontentpro.com/article/1602-rcpprofileeditor
+ *
+ * For modifying this template, please see: http://docs.restrictcontentpro.com/article/1738-template-files
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Templates/Profile Editor
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
-global $current_user, $rcp_load_css;
 
+global $rcp_load_css;
+$current_user = wp_get_current_user();
 $rcp_load_css = true;
 
 if ( is_user_logged_in() ):
@@ -25,7 +36,7 @@ if ( is_user_logged_in() ):
 				<label for="rcp_first_name"><?php _e( 'First Name', 'rcp' ); ?></label>
 				<input name="rcp_first_name" id="rcp_first_name" class="text rcp-input" type="text" value="<?php echo esc_attr( $first_name ); ?>" />
 			</p>
-			<p id="rcp_profile_first_name_wrap">
+			<p id="rcp_profile_last_name_wrap">
 				<label for="rcp_last_name"><?php _e( 'Last Name', 'rcp' ); ?></label>
 				<input name="rcp_last_name" id="rcp_last_name" class="text rcp-input" type="text" value="<?php echo esc_attr( $last_name ); ?>" />
 			</p>
@@ -50,6 +61,8 @@ if ( is_user_logged_in() ):
 				<input name="rcp_email" id="rcp_email" class="text rcp-input required" type="email" value="<?php echo esc_attr( $current_user->user_email ); ?>" />
 			</p>
 			<?php do_action( 'rcp_profile_editor_after', $current_user->ID ); ?>
+        </fieldset>
+        <fieldset>
 			<legend><?php _e( 'Change your Password', 'rcp' ); ?></legend>
 			<p id="rcp_profile_password_wrap">
 				<label for="rcp_user_pass"><?php _e( 'New Password', 'rcp' ); ?></label>
@@ -60,6 +73,8 @@ if ( is_user_logged_in() ):
 				<input name="rcp_new_user_pass2" id="rcp_new_user_pass2" class="password rcp-input" type="password"/>
 			</p>
 			<p class="rcp_password_change_notice"><?php _e( 'Please note after changing your password, you must log back in.', 'rcp' ); ?></p>
+        </fieldset>
+        <fieldset>
 			<p id="rcp_profile_submit_wrap">
 				<input type="hidden" name="rcp_profile_editor_nonce" value="<?php echo wp_create_nonce( 'rcp-profile-editor-nonce' ); ?>"/>
 				<input type="hidden" name="rcp_action" value="edit_user_profile" />

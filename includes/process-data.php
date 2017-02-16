@@ -1,10 +1,26 @@
 <?php
+/**
+ * Process Data
+ *
+ * This file processes all new subscription creations and updates.
+ * It also manages adding/editing subscriptions to users.
+ * The user registration and login is handled in registration-functions.php
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Process Data
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
-/*************************************************************************
-* this file processes all new subscription creations and updates
-* also manages adding/editings subscriptions to users
-* User registration and login is handled in registration-functions.php
-**************************************************************************/
+/**
+ * Handles admin processing for:
+ *
+ * New subscription creations and updates
+ * Adding/editing subscriptions to users
+ * Adding/editing discount codes
+ *
+ * @return void
+ */
 function rcp_process_data() {
 
 	if( ! is_admin() )
@@ -34,9 +50,9 @@ function rcp_process_data() {
 
 			$levels = new RCP_Levels();
 
-			$add = $levels->insert( $_POST );
+			$level_id = $levels->insert( $_POST );
 
-			if( $add ) {
+			if( $level_id ) {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&rcp_message=level_added';
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&rcp_message=level_not_added';
@@ -55,12 +71,13 @@ function rcp_process_data() {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
 
+			$level_id = absint( $_POST['subscription_id'] );
+
 			$levels = new RCP_Levels();
 
 			$update = $levels->update( $_POST['subscription_id'], $_POST );
 
 			if($update) {
-				// clear the cache
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&rcp_message=level_updated';
 			} else {
 				$url = get_bloginfo('wpurl') . '/wp-admin/admin.php?page=rcp-member-levels&rcp_message=level_not_updated';
@@ -191,7 +208,7 @@ function rcp_process_data() {
 
 						case 'mark-cancelled' :
 
-							$member->set_status( 'cancelled' );
+							$member->cancel();
 
 							break;
 
@@ -219,10 +236,15 @@ function rcp_process_data() {
 			$levels       = new RCP_Levels();
 			$user_id      = absint( $_POST['user'] );
 			$member       = new RCP_Member( $user_id );
+			$email        = sanitize_text_field( $_POST['email'] );
 			$status       = sanitize_text_field( $_POST['status'] );
 			$level_id     = absint( $_POST['level'] );
 			$expiration   = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 			$expiration   = 'none' !== $expiration ? date( 'Y-m-d 23:59:59', strtotime( $_POST['expiration'], current_time( 'timestamp' ) ) ) : $expiration;
+
+			if( isset( $_POST['notes'] ) ) {
+				update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
+			}
 
 			if( ! empty( $_POST['expiration'] ) ) {
 				$member->set_expiration_date( $expiration );
@@ -268,16 +290,16 @@ function rcp_process_data() {
 				update_user_meta( $user_id, 'rcp_signup_method', $_POST['signup_method'] );
 			}
 
-			if( isset( $_POST['notes'] ) ) {
-				update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
-			}
-
 			if( $status !== $member->get_status() ) {
 				$member->set_status( $status );
 			}
 
 			if( isset( $_POST['payment-profile-id'] ) ) {
 				$member->set_payment_profile_id( $_POST['payment-profile-id'] );
+			}
+
+			if( $email != $member->user_email ) {
+				wp_update_user( array( 'ID' => $user_id, 'user_email' => $email ) );
 			}
 
 			do_action( 'rcp_edit_member', $user_id );

@@ -1,13 +1,16 @@
 <?php
-
 /**
  * RCP Discounts class
  *
  * This class handles querying, inserting, updating, and removing discounts
  * Also includes other discount helper functions
  *
+ * @package     Restrict Content Pro
+ * @subpackage  Classes/Discounts
+ * @copyright   Copyright (c) 2017, Pippin Williamson
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since 1.5
-*/
+ */
 
 
 class RCP_Discounts {
@@ -17,7 +20,7 @@ class RCP_Discounts {
 	 *
 	 * @access  public
 	 * @since   1.5
-	*/
+	 */
 	public $db_name;
 
 
@@ -26,7 +29,7 @@ class RCP_Discounts {
 	 *
 	 * @access  public
 	 * @since   1.5
-	*/
+	 */
 	public $db_version;
 
 
@@ -34,8 +37,8 @@ class RCP_Discounts {
 	 * Get things started
 	 *
 	 * @since   1.5
-	*/
-
+	 * @return  void
+	 */
 	function __construct() {
 
 		$this->db_name    = rcp_get_discounts_db_name();
@@ -47,10 +50,12 @@ class RCP_Discounts {
 	/**
 	 * Retrieve discounts from the database
 	 *
+	 * @param array $args Query arguments.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  array|false Array of discounts or false if none.
+	 */
 	public function get_discounts( $args = array() ) {
 		global $wpdb;
 
@@ -72,10 +77,12 @@ class RCP_Discounts {
 	/**
 	 * Retrieve a specific discount from the database
 	 *
+	 * @param  int $discount_id ID of the discount to retrieve.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  object|null Database row or null on failure.
+	 */
 	public function get_discount( $discount_id = 0 ) {
 		global $wpdb;
 
@@ -89,10 +96,13 @@ class RCP_Discounts {
 	/**
 	 * Retrieve a specific discount from the database by field
 	 *
+	 * @param string $field Name of the field to check.
+	 * @param string $value Value of the field.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  object|null Database row or null on failure.
+	 */
 	public function get_by( $field = 'code', $value = '' ) {
 		global $wpdb;
 
@@ -106,10 +116,12 @@ class RCP_Discounts {
 	/**
 	 * Get the status of a discount
 	 *
+	 * @param  int $discount_id ID of the discount.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  string|false Discount status or false on failure.
+	 */
 	public function get_status( $discount_id = 0 ) {
 
 		$discount = $this->get_discount( $discount_id );
@@ -124,10 +136,12 @@ class RCP_Discounts {
 	/**
 	 * Get the amount of a discount
 	 *
+	 * @param  int $discount_id ID of the discount.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  int|float
+	 */
 	public function get_amount( $discount_id = 0 ) {
 
 		$discount = $this->get_discount( $discount_id );
@@ -142,10 +156,12 @@ class RCP_Discounts {
 	/**
 	 * Get the number of times a discount has been used
 	 *
+	 * @param  int $discount_id ID of the discount.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  int
+	 */
 	public function get_uses( $discount_id = 0 ) {
 
 		$discount = $this->get_discount( $discount_id );
@@ -160,10 +176,12 @@ class RCP_Discounts {
 	/**
 	 * Get the maximum number of times a discount can be used
 	 *
+	 * @param  int $discount_id ID of the discount.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  int
+	 */
 	public function get_max_uses( $discount_id = 0 ) {
 
 		$discount = $this->get_discount( $discount_id );
@@ -178,10 +196,12 @@ class RCP_Discounts {
 	/**
 	 * Get the associated subscription level for a discount
 	 *
+	 * @param  int $discount_id ID of the discount.
+	 *
 	 * @access  public
 	 * @since   1.6
+	 * @return  int
 	 */
-
 	public function get_subscription_id( $discount_id = 0 ) {
 
 		$discount = $this->get_discount( $discount_id );
@@ -196,11 +216,12 @@ class RCP_Discounts {
 	/**
 	 * Checks wether a discount code has a subscription associated
 	 *
+	 * @param  int $discount_id ID of the discount.
+	 *
 	 * @access  public
 	 * @since   1.6
 	 * @return  bool
 	 */
-
 	public function has_subscription_id( $discount_id = 0 ) {
 
 		return $this->get_subscription_id( $discount_id ) > 0;
@@ -211,10 +232,12 @@ class RCP_Discounts {
 	/**
 	 * Increase the use count of a discount by 1
 	 *
+	 * @param  int $discount_id ID of the discount.
+	 *
 	 * @access  public
 	 * @since   1.5
+	 * @return  void
 	*/
-
 	public function increase_uses( $discount_id = 0 ) {
 
 		$uses = absint( $this->get_uses( $discount_id ) );
@@ -226,10 +249,12 @@ class RCP_Discounts {
 	/**
 	 * Get the expiration date of a discount
 	 *
+	 * @param  int $discount_id ID of the discount.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  string|false Expiration date, or false if it never expires.
+	 */
 	public function get_expiration( $discount_id = 0 ) {
 
 		$discount = $this->get_discount( $discount_id );
@@ -244,10 +269,12 @@ class RCP_Discounts {
 	/**
 	 * Get the discount type
 	 *
+	 * @param  int $discount_id ID of the discount.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  string|false
+	 */
 	public function get_type( $discount_id = 0 ) {
 
 		$discount = $this->get_discount( $discount_id );
@@ -262,10 +289,12 @@ class RCP_Discounts {
 	/**
 	 * Store a discount in the database
 	 *
+	 * @param  array $args Arguments for the discount code.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  int|false ID of the newly created discount code or false on failure.
+	 */
 	public function insert( $args = array() ) {
 
 		global $wpdb;
@@ -326,10 +355,16 @@ class RCP_Discounts {
 			)
 		);
 
-		do_action( 'rcp_add_discount', $args, $wpdb->insert_id );
+		if( $add ) {
 
-		if( $add )
-			return $wpdb->insert_id;
+			$discount_id = $wpdb->insert_id;
+
+			do_action( 'rcp_add_discount', $args, $discount_id );
+
+			return $discount_id;
+
+		}
+
 		return false;
 	}
 
@@ -337,10 +372,13 @@ class RCP_Discounts {
 	/**
 	 * Update an existing discount
 	 *
+	 * @param  int   $discount_id ID of the discount to update.
+	 * @param  array $args        Array of fields/values to update.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  bool Whether or not the update was successful.
+	 */
 	public function update( $discount_id = 0, $args = array() ) {
 
 		global $wpdb;
@@ -401,10 +439,12 @@ class RCP_Discounts {
 	/**
 	 * Delete a discount code
 	 *
+	 * @param  int $discount_id ID of the discount to delete.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  void
+	 */
 	public function delete( $discount_id = 0 ) {
 		global $wpdb;
 		do_action( 'rcp_delete_discount', $discount_id );
@@ -415,10 +455,12 @@ class RCP_Discounts {
 	/**
 	 * Check if a discount is maxed out
 	 *
+	 * @param  int $discount_id ID of the discount to check.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  bool
+	 */
 	public function is_maxed_out( $discount_id = 0 ) {
 
 		$uses = $this->get_uses( $discount_id );
@@ -439,10 +481,12 @@ class RCP_Discounts {
 	/**
 	 * Check if a discount is expired
 	 *
+	 * @param  int $discount_id ID of the discount to check.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  bool
+	 */
 	public function is_expired( $discount_id = 0 ) {
 
 		$ret        = false;
@@ -464,10 +508,13 @@ class RCP_Discounts {
 	/**
 	 * Add a discount to a user's history
 	 *
+	 * @param  int    $user_id ID of the user to add the discount to.
+	 * @param  string $discount_code Discount code to add.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  void
+	 */
 	public function add_to_user( $user_id = 0, $discount_code = '' ) {
 
 		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
@@ -489,10 +536,13 @@ class RCP_Discounts {
 	/**
 	 * Check if a user has used a discount
 	 *
+	 * @param  int    $user_id ID of the user to check.
+	 * @param  string $discount_code Discount code to check.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  bool
+	 */
 	public function user_has_used( $user_id = 0, $discount_code = '' ) {
 
 		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
@@ -508,10 +558,13 @@ class RCP_Discounts {
 	/**
 	 * Format the discount code
 	 *
+	 * @param int|float $amount Discount amount.
+	 * @param string    $type   Type of discount - either '%' or 'flat'.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  string
+	 */
 	public function format_discount( $amount = '', $type = '' ) {
 
 		if( $type == '%' ) {
@@ -528,10 +581,14 @@ class RCP_Discounts {
 	/**
 	 * Calculate the discounted price
 	 *
+	 * @param int|float $base_price      Full price without the discount.
+	 * @param int|float $discount_amount Amount of the discount code.
+	 * @param string    $type            Type of discount - either '%' or 'flat'.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  int|float
+	 */
 	public function calc_discounted_price( $base_price = '', $discount_amount = '', $type = '%' ) {
 
 		$discounted_price = $base_price;
@@ -549,11 +606,12 @@ class RCP_Discounts {
 	/**
 	 * Sanitizes the discount amount
 	 *
+	 * @param int|float $amount The discount amount.
+	 * @param string    $type   The discount type - either '%' or 'flat'.
+	 *
 	 * @access public
-	 * @since 2.4.9
-	 * @param $amount The discount amount
-	 * @param $type string The discount type
-	 * @return mixed array|WP_Error
+	 * @since  2.4.9
+	 * @return mixed|array|WP_Error
 	 */
 	public function format_amount( $amount, $type ) {
 

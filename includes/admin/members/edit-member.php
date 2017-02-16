@@ -1,4 +1,13 @@
 <?php
+/**
+ * Edit Member Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Edit Member
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 if( isset( $_GET['edit_member'] ) ) {
 	$member_id = absint( $_GET['edit_member'] );
 } elseif( isset( $_GET['view_member'] ) ) {
@@ -6,9 +15,9 @@ if( isset( $_GET['edit_member'] ) ) {
 }
 $member = new RCP_Member( $member_id );
 ?>
-<h2>
+<h1>
 	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $member->display_name; ?>
-</h2>
+</h1>
 <?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
 	<a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
 <?php } ?>
@@ -16,6 +25,24 @@ $member = new RCP_Member( $member_id );
 	<table class="form-table">
 		<tbody>
 			<?php do_action( 'rcp_edit_member_before', $member->ID ); ?>
+			<tr valign="top">
+				<th scope="row" valign="top">
+					<label for="rcp-userlogin"><?php _e( 'User Login', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<input id="rcp-userlogin" type="text" style="width: 200px;" value="<?php echo esc_attr( $member->user_login ); ?>" disabled="disabled"/>
+					<p class="description"><?php _e( 'The member\'s login name. This cannot be changed.', 'rcp' ); ?></p>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" valign="top">
+					<label for="rcp-email"><?php _e( 'User Email', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<input id="rcp-email" name="email" type="text" style="width: 200px;" value="<?php echo esc_attr( $member->user_email ); ?>"/>
+					<p class="description"><?php _e( 'The member\'s email address.', 'rcp' ); ?> <a href="<?php echo esc_url( add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php _e( 'Edit User Account', 'rcp' ); ?></a></p>
+				</td>
+			</tr>
 			<tr valign="top">
 				<th scope="row" valign="top">
 					<label for="rcp-status"><?php _e( 'Status', 'rcp' ); ?></label>
@@ -64,7 +91,13 @@ $member = new RCP_Member( $member_id );
 					<label for="rcp-expiration"><?php _e( 'Expiration date', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker" value="<?php echo esc_attr( $member->get_expiration_date() ); ?>"/>
+					<?php
+					$expiration_date = $member->get_expiration_date( false );
+					if( 'none' != $expiration_date ) {
+						$expiration_date = date( 'Y-m-d', strtotime( $expiration_date, current_time( 'timestamp' ) ) );
+					}
+					?>
+					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker" value="<?php echo esc_attr( $expiration_date ); ?>"/>
 					<label for="rcp-unlimited">
 						<input name="unlimited" id="rcp-unlimited" type="checkbox"<?php checked( get_user_meta( $member->ID, 'rcp_expiration', true ), 'none' ); ?>/>
 						<span class="description"><?php _e( 'Never expires?', 'rcp' ); ?></span>

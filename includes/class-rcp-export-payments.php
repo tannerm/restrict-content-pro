@@ -6,7 +6,7 @@
  *
  * @package     Restrict Content Pro
  * @subpackage  Export Class
- * @copyright   Copyright (c) 2013, Pippin Williamson
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
@@ -81,7 +81,7 @@ class RCP_Payments_Export extends RCP_Export {
 
 			$user   = get_userdata( $payment->user_id );
 
-			$data[] = array(
+			$data[] = apply_filters( 'rcp_export_payments_get_data_row', array(
 				'id'               => $payment->id,
 				'subscription'     => $payment->subscription,
 				'amount'           => $payment->amount,
@@ -90,7 +90,7 @@ class RCP_Payments_Export extends RCP_Export {
 				'payment_type'     => $payment->payment_type,
 				'subscription_key' => $payment->subscription_key,
 				'date'             => $payment->date
-			);
+			), $payment );
 
 		}
 

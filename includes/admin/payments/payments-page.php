@@ -1,12 +1,19 @@
 <?php
+/**
+ * Payments Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Payments Page
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
 /**
  * Renders the Restrict > Payments page
  *
  * @since  1.0
  * @return void
-*/
-
+ */
 function rcp_payments_page() {
 	global $rcp_options;
 	$current_page = admin_url( '/admin.php?page=rcp-payments' ); ?>
@@ -19,12 +26,12 @@ function rcp_payments_page() {
 		elseif( isset( $_GET['view'] ) && 'edit-payment' == $_GET['view'] ) :
 			include( 'edit-payment.php' );
 		else : ?>
-		<h2>
+		<h1>
 			<?php _e( 'Payments', 'rcp' ); ?>
 			<a href="<?php echo admin_url( '/admin.php?page=rcp-payments&view=new-payment' ); ?>" class="add-new-h2">
 				<?php _e( 'Create Payment', 'rcp' ); ?>
 			</a>
-		</h2>
+		</h1>
 
 		<?php do_action('rcp_payments_page_top');
 
@@ -109,6 +116,7 @@ function rcp_payments_page() {
 							<td data-colname="<?php _e( 'Type', 'rcp' ); ?>"><?php echo esc_html( $payment->payment_type ); ?></td>
 							<td data-colname="<?php _e( 'Transaction ID', 'rcp' ); ?>"><?php echo rcp_get_merchant_transaction_id_link( $payment ); ?></td>
 							<td data-colname="<?php _e( 'Status', 'rcp' ); ?>"><?php echo rcp_get_payment_status_label( $payment ); ?></td>
+							<?php do_action( 'rcp_payments_page_table_column', $payment->id ); ?>
 						</tr>
 					<?php
 					$i++;
