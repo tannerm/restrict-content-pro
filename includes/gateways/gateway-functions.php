@@ -214,12 +214,11 @@ function rcp_load_gateway_scripts() {
 
 	foreach( $gateways->enabled_gateways  as $key => $gateway ) {
 
-		if( is_array( $gateway ) && isset( $gateway['class'] ) ) {
+		// Stripe.js is loaded on all pages for advanced fraud functionality. Other scripts are only loaded on the registration page.
+		if( is_array( $gateway ) && isset( $gateway['class'] ) && ( $load_scripts || in_array( $key, array( 'stripe', 'stripe_checkout' ) ) ) ) {
 
-			if ( $load_scripts || in_array( $key, array( 'stripe', 'stripe_checkout' ) ) ) {
-				$gateway = new $gateway['class'];
-				$gateway->scripts();
-			}
+			$gateway = new $gateway['class'];
+			$gateway->scripts();
 
 		}
 
