@@ -545,7 +545,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					if ( $event->type == 'charge.failed' ) {
 
 						do_action( 'rcp_recurring_payment_failed', $member, $this );
-						do_action( 'rcp_stripe_charge_failed', $invoice );
+						do_action( 'rcp_stripe_charge_failed', $payment_event );
 
 						die( 'rcp_stripe_charge_failed action fired successfully' );
 
