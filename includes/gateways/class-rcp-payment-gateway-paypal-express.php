@@ -206,11 +206,13 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					unset( $args['INITAMT'] );
 				}
 
-				if ( $this->auto_renew && $this->is_trial() ) {
-					$args['TRIALBILLINGPERIOD']      = ucwords( $this->subscription_data['trial_duration_unit'] );
-					$args['TRIALBILLINGFREQUENCY']   = $this->subscription_data['trial_duration'];
+				if ( $details['is_trial'] ) {
+					$args['TRIALBILLINGPERIOD']      = ucwords( $details['subscription']['trial_duration_unit'] );
+					$args['TRIALBILLINGFREQUENCY']   = $details['subscription']['trial_duration'];
 					$args['TRIALTOTALBILLINGCYCLES'] = 1;
 					$args['TRIALAMT']                = 0;
+
+					unset( $args['INITAMT'] );
 				}
 
 				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
@@ -636,6 +638,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			}
 
 			$body['subscription'] = (array) rcp_get_subscription_details( $subscription_id );
+			$body['is_trial']     = ( ! $member->has_trialed() && ! empty( $body['subscription']['trial_duration'] ) && ! empty( $body['subscription']['trial_duration_unit'] ) );
 
 			return $body;
 
