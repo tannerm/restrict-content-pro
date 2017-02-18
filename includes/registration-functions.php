@@ -281,8 +281,6 @@ function rcp_process_registration() {
 			$subscription_data['fee'] = -1 * $subscription_data['price'];
 		}
 
-		//echo '<pre>'; print_r( $subscription_data ); echo '</pre>'; exit;
-
 		update_user_meta( $user_data['id'], 'rcp_pending_subscription_amount', $subscription_data['price'] + $subscription_data['fee'] );
 
 		// send all of the subscription data off for processing by the gateway
