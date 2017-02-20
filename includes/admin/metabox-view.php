@@ -16,6 +16,7 @@ $sub_levels        = get_post_meta( get_the_ID(), 'rcp_subscription_level', true
 $set_level         = is_array( $sub_levels ) ? '' : $sub_levels;
 $access_level      = get_post_meta( get_the_ID(), 'rcp_access_level', true );
 $access_level      = is_numeric( $access_level ) ? absint( $access_level ) : '';
+$content_excerpts  = isset( $rcp_options['content_excerpts'] ) ? $rcp_options['content_excerpts'] : 'individual';
 $show_excerpt      = get_post_meta( get_the_ID(), 'rcp_show_excerpt', true );
 $hide_in_feed      = get_post_meta( get_the_ID(), 'rcp_hide_from_feed', true );
 $user_role         = get_post_meta( get_the_ID(), 'rcp_user_level', true );
@@ -87,13 +88,13 @@ $role_set_display  = '' != $user_role ? '' : ' style="display:none;"';
 
 		<p><strong><?php _e( 'Additional options', 'rcp' ); ?></strong></p>
 		<p>
-			<?php if ( 'always' == $rcp_options['content_excerpts'] ) :
+			<?php if ( 'always' == $content_excerpts ) :
 				printf(
 					__( 'An excerpt will be shown to members without access to this content. You can change this behavior in %sRestrict > Settings > Misc%s.', 'rcp' ),
 					'<a href="' . esc_url( admin_url( 'admin.php?page=rcp-settings#misc' ) ) . '">',
 					'</a>'
 				);
-			elseif ( 'never' == $rcp_options['content_excerpts'] ) :
+			elseif ( 'never' == $content_excerpts ) :
 				printf(
 					__( 'An excerpt will not be shown to members without access to this content. You can change this behavior in %sRestrict > Settings > Misc%s.', 'rcp'),
 					'<a href="' . esc_url( admin_url( 'admin.php?page=rcp-settings#misc' ) ) . '">',
