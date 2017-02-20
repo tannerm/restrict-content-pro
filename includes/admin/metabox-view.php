@@ -10,6 +10,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
+global $rcp_options;
 $is_paid           = get_post_meta( get_the_ID(), '_is_paid', true );
 $sub_levels        = get_post_meta( get_the_ID(), 'rcp_subscription_level', true );
 $set_level         = is_array( $sub_levels ) ? '' : $sub_levels;
@@ -86,10 +87,24 @@ $role_set_display  = '' != $user_role ? '' : ' style="display:none;"';
 
 		<p><strong><?php _e( 'Additional options', 'rcp' ); ?></strong></p>
 		<p>
-			<label for="rcp-show-excerpt">
-				<input type="checkbox" name="rcp_show_excerpt" id="rcp-show-excerpt" value="1"<?php checked( true, $show_excerpt ); ?>/>
-				<?php _e( 'Show excerpt to members without access to this content.', 'rcp' ); ?>
-			</label>
+			<?php if ( 'always' == $rcp_options['content_excerpts'] ) :
+				printf(
+					__( 'An excerpt will be shown to members without access to this content. You can change this behavior in %sRestrict > Settings > Misc%s.', 'rcp' ),
+					'<a href="' . esc_url( admin_url( 'admin.php?page=rcp-settings#misc' ) ) . '">',
+					'</a>'
+				);
+			elseif ( 'never' == $rcp_options['content_excerpts'] ) :
+				printf(
+					__( 'An excerpt will not be shown to members without access to this content. You can change this behavior in %sRestrict > Settings > Misc%s.', 'rcp'),
+					'<a href="' . esc_url( admin_url( 'admin.php?page=rcp-settings#misc' ) ) . '">',
+					'</a>'
+				);
+			else : ?>
+				<label for="rcp-show-excerpt">
+					<input type="checkbox" name="rcp_show_excerpt" id="rcp-show-excerpt" value="1"<?php checked( true, $show_excerpt ); ?>/>
+					<?php _e( 'Show excerpt to members without access to this content.', 'rcp' ); ?>
+				</label>
+			<?php endif; ?>
 		</p>
 		<p>
 			<label for="rcp-hide-in-feed">
