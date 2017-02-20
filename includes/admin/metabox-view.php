@@ -10,12 +10,14 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
+global $rcp_options;
 $is_paid           = get_post_meta( get_the_ID(), '_is_paid', true );
 $sub_levels        = get_post_meta( get_the_ID(), 'rcp_subscription_level', true );
 $set_level         = is_array( $sub_levels ) ? '' : $sub_levels;
 $access_level      = get_post_meta( get_the_ID(), 'rcp_access_level', true );
 $access_level      = is_numeric( $access_level ) ? absint( $access_level ) : '';
-$show_excerpt      = get_post_meta( get_the_ID(), 'rcp_show_excerpt', true );
+$content_excerpts  = isset( $rcp_options['content_excerpts'] ) ? $rcp_options['content_excerpts'] : 'individual';
+$show_excerpt      = 'always' === $content_excerpts || ( 'individual' === $content_excerpts && get_post_meta( get_the_ID(), 'rcp_show_excerpt', true ) );
 $hide_in_feed      = get_post_meta( get_the_ID(), 'rcp_hide_from_feed', true );
 $user_role         = get_post_meta( get_the_ID(), 'rcp_user_level', true );
 $access_display    = is_numeric( $access_level ) ? '' : ' style="display:none;"';
@@ -86,10 +88,21 @@ $role_set_display  = '' != $user_role ? '' : ' style="display:none;"';
 
 		<p><strong><?php _e( 'Additional options', 'rcp' ); ?></strong></p>
 		<p>
+			<?php
+			$disabled = ( 'always' === $content_excerpts || 'never' === $content_excerpts ) ? ' disabled="disabled"' : '';
+			$message  = __( 'You can automatically enable or disable excerpts for all posts by adjusting your Content Excerpts setting in Restrict > Settings > Misc.', 'rcp' );
+
+			if ( 'always' === $content_excerpts ) {
+				$message = __( 'This option is disabled because excerpts are enabled for all posts. This can be changed in Restrict > Settings > Misc.', 'rcp' );
+			} elseif ( 'never' === $content_excerpts ) {
+				$message = __( 'This option is disabled because excerpts are disabled for all posts. This can be changed in Restrict > Settings > Misc.', 'rcp' );
+			}
+			?>
 			<label for="rcp-show-excerpt">
-				<input type="checkbox" name="rcp_show_excerpt" id="rcp-show-excerpt" value="1"<?php checked( true, $show_excerpt ); ?>/>
+				<input type="checkbox" name="rcp_show_excerpt" id="rcp-show-excerpt" value="1"<?php echo $disabled; checked( true, $show_excerpt ); ?>/>
 				<?php _e( 'Show excerpt to members without access to this content.', 'rcp' ); ?>
 			</label>
+			<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( $message ); ?>"></span>
 		</p>
 		<p>
 			<label for="rcp-hide-in-feed">
