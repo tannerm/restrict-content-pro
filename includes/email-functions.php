@@ -56,10 +56,18 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			}
 
 			if( ! isset( $rcp_options['disable_active_email_admin'] ) ) {
-				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
-				$admin_message = apply_filters('rcp_before_admin_email_active_thanks', $admin_message, $user_id);
-				$admin_message .= __('Thank you', 'rcp');
-				$admin_subject = sprintf( __( 'New subscription on %s', 'rcp' ), $site_name );
+				$admin_message = isset( $rcp_options['active_email_admin'] ) ? $rcp_options['active_email_admin'] : '';
+				$admin_subject = isset( $rcp_options['active_subject_admin'] ) ? $rcp_options['active_subject_admin'] : '';
+
+				if( empty( $admin_message ) ) {
+					$admin_message = __( 'Hello', 'rcp' ) . "\n\n" . $user_info->display_name . ' (' . $user_info->user_login . ') ' . __( 'is now subscribed to', 'rcp' ) . ' ' . $site_name . ".\n\n" . __( 'Subscription level', 'rcp' ) . ': ' . rcp_get_subscription( $user_id ) . "\n\n";
+					$admin_message = apply_filters( 'rcp_before_admin_email_active_thanks', $admin_message, $user_id );
+					$admin_message .= __( 'Thank you', 'rcp' );
+				}
+
+				if( empty( $admin_subject ) ) {
+					$admin_subject = sprintf( __( 'New subscription on %s', 'rcp' ), $site_name );
+				}
 			}
 			break;
 
@@ -75,10 +83,18 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			}
 
 			if( ! isset( $rcp_options['disable_cancelled_email_admin'] ) ) {
-				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('has cancelled their subscription to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Their subscription level was', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
-				$admin_message = apply_filters('rcp_before_admin_email_cancelled_thanks', $admin_message, $user_id);
-				$admin_message .= __('Thank you', 'rcp');
-				$admin_subject = sprintf( __( 'Cancelled subscription on %s', 'rcp' ), $site_name );
+				$admin_message = isset( $rcp_options['cancelled_email_admin'] ) ? $rcp_options['cancelled_email_admin'] : '';
+				$admin_subject = isset( $rcp_options['cancelled_subject_admin'] ) ? $rcp_options['cancelled_subject_admin'] : '';
+
+				if( empty( $admin_message ) ) {
+					$admin_message = __( 'Hello', 'rcp' ) . "\n\n" . $user_info->display_name . ' (' . $user_info->user_login . ') ' . __( 'has cancelled their subscription to', 'rcp' ) . ' ' . $site_name . ".\n\n" . __( 'Their subscription level was', 'rcp' ) . ': ' . rcp_get_subscription( $user_id ) . "\n\n";
+					$admin_message = apply_filters( 'rcp_before_admin_email_cancelled_thanks', $admin_message, $user_id );
+					$admin_message .= __( 'Thank you', 'rcp' );
+				}
+
+				if( empty( $admin_subject ) ) {
+					$admin_subject = sprintf( __( 'Cancelled subscription on %s', 'rcp' ), $site_name );
+				}
 			}
 
 		break;
@@ -98,10 +114,18 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			}
 
 			if( ! isset( $rcp_options['disable_expired_email_admin'] ) ) {
-				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name . "'s " . __('subscription has expired', 'rcp') . "\n\n";
-				$admin_message = apply_filters('rcp_before_admin_email_expired_thanks', $admin_message, $user_id);
-				$admin_message .= __('Thank you', 'rcp');
-				$admin_subject = sprintf( __( 'Expired subscription on %s', 'rcp' ), $site_name );
+				$admin_message = isset( $rcp_options['expired_email_admin'] ) ? $rcp_options['expired_email_admin'] : '';
+				$admin_subject = isset( $rcp_options['expired_subject_admin'] ) ? $rcp_options['expired_subject_admin'] : '';
+
+				if ( empty( $admin_message ) ) {
+					$admin_message = __( 'Hello', 'rcp' ) . "\n\n" . $user_info->display_name . "'s " . __( 'subscription has expired', 'rcp' ) . "\n\n";
+					$admin_message = apply_filters( 'rcp_before_admin_email_expired_thanks', $admin_message, $user_id );
+					$admin_message .= __( 'Thank you', 'rcp' );
+				}
+
+				if ( empty( $admin_subject ) ) {
+					$admin_subject = sprintf( __( 'Expired subscription on %s', 'rcp' ), $site_name );
+				}
 			}
 
 		break;
@@ -119,10 +143,18 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			}
 
 			if( ! isset( $rcp_options['disable_free_email_admin'] ) ) {
-				$admin_message = __('Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
-				$admin_message = apply_filters('rcp_before_admin_email_free_thanks', $admin_message, $user_id);
-				$admin_message .= __('Thank you', 'rcp');
-				$admin_subject = sprintf( __( 'New free subscription on %s', 'rcp' ), $site_name );
+				$admin_message = isset( $rcp_options['free_email_admin'] ) ? $rcp_options['free_email_admin'] : '';
+				$admin_subject = isset( $rcp_options['free_subject_admin'] ) ? $rcp_options['free_subject_admin'] : '';
+
+				if( empty( $admin_message ) ) {
+					$admin_message = __( 'Hello', 'rcp' ) . "\n\n" . $user_info->display_name . ' (' . $user_info->user_login . ') ' . __( 'is now subscribed to', 'rcp' ) . ' ' . $site_name . ".\n\n" . __( 'Subscription level', 'rcp' ) . ': ' . rcp_get_subscription( $user_id ) . "\n\n";
+					$admin_message = apply_filters( 'rcp_before_admin_email_free_thanks', $admin_message, $user_id );
+					$admin_message .= __( 'Thank you', 'rcp' );
+				}
+
+				if( empty( $admin_subject ) ) {
+					$admin_subject = sprintf( __( 'New free subscription on %s', 'rcp' ), $site_name );
+				}
 			}
 
 		break;
@@ -140,10 +172,18 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 			}
 
 			if( ! isset( $rcp_options['disable_trial_email_admin'] ) ) {
-				$admin_message = __( 'Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
-				$admin_message = apply_filters( 'rcp_before_admin_email_trial_thanks', $admin_message, $user_id );
-				$admin_message .= __( 'Thank you', 'rcp' );
-				$admin_subject = sprintf( __( 'New trial subscription on %s', 'rcp' ), $site_name );
+				$admin_message = isset( $rcp_options['trial_email_admin'] ) ? $rcp_options['trial_email_admin'] : '';
+				$admin_subject = isset( $rcp_options['trial_subject_admin'] ) ? $rcp_options['trial_subject_admin'] : '';
+
+				if( empty( $admin_message ) ) {
+					$admin_message = __( 'Hello', 'rcp' ) . "\n\n" . $user_info->display_name . ' (' . $user_info->user_login . ') ' . __( 'is now subscribed to', 'rcp' ) . ' ' . $site_name . ".\n\n" . __( 'Subscription level', 'rcp' ) . ': ' . rcp_get_subscription( $user_id ) . "\n\n";
+					$admin_message = apply_filters( 'rcp_before_admin_email_trial_thanks', $admin_message, $user_id );
+					$admin_message .= __( 'Thank you', 'rcp' );
+				}
+
+				if( empty( $admin_subject ) ) {
+					$admin_subject = sprintf( __( 'New trial subscription on %s', 'rcp' ), $site_name );
+				}
 			}
 
 		break;
