@@ -1308,7 +1308,7 @@ function rcp_sanitize_settings( $data ) {
 
 	do_action( 'rcp_save_settings', $data );
 
-	return $data;
+	return apply_filters( 'rcp_save_settings', $data );
 }
 
 /**
