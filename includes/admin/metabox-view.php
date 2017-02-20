@@ -17,7 +17,7 @@ $set_level         = is_array( $sub_levels ) ? '' : $sub_levels;
 $access_level      = get_post_meta( get_the_ID(), 'rcp_access_level', true );
 $access_level      = is_numeric( $access_level ) ? absint( $access_level ) : '';
 $content_excerpts  = isset( $rcp_options['content_excerpts'] ) ? $rcp_options['content_excerpts'] : 'individual';
-$show_excerpt      = get_post_meta( get_the_ID(), 'rcp_show_excerpt', true );
+$show_excerpt      = 'always' == $content_excerpts || ( 'individual' == $content_excerpts && get_post_meta( get_the_ID(), 'rcp_show_excerpt', true ) );
 $hide_in_feed      = get_post_meta( get_the_ID(), 'rcp_hide_from_feed', true );
 $user_role         = get_post_meta( get_the_ID(), 'rcp_user_level', true );
 $access_display    = is_numeric( $access_level ) ? '' : ' style="display:none;"';
@@ -88,24 +88,21 @@ $role_set_display  = '' != $user_role ? '' : ' style="display:none;"';
 
 		<p><strong><?php _e( 'Additional options', 'rcp' ); ?></strong></p>
 		<p>
-			<?php if ( 'always' == $content_excerpts ) :
-				printf(
-					__( 'An excerpt will be shown to members without access to this content. You can change this behavior in %sRestrict > Settings > Misc%s.', 'rcp' ),
-					'<a href="' . esc_url( admin_url( 'admin.php?page=rcp-settings#misc' ) ) . '">',
-					'</a>'
-				);
-			elseif ( 'never' == $content_excerpts ) :
-				printf(
-					__( 'An excerpt will not be shown to members without access to this content. You can change this behavior in %sRestrict > Settings > Misc%s.', 'rcp'),
-					'<a href="' . esc_url( admin_url( 'admin.php?page=rcp-settings#misc' ) ) . '">',
-					'</a>'
-				);
-			else : ?>
-				<label for="rcp-show-excerpt">
-					<input type="checkbox" name="rcp_show_excerpt" id="rcp-show-excerpt" value="1"<?php checked( true, $show_excerpt ); ?>/>
-					<?php _e( 'Show excerpt to members without access to this content.', 'rcp' ); ?>
-				</label>
-			<?php endif; ?>
+			<?php
+			$disabled = ( 'always' == $content_excerpts || 'never' == $content_excerpts ) ? ' disabled="disabled"' : '';
+			$message  = __( 'You can automatically enable or disable excerpts for all posts by adjusting your Content Excerpt settings in Restrict > Settings > Misc.', 'rcp' );
+
+			if ( 'always' == $content_excerpts ) {
+				$message = __( 'This option is disabled because you\'ve chosen to enable excerpts for all posts. This can be changed in Restrict > Settings > Misc.', 'rcp' );
+			} elseif ( 'never' == $content_excerpts ) {
+				$message = __( 'This option is disabled because you\'ve chosen to disable excerpts for all posts. This can be changed in Restrict > Settings > Misc.', 'rcp' );
+			}
+			?>
+			<label for="rcp-show-excerpt">
+				<input type="checkbox" name="rcp_show_excerpt" id="rcp-show-excerpt" value="1"<?php echo $disabled; checked( true, $show_excerpt ); ?>/>
+				<?php _e( 'Show excerpt to members without access to this content.', 'rcp' ); ?>
+			</label>
+			<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php echo $message; ?>"></span>
 		</p>
 		<p>
 			<label for="rcp-hide-in-feed">
