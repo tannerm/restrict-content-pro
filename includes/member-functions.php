@@ -64,7 +64,21 @@ function rcp_get_members( $status = 'active', $subscription = null, $offset = 0,
 	}
 
 	if( ! empty( $search ) ) {
-		$args['search'] = sanitize_text_field( $search );
+		if( false !== strpos( $search, 'first_name:' ) ) {
+			$args['meta_query'][] = array(
+				'key'     => 'first_name',
+				'value'   => sanitize_text_field( trim( str_replace( 'first_name:', '', $search ) ) ),
+				'compare' => 'LIKE'
+			);
+		} elseif( false !== strpos( $search, 'last_name:' ) ) {
+			$args['meta_query'][] = array(
+				'key'     => 'last_name',
+				'value'   => sanitize_text_field( trim( str_replace( 'last_name:', '', $search ) ) ),
+				'compare' => 'LIKE'
+			);
+		} else {
+			$args['search'] = sanitize_text_field( $search );
+		}
 	}
 
 	$members = get_users( $args );
@@ -199,7 +213,21 @@ function rcp_count_members( $level = '', $status = 'active', $recurring = null, 
 	}
 
 	if( ! empty( $search ) ) {
-		$args['search'] = sanitize_text_field( $search );
+		if( false !== strpos( $search, 'first_name:' ) ) {
+			$args['meta_query'][] = array(
+				'key'     => 'first_name',
+				'value'   => sanitize_text_field( trim( str_replace( 'first_name:', '', $search ) ) ),
+				'compare' => 'LIKE'
+			);
+		} elseif( false !== strpos( $search, 'last_name:' ) ) {
+			$args['meta_query'][] = array(
+				'key'     => 'last_name',
+				'value'   => sanitize_text_field( trim( str_replace( 'last_name:', '', $search ) ) ),
+				'compare' => 'LIKE'
+			);
+		} else {
+			$args['search'] = sanitize_text_field( $search );
+		}
 	}
 
 	$args['fields'] = 'ID';
