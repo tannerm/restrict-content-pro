@@ -90,19 +90,19 @@ $role_set_display  = '' != $user_role ? '' : ' style="display:none;"';
 		<p>
 			<?php
 			$disabled = ( 'always' === $content_excerpts || 'never' === $content_excerpts ) ? ' disabled="disabled"' : '';
-			$message  = __( 'You can automatically enable or disable excerpts for all posts by adjusting your Content Excerpt settings in Restrict > Settings > Misc.', 'rcp' );
+			$message  = __( 'You can automatically enable or disable excerpts for all posts by adjusting your Content Excerpts setting in Restrict > Settings > Misc.', 'rcp' );
 
 			if ( 'always' === $content_excerpts ) {
-				$message = __( 'This option is disabled because you\'ve chosen to enable excerpts for all posts. This can be changed in Restrict > Settings > Misc.', 'rcp' );
+				$message = __( 'This option is disabled because excerpts are enabled for all posts. This can be changed in Restrict > Settings > Misc.', 'rcp' );
 			} elseif ( 'never' === $content_excerpts ) {
-				$message = __( 'This option is disabled because you\'ve chosen to disable excerpts for all posts. This can be changed in Restrict > Settings > Misc.', 'rcp' );
+				$message = __( 'This option is disabled because excerpts are disabled for all posts. This can be changed in Restrict > Settings > Misc.', 'rcp' );
 			}
 			?>
 			<label for="rcp-show-excerpt">
 				<input type="checkbox" name="rcp_show_excerpt" id="rcp-show-excerpt" value="1"<?php echo $disabled; checked( true, $show_excerpt ); ?>/>
 				<?php _e( 'Show excerpt to members without access to this content.', 'rcp' ); ?>
 			</label>
-			<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php echo $message; ?>"></span>
+			<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php echo esc_attr( $message ); ?>"></span>
 		</p>
 		<p>
 			<label for="rcp-hide-in-feed">
