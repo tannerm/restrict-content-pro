@@ -211,10 +211,12 @@ function rcp_save_meta_data( $post_id ) {
 	$hide_in_feed      = isset( $_POST['rcp_hide_from_feed'] );
 	$user_role         = sanitize_text_field( $_POST[ 'rcp_user_level' ] );
 
-	if ( 'individual' == $content_excerpts ) {
+	if ( 'individual' === $content_excerpts ) {
 		update_post_meta( $post_id, 'rcp_show_excerpt', $show_excerpt );
 	}
+
 	update_post_meta( $post_id, 'rcp_hide_from_feed', $hide_in_feed );
+
 	if ( 'unrestricted' !== $_POST['rcp_restrict_by'] ) {
 		update_post_meta( $post_id, 'rcp_user_level', $user_role );
 	}

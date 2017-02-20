@@ -17,7 +17,7 @@ $set_level         = is_array( $sub_levels ) ? '' : $sub_levels;
 $access_level      = get_post_meta( get_the_ID(), 'rcp_access_level', true );
 $access_level      = is_numeric( $access_level ) ? absint( $access_level ) : '';
 $content_excerpts  = isset( $rcp_options['content_excerpts'] ) ? $rcp_options['content_excerpts'] : 'individual';
-$show_excerpt      = 'always' == $content_excerpts || ( 'individual' == $content_excerpts && get_post_meta( get_the_ID(), 'rcp_show_excerpt', true ) );
+$show_excerpt      = 'always' === $content_excerpts || ( 'individual' === $content_excerpts && get_post_meta( get_the_ID(), 'rcp_show_excerpt', true ) );
 $hide_in_feed      = get_post_meta( get_the_ID(), 'rcp_hide_from_feed', true );
 $user_role         = get_post_meta( get_the_ID(), 'rcp_user_level', true );
 $access_display    = is_numeric( $access_level ) ? '' : ' style="display:none;"';
@@ -89,12 +89,12 @@ $role_set_display  = '' != $user_role ? '' : ' style="display:none;"';
 		<p><strong><?php _e( 'Additional options', 'rcp' ); ?></strong></p>
 		<p>
 			<?php
-			$disabled = ( 'always' == $content_excerpts || 'never' == $content_excerpts ) ? ' disabled="disabled"' : '';
+			$disabled = ( 'always' === $content_excerpts || 'never' === $content_excerpts ) ? ' disabled="disabled"' : '';
 			$message  = __( 'You can automatically enable or disable excerpts for all posts by adjusting your Content Excerpt settings in Restrict > Settings > Misc.', 'rcp' );
 
-			if ( 'always' == $content_excerpts ) {
+			if ( 'always' === $content_excerpts ) {
 				$message = __( 'This option is disabled because you\'ve chosen to enable excerpts for all posts. This can be changed in Restrict > Settings > Misc.', 'rcp' );
-			} elseif ( 'never' == $content_excerpts ) {
+			} elseif ( 'never' === $content_excerpts ) {
 				$message = __( 'This option is disabled because you\'ve chosen to disable excerpts for all posts. This can be changed in Restrict > Settings > Misc.', 'rcp' );
 			}
 			?>
