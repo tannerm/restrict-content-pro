@@ -214,7 +214,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				}
 
 				// Set the customer's subscription in Stripe
-				$subscription = $customer->subscriptions->create( array( $sub_args ) );
+				$subscription = $customer->subscriptions->create( array( apply_filters( 'rcp_stripe_create_subscription_args', $sub_args ) ) );
 
 				$member->set_merchant_subscription_id( $subscription->id );
 
