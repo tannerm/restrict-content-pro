@@ -643,8 +643,13 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			}
 
 			$body['subscription'] = (array) rcp_get_subscription_details( $subscription_id );
+
 			$custom = explode( '|', $body['PAYMENTREQUEST_0_CUSTOM'] );
-			$body['is_trial']     = ( 'trial' === $custom[1] && ! empty( $body['subscription']['trial_duration'] ) && ! empty( $body['subscription']['trial_duration_unit'] ) );
+
+			if ( ! empty( $custom[1] ) && 'trial' === $custom[1] && ! empty( $body['subscription']['trial_duration'] ) && ! empty( $body['subscription']['trial_duration_unit'] ) ) {
+				$body['is_trial'] = true;
+
+			}
 
 			return $body;
 
