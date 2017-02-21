@@ -139,6 +139,13 @@ function rcp_help_tabs() {
 			);
 			$screen->add_help_tab(
 				array(
+					'id' => 'pages',
+					'title' => __( 'Pages', 'rcp' ),
+					'content' => rcp_render_settings_tab_content( 'pages' )
+				)
+			);
+			$screen->add_help_tab(
+				array(
 					'id' => 'messages',
 					'title' => __( 'Messages', 'rcp' ),
 					'content' => rcp_render_settings_tab_content( 'messages' )
@@ -146,16 +153,9 @@ function rcp_help_tabs() {
 			);
 			$screen->add_help_tab(
 				array(
-					'id' => 'paypal',
-					'title' => __( 'PayPal', 'rcp' ),
-					'content' => rcp_render_settings_tab_content( 'paypal' )
-				)
-			);
-			$screen->add_help_tab(
-				array(
-					'id' => 'signup_forms',
-					'title' => __( 'Signup Forms', 'rcp' ),
-					'content' => rcp_render_settings_tab_content( 'signup_forms' )
+					'id' => 'payments',
+					'title' => __( 'Payments', 'rcp' ),
+					'content' => rcp_render_settings_tab_content( 'payments' )
 				)
 			);
 			$screen->add_help_tab(
