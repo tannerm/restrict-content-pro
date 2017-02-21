@@ -1236,6 +1236,15 @@ function rcp_settings_page() {
 								<span class="description"><?php _e( 'Check this box if you would like to receive update notifications for beta releases. When beta versions are available, an update notification will be shown in your Plugins page.', 'rcp' ); ?></span>
 							</td>
 						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[uninstall_on_delete]"><?php _e( 'Remove Data on Uninstall', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[uninstall_on_delete]" id="rcp_settings[uninstall_on_delete]" <?php checked( true, ! empty( $rcp_options['uninstall_on_delete'] ) ); ?>/>
+								<span class="description"><?php _e( 'Remove all saved data for Restrict Content Pro when the plugin is deleted.', 'rcp' ); ?></span>
+							</td>
+						</tr>
 					</table>
 					<?php do_action( 'rcp_misc_settings', $rcp_options ); ?>
 				</div><!--end #misc-->
