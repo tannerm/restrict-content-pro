@@ -271,6 +271,19 @@ function rcp_render_settings_tab_content( $id ) {
 			<p><?php _e( 'You may use HTML in the emails.', 'rcp' ); ?></p>
 			<?php
 			break;
+		case 'invoices' :
+			ob_start(); ?>
+			<p><?php _e( 'These settings allow you to customize the appearance of the payment invoices made available to your customers. All fields are optional.', 'rcp' ); ?></p>
+			<p><?php _e( '<strong>Invoice Logo</strong> - Upload a business logo to display on the invoices.', 'rcp' ); ?></p>
+			<p><?php _e( '<strong>Company Name</strong> - The name of your company.', 'rcp' ); ?></p>
+			<p><?php _e( '<strong>Name</strong> - A personal name that will be shown on the invoice.', 'rcp' ); ?></p>
+			<p><?php _e( '<strong>Address</strong> - There are several address fields you can fill out, including address line 1, address line 1, and a field for city/state/zip.', 'rcp' ); ?></p>
+			<p><?php _e( '<strong>Email</strong> - An email address to appear on the invoice.', 'rcp' ); ?></p>
+			<p><?php _e( '<strong>Header Text</strong> - This text will appear in the header of each invoice.', 'rcp' ); ?></p>
+			<p><?php _e( '<strong>Notes</strong> - Enter any additional notes you\'d like to display on the invoice here. This is inserted below the invoice totals.', 'rcp' ); ?></p>
+			<p><?php _e( '<strong>Footer Text</strong> - Text entered in this box will appear on the footer of each invoice.', 'rcp' ); ?></p>
+			<?php
+			break;
 		case 'misc' :
 			ob_start(); ?>
 			<p><?php _e( '<strong>Hide Restricted Posts</strong> - this option will cause all premium posts to be completely hidden from users who do not have access to them. This is useful if you wish to have content that is 100% invisible to non-authorized users. What this means is that premium posts won\'t be listed on blog pages, archives, recent post widgets, search results, RSS feeds, or anywhere else. If, when this setting is enabled, a user tries to access a premium post from a direct URL, they will be automatically redirected to the page you choose below.', 'rcp' ); ?></p>

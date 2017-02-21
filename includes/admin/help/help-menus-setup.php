@@ -167,6 +167,13 @@ function rcp_help_tabs() {
 			);
 			$screen->add_help_tab(
 				array(
+					'id' => 'invoices',
+					'title' => __( 'Invoices', 'rcp' ),
+					'content' => rcp_render_settings_tab_content( 'invoices' )
+				)
+			);
+			$screen->add_help_tab(
+				array(
 					'id' => 'misc',
 					'title' => __( 'Misc', 'rcp' ),
 					'content' => rcp_render_settings_tab_content( 'misc' )
