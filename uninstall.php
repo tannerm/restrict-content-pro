@@ -48,10 +48,7 @@ if( isset( $rcp_options['uninstall_on_delete'] ) ) {
 	wp_clear_scheduled_hook( 'rcp_check_member_counts' );
 
 	// Remove all plugin settings.
-	$options = array( 'rcp_settings', 'rcp_db_version', 'rcp_discounts_db_version', 'rcp_payments_db_version', 'rcp_is_installed', 'rcp_version', 'rcp_license_status' );
-	foreach( $options as $option) {
-		delete_option( $option );
-	}
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'rcp\_%'" );
 
 	// Remove all database tables.
 	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "rcp_discounts" );
