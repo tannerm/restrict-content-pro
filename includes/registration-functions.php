@@ -943,7 +943,7 @@ add_action( 'rcp_set_status', 'rcp_remove_expiring_soon_email_sent_flag', 10, 2 
  */
 function rcp_remove_trial_flags_on_failure( $gateway ) {
 
-	if( $gateway->is_trial() ) {
+	if( ! empty( $gateway->user_id ) && $gateway->is_trial() ) {
 		delete_user_meta( $gateway->user_id, 'rcp_has_trialed' );
 		delete_user_meta( $gateway->user_id, 'rcp_is_trialing' );
 	}
