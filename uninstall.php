@@ -31,7 +31,7 @@ if( isset( $rcp_options['uninstall_on_delete'] ) ) {
 	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE 'rcp\_%'" );
 
 	// Delete all term meta.
-	$wpdb->query( "DELETE FROM $wpdb->termmeta WHERE meta_key LIKE 'rcp\_%'" );
+	$wpdb->query( "DELETE FROM $wpdb->termmeta WHERE meta_key = 'rcp_restricted_meta'" );
 
 	// Delete the plugin pages.
 	$rcp_pages = array( 'registration_page', 'redirect', 'account_page', 'edit_profile', 'update_card' );
