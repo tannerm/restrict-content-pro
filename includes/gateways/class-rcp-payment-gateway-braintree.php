@@ -3,7 +3,7 @@
  * Braintree Payment Gateway Class
  *
  * @package Restrict Content Pro
- * @since 2.7
+ * @since 2.8
  */
 
 class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
@@ -17,6 +17,12 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 // @todo only load if PHP 5.4+
 
+	/**
+	 * Initializes the gateway configuration.
+	 *
+	 * @since 2.8
+	 * @return void
+	 */
 	public function init() {
 
 		if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
@@ -51,16 +57,29 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		Braintree_Configuration::merchantId( $this->merchantId );
 		Braintree_Configuration::publicKey( $this->publicKey );
 		Braintree_Configuration::privateKey( $this->privateKey );
-// error_log('bt init');
 
 	}
 
+	/**
+	 * Validates the form fields.
+	 * If there are any errors, it creates a new WP_Error instance
+	 * via the rcp_errors() function.
+	 *
+	 * @see WP_Error::add()
+	 * @uses rcp_errors()
+	 * @return void
+	 */
 	public function validate_fields() {
 		// if ( empty( $_POST['payment_method_nonce'] ) ) {
 		// 	rcp_errors()->add( 'braintree_payment_method_nonce_failed', __( 'Payment error.', 'rcp' ), 'register' );
 		// }
 	}
 
+	/**
+	 * Processes a registration payment.
+	 *
+	 * @return void
+	 */
 	public function process_signup() {
 
 		if ( empty( $_POST['payment_method_nonce'] ) ) {
@@ -104,10 +123,11 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		 * otherwise create a new customer record.
 		 */
 		$customer = false;
+
 		try {
 			$customer = Braintree_Customer::find( $this->subscription_data['user_id'] );
 
-		} catch ( Exception $e ) {
+		} catch ( Braintree_Exception_NotFound $e ) {
 			// Create the customer since it doesn't exist
 			try {
 				$result = Braintree_Customer::create(
@@ -132,6 +152,10 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 				// Customer lookup/creation failed
 				$this->handle_processing_error( $e );
 			}
+
+		} catch ( Exception $e ) {
+			// Something other than Braintree_Exception_NotFound happened
+			$this->handle_processing_error( $e );
 		}
 
 		if ( empty( $customer ) ) {
@@ -142,7 +166,15 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		 * Set up the subscription values and create the subscription.
 		 */
 		if ( $this->auto_renew ) {
-//@todo cancel existing sub
+
+			/**
+			 * Cancel existing subscription if the member just upgraded to another one.
+			 */
+			if ( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
+				$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+			}
+
+
 			$txn_args['planId']             = $this->subscription_data['subscription_id'];
 			$txn_args['paymentMethodToken'] = $customer->paymentMethods[0]->token;
 
@@ -178,14 +210,36 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 		}
 
+		/**
+		 * Handle any errors that may have happened.
+		 * If $result->success is not true, we very likely
+		 * received a Braintree\Result\Error object, which will
+		 * contain the reason for the error.
+		 * Example error: Plan ID is invalid.
+		 */
 		if ( empty( $result ) || empty( $result->success ) ) {
-			wp_die( sprintf( __( 'An error occurred. Please contact the site administrator: %s', 'rcp' ), get_bloginfo( 'admin_email' ) ) );
+
+			$message = sprintf( __( 'An error occurred. Please contact the site administrator: %s.', 'rcp' ), make_clickable( get_bloginfo( 'admin_email' ) ) ) . PHP_EOL;
+
+			if ( ! empty( $result->message ) ) {
+				$message .= sprintf( __( 'Error message: %s', 'rcp' ), $result->message ) . PHP_EOL;
+			}
+
+			wp_die( $message );
 		}
 
 		/**
 		 * Record the payment and adjust the member properties.
 		 */
 		if ( $paid && ! $this->auto_renew ) {
+
+			/**
+			 * Cancel existing subscription if the member just upgraded to another one.
+			 */
+			if ( rcp_can_member_cancel( $member->ID ) ) {
+				$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+			}
+
 			// Log the one-time payment
 			$payment_data = array(
 				'subscription'     => $this->subscription_data['subscription_name'],
@@ -215,11 +269,29 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			// $member->renew( true, 'active', $result->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
 		}
 
+		/**
+		 * Set the member status to active if this is a trial.
+		 * Braintree does not send a webhook when a new trial
+		 * subscription is created.
+		 */
+		if ( $paid && $this->is_trial() ) {
+			$member->set_status( 'active' );
+		}
+
 		wp_redirect( $this->return_url ); exit;
 
 	}
 
+	/**
+	 * Processes the Braintree webhooks.
+	 *
+	 * @return void
+	 */
 	public function process_webhooks() {
+
+		if ( empty( $_GET['listener'] ) || 'rcp_braintree' !== $_GET['listener'] ) {
+			return;
+		}
 
 		if ( isset( $_GET['bt_challenge'] ) ) {
 			try {
@@ -283,10 +355,19 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * A subscription is canceled.
 			 */
 			case 'subscription_canceled':
+
+				if ( $member->just_upgraded() ) {
+					die(200);
+				}
+
 				$member->cancel();
+
 				$member->set_expiration_date( $data->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
+
 				$member->add_note( __( 'Subscription cancelled in Braintree', 'rcp' ) );
+
 				die( 'braintree subscription cancelled' );
+
 				break;
 
 			/**
@@ -331,8 +412,13 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * A subscription reaches the specified number of billing cycles and expires.
 			 */
 			case 'subscription_expired':
+
 				$member->set_status( 'expired' );
+
+				$member->set_expiration_date( $data->subscription->paidThroughDate->format( 'Y-m-d g:i:s' ) );
+
 				$member->add_note( __( 'Subscription expired in Braintree', 'rcp' ) );
+
 				die( 'member expired' );
 				break;
 
@@ -369,11 +455,17 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		}
 	}
 
+	/**
+	 * Handles the error processing.
+	 */
 	protected function handle_processing_error( $e ) {
 		// @todo
-		echo '<pre>$e '; print_r($e); echo '</pre>';wp_die();
+		die( $e->getMessage() );
 	}
 
+	/**
+	 * Outputs the credit card fields and related javascript.
+	 */
 	public function fields() {
 		ob_start();
 		?>
@@ -385,6 +477,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 				var token = document.getElementById('rcp-braintree-client-token');
 
 				braintree.setup(token.value, 'custom', {
+
 					id: 'rcp_registration_form',
 					onReady: function (response) {
 						var client = new braintree.api.Client({clientToken: token.value});
@@ -392,15 +485,24 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 							number: jQuery('#rcp_card_number_wrap input').val(),
 							expirationDate: jQuery('.rcp_card_exp_month').val() + '/' + jQuery('.rcp_card_exp_year').val()
 						}, function (err, nonce) {
+							console.log('err');console.log(err);
+							console.log('nonce');console.log(nonce);
 							jQuery("input[name='payment_method_nonce']").val(nonce);
 							jQuery('#rcp_registration_form').submit();
 						});
 					},
+					// onPaymentMethodReceived: function (obj) {
+					// 	console.log('obj');console.log(obj);
+					// 	// jQuery("input[name='payment_method_nonce']").appendTo('#rcp_registration_form').val(obj.nonce);
+					// 	jQuery("#rcp_registration_form").append("<input type='hidden' name='payment_method_nonce' value='"+ obj.nonce +"' />");
+					// 	// jQuery('#rcp_registration_form').submit();
+					// },
 					onError: function (response) {
 						//@todo
 						console.log('onError');
 						console.log(response);
 					}
+
 				});
 
 			});
@@ -445,14 +547,17 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 					<?php endfor; ?>
 				</select>
 			</p>
-			<input type="hidden" id="rcp-braintree-client-token" name="rcp-braintree-client-token" value="<?php echo Braintree_ClientToken::generate(); ?>" />
+			<input type="hidden" id="rcp-braintree-client-token" name="rcp-braintree-client-token" value="<?php echo esc_attr( Braintree_ClientToken::generate() ); ?>" />
 		</fieldset>
 		<?php
 		return ob_get_clean();
 	}
 
+	/**
+	 * Loads the Braintree javascript library.
+	 */
 	public function scripts() {
-		wp_enqueue_script( 'braintree', 'https://js.braintreegateway.com/js/braintree-2.30.0.min.js' );
+		wp_enqueue_script( 'rcp-braintree', 'https://js.braintreegateway.com/js/braintree-2.30.0.min.js' );
 	}
 
 }

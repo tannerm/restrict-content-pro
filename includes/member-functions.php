@@ -1200,6 +1200,16 @@ function rcp_cancel_member_payment_profile( $member_id = 0, $set_status = true )
 		} else {
 			$success = true;
 		}
+
+	} elseif ( rcp_is_braintree_subscriber( $member_id ) ) {
+
+		$cancelled = rcp_braintree_cancel_member( $member_id );
+
+		if ( is_wp_error( $cancelled ) ) {
+			wp_die( $cancelled->get_error_message(), __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+		} else {
+			$success = true;
+		}
 	}
 
 	if( $success && $set_status ) {
