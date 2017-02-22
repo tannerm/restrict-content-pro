@@ -128,8 +128,8 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			if( $charge['response']['responseCode'] == 'APPROVED' ) {
 
 				// Look to see if we have an existing subscription to cancel
-				if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-					$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+				if( $member->just_upgraded() && $member->can_cancel() ) {
+					$cancelled = $member->cancel_payment_profile( false );
 				}
 
 				$payment_data = array(

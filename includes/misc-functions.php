@@ -189,21 +189,6 @@ function rcp_get_currencies() {
 	return apply_filters( 'rcp_currencies', $currencies );
 }
 
-
-/**
- * reverse of strstr()
- *
- * @param string $haystack
- * @param string $needle
- *
- * @access private
- * @return string
- */
-function rcp_rstrstr( $haystack, $needle ) {
-	return substr( $haystack, 0, strpos( $haystack, $needle ) );
-}
-
-
 /**
  * Is odd?
  *
@@ -296,16 +281,21 @@ function rcp_get_current_url() {
 
 	else :
 
-		$current_url = 'http';
-		if ( is_ssl() ) $current_url .= "s";
+		global $wp;
 
-		$current_url .= "://";
+		if( get_option( 'permalink_structure' ) ) {
 
-		if ( $_SERVER["SERVER_PORT"] != "80" ) {
-			$current_url .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+			$base = trailingslashit( home_url( $wp->request ) );
+
 		} else {
-			$current_url .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+
+			$base = add_query_arg( $wp->query_string, '', trailingslashit( home_url( $wp->request ) ) );
+			$base = remove_query_arg( array( 'post_type', 'name' ), $base );
+
 		}
+
+		$scheme      = is_ssl() ? 'https' : 'http';
+		$current_url = set_url_scheme( $base, $scheme );
 
 	endif;
 
@@ -736,6 +726,20 @@ function rcp_get_currency() {
 }
 
 /**
+ * Determines if a given currency code matches the currency selected in the settings.
+ *
+ * @param string $currency_code Currency code to check.
+ *
+ * @since  2.7.2
+ * @return bool
+ */
+function rcp_is_valid_currency( $currency_code ) {
+	$valid = strtolower( $currency_code ) == strtolower( rcp_get_currency() );
+
+	return (bool) apply_filters( 'rcp_is_valid_currency', $valid, $currency_code );
+}
+
+/**
  * Determines if RCP is using a zero-decimal currency.
  *
  * @param  string $currency
@@ -879,7 +883,9 @@ function rcp_get_restricted_post_ids() {
 					'compare' => '!='
 				),
 				array(
-					'key' => 'rcp_access_level'
+					'key'     => 'rcp_access_level',
+					'value'   => 'None',
+					'compare' => '!='
 				)
 			)
 		) );

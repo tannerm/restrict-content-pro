@@ -163,7 +163,12 @@ function rcp_save_term_meta( $term_id, $tt_id, $taxonomy ) {
 
 	}
 
-	if ( function_exists( 'update_term_meta' ) && update_term_meta( $term_id, 'rcp_restricted_meta', $fields ) ) {
+	if ( function_exists( 'update_term_meta' ) ) {
+		if ( ! empty( $fields ) ) {
+			update_term_meta( $term_id, 'rcp_restricted_meta', $fields );
+		} else {
+			delete_term_meta( $term_id, 'rcp_restricted_meta' );
+		}
 		// remove deprecated data
 		delete_option( "rcp_category_meta_$term_id" );
 	} else {

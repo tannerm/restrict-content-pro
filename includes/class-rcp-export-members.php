@@ -84,7 +84,7 @@ class RCP_Members_Export extends RCP_Export {
 					$discounts = implode( ' ', $discounts );
 				}
 
-				$data[] = array(
+				$data[] = apply_filters( 'rcp_export_members_get_data_row', array(
 					'user_id'          => $member->ID,
 					'user_login'       => $member->user_login,
 					'user_email'       => $member->user_email,
@@ -97,7 +97,7 @@ class RCP_Members_Export extends RCP_Export {
 					'discount_codes'   => $discounts,
 					'profile_id'       => $member->get_payment_profile_id(),
 					'is_recurring'     => $member->is_recurring()
-				);
+				), $member );
 
 			}
 		endif;

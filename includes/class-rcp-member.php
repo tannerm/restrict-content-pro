@@ -65,6 +65,7 @@ class RCP_Member extends WP_User {
 			}
 
 			do_action( 'rcp_set_status', $new_status, $this->ID, $old_status, $this );
+			do_action( "rcp_set_status_{$new_status}", $this->ID, $old_status, $this );
 
 			// Record the status change
 			if( $old_status != $new_status ) {
@@ -436,6 +437,274 @@ class RCP_Member extends WP_User {
 		$this->set_status( 'cancelled' );
 
 		do_action( 'rcp_member_post_cancel', $this->ID, $this );
+
+	}
+
+	/**
+	 * Determines if the member can cancel their subscription on site
+	 *
+	 * @access  public
+	 * @since   2.7.2
+	 * @return  bool True if the member can cancel, false if not.
+	 */
+	public function can_cancel() {
+
+		$ret = false;
+
+		if( $this->is_recurring() && $this->is_active() && 'cancelled' !== $this->get_status() ) {
+
+			// Check if the member is a Stripe customer
+			if( rcp_is_stripe_subscriber( $this->ID ) ) {
+
+				$ret = true;
+
+			} elseif ( rcp_is_paypal_subscriber( $this->ID ) && rcp_has_paypal_api_access() ) {
+
+				$ret = true;
+
+			} elseif ( rcp_is_2checkout_subscriber( $this->ID ) && defined( 'TWOCHECKOUT_ADMIN_USER' ) && defined( 'TWOCHECKOUT_ADMIN_PASSWORD' ) ) {
+
+				$ret = true;
+
+			} elseif ( rcp_is_authnet_subscriber( $this->ID ) && rcp_has_authnet_api_access() ) {
+
+				$ret = true;
+
+			}
+
+		}
+
+		return apply_filters( 'rcp_member_can_cancel', $ret, $this->ID );
+
+	}
+
+	/**
+	 * Cancel the member's payment profile
+	 *
+	 * @param bool $set_status Whether or not to update the status to 'cancelled'.
+	 *
+	 * @access  public
+	 * @since   2.7.2
+	 * @return  bool Whether or not the cancellation was successful.
+	 */
+	public function cancel_payment_profile( $set_status = true ) {
+
+		global $rcp_options;
+
+		$success = false;
+
+		if( ! $this->can_cancel() ) {
+			return $success;
+		}
+
+		if( rcp_is_stripe_subscriber( $this->ID ) ) {
+
+			if( ! class_exists( 'Stripe\Stripe' ) ) {
+				require_once RCP_PLUGIN_DIR . 'includes/libraries/stripe/init.php';
+			}
+
+			if ( rcp_is_sandbox() ) {
+				$secret_key = trim( $rcp_options['stripe_test_secret'] );
+			} else {
+				$secret_key = trim( $rcp_options['stripe_live_secret'] );
+			}
+
+			\Stripe\Stripe::setApiKey( $secret_key );
+
+			try {
+
+				$subscription_id = $this->get_merchant_subscription_id();
+				$customer        = \Stripe\Customer::retrieve( $this->get_payment_profile_id() );
+
+				if( ! empty( $subscription_id ) ) {
+
+					$customer->subscriptions->retrieve( $subscription_id )->cancel( array( 'at_period_end' => false ) );
+
+				} else {
+
+					$customer->cancelSubscription( array( 'at_period_end' => false ) );
+
+				}
+
+
+				$success = true;
+
+			} catch (\Stripe\Error\InvalidRequest $e) {
+
+				// Invalid parameters were supplied to Stripe's API
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+			} catch (\Stripe\Error\Authentication $e) {
+
+				// Authentication with Stripe's API failed
+				// (maybe you changed API keys recently)
+
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+			} catch (\Stripe\Error\ApiConnection $e) {
+
+				// Network communication with Stripe failed
+
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+			} catch (\Stripe\Error\Base $e) {
+
+				// Display a very generic error to the user
+
+				$body = $e->getJsonBody();
+				$err  = $body['error'];
+
+				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+				if( isset( $err['code'] ) ) {
+					$error .= "<p>" . __( 'Error code:', 'rcp' ) . " " . $err['code'] ."</p>";
+				}
+				$error .= "<p>Status: " . $e->getHttpStatus() ."</p>";
+				$error .= "<p>Message: " . $err['message'] . "</p>";
+
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+			} catch (Exception $e) {
+
+				// Something else happened, completely unrelated to Stripe
+
+				$error = "<h4>" . __( 'An error occurred', 'rcp' ) . "</h4>";
+				$error .= print_r( $e, true );
+
+				wp_die( $error, __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+			}
+
+		} elseif( rcp_is_paypal_subscriber( $this->ID ) ) {
+
+			if( rcp_has_paypal_api_access() && $this->get_payment_profile_id() ) {
+
+				// Set PayPal API key credentials.
+				$api_username  = rcp_is_sandbox() ? 'test_paypal_api_username' : 'live_paypal_api_username';
+				$api_password  = rcp_is_sandbox() ? 'test_paypal_api_password' : 'live_paypal_api_password';
+				$api_signature = rcp_is_sandbox() ? 'test_paypal_api_signature' : 'live_paypal_api_signature';
+				$api_endpoint  = rcp_is_sandbox() ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp';
+
+				$args = array(
+					'USER'      => trim( $rcp_options[ $api_username ] ),
+					'PWD'       => trim( $rcp_options[ $api_password ] ),
+					'SIGNATURE' => trim( $rcp_options[ $api_signature ] ),
+					'VERSION'   => '124',
+					'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
+					'PROFILEID' => $this->get_payment_profile_id(),
+					'ACTION'    => 'Cancel'
+				);
+
+				$error_msg = '';
+				$request   = wp_remote_post( $api_endpoint, array( 'body' => $args, 'timeout' => 30, 'httpversion' => '1.1' ) );
+
+				if ( is_wp_error( $request ) ) {
+
+					$success   = false;
+					$error_msg = $request->get_error_message();
+
+				} else {
+
+					$body    = wp_remote_retrieve_body( $request );
+					$code    = wp_remote_retrieve_response_code( $request );
+					$message = wp_remote_retrieve_response_message( $request );
+
+					if( is_string( $body ) ) {
+						wp_parse_str( $body, $body );
+					}
+
+					if( 200 !== (int) $code ) {
+						$success = false;
+					}
+
+					if( 'OK' !== $message ) {
+						$success = false;
+					}
+
+					if( isset( $body['ACK'] ) && 'success' === strtolower( $body['ACK'] ) ) {
+						$success = true;
+					} else {
+						$success = false;
+						if( isset( $body['L_LONGMESSAGE0'] ) ) {
+							$error_msg = $body['L_LONGMESSAGE0'];
+						}
+					}
+
+				}
+
+				if( ! $success ) {
+					wp_die( sprintf( __( 'There was a problem cancelling the subscription, please contact customer support. Error: %s', 'rcp' ), $error_msg ), array( 'response' => 400 ) );
+				}
+
+			}
+
+		} elseif( rcp_is_2checkout_subscriber( $this->ID ) ) {
+
+			$cancelled = rcp_2checkout_cancel_member( $this->ID );
+
+			if( is_wp_error( $cancelled ) ) {
+
+				wp_die( $cancelled->get_error_message(), __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+			} else {
+				$success = true;
+			}
+		} elseif( rcp_is_authnet_subscriber( $this->ID ) ) {
+
+			$cancelled = rcp_authnet_cancel_member( $this->ID );
+
+			if( is_wp_error( $cancelled ) ) {
+
+				wp_die( $cancelled->get_error_message(), __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+
+			} else {
+				$success = true;
+			}
+		} elseif ( rcp_is_braintree_subscriber( $member_id ) ) {
+
+			$cancelled = rcp_braintree_cancel_member( $member_id );
+
+			if ( is_wp_error( $cancelled ) ) {
+				wp_die( $cancelled->get_error_message(), __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+			} else {
+				$success = true;
+			}
+		}
+
+		if( $success && $set_status ) {
+			$this->cancel();
+		}
+
+		return $success;
 
 	}
 

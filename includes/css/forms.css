@@ -137,6 +137,12 @@ p.rcp_success {
 .rcp_current_cards_fieldset span {
     display: block;
 }
+
+.rcp-total td,
+.rcp-recurring-total td {
+    border-top: none;
+}
+
 /* RCP-Table for or small screen */
 @media only screen and (max-width: 480px) {
 	.rcp-table{

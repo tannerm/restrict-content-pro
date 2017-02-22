@@ -316,6 +316,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			}
 
+			$rcp_payments = new RCP_Payments();
+
 			// setup the payment info in an array for storage
 			$payment_data = array(
 				'date'             => ! empty( $posted['payment_date'] ) ? date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'], current_time( 'timestamp' ) ) ) : date( 'Y-m-d H:i:s', strtotime( 'now', current_time( 'timestamp' ) ) ),
@@ -332,7 +334,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			if( $posted['txn_type'] == 'web_accept' || $posted['txn_type'] == 'subscr_payment' ) {
 
 				// only check for an existing payment if this is a payment IPD request
-				if( rcp_check_for_existing_payment( $posted['txn_type'], $posted['payment_date'], $subscription_key ) ) {
+				if( ! empty( $posted['txn_id'] ) && $rcp_payments->payment_exists( $posted['txn_id'] ) ) {
 
 					$log_data = array(
 						'post_title'    => __( 'Duplicate Payment', 'rcp' ),
@@ -351,7 +353,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					die( 'duplicate IPN detected' );
 				}
 
-				if( strtolower( $currency_code ) != strtolower( rcp_get_currency() ) ) {
+				if( ! rcp_is_valid_currency( $currency_code ) ) {
 					// the currency code is invalid
 
 					$log_data = array(
@@ -379,8 +381,6 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			/* now process the kind of subscription/payment */
 
-			$rcp_payments = new RCP_Payments();
-
 			// Subscriptions
 			switch ( $posted['txn_type'] ) :
 
@@ -390,8 +390,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					// store the recurring payment ID
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
-					if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-						$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+					if( $member->just_upgraded() && $member->can_cancel() ) {
+						$cancelled = $member->cancel_payment_profile( false );
 					}
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
@@ -435,7 +435,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					if( ! $member->just_upgraded() ) {
 
 						// user is marked as cancelled but retains access until end of term
-						$member->set_status( 'cancelled' );
+						$member->cancel();
 
 						// set the use to no longer be recurring
 						delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
@@ -480,8 +480,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 						case 'completed' :
 
-							if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-								$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+							if( $member->just_upgraded() && $member->can_cancel() ) {
+								$cancelled = $member->cancel_payment_profile( false );
 								if( $cancelled ) {
 
 									$member->set_payment_profile_id( '' );
@@ -500,7 +500,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 						case 'expired' :
 						case 'failed' :
 						case 'voided' :
-							$member->set_status( 'cancelled' );
+							$member->cancel();
 							break;
 
 					endswitch;

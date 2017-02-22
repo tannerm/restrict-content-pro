@@ -108,7 +108,7 @@ function rcp_process_registration() {
 			'nonce'            => wp_create_nonce( 'rcp-register-nonce' ),
 			'gateway'          => array(
 				'slug'     => $gateway,
-				'supports' => $gateway_obj->supports
+				'supports' => ! empty( $gateway_obj->supports ) ? $gateway_obj->supports : false
 			)
 		) );
 
@@ -118,7 +118,7 @@ function rcp_process_registration() {
 			'total'            => rcp_get_registration()->get_total(),
 			'gateway'          => array(
 				'slug'     => $gateway,
-				'supports' => $gateway_obj->supports
+				'supports' => ! empty( $gateway_obj->supports ) ? $gateway_obj->supports : false
 			),
 			'level'            => array(
 				'trial'        => ! empty( $trial_duration )
@@ -134,13 +134,15 @@ function rcp_process_registration() {
 
 	if( $user_data['need_new'] ) {
 
+		$display_name = trim( $user_data['first_name'] . ' ' . $user_data['last_name'] );
+
 		$user_data['id'] = wp_insert_user( array(
 				'user_login'      => $user_data['login'],
 				'user_pass'       => $user_data['password'],
 				'user_email'      => $user_data['email'],
 				'first_name'      => $user_data['first_name'],
 				'last_name'       => $user_data['last_name'],
-				'display_name'    => $user_data['first_name'] . ' ' . $user_data['last_name'],
+				'display_name'    => ! empty( $display_name ) ? $display_name : $user_data['login'],
 				'user_registered' => date( 'Y-m-d H:i:s' )
 			)
 		);
@@ -292,13 +294,12 @@ function rcp_process_registration() {
 		// if the subscription is a free trial, we need to record it in the user meta
 		if( $member_expires != 'none' ) {
 
-			// activate the user's trial subscription
-			$member->set_status( 'active' );
-
 			// this is so that users can only sign up for one trial
 			update_user_meta( $user_data['id'], 'rcp_has_trialed', 'yes' );
 			update_user_meta( $user_data['id'], 'rcp_is_trialing', 'yes' );
-			rcp_email_subscription_status( $user_data['id'], 'trial' );
+
+			// activate the user's trial subscription
+			$member->set_status( 'active' );
 
 		} else {
 

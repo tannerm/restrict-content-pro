@@ -143,7 +143,7 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 				$admin_message = __( 'Hello', 'rcp') . "\n\n" . $user_info->display_name .  ' (' . $user_info->user_login . ') ' . __('is now subscribed to', 'rcp') . ' ' . $site_name . ".\n\n" . __('Subscription level', 'rcp') . ': ' . rcp_get_subscription($user_id) . "\n\n";
 				$admin_message = apply_filters( 'rcp_before_admin_email_trial_thanks', $admin_message, $user_id );
 				$admin_message .= __( 'Thank you', 'rcp' );
-				$admin_subject = __( 'New trial subscription on ', 'rcp' );
+				$admin_subject = sprintf( __( 'New trial subscription on %s', 'rcp' ), $site_name );
 			}
 
 		break;
@@ -230,6 +230,28 @@ function rcp_email_on_activation( $status, $user_id ) {
 
 }
 add_action( 'rcp_set_status', 'rcp_email_on_activation', 11, 2 );
+
+/**
+ * Triggers the free trial notice when an account is marked as active.
+ *
+ * @param string $status  User's status.
+ * @param int    $user_id ID of the user to email.
+ *
+ * @access  public
+ * @since   2.7.2
+ * @return  void
+ */
+function rcp_email_on_free_trial( $status, $user_id ) {
+
+	if( 'active' == $status && rcp_is_trialing( $user_id ) ) {
+
+		// Send free trial welcome email.
+		rcp_email_subscription_status( $user_id, 'trial' );
+
+	}
+
+}
+add_action( 'rcp_set_status', 'rcp_email_on_free_trial', 11, 2 );
 
 /**
  * Triggers the cancellation notice when an account is marked as cancelled.
@@ -541,3 +563,52 @@ function rcp_email_member_on_renewal_payment_failure( RCP_Member $member, RCP_Pa
 	$emails->send( $member->user_email, $subject, $message );
 }
 add_action( 'rcp_recurring_payment_failed', 'rcp_email_member_on_renewal_payment_failure', 10, 2 );
+
+/**
+ * Email the site admin when a new manual payment is received.
+ *
+ * @param RCP_Member                 $member
+ * @param int                        $payment_id
+ * @param RCP_Payment_Gateway_Manual $gateway
+ *
+ * @since  2.7.3
+ * @return void
+ */
+function rcp_email_admin_on_manual_payment( $member, $payment_id, $gateway ) {
+
+	global $rcp_options;
+
+	if ( isset( $rcp_options['disable_new_user_notices'] ) ) {
+		return;
+	}
+
+	$admin_emails   = array();
+	$admin_emails[] = get_option( 'admin_email' );
+	$admin_emails   = apply_filters( 'rcp_admin_notice_emails', $admin_emails );
+
+	$emails             = new RCP_Emails;
+	$emails->member_id  = $member->ID;
+	$emails->payment_id = $payment_id;
+
+	$site_name = stripslashes_deep( html_entity_decode( get_bloginfo( 'name' ), ENT_COMPAT, 'UTF-8' ) );
+
+	$admin_message = __( 'Hello', 'rcp' ) . "\n\n" . $member->display_name . ' (' . $member->user_login . ') ' . __( 'just submitted a manual payment on', 'rcp' ) . ' ' . $site_name . ".\n\n" . __( 'Subscription level', 'rcp' ) . ': ' . $member->get_subscription_name() . "\n\n";
+	$admin_message = apply_filters( 'rcp_before_admin_email_manual_payment_thanks', $admin_message, $member->ID );
+	$admin_message .= __( 'Thank you', 'rcp' );
+	$admin_subject = sprintf( __( 'New manual payment on %s', 'rcp' ), $site_name );
+
+	$emails->send( $admin_emails, $admin_subject, $admin_message );
+
+}
+add_action( 'rcp_process_manual_signup', 'rcp_email_admin_on_manual_payment', 10, 3 );
+
+/**
+ * Disable the mandrill_nl2br filter while sending RCP emails
+ *
+ * @since 2.7.2
+ * @return void
+ */
+function rcp_disable_mandrill_nl2br() {
+	add_filter( 'mandrill_nl2br', '__return_false' );
+}
+add_action( 'rcp_email_send_before', 'rcp_disable_mandrill_nl2br' );

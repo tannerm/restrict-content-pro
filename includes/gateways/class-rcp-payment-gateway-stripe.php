@@ -193,8 +193,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				}
 
 				// If the customer has an existing subscription, we need to cancel it
-				if( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-					$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+				if( $member->just_upgraded() && $member->can_cancel() ) {
+					$cancelled = $member->cancel_payment_profile( false );
 				}
 
 				$sub_args = array(
@@ -336,8 +336,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		if ( $paid ) {
 
 			// If this is a one-time signup and the customer has an existing subscription, we need to cancel it
-			if( ! $this->auto_renew && $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-				$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+			if( ! $this->auto_renew && $member->just_upgraded() && $member->can_cancel() ) {
+				$cancelled = $member->cancel_payment_profile( false );
 			}
 
 			$member->set_recurring( $this->auto_renew );
@@ -529,7 +529,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 								$rcp_payments->insert( $payment_data );
 							}
 
-							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data );
+							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data, $event );
 
 							die( 'rcp_stripe_charge_succeeded action fired successfully' );
 
@@ -544,8 +544,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// failed payment
 					if ( $event->type == 'charge.failed' ) {
 
-						do_action( 'rcp_recurring_payment_failed', $member, $this );
-						do_action( 'rcp_stripe_charge_failed', $invoice );
+						do_action( 'rcp_recurring_payment_failed', $member, $this, $event );
+						do_action( 'rcp_stripe_charge_failed', $payment_event, $event );
 
 						die( 'rcp_stripe_charge_failed action fired successfully' );
 
@@ -556,7 +556,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						if( ! $member->just_upgraded() ) {
 
-							$member->set_status( 'cancelled' );
+							$member->cancel();
 
 							die( 'member cancelled successfully' );
 
@@ -564,7 +564,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					}
 
-					do_action( 'rcp_stripe_' . $event->type, $payment_event );
+					do_action( 'rcp_stripe_' . $event->type, $payment_event, $event );
 
 				}
 

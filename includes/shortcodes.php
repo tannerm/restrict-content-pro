@@ -152,6 +152,24 @@ function rcp_is_free_user_shortcode( $atts, $content = null ) {
 }
 add_shortcode( 'is_free', 'rcp_is_free_user_shortcode' );
 
+/**
+ * Shows content only to expired users
+ *
+ * @param array  $atts    Shortcode attributes.
+ * @param string $content Shortcode content.
+ *
+ * @return string|void
+ */
+function rcp_is_expired_user_shortcode( $atts, $content = null ) {
+
+	global $user_ID;
+
+	if( rcp_is_expired( $user_ID ) ) {
+		return do_shortcode( $content );
+	}
+}
+add_shortcode( 'is_expired', 'rcp_is_expired_user_shortcode' );
+
 
 /**
  * Shows content only to not logged-in users

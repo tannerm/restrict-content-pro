@@ -137,7 +137,7 @@ function rcp_get_users_last_payment_amount( $user_id = 0 ) {
  * @access      private
  * @param       $expiration_object
  * @return      string
-*/
+ */
 function rcp_calc_member_expiration( $expiration_object ) {
 
 	$member_expires = 'none';
@@ -393,4 +393,18 @@ function rcp_filter_email_tags( $message, $user_id, $display_name ) {
 	$message = str_replace( '%amount%', html_entity_decode( rcp_currency_filter( $rcp_payments->last_payment_of_user( $user_id ) ), ENT_COMPAT, 'UTF-8' ), $message );
 
 	return apply_filters( 'rcp_email_tags', $message, $user_id );
+}
+
+/**
+ * reverse of strstr()
+ *
+ * @deprecated 2.7.2
+ *
+ * @param string $haystack
+ * @param string $needle
+ *
+ * @return string
+ */
+function rcp_rstrstr( $haystack, $needle ) {
+	return substr( $haystack, 0, strpos( $haystack, $needle ) );
 }

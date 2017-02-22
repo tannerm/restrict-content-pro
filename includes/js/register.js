@@ -51,6 +51,8 @@ jQuery(document).ready(function($) {
 
 	$(document).on('click', '#rcp_registration_form #rcp_submit', function(e) {
 
+		e.preventDefault();
+
 		var submission_form = document.getElementById('rcp_registration_form');
 		var form = $('#rcp_registration_form');
 		var form_id = form.attr('id');
@@ -58,8 +60,6 @@ jQuery(document).ready(function($) {
 		if( typeof submission_form.checkValidity === "function" && false === submission_form.checkValidity() ) {
 			return;
 		}
-
-		e.preventDefault();
 
 		var submit_register_text = $(this).val();
 
@@ -178,14 +178,14 @@ function rcp_validate_subscription_level() {
 		$('#rcp_discount_code_wrap input').val('');
 		$('.rcp_discount_amount,#rcp_gateway_extra_fields').remove();
 		$('.rcp_discount_valid, .rcp_discount_invalid').hide();
-		$('#rcp_auto_renew_wrap input').attr('checked', false);
+		$('#rcp_auto_renew_wrap input').prop('checked', false);
 
 	} else {
 
 		if( full ) {
 			$('#rcp_gateway_extra_fields').remove();
 		} else if( lifetime ) {
-			$('#rcp_auto_renew_wrap input').attr('checked', false);
+			$('#rcp_auto_renew_wrap input').prop('checked', false);
 			$('#rcp_auto_renew_wrap').hide();
 		} else {
 			$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();

@@ -136,6 +136,10 @@ function rcp_gateway_supports( $gateway = 'paypal', $item = 'recurring' ) {
 */
 function rcp_process_gateway_webooks() {
 
+	if ( empty( $_GET['listener'] ) ) {
+		return;
+	}
+
 	$gateways = new RCP_Payment_Gateways;
 
 	foreach( $gateways->available_gateways  as $key => $gateway ) {
@@ -205,15 +209,13 @@ function rcp_load_gateway_scripts() {
 
 	global $rcp_options;
 
-	if( ! rcp_is_registration_page() && ! defined( 'RCP_LOAD_SCRIPTS_GLOBALLY' ) ) {
-		return;
-	}
-
-	$gateways = new RCP_Payment_Gateways;
+	$load_scripts = rcp_is_registration_page() || defined( 'RCP_LOAD_SCRIPTS_GLOBALLY' );
+	$gateways     = new RCP_Payment_Gateways;
 
 	foreach( $gateways->enabled_gateways  as $key => $gateway ) {
 
-		if( is_array( $gateway ) && isset( $gateway['class'] ) ) {
+		// Stripe.js is loaded on all pages for advanced fraud functionality. Other scripts are only loaded on the registration page.
+		if( is_array( $gateway ) && isset( $gateway['class'] ) && ( $load_scripts || in_array( $key, array( 'stripe', 'stripe_checkout' ) ) ) ) {
 
 			$gateway = new $gateway['class'];
 			$gateway->scripts();
