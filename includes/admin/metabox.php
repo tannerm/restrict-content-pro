@@ -222,5 +222,7 @@ function rcp_save_meta_data( $post_id ) {
 	}
 	update_post_meta( $post_id, '_is_paid', $is_paid );
 
+	do_action( 'rcp_save_post_meta', $post_id );
+
 }
 add_action( 'save_post', 'rcp_save_meta_data' );
