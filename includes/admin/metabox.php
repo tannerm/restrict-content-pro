@@ -226,7 +226,12 @@ function rcp_save_meta_data( $post_id ) {
 	if ( 'unrestricted' !== $_POST['rcp_restrict_by'] ) {
 		update_post_meta( $post_id, 'rcp_user_level', $user_role );
 	}
-	update_post_meta( $post_id, '_is_paid', $is_paid );
+
+	if ( $is_paid ) {
+		update_post_meta( $post_id, '_is_paid', $is_paid );
+	} else {
+		delete_post_meta( $post_id, '_is_paid' );
+	}
 
 }
 add_action( 'save_post', 'rcp_save_meta_data' );
