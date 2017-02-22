@@ -167,7 +167,8 @@ function rcp_print_scripts() {
 			'pleasewait' => __( 'Please Wait . . . ', 'rcp' ),
 			'pay_now'    => __( 'Submit Payment', 'rcp' ),
 			'user_has_trialed'  => is_user_logged_in() && rcp_has_used_trial(),
-			'trial_levels' => rcp_get_trial_level_ids()
+			'trial_levels' => rcp_get_trial_level_ids(),
+			'auto_renew_default' => isset( $rcp_options['auto_renew_checked_on'] )
 		)
 	);
 

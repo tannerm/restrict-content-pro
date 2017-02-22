@@ -289,4 +289,13 @@ jQuery(document).ready(function($) {
 		}
 	});
 
+	// Show/hide auto renew default based on settings.
+	$('#rcp_settings_auto_renew').on('change', function() {
+		if( '3' == $(this).val() ) {
+			$(this).parents('tr').next().css('display', 'table-row');
+		} else {
+			$(this).parents('tr').next().css('display', 'none');
+		}
+	});
+
 });
