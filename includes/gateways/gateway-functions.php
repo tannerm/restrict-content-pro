@@ -136,7 +136,7 @@ function rcp_gateway_supports( $gateway = 'paypal', $item = 'recurring' ) {
 */
 function rcp_process_gateway_webooks() {
 
-	if ( empty( $_GET['listener'] ) ) {
+	if ( ! apply_filters( 'rcp_process_gateway_webhooks', ! empty( $_GET['listener'] ) ) ) {
 		return;
 	}
 
