@@ -263,7 +263,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 			$member->set_merchant_subscription_id( $result->subscription->id );
 
-			$member->set_payment_profile_id( $this->user_id );
+			$member->set_payment_profile_id( 'bt_' . $this->user_id );
 
 			/**
 			 * Set the member status to active if this is a trial.

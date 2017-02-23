@@ -470,6 +470,10 @@ class RCP_Member extends WP_User {
 
 				$ret = true;
 
+			} elseif ( rcp_is_braintree_subscriber( $this->ID ) && rcp_has_braintree_api_access() ) {
+
+				$ret = true;
+
 			}
 
 		}
@@ -689,9 +693,9 @@ class RCP_Member extends WP_User {
 			} else {
 				$success = true;
 			}
-		} elseif ( rcp_is_braintree_subscriber( $member_id ) ) {
+		} elseif ( rcp_is_braintree_subscriber( $this->ID ) ) {
 
-			$cancelled = rcp_braintree_cancel_member( $member_id );
+			$cancelled = rcp_braintree_cancel_member( $this->ID );
 
 			if ( is_wp_error( $cancelled ) ) {
 				wp_die( $cancelled->get_error_message(), __( 'Error', 'rcp' ), array( 'response' => 401 ) );
