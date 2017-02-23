@@ -107,7 +107,7 @@ function rcp_members_page() {
 				<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
 				<input type="submit" name="" id="rcp-member-search-submit" class="button" value="<?php _e( 'Search members', 'rcp' ); ?>"/>
 			</form>
-			<form id="members-filter" action="" method="get">
+			<form id="rcp-members-filter" action="" method="get">
 				<?php
 				$levels = rcp_get_subscription_levels( 'all' );
 				if($levels) : ?>
