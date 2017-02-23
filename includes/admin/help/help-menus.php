@@ -302,7 +302,7 @@ function rcp_render_settings_tab_content( $id ) {
 			ob_start(); ?>
 			<p><?php _e( '<strong>Enable IPN Reports</strong> - by checking this option, you will enable an automatic email that is sent to the WordPress admin email anytime a PayPal IPN attempt is made. IPN attempts are made when a user signs up for a paid subscription, and when recurring payments are made or cancelled.', 'rcp' ); ?></p>
 			<p><?php _e( 'When an IPN attempt is made, it is either Valid, or Invalid. A valid IPN is one that resulted in a successful payment and notification of the payment. An invalid IPN attempt happens when, for whatever reason, PayPal is unable to correctly notify your site of a payment or subscription change.', 'rcp' ); ?></p>
-			<p><?php _e( 'With this option enabled, the email address set in the General WordPress Settings will get an email every time an IPD request is made. This is useful for debugging, in the case something is not working correctly.', 'rcp' ); ?></p>
+			<p><?php _e( 'With this option enabled, the email address set in the General WordPress Settings will get an email every time an IPN request is made. This is useful for debugging, in the case something is not working correctly.', 'rcp' ); ?></p>
 			<?php
 			break;
 		default;
