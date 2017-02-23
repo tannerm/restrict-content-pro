@@ -98,8 +98,9 @@ function rcp_admin_styles( $hook ) {
 	);
 
 	if( in_array( $hook, $pages ) ) {
-		wp_enqueue_style( 'datepicker',  RCP_PLUGIN_URL . 'includes/css/datepicker.css' );
-		wp_enqueue_style( 'rcp-admin',  RCP_PLUGIN_URL . 'includes/css/admin-styles.css', array(), RCP_PLUGIN_VERSION );
+		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+		wp_enqueue_style( 'datepicker',  RCP_PLUGIN_URL . 'includes/css/datepicker' . $suffix . '.css' );
+		wp_enqueue_style( 'rcp-admin',  RCP_PLUGIN_URL . 'includes/css/admin-styles' . $suffix . '.css', array(), RCP_PLUGIN_VERSION );
 	}
 }
 add_action( 'admin_enqueue_scripts', 'rcp_admin_styles' );
@@ -111,7 +112,8 @@ add_action( 'admin_enqueue_scripts', 'rcp_admin_styles' );
  * @return void
  */
 function rcp_register_css() {
-	wp_register_style('rcp-form-css',  RCP_PLUGIN_URL . 'includes/css/forms.css', array(), RCP_PLUGIN_VERSION );
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	wp_register_style('rcp-form-css',  RCP_PLUGIN_URL . 'includes/css/forms' . $suffix . '.css', array(), RCP_PLUGIN_VERSION );
 }
 add_action('init', 'rcp_register_css');
 
