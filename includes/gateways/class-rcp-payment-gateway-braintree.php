@@ -465,10 +465,44 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 	 */
 	public function fields() {
 		ob_start();
+		rcp_get_template_part( 'card-form' );
 		?>
+
+		<input type="hidden" id="rcp-braintree-client-token" name="rcp-braintree-client-token" value="<?php echo esc_attr( Braintree_ClientToken::generate() ); ?>" />
+
 		<script type="text/javascript">
 
 			var rcp_form = document.getElementById("rcp_registration_form");
+
+			/**
+			 * Braintree requires data-braintree-name attributes on the inputs.
+			 * Let's add them and remove the name attribute to prevent card
+			 * data from being submitted to the server.
+			 */
+			var card_number = rcp_form.querySelector("[name='rcp_card_number']");
+			var card_cvc    = rcp_form.querySelector("[name='rcp_card_cvc']");
+			var card_zip    = rcp_form.querySelector("[name='rcp_card_zip']");
+			var card_name   = rcp_form.querySelector("[name='rcp_card_name']");
+			var card_month  = rcp_form.querySelector("[name='rcp_card_exp_month']");
+			var card_year   = rcp_form.querySelector("[name='rcp_card_exp_year']");
+
+			card_number.setAttribute('data-braintree-name', 'number');
+			card_number.removeAttribute('name');
+
+			card_cvc.setAttribute('data-braintree-name', 'cvv');
+			card_cvc.removeAttribute('name');
+
+			card_zip.setAttribute('data-braintree-name', 'postal_code');
+			card_zip.removeAttribute('name');
+
+			card_name.setAttribute('data-braintree-name', 'cardholder_name');
+			card_name.removeAttribute('name');
+
+			card_month.setAttribute('data-braintree-name', 'expiration_month');
+			card_month.removeAttribute('name');
+
+			card_year.setAttribute('data-braintree-name', 'expiration_year');
+			card_year.removeAttribute('name');
 
 			rcp_form.querySelector("#rcp_submit").addEventListener("click", function(event) {
 
@@ -483,7 +517,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 						var client = new braintree.api.Client({clientToken: token});
 						client.tokenizeCard({
 							number: rcp_form.querySelector("[data-braintree-name='number']").value,
-							expirationDate: document.getElementById("rcp-card-exp-month").value + '/' + document.getElementById("rcp-card-exp-year").value
+							expirationDate: rcp_form.querySelector("[data-braintree-name='expiration_month']").value + '/' + rcp_form.querySelector("[data-braintree-name='expiration_year']").value
 						}, function (err, nonce) {
 							rcp_form.querySelector("[name='payment_method_nonce']").value = nonce;
 							rcp_form.submit();
@@ -499,48 +533,6 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 			});
 		</script>
-
-		<fieldset class="rcp_card_fieldset">
-			<p id="rcp_card_number_wrap">
-				<label><?php _e( 'Card Number', 'rcp' ); ?></label>
-				<input id="rcp-card-number" data-braintree-name="number" value="">
-			</p>
-
-			<p id="rcp_card_cvc_wrap">
-				<label><?php _e( 'Card CVC', 'rcp' ); ?></label>
-				<input id="rcp-card-cvc" data-braintree-name="cvv" value="">
-			</p>
-
-			<p id="rcp_card_zip_wrap">
-				<label><?php _e( 'Card ZIP or Postal Code', 'rcp' ); ?></label>
-				<input id="rcp-card-zip" data-braintree-name="postal_code" value="">
-			</p>
-
-			<p id="rcp_card_name_wrap">
-				<label><?php _e( 'Name on Card', 'rcp' ); ?></label>
-				<input id="rcp-card-name" data-braintree-name="cardholder_name" value="">
-			</p>
-
-			<p id="rcp_card_exp_wrap">
-				<label><?php _e( 'Expiration (MM/YYYY)', 'rcp' ); ?></label>
-				<select id="rcp-card-exp-month" data-braintree-name="expiration_month" class="rcp_card_exp_month card-expiry-month">
-					<?php for( $i = 1; $i <= 12; $i++ ) : ?>
-						<option value="<?php echo $i; ?>"><?php echo $i . ' - ' . rcp_get_month_name( $i ); ?></option>
-					<?php endfor; ?>
-				</select>
-
-				<span class="rcp_expiry_separator"> / </span>
-
-				<select id="rcp-card-exp-year" data-braintree-name="expiration_year" class="rcp_card_exp_year card-expiry-year">
-					<?php
-					$year = date( 'Y' );
-					for( $i = $year; $i <= $year + 10; $i++ ) : ?>
-						<option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-					<?php endfor; ?>
-				</select>
-			</p>
-			<input type="hidden" id="rcp-braintree-client-token" name="rcp-braintree-client-token" value="<?php echo esc_attr( Braintree_ClientToken::generate() ); ?>" />
-		</fieldset>
 		<?php
 		return ob_get_clean();
 	}
