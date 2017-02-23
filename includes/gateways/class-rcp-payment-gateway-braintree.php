@@ -194,7 +194,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		 */
 		} else {
 
-			$txn_args['amount'] = $this->amount;
+			$txn_args['customerId']                     = $customer->id;
+			$txn_args['amount']                         = $this->amount;
 			$txn_args['options']['submitForSettlement'] = true;
 
 			try {
@@ -229,7 +230,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		}
 
 		/**
-		 * Record the payment and adjust the member properties.
+		 * Record the one-time payment and adjust the member properties.
 		 */
 		if ( $paid && ! $this->auto_renew ) {
 
@@ -253,33 +254,27 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			$rcp_payments = new RCP_Payments;
 			$rcp_payments->insert( $payment_data );
 
-			// Update the user account
-			$member->set_recurring( false );
-
-			$member->set_expiration_date( $member->calculate_expiration() );
-
-			$member->set_status( 'active' );
+			// Update the member
+			$member->renew( false, 'active', $member->calculate_expiration() );
 
 		}
 
-		// Update the user account
 		if ( $paid && $this->auto_renew ) {
+
 			$member->set_merchant_subscription_id( $result->subscription->id );
+
 			$member->set_payment_profile_id( $this->user_id );
+
+			/**
+			 * Set the member status to active if this is a trial.
+			 * Braintree does not send a webhook when a new trial
+			 * subscription is created.
+			 */
 			if ( $this->is_trial() ) {
 				$member->renew( true, 'active', $result->subscription->nextBillingDate->format( 'Y-m-d 23:59:59' ) );
 			} else {
 				$member->renew( true, 'active', $result->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
 			}
-		}
-
-		/**
-		 * Set the member status to active if this is a trial.
-		 * Braintree does not send a webhook when a new trial
-		 * subscription is created.
-		 */
-		if ( $paid && $this->is_trial() ) {
-			$member->set_status( 'active' );
 		}
 
 		wp_redirect( $this->return_url ); exit;
