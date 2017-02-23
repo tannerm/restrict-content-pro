@@ -99,7 +99,7 @@ function rcp_braintree_cancel_member( $member_id = 0 ) {
 	Braintree_Configuration::publicKey( $public_key );
 	Braintree_Configuration::privateKey( $private_key );
 
-	$member     = new RCP_Member( $member_id );
+	$member = new RCP_Member( $member_id );
 
 	try {
 		$result = Braintree_Subscription::cancel( $member->get_merchant_subscription_id() );
