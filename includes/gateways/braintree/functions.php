@@ -4,7 +4,7 @@
  *
  * @package     Restrict Content Pro
  * @subpackage  Gateways/Braintree/Functions
- * @copyright   Copyright (c) 2017, John Parris
+ * @copyright   Copyright (c) 2017, Sandhills Development
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.8
  */

@@ -2,8 +2,11 @@
 /**
  * Braintree Payment Gateway Class
  *
- * @package Restrict Content Pro
- * @since 2.8
+ * @package    Restrict Content Pro
+ * @subpackage Classes/Gateways/Braintree
+ * @copyright  Copyright (c) 2017, Sandhills Development
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since      2.8
  */
 
 class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
