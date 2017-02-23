@@ -51,10 +51,18 @@ if( isset( $rcp_options['remove_data_on_uninstall'] ) ) {
 	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'rcp\_%'" );
 
 	// Remove all database tables.
-	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "rcp_discounts" );
-	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "rcp_payments" );
-	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "rcp_payment_meta" );
-	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "rcp_subscription_level_meta" );
-	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "restrict_content_pro" );
+	$wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %s", rcp_get_discounts_db_name() ) );
+	$wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %s", rcp_get_payments_db_name() ) );
+	$wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %s", rcp_get_payment_meta_db_name() ) );
+	$wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %s", rcp_get_level_meta_db_name() ) );
+	$wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %s", rcp_get_levels_db_name() ) );
+
+	// Remove all options.
+	delete_option( 'rcp_version' );
+	delete_option( 'rcp_db_version' );
+	delete_option( 'rcp_settings' );
+	delete_option( 'rcp_is_installed' );
+	delete_option( 'rcp_discounts_db_version' );
+	delete_option( 'rcp_payments_db_version' );
 
 }
