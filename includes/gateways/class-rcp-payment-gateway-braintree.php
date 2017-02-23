@@ -352,7 +352,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			case 'subscription_canceled':
 
 				if ( $member->just_upgraded() ) {
-					die(200);
+					die( 'subscription_canceled returned early. Member just upgraded.' );
 				}
 
 				$member->cancel();
@@ -424,6 +424,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 				//@todo verify this
 				$member->renew( $member->is_recurring(), '', $data->subscription->paidThroughDate->format( 'Y-m-d g:i:s' ) );
 				$member->add_note( __( 'Trial ended in Braintree', 'rcp' ) );
+				die( 'subscription_trial_ended processed' );
 				break;
 
 			/**
@@ -431,6 +432,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * Subscriptions with trial periods will never trigger this notification.
 			 */
 			case 'subscription_went_active':
+				$member->renew( true, 'active', $data->subscription->paidThroughDate->format( 'Y-m-d g:i:s' ) );
 				die( 'subscription went active' );
 				break;
 
