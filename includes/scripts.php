@@ -46,7 +46,9 @@ function rcp_admin_scripts( $hook ) {
 				'currency_sign'       => rcp_currency_filter(''),
 				'currency_pos'        => isset( $rcp_options['currency_position'] ) ? $rcp_options['currency_position'] : 'before',
 				'use_as_logo'         => __( 'Use as Logo', 'rcp' ),
-				'choose_logo'         => __( 'Choose a Logo', 'rcp' )
+				'choose_logo'         => __( 'Choose a Logo', 'rcp' ),
+				'can_cancel_member'   => ( $hook == $rcp_members_page && isset( $_GET['edit_member'] ) && rcp_can_member_cancel( absint( $_GET['edit_member'] ) ) ),
+				'cancel_subscription' => __( 'Cancel subscription at gateway', 'rcp' )
 			)
 		);
 	}

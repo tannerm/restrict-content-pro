@@ -289,6 +289,16 @@ jQuery(document).ready(function($) {
 		}
 	});
 
+
+	// Cancel user's subscription when updating status to "Cancelled".
+	$('#rcp-status').on('change', function () {
+		if ( rcp_vars.can_cancel_member && 'cancelled' == $(this).val() ) {
+			$(this).parent().append('<p id="rcp-cancel-subscription-wrap"><input type="checkbox" id="rcp-cancel-subscription" name="cancel_subscription" value="1"><label for="rcp-cancel-subscription">' + rcp_vars.cancel_subscription + '</label></p>');
+		} else {
+			$('#rcp-cancel-subscription-wrap').remove();
+		}
+	});
+
 	// Show/hide auto renew default based on settings.
 	$('#rcp_settings_auto_renew').on('change', function() {
 		if( '3' == $(this).val() ) {
