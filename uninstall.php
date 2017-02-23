@@ -38,7 +38,7 @@ if( isset( $rcp_options['remove_data_on_uninstall'] ) ) {
 	foreach( $rcp_pages as $page_option ) {
 		$page_id = isset( $rcp_options[ $page_option ] ) ? $rcp_options[ $page_option ] : false;
 		if( $page_id ) {
-			wp_delete_post( $page_id, true );
+			wp_trash_post( $page_id );
 		}
 	}
 
