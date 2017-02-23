@@ -471,32 +471,27 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		?>
 		<script type="text/javascript">
 
-			jQuery('#rcp_registration_form #rcp_submit').on('click', function(event) {
+			var rcp_form = document.getElementById("rcp_registration_form");
+
+			rcp_form.querySelector("#rcp_submit").addEventListener("click", function(event) {
+
 				event.preventDefault();
 
-				var token = document.getElementById('rcp-braintree-client-token');
+				var token = rcp_form.querySelector('#rcp-braintree-client-token').value;
 
-				braintree.setup(token.value, 'custom', {
+				braintree.setup(token, 'custom', {
 
 					id: 'rcp_registration_form',
 					onReady: function (response) {
-						var client = new braintree.api.Client({clientToken: token.value});
+						var client = new braintree.api.Client({clientToken: token});
 						client.tokenizeCard({
-							number: jQuery('#rcp_card_number_wrap input').val(),
-							expirationDate: jQuery('.rcp_card_exp_month').val() + '/' + jQuery('.rcp_card_exp_year').val()
+							number: rcp_form.querySelector("[data-braintree-name='number']").value,
+							expirationDate: document.getElementById("rcp-card-exp-month").value + '/' + document.getElementById("rcp-card-exp-year").value
 						}, function (err, nonce) {
-							console.log('err');console.log(err);
-							console.log('nonce');console.log(nonce);
-							jQuery("input[name='payment_method_nonce']").val(nonce);
-							jQuery('#rcp_registration_form').submit();
+							rcp_form.querySelector("[name='payment_method_nonce']").value = nonce;
+							rcp_form.submit();
 						});
 					},
-					// onPaymentMethodReceived: function (obj) {
-					// 	console.log('obj');console.log(obj);
-					// 	// jQuery("input[name='payment_method_nonce']").appendTo('#rcp_registration_form').val(obj.nonce);
-					// 	jQuery("#rcp_registration_form").append("<input type='hidden' name='payment_method_nonce' value='"+ obj.nonce +"' />");
-					// 	// jQuery('#rcp_registration_form').submit();
-					// },
 					onError: function (response) {
 						//@todo
 						console.log('onError');
@@ -511,27 +506,27 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		<fieldset class="rcp_card_fieldset">
 			<p id="rcp_card_number_wrap">
 				<label><?php _e( 'Card Number', 'rcp' ); ?></label>
-				<input data-braintree-name="number" value="">
+				<input id="rcp-card-number" data-braintree-name="number" value="">
 			</p>
 
 			<p id="rcp_card_cvc_wrap">
 				<label><?php _e( 'Card CVC', 'rcp' ); ?></label>
-				<input data-braintree-name="cvv" value="">
+				<input id="rcp-card-cvc" data-braintree-name="cvv" value="">
 			</p>
 
 			<p id="rcp_card_zip_wrap">
 				<label><?php _e( 'Card ZIP or Postal Code', 'rcp' ); ?></label>
-				<input data-braintree-name="postal_code" value="">
+				<input id="rcp-card-zip" data-braintree-name="postal_code" value="">
 			</p>
 
 			<p id="rcp_card_name_wrap">
 				<label><?php _e( 'Name on Card', 'rcp' ); ?></label>
-				<input data-braintree-name="cardholder_name" value="">
+				<input id="rcp-card-name" data-braintree-name="cardholder_name" value="">
 			</p>
 
 			<p id="rcp_card_exp_wrap">
 				<label><?php _e( 'Expiration (MM/YYYY)', 'rcp' ); ?></label>
-				<select data-braintree-name="expiration_month" class="rcp_card_exp_month card-expiry-month">
+				<select id="rcp-card-exp-month" data-braintree-name="expiration_month" class="rcp_card_exp_month card-expiry-month">
 					<?php for( $i = 1; $i <= 12; $i++ ) : ?>
 						<option value="<?php echo $i; ?>"><?php echo $i . ' - ' . rcp_get_month_name( $i ); ?></option>
 					<?php endfor; ?>
@@ -539,7 +534,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 				<span class="rcp_expiry_separator"> / </span>
 
-				<select data-braintree-name="expiration_year" class="rcp_card_exp_year card-expiry-year">
+				<select id="rcp-card-exp-year" data-braintree-name="expiration_year" class="rcp_card_exp_year card-expiry-year">
 					<?php
 					$year = date( 'Y' );
 					for( $i = $year; $i <= $year + 10; $i++ ) : ?>
