@@ -266,7 +266,11 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		if ( $paid && $this->auto_renew ) {
 			$member->set_merchant_subscription_id( $result->subscription->id );
 			$member->set_payment_profile_id( $this->user_id );
-			// $member->renew( true, 'active', $result->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
+			if ( $this->is_trial() ) {
+				$member->renew( true, 'active', $result->subscription->nextBillingDate->format( 'Y-m-d 23:59:59' ) );
+			} else {
+				$member->renew( true, 'active', $result->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
+			}
 		}
 
 		/**
