@@ -21,9 +21,10 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 
 // Load RCP file.
-include_once( 'restrict-content-pro.php' );
+include_once 'restrict-content-pro.php';
 
-global $wpdb, $rcp_options;
+global $wpdb;
+$rcp_options = get_option( 'rcp_settings' );
 
 if( isset( $rcp_options['remove_data_on_uninstall'] ) ) {
 
@@ -50,19 +51,22 @@ if( isset( $rcp_options['remove_data_on_uninstall'] ) ) {
 	// Remove all plugin settings.
 	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'rcp\_%'" );
 
-	// Remove all database tables.
-	$wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %s", rcp_get_discounts_db_name() ) );
-	$wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %s", rcp_get_payments_db_name() ) );
-	$wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %s", rcp_get_payment_meta_db_name() ) );
-	$wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %s", rcp_get_level_meta_db_name() ) );
-	$wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %s", rcp_get_levels_db_name() ) );
+	/**
+	 * Our table names can be unpredictable, since they run through
+	 * helper functions that have filters. You can't use $wpdb::prepare()
+	 * to prepare table names, so we run them through esc_sql here
+	 * just to make sure they're safe.
+	 */
+	$table_discounts    = esc_sql( rcp_get_discounts_db_name() );
+	$table_payments     = esc_sql( rcp_get_payments_db_name() );
+	$table_payment_meta = esc_sql( rcp_get_payment_meta_db_name() );
+	$table_levels       = esc_sql( rcp_get_levels_db_name() );
+	$table_level_meta   = esc_sql( rcp_get_level_meta_db_name() );
 
-	// Remove all options.
-	delete_option( 'rcp_version' );
-	delete_option( 'rcp_db_version' );
-	delete_option( 'rcp_settings' );
-	delete_option( 'rcp_is_installed' );
-	delete_option( 'rcp_discounts_db_version' );
-	delete_option( 'rcp_payments_db_version' );
+	$wpdb->query( "DROP TABLE IF EXISTS {$table_discounts}" );
+	$wpdb->query( "DROP TABLE IF EXISTS {$table_payments}" );
+	$wpdb->query( "DROP TABLE IF EXISTS {$table_payment_meta}" );
+	$wpdb->query( "DROP TABLE IF EXISTS {$table_levels}" );
+	$wpdb->query( "DROP TABLE IF EXISTS {$table_level_meta}" );
 
 }
