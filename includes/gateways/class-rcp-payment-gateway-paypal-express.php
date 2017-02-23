@@ -107,10 +107,6 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			$args['RETURNURL']                      = add_query_arg( array( 'rcp-recurring' => '1' ), $args['RETURNURL'] );
 		}
 
-		if ( $this->is_trial() ) {
-			$args['PAYMENTREQUEST_0_CUSTOM'] .= '|trial';
-		}
-
 		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
 		$body    = wp_remote_retrieve_body( $request );
 		$code    = wp_remote_retrieve_response_code( $request );
@@ -210,13 +206,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					unset( $args['INITAMT'] );
 				}
 
-				if ( $details['is_trial'] ) {
-					$args['TRIALBILLINGPERIOD']      = ucwords( $details['subscription']['trial_duration_unit'] );
-					$args['TRIALBILLINGFREQUENCY']   = $details['subscription']['trial_duration'];
+				if ( $this->auto_renew && $this->is_trial() ) {
+					$args['TRIALBILLINGPERIOD']      = ucwords( $this->subscription_data['trial_duration_unit'] );
+					$args['TRIALBILLINGFREQUENCY']   = $this->subscription_data['trial_duration'];
 					$args['TRIALTOTALBILLINGCYCLES'] = 1;
 					$args['TRIALAMT']                = 0;
-
-					unset( $args['INITAMT'] );
 				}
 
 				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
@@ -247,8 +241,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 					} else {
 
-						$custom = explode( '|', $details['PAYMENTREQUEST_0_CUSTOM'] );
-						$member = new RCP_Member( $custom[0] );
+						$member = new RCP_Member( $details['PAYMENTREQUEST_0_CUSTOM'] );
 
 						if( $member->just_upgraded() && $member->can_cancel() ) {
 							$cancelled = $member->cancel_payment_profile( false );
@@ -643,13 +636,6 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			}
 
 			$body['subscription'] = (array) rcp_get_subscription_details( $subscription_id );
-
-			$custom = explode( '|', $body['PAYMENTREQUEST_0_CUSTOM'] );
-
-			if ( ! empty( $custom[1] ) && 'trial' === $custom[1] && ! empty( $body['subscription']['trial_duration'] ) && ! empty( $body['subscription']['trial_duration_unit'] ) ) {
-				$body['is_trial'] = true;
-
-			}
 
 			return $body;
 
