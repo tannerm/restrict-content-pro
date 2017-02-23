@@ -194,8 +194,11 @@ add_filter( 'comments_template', 'rcp_hide_comments', 9999999 );
  * @return string Formatted teaser with message appended.
  */
 function rcp_format_teaser( $message ) {
-	global $post;
-	if ( get_post_meta( $post->ID, 'rcp_show_excerpt', true ) ) {
+	global $post, $rcp_options;
+
+	$show_excerpt = isset( $rcp_options['content_excerpts'] ) ? $rcp_options['content_excerpts'] : 'individual';
+
+	if ( 'always' == $show_excerpt || ( 'individual' == $show_excerpt && get_post_meta( $post->ID, 'rcp_show_excerpt', true ) ) ) {
 		$excerpt_length = 50;
 		if ( has_filter( 'rcp_filter_excerpt_length' ) ) {
 			$excerpt_length = apply_filters( 'rcp_filter_excerpt_length', $excerpt_length );
@@ -206,6 +209,7 @@ function rcp_format_teaser( $message ) {
 	} else {
 		$message = apply_filters( 'rcp_restricted_message', $message );
 	}
+
 	return $message;
 }
 

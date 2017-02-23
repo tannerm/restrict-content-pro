@@ -96,8 +96,25 @@ function rcp_get_subscription_length( $id ) {
  * @return string Nicely formatted date of expiration.
  */
 function rcp_calculate_subscription_expiration( $id ) {
-	$length = rcp_get_subscription_length( $id );
-	return rcp_calc_member_expiration( $length );
+	$length          = rcp_get_subscription_length( $id );
+	$expiration_date = 'none';
+
+	if( $length->duration > 0 ) {
+
+		$current_time       = current_time( 'timestamp' );
+		$last_day           = cal_days_in_month( CAL_GREGORIAN, date( 'n', $current_time ), date( 'Y', $current_time ) );
+
+		$expiration_unit    = $length->duration_unit;
+		$expiration_length  = $length->duration;
+		$expiration_date    = date( 'Y-m-d H:i:s', strtotime( '+' . $expiration_length . ' ' . $expiration_unit . ' 23:59:59', current_time( 'timestamp' ) ) );
+
+		if( date( 'j', $current_time ) == $last_day && 'day' != $expiration_unit ) {
+			$expiration_date = date( 'Y-m-d H:i:s', strtotime( $expiration_date . ' +2 days', current_time( 'timestamp' ) ) );
+		}
+
+	}
+
+	return $expiration_date;
 }
 
 /**

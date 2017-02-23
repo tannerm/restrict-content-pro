@@ -159,9 +159,11 @@ function rcp_change_password_form( $args = array() ) {
  * @return void
  */
 function rcp_add_auto_renew( $levels = array() ) {
-	if( '3' == rcp_get_auto_renew_behavior() ) : ?>
+	if( '3' == rcp_get_auto_renew_behavior() ) :
+		global $rcp_options;
+		?>
 		<p id="rcp_auto_renew_wrap">
-			<input name="rcp_auto_renew" id="rcp_auto_renew" type="checkbox" checked="checked"/>
+			<input name="rcp_auto_renew" id="rcp_auto_renew" type="checkbox" <?php echo isset( $rcp_options['auto_renew_checked_on'] ) ? 'checked="checked"' : ''; ?>/>
 			<label for="rcp_auto_renew"><?php echo apply_filters ( 'rcp_registration_auto_renew', __( 'Auto Renew', 'rcp' ) ); ?></label>
 		</p>
 	<?php endif;

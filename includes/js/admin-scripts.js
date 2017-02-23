@@ -153,7 +153,7 @@ jQuery(document).ready(function($) {
 	// make columns sortable via drag and drop
 	if( $('.rcp-subscriptions tbody').length ) {
 		$(".rcp-subscriptions tbody").sortable({
-			handle: '.dragHandle', items: '.rcp-subscription', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
+			handle: '.rcp-drag-handle', items: '.rcp-subscription', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
 				var order = $(this).sortable("serialize") + '&action=update-subscription-order';
 				$.post(ajaxurl, order, function(response) {
 					// response here
@@ -289,12 +289,36 @@ jQuery(document).ready(function($) {
 		}
 	});
 
+
 	// Cancel user's subscription when updating status to "Cancelled".
 	$('#rcp-status').on('change', function () {
 		if ( rcp_vars.can_cancel_member && 'cancelled' == $(this).val() ) {
 			$(this).parent().append('<p id="rcp-cancel-subscription-wrap"><input type="checkbox" id="rcp-cancel-subscription" name="cancel_subscription" value="1"><label for="rcp-cancel-subscription">' + rcp_vars.cancel_subscription + '</label></p>');
 		} else {
 			$('#rcp-cancel-subscription-wrap').remove();
+		}
+	});
+
+	// Show/hide auto renew default based on settings.
+	$('#rcp_settings_auto_renew').on('change', function() {
+		if( '3' == $(this).val() ) {
+			$(this).parents('tr').next().css('display', 'table-row');
+		} else {
+			$(this).parents('tr').next().css('display', 'none');
+		}
+	});
+
+	// Show/hide email fields based on their activation state.
+	$('.rcp-disable-email').on('change', function () {
+		var subject = $(this).parents('tr').next();
+		var body = subject.next();
+
+		if( $(this).prop('checked') ) {
+			subject.css('display', 'none');
+			body.css('display', 'none');
+		} else {
+			subject.css('display', 'table-row');
+			body.css('display', 'table-row');
 		}
 	});
 
