@@ -153,7 +153,7 @@ jQuery(document).ready(function($) {
 	// make columns sortable via drag and drop
 	if( $('.rcp-subscriptions tbody').length ) {
 		$(".rcp-subscriptions tbody").sortable({
-			handle: '.dragHandle', items: '.rcp-subscription', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
+			handle: '.rcp-drag-handle', items: '.rcp-subscription', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
 				var order = $(this).sortable("serialize") + '&action=update-subscription-order';
 				$.post(ajaxurl, order, function(response) {
 					// response here
