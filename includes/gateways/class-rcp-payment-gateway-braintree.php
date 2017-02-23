@@ -290,10 +290,6 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 	 */
 	public function process_webhooks() {
 
-		if ( empty( $_GET['listener'] ) || 'rcp_braintree' !== $_GET['listener'] ) {
-			return;
-		}
-
 		if ( isset( $_GET['bt_challenge'] ) ) {
 			try {
 				$verify = Braintree_WebhookNotification::verify( $_GET['bt_challenge'] );
@@ -435,7 +431,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * Subscriptions with trial periods will never trigger this notification.
 			 */
 			case 'subscription_went_active':
-				# code...
+				die( 'subscription went active' );
 				break;
 
 			/**

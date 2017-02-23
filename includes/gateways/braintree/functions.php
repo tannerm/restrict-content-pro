@@ -114,3 +114,33 @@ function rcp_braintree_cancel_member( $member_id = 0 ) {
 
 	return $ret;
 }
+
+/**
+ * Checks for the legacy Braintree gateway
+ * and deactivates it and shows a notice.
+ *
+ * @since 2.8
+ * @return void
+ */
+function rcp_braintree_detect_legacy_plugin() {
+
+	if ( is_admin() && ! wp_doing_ajax() ) {
+		if ( is_plugin_active( 'rcp-braintree/rcp-braintree.php' ) ) {
+			deactivate_plugins( 'rcp-braintree/rcp-braintree.php', true );
+		}
+	}
+}
+add_action( 'admin_init', 'rcp_braintree_detect_legacy_plugin' );
+
+/**
+ * Checks for legacy Braintree webhook endpoints
+ * and fires off the webhook processing for those requests.
+ *
+ * @since 2.8
+ * @return void
+ */
+add_action( 'init', function() {
+	if ( ! empty( $_GET['bt_challenge'] ) || ( ! empty( $_POST['bt_signature'] ) && ! empty( $_POST['bt_payload'] ) ) ) {
+		add_filter( 'rcp_process_gateway_webhooks', '__return_true' );
+	}
+}, -100000 ); // Must run before rcp_process_gateway_webooks which is hooked on -99999
