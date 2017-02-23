@@ -309,8 +309,6 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 		try {
 			$data = Braintree_WebhookNotification::parse( $_POST['bt_signature'], $_POST['bt_payload'] );
-// echo '<pre>'; print_r($data); echo '</pre>';
-// die(200);
 		} catch ( Exception $e ) {
 			die( 'Invalid signature' );
 		}
@@ -328,7 +326,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 		$transaction = $data->subscription->transactions[0];
 
-		$user_id = rcp_get_member_id_from_profile_id( $transaction->customer['id'] );
+		$user_id = rcp_get_member_id_from_profile_id( 'bt_' . $transaction->customer['id'] );
 
 		if ( empty( $user_id ) ) {
 			die( 'no user ID found' );
