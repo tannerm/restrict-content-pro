@@ -17,9 +17,6 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 	protected $encryptionKey;
 	protected $environment;
 
-
-// @todo only load if PHP 5.4+
-
 	/**
 	 * Initializes the gateway configuration.
 	 *
@@ -55,7 +52,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		}
 
 		require_once RCP_PLUGIN_DIR . 'includes/libraries/braintree/lib/Braintree.php';
-// @todo only run this when needed
+
 		Braintree_Configuration::environment( $this->environment );
 		Braintree_Configuration::merchantId( $this->merchantId );
 		Braintree_Configuration::publicKey( $this->publicKey );
@@ -228,6 +225,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			if ( ! empty( $result->message ) ) {
 				$message .= sprintf( __( 'Error message: %s', 'rcp' ), $result->message ) . PHP_EOL;
 			}
+
+			do_action( 'rcp_registration_failed', $this );
 
 			wp_die( $message );
 		}
@@ -459,8 +458,11 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 	 * Handles the error processing.
 	 */
 	protected function handle_processing_error( $e ) {
-		// @todo
+
+		do_action( 'rcp_registration_failed', $this );
+
 		die( $e->getMessage() );
+
 	}
 
 	/**
