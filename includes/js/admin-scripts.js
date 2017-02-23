@@ -289,4 +289,27 @@ jQuery(document).ready(function($) {
 		}
 	});
 
+	// Show/hide auto renew default based on settings.
+	$('#rcp_settings_auto_renew').on('change', function() {
+		if( '3' == $(this).val() ) {
+			$(this).parents('tr').next().css('display', 'table-row');
+		} else {
+			$(this).parents('tr').next().css('display', 'none');
+		}
+	});
+
+	// Show/hide email fields based on their activation state.
+	$('.rcp-disable-email').on('change', function () {
+		var subject = $(this).parents('tr').next();
+		var body = subject.next();
+
+		if( $(this).prop('checked') ) {
+			subject.css('display', 'none');
+			body.css('display', 'none');
+		} else {
+			subject.css('display', 'table-row');
+			body.css('display', 'table-row');
+		}
+	});
+
 });

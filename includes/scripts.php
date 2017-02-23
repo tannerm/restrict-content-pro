@@ -162,12 +162,13 @@ function rcp_print_scripts() {
 
 	wp_localize_script('rcp-register', 'rcp_script_options',
 		array(
-			'ajaxurl'    => admin_url( 'admin-ajax.php' ),
-			'register'   => apply_filters ( 'rcp_registration_register_button', __( 'Register', 'rcp' ) ),
-			'pleasewait' => __( 'Please Wait . . . ', 'rcp' ),
-			'pay_now'    => __( 'Submit Payment', 'rcp' ),
-			'user_has_trialed'  => is_user_logged_in() && rcp_has_used_trial(),
-			'trial_levels' => rcp_get_trial_level_ids()
+			'ajaxurl'            => admin_url( 'admin-ajax.php' ),
+			'register'           => apply_filters ( 'rcp_registration_register_button', __( 'Register', 'rcp' ) ),
+			'pleasewait'         => __( 'Please Wait . . . ', 'rcp' ),
+			'pay_now'            => __( 'Submit Payment', 'rcp' ),
+			'user_has_trialed'   => is_user_logged_in() && rcp_has_used_trial(),
+			'trial_levels'       => rcp_get_trial_level_ids(),
+			'auto_renew_default' => isset( $rcp_options['auto_renew_checked_on'] )
 		)
 	);
 

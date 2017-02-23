@@ -306,7 +306,7 @@ function rcp_validate_gateways() {
 		// Auto Renew checkbox
 		if ( 'yes' == gateway.data('supports-recurring') ) {
 			// Set up defaults
-			$('#rcp_auto_renew_wrap input').prop('checked', false);
+			$('#rcp_auto_renew_wrap input').prop('checked', rcp_script_options.auto_renew_default);
 			$('#rcp_auto_renew_wrap').show();
 
 			// Uncheck and hide if free level, lifetime level, or 100% discount applied
