@@ -25,7 +25,7 @@ include_once( 'restrict-content-pro.php' );
 
 global $wpdb, $rcp_options;
 
-if( isset( $rcp_options['uninstall_on_delete'] ) ) {
+if( isset( $rcp_options['remove_data_on_uninstall'] ) ) {
 
 	// Delete all post meta.
 	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE 'rcp\_%'" );
