@@ -358,6 +358,13 @@ function rcp_validate_discount() {
 	}
 
 	if( ! discount ) {
+
+		// Reset everything in case a previous discount was just removed.
+		$('.rcp_discount_valid, .rcp_discount_invalid').hide();
+		$('#rcp_auto_renew_wrap').show();
+		gateway_fields.show().removeClass('rcp_discounted_100');
+		rcp_validate_gateways();
+
 		return;
 	}
 
@@ -380,6 +387,7 @@ function rcp_validate_discount() {
 			$('.rcp_discount_invalid').show();
 			gateway_fields.removeClass('rcp_discounted_100');
 			$('.rcp_gateway_fields,#rcp_auto_renew_wrap').show();
+			rcp_validate_gateways();
 
 		} else if( response.valid ) {
 
