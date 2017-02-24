@@ -94,12 +94,57 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		$member = new RCP_Member( $this->user_id );
 
 		/**
+		 * Set up the customer object.
+		 *
+		 * Get the customer record from Braintree if it already exists,
+		 * otherwise create a new customer record.
+		 */
+		$customer = false;
+		$payment_profile_id = $member->get_payment_profile_id();
+		$payment_profile_id = ! empty( $payment_profile_id ) ? $payment_profile_id : 'bt_' . $this->user_id;
+
+		if ( $payment_profile_id ) {
+			try {
+				$customer = Braintree_Customer::find( $payment_profile_id );
+			} catch ( Braintree_Exception_NotFound $e ) {
+				$customer = false;
+			}
+		}
+
+		if ( ! $customer ) {
+
+			try {
+				$result = Braintree_Customer::create(
+					array(
+						'id'                 => 'bt_' . $this->user_id,
+						'firstName'          => ! empty( $this->subscription_data['post_data']['rcp_user_first'] ) ? sanitize_text_field( $this->subscription_data['post_data']['rcp_user_first'] ) : '',
+						'lastName'           => ! empty( $this->subscription_data['post_data']['rcp_user_last'] ) ? sanitize_text_field( $this->subscription_data['post_data']['rcp_user_last'] ) : '',
+						'email'              => $this->subscription_data['user_email'],
+						'riskData'           => array(
+							'customerBrowser' => $_SERVER['HTTP_USER_AGENT'],
+							'customerIp'      => rcp_get_ip()
+						)
+					)
+				);
+
+				if ( $result->success && $result->customer ) {
+					$customer = $result->customer;
+					$member->set_payment_profile_id( $customer->id );
+				}
+
+			} catch ( Exception $e ) {
+				// Customer lookup/creation failed
+				$this->handle_processing_error( $e );
+			}
+		}
+
+		if ( empty( $customer ) ) {
+			$this->handle_processing_error( __( 'Unable to locate or create customer record. Please try again. Contact support is the problem persists.', 'rcp' ) );
+		}
+
+		/**
 		 * Set up the transaction arguments.
 		 */
-		$txn_args = array(
-			'paymentMethodNonce' => $_POST['payment_method_nonce']
-		);
-
 		if ( $this->auto_renew && $this->is_trial() ) {
 
 			// Braintree only supports 'day' and 'month' units
@@ -116,50 +161,29 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			$txn_args['trialDurationUnit'] = $duration_unit;
 		}
 
-		/**
-		 * Set up the customer object.
-		 *
-		 * Get the customer record from Braintree if it already exists,
-		 * otherwise create a new customer record.
-		 */
-		$customer = false;
-
+		// Save the payment method to the customer and add it to the transaction arguments.
 		try {
-			$customer = Braintree_Customer::find( $this->subscription_data['user_id'] );
 
-		} catch ( Braintree_Exception_NotFound $e ) {
-			// Create the customer since it doesn't exist
-			try {
-				$result = Braintree_Customer::create(
-					array(
-						'id'                 => $this->subscription_data['user_id'],
-						'firstName'          => ! empty( $this->subscription_data['post_data']['rcp_user_first'] ) ? sanitize_text_field( $this->subscription_data['post_data']['rcp_user_first'] ) : '',
-						'lastName'           => ! empty( $this->subscription_data['post_data']['rcp_user_last'] ) ? sanitize_text_field( $this->subscription_data['post_data']['rcp_user_last'] ) : '',
-						'email'              => $this->subscription_data['user_email'],
-						'paymentMethodNonce' => $_POST['payment_method_nonce'],
-						'riskData'           => array(
-							'customerBrowser' => $_SERVER['HTTP_USER_AGENT'],
-							'customerIp'      => rcp_get_ip()
-						)
-					)
-				);
+			$payment_method = Braintree_PaymentMethod::create( array(
+				'customerId'         => $customer->id,
+				'paymentMethodNonce' => $_POST['payment_method_nonce'],
+				'options'            => array(
+					'makeDefault' => true
+				)
+			) );
 
-				if ( $result->success && $result->customer ) {
-					$customer = $result->customer;
-				}
-
-			} catch ( Exception $e ) {
-				// Customer lookup/creation failed
-				$this->handle_processing_error( $e );
+			if ( $payment_method->success ) {
+				$txn_args['paymentMethodToken'] = $payment_method->id;
 			}
 
 		} catch ( Exception $e ) {
-			// Something other than Braintree_Exception_NotFound happened
+
 			$this->handle_processing_error( $e );
+
 		}
 
-		if ( empty( $customer ) ) {
-			$this->handle_processing_error( __( 'Unable to locate or create customer record. Please try again. Contact support is the problem persists.', 'rcp' ) );
+		if ( empty( $payment_method ) ) {
+			$this->handle_processing_error( __( 'There was an error saving your payment information. Please try again. Contact support is the problem persists.', 'rcp' ) );
 		}
 
 		/**
@@ -170,13 +194,12 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			/**
 			 * Cancel existing subscription if the member just upgraded to another one.
 			 */
-			if ( $member->just_upgraded() && rcp_can_member_cancel( $member->ID ) ) {
-				$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+			if ( $member->just_upgraded() && $member->can_cancel() ) {
+				$cancelled = $member->cancel_payment_profile( false );
 			}
 
-
-			$txn_args['planId']             = $this->subscription_data['subscription_id'];
-			$txn_args['paymentMethodToken'] = $customer->paymentMethods[0]->token;
+			$txn_args['planId'] = $this->subscription_data['subscription_id'];
+			$txn_args['price']  = $this->amount + $this->signup_fee;
 
 			try {
 				$result = Braintree_Subscription::create( $txn_args );
@@ -195,7 +218,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		} else {
 
 			$txn_args['customerId']                     = $customer->id;
-			$txn_args['amount']                         = $this->amount;
+			$txn_args['amount']                         = $this->amount + $this->signup_fee;
 			$txn_args['options']['submitForSettlement'] = true;
 
 			try {
@@ -239,8 +262,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			/**
 			 * Cancel existing subscription if the member just upgraded to another one.
 			 */
-			if ( rcp_can_member_cancel( $member->ID ) ) {
-				$cancelled = rcp_cancel_member_payment_profile( $member->ID, false );
+			if ( $member->can_cancel() ) {
+				$cancelled = $member->cancel_payment_profile( false );
 			}
 
 			// Log the one-time payment
@@ -248,7 +271,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 				'subscription'     => $this->subscription_data['subscription_name'],
 				'date'             => date( 'Y-m-d g:i:s', time() ),
 				'amount'           => $result->transaction->amount,
-				'user_id'          => $this->subscription_data['user_id'],
+				'user_id'          => $this->user_id,
 				'payment_type'     => __( 'Braintree Credit Card One Time', 'rcp' ),
 				'subscription_key' => $this->subscription_data['key'],
 				'transaction_id'   => $result->transaction->id
@@ -264,8 +287,6 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		if ( $paid && $this->auto_renew ) {
 
 			$member->set_merchant_subscription_id( $result->subscription->id );
-
-			$member->set_payment_profile_id( 'bt_' . $this->user_id );
 
 			/**
 			 * Set the member status to active if this is a trial.
@@ -477,6 +498,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 			var rcp_form = document.getElementById("rcp_registration_form");
 
+			var rcp_braintree_processing_submission = false;
+
 			/**
 			 * Braintree requires data-braintree-name attributes on the inputs.
 			 * Let's add them and remove the name attribute to prevent card
@@ -507,7 +530,17 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			card_year.setAttribute('data-braintree-name', 'expiration_year');
 			card_year.removeAttribute('name');
 
-			rcp_form.querySelector("#rcp_submit").addEventListener("click", function(event) {
+			jQuery('body').on('rcp_register_form_submission', function rcp_braintree_register_form_submission_handler(event, response, form_id) {
+
+				if ( response.gateway.slug !== 'braintree' ) {
+					return;
+				}
+
+				if ( rcp_braintree_processing_submission ) {
+					return;
+				}
+
+				rcp_braintree_processing_submission = true;
 
 				event.preventDefault();
 
