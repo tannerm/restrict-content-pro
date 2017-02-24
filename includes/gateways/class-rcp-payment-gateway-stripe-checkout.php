@@ -134,6 +134,7 @@ class RCP_Payment_Gateway_Stripe_Checkout extends RCP_Payment_Gateway_Stripe {
 					if (! rcpStripeCheckoutGotToken) {
 						jQuery('#rcp_submit').val(rcp_script_options.register);
 						rcp_processing = false;
+						jQuery('.stripe_checkout_app').hide();
 						submission_form.unblock();
 					}
 				}
