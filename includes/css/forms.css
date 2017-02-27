@@ -162,13 +162,14 @@ p.rcp_success {
 @media only screen and (max-width: 480px) {
 	.rcp-table {
 		overflow: hidden;
+		width: 100%;
 	}
 
 	.rcp-table th {
 		display: none;
 	}
 
-	#content .rcp-table tr td {
+	.rcp-table tr td {
 		display: block;
 		text-align: left;
 		padding-left: 50%;
