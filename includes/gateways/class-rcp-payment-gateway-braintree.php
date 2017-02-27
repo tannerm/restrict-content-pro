@@ -343,9 +343,23 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			die(200);
 		}
 
-		$transaction = $data->subscription->transactions[0];
+		/**
+		 * If this is a free trial cancellation, there will not
+		 * be a transaction to reference in this webhook, which
+		 * is where Braintree stores the customer ID associated
+		 * with the webhook. We need to get the customer ID
+		 * another way.
+		 */
+		if ( ! empty( $data->subscription->transactions) ) {
 
-		$user_id = rcp_get_member_id_from_profile_id( $transaction->customer['id'] );
+			$transaction = $data->subscription->transactions[0];
+			$user_id     = rcp_get_member_id_from_profile_id( $transaction->customer['id'] );
+
+		} elseif ( ! empty( $data->subscription->id ) ) {
+
+			$user_id = rcp_get_member_id_from_subscription_id( $data->subscription->id );
+
+		}
 
 		if ( empty( $user_id ) ) {
 			die( 'no user ID found' );
@@ -378,7 +392,13 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 				$member->cancel();
 
-				$member->set_expiration_date( $data->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
+				/**
+				 * There won't be a paidThroughDate if a trial user cancels,
+				 * so we need to check that it exists.
+				 */
+				if ( ! empty( $data->subscription->paidThroughDate ) ) {
+					$member->set_expiration_date( $data->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
+				}
 
 				$member->add_note( __( 'Subscription cancelled in Braintree', 'rcp' ) );
 
