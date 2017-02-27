@@ -173,7 +173,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			) );
 
 			if ( $payment_method->success ) {
-				$txn_args['paymentMethodToken'] = $payment_method->id;
+				$txn_args['paymentMethodToken'] = $payment_method->paymentMethod->token;
 			}
 
 		} catch ( Exception $e ) {
