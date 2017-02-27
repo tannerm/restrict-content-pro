@@ -192,6 +192,9 @@ function rcp_process_registration() {
 
 	$member->set_joined_date( '', $subscription_id );
 
+	// Delete pending expiration date in case a previous registration was never completed.
+	delete_user_meta( $user_data['id'], 'rcp_pending_expiration_date' );
+
 	// Calculate the expiration date for the member
 	$member_expires = $member->calculate_expiration( $auto_renew, $trial_duration );
 
