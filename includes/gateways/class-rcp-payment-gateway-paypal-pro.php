@@ -133,6 +133,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		if( is_wp_error( $request ) ) {
 
+			do_action( 'rcp_registration_failed', $this );
 			do_action( 'rcp_paypal_pro_signup_payment_failed', $request, $this );
 
 			$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
@@ -148,6 +149,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 			if( false !== strpos( strtolower( $body['ACK'] ), 'failure' ) ) {
 
+				do_action( 'rcp_registration_failed', $this );
 				do_action( 'rcp_paypal_pro_signup_payment_failed', $request, $this );
 
 				$error = '<p>' . __( 'PayPal subscription creation failed.', 'rcp' ) . '</p>';
@@ -183,6 +185,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		} else {
 
+			do_action( 'rcp_registration_failed', $this );
 			wp_die( __( 'Something has gone wrong, please try again', 'rcp' ), __( 'Error', 'rcp' ), array( 'back_link' => true, 'response' => '401' ) );
 
 		}

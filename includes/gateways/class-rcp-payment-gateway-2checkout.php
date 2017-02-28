@@ -150,6 +150,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 		} catch ( Twocheckout_Error $e ) {
 
+			do_action( 'rcp_registration_failed', $this );
 			wp_die( $e->getMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 		}
