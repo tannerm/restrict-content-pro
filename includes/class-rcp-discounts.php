@@ -581,7 +581,11 @@ class RCP_Discounts {
 
 			do_action( 'rcp_pre_remove_discount_from_user', $discount_code, $user_id );
 
-			update_user_meta( $user_id, 'rcp_user_discounts', $user_discounts );
+			if( empty( $user_discounts ) ) {
+				delete_user_meta( $user_id, 'rcp_user_discounts' );
+			} else {
+				update_user_meta( $user_id, 'rcp_user_discounts', $user_discounts );
+			}
 
 			do_action( 'rcp_remove_discount_from_user', $discount_code, $user_id );
 
