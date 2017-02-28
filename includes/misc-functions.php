@@ -821,6 +821,9 @@ function rcp_get_post_ids_assigned_to_restricted_terms() {
 	if ( false === ( $post_ids = get_transient( 'rcp_post_ids_assigned_to_restricted_terms' ) ) ) {
 		$post_ids = array();
 
+		/**
+		 * Get all terms with the 'rcp_restricted_meta' key.
+		 */
 		$terms = get_terms(
 			array_values( get_taxonomies( array( 'public' => true ) ) ),
 			array(
@@ -839,6 +842,26 @@ function rcp_get_post_ids_assigned_to_restricted_terms() {
 		}
 
 		foreach ( $terms as $term ) {
+
+			/**
+			 * For legacy reasons, we need to check for empty meta
+			 * and for meta with just an access_level of 'None'
+			 * and ignore them.
+			 */
+			$meta = get_term_meta( $term->term_id , 'rcp_restricted_meta', true );
+
+			if ( empty( $meta ) ) {
+				// Remove the legacy metadata
+				delete_term_meta( $term->term_id, 'rcp_restricted_meta' );
+				continue;
+			}
+
+			if ( 1 === count( $meta) && array_key_exists( 'access_level', $meta ) && 'None' === $meta['access_level'] ) {
+				// Remove the legacy metadata
+				delete_term_meta( $term->term_id, 'rcp_restricted_meta' );
+				continue;
+			}
+
 			$p_ids = $wpdb->get_results( $wpdb->prepare( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", absint( $term->term_id ) ), ARRAY_A );
 			foreach( $p_ids as $p_id ) {
 				if ( ! in_array( $p_id['object_id'], $post_ids ) ) {
