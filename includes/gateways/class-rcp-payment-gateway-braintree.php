@@ -83,15 +83,16 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 	public function process_signup() {
 
 		if ( empty( $_POST['payment_method_nonce'] ) ) {
-			wp_die(
-				__( 'Missing Braintree payment nonce. Please try again. Contact support if the issue persists.', 'rcp' ),
-				__( 'Error', 'rcp' ),
-				array( 'response' => 400 )
+			$this->handle_processing_error(
+				new Exception(
+					__( 'Missing Braintree payment nonce. Please try again. Contact support if the issue persists.', 'rcp' )
+				)
 			);
 		}
 
-		$paid   = false;
-		$member = new RCP_Member( $this->user_id );
+		$paid     = false;
+		$txn_args = array();
+		$member   = new RCP_Member( $this->user_id );
 
 		/**
 		 * Set up the customer object.
@@ -108,6 +109,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 				$customer = Braintree_Customer::find( $payment_profile_id );
 			} catch ( Braintree_Exception_NotFound $e ) {
 				$customer = false;
+			} catch ( Exception $e ) {
+				$this->handle_processing_error( $e );
 			}
 		}
 
@@ -139,29 +142,12 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		}
 
 		if ( empty( $customer ) ) {
-			$this->handle_processing_error( __( 'Unable to locate or create customer record. Please try again. Contact support is the problem persists.', 'rcp' ) );
+			$this->handle_processing_error( new Exception( __( 'Unable to locate or create customer record. Please try again. Contact support is the problem persists.', 'rcp' ) ) );
 		}
 
 		/**
-		 * Set up the transaction arguments.
+		 * Save the customer's payment method.
 		 */
-		if ( $this->auto_renew && $this->is_trial() ) {
-
-			// Braintree only supports 'day' and 'month' units
-			$duration      = $this->subscription_data['trial_duration'];
-			$duration_unit = $this->subscription_data['trial_duration_unit'];
-
-			if ( 'year' === $duration_unit ) {
-				$duration = '12';
-				$duration_unit = 'month';
-			}
-
-			$txn_args['trialPeriod'] = true;
-			$txn_args['trialDuration'] = $duration;
-			$txn_args['trialDurationUnit'] = $duration_unit;
-		}
-
-		// Save the payment method to the customer and add it to the transaction arguments.
 		try {
 
 			$payment_method = Braintree_PaymentMethod::create( array(
@@ -173,7 +159,13 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			) );
 
 			if ( $payment_method->success ) {
-				$txn_args['paymentMethodToken'] = $payment_method->paymentMethod->token;
+
+				$payment_token = $payment_method->paymentMethod->token;
+
+			} else {
+
+				$this->handle_processing_error( new Exception( __( 'There was an error saving your payment information. Please try again. Contact support is the problem persists.', 'rcp' ) ) );
+
 			}
 
 		} catch ( Exception $e ) {
@@ -182,8 +174,9 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 		}
 
-		if ( empty( $payment_method ) ) {
-			$this->handle_processing_error( __( 'There was an error saving your payment information. Please try again. Contact support is the problem persists.', 'rcp' ) );
+		if ( empty( $payment_token ) ) {
+			$this->handle_processing_error( new Exception( __( 'There was an error saving your payment information. Please try again. Contact support is the problem persists.', 'rcp' ) ) );
+
 		}
 
 		/**
@@ -192,19 +185,93 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		if ( $this->auto_renew ) {
 
 			/**
+			 * Process signup fees as a separate payment.
+			 */
+			if ( $this->signup_fee && $this->signup_fee > 0 && ! $this->is_trial() ) {
+
+				try {
+					$signup_fee_payment = Braintree_Transaction::sale( array(
+						'amount'             => $this->signup_fee,
+						'customerId'         => $customer->id,
+						'paymentMethodToken' => $payment_token,
+						'options'            => array(
+							'submitForSettlement' => true
+						)
+					) );
+
+					if ( $signup_fee_payment->success ) {
+
+						$payment_data = array(
+							'subscription'     => $this->subscription_data['subscription_name'],
+							'date'             => date( 'Y-m-d g:i:s', time() ),
+							'amount'           => $signup_fee_payment->transaction->amount,
+							'user_id'          => $this->user_id,
+							'payment_type'     => __( 'Braintree Credit Card Signup Fee', 'rcp' ),
+							'subscription_key' => $this->subscription_data['key'],
+							'transaction_id'   => $signup_fee_payment->transaction->id
+						);
+						$rcp_payments = new RCP_Payments;
+						$rcp_payments->insert( $payment_data );
+
+
+					} else {
+						$this->handle_processing_error(
+							new Exception(
+								sprintf( __( 'There was a problem processing your payment. Message: %s', 'rcp' ), $signup_fee_payment->message )
+							)
+						);
+					}
+
+				} catch ( Exception $e ) {
+
+					$this->handle_processing_error( $e );
+
+				}
+			}
+
+			/**
 			 * Cancel existing subscription if the member just upgraded to another one.
 			 */
 			if ( $member->just_upgraded() && $member->can_cancel() ) {
 				$cancelled = $member->cancel_payment_profile( false );
 			}
 
-			$txn_args['planId'] = $this->subscription_data['subscription_id'];
-			$txn_args['price']  = $this->amount + $this->signup_fee;
+			/**
+			 * Set up the trial values.
+			 *
+			 * Braintree only supports 'day' and 'month' units.
+			 * If the trial is set to x year, force it to 12 months.
+			 */
+			if ( $this->is_trial() ) {
+
+				$duration      = $this->subscription_data['trial_duration'];
+				$duration_unit = $this->subscription_data['trial_duration_unit'];
+
+				if ( 'year' === $duration_unit ) {
+					$duration = '12';
+					$duration_unit = 'month';
+				}
+
+				$txn_args['trialPeriod'] = true;
+				$txn_args['trialDuration'] = $duration;
+				$txn_args['trialDurationUnit'] = $duration_unit;
+			}
+
+			$txn_args['planId']             = $this->subscription_data['subscription_id'];
+			$txn_args['price']              = $this->amount;
+			$txn_args['paymentMethodToken'] = $payment_token;
 
 			try {
 				$result = Braintree_Subscription::create( $txn_args );
+
 				if ( $result->success ) {
 					$paid = true;
+				} else {
+					$this->handle_processing_error(
+						new Exception(
+							sprintf( __( 'There was a problem processing your payment. Message: %s', 'rcp' ), $result->message )
+						)
+					);
 				}
 
 			} catch ( Exception $e ) {
@@ -212,19 +279,29 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 				$this->handle_processing_error( $e );
 			}
 
+		}
+
 		/**
-		 * Set up the one-time payment values and create the payment.
+		 * Process a one-time payment.
 		 */
-		} else {
+		if ( ! $this->auto_renew ) {
 
 			$txn_args['customerId']                     = $customer->id;
 			$txn_args['amount']                         = $this->amount + $this->signup_fee;
+			$txn_args['paymentMethodToken']             = $payment_token;
 			$txn_args['options']['submitForSettlement'] = true;
 
 			try {
 				$result = Braintree_Transaction::sale( $txn_args );
+
 				if ( $result->success ) {
 					$paid = true;
+				} else {
+					$this->handle_processing_error(
+						new Exception(
+							sprintf( __( 'There was a problem processing your payment. Message: %s', 'rcp' ), $result->message )
+						)
+					);
 				}
 
 			} catch ( Exception $e ) {
@@ -249,9 +326,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 				$message .= sprintf( __( 'Error message: %s', 'rcp' ), $result->message ) . PHP_EOL;
 			}
 
-			do_action( 'rcp_registration_failed', $this );
+			$this->handle_processing_error( new Exception( $message ) );
 
-			wp_die( $message );
 		}
 
 		/**
@@ -260,7 +336,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		if ( $paid && ! $this->auto_renew ) {
 
 			/**
-			 * Cancel existing subscription if the member just upgraded to another one.
+			 * Cancel existing subscription.
 			 */
 			if ( $member->can_cancel() ) {
 				$cancelled = $member->cancel_payment_profile( false );
@@ -441,7 +517,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * subscription fails due to an unsuccessful transaction.
 			 */
 			case 'subscription_charged_unsuccessfully':
-				# code...
+				die( 'subscription_charged_unsuccessfully' );
 				break;
 
 			/**
@@ -495,12 +571,14 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 	/**
 	 * Handles the error processing.
+	 *
+	 * @param Exception $exception
 	 */
-	protected function handle_processing_error( $e ) {
+	protected function handle_processing_error( $exception ) {
 
 		do_action( 'rcp_registration_failed', $this );
 
-		die( $e->getMessage() );
+		die( $exception->getMessage() );
 
 	}
 
