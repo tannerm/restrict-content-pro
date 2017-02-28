@@ -245,6 +245,28 @@ class RCP_Discounts {
 		$this->update( $discount_id, array( 'use_count' => $uses ) );
 	}
 
+	/**
+	 * Decrease the use count of a discount by 1
+	 *
+	 * @param  int $discount_id ID of the discount.
+	 *
+	 * @access  public
+	 * @since   2.8
+	 * @return  void
+	 */
+	public function decrease_uses( $discount_id = 0 ) {
+
+		$uses = absint( $this->get_uses( $discount_id ) );
+		$uses -= 1;
+		
+		if( $uses < 0 ) {
+			$uses = 0;
+		}
+
+		$this->update( $discount_id, array( 'use_count' => $uses ) );
+
+	}
+
 
 	/**
 	 * Get the expiration date of a discount
@@ -519,8 +541,9 @@ class RCP_Discounts {
 
 		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
 
-		if( ! is_array( $user_discounts ) )
+		if( ! is_array( $user_discounts ) ) {
 			$user_discounts = array();
+		}
 
 		$user_discounts[] = $discount_code;
 
@@ -529,6 +552,47 @@ class RCP_Discounts {
 		update_user_meta( $user_id, 'rcp_user_discounts', $user_discounts );
 
 		do_action( 'rcp_store_discount_for_user', $discount_code, $user_id );
+
+	}
+
+	/**
+	 * Remove a discount from a user's history
+	 *
+	 * @param  int    $user_id ID of the user to remove the discount from.
+	 * @param  string $discount_code Discount code to remove.
+	 *
+	 * @access  public
+	 * @since   2.8
+	 * @return  bool Whether or not the discount was removed.
+	 */
+	public function remove_from_user( $user_id, $discount_code = '' ) {
+
+		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
+
+		if( ! is_array( $user_discounts ) ) {
+			$user_discounts = array();
+		}
+
+		// Reverse the array to remove the last instance of the discount.
+		$key = array_search( $discount_code, array_reverse( $user_discounts, true ) );
+
+		if( false !== $key ) {
+			unset( $user_discounts[ $key ] );
+
+			do_action( 'rcp_pre_remove_discount_from_user', $discount_code, $user_id );
+
+			if( empty( $user_discounts ) ) {
+				delete_user_meta( $user_id, 'rcp_user_discounts' );
+			} else {
+				update_user_meta( $user_id, 'rcp_user_discounts', $user_discounts );
+			}
+
+			do_action( 'rcp_remove_discount_from_user', $discount_code, $user_id );
+
+			return true;
+		}
+
+		return false;
 
 	}
 
