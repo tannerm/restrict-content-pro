@@ -30,6 +30,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
+		$this->supports[]  = 'gateway-submits-form';
 
 		$this->secret_word = isset( $rcp_options['twocheckout_secret_word'] ) ? trim( $rcp_options['twocheckout_secret_word'] ) : '';
 
@@ -139,7 +140,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 					'subscription_key' => $this->subscription_key,
 					'amount'           => $this->amount + $this->signup_fee,
 					'user_id'          => $this->user_id,
-					'transaction_id'   => $charge['response']['transactionId']
+					'transaction_id'   => $charge['response']['orderNumber']
 				);
 
 				$rcp_payments = new RCP_Payments();
@@ -364,7 +365,22 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			jQuery(document).ready(function($) {
 				// Pull in the public encryption key for our environment
 				TCO.loadPubKey('<?php echo $this->environment; ?>');
-				jQuery("#rcp_registration_form").submit(function(e) {
+
+				var rcp_twocheckout_processing_submission = false;
+
+				jQuery('body').on('rcp_register_form_submission', function rcp_2co_register_form_submission_handler(event, response, form_id) {
+
+					if ( response.gateway.slug !== 'twocheckout' ) {
+						return;
+					}
+
+					if ( rcp_twocheckout_processing_submission ) {
+						return;
+					}
+
+					rcp_twocheckout_processing_submission = true;
+
+					event.preventDefault();
 
 					if( jQuery('.rcp_level:checked').length ) {
 						var price = jQuery('.rcp_level:checked').closest('.rcp_subscription_level').find('span.rcp_price').attr('rel');
