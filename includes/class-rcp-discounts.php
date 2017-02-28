@@ -541,8 +541,9 @@ class RCP_Discounts {
 
 		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
 
-		if( ! is_array( $user_discounts ) )
+		if( ! is_array( $user_discounts ) ) {
 			$user_discounts = array();
+		}
 
 		$user_discounts[] = $discount_code;
 
@@ -568,8 +569,9 @@ class RCP_Discounts {
 
 		$user_discounts = get_user_meta( $user_id, 'rcp_user_discounts', true );
 
-		if( ! is_array( $user_discounts ) )
+		if( ! is_array( $user_discounts ) ) {
 			$user_discounts = array();
+		}
 
 		// Reverse the array to remove the last instance of the discount.
 		$key = array_search( $discount_code, array_reverse( $user_discounts, true ) );
