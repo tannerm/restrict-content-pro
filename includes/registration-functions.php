@@ -939,19 +939,37 @@ function rcp_remove_expiring_soon_email_sent_flag( $status, $user_id ) {
 add_action( 'rcp_set_status', 'rcp_remove_expiring_soon_email_sent_flag', 10, 2 );
 
 /**
- * Remove trial flags if payment fails. This ensures they can try signing up for a trial again.
+ * Remove subscription data if registration payment fails. Includes:
+ *
+ *  - Remove trial flags that were just set.
+ *  - Decrease discount code usage if a code was used.
  *
  * @param RCP_Payment_Gateway $gateway
  *
  * @since  2.8
  * @return void
  */
-function rcp_remove_trial_flags_on_failure( $gateway ) {
+function rcp_remove_subscription_data_on_failure( $gateway ) {
 
+	// Remove free trial flags to allow them to sign up again.
 	if( ! empty( $gateway->user_id ) && $gateway->is_trial() ) {
 		delete_user_meta( $gateway->user_id, 'rcp_has_trialed' );
 		delete_user_meta( $gateway->user_id, 'rcp_is_trialing' );
 	}
 
+	// Remove discount code records.
+	if( ! empty( $gateway->discount_code ) ) {
+		$discounts    = new RCP_Discounts();
+		$discount_obj = $discounts->get_by( 'code', $gateway->discount_code );
+
+		// Decrease usage count.
+		$discounts->decrease_uses( $discount_obj->id );
+
+		// Remove the code from this user's profile.
+		if( ! empty( $gateway->user_id ) ) {
+			$discounts->remove_from_user( $gateway->user_id, $gateway->discount_code );
+		}
+	}
+
 }
-add_action( 'rcp_registration_failed', 'rcp_remove_trial_flags_on_failure' );
+add_action( 'rcp_registration_failed', 'rcp_remove_subscription_data_on_failure' );
