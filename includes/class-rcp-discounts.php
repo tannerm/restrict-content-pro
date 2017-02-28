@@ -558,8 +558,8 @@ class RCP_Discounts {
 	/**
 	 * Remove a discount from a user's history
 	 *
-	 * @param  int    $user_id ID of the user to add the discount to.
-	 * @param  string $discount_code Discount code to add.
+	 * @param  int    $user_id ID of the user to remove the discount from.
+	 * @param  string $discount_code Discount code to remove.
 	 *
 	 * @access  public
 	 * @since   2.8
