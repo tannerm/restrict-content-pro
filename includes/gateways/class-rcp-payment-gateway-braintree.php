@@ -104,7 +104,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		 */
 		$customer = false;
 		$payment_profile_id = $member->get_payment_profile_id();
-		$payment_profile_id = ! empty( $payment_profile_id ) ? $payment_profile_id : 'bt_' . $this->user_id;
+		$payment_profile_id = ( ! empty( $payment_profile_id ) && false !== strpos( $payment_profile_id, 'bt_' ) ) ? $payment_profile_id : 'bt_' . $this->user_id;
+
 
 		if ( $payment_profile_id ) {
 			try {
@@ -345,7 +346,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		if ( ! $this->auto_renew ) {
 
 			$txn_args['customerId']                     = $customer->id;
-			$txn_args['amount']                         = $this->amount + $this->signup_fee;
+			$txn_args['amount']                         = $this->initial_amount;
 			$txn_args['paymentMethodToken']             = $payment_token;
 			$txn_args['options']['submitForSettlement'] = true;
 
