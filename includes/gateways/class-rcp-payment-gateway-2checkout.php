@@ -138,7 +138,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 					'subscription'     => $this->subscription_name,
 					'payment_type'     => $payment_type,
 					'subscription_key' => $this->subscription_key,
-					'amount'           => $this->amount + $this->signup_fee,
+					'amount'           => $this->initial_amount,
 					'user_id'          => $this->user_id,
 					'transaction_id'   => $charge['response']['orderNumber']
 				);
