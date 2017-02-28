@@ -70,9 +70,9 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 	 * @return void
 	 */
 	public function validate_fields() {
-		// if ( empty( $_POST['payment_method_nonce'] ) ) {
-		// 	rcp_errors()->add( 'braintree_payment_method_nonce_failed', __( 'Payment error.', 'rcp' ), 'register' );
-		// }
+		if ( empty( $_POST['rcp_braintree_fields_completed'] ) ) {
+			rcp_errors()->add( 'missing_card_info', __( 'Credit card information incomplete.', 'rcp' ), 'register' );
+		}
 	}
 
 	/**
@@ -627,6 +627,14 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 			card_year.setAttribute('data-braintree-name', 'expiration_year');
 			card_year.removeAttribute('name');
+
+			// Check that the credit card fields are filled.
+			rcp_form.querySelector("#rcp_submit").addEventListener("click", function(event) {
+				event.preventDefault();
+				if ( card_number.value && card_cvc.value && card_zip.value && card_name.value && card_month.value && card_year.value ) {
+					rcp_form.insertAdjacentHTML("beforeend", "<input name='rcp_braintree_fields_completed' type='hidden' value='true' />");
+				}
+			});
 
 			jQuery('body').on('rcp_register_form_submission', function rcp_braintree_register_form_submission_handler(event, response, form_id) {
 
