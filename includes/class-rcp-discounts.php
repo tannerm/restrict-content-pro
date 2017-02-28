@@ -258,6 +258,11 @@ class RCP_Discounts {
 
 		$uses = absint( $this->get_uses( $discount_id ) );
 		$uses -= 1;
+		
+		if( $uses < 0 ) {
+			$uses = 0;
+		}
+
 		$this->update( $discount_id, array( 'use_count' => $uses ) );
 
 	}
