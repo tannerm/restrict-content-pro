@@ -893,6 +893,11 @@ function rcp_add_prorate_fee( $registration ) {
 		return;
 	}
 
+	// If renewing their current subscription, no proration.
+	if ( is_user_logged_in() && rcp_get_subscription_id() == $registration->get_subscription() ) {
+		return;
+	}
+
 	$registration->add_fee( -1 * $amount, __( 'Proration Credit', 'rcp' ), false, true );
 }
 add_action( 'rcp_registration_init', 'rcp_add_prorate_fee' );
