@@ -84,7 +84,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			$line_items   = array( array(
 				"recurrence"  => $this->length . ' ' . ucfirst( $this->length_unit ),
 				"type"        => 'product',
-				"price"       => $this->initial_amount,
+				"price"       => $this->amount,
 				"productId"   => $this->subscription_id,
 				"name"        => $this->subscription_name,
 				"quantity"    => '1',
@@ -102,8 +102,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 				"productId"   => $this->subscription_id,
 				"name"        => $this->subscription_name,
 				"quantity"    => '1',
-				"tangible"    => 'N',
-				"startupFee"  => $this->initial_amount - $this->amount
+				"tangible"    => 'N'
 			) );
 
 		}
