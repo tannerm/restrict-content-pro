@@ -324,6 +324,7 @@ function rcp_get_merchant_transaction_id_link( $payment ) {
 
 			case 'braintree credit card one time' :
 			case 'braintree credit card signup fee' :
+			case 'braintree credit card one-time discount':
 			case 'braintree credit card' :
 
 				$mode        = $test ? 'sandbox.' : '';

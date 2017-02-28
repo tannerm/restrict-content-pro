@@ -90,6 +90,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			);
 		}
 
+		global $rcp_options;
+
 		$paid     = false;
 		$txn_args = array();
 		$member   = new RCP_Member( $this->user_id );
@@ -227,7 +229,54 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 					$this->handle_processing_error( $e );
 
 				}
+
 			}
+
+			/**
+			 * Process one-time discounts as a separate payment.
+			 */
+			if ( ! empty( $this->discount_code ) && isset( $rcp_options['one_time_discounts'] ) ) {
+
+				try {
+					$one_time_discount_payment = Braintree_Transaction::sale( array(
+						'amount'             => $this->initial_amount,
+						'customerId'         => $customer->id,
+						'paymentMethodToken' => $payment_token,
+						'options'            => array(
+							'submitForSettlement' => true
+						)
+					) );
+
+					if ( $one_time_discount_payment->success ) {
+
+						$payment_data = array(
+							'subscription'     => $this->subscription_data['subscription_name'],
+							'date'             => date( 'Y-m-d g:i:s', time() ),
+							'amount'           => $one_time_discount_payment->transaction->amount,
+							'user_id'          => $this->user_id,
+							'payment_type'     => __( 'Braintree Credit Card One-Time Discount', 'rcp' ),
+							'subscription_key' => $this->subscription_data['key'],
+							'transaction_id'   => $one_time_discount_payment->transaction->id
+						);
+						$rcp_payments = new RCP_Payments;
+						$rcp_payments->insert( $payment_data );
+
+
+					} else {
+						$this->handle_processing_error(
+							new Exception(
+								sprintf( __( 'There was a problem processing your payment. Message: %s', 'rcp' ), $signup_fee_payment->message )
+							)
+						);
+					}
+
+				} catch ( Exception $e ) {
+
+					$this->handle_processing_error( $e );
+
+				}
+			}
+
 
 			/**
 			 * Cancel existing subscription if the member just upgraded to another one.
@@ -260,6 +309,15 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			$txn_args['planId']             = $this->subscription_data['subscription_id'];
 			$txn_args['price']              = $this->amount;
 			$txn_args['paymentMethodToken'] = $payment_token;
+
+			/**
+			 * If this subscription is using a one-time discount code,
+			 * we need to start the subscription at the end of the first
+			 * period.
+			 */
+			if ( ! empty( $this->discount_code ) && isset( $rcp_options['one_time_discounts'] ) ) {
+				$txn_args['firstBillingDate'] = date( 'Y-m-d g:i:s', strtotime( '+ ' . $this->subscription_data['length'] . ' ' . $this->subscription_data['length_unit'] ) );
+			}
 
 			try {
 				$result = Braintree_Subscription::create( $txn_args );
@@ -370,9 +428,24 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * subscription is created.
 			 */
 			if ( $this->is_trial() ) {
+
 				$member->renew( true, 'active', $result->subscription->nextBillingDate->format( 'Y-m-d 23:59:59' ) );
+
+			/**
+			 * If this subscription used a one-time discount,
+			 * set the expiration date to the first billing date.
+			 */
+			} elseif ( ! empty( $this->discount_code ) && isset( $rcp_options['one_time_discounts'] ) ) {
+
+				$member->renew( true, 'active', $result->subscription->firstBillingDate->format( 'Y-m-d 23:59:59' ) );
+
+			/**
+			 * Set the expiration date for normal subscriptions.
+			 */
 			} else {
+
 				$member->renew( true, 'active', $result->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
+
 			}
 		}
 
