@@ -71,7 +71,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		if( $this->auto_renew ) {
 			$amount = $this->amount;
 		} else {
-			$amount = round( $this->amount + $this->signup_fee, 2 );
+			$amount = $this->initial_amount;
 		}
 
 		$args = array(
@@ -114,6 +114,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		if( is_wp_error( $request ) ) {
 
+			do_action( 'rcp_registration_failed', $this );
 			do_action( 'rcp_paypal_express_signup_payment_failed', $request, $this );
 
 			$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
@@ -128,6 +129,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			}
 
 			if( 'failure' === strtolower( $body['ACK'] ) ) {
+
+				do_action( 'rcp_registration_failed', $this );
 
 				$error = '<p>' . __( 'PayPal token creation failed.', 'rcp' ) . '</p>';
 				$error .= '<p>' . __( 'Error message:', 'rcp' ) . ' ' . $body['L_LONGMESSAGE0'] . '</p>';
@@ -145,6 +148,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		} else {
 
+			do_action( 'rcp_registration_failed', $this );
 			wp_die( __( 'Something has gone wrong, please try again', 'rcp' ), __( 'Error', 'rcp' ), array( 'back_link' => true, 'response' => '401' ) );
 
 		}
@@ -194,7 +198,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'BILLINGPERIOD'       => ucwords( $details['subscription']['duration_unit'] ),
 					'BILLINGFREQUENCY'    => $details['subscription']['duration'],
 					'AMT'                 => $details['AMT'],
-					'INITAMT'             => round( $details['AMT'] + $details['subscription']['fee'], 2 ),
+					'INITAMT'             => $details['initial_amount'],
 					'CURRENCYCODE'        => $details['CURRENCYCODE'],
 					'FAILEDINITAMTACTION' => 'CancelOnFailure',
 					'L_BILLINGTYPE0'      => 'RecurringPayments',
@@ -635,7 +639,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				$subscription_id = $member->get_subscription_id();
 			}
 
-			$body['subscription'] = (array) rcp_get_subscription_details( $subscription_id );
+			$body['subscription']   = (array) rcp_get_subscription_details( $subscription_id );
+			$body['initial_amount'] = get_user_meta( $member->ID, 'rcp_pending_subscription_amount', true );
 
 			return $body;
 

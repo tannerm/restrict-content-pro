@@ -742,6 +742,8 @@ class RCP_Member extends WP_User {
 	*/
 	public function set_payment_profile_id( $profile_id = '' ) {
 
+		$profile_id = trim( $profile_id );
+
 		do_action( 'rcp_member_pre_set_profile_payment_id', $this->ID, $profile_id, $this );
 
 		update_user_meta( $this->ID, 'rcp_payment_profile_id', $profile_id );
@@ -779,6 +781,8 @@ class RCP_Member extends WP_User {
 	 * @return  void
 	 */
 	public function set_merchant_subscription_id( $subscription_id = '' ) {
+
+		$subscription_id = trim( $subscription_id );
 
 		do_action( 'rcp_member_pre_set_merchant_subscription_id', $this->ID, $subscription_id, $this );
 

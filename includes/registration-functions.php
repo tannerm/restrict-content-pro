@@ -254,6 +254,7 @@ function rcp_process_registration() {
 
 		$subscription_data = array(
 			'price'               => rcp_get_registration()->get_total( true, false ), // get total without the fee
+			'recurring_price'     => rcp_get_registration()->get_recurring_total( true, false ), // get recurring total without the fee
 			'discount'            => rcp_get_registration()->get_total_discounts(),
 			'discount_code'       => $discount,
 			'fee'                 => rcp_get_registration()->get_total_fees(),
@@ -893,6 +894,11 @@ function rcp_add_prorate_fee( $registration ) {
 		return;
 	}
 
+	// If renewing their current subscription, no proration.
+	if ( is_user_logged_in() && rcp_get_subscription_id() == $registration->get_subscription() ) {
+		return;
+	}
+
 	$registration->add_fee( -1 * $amount, __( 'Proration Credit', 'rcp' ), false, true );
 }
 add_action( 'rcp_registration_init', 'rcp_add_prorate_fee' );
@@ -932,3 +938,21 @@ function rcp_remove_expiring_soon_email_sent_flag( $status, $user_id ) {
 	delete_user_meta( $user_id, '_rcp_expiring_soon_email_sent' );
 }
 add_action( 'rcp_set_status', 'rcp_remove_expiring_soon_email_sent_flag', 10, 2 );
+
+/**
+ * Remove trial flags if payment fails. This ensures they can try signing up for a trial again.
+ *
+ * @param RCP_Payment_Gateway $gateway
+ *
+ * @since  2.8
+ * @return void
+ */
+function rcp_remove_trial_flags_on_failure( $gateway ) {
+
+	if( ! empty( $gateway->user_id ) && $gateway->is_trial() ) {
+		delete_user_meta( $gateway->user_id, 'rcp_has_trialed' );
+		delete_user_meta( $gateway->user_id, 'rcp_is_trialing' );
+	}
+
+}
+add_action( 'rcp_registration_failed', 'rcp_remove_trial_flags_on_failure' );
