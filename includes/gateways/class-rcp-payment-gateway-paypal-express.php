@@ -71,7 +71,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		if( $this->auto_renew ) {
 			$amount = $this->amount;
 		} else {
-			$amount = round( $this->amount + $this->signup_fee, 2 );
+			$amount = $this->initial_amount;
 		}
 
 		$args = array(
@@ -198,7 +198,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'BILLINGPERIOD'       => ucwords( $details['subscription']['duration_unit'] ),
 					'BILLINGFREQUENCY'    => $details['subscription']['duration'],
 					'AMT'                 => $details['AMT'],
-					'INITAMT'             => round( $details['AMT'] + $details['subscription']['fee'], 2 ),
+					'INITAMT'             => $details['initial_amount'],
 					'CURRENCYCODE'        => $details['CURRENCYCODE'],
 					'FAILEDINITAMTACTION' => 'CancelOnFailure',
 					'L_BILLINGTYPE0'      => 'RecurringPayments',
@@ -639,7 +639,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				$subscription_id = $member->get_subscription_id();
 			}
 
-			$body['subscription'] = (array) rcp_get_subscription_details( $subscription_id );
+			$body['subscription']   = (array) rcp_get_subscription_details( $subscription_id );
+			$body['initial_amount'] = get_user_meta( $member->ID, 'rcp_pending_subscription_amount', true );
 
 			return $body;
 

@@ -1343,6 +1343,15 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
+								<label for="rcp_settings[one_time_discounts]"><?php _e( 'One Time Discounts', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[one_time_discounts]" id="rcp_settings[one_time_discounts]" <?php if( isset( $rcp_options['one_time_discounts'] ) ) checked('1', $rcp_options['one_time_discounts']); ?>/>
+								<span class="description"><?php _e( 'Check this to enable one time discounts. When this option is not enabled, discount codes will apply to all payments in a subscription instead of just the initial payment.', 'rcp' ); ?></span>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
 								<label for="rcp_settings[disable_toolbar]"><?php _e( 'Disable WordPress Toolbar', 'rcp' ); ?></label>
 							</th>
 							<td>

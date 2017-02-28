@@ -58,6 +58,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	 */
 	public function process_signup() {
 
+		global $rcp_options;
+
 		\Stripe\Stripe::setApiKey( $this->secret_key );
 
 		if ( method_exists( '\Stripe\Stripe', 'setAppInfo' ) ) {
@@ -164,17 +166,32 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			try {
 
 				// Add fees before the plan is updated and charged
-				if ( ! empty( $this->signup_fee ) ) {
 
-					$customer->account_balance = $customer->account_balance + ( $this->signup_fee * rcp_stripe_get_currency_multiplier() ); // Add additional amount to initial payment (in cents)
+				if( $this->initial_amount > $this->amount ) {
+					$save_balance   = true;
+					$amount         = $this->initial_amount - $this->amount;
+					$balance_amount = round( $customer->account_balance + ( $amount * rcp_stripe_get_currency_multiplier() ), 0 ); // Add additional amount to initial payment (in cents)
+				}
+
+				if( $this->initial_amount < $this->amount ) {
+					$save_balance   = true;
+					$amount         = $this->amount - $this->initial_amount;
+					$balance_amount = round( $customer->account_balance - ( $amount * rcp_stripe_get_currency_multiplier() ), 0 ); // Add additional amount to initial payment (in cents)
+				}
+
+				if ( ! empty( $save_balance ) ) {
+
+					$customer->account_balance = $balance_amount;
 					$customer->save();
 
-					if( isset( $temp_invoice ) ) {
-						$invoice = \Stripe\Invoice::retrieve( $temp_invoice->id );
-						$invoice->closed = true;
-						$invoice->save();
-						unset( $temp_invoice, $invoice );
-					}
+				}
+
+				// Remove the temporary invoice
+				if( isset( $temp_invoice ) ) {
+					$invoice = \Stripe\Invoice::retrieve( $temp_invoice->id );
+					$invoice->closed = true;
+					$invoice->save();
+					unset( $temp_invoice, $invoice );
 				}
 
 				// clean up any past due or unpaid subscriptions before upgrading/downgrading
@@ -202,7 +219,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					'prorate' => false
 				);
 
-				if ( ! empty( $this->discount_code ) ) {
+				if ( ! empty( $this->discount_code ) && ! isset( $rcp_options['one_time_discounts'] ) ) {
 
 					$sub_args['coupon'] = $this->discount_code;
 
@@ -265,7 +282,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			try {
 
 				$charge = \Stripe\Charge::create( apply_filters( 'rcp_stripe_charge_create_args', array(
-					'amount'         => round( ( $this->amount + $this->signup_fee ) * rcp_stripe_get_currency_multiplier(), 0 ), // amount in cents
+					'amount'         => round( ( $this->initial_amount ) * rcp_stripe_get_currency_multiplier(), 0 ), // amount in cents
 					'currency'       => strtolower( $this->currency ),
 					'customer'       => $customer->id,
 					'description'    => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
@@ -284,7 +301,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					'subscription'      => $this->subscription_name,
 					'payment_type' 		=> 'Credit Card One Time',
 					'subscription_key' 	=> $this->subscription_key,
-					'amount' 			=> $this->amount + $this->signup_fee,
+					'amount' 			=> $this->initial_amount,
 					'user_id' 			=> $this->user_id,
 					'transaction_id'    => $charge->id
 				);

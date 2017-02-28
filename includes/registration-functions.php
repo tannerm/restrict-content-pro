@@ -254,6 +254,7 @@ function rcp_process_registration() {
 
 		$subscription_data = array(
 			'price'               => rcp_get_registration()->get_total( true, false ), // get total without the fee
+			'recurring_price'     => rcp_get_registration()->get_recurring_total( true, false ), // get recurring total without the fee
 			'discount'            => rcp_get_registration()->get_total_discounts(),
 			'discount_code'       => $discount,
 			'fee'                 => rcp_get_registration()->get_total_fees(),
