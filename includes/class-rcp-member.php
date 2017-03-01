@@ -1090,7 +1090,7 @@ class RCP_Member extends WP_User {
 
 					case 'any' :
 
-						$ret = ! empty( $sub_id ) && ! $this->is_expired();
+						$ret = ! empty( $sub_id ) && in_array( rcp_get_status(), array( 'active', 'free', 'cancelled' ) );
 						break;
 
 					case 'any-paid' :
