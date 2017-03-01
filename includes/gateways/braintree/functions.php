@@ -105,7 +105,13 @@ function rcp_braintree_cancel_member( $member_id = 0 ) {
 		$result = Braintree_Subscription::cancel( $member->get_merchant_subscription_id() );
 
 		if ( ! $result->success ) {
-			if ( '81905' != $result->errors->forKey( 'subscription' )->onAttribute( 'status' ) ) {
+
+			$status = $result->errors->forKey( 'subscription' )->onAttribute( 'status' );
+
+			/**
+			 * Don't throw an exception if the subscription is already cancelled.
+			 */
+			if ( '81905' != $status[0]->code ) {
 				$ret = new WP_Error( 'rcp_braintree_error', $result->message );
 			}
 		}
