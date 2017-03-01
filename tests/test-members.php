@@ -346,6 +346,15 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 
 	}
 
+	function test_cannot_access_content_restricted_to_any_level_as_pending_member() {
+
+		$this->member->set_status( 'pending' );
+		delete_post_meta( $this->post_id, '_is_paid' );
+		update_post_meta( $this->post_id, 'rcp_subscription_level', 'any' );
+
+		$this->assertFalse( $this->member->can_access( $this->post_id ) );
+	}
+
 	function test_cannot_access_active_content_as_expired_member() {
 
 		$this->member->set_status( 'expired' );
