@@ -188,58 +188,12 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		if ( $this->auto_renew ) {
 
 			/**
-			 * Process signup fees as a separate payment.
+			 * Process signup fees and one-time discounts as a separate payment.
 			 */
-			if ( $this->signup_fee && $this->signup_fee > 0 && ! $this->is_trial() ) {
+			if ( $this->initial_amount != $this->amount ) {
 
 				try {
-					$signup_fee_payment = Braintree_Transaction::sale( array(
-						'amount'             => $this->signup_fee,
-						'customerId'         => $customer->id,
-						'paymentMethodToken' => $payment_token,
-						'options'            => array(
-							'submitForSettlement' => true
-						)
-					) );
-
-					if ( $signup_fee_payment->success ) {
-
-						$payment_data = array(
-							'subscription'     => $this->subscription_data['subscription_name'],
-							'date'             => date( 'Y-m-d g:i:s', time() ),
-							'amount'           => $signup_fee_payment->transaction->amount,
-							'user_id'          => $this->user_id,
-							'payment_type'     => __( 'Braintree Credit Card Signup Fee', 'rcp' ),
-							'subscription_key' => $this->subscription_data['key'],
-							'transaction_id'   => $signup_fee_payment->transaction->id
-						);
-						$rcp_payments = new RCP_Payments;
-						$rcp_payments->insert( $payment_data );
-
-
-					} else {
-						$this->handle_processing_error(
-							new Exception(
-								sprintf( __( 'There was a problem processing your payment. Message: %s', 'rcp' ), $signup_fee_payment->message )
-							)
-						);
-					}
-
-				} catch ( Exception $e ) {
-
-					$this->handle_processing_error( $e );
-
-				}
-
-			}
-
-			/**
-			 * Process one-time discounts as a separate payment.
-			 */
-			if ( ! empty( $this->discount_code ) && isset( $rcp_options['one_time_discounts'] ) ) {
-
-				try {
-					$one_time_discount_payment = Braintree_Transaction::sale( array(
+					$single_payment = Braintree_Transaction::sale( array(
 						'amount'             => $this->initial_amount,
 						'customerId'         => $customer->id,
 						'paymentMethodToken' => $payment_token,
@@ -248,16 +202,16 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 						)
 					) );
 
-					if ( $one_time_discount_payment->success ) {
+					if ( $single_payment->success ) {
 
 						$payment_data = array(
 							'subscription'     => $this->subscription_data['subscription_name'],
 							'date'             => date( 'Y-m-d g:i:s', time() ),
-							'amount'           => $one_time_discount_payment->transaction->amount,
+							'amount'           => $single_payment->transaction->amount,
 							'user_id'          => $this->user_id,
-							'payment_type'     => __( 'Braintree Credit Card One-Time Discount', 'rcp' ),
+							'payment_type'     => __( 'Braintree Credit Card Initial Payment', 'rcp' ),
 							'subscription_key' => $this->subscription_data['key'],
-							'transaction_id'   => $one_time_discount_payment->transaction->id
+							'transaction_id'   => $single_payment->transaction->id
 						);
 						$rcp_payments = new RCP_Payments;
 						$rcp_payments->insert( $payment_data );
@@ -266,7 +220,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 					} else {
 						$this->handle_processing_error(
 							new Exception(
-								sprintf( __( 'There was a problem processing your payment. Message: %s', 'rcp' ), $signup_fee_payment->message )
+								sprintf( __( 'There was a problem processing your payment. Message: %s', 'rcp' ), $single_payment->message )
 							)
 						);
 					}
@@ -276,8 +230,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 					$this->handle_processing_error( $e );
 
 				}
-			}
 
+			}
 
 			/**
 			 * Cancel existing subscription if the member just upgraded to another one.
