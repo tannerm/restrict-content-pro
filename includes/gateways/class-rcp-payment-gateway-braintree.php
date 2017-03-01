@@ -266,11 +266,11 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			$txn_args['paymentMethodToken'] = $payment_token;
 
 			/**
-			 * If this subscription is using a one-time discount code,
-			 * we need to start the subscription at the end of the first
-			 * period.
+			 * If this subscription is using a one-time discount code or
+			 * a signup fee, we need to start the subscription at the end
+			 * of the first period.
 			 */
-			if ( ! empty( $this->discount_code ) && isset( $rcp_options['one_time_discounts'] ) ) {
+			if ( $this->initial_amount != $this->amount ) {
 				$txn_args['firstBillingDate'] = date( 'Y-m-d g:i:s', strtotime( '+ ' . $this->subscription_data['length'] . ' ' . $this->subscription_data['length_unit'] ) );
 			}
 
@@ -390,7 +390,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * If this subscription used a one-time discount,
 			 * set the expiration date to the first billing date.
 			 */
-			} elseif ( ! empty( $this->discount_code ) && isset( $rcp_options['one_time_discounts'] ) ) {
+			} elseif ( $this->initial_amount != $this->amount ) {
 
 				$member->renew( true, 'active', $result->subscription->firstBillingDate->format( 'Y-m-d 23:59:59' ) );
 
@@ -577,7 +577,24 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * Subscriptions with trial periods will never trigger this notification.
 			 */
 			case 'subscription_went_active':
+
 				$member->renew( true, 'active', $data->subscription->paidThroughDate->format( 'Y-m-d g:i:s' ) );
+
+				if ( ! $rcp_payments->payment_exists( $transaction->id ) ) {
+
+					$payment_id = $rcp_payments->insert( array(
+						'date'             => date_i18n( $transaction->createdAt->format( 'Y-m-d g:i:s' ) ),
+						'payment_type'     => 'Braintree Credit Card',
+						'user_id'          => $member->ID,
+						'amount'           => $transaction->amount,
+						'transaction_id'   => $transaction->id,
+						'subscription'     => $member->get_subscription_name(),
+						'subscription_key' => $member->get_subscription_key()
+					) );
+
+					$member->add_note( sprintf( __( 'Subscription %s started in Braintree', 'rcp' ), $payment_id ) );
+				}
+
 				die( 'subscription went active' );
 				break;
 
