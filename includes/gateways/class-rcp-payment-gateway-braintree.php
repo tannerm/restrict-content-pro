@@ -566,7 +566,6 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * A subscription's trial period ends.
 			 */
 			case 'subscription_trial_ended':
-				//@todo verify this
 				$member->renew( $member->is_recurring(), '', $data->subscription->billingPeriodEndDate->format( 'Y-m-d g:i:s' ) );
 				$member->add_note( __( 'Trial ended in Braintree', 'rcp' ) );
 				die( 'subscription_trial_ended processed' );
