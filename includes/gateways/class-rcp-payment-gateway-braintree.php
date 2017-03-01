@@ -622,7 +622,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 		do_action( 'rcp_registration_failed', $this );
 
-		die( $exception->getMessage() );
+		wp_die( $exception->getMessage(), __( 'Error', 'rcp' ), array( 'response' => 401 ) );
 
 	}
 
