@@ -623,6 +623,94 @@ function rcp_settings_page() {
 							</td>
 						</tr>
 
+						<tr valign="top">
+							<th colspan=2>
+								<h3><?php _e('Braintree Settings', 'rcp'); ?></h3>
+							</th>
+						</tr>
+
+						<?php // Braintree Live Merchant ID ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[braintree_live_merchantId]"><?php _e( 'Live Merchant ID', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[braintree_live_merchantId]" style="width: 300px;" name="rcp_settings[braintree_live_merchantId]" value="<?php if(isset($rcp_options['braintree_live_merchantId'])) { echo esc_attr( $rcp_options['braintree_live_merchantId'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your Braintree live merchant ID.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // Braintree Live Public Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[braintree_live_publicKey]"><?php _e( 'Live Public Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[braintree_live_publicKey]" style="width: 300px;" name="rcp_settings[braintree_live_publicKey]" value="<?php if(isset($rcp_options['braintree_live_publicKey'])) { echo esc_attr( $rcp_options['braintree_live_publicKey'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your Braintree live public key.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // Braintree Live Private Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[braintree_live_privateKey]"><?php _e( 'Live Private Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[braintree_live_privateKey]" style="width: 300px;" name="rcp_settings[braintree_live_privateKey]" value="<?php if(isset($rcp_options['braintree_live_privateKey'])) { echo esc_attr( $rcp_options['braintree_live_privateKey'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your Braintree live private key.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // Braintree Live Encryption Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[braintree_live_encryptionKey]"><?php _e( 'Live Client Side Encryption Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<textarea class="regular-text" id="rcp_settings[braintree_live_encryptionKey]" style="width: 300px;height: 100px;" name="rcp_settings[braintree_live_encryptionKey]"/><?php if(isset($rcp_options['braintree_live_encryptionKey'])) { echo  esc_attr( $rcp_options['braintree_live_encryptionKey'] ); } ?></textarea>
+								<p class="description"><?php _e('Enter your Braintree live client side encryption key.', 'rcp'); ?></p>
+							</td>
+						</tr>
+
+						<?php // Braintree Sandbox Merchant ID ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[braintree_sandbox_merchantId]"><?php _e( 'Sandbox Merchant ID', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[braintree_sandbox_merchantId]" style="width: 300px;" name="rcp_settings[braintree_sandbox_merchantId]" value="<?php if(isset($rcp_options['braintree_sandbox_merchantId'])) { echo esc_attr( $rcp_options['braintree_sandbox_merchantId'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your Braintree sandbox merchant ID.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // Braintree Sandbox Public Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[braintree_sandbox_publicKey]"><?php _e( 'Sandbox Public Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[braintree_sandbox_publicKey]" style="width: 300px;" name="rcp_settings[braintree_sandbox_publicKey]" value="<?php if(isset($rcp_options['braintree_sandbox_publicKey'])) { echo esc_attr( $rcp_options['braintree_sandbox_publicKey'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your Braintree sandbox public key.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // Braintree Sandbox Private Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[braintree_sandbox_privateKey]"><?php _e( 'Sandbox Private Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input class="regular-text" id="rcp_settings[braintree_sandbox_privateKey]" style="width: 300px;" name="rcp_settings[braintree_sandbox_privateKey]" value="<?php if(isset($rcp_options['braintree_sandbox_privateKey'])) { echo esc_attr( $rcp_options['braintree_sandbox_privateKey'] ); } ?>"/>
+								<p class="description"><?php _e('Enter your Braintree sandbox private key.', 'rcp'); ?></p>
+							</td>
+						</tr>
+						<?php // Braintree Sandbox Encryption Key ?>
+						<tr>
+							<th>
+								<label for="rcp_settings[braintree_sandbox_encryptionKey]"><?php _e( 'Sandbox Client Side Encryption Key', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<textarea class="regular-text" id="rcp_settings[braintree_sandbox_encryptionKey]" style="width: 300px;height: 100px;" name="rcp_settings[braintree_sandbox_encryptionKey]"/><?php if ( isset( $rcp_options['braintree_sandbox_encryptionKey'] ) ) { echo esc_attr( $rcp_options['braintree_sandbox_encryptionKey'] ); } ?></textarea>
+								<p class="description"><?php _e('Enter your Braintree sandbox client side encryption key.', 'rcp'); ?></p>
+							</td>
+						</tr>
+
 					</table>
 					<?php do_action( 'rcp_payments_settings', $rcp_options ); ?>
 
