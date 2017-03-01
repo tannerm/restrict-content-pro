@@ -105,7 +105,9 @@ function rcp_braintree_cancel_member( $member_id = 0 ) {
 		$result = Braintree_Subscription::cancel( $member->get_merchant_subscription_id() );
 
 		if ( ! $result->success ) {
-			$ret = new WP_Error( 'rcp_braintree_error', $result->message );
+			if ( '81905' != $result->errors->forKey( 'subscription' )->onAttribute( 'status' ) ) {
+				$ret = new WP_Error( 'rcp_braintree_error', $result->message );
+			}
 		}
 
 	} catch ( Exception $e ) {
