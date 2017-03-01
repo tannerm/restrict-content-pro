@@ -20,8 +20,6 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 	 */
 	public function init() {
 
-		global $rcp_options;
-
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'fees';
 
@@ -59,7 +57,9 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 		);
 
 		$rcp_payments = new RCP_Payments();
-		$rcp_payments->insert( $payment_data );
+		$payment_id   = $rcp_payments->insert( $payment_data );
+
+		do_action( 'rcp_process_manual_signup', $member, $payment_id, $this );
 
 		wp_redirect( $this->return_url ); exit;
 

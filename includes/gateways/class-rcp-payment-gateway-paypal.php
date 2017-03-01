@@ -316,6 +316,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			}
 
+			$rcp_payments = new RCP_Payments();
+
 			// setup the payment info in an array for storage
 			$payment_data = array(
 				'date'             => ! empty( $posted['payment_date'] ) ? date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'], current_time( 'timestamp' ) ) ) : date( 'Y-m-d H:i:s', strtotime( 'now', current_time( 'timestamp' ) ) ),
@@ -332,7 +334,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			if( $posted['txn_type'] == 'web_accept' || $posted['txn_type'] == 'subscr_payment' ) {
 
 				// only check for an existing payment if this is a payment IPD request
-				if( rcp_check_for_existing_payment( $posted['txn_type'], $posted['payment_date'], $subscription_key ) ) {
+				if( ! empty( $posted['txn_id'] ) && $rcp_payments->payment_exists( $posted['txn_id'] ) ) {
 
 					$log_data = array(
 						'post_title'    => __( 'Duplicate Payment', 'rcp' ),
@@ -378,8 +380,6 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			}
 
 			/* now process the kind of subscription/payment */
-
-			$rcp_payments = new RCP_Payments();
 
 			// Subscriptions
 			switch ( $posted['txn_type'] ) :

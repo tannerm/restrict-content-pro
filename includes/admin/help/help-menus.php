@@ -37,6 +37,7 @@ function rcp_render_members_tab_content( $id ) {
 				<li>Activate / Deactivate the subscription of any registered user</li>
 				<li>Add new subscriptions to pre-existing users</li>
 			</ul>
+			<p>You can also enter a username or email address in the search box to locate a specific member. To search by first or last name, prefix your search with one of the following: <code>first_name:</code>, <code>last_name:</code></p>
 			<?php
 			break;
 		case 'adding_subs' :

@@ -137,7 +137,7 @@ function rcp_get_users_last_payment_amount( $user_id = 0 ) {
  * @access      private
  * @param       $expiration_object
  * @return      string
-*/
+ */
 function rcp_calc_member_expiration( $expiration_object ) {
 
 	$member_expires = 'none';
