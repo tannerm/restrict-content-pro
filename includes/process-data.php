@@ -500,6 +500,17 @@ function rcp_process_data() {
 			wp_safe_redirect( admin_url( add_query_arg( 'rcp_message', 'member_cancelled', 'admin.php?page=rcp-members' ) ) ); exit;
 		}
 
+		if( isset( $_GET['send_verification'] ) ) {
+
+			if( ! current_user_can( 'rcp_manage_members' ) ) {
+				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
+			}
+
+			rcp_send_email_verification( urldecode( absint( $_GET['send_verification'] ) ) );
+			wp_safe_redirect( admin_url( add_query_arg( 'rcp_message', 'verification_sent', 'admin.php?page=rcp-members' ) ) ); exit;
+
+		}
+
 		/* subscription processing */
 		if( isset( $_GET['delete_subscription'] ) && $_GET['delete_subscription'] > 0) {
 
