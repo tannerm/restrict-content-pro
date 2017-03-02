@@ -336,6 +336,75 @@ function rcp_email_payment_received( $payment_id, $args, $amount ) {
 add_action( 'rcp_insert_payment', 'rcp_email_payment_received', 10, 3 );
 
 /**
+ * Emails a member when a renewal payment fails.
+ *
+ * @since 2.7
+ * @param object $member  The member (RCP_Member object).
+ * @param object $gateway The gateway used to process the renewal.
+ * @return void
+ */
+function rcp_email_member_on_renewal_payment_failure( RCP_Member $member, RCP_Payment_Gateway $gateway ) {
+
+	global $rcp_options;
+
+	if ( ! empty( $rcp_options['disable_renewal_payment_failed_email'] ) ) {
+		return;
+	}
+
+	$status = $member->get_status();
+
+	$message = isset( $rcp_options['renewal_payment_failed_email'] ) ? $rcp_options['renewal_payment_failed_email'] : '';
+	$message = apply_filters( 'rcp_subscription_renewal_payment_failed_email', $message, $member->ID, $status );
+
+	$subject = isset( $rcp_options['renewal_payment_failed_subject'] ) ? $rcp_options['renewal_payment_failed_subject'] : '';
+	$subject = apply_filters( 'rcp_subscription_renewal_payment_failed_subject', $subject, $member->ID, $status );
+
+	$emails = new RCP_Emails;
+	$emails->member_id = $member->ID;
+
+	$emails->send( $member->user_email, $subject, $message );
+}
+add_action( 'rcp_recurring_payment_failed', 'rcp_email_member_on_renewal_payment_failure', 10, 2 );
+
+/**
+ * Email the site admin when a new manual payment is received.
+ *
+ * @param RCP_Member                 $member
+ * @param int                        $payment_id
+ * @param RCP_Payment_Gateway_Manual $gateway
+ *
+ * @since  2.7.3
+ * @return void
+ */
+function rcp_email_admin_on_manual_payment( $member, $payment_id, $gateway ) {
+
+	global $rcp_options;
+
+	if ( isset( $rcp_options['disable_new_user_notices'] ) ) {
+		return;
+	}
+
+	$admin_emails   = array();
+	$admin_emails[] = get_option( 'admin_email' );
+	$admin_emails   = apply_filters( 'rcp_admin_notice_emails', $admin_emails );
+
+	$emails             = new RCP_Emails;
+	$emails->member_id  = $member->ID;
+	$emails->payment_id = $payment_id;
+
+	$site_name = stripslashes_deep( html_entity_decode( get_bloginfo( 'name' ), ENT_COMPAT, 'UTF-8' ) );
+
+	$admin_message = __( 'Hello', 'rcp' ) . "\n\n" . $member->display_name . ' (' . $member->user_login . ') ' . __( 'just submitted a manual payment on', 'rcp' ) . ' ' . $site_name . ".\n\n" . __( 'Subscription level', 'rcp' ) . ': ' . $member->get_subscription_name() . "\n\n";
+	$admin_message = apply_filters( 'rcp_before_admin_email_manual_payment_thanks', $admin_message, $member->ID );
+	$admin_message .= __( 'Thank you', 'rcp' );
+	$admin_subject = sprintf( __( 'New manual payment on %s', 'rcp' ), $site_name );
+
+	$emails->send( $admin_emails, $admin_subject, $admin_message );
+
+}
+add_action( 'rcp_process_manual_signup', 'rcp_email_admin_on_manual_payment', 10, 3 );
+
+/**
  * Get a list of available email templates
  *
  * @since 2.7
@@ -551,75 +620,6 @@ function rcp_email_tag_amount( $member_id = 0, $payment_id = 0 ) {
 function rcp_email_tag_site_name() {
 	return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 }
-
-/**
- * Emails a member when a renewal payment fails.
- *
- * @since 2.7
- * @param object $member  The member (RCP_Member object).
- * @param object $gateway The gateway used to process the renewal.
- * @return void
- */
-function rcp_email_member_on_renewal_payment_failure( RCP_Member $member, RCP_Payment_Gateway $gateway ) {
-
-	global $rcp_options;
-
-	if ( ! empty( $rcp_options['disable_renewal_payment_failed_email'] ) ) {
-		return;
-	}
-
-	$status = $member->get_status();
-
-	$message = isset( $rcp_options['renewal_payment_failed_email'] ) ? $rcp_options['renewal_payment_failed_email'] : '';
-	$message = apply_filters( 'rcp_subscription_renewal_payment_failed_email', $message, $member->ID, $status );
-
-	$subject = isset( $rcp_options['renewal_payment_failed_subject'] ) ? $rcp_options['renewal_payment_failed_subject'] : '';
-	$subject = apply_filters( 'rcp_subscription_renewal_payment_failed_subject', $subject, $member->ID, $status );
-
-	$emails = new RCP_Emails;
-	$emails->member_id = $member->ID;
-
-	$emails->send( $member->user_email, $subject, $message );
-}
-add_action( 'rcp_recurring_payment_failed', 'rcp_email_member_on_renewal_payment_failure', 10, 2 );
-
-/**
- * Email the site admin when a new manual payment is received.
- *
- * @param RCP_Member                 $member
- * @param int                        $payment_id
- * @param RCP_Payment_Gateway_Manual $gateway
- *
- * @since  2.7.3
- * @return void
- */
-function rcp_email_admin_on_manual_payment( $member, $payment_id, $gateway ) {
-
-	global $rcp_options;
-
-	if ( isset( $rcp_options['disable_new_user_notices'] ) ) {
-		return;
-	}
-
-	$admin_emails   = array();
-	$admin_emails[] = get_option( 'admin_email' );
-	$admin_emails   = apply_filters( 'rcp_admin_notice_emails', $admin_emails );
-
-	$emails             = new RCP_Emails;
-	$emails->member_id  = $member->ID;
-	$emails->payment_id = $payment_id;
-
-	$site_name = stripslashes_deep( html_entity_decode( get_bloginfo( 'name' ), ENT_COMPAT, 'UTF-8' ) );
-
-	$admin_message = __( 'Hello', 'rcp' ) . "\n\n" . $member->display_name . ' (' . $member->user_login . ') ' . __( 'just submitted a manual payment on', 'rcp' ) . ' ' . $site_name . ".\n\n" . __( 'Subscription level', 'rcp' ) . ': ' . $member->get_subscription_name() . "\n\n";
-	$admin_message = apply_filters( 'rcp_before_admin_email_manual_payment_thanks', $admin_message, $member->ID );
-	$admin_message .= __( 'Thank you', 'rcp' );
-	$admin_subject = sprintf( __( 'New manual payment on %s', 'rcp' ), $site_name );
-
-	$emails->send( $admin_emails, $admin_subject, $admin_message );
-
-}
-add_action( 'rcp_process_manual_signup', 'rcp_email_admin_on_manual_payment', 10, 3 );
 
 /**
  * Disable the mandrill_nl2br filter while sending RCP emails
