@@ -904,7 +904,7 @@ function rcp_process_profile_editor_updates() {
 		if( $updated ) {
 			do_action( 'rcp_user_profile_updated', $user_id, $userdata, $old_data );
 
-			wp_safe_redirect( add_query_arg( 'updated', 'true', sanitize_text_field( $_POST['rcp_redirect'] ) ) );
+			wp_safe_redirect( add_query_arg( 'rcp-message', 'profile-updated', sanitize_text_field( $_POST['rcp_redirect'] ) ) );
 
 			exit;
 		} else {

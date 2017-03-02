@@ -23,11 +23,8 @@ if ( is_user_logged_in() ):
 	$last_name    = get_user_meta( $user_id, 'last_name', true );
 	$display_name = $current_user->display_name;
 
-	if ( isset( $_GET['updated'] ) && $_GET['updated'] == 'true' ): ?>
-		<p class="rcp_success"><span><strong><?php _e( 'Success', 'rcp'); ?>:</strong> <?php _e( 'Your profile has been updated.', 'rcp' ); ?></span></p>
-	<?php endif; ?>
-
-	<?php rcp_show_error_messages(); ?>
+	do_action( 'rcp_profile_editor_messages', $current_user );
+	rcp_show_error_messages(); ?>
 	<form id="rcp_profile_editor_form" class="rcp_form" action="<?php echo rcp_get_current_url(); ?>" method="post">
 		<fieldset>
 			<?php do_action( 'rcp_profile_editor_before', $current_user->ID ); ?>

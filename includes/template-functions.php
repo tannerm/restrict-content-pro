@@ -165,3 +165,43 @@ function rcp_post_classes( $classes, $class = '', $post_id = false ) {
 }
 
 add_filter( 'post_class', 'rcp_post_classes', 10, 3 );
+
+/**
+ * Print notices on the Edit Profile page
+ *
+ * @param WP_User $current_user Currently logged in user.
+ *
+ * @since  2.8.2
+ * @return void
+ */
+function rcp_profile_editor_notices( $current_user ) {
+
+	if( ! isset( $_GET['rcp-message'] ) ) {
+		return;
+	}
+
+	$message = '';
+	$type    = 'success';
+	$notice  = $_GET['rcp-message'];
+
+	switch( $notice ) {
+
+		case 'email-verified' :
+			$message = __( 'Your email address has been successfully verified.', 'rcp' );
+			break;
+
+		case 'profile-updated' :
+			$message = __( 'Your profile has been updated successfully.', 'rcp' );
+			break;
+
+	}
+
+	if( empty( $message ) ) {
+		return;
+	}
+
+	$class = ( 'success' == $type ) ? 'rcp_success' : 'rcp_error';
+	printf( '<p class="%s"><span>%s</span></p>', $class, esc_html( $message ) );
+
+}
+add_action( 'rcp_profile_editor_messages', 'rcp_profile_editor_notices' );
