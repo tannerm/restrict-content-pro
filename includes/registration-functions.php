@@ -315,7 +315,6 @@ function rcp_process_registration() {
 
 			// set the user's status to free
 			$member->set_status( 'free' );
-			rcp_email_subscription_status( $user_data['id'], 'free' );
 
 		}
 

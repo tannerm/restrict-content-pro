@@ -256,6 +256,23 @@ function rcp_email_on_free_trial( $status, $user_id ) {
 add_action( 'rcp_set_status', 'rcp_email_on_free_trial', 11, 2 );
 
 /**
+ * Triggers the free notice when an account is marked as free.
+ *
+ * @param int        $user_id    ID of the user to email.
+ * @param string     $old_status Previous status before the update.
+ * @param RCP_Member $member     Member object.
+ *
+ * @since  2.7.4
+ * @return void
+ */
+function rcp_email_on_free_subscription( $user_id, $old_status, $member ) {
+
+	rcp_email_subscription_status( $user_id, 'free' );
+
+}
+add_action( 'rcp_set_status_free', 'rcp_email_on_free_subscription', 11, 3 );
+
+/**
  * Triggers the cancellation notice when an account is marked as cancelled.
  *
  * @param string $status  User's status.
