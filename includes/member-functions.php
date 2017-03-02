@@ -1313,3 +1313,109 @@ function rcp_update_expired_member_role( $status, $member_id, $old_status, $memb
 	}
 }
 add_action( 'rcp_set_status', 'rcp_update_expired_member_role', 10, 4 );
+
+/**
+ * Determines if a member is pending email verification.
+ *
+ * @param int $user_id ID of the user to check.
+ *
+ * @return bool
+ */
+function rcp_is_pending_verification( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$member = new RCP_Member( $user_id );
+
+	return $member->is_pending_verification();
+
+}
+
+/**
+ * Disallow access to restricted content if the user is pending email verification.
+ *
+ * @param bool       $can_access Whether or not the user can access the post.
+ * @param int        $user_id    ID of the user being checked.
+ * @param int        $post_id    ID of the post being checked.
+ * @param RCP_Member $member     Member object.
+ *
+ * @return bool
+ */
+function rcp_disallow_access_pending_verification( $can_access, $user_id, $post_id, $member ) {
+
+	if ( rcp_is_restricted_content( $post_id ) && $member->is_pending_verification() ) {
+		return false;
+	}
+
+	return $can_access;
+
+}
+add_filter( 'rcp_member_can_access', 'rcp_disallow_access_pending_verification', 10, 4 );
+
+/**
+ * Generate email verification link for a user
+ *
+ * @param int $user_id ID of the user to create the link for.
+ *
+ * @return string|false Verification link on success, false on failure.
+ */
+function rcp_generate_verification_link( $user_id ) {
+
+	if ( ! $user = get_user_by( 'id', $user_id ) ) {
+		return false;
+	}
+
+	// The user should already be pending.
+	if ( ! rcp_is_pending_verification( $user_id ) ) {
+		return false;
+	}
+
+	$verify_link = add_query_arg( array(
+		'rcp-verify-key' => urlencode( $user->user_pass ),
+		'rcp-user'       => urlencode( $user->user_email )
+	), trailingslashit( home_url() ) );
+
+	return apply_filters( 'rcp_email_verification_link', $verify_link, $user );
+
+}
+
+/**
+ * Confirm email verification and redirect to Edit Profile page
+ *
+ * @return void
+ */
+function rcp_confirm_email_verification() {
+
+	if ( empty( $_GET['rcp-verify-key'] ) || empty( $_GET['rcp-user'] ) ) {
+		return;
+	}
+
+	if ( ! $user = get_user_by( 'email', rawurldecode( $_GET['rcp-user'] ) ) ) {
+		return;
+	}
+
+	if ( rawurldecode( $_GET['rcp-verify-key'] ) != $user->user_pass ) {
+		return;
+	}
+
+	if ( ! rcp_is_pending_verification( $user->ID ) ) {
+		return;
+	}
+
+	$member = new RCP_Member( $user->ID );
+	$member->verify_email();
+
+	global $rcp_options;
+
+	$edit_profile_page = $rcp_options['edit_profile'];
+	if ( ! $redirect = add_query_arg( array( 'rcp-message' => 'email-verified' ), get_post_permalink( $edit_profile_page ) ) ) {
+		return;
+	}
+
+	wp_safe_redirect( $redirect );
+	exit;
+
+}
+add_action( 'template_redirect', 'rcp_confirm_email_verification' );

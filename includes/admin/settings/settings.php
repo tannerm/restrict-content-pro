@@ -1166,6 +1166,20 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
+								<label for="rcp_settings[email_verification]"><?php _e( 'Email Verification', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<?php $verify = isset( $rcp_options['email_verification'] ) ? $rcp_options['email_verification'] : 'off'; ?>
+								<select id="rcp_settings[email_verification]" name="rcp_settings[email_verification]">
+									<option value="off" <?php selected( $verify, 'off' ); ?>><?php _e( 'Off', 'rcp' ); ?></option>
+									<option value="free" <?php selected( $verify, 'free' ); ?>><?php _e( 'On for free registrations', 'rcp' ); ?></option>
+									<option value="all" <?php selected( $verify, 'all' ); ?>><?php _e( 'On for all registrations', 'rcp' ); ?></option>
+								</select>
+								<p class="description"><?php _e( 'Require that new members verify their email address before gaining access to restricted content.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
 								<label for="rcp_settings[no_login_sharing]"><?php _e( 'Prevent Account Sharing', 'rcp' ); ?></label>
 							</th>
 							<td>

@@ -935,3 +935,44 @@ function rcp_remove_expiring_soon_email_sent_flag( $status, $user_id ) {
 	delete_user_meta( $user_id, '_rcp_expiring_soon_email_sent' );
 }
 add_action( 'rcp_set_status', 'rcp_remove_expiring_soon_email_sent_flag', 10, 2 );
+
+/**
+ * Trigger email verification during registration.
+ *
+ * @uses rcp_send_email_verification()
+ *
+ * @param array $posted  Posted form data.
+ * @param int   $user_id ID of the user making this registration.
+ * @param float $price   Price of the subscription level.
+ *
+ * @return void
+ */
+function rcp_set_email_verification_flag( $posted, $user_id, $price ) {
+
+	global $rcp_options;
+
+	$require_verification = isset( $rcp_options['email_verification'] ) ? $rcp_options['email_verification'] : 'off';
+
+	// Verification not required.
+	if( ! in_array( $require_verification, array( 'free', 'all' ) ) ) {
+		return;
+	}
+
+	// Email verification already completed.
+	if( get_user_meta( $user_id, 'rcp_email_verified', true ) ) {
+		return;
+	}
+
+	// Bail if this is a paid registration and email verification is required for free only.
+	if( $price > 0 && 'free' == $require_verification ) {
+		return;
+	}
+
+	// Add meta flag to indicate they're pending email verification.
+	update_user_meta( $user_id, 'rcp_pending_email_verification', true );
+
+	// Send email.
+	rcp_send_email_verification( $user_id );
+
+}
+add_action( 'rcp_form_processing', 'rcp_set_email_verification_flag', 10, 3 );

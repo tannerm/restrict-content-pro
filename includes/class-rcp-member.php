@@ -1055,6 +1055,37 @@ class RCP_Member extends WP_User {
 	}
 
 	/**
+	 * Determines if a member is pending email verification.
+	 *
+	 * @access public
+	 * @return bool
+	 */
+	public function is_pending_verification() {
+
+		$is_pending = get_user_meta( $this->ID, 'rcp_pending_email_verification', true );
+
+		return (bool) apply_filters( 'rcp_is_pending_email_verification', $is_pending, $this->ID, $this );
+
+	}
+
+	/**
+	 * Confirm email verification
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function verify_email() {
+
+		do_action( 'rcp_member_pre_verify_email', $this->ID, $this );
+
+		delete_user_meta( $this->ID, 'rcp_pending_email_verification' );
+		update_user_meta( $this->ID, 'rcp_email_verified', true );
+
+		do_action( 'rcp_member_post_verify_email', $this->ID, $this );
+
+	}
+
+	/**
 	 * Determines if the member can access specified content
 	 *
 	 * @param   int $post_id ID of the post to check the permissions on.

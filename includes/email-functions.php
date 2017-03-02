@@ -319,6 +319,38 @@ function rcp_email_payment_received( $payment_id, $args, $amount ) {
 add_action( 'rcp_insert_payment', 'rcp_email_payment_received', 10, 3 );
 
 /**
+ * Send email verification message
+ *
+ * @see rcp_trigger_email_verification()
+ *
+ * @param int $user_id
+ *
+ * @return void
+ */
+function rcp_send_email_verification( $user_id ) {
+
+	global $rcp_options;
+
+	$emails = new RCP_Emails;
+	$emails->member_id = $user_id;
+
+	// @todo add to settings?
+	$message = isset( $rcp_options['verification_email'] ) ? $rcp_options['verification_email'] : '';
+	$message = apply_filters( 'rcp_verification_email', $message, $user_id );
+	$subject = isset( $rcp_options['verification_subject'] ) ? $rcp_options['verification_subject'] : __( 'Please confirm your email address', 'rcp' );
+	$subject = apply_filters( 'rcp_verification_subject', $subject, $user_id );
+
+	// @todo remove
+	$message = sprintf( __( 'Click here to confirm your email address: %s', 'rcp' ), esc_url( rcp_generate_verification_link( $user_id ) ) );
+
+	if( ! empty( $message ) && ! empty( $subject ) ) {
+		$user_info = get_userdata( $user_id );
+		$emails->send( $user_info->user_email, $subject, $message );
+	}
+
+}
+
+/**
  * Get a list of available email templates
  *
  * @since 2.7
