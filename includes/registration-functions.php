@@ -969,7 +969,7 @@ function rcp_set_email_verification_flag( $posted, $user_id, $price ) {
 	}
 
 	// Add meta flag to indicate they're pending email verification.
-	update_user_meta( $user_id, 'rcp_pending_email_verification', true );
+	update_user_meta( $user_id, 'rcp_pending_email_verification', strtolower( md5( uniqid() ) ) );
 
 	// Send email.
 	rcp_send_email_verification( $user_id );

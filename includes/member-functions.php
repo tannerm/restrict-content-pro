@@ -1373,7 +1373,7 @@ function rcp_generate_verification_link( $user_id ) {
 	}
 
 	$verify_link = add_query_arg( array(
-		'rcp-verify-key' => urlencode( $user->user_pass ),
+		'rcp-verify-key' => urlencode( get_user_meta( $user_id, 'rcp_pending_email_verification', true ) ),
 		'rcp-user'       => urlencode( $user->user_email )
 	), trailingslashit( home_url() ) );
 
@@ -1396,11 +1396,11 @@ function rcp_confirm_email_verification() {
 		return;
 	}
 
-	if ( rawurldecode( $_GET['rcp-verify-key'] ) != $user->user_pass ) {
+	if ( ! rcp_is_pending_verification( $user->ID ) ) {
 		return;
 	}
 
-	if ( ! rcp_is_pending_verification( $user->ID ) ) {
+	if ( rawurldecode( $_GET['rcp-verify-key'] ) != get_user_meta( $user->ID, 'rcp_pending_email_verification', true ) ) {
 		return;
 	}
 
