@@ -28,6 +28,7 @@ class RCP_Payment_Gateway {
 	public $return_url;
 	public $test_mode;
 	public $subscription_data;
+	public $webhook_event_id;
 
 	public function __construct( $subscription_data = array() ) {
 

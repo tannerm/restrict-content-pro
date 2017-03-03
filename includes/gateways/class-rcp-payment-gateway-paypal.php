@@ -450,6 +450,15 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 				case "subscr_failed" :
 
+					if ( ! empty( $posted['txn_id'] ) ) {
+
+						$this->webhook_event_id = sanitize_text_field( $posted['txn_id'] );
+
+					} elseif ( ! empty( $posted['ipn_track_id'] ) ) {
+
+						$this->webhook_event_id = sanitize_text_field( $posted['ipn_track_id'] );
+					}
+
 					do_action( 'rcp_recurring_payment_failed', $member, $this );
 					do_action( 'rcp_ipn_subscr_failed' );
 
