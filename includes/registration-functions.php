@@ -952,19 +952,20 @@ function rcp_set_email_verification_flag( $posted, $user_id, $price ) {
 	global $rcp_options;
 
 	$require_verification = isset( $rcp_options['email_verification'] ) ? $rcp_options['email_verification'] : 'off';
+	$required             = in_array( $require_verification, array( 'free', 'all' ) );
 
-	// Verification not required.
-	if( ! in_array( $require_verification, array( 'free', 'all' ) ) ) {
+	// Not required if this is a paid registration and email verification is required for free only.
+	if( $price > 0 && 'free' == $require_verification ) {
+		$required = false;
+	}
+
+	// Bail if verification not required.
+	if( ! apply_filters( 'rcp_require_email_verification', $required, $posted, $user_id, $price ) ) {
 		return;
 	}
 
 	// Email verification already completed.
 	if( get_user_meta( $user_id, 'rcp_email_verified', true ) ) {
-		return;
-	}
-
-	// Bail if this is a paid registration and email verification is required for free only.
-	if( $price > 0 && 'free' == $require_verification ) {
 		return;
 	}
 
