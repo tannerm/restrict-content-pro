@@ -226,6 +226,28 @@ function rcp_restricted_message_filter( $message ) {
 add_filter( 'rcp_restricted_message', 'rcp_restricted_message_filter', 10, 1 );
 
 /**
+ * Display pending email verification message when trying to access restricted content
+ *
+ * @param string $message
+ *
+ * @return string
+ */
+function rcp_restricted_message_pending_verification( $message ) {
+
+	global $rcp_load_css;
+
+	$rcp_load_css = true;
+
+	if( rcp_is_pending_verification() ) {
+		$message = '<div class="rcp_message error"><p class="rcp_error rcp_pending_member">' . __( 'Your account is pending email verification.', 'rcp' ) . '</p></div>';
+	}
+
+	return $message;
+
+}
+add_filter( 'rcp_restricted_message', 'rcp_restricted_message_pending_verification', 9999 );
+
+/**
  * Spoof password required during REST API requests in order to hide comments
  * associated with restricted posts.
  *
