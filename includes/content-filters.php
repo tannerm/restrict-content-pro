@@ -239,7 +239,7 @@ function rcp_restricted_message_pending_verification( $message ) {
 	$rcp_load_css = true;
 
 	if( rcp_is_pending_verification() ) {
-		$message = '<div class="rcp_message error"><p class="rcp_error rcp_pending_member">' . __( 'Your account is pending email verification.', 'rcp' ) . '</p></div>';
+		$message = '<div class="rcp_message error"><p class="rcp_error rcp_pending_member"><span>' . __( 'Your account is pending email verification.', 'rcp' ) . '</span></p></div>';
 	}
 
 	return $message;

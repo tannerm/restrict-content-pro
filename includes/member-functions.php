@@ -1359,6 +1359,7 @@ add_filter( 'rcp_member_can_access', 'rcp_disallow_access_pending_verification',
  *
  * @param int $user_id ID of the user to create the link for.
  *
+ * @since  2.8.2
  * @return string|false Verification link on success, false on failure.
  */
 function rcp_generate_verification_link( $user_id ) {
@@ -1384,6 +1385,7 @@ function rcp_generate_verification_link( $user_id ) {
 /**
  * Confirm email verification and redirect to Edit Profile page
  *
+ * @since  2.8.2
  * @return void
  */
 function rcp_confirm_email_verification() {
@@ -1419,3 +1421,44 @@ function rcp_confirm_email_verification() {
 
 }
 add_action( 'template_redirect', 'rcp_confirm_email_verification' );
+
+/**
+ * Process re-send verification email from the Edit Profile page
+ *
+ * @since  2.8.2
+ * @return void
+ */
+function rcp_resend_email_verification() {
+
+	// Profile field change request
+	if ( empty( $_GET['rcp_action'] ) || $_GET['rcp_action'] !== 'resend_verification' || ! is_user_logged_in() ) {
+		return;
+	}
+
+	// Nonce security
+	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'rcp-verification-nonce' ) ) {
+		return;
+	}
+
+	$member = new RCP_Member( get_current_user_id() );
+
+	// Not pending verification.
+	if ( ! $member->is_pending_verification() ) {
+		return;
+	}
+
+	rcp_send_email_verification( $member->ID );
+
+	// Redirect back to Edit Profile page with success message.
+	global $rcp_options;
+
+	$edit_profile_page = $rcp_options['edit_profile'];
+	if ( ! $redirect = add_query_arg( array( 'rcp-message' => 'verification-resent' ), get_post_permalink( $edit_profile_page ) ) ) {
+		return;
+	}
+
+	wp_safe_redirect( $redirect );
+	exit;
+
+}
+add_action( 'init', 'rcp_resend_email_verification' );

@@ -190,6 +190,10 @@ function rcp_profile_editor_notices( $current_user ) {
 			$message = __( 'Your email address has been successfully verified.', 'rcp' );
 			break;
 
+		case 'verification-resent' :
+			$message = __( 'Your verification email has been re-sent successfully.', 'rcp' );
+			break;
+
 		case 'profile-updated' :
 			$message = __( 'Your profile has been updated successfully.', 'rcp' );
 			break;
@@ -205,3 +209,25 @@ function rcp_profile_editor_notices( $current_user ) {
 
 }
 add_action( 'rcp_profile_editor_messages', 'rcp_profile_editor_notices' );
+
+/**
+ * Display message on the Edit Profile page if the account is pending email verification.
+ * Also includes a link to re-send the verification email.
+ *
+ * @param WP_User $current_user
+ *
+ * @since  2.8.2
+ * @return void
+ */
+function rcp_profile_editor_pending_verification_notice( $current_user ) {
+
+	$member = new RCP_Member( $current_user->ID );
+
+	if ( ! $member->is_pending_verification() ) {
+		return;
+	}
+
+	printf( '<p class="rcp_error"><span>' . __( 'Your account is pending email verification. <a href="%s">Click here to re-send the verification email.</a>', 'rcp' ) . '</span></p>', esc_url( wp_nonce_url( add_query_arg( 'rcp_action', 'resend_verification', rcp_get_current_url() ), 'rcp-verification-nonce' ) ) );
+
+}
+add_action( 'rcp_profile_editor_messages', 'rcp_profile_editor_pending_verification_notice' );
