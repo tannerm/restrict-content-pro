@@ -138,7 +138,7 @@ function rcp_process_data() {
 
 				update_user_meta( $user->ID, 'rcp_signup_method', 'manual' );
 
-				update_user_meta( $user->ID, 'rcp_subscription_level', $level_id );
+				$member->set_subscription_id( $level_id );
 
 				$status = $subscription->price == 0 ? 'free' : 'active';
 
@@ -258,7 +258,7 @@ function rcp_process_data() {
 
 				if( $current_id != $level_id ) {
 
-					update_user_meta( $user_id, 'rcp_subscription_level', $level_id );
+					$member->set_subscription_id( $level_id );
 
 					// Remove the old user role
 					$role = ! empty( $old_level->role ) ? $old_level->role : 'subscriber';

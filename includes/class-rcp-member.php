@@ -808,6 +808,25 @@ class RCP_Member extends WP_User {
 	}
 
 	/**
+	 * Set member's subscription ID
+	 *
+	 * @param int $subscription_id ID of the subscription level to set.
+	 *
+	 * @access public
+	 * @since  2.7.4
+	 * @return void
+	 */
+	public function set_subscription_id( $subscription_id ) {
+
+		do_action( 'rcp_member_pre_set_subscription_id', $subscription_id, $this->ID, $this );
+
+		update_user_meta( $this->ID, 'rcp_subscription_level', $subscription_id );
+
+		do_action( 'rcp_member_post_set_subscription_id', $subscription_id, $this->ID, $this );
+
+	}
+
+	/**
 	 * Retrieves the pending subscription ID of the member
 	 *
 	 * @access  public
@@ -832,6 +851,29 @@ class RCP_Member extends WP_User {
 		$subscription_key = get_user_meta( $this->ID, 'rcp_subscription_key', true );
 
 		return apply_filters( 'rcp_member_get_subscription_key', $subscription_key, $this->ID, $this );
+
+	}
+
+	/**
+	 * Set member's subscription key
+	 *
+	 * @param string $subscription_key Key to set. Automatically generated if omitted.
+	 *
+	 * @access public
+	 * @since  2.7.4
+	 * @return void
+	 */
+	public function set_subscription_key( $subscription_key = '' ) {
+
+		if( empty( $subscription_key ) ) {
+			$subscription_key = rcp_generate_subscription_key();
+		}
+
+		do_action( 'rcp_member_pre_set_subscription_key', $subscription_key, $this->ID, $this );
+
+		update_user_meta( $this->ID, 'rcp_subscription_key', $subscription_key );
+
+		do_action( 'rcp_member_post_set_subscription_key', $subscription_key, $this->ID, $this );
 
 	}
 
@@ -1107,7 +1149,7 @@ class RCP_Member extends WP_User {
 
 					case 'any' :
 
-						$ret = ! empty( $sub_id ) && ! $this->is_expired();
+						$ret = ! empty( $sub_id ) && ! $this->is_expired() && in_array( rcp_get_status(), array( 'active', 'free', 'cancelled' ) );
 						break;
 
 					case 'any-paid' :

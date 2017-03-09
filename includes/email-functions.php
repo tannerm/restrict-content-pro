@@ -216,6 +216,8 @@ function rcp_email_expiring_notice( $user_id = 0 ) {
 	global $rcp_options;
 	$user_info = get_userdata( $user_id );
 	$message   = ! empty( $rcp_options['renew_notice_email'] ) ? $rcp_options['renew_notice_email'] : false;
+	$message   = apply_filters( 'rcp_expiring_soon_email', $message, $user_id );
+	$subject   = apply_filters( 'rcp_expiring_soon_subject', $rcp_options['renewal_subject'], $user_id );
 
 	if( ! $message ) {
 		return;
@@ -223,7 +225,7 @@ function rcp_email_expiring_notice( $user_id = 0 ) {
 
 	$emails = new RCP_Emails;
 	$emails->member_id = $user_id;
-	$emails->send( $user_info->user_email, $rcp_options['renewal_subject'], $message );
+	$emails->send( $user_info->user_email, $subject, $message );
 
 }
 

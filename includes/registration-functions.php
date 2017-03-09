@@ -170,8 +170,8 @@ function rcp_process_registration() {
 
 	if( ! $member->is_active() ) {
 
-		update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
-		update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
+		$member->set_subscription_id( $subscription_id );
+		$member->set_subscription_key( $subscription_key );
 
 		// Ensure no pending level details are set
 		delete_user_meta( $user_data['id'], 'rcp_pending_subscription_level' );
@@ -191,6 +191,9 @@ function rcp_process_registration() {
 	}
 
 	$member->set_joined_date( '', $subscription_id );
+
+	// Delete pending expiration date in case a previous registration was never completed.
+	delete_user_meta( $user_data['id'], 'rcp_pending_expiration_date' );
 
 	// Calculate the expiration date for the member
 	$member_expires = $member->calculate_expiration( $auto_renew, $trial_duration );
@@ -304,8 +307,8 @@ function rcp_process_registration() {
 
 		} else {
 
-			update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
-			update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
+			$member->set_subscription_id( $subscription_id );
+			$member->set_subscription_key( $subscription_key );
 
 			// Ensure no pending level details are set
 			delete_user_meta( $user_data['id'], 'rcp_pending_subscription_level' );
@@ -574,8 +577,8 @@ function rcp_set_pending_subscription_on_upgrade( $status, $user_id, $old_status
 
 	if( ! empty( $subscription_id ) && ! empty( $subscription_key ) ) {
 
-		update_user_meta( $user_id, 'rcp_subscription_level', $subscription_id );
-		update_user_meta( $user_id, 'rcp_subscription_key', $subscription_key );
+		$member->set_subscription_id( $subscription_id );
+		$member->set_subscription_key( $subscription_key );
 
 		delete_user_meta( $user_id, 'rcp_pending_subscription_level' );
 		delete_user_meta( $user_id, 'rcp_pending_subscription_key' );

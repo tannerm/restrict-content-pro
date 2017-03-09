@@ -224,3 +224,23 @@ function rcp_restricted_message_filter( $message ) {
 	return do_shortcode( wpautop( $message ) );
 }
 add_filter( 'rcp_restricted_message', 'rcp_restricted_message_filter', 10, 1 );
+
+/**
+ * Spoof password required during REST API requests in order to hide comments
+ * associated with restricted posts.
+ *
+ * @param bool    $required Whether or not the post requires a password.
+ * @param WP_Post $post     The post being checked.
+ *
+ * @since  2.7.4
+ * @return bool
+ */
+function rcp_post_password_required_rest_api( $required, $post ) {
+	if( DEFINED( 'REST_REQUEST' ) && REST_REQUEST && rcp_is_restricted_content( $post->ID ) ) {
+		$required = true;
+	}
+
+	return $required;
+}
+
+add_filter( 'post_password_required', 'rcp_post_password_required_rest_api', 10, 2 );

@@ -541,6 +541,15 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 				}
 
+				if ( ! empty( $posted['txn_id'] ) ) {
+
+					$this->webhook_event_id = sanitize_text_field( $posted['txn_id'] );
+
+				} elseif ( ! empty( $posted['ipn_track_id'] ) ) {
+
+					$this->webhook_event_id = sanitize_text_field( $posted['ipn_track_id'] );
+				}
+
 				do_action( 'rcp_ipn_subscr_failed' );
 
 				do_action( 'rcp_recurring_payment_failed', $member, $this );

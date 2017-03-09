@@ -1334,3 +1334,28 @@ function rcp_get_member_id_from_subscription_id( $subscription_id = '' ) {
 
 	return false;
 }
+
+/**
+ * Add a note to the member when a recurring charge fails.
+ *
+ * @param RCP_Member          $member
+ * @param RCP_Payment_Gateway $gateway
+ *
+ * @since  2.7.4
+ * @return void
+ */
+function rcp_add_recurring_payment_failure_note( $member, $gateway ) {
+
+	$gateway_classes = wp_list_pluck( rcp_get_payment_gateways(), 'class' );
+	$gateway_name    = array_search( get_class( $gateway ), $gateway_classes );
+
+	$note = sprintf( __( 'Recurring charge failed in %s.', 'rcp' ), ucwords( $gateway_name ) );
+
+	if ( ! empty( $gateway->webhook_event_id ) ) {
+		$note .= sprintf( __( ' Event ID: %s', 'rcp' ), $gateway->webhook_event_id );
+	}
+
+	$member->add_note( $note );
+
+}
+add_action( 'rcp_recurring_payment_failed', 'rcp_add_recurring_payment_failure_note', 10, 2 );

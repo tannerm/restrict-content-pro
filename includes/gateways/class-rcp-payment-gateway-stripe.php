@@ -158,9 +158,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		if ( $this->auto_renew ) {
 
 			// process a subscription sign up
-			if ( ! $plan_id = $this->plan_exists( $this->subscription_name ) ) {
+			if ( ! $plan_id = $this->plan_exists( $this->subscription_id ) ) {
 				// create the plan if it doesn't exist
-				$plan_id = $this->create_plan( $this->subscription_name );
+				$plan_id = $this->create_plan( $this->subscription_id );
 			}
 
 			try {
@@ -562,8 +562,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// failed payment
 					if ( $event->type == 'charge.failed' ) {
 
-						do_action( 'rcp_recurring_payment_failed', $member, $this, $event );
-						do_action( 'rcp_stripe_charge_failed', $payment_event, $event );
+						$this->webhook_event_id = $event->id;
+
+						do_action( 'rcp_recurring_payment_failed', $member, $this );
+						do_action( 'rcp_stripe_charge_failed', $payment_event, $event, $member );
 
 						die( 'rcp_stripe_charge_failed action fired successfully' );
 
@@ -751,21 +753,21 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Create plan in Stripe
 	 *
-	 * @param string $plan_name Name of the plan.
+	 * @param int $plan_id ID number of the plan.
 	 *
 	 * @since 2.1
 	 * @return bool|string - plan_id if successful, false if not
 	 */
-	private function create_plan( $plan_name = '' ) {
+	private function create_plan( $plan_id = '' ) {
 		global $rcp_options;
 
 		// get all subscription level info for this plan
-		$plan           = rcp_get_subscription_details_by_name( $plan_name );
+		$plan           = rcp_get_subscription_details( $plan_id );
 		$price          = round( $plan->price * rcp_stripe_get_currency_multiplier(), 0 );
 		$interval       = $plan->duration_unit;
 		$interval_count = $plan->duration;
 		$name           = $plan->name;
-		$plan_id        = sprintf( '%s-%s-%s', strtolower( str_replace( ' ', '', $plan_name ) ), $plan->price, $plan->duration . $plan->duration_unit );
+		$plan_id        = sprintf( '%s-%s-%s', strtolower( str_replace( ' ', '', $plan->name ) ), $plan->price, $plan->duration . $plan->duration_unit );
 		$currency       = strtolower( rcp_get_currency() );
 
 		\Stripe\Stripe::setApiKey( $this->secret_key );
@@ -794,7 +796,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Determine if a plan exists
 	 *
-	 * @param string $plan The name of the plan to check
+	 * @param int $plan The ID number of the plan to check
 	 *
 	 * @since 2.1
 	 * @return bool|string false if the plan doesn't exist, plan id if it does
@@ -803,7 +805,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		\Stripe\Stripe::setApiKey( $this->secret_key );
 
-		if ( ! $plan = rcp_get_subscription_details_by_name( $plan ) ) {
+		if ( ! $plan = rcp_get_subscription_details( $plan ) ) {
 			return false;
 		}
 

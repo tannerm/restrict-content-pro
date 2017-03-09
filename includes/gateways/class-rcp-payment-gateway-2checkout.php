@@ -260,6 +260,10 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				case 'RECURRING_INSTALLMENT_FAILED' :
 
+					if ( ! empty( $_POST['sale_id'] ) ) {
+						$this->webhook_event_id = sanitize_text_field( $_POST['sale_id'] );
+					}
+
 					do_action( 'rcp_recurring_payment_failed', $member, $this );
 
 					break;
