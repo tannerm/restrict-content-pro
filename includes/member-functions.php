@@ -474,9 +474,16 @@ function rcp_set_expiration_date( $user_id = 0, $new_date = '' ) {
  *
  * @return int|false Timestamp of expiration of false if no expiration
  */
-function rcp_get_expiration_timestamp( $user_id ) {
-	$expiration = get_user_meta( $user_id, 'rcp_expiration', true );
-	return $expiration && $expiration !== 'none' ? strtotime( $expiration, current_time( 'timestamp' ) ) : false;
+function rcp_get_expiration_timestamp( $user_id = 0 ) {
+
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$member = new RCP_Member( $user_id );
+
+	return $member->get_expiration_time();
+
 }
 
 /**

@@ -120,19 +120,14 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	 * @return  int
+	 * @return  int|false
 	 */
 	public function get_expiration_time() {
 
-		$expiration = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
+		$expiration = $this->get_expiration_date();
+		$timestamp  = ( $expiration && 'none' != $expiration ) ? strtotime( $expiration, current_time( 'timestamp' ) ) : false;
 
-		if( empty( $expiration ) ) {
-
-			$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
-
-		}
-
-		return apply_filters( 'rcp_member_get_expiration_time', strtotime( $expiration, current_time( 'timestamp' ) ), $this->ID, $this );
+		return apply_filters( 'rcp_member_get_expiration_time', $timestamp, $this->ID, $this );
 
 	}
 
@@ -150,7 +145,7 @@ class RCP_Member extends WP_User {
 	public function set_expiration_date( $new_date = '' ) {
 
 		$ret      = false;
-		$old_date = get_user_meta( $this->ID, 'rcp_expiration', true ); // This calls user meta directly to avoid retrieving the pending date
+		$old_date = $this->get_expiration_date( false, false );
 
 		if( $old_date !== $new_date ) {
 
@@ -1055,7 +1050,7 @@ class RCP_Member extends WP_User {
 	public function is_expired() {
 
 		$ret        = false;
-		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+		$expiration = $this->get_expiration_date( false, false );
 
 		if( $expiration && strtotime( 'NOW', current_time( 'timestamp' ) ) > strtotime( $expiration, current_time( 'timestamp' ) ) ) {
 			$ret = true;
