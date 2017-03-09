@@ -28,6 +28,7 @@ class RCP_Payment_Gateway {
 	public $return_url;
 	public $test_mode;
 	public $subscription_data;
+	public $webhook_event_id;
 
 	public function __construct( $subscription_data = array() ) {
 
@@ -40,7 +41,7 @@ class RCP_Payment_Gateway {
 			$this->user_id             = $subscription_data['user_id'];
 			$this->user_name           = $subscription_data['user_name'];
 			$this->currency            = $subscription_data['currency'];
-			$this->amount              = $subscription_data['price'];
+			$this->amount              = $subscription_data['recurring_price'];
 			$this->initial_amount      = $subscription_data['price'] + $subscription_data['fee'];
 			$this->discount            = $subscription_data['discount'];
 			$this->discount_code       = $subscription_data['discount_code'];

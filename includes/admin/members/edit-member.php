@@ -71,8 +71,8 @@ $member = new RCP_Member( $member_id );
 				<td>
 					<select name="level" id="rcp-level">
 						<?php
-							foreach( rcp_get_subscription_levels( 'all' ) as $key => $level) :
-								echo '<option value="' . esc_attr( absint( $level->id ) ) . '"' . selected( $level->name, $member->get_subscription_name(), false ) . '>' . esc_html( $level->name ) . '</option>';
+							foreach( rcp_get_subscription_levels( 'all' ) as $key => $level ) :
+								echo '<option value="' . esc_attr( absint( $level->id ) ) . '"' . selected( $level->id, $member->get_subscription_id(), false ) . '>' . esc_html( $level->name ) . '</option>';
 							endforeach;
 						?>
 					</select>

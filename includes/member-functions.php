@@ -1462,3 +1462,48 @@ function rcp_resend_email_verification() {
 
 }
 add_action( 'init', 'rcp_resend_email_verification' );
+
+ * Retrieves the member's ID from their payment processor's subscription ID
+ *
+ * @param   string $subscription_id
+ *
+ * @since   2.8
+ * @return  int|false User ID if found, false if not.
+ */
+function rcp_get_member_id_from_subscription_id( $subscription_id = '' ) {
+
+	global $wpdb;
+
+	$user_id = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'rcp_merchant_subscription_id' AND meta_value = %s LIMIT 1", $subscription_id ) );
+
+	if ( $user_id != NULL ) {
+		return $user_id;
+	}
+
+	return false;
+}
+
+/**
+ * Add a note to the member when a recurring charge fails.
+ *
+ * @param RCP_Member          $member
+ * @param RCP_Payment_Gateway $gateway
+ *
+ * @since  2.7.4
+ * @return void
+ */
+function rcp_add_recurring_payment_failure_note( $member, $gateway ) {
+
+	$gateway_classes = wp_list_pluck( rcp_get_payment_gateways(), 'class' );
+	$gateway_name    = array_search( get_class( $gateway ), $gateway_classes );
+
+	$note = sprintf( __( 'Recurring charge failed in %s.', 'rcp' ), ucwords( $gateway_name ) );
+
+	if ( ! empty( $gateway->webhook_event_id ) ) {
+		$note .= sprintf( __( ' Event ID: %s', 'rcp' ), $gateway->webhook_event_id );
+	}
+
+	$member->add_note( $note );
+
+}
+add_action( 'rcp_recurring_payment_failed', 'rcp_add_recurring_payment_failure_note', 10, 2 );
