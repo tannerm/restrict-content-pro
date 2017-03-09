@@ -80,7 +80,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 			'SIGNATURE'          => $this->signature,
 			'VERSION'            => '124',
 			'METHOD'             => $this->auto_renew ? 'CreateRecurringPaymentsProfile' : 'DoDirectPayment',
-			'AMT'                => $this->amount,
+			'AMT'                => $this->auto_renew ? $this->amount : $this->initial_amount,
 			'CURRENCYCODE'       => strtoupper( $this->currency ),
 			'SHIPPINGAMT'        => 0,
 			'TAXAMT'             => 0,
@@ -111,10 +111,8 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		if ( $this->auto_renew ) {
 
-			$initamt = round( $this->amount + $this->signup_fee, 2 );
-
-			if ( $initamt >= 0 ) {
-				$args['INITAMT'] = $initamt;
+			if ( $this->initial_amount >= 0 ) {
+				$args['INITAMT'] = $this->initial_amount;
 			}
 
 		}
@@ -133,6 +131,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		if( is_wp_error( $request ) ) {
 
+			do_action( 'rcp_registration_failed', $this );
 			do_action( 'rcp_paypal_pro_signup_payment_failed', $request, $this );
 
 			$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
@@ -148,6 +147,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 			if( false !== strpos( strtolower( $body['ACK'] ), 'failure' ) ) {
 
+				do_action( 'rcp_registration_failed', $this );
 				do_action( 'rcp_paypal_pro_signup_payment_failed', $request, $this );
 
 				$error = '<p>' . __( 'PayPal subscription creation failed.', 'rcp' ) . '</p>';
@@ -183,6 +183,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		} else {
 
+			do_action( 'rcp_registration_failed', $this );
 			wp_die( __( 'Something has gone wrong, please try again', 'rcp' ), __( 'Error', 'rcp' ), array( 'back_link' => true, 'response' => '401' ) );
 
 		}

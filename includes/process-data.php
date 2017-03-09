@@ -290,6 +290,10 @@ function rcp_process_data() {
 				update_user_meta( $user_id, 'rcp_signup_method', $_POST['signup_method'] );
 			}
 
+			if( isset( $_POST['cancel_subscription'] ) && $member->can_cancel() ) {
+				$member->cancel_payment_profile();
+			}
+
 			if( $status !== $member->get_status() ) {
 				$member->set_status( $status );
 			}

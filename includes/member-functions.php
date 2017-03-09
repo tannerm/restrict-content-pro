@@ -1315,6 +1315,27 @@ function rcp_update_expired_member_role( $status, $member_id, $old_status, $memb
 add_action( 'rcp_set_status', 'rcp_update_expired_member_role', 10, 4 );
 
 /**
+ * Retrieves the member's ID from their payment processor's subscription ID
+ *
+ * @param   string $subscription_id
+ *
+ * @since   2.8
+ * @return  int|false User ID if found, false if not.
+ */
+function rcp_get_member_id_from_subscription_id( $subscription_id = '' ) {
+
+	global $wpdb;
+
+	$user_id = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'rcp_merchant_subscription_id' AND meta_value = %s LIMIT 1", $subscription_id ) );
+
+	if ( $user_id != NULL ) {
+		return $user_id;
+	}
+
+	return false;
+}
+
+/**
  * Add a note to the member when a recurring charge fails.
  *
  * @param RCP_Member          $member

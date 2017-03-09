@@ -13,7 +13,7 @@ class RCP_Payment_Gateways {
 
 	public $available_gateways;
 
-	public $enabled_gateways; 
+	public $enabled_gateways;
 
 	/**
 	 * Get things going
@@ -92,6 +92,11 @@ class RCP_Payment_Gateways {
 				'label'        => __( 'Credit / Debit Card', 'rcp' ),
 				'admin_label'  => __( 'Authorize.net', 'rcp' ),
 				'class'        => 'RCP_Payment_Gateway_Authorizenet'
+			),
+			'braintree' => array(
+				'label'        => __( 'Credit / Debit Card', 'rcp' ),
+				'admin_label'  => __( 'Braintree', 'rcp' ),
+				'class'        => 'RCP_Payment_Gateway_Braintree'
 			)
 		);
 
@@ -117,9 +122,9 @@ class RCP_Payment_Gateways {
 			foreach( $this->available_gateways as $key => $gateway ) {
 
 				if( isset( $saved[ $key ] ) && $saved[ $key ] == 1 ) {
-				
+
 					$enabled[ $key ] = $gateway;
-				
+
 				}
 			}
 
@@ -159,7 +164,7 @@ class RCP_Payment_Gateways {
 		if( ! empty( $_POST['rcp_gateway'] ) ) {
 
 			$gateway = $this->get_gateway( sanitize_text_field( $_POST['rcp_gateway'] ) );
-	
+
 			if( isset( $gateway['class'] ) ) {
 				$gateway = new $gateway['class'];
 			}
@@ -172,5 +177,5 @@ class RCP_Payment_Gateways {
 
 		}
 	}
-	
+
 }

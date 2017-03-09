@@ -470,6 +470,10 @@ class RCP_Member extends WP_User {
 
 				$ret = true;
 
+			} elseif ( rcp_is_braintree_subscriber( $this->ID ) && rcp_has_braintree_api_access() ) {
+
+				$ret = true;
+
 			}
 
 		}
@@ -689,6 +693,15 @@ class RCP_Member extends WP_User {
 			} else {
 				$success = true;
 			}
+		} elseif ( rcp_is_braintree_subscriber( $this->ID ) ) {
+
+			$cancelled = rcp_braintree_cancel_member( $this->ID );
+
+			if ( is_wp_error( $cancelled ) ) {
+				wp_die( $cancelled->get_error_message(), __( 'Error', 'rcp' ), array( 'response' => 401 ) );
+			} else {
+				$success = true;
+			}
 		}
 
 		if( $success && $set_status ) {
@@ -729,6 +742,8 @@ class RCP_Member extends WP_User {
 	*/
 	public function set_payment_profile_id( $profile_id = '' ) {
 
+		$profile_id = trim( $profile_id );
+
 		do_action( 'rcp_member_pre_set_profile_payment_id', $this->ID, $profile_id, $this );
 
 		update_user_meta( $this->ID, 'rcp_payment_profile_id', $profile_id );
@@ -766,6 +781,8 @@ class RCP_Member extends WP_User {
 	 * @return  void
 	 */
 	public function set_merchant_subscription_id( $subscription_id = '' ) {
+
+		$subscription_id = trim( $subscription_id );
 
 		do_action( 'rcp_member_pre_set_merchant_subscription_id', $this->ID, $subscription_id, $this );
 

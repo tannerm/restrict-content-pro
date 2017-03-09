@@ -136,7 +136,7 @@ function rcp_gateway_supports( $gateway = 'paypal', $item = 'recurring' ) {
 */
 function rcp_process_gateway_webooks() {
 
-	if ( empty( $_GET['listener'] ) ) {
+	if ( ! apply_filters( 'rcp_process_gateway_webhooks', ! empty( $_GET['listener'] ) ) ) {
 		return;
 	}
 
@@ -322,6 +322,16 @@ function rcp_get_merchant_transaction_id_link( $payment ) {
 
 				break;
 
+			case 'braintree credit card one time' :
+			case 'braintree credit card initial payment' :
+			case 'braintree credit card' :
+
+				$mode        = $test ? 'sandbox.' : '';
+				$merchant_id = $test ? $rcp_options['braintree_sandbox_merchantId'] : $rcp_options['braintree_live_merchantId'];
+
+				$url         = 'https://' . $mode . 'braintreegateway.com/merchants/' . $merchant_id . '/transactions/' . $payment->transaction_id;
+
+				break;
 		}
 
 		if( ! empty( $url ) ) {

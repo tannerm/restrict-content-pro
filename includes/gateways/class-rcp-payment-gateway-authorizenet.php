@@ -160,13 +160,14 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 
 			} else {
 
-				$error = $response->getErrorMessage();
+				do_action( 'rcp_registration_failed', $this );
 
 				wp_die( $response->getErrorMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			}
 
 		} catch ( AuthorizeNetException $e ) {
+			do_action( 'rcp_registration_failed', $this );
 			wp_die( $e->getMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 		}
 
