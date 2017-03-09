@@ -132,11 +132,14 @@ function rcp_braintree_cancel_member( $member_id = 0 ) {
  */
 function rcp_braintree_detect_legacy_plugin() {
 
-	if ( is_admin() && ! wp_doing_ajax() ) {
-		if ( is_plugin_active( 'rcp-braintree/rcp-braintree.php' ) ) {
-			deactivate_plugins( 'rcp-braintree/rcp-braintree.php', true );
-		}
+	if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		return;
 	}
+
+	if ( is_plugin_active( 'rcp-braintree/rcp-braintree.php' ) ) {
+		deactivate_plugins( 'rcp-braintree/rcp-braintree.php', true );
+	}
+
 }
 add_action( 'admin_init', 'rcp_braintree_detect_legacy_plugin' );
 
