@@ -1124,12 +1124,6 @@ function rcp_can_member_renew( $user_id = 0 ) {
 
 	}
 
-	if( ! rcp_subscription_upgrade_possible( $user_id ) ) {
-
-		$ret = false;
-
-	}
-
 	return apply_filters( 'rcp_member_can_renew', $ret, $user_id );
 }
 
