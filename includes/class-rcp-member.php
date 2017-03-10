@@ -124,7 +124,7 @@ class RCP_Member extends WP_User {
 	 */
 	public function get_expiration_time() {
 
-		$expiration = $this->get_expiration_date();
+		$expiration = $this->get_expiration_date( false );
 		$timestamp  = ( $expiration && 'none' != $expiration ) ? strtotime( $expiration, current_time( 'timestamp' ) ) : false;
 
 		return apply_filters( 'rcp_member_get_expiration_time', $timestamp, $this->ID, $this );
