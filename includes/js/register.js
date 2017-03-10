@@ -464,7 +464,7 @@ function rcp_calc_total() {
 
 /**
  * Enables the submit button when a successful
- * reCAPTCHA response is trigger.
+ * reCAPTCHA response is triggered.
  *
  * This function is referenced via the data-callback
  * attribute on the #rcp_recaptcha element.
