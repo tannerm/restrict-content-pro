@@ -1248,7 +1248,7 @@ function rcp_get_switch_to_url( $user_id = 0 ) {
  */
 function rcp_validate_username( $username = '' ) {
 	$sanitized = sanitize_user( $username, false );
-	$valid = ( $sanitized == $username );
+	$valid = ( strtolower( $sanitized ) == strtolower( $username ) );
 	return (bool) apply_filters( 'rcp_validate_username', $valid, $username );
 }
 
