@@ -49,6 +49,15 @@ jQuery(document).ready(function($) {
 	$(document.getElementById('rcp_auto_renew')).on('change', rcp_calc_total);
 	$('body').on( 'rcp_discount_change rcp_level_change rcp_gateway_change', rcp_calc_total);
 
+	/**
+	 * If reCAPTCHA is enabled, disable the submit button
+	 * until it is successfully completed, at which point
+	 * it triggers rcp_validate_recaptcha().
+	 */
+	if ( '1' === rcp_script_options.recaptcha_enabled ) {
+		jQuery('#rcp_registration_form #rcp_submit').prop('disabled', true);
+	}
+
 	$(document).on('click', '#rcp_registration_form #rcp_submit', function(e) {
 
 		e.preventDefault();
@@ -451,4 +460,15 @@ function rcp_calc_total() {
 
 	});
 
+}
+
+/**
+ * Enables the submit button when a successful
+ * reCAPTCHA response is trigger.
+ *
+ * This function is referenced via the data-callback
+ * attribute on the #rcp_recaptcha element.
+ */
+function rcp_validate_recaptcha(response) {
+	jQuery('#rcp_registration_form #rcp_submit').prop('disabled', false);
 }
