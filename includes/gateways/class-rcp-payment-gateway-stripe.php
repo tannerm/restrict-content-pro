@@ -369,6 +369,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			if( ! $this->auto_renew ) {
 				$member->set_expiration_date( $member->calculate_expiration() );
 				$member->set_status( 'active' );
+			} elseif( ! $member->is_expired() ) {
+				$member->set_status( 'active' );
 			}
 
 			do_action( 'rcp_stripe_signup', $this->user_id, $this );
