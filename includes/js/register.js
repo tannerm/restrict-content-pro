@@ -355,6 +355,12 @@ function rcp_validate_discount() {
 	var $ = jQuery;
 	var gateway_fields = $('.rcp_gateway_fields');
 	var discount = $('#rcp_discount_code').val();
+	var is_free   = false;
+	var level     = $( '#rcp_subscription_levels input:checked' );
+
+	if( level.attr('rel') == 0 ) {
+		is_free = true;
+	}
 
 	if( $('#rcp_subscription_levels input:checked').length ) {
 
@@ -370,7 +376,11 @@ function rcp_validate_discount() {
 
 		// Reset everything in case a previous discount was just removed.
 		$('.rcp_discount_valid, .rcp_discount_invalid').hide();
-		$('#rcp_auto_renew_wrap').show();
+		if ( is_free ) {
+			$('#rcp_auto_renew_wrap').hide();
+		} else {
+			$('#rcp_auto_renew_wrap').show();
+		}
 		gateway_fields.show().removeClass('rcp_discounted_100');
 		rcp_validate_gateways();
 
