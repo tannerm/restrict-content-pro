@@ -52,7 +52,7 @@ if( isset( $_GET['profile'] ) && 'cancelled' == $_GET['profile'] ) : ?>
 				}
 
 				if ( rcp_is_active( $user_ID ) && rcp_can_member_cancel( $user_ID ) ) {
-					$links[] = apply_filters( 'rcp_subscription_details_action_cancel', '<a href="' . rcp_get_member_cancel_url( $user_ID ) . '" title="' . __( 'Cancel your subscription', 'rcp' ) . '">' . __( 'Cancel your subscription', 'rcp' ) . '</a>', $user_ID );
+					$links[] = apply_filters( 'rcp_subscription_details_action_cancel', '<a href="' . rcp_get_member_cancel_url( $user_ID ) . '" title="' . __( 'Cancel your subscription', 'rcp' ) . '" class="rcp_sub_details_cancel">' . __( 'Cancel your subscription', 'rcp' ) . '</a>', $user_ID );
 				}
 
 				echo apply_filters( 'rcp_subscription_details_actions', implode( '<br/>', $links ), $links, $user_ID );
@@ -91,4 +91,25 @@ if( isset( $_GET['profile'] ) && 'cancelled' == $_GET['profile'] ) : ?>
 	<?php endif; ?>
 	</tbody>
 </table>
+<script>
+	// Adds a confirm dialog to the cancel link
+	var cancel_link = document.querySelector(".rcp_sub_details_cancel");
+
+	if ( cancel_link ) {
+
+		cancel_link.addEventListener("click", function(event) {
+			event.preventDefault();
+
+			var message = '<?php printf( __( "Are you sure you want to cancel your subscription? If you cancel, your membership will expire on %s.", "rcp" ), rcp_get_expiration_date() ); ?>';
+			var confirmed = confirm( message );
+
+			if ( true === confirmed ) {
+				location.assign(event.target.href);
+			} else {
+				return false;
+			}
+		});
+
+	}
+</script>
 <?php do_action( 'rcp_subscription_details_bottom' );
