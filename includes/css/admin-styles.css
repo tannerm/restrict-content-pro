@@ -349,6 +349,17 @@ table.rcp-table th {
 	font-weight: bold;
 }
 
+table.rcp_payment_details th,
+table.rcp_payment_details td {
+	padding: 8px 10px;
+}
+
+@media screen and (max-width: 782px) {
+	table.rcp_payment_details th.column-primary {
+		width: auto;
+	}
+}
+
 /* Add-Ons
 -------------------------------------------------------------- */
 
