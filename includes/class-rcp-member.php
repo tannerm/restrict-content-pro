@@ -156,22 +156,33 @@ class RCP_Member extends WP_User {
 		$ret      = false;
 		$old_date = get_user_meta( $this->ID, 'rcp_expiration', true ); // This calls user meta directly to avoid retrieving the pending date
 
-		if( $old_date !== $new_date ) {
+		// Return early if there's no change in expiration date
+		if ( empty( $new_date ) || ( ! empty( $old_date ) && ( $old_date == $new_date ) ) ) {
+			return $ret;
+		}
 
-			if( update_user_meta( $this->ID, 'rcp_expiration', $new_date ) ) {
+		if ( update_user_meta( $this->ID, 'rcp_expiration', $new_date ) ) {
 
-				// Record the status change
+			// Record the status change
+			if ( empty( $old_date ) ) {
+
+				$note = sprintf( __( 'Member\'s expiration set to %s', 'rcp' ), $new_date );
+
+			} else {
+
 				$note = sprintf( __( 'Member\'s expiration changed from %s to %s', 'rcp' ), $old_date, $new_date );
-				rcp_add_member_note( $this->ID, $note );
 
 			}
 
-			delete_user_meta( $this->ID, 'rcp_pending_expiration_date' );
-
-			do_action( 'rcp_set_expiration_date', $this->ID, $new_date, $old_date );
-
-			$ret = true;
 		}
+
+		$this->add_note( $note );
+
+		delete_user_meta( $this->ID, 'rcp_pending_expiration_date' );
+
+		do_action( 'rcp_set_expiration_date', $this->ID, $new_date, $old_date );
+
+		$ret = true;
 
 		return $ret;
 
