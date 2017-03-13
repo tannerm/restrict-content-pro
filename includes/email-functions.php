@@ -302,7 +302,7 @@ add_action( 'rcp_set_status', 'rcp_email_on_free_trial', 11, 2 );
  * @param string     $old_status Previous status before the update.
  * @param RCP_Member $member     Member object.
  *
- * @since  2.7.4
+ * @since  2.8.2
  * @return void
  */
 function rcp_email_on_free_subscription( $user_id, $old_status, $member ) {
