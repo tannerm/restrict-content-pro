@@ -58,6 +58,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	 */
 	public function process_signup() {
 
+		global $rcp_options;
+
 		\Stripe\Stripe::setApiKey( $this->secret_key );
 
 		if ( method_exists( '\Stripe\Stripe', 'setAppInfo' ) ) {
@@ -156,25 +158,40 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		if ( $this->auto_renew ) {
 
 			// process a subscription sign up
-			if ( ! $plan_id = $this->plan_exists( $this->subscription_name ) ) {
+			if ( ! $plan_id = $this->plan_exists( $this->subscription_id ) ) {
 				// create the plan if it doesn't exist
-				$plan_id = $this->create_plan( $this->subscription_name );
+				$plan_id = $this->create_plan( $this->subscription_id );
 			}
 
 			try {
 
 				// Add fees before the plan is updated and charged
-				if ( ! empty( $this->signup_fee ) ) {
 
-					$customer->account_balance = $customer->account_balance + ( $this->signup_fee * rcp_stripe_get_currency_multiplier() ); // Add additional amount to initial payment (in cents)
+				if( $this->initial_amount > $this->amount ) {
+					$save_balance   = true;
+					$amount         = $this->initial_amount - $this->amount;
+					$balance_amount = round( $customer->account_balance + ( $amount * rcp_stripe_get_currency_multiplier() ), 0 ); // Add additional amount to initial payment (in cents)
+				}
+
+				if( $this->initial_amount < $this->amount ) {
+					$save_balance   = true;
+					$amount         = $this->amount - $this->initial_amount;
+					$balance_amount = round( $customer->account_balance - ( $amount * rcp_stripe_get_currency_multiplier() ), 0 ); // Add additional amount to initial payment (in cents)
+				}
+
+				if ( ! empty( $save_balance ) ) {
+
+					$customer->account_balance = $balance_amount;
 					$customer->save();
 
-					if( isset( $temp_invoice ) ) {
-						$invoice = \Stripe\Invoice::retrieve( $temp_invoice->id );
-						$invoice->closed = true;
-						$invoice->save();
-						unset( $temp_invoice, $invoice );
-					}
+				}
+
+				// Remove the temporary invoice
+				if( isset( $temp_invoice ) ) {
+					$invoice = \Stripe\Invoice::retrieve( $temp_invoice->id );
+					$invoice->closed = true;
+					$invoice->save();
+					unset( $temp_invoice, $invoice );
 				}
 
 				// clean up any past due or unpaid subscriptions before upgrading/downgrading
@@ -202,7 +219,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					'prorate' => false
 				);
 
-				if ( ! empty( $this->discount_code ) ) {
+				if ( ! empty( $this->discount_code ) && ! isset( $rcp_options['one_time_discounts'] ) ) {
 
 					$sub_args['coupon'] = $this->discount_code;
 
@@ -214,7 +231,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				}
 
 				// Set the customer's subscription in Stripe
-				$subscription = $customer->subscriptions->create( array( $sub_args ) );
+				$subscription = $customer->subscriptions->create( apply_filters( 'rcp_stripe_create_subscription_args', $sub_args, $this ) );
 
 				$member->set_merchant_subscription_id( $subscription->id );
 
@@ -265,7 +282,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			try {
 
 				$charge = \Stripe\Charge::create( apply_filters( 'rcp_stripe_charge_create_args', array(
-					'amount'         => round( ( $this->amount + $this->signup_fee ) * rcp_stripe_get_currency_multiplier(), 0 ), // amount in cents
+					'amount'         => round( ( $this->initial_amount ) * rcp_stripe_get_currency_multiplier(), 0 ), // amount in cents
 					'currency'       => strtolower( $this->currency ),
 					'customer'       => $customer->id,
 					'description'    => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
@@ -284,7 +301,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					'subscription'      => $this->subscription_name,
 					'payment_type' 		=> 'Credit Card One Time',
 					'subscription_key' 	=> $this->subscription_key,
-					'amount' 			=> $this->amount + $this->signup_fee,
+					'amount' 			=> $this->initial_amount,
 					'user_id' 			=> $this->user_id,
 					'transaction_id'    => $charge->id
 				);
@@ -382,6 +399,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		$body = $e->getJsonBody();
 		$err  = $body['error'];
 
+		do_action( 'rcp_registration_failed', $this );
 		do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
 
 		$error = '<h4>' . __( 'An error occurred', 'rcp' ) . '</h4>';
@@ -544,8 +562,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// failed payment
 					if ( $event->type == 'charge.failed' ) {
 
-						do_action( 'rcp_recurring_payment_failed', $member, $this, $event );
-						do_action( 'rcp_stripe_charge_failed', $payment_event, $event );
+						$this->webhook_event_id = $event->id;
+
+						do_action( 'rcp_recurring_payment_failed', $member, $this );
+						do_action( 'rcp_stripe_charge_failed', $payment_event, $event, $member );
 
 						die( 'rcp_stripe_charge_failed action fired successfully' );
 
@@ -733,21 +753,21 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Create plan in Stripe
 	 *
-	 * @param string $plan_name Name of the plan.
+	 * @param int $plan_id ID number of the plan.
 	 *
 	 * @since 2.1
 	 * @return bool|string - plan_id if successful, false if not
 	 */
-	private function create_plan( $plan_name = '' ) {
+	private function create_plan( $plan_id = '' ) {
 		global $rcp_options;
 
 		// get all subscription level info for this plan
-		$plan           = rcp_get_subscription_details_by_name( $plan_name );
+		$plan           = rcp_get_subscription_details( $plan_id );
 		$price          = round( $plan->price * rcp_stripe_get_currency_multiplier(), 0 );
 		$interval       = $plan->duration_unit;
 		$interval_count = $plan->duration;
 		$name           = $plan->name;
-		$plan_id        = sprintf( '%s-%s-%s', strtolower( str_replace( ' ', '', $plan_name ) ), $plan->price, $plan->duration . $plan->duration_unit );
+		$plan_id        = sprintf( '%s-%s-%s', strtolower( str_replace( ' ', '', $plan->name ) ), $plan->price, $plan->duration . $plan->duration_unit );
 		$currency       = strtolower( rcp_get_currency() );
 
 		\Stripe\Stripe::setApiKey( $this->secret_key );
@@ -776,7 +796,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	/**
 	 * Determine if a plan exists
 	 *
-	 * @param string $plan The name of the plan to check
+	 * @param int $plan The ID number of the plan to check
 	 *
 	 * @since 2.1
 	 * @return bool|string false if the plan doesn't exist, plan id if it does
@@ -785,7 +805,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		\Stripe\Stripe::setApiKey( $this->secret_key );
 
-		if ( ! $plan = rcp_get_subscription_details_by_name( $plan ) ) {
+		if ( ! $plan = rcp_get_subscription_details( $plan ) ) {
 			return false;
 		}
 

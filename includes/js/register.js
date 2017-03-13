@@ -49,6 +49,15 @@ jQuery(document).ready(function($) {
 	$(document.getElementById('rcp_auto_renew')).on('change', rcp_calc_total);
 	$('body').on( 'rcp_discount_change rcp_level_change rcp_gateway_change', rcp_calc_total);
 
+	/**
+	 * If reCAPTCHA is enabled, disable the submit button
+	 * until it is successfully completed, at which point
+	 * it triggers rcp_validate_recaptcha().
+	 */
+	if ( '1' === rcp_script_options.recaptcha_enabled ) {
+		jQuery('#rcp_registration_form #rcp_submit').prop('disabled', true);
+	}
+
 	$(document).on('click', '#rcp_registration_form #rcp_submit', function(e) {
 
 		e.preventDefault();
@@ -306,7 +315,7 @@ function rcp_validate_gateways() {
 		// Auto Renew checkbox
 		if ( 'yes' == gateway.data('supports-recurring') ) {
 			// Set up defaults
-			$('#rcp_auto_renew_wrap input').prop('checked', false);
+			$('#rcp_auto_renew_wrap input').prop('checked', rcp_script_options.auto_renew_default);
 			$('#rcp_auto_renew_wrap').show();
 
 			// Uncheck and hide if free level, lifetime level, or 100% discount applied
@@ -346,6 +355,12 @@ function rcp_validate_discount() {
 	var $ = jQuery;
 	var gateway_fields = $('.rcp_gateway_fields');
 	var discount = $('#rcp_discount_code').val();
+	var is_free   = false;
+	var level     = $( '#rcp_subscription_levels input:checked' );
+
+	if( level.attr('rel') == 0 ) {
+		is_free = true;
+	}
 
 	if( $('#rcp_subscription_levels input:checked').length ) {
 
@@ -361,7 +376,11 @@ function rcp_validate_discount() {
 
 		// Reset everything in case a previous discount was just removed.
 		$('.rcp_discount_valid, .rcp_discount_invalid').hide();
-		$('#rcp_auto_renew_wrap').show();
+		if ( is_free ) {
+			$('#rcp_auto_renew_wrap').hide();
+		} else {
+			$('#rcp_auto_renew_wrap').show();
+		}
 		gateway_fields.show().removeClass('rcp_discounted_100');
 		rcp_validate_gateways();
 
@@ -451,4 +470,15 @@ function rcp_calc_total() {
 
 	});
 
+}
+
+/**
+ * Enables the submit button when a successful
+ * reCAPTCHA response is triggered.
+ *
+ * This function is referenced via the data-callback
+ * attribute on the #rcp_recaptcha element.
+ */
+function rcp_validate_recaptcha(response) {
+	jQuery('#rcp_registration_form #rcp_submit').prop('disabled', false);
 }

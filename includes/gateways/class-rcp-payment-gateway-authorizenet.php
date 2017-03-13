@@ -160,13 +160,14 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 
 			} else {
 
-				$error = $response->getErrorMessage();
+				do_action( 'rcp_registration_failed', $this );
 
 				wp_die( $response->getErrorMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 			}
 
 		} catch ( AuthorizeNetException $e ) {
+			do_action( 'rcp_registration_failed', $this );
 			wp_die( $e->getMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 		}
 
@@ -234,12 +235,20 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 			} elseif ( 2 == $response_code ) {
 
 				// Declined
+				if ( ! empty( $_POST['x_trans_id'] ) ) {
+					$this->webhook_event_id = sanitize_text_field( $_POST['x_trans_id'] );
+				}
+
 				do_action( 'rcp_recurring_payment_failed', $member, $this );
 				do_action( 'rcp_authorizenet_silent_post_error', $member, $this );
 
 			} elseif ( 3 == $response_code || 8 == $reason_code ) {
 
 				// An expired card
+				if ( ! empty( $_POST['x_trans_id'] ) ) {
+					$this->webhook_event_id = sanitize_text_field( $_POST['x_trans_id'] );
+				}
+
 				do_action( 'rcp_recurring_payment_failed', $member, $this );
 				do_action( 'rcp_authorizenet_silent_post_error', $member, $this );
 

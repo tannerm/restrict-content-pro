@@ -104,41 +104,29 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			$paypal_args['src'] = '1';
 			$paypal_args['sra'] = '1';
 			$paypal_args['a3'] = $this->amount;
-
-			if( ! empty( $this->signup_fee ) ) {
-				$paypal_args['a1'] = number_format( $this->signup_fee + $this->amount, 2 );
-			}
+			$paypal_args['a1'] = $this->initial_amount;
 
 			$paypal_args['p3'] = $this->length;
-
-			if( ! empty( $this->signup_fee ) ) {
-				$paypal_args['p1'] = $this->length;
-			}
+			$paypal_args['p1'] = $this->length;
 
 			switch ( $this->length_unit ) {
 
 				case "day" :
 
 					$paypal_args['t3'] = 'D';
-					if( ! empty( $this->signup_fee ) ) {
-						$paypal_args['t1'] = 'D';
-					}
+					$paypal_args['t1'] = 'D';
 					break;
 
 				case "month" :
 
 					$paypal_args['t3'] = 'M';
-					if( ! empty( $this->signup_fee ) ) {
-						$paypal_args['t1'] = 'M';
-					}
+					$paypal_args['t1'] = 'M';
 					break;
 
 				case "year" :
 
 					$paypal_args['t3'] = 'Y';
-					if( ! empty( $this->signup_fee ) ) {
-						$paypal_args['t1'] = 'Y';
-					}
+					$paypal_args['t1'] = 'Y';
 					break;
 
 			}
@@ -168,7 +156,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 			// one time payment
 			$paypal_args['cmd'] = '_xclick';
-			$paypal_args['amount'] = round( $this->amount + $this->signup_fee, 2 );
+			$paypal_args['amount'] = $this->initial_amount;
 
 		}
 
@@ -450,6 +438,15 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 				case "subscr_failed" :
 
+					if ( ! empty( $posted['txn_id'] ) ) {
+
+						$this->webhook_event_id = sanitize_text_field( $posted['txn_id'] );
+
+					} elseif ( ! empty( $posted['ipn_track_id'] ) ) {
+
+						$this->webhook_event_id = sanitize_text_field( $posted['ipn_track_id'] );
+					}
+
 					do_action( 'rcp_recurring_payment_failed', $member, $this );
 					do_action( 'rcp_ipn_subscr_failed' );
 
@@ -461,7 +458,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					// user's subscription has reached the end of its term
 
-					if( 'cancelled' !== $member->get_status( $user_id ) ) {
+					if( isset( $posted['subscr_id'] ) && $posted['subscr_id'] == $member->get_payment_profile_id() && 'cancelled' !== $member->get_status() ) {
 
 						$member->set_status( 'expired' );
 

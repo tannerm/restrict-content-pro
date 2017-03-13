@@ -89,7 +89,7 @@ function rcp_member_levels_page() {
 								?>
 							</td>
 							<?php do_action('rcp_levels_page_table_column', $level->id); ?>
-							<td class="rcp-sub-order-col"><a href="#" class="dragHandle"></a></td>
+							<td class="rcp-sub-order-col"><a href="#" class="rcp-drag-handle"></a></td>
 						</tr>
 					<?php $i++;
 					endforeach;

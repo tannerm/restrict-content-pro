@@ -30,6 +30,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'recurring';
 		$this->supports[]  = 'fees';
+		$this->supports[]  = 'gateway-submits-form';
 
 		$this->secret_word = isset( $rcp_options['twocheckout_secret_word'] ) ? trim( $rcp_options['twocheckout_secret_word'] ) : '';
 
@@ -88,7 +89,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 				"name"        => $this->subscription_name,
 				"quantity"    => '1',
 				"tangible"    => 'N',
-				"startupFee"  => $this->signup_fee
+				"startupFee"  => $this->initial_amount - $this->amount
 			) );
 
 		} else {
@@ -97,12 +98,11 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			$line_items   = array( array(
 				"recurrence"  => 0,
 				"type"        => 'product',
-				"price"       => $this->amount,
+				"price"       => $this->initial_amount,
 				"productId"   => $this->subscription_id,
 				"name"        => $this->subscription_name,
 				"quantity"    => '1',
-				"tangible"    => 'N',
-				"startupFee"  => $this->signup_fee
+				"tangible"    => 'N'
 			) );
 
 		}
@@ -137,9 +137,9 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 					'subscription'     => $this->subscription_name,
 					'payment_type'     => $payment_type,
 					'subscription_key' => $this->subscription_key,
-					'amount'           => $this->amount + $this->signup_fee,
+					'amount'           => $this->initial_amount,
 					'user_id'          => $this->user_id,
-					'transaction_id'   => $charge['response']['transactionId']
+					'transaction_id'   => $charge['response']['orderNumber']
 				);
 
 				$rcp_payments = new RCP_Payments();
@@ -150,6 +150,7 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 		} catch ( Twocheckout_Error $e ) {
 
+			do_action( 'rcp_registration_failed', $this );
 			wp_die( $e->getMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
 		}
@@ -259,6 +260,10 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				case 'RECURRING_INSTALLMENT_FAILED' :
 
+					if ( ! empty( $_POST['sale_id'] ) ) {
+						$this->webhook_event_id = sanitize_text_field( $_POST['sale_id'] );
+					}
+
 					do_action( 'rcp_recurring_payment_failed', $member, $this );
 
 					break;
@@ -364,7 +369,22 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			jQuery(document).ready(function($) {
 				// Pull in the public encryption key for our environment
 				TCO.loadPubKey('<?php echo $this->environment; ?>');
-				jQuery("#rcp_registration_form").submit(function(e) {
+
+				var rcp_twocheckout_processing_submission = false;
+
+				jQuery('body').on('rcp_register_form_submission', function rcp_2co_register_form_submission_handler(event, response, form_id) {
+
+					if ( response.gateway.slug !== 'twocheckout' ) {
+						return;
+					}
+
+					if ( rcp_twocheckout_processing_submission ) {
+						return;
+					}
+
+					rcp_twocheckout_processing_submission = true;
+
+					event.preventDefault();
 
 					if( jQuery('.rcp_level:checked').length ) {
 						var price = jQuery('.rcp_level:checked').closest('.rcp_subscription_level').find('span.rcp_price').attr('rel');

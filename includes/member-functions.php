@@ -1313,3 +1313,82 @@ function rcp_update_expired_member_role( $status, $member_id, $old_status, $memb
 	}
 }
 add_action( 'rcp_set_status', 'rcp_update_expired_member_role', 10, 4 );
+
+/**
+ * Retrieves the member's ID from their payment processor's subscription ID
+ *
+ * @param   string $subscription_id
+ *
+ * @since   2.8
+ * @return  int|false User ID if found, false if not.
+ */
+function rcp_get_member_id_from_subscription_id( $subscription_id = '' ) {
+
+	global $wpdb;
+
+	$user_id = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'rcp_merchant_subscription_id' AND meta_value = %s LIMIT 1", $subscription_id ) );
+
+	if ( $user_id != NULL ) {
+		return $user_id;
+	}
+
+	return false;
+}
+
+/**
+ * Add a note to the member when a recurring charge fails.
+ *
+ * @param RCP_Member          $member
+ * @param RCP_Payment_Gateway $gateway
+ *
+ * @since  2.7.4
+ * @return void
+ */
+function rcp_add_recurring_payment_failure_note( $member, $gateway ) {
+
+	$gateway_classes = wp_list_pluck( rcp_get_payment_gateways(), 'class' );
+	$gateway_name    = array_search( get_class( $gateway ), $gateway_classes );
+
+	$note = sprintf( __( 'Recurring charge failed in %s.', 'rcp' ), ucwords( $gateway_name ) );
+
+	if ( ! empty( $gateway->webhook_event_id ) ) {
+		$note .= sprintf( __( ' Event ID: %s', 'rcp' ), $gateway->webhook_event_id );
+	}
+
+	$member->add_note( $note );
+
+}
+add_action( 'rcp_recurring_payment_failed', 'rcp_add_recurring_payment_failure_note', 10, 2 );
+
+/**
+ * Adds a note to the member when a subscription is started, renewed, or changed.
+ *
+ * @param string     $subscription_id The member's new subscription ID.
+ * @param int        $member_id       The member ID.
+ * @param RCP_Member $member          The RCP_Member object.
+ *
+ * @since 2.8.2
+ * @return void
+ */
+function rcp_add_subscription_change_note( $subscription_id, $member_id, $member ) {
+
+	$subscription_id          = (int) $subscription_id;
+	$existing_subscription_id = (int) $member->get_subscription_id();
+
+	if ( empty( $existing_subscription_id ) ) {
+		$member->add_note( sprintf( __( '%s subscription started.', 'rcp' ), rcp_get_subscription_name( $subscription_id ) ) );
+		return;
+	}
+
+	if ( $existing_subscription_id === $subscription_id ) {
+		$member->add_note( sprintf( __( '%s subscription renewed.', 'rcp' ), rcp_get_subscription_name( $subscription_id ) ) );
+		return;
+	}
+
+	if ( $existing_subscription_id !== $subscription_id ) {
+		$member->add_note( sprintf( __( 'Subscription changed from %s to %s.', 'rcp' ), rcp_get_subscription_name( $existing_subscription_id ), rcp_get_subscription_name( $subscription_id ) ) );
+		return;
+	}
+
+}
+add_action( 'rcp_member_pre_set_subscription_id', 'rcp_add_subscription_change_note', 10, 3 );
