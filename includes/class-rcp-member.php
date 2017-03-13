@@ -68,8 +68,12 @@ class RCP_Member extends WP_User {
 			do_action( "rcp_set_status_{$new_status}", $this->ID, $old_status, $this );
 
 			// Record the status change
-			if( $old_status != $new_status ) {
+			if( $old_status && ( $old_status != $new_status ) ) {
 				rcp_add_member_note( $this->ID, sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
+			}
+
+			if ( ! $old_status ) {
+				rcp_add_member_note( $this->ID, sprintf( __( 'Member\'s status set to %s', 'rcp' ), $new_status ) );
 			}
 
 			$ret = true;
