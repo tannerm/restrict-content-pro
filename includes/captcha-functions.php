@@ -18,7 +18,7 @@ function rcp_show_captcha() {
 	global $rcp_options;
 	// reCaptcha
 	if( isset( $rcp_options['enable_recaptcha'] ) && ! empty( $rcp_options['recaptcha_public_key'] ) ) : ?>
-		<div id="rcp_recaptcha" class="g-recaptcha" data-sitekey="<?php echo esc_attr( $rcp_options['recaptcha_public_key'] ); ?>"></div>
+		<div id="rcp_recaptcha" data-callback="rcp_validate_recaptcha" class="g-recaptcha" data-sitekey="<?php echo esc_attr( $rcp_options['recaptcha_public_key'] ); ?>"></div>
 		<input type="hidden" name="g-recaptcha-remoteip" value=<?php echo esc_attr( rcp_get_ip() ); ?> /><br/>
 	<?php endif;
 }

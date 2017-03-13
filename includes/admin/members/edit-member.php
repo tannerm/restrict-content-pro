@@ -18,6 +18,14 @@ $member = new RCP_Member( $member_id );
 <h1>
 	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $member->display_name; ?>
 </h1>
+
+<?php if( ! $member->exists() ) : ?>
+	<div class="error settings-error">
+		<p><?php _e( 'Error: Invalid member ID.', 'rcp' ); ?></p>
+	</div>
+	<?php return; ?>
+<?php endif; ?>
+
 <?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
 	<a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
 <?php } ?>
@@ -93,7 +101,7 @@ $member = new RCP_Member( $member_id );
 				<td>
 					<?php
 					$expiration_date = $member->get_expiration_date( false );
-					if( 'none' != $expiration_date ) {
+					if( ! empty( $expiration_date ) && 'none' != $expiration_date ) {
 						$expiration_date = date( 'Y-m-d', strtotime( $expiration_date, current_time( 'timestamp' ) ) );
 					}
 					?>

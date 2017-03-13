@@ -1124,12 +1124,6 @@ function rcp_can_member_renew( $user_id = 0 ) {
 
 	}
 
-	if( ! rcp_subscription_upgrade_possible( $user_id ) ) {
-
-		$ret = false;
-
-	}
-
 	return apply_filters( 'rcp_member_can_renew', $ret, $user_id );
 }
 
@@ -1359,3 +1353,36 @@ function rcp_add_recurring_payment_failure_note( $member, $gateway ) {
 
 }
 add_action( 'rcp_recurring_payment_failed', 'rcp_add_recurring_payment_failure_note', 10, 2 );
+
+/**
+ * Adds a note to the member when a subscription is started, renewed, or changed.
+ *
+ * @param string     $subscription_id The member's new subscription ID.
+ * @param int        $member_id       The member ID.
+ * @param RCP_Member $member          The RCP_Member object.
+ *
+ * @since 2.8.2
+ * @return void
+ */
+function rcp_add_subscription_change_note( $subscription_id, $member_id, $member ) {
+
+	$subscription_id          = (int) $subscription_id;
+	$existing_subscription_id = (int) $member->get_subscription_id();
+
+	if ( empty( $existing_subscription_id ) ) {
+		$member->add_note( sprintf( __( '%s subscription started.', 'rcp' ), rcp_get_subscription_name( $subscription_id ) ) );
+		return;
+	}
+
+	if ( $existing_subscription_id === $subscription_id ) {
+		$member->add_note( sprintf( __( '%s subscription renewed.', 'rcp' ), rcp_get_subscription_name( $subscription_id ) ) );
+		return;
+	}
+
+	if ( $existing_subscription_id !== $subscription_id ) {
+		$member->add_note( sprintf( __( 'Subscription changed from %s to %s.', 'rcp' ), rcp_get_subscription_name( $existing_subscription_id ), rcp_get_subscription_name( $subscription_id ) ) );
+		return;
+	}
+
+}
+add_action( 'rcp_member_pre_set_subscription_id', 'rcp_add_subscription_change_note', 10, 3 );

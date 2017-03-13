@@ -172,13 +172,16 @@ function rcp_print_scripts() {
 			'pay_now'            => __( 'Submit Payment', 'rcp' ),
 			'user_has_trialed'   => is_user_logged_in() && rcp_has_used_trial(),
 			'trial_levels'       => rcp_get_trial_level_ids(),
-			'auto_renew_default' => isset( $rcp_options['auto_renew_checked_on'] )
+			'auto_renew_default' => isset( $rcp_options['auto_renew_checked_on'] ),
+			'recaptcha_enabled'  => isset( $rcp_options['enable_recaptcha'] ) ? true : false
 		)
 	);
 
 	wp_print_scripts( 'rcp-register' );
 	wp_print_scripts( 'jquery-blockui' );
-	wp_print_scripts( 'recaptcha' );
+	if ( isset( $rcp_options['enable_recaptcha'] ) ) {
+		wp_print_scripts( 'recaptcha' );
+	}
 
 }
 add_action( 'wp_footer', 'rcp_print_scripts' );
