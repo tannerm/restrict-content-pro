@@ -1464,6 +1464,7 @@ function rcp_resend_email_verification() {
 }
 add_action( 'init', 'rcp_resend_email_verification' );
 
+/**
  * Retrieves the member's ID from their payment processor's subscription ID
  *
  * @param   string $subscription_id
