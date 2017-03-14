@@ -541,7 +541,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			case "recurring_payment_failed" :
 			case "recurring_payment_suspended_due_to_max_failed_payment" :
 
-				if( 'cancelled' !== $member->get_status( $user_id ) ) {
+				if( 'cancelled' !== $member->get_status() ) {
 
 					$member->set_status( 'expired' );
 
