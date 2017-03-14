@@ -522,7 +522,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 						// Initial payment failed, so set the user back to pending.
 						$member->set_status( 'pending' );
 						$member->add_note( __( 'Initial payment failed in PayPal Express.', 'rcp' ) );
-						
+
+						do_action( 'rcp_registration_failed', $this );
 						do_action( 'rcp_paypal_express_initial_payment_failed', $posted, $this );
 					} else {
 						// user is marked as cancelled but retains access until end of term
