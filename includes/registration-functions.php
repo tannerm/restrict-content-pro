@@ -989,6 +989,7 @@ function rcp_set_email_verification_flag( $posted, $user_id, $price ) {
 }
 add_action( 'rcp_form_processing', 'rcp_set_email_verification_flag', 10, 3 );
 
+/**
  * Remove subscription data if registration payment fails. Includes:
  *
  *  - Remove trial flags that were just set.
