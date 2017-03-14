@@ -747,7 +747,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	 * @return void
 	 */
 	public function scripts() {
-		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v2/', array( 'jquery' ) );
+		wp_enqueue_script( 'stripe-js', 'https://js.stripe.com/v2/', array( 'jquery' ) );
 	}
 
 	/**
