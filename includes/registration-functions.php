@@ -197,7 +197,8 @@ function rcp_process_registration() {
 
 	// If they're given proration credits, calculate the expiration date from today.
 	$force_now = $auto_renew;
-	if ( ! $force_now && ! empty( $member->get_prorate_credit_amount() ) ) {
+	$prorated  = $member->get_prorate_credit_amount();
+	if ( ! $force_now && ! empty( $prorated ) ) {
 		$force_now = true;
 	}
 
