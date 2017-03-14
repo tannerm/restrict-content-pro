@@ -368,10 +368,13 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			if( ! $this->auto_renew ) {
 				$member->set_expiration_date( $member->calculate_expiration() );
+				$member->set_status( 'active' );
 			}
 
-			// set this user to active
-			$member->set_status( 'active' );
+			if ( $this->auto_renew ) {
+				$member->set_expiration_date( date( 'Y-m-d 23:59:59', $subscription->current_period_end ) );
+				$member->set_status( 'active' );
+			}
 
 			do_action( 'rcp_stripe_signup', $this->user_id, $this );
 
@@ -747,7 +750,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 	 * @return void
 	 */
 	public function scripts() {
-		wp_enqueue_script( 'stripe', 'https://js.stripe.com/v2/', array( 'jquery' ) );
+		wp_enqueue_script( 'stripe-js', 'https://js.stripe.com/v2/', array( 'jquery' ) );
 	}
 
 	/**
