@@ -103,14 +103,26 @@ function rcp_tools_system_info_report() {
 	$return .= 'reCaptcha Secret Key:             ' . ( ! empty( $rcp_options['recaptcha_private_key'] ) ? "Set\n" : "Unset\n" );
 
 	// RCP Templates
-	$dir = get_stylesheet_directory() . '/rcp/';
+	$files       = array();
+	$directories = array( get_stylesheet_directory() . '/rcp/' );
 
-	if( is_dir( $dir ) && ( count( glob( "$dir/*" ) ) !== 0 ) ) {
-		$return .= "\n" . '-- RCP Template Overrides' . "\n\n";
+	if ( is_child_theme() ) {
+		$directories[] = get_template_directory() . '/rcp/';
+	}
 
-		foreach( glob( $dir . '/*' ) as $file ) {
-			$return .= 'Filename:                 ' . basename( $file ) . "\n";
+	foreach ( $directories as $dir ) {
+		if ( is_dir( $dir ) && ( count( glob( "$dir/*" ) ) !== 0 ) ) {
+			foreach ( glob( $dir . '/*' ) as $file ) {
+				if ( ! array_key_exists( basename( $file ), $files ) ) {
+					$files[ basename( $file ) ] = 'Filename:                 ' . basename( $file );
+				}
+			}
 		}
+	}
+
+	if ( ! empty( $files ) ) {
+		$return .= "\n" . '-- RCP Template Overrides' . "\n\n";
+		$return .= implode( "\n", $files ) . "\n";
 	}
 
 	// Get plugins that have an update
