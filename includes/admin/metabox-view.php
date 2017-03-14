@@ -83,6 +83,7 @@ $role_set_display  = '' != $user_role ? '' : ' style="display:none;"';
 		</select>
 	</p>
 </div>
+<?php do_action( 'rcp_metabox_additional_options_before' ); ?>
 <?php if( apply_filters( 'rcp_metabox_show_additional_options', true ) ) : ?>
 	<div id="rcp-metabox-field-options" class="rcp-metabox-field">
 

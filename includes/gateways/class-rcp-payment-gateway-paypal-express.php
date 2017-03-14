@@ -71,7 +71,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		if( $this->auto_renew ) {
 			$amount = $this->amount;
 		} else {
-			$amount = round( $this->amount + $this->signup_fee, 2 );
+			$amount = $this->initial_amount;
 		}
 
 		$args = array(
@@ -107,10 +107,6 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			$args['RETURNURL']                      = add_query_arg( array( 'rcp-recurring' => '1' ), $args['RETURNURL'] );
 		}
 
-		if ( $this->is_trial() ) {
-			$args['PAYMENTREQUEST_0_CUSTOM'] .= '|trial';
-		}
-
 		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
 		$body    = wp_remote_retrieve_body( $request );
 		$code    = wp_remote_retrieve_response_code( $request );
@@ -118,6 +114,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		if( is_wp_error( $request ) ) {
 
+			do_action( 'rcp_registration_failed', $this );
 			do_action( 'rcp_paypal_express_signup_payment_failed', $request, $this );
 
 			$error = '<p>' . __( 'An unidentified error occurred.', 'rcp' ) . '</p>';
@@ -132,6 +129,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			}
 
 			if( 'failure' === strtolower( $body['ACK'] ) ) {
+
+				do_action( 'rcp_registration_failed', $this );
 
 				$error = '<p>' . __( 'PayPal token creation failed.', 'rcp' ) . '</p>';
 				$error .= '<p>' . __( 'Error message:', 'rcp' ) . ' ' . $body['L_LONGMESSAGE0'] . '</p>';
@@ -149,6 +148,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		} else {
 
+			do_action( 'rcp_registration_failed', $this );
 			wp_die( __( 'Something has gone wrong, please try again', 'rcp' ), __( 'Error', 'rcp' ), array( 'back_link' => true, 'response' => '401' ) );
 
 		}
@@ -198,7 +198,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					'BILLINGPERIOD'       => ucwords( $details['subscription']['duration_unit'] ),
 					'BILLINGFREQUENCY'    => $details['subscription']['duration'],
 					'AMT'                 => $details['AMT'],
-					'INITAMT'             => round( $details['AMT'] + $details['subscription']['fee'], 2 ),
+					'INITAMT'             => $details['initial_amount'],
 					'CURRENCYCODE'        => $details['CURRENCYCODE'],
 					'FAILEDINITAMTACTION' => 'CancelOnFailure',
 					'L_BILLINGTYPE0'      => 'RecurringPayments',
@@ -210,13 +210,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					unset( $args['INITAMT'] );
 				}
 
-				if ( $details['is_trial'] ) {
-					$args['TRIALBILLINGPERIOD']      = ucwords( $details['subscription']['trial_duration_unit'] );
-					$args['TRIALBILLINGFREQUENCY']   = $details['subscription']['trial_duration'];
+				if ( $this->auto_renew && $this->is_trial() ) {
+					$args['TRIALBILLINGPERIOD']      = ucwords( $this->subscription_data['trial_duration_unit'] );
+					$args['TRIALBILLINGFREQUENCY']   = $this->subscription_data['trial_duration'];
 					$args['TRIALTOTALBILLINGCYCLES'] = 1;
 					$args['TRIALAMT']                = 0;
-
-					unset( $args['INITAMT'] );
 				}
 
 				$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
@@ -247,8 +245,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 					} else {
 
-						$custom = explode( '|', $details['PAYMENTREQUEST_0_CUSTOM'] );
-						$member = new RCP_Member( $custom[0] );
+						$member = new RCP_Member( $details['PAYMENTREQUEST_0_CUSTOM'] );
 
 						if( $member->just_upgraded() && $member->can_cancel() ) {
 							$cancelled = $member->cancel_payment_profile( false );
@@ -544,6 +541,15 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 				}
 
+				if ( ! empty( $posted['txn_id'] ) ) {
+
+					$this->webhook_event_id = sanitize_text_field( $posted['txn_id'] );
+
+				} elseif ( ! empty( $posted['ipn_track_id'] ) ) {
+
+					$this->webhook_event_id = sanitize_text_field( $posted['ipn_track_id'] );
+				}
+
 				do_action( 'rcp_ipn_subscr_failed' );
 
 				do_action( 'rcp_recurring_payment_failed', $member, $this );
@@ -642,14 +648,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				$subscription_id = $member->get_subscription_id();
 			}
 
-			$body['subscription'] = (array) rcp_get_subscription_details( $subscription_id );
-
-			$custom = explode( '|', $body['PAYMENTREQUEST_0_CUSTOM'] );
-
-			if ( ! empty( $custom[1] ) && 'trial' === $custom[1] && ! empty( $body['subscription']['trial_duration'] ) && ! empty( $body['subscription']['trial_duration_unit'] ) ) {
-				$body['is_trial'] = true;
-
-			}
+			$body['subscription']   = (array) rcp_get_subscription_details( $subscription_id );
+			$body['initial_amount'] = get_user_meta( $member->ID, 'rcp_pending_subscription_amount', true );
 
 			return $body;
 

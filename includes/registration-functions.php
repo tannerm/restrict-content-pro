@@ -170,8 +170,8 @@ function rcp_process_registration() {
 
 	if( ! $member->is_active() ) {
 
-		update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
-		update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
+		$member->set_subscription_id( $subscription_id );
+		$member->set_subscription_key( $subscription_key );
 
 		// Ensure no pending level details are set
 		delete_user_meta( $user_data['id'], 'rcp_pending_subscription_level' );
@@ -257,6 +257,7 @@ function rcp_process_registration() {
 
 		$subscription_data = array(
 			'price'               => rcp_get_registration()->get_total( true, false ), // get total without the fee
+			'recurring_price'     => rcp_get_registration()->get_recurring_total( true, false ), // get recurring total without the fee
 			'discount'            => rcp_get_registration()->get_total_discounts(),
 			'discount_code'       => $discount,
 			'fee'                 => rcp_get_registration()->get_total_fees(),
@@ -306,8 +307,8 @@ function rcp_process_registration() {
 
 		} else {
 
-			update_user_meta( $user_data['id'], 'rcp_subscription_level', $subscription_id );
-			update_user_meta( $user_data['id'], 'rcp_subscription_key', $subscription_key );
+			$member->set_subscription_id( $subscription_id );
+			$member->set_subscription_key( $subscription_key );
 
 			// Ensure no pending level details are set
 			delete_user_meta( $user_data['id'], 'rcp_pending_subscription_level' );
@@ -576,8 +577,8 @@ function rcp_set_pending_subscription_on_upgrade( $status, $user_id, $old_status
 
 	if( ! empty( $subscription_id ) && ! empty( $subscription_key ) ) {
 
-		update_user_meta( $user_id, 'rcp_subscription_level', $subscription_id );
-		update_user_meta( $user_id, 'rcp_subscription_key', $subscription_key );
+		$member->set_subscription_id( $subscription_id );
+		$member->set_subscription_key( $subscription_key );
 
 		delete_user_meta( $user_id, 'rcp_pending_subscription_level' );
 		delete_user_meta( $user_id, 'rcp_pending_subscription_key' );
@@ -896,6 +897,11 @@ function rcp_add_prorate_fee( $registration ) {
 		return;
 	}
 
+	// If renewing their current subscription, no proration.
+	if ( is_user_logged_in() && rcp_get_subscription_id() == $registration->get_subscription() ) {
+		return;
+	}
+
 	$registration->add_fee( -1 * $amount, __( 'Proration Credit', 'rcp' ), false, true );
 }
 add_action( 'rcp_registration_init', 'rcp_add_prorate_fee' );
@@ -983,3 +989,38 @@ function rcp_set_email_verification_flag( $posted, $user_id, $price ) {
 
 }
 add_action( 'rcp_form_processing', 'rcp_set_email_verification_flag', 10, 3 );
+
+ * Remove subscription data if registration payment fails. Includes:
+ *
+ *  - Remove trial flags that were just set.
+ *  - Decrease discount code usage if a code was used.
+ *
+ * @param RCP_Payment_Gateway $gateway
+ *
+ * @since  2.8
+ * @return void
+ */
+function rcp_remove_subscription_data_on_failure( $gateway ) {
+
+	// Remove free trial flags to allow them to sign up again.
+	if( ! empty( $gateway->user_id ) && $gateway->is_trial() ) {
+		delete_user_meta( $gateway->user_id, 'rcp_has_trialed' );
+		delete_user_meta( $gateway->user_id, 'rcp_is_trialing' );
+	}
+
+	// Remove discount code records.
+	if( ! empty( $gateway->discount_code ) ) {
+		$discounts    = new RCP_Discounts();
+		$discount_obj = $discounts->get_by( 'code', $gateway->discount_code );
+
+		// Decrease usage count.
+		$discounts->decrease_uses( $discount_obj->id );
+
+		// Remove the code from this user's profile.
+		if( ! empty( $gateway->user_id ) ) {
+			$discounts->remove_from_user( $gateway->user_id, $gateway->discount_code );
+		}
+	}
+
+}
+add_action( 'rcp_registration_failed', 'rcp_remove_subscription_data_on_failure' );
