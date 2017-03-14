@@ -21,7 +21,7 @@ function rcp_members_page() {
 		<?php if( isset( $_GET['edit_member'] ) || isset( $_GET['view_member'] ) ) :
 			include( 'edit-member.php' );
 		else : ?>
-			<h1><?php _e(' Paid Subscribers', 'rcp' ); ?></h1>
+			<h1><?php _e( 'Members', 'rcp' ); ?></h1>
 			<?php
 
 			$subscription_id = isset( $_GET['subscription'] ) && $_GET['subscription'] != 'all' ? urldecode( $_GET['subscription'] ) : null;

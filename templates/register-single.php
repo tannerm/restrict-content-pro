@@ -124,20 +124,12 @@ rcp_show_error_messages( 'register' ); ?>
 			<?php endif; ?>
 		</div>
 
-		<fieldset class="rcp_level_details_fieldset">
-			<p id="rcp_level_details_wrap" class="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>">
-				<span class="rcp_price"><?php echo rcp_currency_filter( $level->price ); ?></span>
-				<span class="rcp_sep">&nbsp;/&nbsp;</span>
-				<span class="rcp_duration"><?php echo $level->duration > 0 ? $level->duration . '&nbsp;' . rcp_filter_duration_unit( $level->duration_unit, $level->duration ) : __( 'unlimited', 'rcp' ); ?></span>
-			</p>
-		</fieldset>
-
 	<?php endif; ?>
 
 	<?php do_action( 'rcp_before_registration_submit_field' ); ?>
 
 	<p id="rcp_submit_wrap">
-		<input type="hidden" name="rcp_level" value="<?php echo absint( $rcp_level ); ?>" <?php if ( ! empty( $has_trial ) ) { echo 'data-has-trial="true"'; } ?> />
+		<input type="hidden" name="rcp_level" class="rcp_level" value="<?php echo absint( $rcp_level ); ?>" rel="<?php echo esc_attr( $level->price ); ?>" <?php if ( ! empty( $has_trial ) ) { echo 'data-has-trial="true"'; } ?> />
 		<input type="hidden" name="rcp_register_nonce" value="<?php echo wp_create_nonce('rcp-register-nonce' ); ?>"/>
 		<input type="submit" name="rcp_submit_registration" id="rcp_submit" value="<?php esc_attr_e( apply_filters ( 'rcp_registration_register_button', __( 'Register', 'rcp' ) ) ); ?>"/>
 	</p>

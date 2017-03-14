@@ -18,6 +18,14 @@ $member = new RCP_Member( $member_id );
 <h1>
 	<?php _e( 'Edit Member:', 'rcp' ); echo ' ' . $member->display_name; ?>
 </h1>
+
+<?php if( ! $member->exists() ) : ?>
+	<div class="error settings-error">
+		<p><?php _e( 'Error: Invalid member ID.', 'rcp' ); ?></p>
+	</div>
+	<?php return; ?>
+<?php endif; ?>
+
 <?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
 	<a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a>
 <?php } ?>
@@ -96,7 +104,7 @@ $member = new RCP_Member( $member_id );
 				<td>
 					<?php
 					$expiration_date = $member->get_expiration_date( false );
-					if( 'none' != $expiration_date ) {
+					if( ! empty( $expiration_date ) && 'none' != $expiration_date ) {
 						$expiration_date = date( 'Y-m-d', strtotime( $expiration_date, current_time( 'timestamp' ) ) );
 					}
 					?>
@@ -183,15 +191,13 @@ $member = new RCP_Member( $member_id );
 					?>
 				</td>
 			</tr>
-			<tr class="form-field">
-				<td colspan="2" scope="row" valign="top" style="padding: 20px 10px 20px 0;">
-					<h4><?php _e( 'Payments', 'rcp' ); ?></h4>
-					<?php echo rcp_print_user_payments_formatted( $member->ID ); ?>
-				</td>
-			</tr>
 			<?php do_action( 'rcp_edit_member_after', $member->ID ); ?>
 		</tbody>
 	</table>
+	
+	<h4><?php _e( 'Payments', 'rcp' ); ?></h4>
+	<?php echo rcp_print_user_payments_formatted( $member->ID ); ?>
+
 	<p class="submit">
 		<input type="hidden" name="rcp-action" value="edit-member"/>
 		<input type="hidden" name="user" value="<?php echo absint( urldecode( $_GET['edit_member'] ) ); ?>"/>
