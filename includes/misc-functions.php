@@ -684,6 +684,38 @@ function rcp_is_restricted_content( $post_id ) {
 		return false;
 	}
 
+	$post_id = absint( $post_id );
+
+	// Check post restrictions.
+	$restricted = rcp_has_post_restrictions( $post_id );
+
+	// Check if the post is restricted via a term.
+	if ( ! $restricted ) {
+		$term_restricted_post_ids = rcp_get_post_ids_assigned_to_restricted_terms();
+		if ( in_array( $post_id, $term_restricted_post_ids ) ) {
+			$restricted = true;
+		}
+	}
+
+	return apply_filters( 'rcp_is_restricted_content', $restricted, $post_id );
+
+}
+
+/**
+ * Checks to see if a given post has any restrictions. This checks post
+ * restrictions only via the Edit Post meta box.
+ *
+ * @param int $post_id The post ID to check for restrictions.
+ *
+ * @since 2.8.2
+ * @return bool True if the post has restrictions.
+ */
+function rcp_has_post_restrictions( $post_id ) {
+
+	if ( empty( $post_id ) || ! is_numeric( $post_id ) ) {
+		return false;
+	}
+
 	$restricted = false;
 
 	$post_id = absint( $post_id );
@@ -710,7 +742,8 @@ function rcp_is_restricted_content( $post_id ) {
 		}
 	}
 
-	return apply_filters( 'rcp_is_restricted_content', $restricted, $post_id );
+	return (bool) apply_filters( 'rcp_has_post_restrictions', $restricted, $post_id );
+
 }
 
 /**

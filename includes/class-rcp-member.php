@@ -1215,11 +1215,11 @@ class RCP_Member extends WP_User {
 			}
 		}
 
-		$is_restricted_content    = rcp_is_restricted_content( $post_id );
+		$has_post_restrictions    = rcp_has_post_restrictions( $post_id );
 		$term_restricted_post_ids = rcp_get_post_ids_assigned_to_restricted_terms();
 
 		// since no post-level restrictions, check to see if user is restricted via term
-		if ( $ret && ! $is_restricted_content && in_array( $post_id, $term_restricted_post_ids ) ) {
+		if ( $ret && ! $has_post_restrictions && in_array( $post_id, $term_restricted_post_ids ) ) {
 
 			$restricted = false;
 
@@ -1263,7 +1263,7 @@ class RCP_Member extends WP_User {
 			}
 
 		// since user doesn't pass post-level restrictions, see if user is allowed via term
-		} else if ( ! $ret && $is_restricted_content && in_array( $post_id, $term_restricted_post_ids ) ) {
+		} else if ( ! $ret && $has_post_restrictions && in_array( $post_id, $term_restricted_post_ids ) ) {
 
 			$allowed = false;
 
