@@ -966,7 +966,7 @@ function rcp_set_email_verification_flag( $posted, $user_id, $price ) {
 
 	// Not required if they've already had a subscription level.
 	// This prevents email verification from popping up for old users on upgrades/downgrades/renewals.
-	if( rcp_get_subscription_id( $user_id ) ) {
+	if( get_user_meta( $user_id, '_rcp_old_subscription_id', true ) ) {
 		$required = false;
 	}
 
