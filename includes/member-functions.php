@@ -1412,8 +1412,8 @@ function rcp_confirm_email_verification() {
 
 	global $rcp_options;
 
-	$edit_profile_page = $rcp_options['edit_profile'];
-	if ( ! $redirect = add_query_arg( array( 'rcp-message' => 'email-verified' ), get_post_permalink( $edit_profile_page ) ) ) {
+	$account_page = $rcp_options['account_page'];
+	if ( ! $redirect = add_query_arg( array( 'rcp-message' => 'email-verified' ), get_post_permalink( $account_page ) ) ) {
 		return;
 	}
 
@@ -1453,8 +1453,8 @@ function rcp_resend_email_verification() {
 	// Redirect back to Edit Profile page with success message.
 	global $rcp_options;
 
-	$edit_profile_page = $rcp_options['edit_profile'];
-	if ( ! $redirect = add_query_arg( array( 'rcp-message' => 'verification-resent' ), get_post_permalink( $edit_profile_page ) ) ) {
+	$account_page = $rcp_options['account_page'];
+	if ( ! $redirect = add_query_arg( array( 'rcp-message' => 'verification-resent' ), get_post_permalink( $account_page ) ) ) {
 		return;
 	}
 
