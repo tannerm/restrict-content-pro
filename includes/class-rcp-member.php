@@ -68,8 +68,12 @@ class RCP_Member extends WP_User {
 			do_action( "rcp_set_status_{$new_status}", $this->ID, $old_status, $this );
 
 			// Record the status change
-			if( $old_status != $new_status ) {
-				rcp_add_member_note( $this->ID, sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
+			if( $old_status && ( $old_status != $new_status ) ) {
+				$this->add_note( sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
+			}
+
+			if ( ! $old_status ) {
+				$this->add_note( sprintf( __( 'Member\'s status set to %s', 'rcp' ), $new_status ) );
 			}
 
 			$ret = true;
@@ -147,22 +151,33 @@ class RCP_Member extends WP_User {
 		$ret      = false;
 		$old_date = $this->get_expiration_date( false, false );
 
-		if( $old_date !== $new_date ) {
+		// Return early if there's no change in expiration date
+		if ( empty( $new_date ) || ( ! empty( $old_date ) && ( $old_date == $new_date ) ) ) {
+			return $ret;
+		}
 
-			if( update_user_meta( $this->ID, 'rcp_expiration', $new_date ) ) {
+		if ( update_user_meta( $this->ID, 'rcp_expiration', $new_date ) ) {
 
-				// Record the status change
+			// Record the status change
+			if ( empty( $old_date ) ) {
+
+				$note = sprintf( __( 'Member\'s expiration set to %s', 'rcp' ), $new_date );
+
+			} else {
+
 				$note = sprintf( __( 'Member\'s expiration changed from %s to %s', 'rcp' ), $old_date, $new_date );
-				rcp_add_member_note( $this->ID, $note );
 
 			}
 
-			delete_user_meta( $this->ID, 'rcp_pending_expiration_date' );
-
-			do_action( 'rcp_set_expiration_date', $this->ID, $new_date, $old_date );
-
-			$ret = true;
 		}
+
+		$this->add_note( $note );
+
+		delete_user_meta( $this->ID, 'rcp_pending_expiration_date' );
+
+		do_action( 'rcp_set_expiration_date', $this->ID, $new_date, $old_date );
+
+		$ret = true;
 
 		return $ret;
 

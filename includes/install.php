@@ -264,7 +264,7 @@ function rcp_create_tables() {
 		transaction_id varchar(64) NOT NULL,
 		status varchar(12) NOT NULL,
 		PRIMARY KEY id (id),
-		KEY subscription(subscription),
+		KEY subscription (subscription),
 		KEY user_id (user_id),
 		KEY subscription_key (subscription_key),
 		KEY transaction_id (transaction_id),

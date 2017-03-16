@@ -665,36 +665,43 @@ function rcp_print_user_payments_formatted( $user_id ) {
 		return $payments_list;
 	}
 
+	$i = 0;
+
 	ob_start();
 	?>
 
-	<table class="wp-list-table widefat fixed posts rcp-table rcp_payment_details" style="display: block; width: 100%;">
+	<table class="wp-list-table widefat posts rcp-table rcp_payment_details">
 
 		<thead>
 			<tr>
-				<th><?php _e( 'ID', 'rcp' ); ?></th>
-				<th><?php _e( 'Date', 'rcp' ); ?></th>
-				<th><?php _e( 'Subscription', 'rcp' ); ?></th>
-				<th><?php _e( 'Payment Type', 'rcp' ); ?></th>
-				<th><?php _e( 'Subscription Key', 'rcp' ); ?></th>
-				<th><?php _e( 'Transaction ID', 'rcp' ); ?></th>
-				<th><?php _e( 'Amount', 'rcp' ); ?></th>
+				<th scope="col" class="column-primary"><?php _e( 'ID', 'rcp' ); ?></th>
+				<th scope="col"><?php _e( 'Date', 'rcp' ); ?></th>
+				<th scope="col"><?php _e( 'Subscription', 'rcp' ); ?></th>
+				<th scope="col"><?php _e( 'Payment Type', 'rcp' ); ?></th>
+				<th scope="col"><?php _e( 'Subscription Key', 'rcp' ); ?></th>
+				<th scope="col"><?php _e( 'Transaction ID', 'rcp' ); ?></th>
+				<th scope="col"><?php _e( 'Amount', 'rcp' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach( $user_payments as $payment ) : ?>
 
-				<tr>
-					<td><a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php echo esc_html( $payment->id ); ?></a></td>
-					<td><?php echo esc_html( $payment->date ); ?></td>
-					<td><?php echo esc_html( $payment->subscription ); ?></td>
-					<td><?php echo esc_html( $payment->payment_type ); ?></td>
-					<td><?php echo esc_html( $payment->subscription_key ); ?></td>
-					<td><?php echo rcp_get_merchant_transaction_id_link( $payment ); ?></td>
-					<td><?php echo ( '' == $payment->amount ) ? esc_html( rcp_currency_filter( $payment->amount2 ) ) : esc_html( rcp_currency_filter( $payment->amount ) ); ?></td>
+				<tr class="rcp_row<?php echo rcp_is_odd( $i ) ? ' alternate' : ''; ?>">
+					<td class="column-primary" data-colname="<?php _e( 'ID', 'rcp' ); ?>">
+						<a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php echo esc_html( $payment->id ); ?></a>
+						<button type="button" class="toggle-row"><span class="screen-reader-text"><?php _e( 'Show more details', 'rcp' ); ?></span></button>
+					</td>
+					<td data-colname="<?php _e( 'Date', 'rcp' ); ?>"><?php echo esc_html( $payment->date ); ?></td>
+					<td data-colname="<?php _e( 'Subscription', 'rcp' ); ?>"><?php echo esc_html( $payment->subscription ); ?></td>
+					<td data-colname="<?php _e( 'Payment Type', 'rcp' ); ?>"><?php echo esc_html( $payment->payment_type ); ?></td>
+					<td data-colname="<?php _e( 'Subscription Key', 'rcp' ); ?>"><?php echo esc_html( $payment->subscription_key ); ?></td>
+					<td data-colname="<?php _e( 'Transaction ID', 'rcp' ); ?>"><?php echo rcp_get_merchant_transaction_id_link( $payment ); ?></td>
+					<td data-colname="<?php _e( 'Amount', 'rcp' ); ?>"><?php echo ( '' == $payment->amount ) ? esc_html( rcp_currency_filter( $payment->amount2 ) ) : esc_html( rcp_currency_filter( $payment->amount ) ); ?></td>
 				</tr>
 
-			<?php endforeach; ?>
+			<?php
+			$i++;
+			endforeach; ?>
 		</tbody>
 
 	</table>
@@ -1131,12 +1138,6 @@ function rcp_can_member_renew( $user_id = 0 ) {
 
 	}
 
-	if( ! rcp_subscription_upgrade_possible( $user_id ) ) {
-
-		$ret = false;
-
-	}
-
 	return apply_filters( 'rcp_member_can_renew', $ret, $user_id );
 }
 
@@ -1255,7 +1256,7 @@ function rcp_get_switch_to_url( $user_id = 0 ) {
  */
 function rcp_validate_username( $username = '' ) {
 	$sanitized = sanitize_user( $username, false );
-	$valid = ( $sanitized == $username );
+	$valid = ( strtolower( $sanitized ) == strtolower( $username ) );
 	return (bool) apply_filters( 'rcp_validate_username', $valid, $username );
 }
 
@@ -1366,3 +1367,36 @@ function rcp_add_recurring_payment_failure_note( $member, $gateway ) {
 
 }
 add_action( 'rcp_recurring_payment_failed', 'rcp_add_recurring_payment_failure_note', 10, 2 );
+
+/**
+ * Adds a note to the member when a subscription is started, renewed, or changed.
+ *
+ * @param string     $subscription_id The member's new subscription ID.
+ * @param int        $member_id       The member ID.
+ * @param RCP_Member $member          The RCP_Member object.
+ *
+ * @since 2.8.2
+ * @return void
+ */
+function rcp_add_subscription_change_note( $subscription_id, $member_id, $member ) {
+
+	$subscription_id          = (int) $subscription_id;
+	$existing_subscription_id = (int) $member->get_subscription_id();
+
+	if ( empty( $existing_subscription_id ) ) {
+		$member->add_note( sprintf( __( '%s subscription started.', 'rcp' ), rcp_get_subscription_name( $subscription_id ) ) );
+		return;
+	}
+
+	if ( $existing_subscription_id === $subscription_id ) {
+		$member->add_note( sprintf( __( '%s subscription renewed.', 'rcp' ), rcp_get_subscription_name( $subscription_id ) ) );
+		return;
+	}
+
+	if ( $existing_subscription_id !== $subscription_id ) {
+		$member->add_note( sprintf( __( 'Subscription changed from %s to %s.', 'rcp' ), rcp_get_subscription_name( $existing_subscription_id ), rcp_get_subscription_name( $subscription_id ) ) );
+		return;
+	}
+
+}
+add_action( 'rcp_member_pre_set_subscription_id', 'rcp_add_subscription_change_note', 10, 3 );

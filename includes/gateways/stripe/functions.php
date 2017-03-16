@@ -63,7 +63,7 @@ function rcp_stripe_update_card_form_js() {
 		return;
 	}
 
-	wp_enqueue_script( 'stripe', 'https://js.stripe.com/v2/', array( 'jquery' ) );
+	wp_enqueue_script( 'stripe-js', 'https://js.stripe.com/v2/', array( 'jquery' ) );
 ?>
 	<script type="text/javascript">
 
