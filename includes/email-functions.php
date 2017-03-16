@@ -466,11 +466,6 @@ function rcp_send_email_verification( $user_id ) {
 	$subject = isset( $rcp_options['verification_subject'] ) ? $rcp_options['verification_subject'] : __( 'Please confirm your email address', 'rcp' );
 	$subject = apply_filters( 'rcp_verification_subject', $subject, $user_id );
 
-	// @todo remove
-	//$message = sprintf( __( 'Click here to confirm your email address: %s', 'rcp' ), esc_url( rcp_generate_verification_link( $user_id ) ) );
-
-	error_log($message);error_log($subject);
-
 	if( ! empty( $message ) && ! empty( $subject ) ) {
 		$user_info = get_userdata( $user_id );
 		$emails->send( $user_info->user_email, $subject, $message );
