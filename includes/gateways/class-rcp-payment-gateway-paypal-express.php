@@ -518,13 +518,22 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 				if( ! $member->just_upgraded() ) {
 
-					// user is marked as cancelled but retains access until end of term
-					$member->cancel();
+					if( isset( $posted['initial_payment_status'] ) && 'Failed' == $posted['initial_payment_status'] ) {
+						// Initial payment failed, so set the user back to pending.
+						$member->set_status( 'pending' );
+						$member->add_note( __( 'Initial payment failed in PayPal Express.', 'rcp' ) );
 
-					// set the use to no longer be recurring
-					delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
+						do_action( 'rcp_registration_failed', $this );
+						do_action( 'rcp_paypal_express_initial_payment_failed', $member, $posted, $this );
+					} else {
+						// user is marked as cancelled but retains access until end of term
+						$member->cancel();
 
-					do_action( 'rcp_ipn_subscr_cancel', $user_id );
+						// set the use to no longer be recurring
+						delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
+
+						do_action( 'rcp_ipn_subscr_cancel', $user_id );
+					}
 
 					die( 'successful recurring_payment_profile_cancel' );
 
@@ -535,7 +544,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			case "recurring_payment_failed" :
 			case "recurring_payment_suspended_due_to_max_failed_payment" :
 
-				if( 'cancelled' !== $member->get_status( $user_id ) ) {
+				if( 'cancelled' !== $member->get_status() ) {
 
 					$member->set_status( 'expired' );
 

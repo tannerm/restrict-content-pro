@@ -211,6 +211,9 @@ function rcp_members_page() {
 											<?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
 												<span> | <a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a></span>
 											<?php } ?>
+											<?php if( $rcp_member->is_pending_verification() ) : ?>
+												<span> | <a href="<?php echo wp_nonce_url( add_query_arg( 'send_verification', $member->ID, $current_page ), 'rcp-verification-nonce' ); ?>" class="rcp_send_verification"><?php _e( 'Re-send Verification', 'rcp' ); ?></a></span>
+											<?php endif; ?>
 											<span class="rcp-separator"> | </span>
 											<span class="id rcp-member-id"><?php echo __( 'ID:', 'rcp' ) . ' ' . $member->ID; ?></span>
 											<?php do_action( 'rcp_member_row_actions', $member->ID ); ?>

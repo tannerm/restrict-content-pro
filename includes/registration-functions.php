@@ -195,8 +195,15 @@ function rcp_process_registration() {
 	// Delete pending expiration date in case a previous registration was never completed.
 	delete_user_meta( $user_data['id'], 'rcp_pending_expiration_date' );
 
+	// If they're given proration credits, calculate the expiration date from today.
+	$force_now = $auto_renew;
+	$prorated  = $member->get_prorate_credit_amount();
+	if ( ! $force_now && ! empty( $prorated ) ) {
+		$force_now = true;
+	}
+
 	// Calculate the expiration date for the member
-	$member_expires = $member->calculate_expiration( $auto_renew, $trial_duration );
+	$member_expires = $member->calculate_expiration( $force_now, $trial_duration );
 
 	update_user_meta( $user_data['id'], 'rcp_pending_expiration_date', $member_expires );
 
@@ -940,6 +947,54 @@ function rcp_remove_expiring_soon_email_sent_flag( $status, $user_id ) {
 	delete_user_meta( $user_id, '_rcp_expiring_soon_email_sent' );
 }
 add_action( 'rcp_set_status', 'rcp_remove_expiring_soon_email_sent_flag', 10, 2 );
+
+/**
+ * Trigger email verification during registration.
+ *
+ * @uses rcp_send_email_verification()
+ *
+ * @param array $posted  Posted form data.
+ * @param int   $user_id ID of the user making this registration.
+ * @param float $price   Price of the subscription level.
+ *
+ * @return void
+ */
+function rcp_set_email_verification_flag( $posted, $user_id, $price ) {
+
+	global $rcp_options;
+
+	$require_verification = isset( $rcp_options['email_verification'] ) ? $rcp_options['email_verification'] : 'off';
+	$required             = in_array( $require_verification, array( 'free', 'all' ) );
+
+	// Not required if this is a paid registration and email verification is required for free only.
+	if( $price > 0 && 'free' == $require_verification ) {
+		$required = false;
+	}
+
+	// Not required if they've already had a subscription level.
+	// This prevents email verification from popping up for old users on upgrades/downgrades/renewals.
+	if( get_user_meta( $user_id, '_rcp_old_subscription_id', true ) ) {
+		$required = false;
+	}
+
+	// Bail if verification not required.
+	if( ! apply_filters( 'rcp_require_email_verification', $required, $posted, $user_id, $price ) ) {
+		return;
+	}
+
+	// Email verification already completed.
+	if( get_user_meta( $user_id, 'rcp_email_verified', true ) ) {
+		return;
+	}
+
+	// Add meta flag to indicate they're pending email verification.
+	update_user_meta( $user_id, 'rcp_pending_email_verification', strtolower( md5( uniqid() ) ) );
+
+	// Send email.
+	rcp_send_email_verification( $user_id );
+
+}
+add_action( 'rcp_form_processing', 'rcp_set_email_verification_flag', 10, 3 );
 
 /**
  * Remove subscription data if registration payment fails. Includes:

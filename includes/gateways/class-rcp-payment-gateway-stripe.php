@@ -241,6 +241,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			} catch ( \Stripe\Error\Card $e ) {
 
+				if ( ! empty( $save_balance ) ) {
+					$customer->account_balance -= $balance_amount;
+					$customer->save();
+				}
+
 				$this->handle_processing_error( $e );
 
 			} catch ( \Stripe\Error\InvalidRequest $e ) {

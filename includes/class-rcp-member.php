@@ -124,19 +124,14 @@ class RCP_Member extends WP_User {
 	 *
 	 * @access  public
 	 * @since   2.1
-	 * @return  int
+	 * @return  int|false
 	 */
 	public function get_expiration_time() {
 
-		$expiration = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
+		$expiration = $this->get_expiration_date( false );
+		$timestamp  = ( $expiration && 'none' != $expiration ) ? strtotime( $expiration, current_time( 'timestamp' ) ) : false;
 
-		if( empty( $expiration ) ) {
-
-			$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
-
-		}
-
-		return apply_filters( 'rcp_member_get_expiration_time', strtotime( $expiration, current_time( 'timestamp' ) ), $this->ID, $this );
+		return apply_filters( 'rcp_member_get_expiration_time', $timestamp, $this->ID, $this );
 
 	}
 
@@ -154,7 +149,7 @@ class RCP_Member extends WP_User {
 	public function set_expiration_date( $new_date = '' ) {
 
 		$ret      = false;
-		$old_date = get_user_meta( $this->ID, 'rcp_expiration', true ); // This calls user meta directly to avoid retrieving the pending date
+		$old_date = $this->get_expiration_date( false, false );
 
 		// Return early if there's no change in expiration date
 		if ( empty( $new_date ) || ( ! empty( $old_date ) && ( $old_date == $new_date ) ) ) {
@@ -1070,7 +1065,7 @@ class RCP_Member extends WP_User {
 	public function is_expired() {
 
 		$ret        = false;
-		$expiration = get_user_meta( $this->ID, 'rcp_expiration', true );
+		$expiration = $this->get_expiration_date( false, false );
 
 		if( $expiration && strtotime( 'NOW', current_time( 'timestamp' ) ) > strtotime( $expiration, current_time( 'timestamp' ) ) ) {
 			$ret = true;
@@ -1125,6 +1120,37 @@ class RCP_Member extends WP_User {
 		$ret = apply_filters( 'rcp_has_used_trial', $ret, $this->ID );
 
 		return apply_filters( 'rcp_member_has_trialed', $ret, $this->ID );
+
+	}
+
+	/**
+	 * Determines if a member is pending email verification.
+	 *
+	 * @access public
+	 * @return bool
+	 */
+	public function is_pending_verification() {
+
+		$is_pending = get_user_meta( $this->ID, 'rcp_pending_email_verification', true );
+
+		return (bool) apply_filters( 'rcp_is_pending_email_verification', $is_pending, $this->ID, $this );
+
+	}
+
+	/**
+	 * Confirm email verification
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function verify_email() {
+
+		do_action( 'rcp_member_pre_verify_email', $this->ID, $this );
+
+		delete_user_meta( $this->ID, 'rcp_pending_email_verification' );
+		update_user_meta( $this->ID, 'rcp_email_verified', true );
+
+		do_action( 'rcp_member_post_verify_email', $this->ID, $this );
 
 	}
 
@@ -1215,11 +1241,11 @@ class RCP_Member extends WP_User {
 			}
 		}
 
-		$is_restricted_content    = rcp_is_restricted_content( $post_id );
+		$has_post_restrictions    = rcp_has_post_restrictions( $post_id );
 		$term_restricted_post_ids = rcp_get_post_ids_assigned_to_restricted_terms();
 
 		// since no post-level restrictions, check to see if user is restricted via term
-		if ( $ret && ! $is_restricted_content && in_array( $post_id, $term_restricted_post_ids ) ) {
+		if ( $ret && ! $has_post_restrictions && in_array( $post_id, $term_restricted_post_ids ) ) {
 
 			$restricted = false;
 
@@ -1263,7 +1289,7 @@ class RCP_Member extends WP_User {
 			}
 
 		// since user doesn't pass post-level restrictions, see if user is allowed via term
-		} else if ( ! $ret && $is_restricted_content && in_array( $post_id, $term_restricted_post_ids ) ) {
+		} else if ( ! $ret && $has_post_restrictions && in_array( $post_id, $term_restricted_post_ids ) ) {
 
 			$allowed = false;
 

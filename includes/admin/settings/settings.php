@@ -784,6 +784,43 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 
+							<tr valign="top">
+								<th>
+									<label for="rcp_settings[email_verification]"><?php _e( 'Email Verification', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<?php $verify = isset( $rcp_options['email_verification'] ) ? $rcp_options['email_verification'] : 'off'; ?>
+									<select id="rcp_settings[email_verification]" name="rcp_settings[email_verification]" class="rcp-disable-email">
+										<option value="off" <?php selected( $verify, 'off' ); ?>><?php _e( 'Off', 'rcp' ); ?></option>
+										<option value="free" <?php selected( $verify, 'free' ); ?>><?php _e( 'On for free subscription levels', 'rcp' ); ?></option>
+										<option value="all" <?php selected( $verify, 'all' ); ?>><?php _e( 'On for all subscription levels', 'rcp' ); ?></option>
+									</select>
+									<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'A free subscription level is one with a 0 price in the level settings. It does not include registrations that have been made free with a discount code.', 'rcp' ); ?>"></span>
+									<p class="description"><?php _e( 'Require that new members verify their email address before gaining access to restricted content.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr valign="top"<?php echo ( ! isset( $rcp_options['email_verification'] ) || 'off' == $rcp_options['email_verification'] ) ? ' style="display: none;"' : ''; ?>>
+								<th>
+									<label for="rcp_settings[verification_subject]"><?php _e( 'Email Verification Subject', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<input class="regular-text" id="rcp_settings[verification_subject]" style="width: 300px;" name="rcp_settings[verification_subject]" value="<?php echo ! empty( $rcp_options['verification_subject'] ) ? esc_attr( $rcp_options['verification_subject'] ) : esc_attr__( 'Please confirm your email address', 'rcp' ); ?>"/>
+									<p class="description"><?php _e( 'The subject line for the email verification message.', 'rcp' ); ?></p>
+								</td>
+							</tr>
+							<tr valign="top"<?php echo ( ! isset( $rcp_options['email_verification'] ) || 'off' == $rcp_options['email_verification'] ) ? ' style="display: none;"' : ''; ?>>
+								<th>
+									<label for="rcp_settings[verification_email]"><?php _e( 'Email Verification Body', 'rcp' ); ?></label>
+								</th>
+								<td>
+									<?php
+									$verification_email = isset( $rcp_options['verification_email'] ) ? wptexturize( $rcp_options['verification_email'] ) : sprintf( __( 'Click here to confirm your email address and activate your account: %s', 'rcp' ), '%verificationlink%' );
+									wp_editor( $verification_email, 'rcp_settings_verification_email', array( 'textarea_name' => 'rcp_settings[verification_email]', 'teeny' => true ) );
+									?>
+									<p class="description"><?php printf( __( 'This is the message for the verification email. Use the %s template tag for the verification URL.', 'rcp' ), '<code>%verificationlink%</code>' ); ?></p>
+								</td>
+							</tr>
+
 							<tr>
 								<th>
 									<label><?php _e( 'Available Template Tags', 'rcp' ); ?></label>

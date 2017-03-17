@@ -66,6 +66,9 @@ $member = new RCP_Member( $member_id );
 						?>
 					</select>
 					<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( 'An Active status is required to access paid content. Members with a status of Cancelled may continue to access paid content until the expiration date on their account is reached.', 'rcp' ); ?>"></span>
+					<?php if ( $member->is_pending_verification() ) : ?>
+						<p class="description"><?php _e( '(Pending email verification.)', 'rcp' ); ?></p>
+					<?php endif; ?>
 					<p class="description"><?php _e( 'The status of this user\'s subscription', 'rcp' ); ?></p>
 				</td>
 			</tr>
@@ -107,7 +110,7 @@ $member = new RCP_Member( $member_id );
 					?>
 					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker" value="<?php echo esc_attr( $expiration_date ); ?>"/>
 					<label for="rcp-unlimited">
-						<input name="unlimited" id="rcp-unlimited" type="checkbox"<?php checked( get_user_meta( $member->ID, 'rcp_expiration', true ), 'none' ); ?>/>
+						<input name="unlimited" id="rcp-unlimited" type="checkbox"<?php checked( $expiration_date, 'none' ); ?>/>
 						<span class="description"><?php _e( 'Never expires?', 'rcp' ); ?></span>
 					</label>
 					<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( 'This is the date the member will lose access to content if their membership is not renewed.', 'rcp' ); ?>"></span>

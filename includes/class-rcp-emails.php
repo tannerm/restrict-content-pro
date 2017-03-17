@@ -489,6 +489,11 @@ class RCP_Emails {
 				'description' => __( 'The name of this website', 'rcp' ),
 				'function'    => 'rcp_email_tag_site_name'
 			),
+			array(
+				'tag'         => 'verificationlink',
+				'description' => __( 'The email verification URL, only for the Email Verification template', 'rcp' ),
+				'function'    => 'rcp_email_tag_email_verification'
+			)
 		);
 
 		return apply_filters( 'rcp_email_template_tags', $email_tags, $this );
