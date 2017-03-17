@@ -165,3 +165,86 @@ function rcp_post_classes( $classes, $class = '', $post_id = false ) {
 }
 
 add_filter( 'post_class', 'rcp_post_classes', 10, 3 );
+
+/**
+ * Print notices on the front-end pages.
+ *
+ * @since  2.8.2
+ * @return void
+ */
+function rcp_front_end_notices() {
+
+	if( ! isset( $_GET['rcp-message'] ) ) {
+		return;
+	}
+
+	static $displayed = false;
+
+	// Only one message at a time.
+	if ( $displayed ) {
+		return;
+	}
+
+	$message = '';
+	$type    = 'success';
+	$notice  = $_GET['rcp-message'];
+
+	switch( $notice ) {
+
+		case 'email-verified' :
+			$message = __( 'Your email address has been successfully verified.', 'rcp' );
+			break;
+
+		case 'verification-resent' :
+			$message = __( 'Your verification email has been re-sent successfully.', 'rcp' );
+			break;
+
+		case 'profile-updated' :
+			$message = __( 'Your profile has been updated successfully.', 'rcp' );
+			break;
+
+	}
+
+	if( empty( $message ) ) {
+		return;
+	}
+
+	$class = ( 'success' == $type ) ? 'rcp_success' : 'rcp_error';
+	printf( '<p class="%s"><span>%s</span></p>', $class, esc_html( $message ) );
+
+	$displayed = true;
+
+}
+add_action( 'rcp_profile_editor_messages', 'rcp_front_end_notices' );
+add_action( 'rcp_subscription_details_top', 'rcp_front_end_notices' );
+
+/**
+ * Display messages on the Edit Profile and Membership Details pages
+ * if the account is pending email verification. Also includes a link
+ * to re-send the verification email.
+ *
+ * @since  2.8.2
+ * @return void
+ */
+function rcp_pending_verification_notice() {
+
+	$member = new RCP_Member( get_current_user_id() );
+
+	if ( ! $member->is_pending_verification() ) {
+		return;
+	}
+
+	static $displayed = false;
+
+	// Make sure we only display once in case both shortcodes are on the same page.
+	if ( $displayed ) {
+		return;
+	}
+
+	printf( '<p class="rcp_error"><span>' . __( 'Your account is pending email verification. <a href="%s">Click here to re-send the verification email.</a>', 'rcp' ) . '</span></p>', esc_url( wp_nonce_url( add_query_arg( 'rcp_action', 'resend_verification', rcp_get_current_url() ), 'rcp-verification-nonce' ) ) );
+
+	$displayed = true;
+
+}
+add_action( 'rcp_subscription_details_top', 'rcp_pending_verification_notice' );
+add_action( 'rcp_profile_editor_messages', 'rcp_pending_verification_notice' );

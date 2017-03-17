@@ -118,6 +118,11 @@ function rcp_admin_notices() {
 			$text = __( 'Member\'s payment profile cancelled successfully', 'rcp' );
 			break;
 
+		case 'verification_sent' :
+
+			$text = __( 'Verification email sent successfully.', 'rcp' );
+			break;
+
 		case 'level_added' :
 
 			$text = __( 'Subscription level added', 'rcp' );

@@ -92,6 +92,11 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 		$has_access = false;
 	}
 
+	// No access if pending email verification.
+	if ( rcp_is_pending_verification() ) {
+		$has_access = false;
+	}
+
 	if ( current_user_can( 'manage_options' ) ) {
 		$has_access = true;
 	}

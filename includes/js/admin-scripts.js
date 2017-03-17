@@ -310,10 +310,19 @@ jQuery(document).ready(function($) {
 
 	// Show/hide email fields based on their activation state.
 	$('.rcp-disable-email').on('change', function () {
-		var subject = $(this).parents('tr').next();
-		var body = subject.next();
+		var subject  = $(this).parents('tr').next();
+		var body     = subject.next();
+		var disabled = false;
 
-		if( $(this).prop('checked') ) {
+		if( 'SELECT' == $(this).prop('tagName') && 'off' == $(this).val() ) {
+			// Select dropdowns, like email verification.
+			disabled = true;
+		} else {
+			// Checkboxes.
+			disabled = $(this).prop('checked');
+		}
+
+		if( true === disabled ) {
 			subject.css('display', 'none');
 			body.css('display', 'none');
 		} else {

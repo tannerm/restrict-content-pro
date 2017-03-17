@@ -66,6 +66,9 @@ $member = new RCP_Member( $member_id );
 						?>
 					</select>
 					<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( 'An Active status is required to access paid content. Members with a status of Cancelled may continue to access paid content until the expiration date on their account is reached.', 'rcp' ); ?>"></span>
+					<?php if ( $member->is_pending_verification() ) : ?>
+						<p class="description"><?php _e( '(Pending email verification.)', 'rcp' ); ?></p>
+					<?php endif; ?>
 					<p class="description"><?php _e( 'The status of this user\'s subscription', 'rcp' ); ?></p>
 				</td>
 			</tr>

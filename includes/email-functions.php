@@ -445,6 +445,35 @@ function rcp_email_admin_on_manual_payment( $member, $payment_id, $gateway ) {
 add_action( 'rcp_process_manual_signup', 'rcp_email_admin_on_manual_payment', 10, 3 );
 
 /**
+ * Send email verification message
+ *
+ * @see rcp_trigger_email_verification()
+ *
+ * @param int $user_id
+ *
+ * @since 2.8.2
+ * @return void
+ */
+function rcp_send_email_verification( $user_id ) {
+
+	global $rcp_options;
+
+	$emails = new RCP_Emails;
+	$emails->member_id = $user_id;
+
+	$message = isset( $rcp_options['verification_email'] ) ? $rcp_options['verification_email'] : '';
+	$message = apply_filters( 'rcp_verification_email', $message, $user_id );
+	$subject = isset( $rcp_options['verification_subject'] ) ? $rcp_options['verification_subject'] : __( 'Please confirm your email address', 'rcp' );
+	$subject = apply_filters( 'rcp_verification_subject', $subject, $user_id );
+
+	if( ! empty( $message ) && ! empty( $subject ) ) {
+		$user_info = get_userdata( $user_id );
+		$emails->send( $user_info->user_email, $subject, $message );
+	}
+
+}
+
+/**
  * Get a list of available email templates
  *
  * @since 2.7
@@ -659,6 +688,20 @@ function rcp_email_tag_amount( $member_id = 0, $payment_id = 0 ) {
  */
 function rcp_email_tag_site_name() {
 	return wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
+}
+
+/**
+ * Email template tag: email verification
+ * The URL for verifying an email address.
+ *
+ * @param int $member_id  The member ID.
+ * @param int $payment_id The payment ID.
+ *
+ * @since 2.8.2
+ * @return string
+ */
+function rcp_email_tag_email_verification( $member_id = 0, $payment_id = 0 ) {
+	return esc_url( rcp_generate_verification_link( $member_id ) );
 }
 
 /**
