@@ -249,7 +249,7 @@ class RCP_Payment_Gateway {
 	 * the $this->initial_payment value. If recurring, you'll want to use $initial_payment for the
 	 * first payment and $this->amount for the recurring amount.
 	 *
-	 * After a successful registration, redirect to $this->checkout_url.
+	 * After a successful payment, redirect to $this->return_url.
 	 *
 	 * @access public
 	 * @return void
