@@ -40,8 +40,11 @@ rcp_show_error_messages( 'register' ); ?>
 
 	<?php if( ! is_user_logged_in() ) { ?>
 
-	<?php do_action( 'rcp_before_register_form_fields' ); ?>
+	<div class="rcp_login_link">
+		<p><?php printf( __( '<a href="%s">Log in</a> if you wish to renew an existing subscription.', 'rcp' ), esc_url( rcp_get_login_url( rcp_get_current_url() ) ) ); ?></p>
+	</div>
 
+	<?php do_action( 'rcp_before_register_form_fields' ); ?>
 
 	<fieldset class="rcp_user_fieldset">
 		<p id="rcp_user_login_wrap">
