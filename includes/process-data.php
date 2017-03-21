@@ -210,6 +210,10 @@ function rcp_process_data() {
 
 							$member->cancel();
 
+							if( ! empty( $_POST['rcp-revoke-access'] ) && ! $member->is_expired() ) {
+								$member->set_expiration_date( date( 'Y-m-d H:i:s', strtotime( '-1 day', current_time( 'timestamp' ) ) ) );
+							}
+
 							break;
 
 					}
@@ -233,21 +237,24 @@ function rcp_process_data() {
 				wp_die( __( 'You do not have permission to perform this action.', 'rcp' ) );
 			}
 
-			$levels       = new RCP_Levels();
-			$user_id      = absint( $_POST['user'] );
-			$member       = new RCP_Member( $user_id );
-			$email        = sanitize_text_field( $_POST['email'] );
-			$status       = sanitize_text_field( $_POST['status'] );
-			$level_id     = absint( $_POST['level'] );
-			$expiration   = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
-			$expiration   = 'none' !== $expiration ? date( 'Y-m-d 23:59:59', strtotime( $_POST['expiration'], current_time( 'timestamp' ) ) ) : $expiration;
+			$levels        = new RCP_Levels();
+			$user_id       = absint( $_POST['user'] );
+			$member        = new RCP_Member( $user_id );
+			$email         = sanitize_text_field( $_POST['email'] );
+			$status        = sanitize_text_field( $_POST['status'] );
+			$level_id      = absint( $_POST['level'] );
+			$expiration    = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
+			$expiration    = 'none' !== $expiration ? date( 'Y-m-d 23:59:59', strtotime( $_POST['expiration'], current_time( 'timestamp' ) ) ) : $expiration;
+			$revoke_access = isset( $_POST['rcp-revoke-access'] );
 
 			if( isset( $_POST['notes'] ) ) {
 				update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
 			}
 
-			if( ! empty( $_POST['expiration'] ) ) {
+			if( ! empty( $_POST['expiration'] ) && ( 'cancelled' != $status || ! $revoke_access ) ) {
 				$member->set_expiration_date( $expiration );
+			} elseif( 'cancelled' == $status && $revoke_access && ! $member->is_expired() ) {
+				$member->set_expiration_date( date( 'Y-m-d H:i:s', strtotime( '-1 day', current_time( 'timestamp' ) ) ) );
 			}
 
 			if( isset( $_POST['level'] ) ) {

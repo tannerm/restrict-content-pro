@@ -70,6 +70,11 @@ $member = new RCP_Member( $member_id );
 						<p class="description"><?php _e( '(Pending email verification.)', 'rcp' ); ?></p>
 					<?php endif; ?>
 					<p class="description"><?php _e( 'The status of this user\'s subscription', 'rcp' ); ?></p>
+					<p id="rcp-revoke-access-wrap">
+						<input type="checkbox" id="rcp-revoke-access" name="rcp-revoke-access" value="1">
+						<label for="rcp-revoke-access"><?php _e( 'Revoke access now', 'rcp' ); ?></label>
+						<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'If not enabled, the member will retain access until the end of their current term. If checked, access will be revoked immediately.', 'rcp' ); ?>"></span>
+					</p>
 				</td>
 			</tr>
 			<tr valign="top">

@@ -207,6 +207,10 @@
 	color: #555;
 }
 
+#rcp-revoke-access-wrap {
+	display: none;
+}
+
 /* Subscription Levels Page Columns
 -------------------------------------------------------------- */
 

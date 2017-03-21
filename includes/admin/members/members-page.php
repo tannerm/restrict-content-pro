@@ -136,8 +136,13 @@ function rcp_members_page() {
 						<option value="-1"><?php _e( 'Bulk Actions', 'rcp' ); ?></option>
 						<option value="mark-active"><?php _e( 'Mark as Active', 'rcp' ); ?></option>
 						<option value="mark-expired"><?php _e( 'Mark as Expired', 'rcp' ); ?></option>
-						<option value="mark-cancelled"><?php _e( 'Revoke Access', 'rcp' ); ?></option>
+						<option value="mark-cancelled"><?php _e( 'Mark as Cancelled', 'rcp' ); ?></option>
 					</select>
+					<span id="rcp-revoke-access-wrap">
+						<input type="checkbox" id="rcp-revoke-access" name="rcp-revoke-access" value="1">
+						<label for="rcp-revoke-access"><?php _e( 'Revoke access now', 'rcp' ); ?></label>
+						<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'If not enabled, the member(s) will retain access until the end of their current term. If checked, access will be revoked immediately.', 'rcp' ); ?>"></span>
+					</span>
 					<input type="text" class="rcp-datepicker" name="expiration" placeholder="<?php esc_attr_e( 'New Expiration Date', 'rcp' ); ?>" id="rcp-bulk-expiration" value=""/>
 					<input type="submit" id="rcp-submit-bulk-action" class="button action" value="<?php _e( 'Apply', 'rcp' ); ?>"/>
 				</div>
