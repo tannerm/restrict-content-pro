@@ -285,7 +285,7 @@ add_action( 'rcp_set_status', 'rcp_email_on_activation', 11, 2 );
  */
 function rcp_email_on_free_trial( $status, $user_id ) {
 
-	if( 'active' == $status && rcp_is_trialing( $user_id ) ) {
+	if( 'active' == $status && rcp_is_trialing( $user_id ) && get_user_meta( $user_id, '_rcp_new_subscription', true ) ) {
 
 		// Send free trial welcome email.
 		rcp_email_subscription_status( $user_id, 'trial' );
