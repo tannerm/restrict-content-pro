@@ -291,7 +291,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					'currency'       => strtolower( $this->currency ),
 					'customer'       => $customer->id,
 					'description'    => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
-					'receipt_email'  => $this->email,
 					'metadata'       => array(
 						'email'      => $this->email,
 						'user_id'    => $this->user_id,
