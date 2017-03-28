@@ -1165,23 +1165,35 @@ class RCP_Member extends WP_User {
 	 */
 	public function can_access( $post_id = 0 ) {
 
+		// Admins always get access.
+		if( user_can( $this->ID, 'manage_options' ) ) {
+			return apply_filters( 'rcp_member_can_access', true, $this->ID, $post_id, $this );
+		}
+
+		// If the post is unrestricted, everyone gets access.
+		if( ! rcp_is_restricted_content( $post_id ) ) {
+			return apply_filters( 'rcp_member_can_access', true, $this->ID, $post_id, $this );
+		}
+
+		/*
+		 * From this point on we assume the post has some kind of restrictions added.
+		 */
+
+		// If the user doesn't have an active account, they don't get access.
+		if( $this->is_expired() || ! in_array( $this->get_status(), array( 'active', 'free', 'cancelled' ) ) ) {
+			return apply_filters( 'rcp_member_can_access', false, $this->ID, $post_id, $this );
+		}
+
+		// Post restrictions.
 		$subscription_levels = rcp_get_content_subscription_levels( $post_id );
 		$access_level        = get_post_meta( $post_id, 'rcp_access_level', true );
 		$user_level          = get_post_meta( $post_id, 'rcp_user_level', true );
 		$sub_id              = $this->get_subscription_id();
 
-		if ( rcp_is_restricted_content( $post_id ) ) {
-			$ret = in_array( rcp_get_status(), array( 'active', 'free', 'cancelled' ) );
-		} else {
-			$ret = true;
-		}
+		// Assume they have access until proven otherwise.
+		$ret = true;
 
-		if ( rcp_is_paid_content( $post_id ) && $this->is_expired() ) {
-
-			$ret = false;
-
-		}
-
+		// Check subscription level restrictions.
 		if ( ! empty( $subscription_levels ) ) {
 
 			if( is_string( $subscription_levels ) ) {
@@ -1190,7 +1202,7 @@ class RCP_Member extends WP_User {
 
 					case 'any' :
 
-						$ret = ! empty( $sub_id ) && ! $this->is_expired() && in_array( rcp_get_status(), array( 'active', 'free', 'cancelled' ) );
+						$ret = ! empty( $sub_id );
 						break;
 
 					case 'any-paid' :
@@ -1218,7 +1230,7 @@ class RCP_Member extends WP_User {
 
 					} else {
 
-						$ret = ! $this->is_expired();
+						$ret = true;
 					}
 
 				} else {
@@ -1229,18 +1241,21 @@ class RCP_Member extends WP_User {
 			}
 		}
 
+		// Check post access level restrictions.
 		if ( ! rcp_user_has_access( $this->ID, $access_level ) && $access_level > 0 ) {
 
 			$ret = false;
 
 		}
 
+		// Check post user role restrictions.
 		if ( $ret && ! empty( $user_level ) && 'All' != $user_level ) {
 			if ( ! user_can( $this->ID, strtolower( $user_level ) ) ) {
 				$ret = false;
 			}
 		}
 
+		// Check term restrictions.
 		$has_post_restrictions    = rcp_has_post_restrictions( $post_id );
 		$term_restricted_post_ids = rcp_get_post_ids_assigned_to_restricted_terms();
 
@@ -1270,13 +1285,13 @@ class RCP_Member extends WP_User {
 						break;
 					}
 
-					if ( ! $restricted && ! empty( $restrictions['subscriptions'] ) && ( ! in_array( $this->get_subscription_id(), $restrictions['subscriptions'] ) || ! in_array( $this->get_status(), array( 'active', 'free', 'cancelled' ) ) ) ) {
+					if ( ! $restricted && ! empty( $restrictions['subscriptions'] ) && ! in_array( $this->get_subscription_id(), $restrictions['subscriptions'] ) ) {
 						$restricted = true;
 						break;
 					}
 
 					if ( ! $restricted && ! empty( $restrictions['access_level'] ) && 'None' !== $restrictions['access_level'] ) {
-						if ( $restrictions['access_level'] > 0 && ( ! rcp_user_has_access( $this->ID, $restrictions['access_level'] ) || ! in_array( $this->get_status(), array( 'active', 'free', 'cancelled' ) ) ) ) {
+						if ( $restrictions['access_level'] > 0 && ! rcp_user_has_access( $this->ID, $restrictions['access_level'] ) ) {
 							$restricted = true;
 							break;
 						}
@@ -1314,13 +1329,13 @@ class RCP_Member extends WP_User {
 						break;
 					}
 
-					if ( ! $allowed && ! empty( $restrictions['subscriptions'] ) && in_array( $this->get_subscription_id(), $restrictions['subscriptions'] ) && in_array( $this->get_status(), array( 'active', 'free', 'cancelled' ) ) ) {
+					if ( ! $allowed && ! empty( $restrictions['subscriptions'] ) && in_array( $this->get_subscription_id(), $restrictions['subscriptions'] ) ) {
 						$allowed = true;
 						break;
 					}
 
 					if ( ! $allowed && ! empty( $restrictions['access_level'] ) && 'None' !== $restrictions['access_level'] ) {
-						if ( $restrictions['access_level'] > 0 && rcp_user_has_access( $this->ID, $restrictions['access_level'] ) && in_array( $this->get_status(), array( 'active', 'free', 'cancelled' ) ) ) {
+						if ( $restrictions['access_level'] > 0 && rcp_user_has_access( $this->ID, $restrictions['access_level'] ) ) {
 							$allowed = true;
 							break;
 						}
@@ -1331,10 +1346,6 @@ class RCP_Member extends WP_User {
 			if ( $allowed ) {
 				$ret = true;
 			}
-		}
-
-		if( user_can( $this->ID, 'manage_options' ) ) {
-			$ret = true;
 		}
 
 		return apply_filters( 'rcp_member_can_access', $ret, $this->ID, $post_id, $this );
