@@ -246,8 +246,8 @@ class RCP_Payment_Gateway {
 	 * Process registration
 	 *
 	 * This is where you process the actual payment. If non-recurring, you'll want to use
-	 * the $this->initial_payment value. If recurring, you'll want to use $initial_payment for the
-	 * first payment and $this->amount for the recurring amount.
+	 * the $this->initial_amount value. If recurring, you'll want to use $this->initial_amount
+	 * for the first payment and $this->amount for the recurring amount.
 	 *
 	 * After a successful payment, redirect to $this->return_url.
 	 *
@@ -355,7 +355,7 @@ class RCP_Payment_Gateway {
 	 * Add error to the registration form
 	 *
 	 * @param string $code    Error code.
-	 * @param string $message Error message to displayl.
+	 * @param string $message Error message to display.
 	 *
 	 * @access public
 	 * @return void
