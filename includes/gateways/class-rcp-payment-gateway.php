@@ -2,6 +2,9 @@
 /**
  * Payment Gateway Base Class
  *
+ * You can extend this class to add support for a custom gateway.
+ * @link http://docs.restrictcontentpro.com/article/1695-payment-gateway-api
+ *
  * @package     Restrict Content Pro
  * @subpackage  Classes/Gateway
  * @copyright   Copyright (c) 2017, Pippin Williamson
@@ -11,25 +14,174 @@
 
 class RCP_Payment_Gateway {
 
+	/**
+	 * Array of features the gateway supports, including:
+	 *      one-time (one time payments)
+	 *      recurring (recurring payments)
+	 *      fees (setup fees)
+	 *      trial (free trials)
+	 *
+	 * @var array
+	 * @access public
+	 */
 	public $supports = array();
+
+	/**
+	 * The customer's email address
+	 *
+	 * @var string
+	 * @access public
+	 */
 	public $email;
+
+	/**
+	 * The customer's user account ID
+	 *
+	 * @var int
+	 * @access public
+	 */
 	public $user_id;
+
+	/**
+	 * The customer's username
+	 *
+	 * @var string
+	 * @access public
+	 */
 	public $user_name;
+
+	/**
+	 * The selected currency code (i.e. "USD")
+	 *
+	 * @var string
+	 * @access public
+	 */
 	public $currency;
+
+	/**
+	 * Recurring subscription amount
+	 * This excludes any one-time fees or one-time discounts.
+	 *
+	 * @var int|float
+	 */
 	public $amount;
+
+	/**
+	 * Initial payment amount
+	 * This is the amount to be billed for the first payment, including
+	 * any one-time setup fees or one-time discounts.
+	 *
+	 * @var int|float
+	 * @access public
+	 */
+	public $initial_amount;
+
+	/**
+	 * Total discounts applied to the payment
+	 *
+	 * @var int|float
+	 * @access public
+	 */
 	public $discount;
+
+	/**
+	 * Subscription duration
+	 *
+	 * @var int
+	 * @access public
+	 */
 	public $length;
+
+	/**
+	 * Subscription unit: day, month, or year
+	 *
+	 * @var string
+	 * @access public
+	 */
 	public $length_unit;
+
+	/**
+	 * Signup fees to apply to the first payment
+	 * (This number is included in $initial_amount)
+	 *
+	 * @var int|float
+	 * @access public
+	 */
 	public $signup_fee;
+
+	/**
+	 * Subscription key
+	 *
+	 * @var string
+	 * @access public
+	 */
 	public $subscription_key;
+
+	/**
+	 * Subscription ID number the customer is signing up for
+	 *
+	 * @var int
+	 * @access public
+	 */
 	public $subscription_id;
+
+	/**
+	 * Name of the subscription the customer is signing up for
+	 *
+	 * @var string
+	 * @access public
+	 */
 	public $subscription_name;
+
+	/**
+	 * Whether or not this registration is for a recurring subscription
+	 *
+	 * @var bool
+	 * @access public
+	 */
 	public $auto_renew;
+
+	/**
+	 * URL to redirect the customer to after a successful registration
+	 *
+	 * @var string
+	 * @access public
+	 */
 	public $return_url;
+
+	/**
+	 * Whether or not the site is in sandbox mode
+	 *
+	 * @var bool
+	 * @access public
+	 */
 	public $test_mode;
+
+	/**
+	 * Array of all subscription data that's been passed to the gateway
+	 *
+	 * @var array
+	 * @access public
+	 */
 	public $subscription_data;
+
+	/**
+	 * Webhook event ID (for example: the Stripe event ID)
+	 * This may not always be populated
+	 *
+	 * @var string
+	 * @access public
+	 */
 	public $webhook_event_id;
 
+	/**
+	 * RCP_Payment_Gateway constructor.
+	 *
+	 * @param array $subscription_data Subscription data passed from rcp_process_registration()
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function __construct( $subscription_data = array() ) {
 
 		$this->test_mode = rcp_is_sandbox();
@@ -59,32 +211,155 @@ class RCP_Payment_Gateway {
 
 	}
 
-	public function init() {}
+	/**
+	 * Initialize the gateway configuration
+	 *
+	 * This is used to populate the $supports property, setup any API keys, and set the API endpoint.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function init() {
 
+		/* Example:
+
+		$this->supports[] = 'one-time';
+		$this->supports[] = 'recurring';
+		$this->supports[] = 'fees';
+		$this->supports[] = 'trial';
+
+		global $rcp_options;
+
+		if ( $this->test_mode ) {
+			$this->api_endpoint = 'https://sandbox.gateway.com';
+			$this->api_key      = $rcp_options['my_sandbox_api_key'];
+		} else {
+			$this->api_endpoint = 'https://live.gateway.com';
+			$this->api_key      = $rcp_options['my_live_api_key'];
+		}
+
+		*/
+
+	}
+
+	/**
+	 * Process registration
+	 *
+	 * This is where you process the actual payment. If non-recurring, you'll want to use
+	 * the $this->initial_amount value. If recurring, you'll want to use $this->initial_amount
+	 * for the first payment and $this->amount for the recurring amount.
+	 *
+	 * After a successful payment, redirect to $this->return_url.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function process_signup() {}
 
+	/**
+	 * Process webhooks
+	 *
+	 * Listen for webhooks and take appropriate action to insert payments, renew the member's
+	 * account, or cancel the membership.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function process_webhooks() {}
 
+	/**
+	 * Use this space to enqueue any extra JavaScript files.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function scripts() {}
 
-	public function fields() {}
+	/**
+	 * Load any extra fields on the registration form
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function fields() {
 
-	public function validate_fields() {}
+		/* Example for loading the credit card fields :
 
+		ob_start();
+		rcp_get_template_part( 'card-form' );
+		return ob_get_clean();
+
+		*/
+
+	}
+
+	/**
+	 * Validate registration form fields
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function validate_fields() {
+
+		/* Example :
+
+		if ( empty( $_POST['rcp_card_cvc'] ) ) {
+			rcp_errors()->add( 'missing_card_code', __( 'The security code you have entered is invalid', 'rcp' ), 'register' );
+		}
+
+		*/
+
+	}
+
+	/**
+	 * Check if the gateway supports a given feature
+	 *
+	 * @param string $item
+	 *
+	 * @access public
+	 * @return bool
+	 */
 	public function supports( $item = '' ) {
 		return in_array( $item, $this->supports );
 	}
 
+	/**
+	 * Generate a transaction ID
+	 *
+	 * Used in the manual payments gateway.
+	 *
+	 * @return string
+	 */
 	public function generate_transaction_id() {
 		$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 		return strtolower( md5( $this->subscription_key . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'rcp', true ) ) );
 	}
 
+	/**
+	 * Renew a member's subscription
+	 *
+	 * This is a useful wrapper if you don't already have an RCP_Member object handy.
+	 *
+	 * @param bool   $recurring Whether or not it's a recurring subscription.
+	 * @param string $status    Status to set the member to, usually 'active'.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function renew_member( $recurring = false, $status = 'active' ) {
 		$member = new RCP_Member( $this->user_id );
 		$member->renew( $recurring, $status );
 	}
 
+	/**
+	 * Add error to the registration form
+	 *
+	 * @param string $code    Error code.
+	 * @param string $message Error message to display.
+	 *
+	 * @access public
+	 * @return void
+	 */
 	public function add_error( $code = '', $message = '' ) {
 		rcp_errors()->add( $code, $message, 'register' );
 	}
