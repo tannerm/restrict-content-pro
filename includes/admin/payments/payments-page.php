@@ -88,7 +88,7 @@ function rcp_payments_page() {
 						<tr class="rcp_payment <?php if( rcp_is_odd( $i ) ) echo 'alternate'; ?>">
 							<td class="column-primary has-row-actions" data-colname="<?php _e( 'User', 'rcp' ); ?>">
 								<strong><a href="<?php echo esc_url( add_query_arg( 'user_id', $payment->user_id, menu_page_url( 'rcp-payments', false ) ) ); ?>" title="<?php _e( 'View payments by this user', 'rcp' ); ?>">
-									<?php echo isset( $user->display_name ) ? esc_html( $user->display_name ) : ''; ?>
+									<?php echo isset( $user->display_name ) ? esc_html( $user->display_name ) : sprintf( __( 'User #%d (deleted)', 'rcp' ), $payment->user_id ); ?>
 								</a></strong>
 								<span class="rcp-payment-amount-user-col">
 									<?php printf( _x( ' (%s) ', 'The payment amount shown in the user column on smaller devices', 'rcp' ), rcp_currency_filter( $payment->amount ) ); ?>
@@ -97,10 +97,12 @@ function rcp_payments_page() {
 									<?php if( current_user_can( 'rcp_manage_payments' ) ) : ?>
 										<span class="id"><?php echo __( 'ID:', 'rcp' ) . ' ' . absint( $payment->id ); ?></span>
 										<span class="rcp-row-action-separator"> | </span>
-										<span class="view rcp-view-member"><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'rcp-members', 'edit_member' => $user->ID ), $current_page) ); ?>"><?php _e('View Member', 'rcp'); ?></a></span>
-										<span class="rcp-row-action-separator"> | </span>
-										<span class="view rcp-edit-user"><a href="<?php echo esc_url( add_query_arg( array( 'user_id' => $user->ID ), admin_url( 'user-edit.php' ) ) ); ?>"><?php _e( 'Edit User', 'rcp'); ?></a></span>
-										<span class="rcp-row-action-separator"> | </span>
+										<?php if ( is_object( $user ) ) : ?>
+											<span class="view rcp-view-member"><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'rcp-members', 'edit_member' => $user->ID ), $current_page) ); ?>"><?php _e('View Member', 'rcp'); ?></a></span>
+											<span class="rcp-row-action-separator"> | </span>
+											<span class="view rcp-edit-user"><a href="<?php echo esc_url( add_query_arg( array( 'user_id' => $user->ID ), admin_url( 'user-edit.php' ) ) ); ?>"><?php _e( 'Edit User', 'rcp'); ?></a></span>
+											<span class="rcp-row-action-separator"> | </span>
+										<?php endif; ?>
 										<span class="rcp-view-invoice"><a href="<?php echo esc_url( rcp_get_invoice_url( $payment->id ) ); ?>" class="rcp-payment-invoice"><?php _e( 'View Invoice', 'rcp' ); ?></a></span>
 										<span class="rcp-row-action-separator"> | </span>
 										<span class="rcp-edit-payment"><a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php _e( 'Edit', 'rcp' ); ?></a></span>

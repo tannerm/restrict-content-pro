@@ -86,7 +86,7 @@ class RCP_Payments_Export extends RCP_Export {
 				'subscription'     => $payment->subscription,
 				'amount'           => $payment->amount,
 				'user_id'          => $payment->user_id,
-				'user_login'       => $user->user_login,
+				'user_login'       => isset( $user->user_login ) ? $user->user_login : '',
 				'payment_type'     => $payment->payment_type,
 				'subscription_key' => $payment->subscription_key,
 				'date'             => $payment->date
