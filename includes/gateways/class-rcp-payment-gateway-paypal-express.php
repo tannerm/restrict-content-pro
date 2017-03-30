@@ -215,11 +215,6 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				}
 
 				if ( $details['is_trial'] ) {
-					$args['TRIALBILLINGPERIOD']      = ucwords( $details['subscription']['trial_duration_unit'] );
-					$args['TRIALBILLINGFREQUENCY']   = $details['subscription']['trial_duration'];
-					$args['TRIALTOTALBILLINGCYCLES'] = 1;
-					$args['TRIALAMT']                = 0;
-
 					// Set profile start date to the end of the free trial.
 					$args['PROFILESTARTDATE'] = date( 'Y-m-d\TH:i:s', strtotime( '+' . $details['subscription']['trial_duration'] . ' ' . $details['subscription']['trial_duration_unit'], current_time( 'timestamp' ) ) );
 
