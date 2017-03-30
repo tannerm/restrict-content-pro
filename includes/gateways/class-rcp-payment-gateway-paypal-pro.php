@@ -118,10 +118,10 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 		}
 
 		if ( $this->auto_renew && $this->is_trial() ) {
-			$args['TRIALBILLINGPERIOD']      = ucwords( $this->subscription_data['trial_duration_unit'] );
-			$args['TRIALBILLINGFREQUENCY']   = $this->subscription_data['trial_duration'];
-			$args['TRIALTOTALBILLINGCYCLES'] = 1;
-			$args['TRIALAMT']                = 0;
+			// Set profile start date to the end of the free trial.
+			$subscription = rcp_get_subscription_details( $this->subscription_id );
+			$args['PROFILESTARTDATE'] = date( 'Y-m-d\TH:i:s', strtotime( '+' . $subscription->trial_duration . ' ' . $subscription->trial_duration_unit, current_time( 'timestamp' ) ) );
+			unset( $args['INITAMT'] );
 		}
 
 		$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => apply_filters( 'rcp_paypal_pro_args', $args, $this ) ) );
