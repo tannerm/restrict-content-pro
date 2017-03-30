@@ -130,16 +130,18 @@ jQuery(document).ready(function($) {
 	$('.rcp_delete_subscription').click(function() {
 		if(confirm(rcp_vars.delete_subscription)) {
 			return true;
-		} else {
-			return false;
 		}
 		return false;
 	});
 	$('.rcp-delete-payment').click(function() {
 		if(confirm(rcp_vars.delete_payment)) {
 			return true;
-		} else {
-			return false;
+		}
+		return false;
+	});
+	$('.rcp_delete_discount').click(function() {
+		if(confirm(rcp_vars.delete_discount)) {
+			return true;
 		}
 		return false;
 	});
