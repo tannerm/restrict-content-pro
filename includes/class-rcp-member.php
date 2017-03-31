@@ -1270,7 +1270,7 @@ class RCP_Member extends WP_User {
 
 				foreach( $terms as $term_id ) {
 
-					$restrictions = rcp_get_term_restrictions( $term_id['term_taxonomy_id'] );
+					$restrictions = rcp_get_term_restrictions( $term_id );
 
 					if ( empty( $restrictions['paid_only'] ) && empty( $restrictions['subscriptions'] ) && ( empty( $restrictions['access_level'] ) || 'None' == $restrictions['access_level'] ) ) {
 						if ( count( $terms ) === 1 ) {

@@ -837,8 +837,15 @@ function rcp_currency_decimal_filter( $decimals = 2 ) {
  * @return array An array of taxonomy term IDs connected to the post.
  */
 function rcp_get_connected_term_ids( $post_id = 0 ) {
-	global $wpdb;
-	return $wpdb->get_results( $wpdb->prepare( "SELECT term_taxonomy_id FROM {$wpdb->term_relationships} WHERE object_id = %d", absint( $post_id ) ), ARRAY_A );
+	$terms = get_terms(
+		array_values( get_taxonomies( array( 'public' => true ) ) ),
+		array(
+			'fields'     => 'ids',
+			'object_ids' => $post_id
+		)
+	);
+
+	return $terms;
 }
 
 /**
@@ -895,7 +902,7 @@ function rcp_get_post_ids_assigned_to_restricted_terms() {
 				continue;
 			}
 
-			$p_ids = $wpdb->get_results( $wpdb->prepare( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", absint( $term->term_id ) ), ARRAY_A );
+			$p_ids = $wpdb->get_results( $wpdb->prepare( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", absint( $term->term_taxonomy_id ) ), ARRAY_A );
 			foreach( $p_ids as $p_id ) {
 				if ( ! in_array( $p_id['object_id'], $post_ids ) ) {
 					$post_ids[] = $p_id['object_id'];
