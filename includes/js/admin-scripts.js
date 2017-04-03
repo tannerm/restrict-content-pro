@@ -130,16 +130,18 @@ jQuery(document).ready(function($) {
 	$('.rcp_delete_subscription').click(function() {
 		if(confirm(rcp_vars.delete_subscription)) {
 			return true;
-		} else {
-			return false;
 		}
 		return false;
 	});
 	$('.rcp-delete-payment').click(function() {
 		if(confirm(rcp_vars.delete_payment)) {
 			return true;
-		} else {
-			return false;
+		}
+		return false;
+	});
+	$('.rcp_delete_discount').click(function() {
+		if(confirm(rcp_vars.delete_discount)) {
+			return true;
 		}
 		return false;
 	});
@@ -292,10 +294,23 @@ jQuery(document).ready(function($) {
 
 	// Cancel user's subscription when updating status to "Cancelled".
 	$('#rcp-status').on('change', function () {
-		if ( rcp_vars.can_cancel_member && 'cancelled' == $(this).val() ) {
-			$(this).parent().append('<p id="rcp-cancel-subscription-wrap"><input type="checkbox" id="rcp-cancel-subscription" name="cancel_subscription" value="1"><label for="rcp-cancel-subscription">' + rcp_vars.cancel_subscription + '</label></p>');
+		if ( 'cancelled' == $(this).val() ) {
+			if ( rcp_vars.can_cancel_member ) {
+				$(this).parent().append('<p id="rcp-cancel-subscription-wrap"><input type="checkbox" id="rcp-cancel-subscription" name="cancel_subscription" value="1"><label for="rcp-cancel-subscription">' + rcp_vars.cancel_subscription + '</label></p>');
+			}
+			$('#rcp-revoke-access-wrap').show();
 		} else {
 			$('#rcp-cancel-subscription-wrap').remove();
+			$('#rcp-revoke-access-wrap').hide();
+		}
+	});
+
+	// Show "Revoke access now" checkbox when marking as cancelled via bulk edit.
+	$('#rcp-bulk-member-action').on('change', function () {
+		if ('mark-cancelled' == $(this).val()) {
+			$('#rcp-revoke-access-wrap').show();
+		} else {
+			$('#rcp-revoke-access-wrap').hide();
 		}
 	});
 

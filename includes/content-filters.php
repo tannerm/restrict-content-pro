@@ -43,52 +43,6 @@ function rcp_filter_restricted_content( $content ) {
 add_filter( 'the_content', 'rcp_filter_restricted_content' , 100 );
 
 /**
- * Filter restricted content based on category restrictions
- *
- * @deprecated 2.7 This is now covered by rcp_filter_restricted_content()
- *
- * @access      public
- * @since       2.0
- * @return      $content
- */
-function rcp_filter_restricted_category_content( $content ) {
-	global $post, $rcp_options;
-
-	$restrictions = array();
-
-	foreach( rcp_get_restricted_taxonomies() as $taxonomy ) {
-		$restriction = rcp_is_post_taxonomy_restricted( $post->ID, $taxonomy );
-
-		// -1 means that the taxonomy terms are unrestricted
-		if ( -1 === $restriction ) {
-			continue;
-		}
-
-		// true or false. Whether or not the user has access to the restricted taxonomy terms
-		$restrictions[] = $restriction;
-
-	}
-
-	if ( empty( $restrictions ) ) {
-		return $content;
-	}
-
-	$restricted = ( apply_filters( 'rcp_restricted_taxonomy_match_all', false ) ) ? false !== array_search( true, $restrictions ) : false === array_search( false, $restrictions );
-
-	if ( $restricted ) {
-
-		$message = ! empty( $rcp_options['paid_message'] ) ? $rcp_options['paid_message'] : __( 'You need to have an active subscription to view this content.', 'rcp' );
-
-		return rcp_format_teaser( $message );
-
-	}
-
-	return $content;
-
-}
-// add_filter( 'the_content', 'rcp_filter_restricted_category_content', 101 );
-
-/**
  * Check the provided taxonomy along with the given post id to see if any restrictions are found
  *
  * @since      2.5

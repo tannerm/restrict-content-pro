@@ -193,8 +193,8 @@ class RCP_Payment_Gateway {
 			$this->user_id             = $subscription_data['user_id'];
 			$this->user_name           = $subscription_data['user_name'];
 			$this->currency            = $subscription_data['currency'];
-			$this->amount              = $subscription_data['recurring_price'];
-			$this->initial_amount      = $subscription_data['price'] + $subscription_data['fee'];
+			$this->amount              = round( $subscription_data['recurring_price'], 2 );
+			$this->initial_amount      = round( $subscription_data['price'] + $subscription_data['fee'], 2 );
 			$this->discount            = $subscription_data['discount'];
 			$this->discount_code       = $subscription_data['discount_code'];
 			$this->length              = $subscription_data['length'];

@@ -42,6 +42,7 @@ function rcp_admin_scripts( $hook ) {
 				'cancel_user'         => __( 'Are you sure you wish to cancel this member\'s subscription?', 'rcp' ),
 				'delete_subscription' => __( 'If you delete this subscription, all members registered with this level will be canceled. Proceed?', 'rcp' ),
 				'delete_payment'      => __( 'Are you sure you want to delete this payment? This action is irreversible. Proceed?', 'rcp' ),
+				'delete_discount'     => __( 'Are you sure you want to delete this discount? This action is irreversible. Proceed?', 'rcp' ),
 				'missing_username'    => __( 'You must choose a username', 'rcp' ),
 				'currency_sign'       => rcp_currency_filter(''),
 				'currency_pos'        => isset( $rcp_options['currency_position'] ) ? $rcp_options['currency_position'] : 'before',

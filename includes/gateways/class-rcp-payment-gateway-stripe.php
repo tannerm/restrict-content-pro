@@ -291,7 +291,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					'currency'       => strtolower( $this->currency ),
 					'customer'       => $customer->id,
 					'description'    => 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name,
-					'receipt_email'  => $this->email,
 					'metadata'       => array(
 						'email'      => $this->email,
 						'user_id'    => $this->user_id,
@@ -582,7 +581,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// Cancelled / failed subscription
 					if( $event->type == 'customer.subscription.deleted' ) {
 
-						if( ! $member->just_upgraded() ) {
+						if( $payment_event->id == $member->get_merchant_subscription_id() ) {
 
 							$member->cancel();
 

@@ -164,7 +164,7 @@ add_action( 'init', function() {
  */
 function rcp_braintree_php_version_check() {
 
-	if ( version_compare( PHP_VERSION, '5.4', '<' ) && array_key_exists( 'braintree', rcp_get_enabled_payment_gateways() ) ) {
+	if ( current_user_can( 'rcp_manage_settings' ) && version_compare( PHP_VERSION, '5.4', '<' ) && array_key_exists( 'braintree', rcp_get_enabled_payment_gateways() ) ) {
 		echo '<div class="error"><p>' . __( 'The Braintree payment gateway in Restrict Content Pro requires PHP version 5.4 or later. Please contact your web host and request that your version be upgraded to 5.4 or later. Your site will be unable to take Braintree payments until PHP is upgraded.', 'rcp' ) . '</p></div>';
 	}
 

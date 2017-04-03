@@ -2,6 +2,9 @@
 
 class RCP_Member_Tests extends WP_UnitTestCase {
 
+	/**
+	 * @var RCP_Member
+	 */
 	protected $member;
 	protected $level_id;
 	protected $level_id_2;
@@ -368,7 +371,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 	function test_can_access_active_content_as_cancelled_member() {
 
 		$this->member->set_status( 'cancelled' );
-		$this->member->set_expiration( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
+		$this->member->set_expiration_date( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
 		update_post_meta( $this->post_id, '_is_paid', true );
 		update_post_meta( $this->post_id, 'rcp_subscription_level', 'any-paid' );
 
@@ -389,7 +392,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 	function test_can_access_active_content_as_active_member() {
 
 		$this->member->set_status( 'active' );
-		$this->member->set_expiration( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
+		$this->member->set_expiration_date( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
 		update_post_meta( $this->post_id, '_is_paid', true );
 		update_post_meta( $this->post_id, 'rcp_subscription_level', 'any-paid' );
 
@@ -400,7 +403,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 	function test_can_access_active_content_as_active_member_with_subscription_level() {
 
 		$this->member->set_status( 'active' );
-		$this->member->set_expiration( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
+		$this->member->set_expiration_date( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
 		update_post_meta( $this->post_id, '_is_paid', true );
 		update_user_meta( $this->member->ID, 'rcp_subscription_level', $this->level_id );
 		update_post_meta( $this->post_id, 'rcp_subscription_level', array( $this->level_id, $this->level_id_2 ) );
@@ -412,7 +415,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 	function test_can_access_active_content_as_cancelled_member_with_subscription_level() {
 
 		$this->member->set_status( 'cancelled' );
-		$this->member->set_expiration( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
+		$this->member->set_expiration_date( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
 		update_post_meta( $this->post_id, '_is_paid', true );
 		update_user_meta( $this->member->ID, 'rcp_subscription_level', $this->level_id );
 		update_post_meta( $this->post_id, 'rcp_subscription_level', array( $this->level_id, $this->level_id_2 ) );
@@ -423,7 +426,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 
 	function test_cannot_access_active_content_as_expired_member_with_subscription_level() {
 
-		$this->member->set_expiration( date( 'Y-n-d H:i:s', strtotime( '-1 week' ) ) );
+		$this->member->set_expiration_date( date( 'Y-n-d H:i:s', strtotime( '-1 week' ) ) );
 		$this->member->set_status( 'expired' );
 		update_post_meta( $this->post_id, '_is_paid', true );
 		update_user_meta( $this->member->ID, 'rcp_subscription_level', $this->level_id );
@@ -458,7 +461,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 	function test_cannot_access_active_content_as_active_member_without_subscription_level() {
 
 		$this->member->set_status( 'active' );
-		$this->member->set_expiration( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
+		$this->member->set_expiration_date( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
 		update_post_meta( $this->post_id, '_is_paid', true );
 		update_user_meta( $this->member->ID, 'rcp_subscription_level', $this->level_id_3 );
 		update_post_meta( $this->post_id, 'rcp_subscription_level', array( $this->level_id, $this->level_id_2 ) );
@@ -470,7 +473,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 	function test_cannot_access_active_content_as_cancelled_member_without_subscription_level() {
 
 		$this->member->set_status( 'cancelled' );
-		$this->member->set_expiration( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
+		$this->member->set_expiration_date( date( 'Y-n-d H:i:s', strtotime( '+1 week' ) ) );
 		update_post_meta( $this->post_id, '_is_paid', true );
 		update_user_meta( $this->member->ID, 'rcp_subscription_level', $this->level_id_3 );
 		update_post_meta( $this->post_id, 'rcp_subscription_level', array( $this->level_id, $this->level_id_2 ) );
@@ -481,7 +484,7 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 
 	function test_cannot_access_active_content_as_expired_member_without_subscription_level() {
 
-		$this->member->set_expiration( date( 'Y-n-d H:i:s', strtotime( '-1 week' ) ) );
+		$this->member->set_expiration_date( date( 'Y-n-d H:i:s', strtotime( '-1 week' ) ) );
 		$this->member->set_status( 'expired' );
 		update_post_meta( $this->post_id, '_is_paid', true );
 		update_user_meta( $this->member->ID, 'rcp_subscription_level', $this->level_id_3 );
@@ -588,6 +591,18 @@ class RCP_Member_Tests extends WP_UnitTestCase {
 		update_user_meta( $this->member->ID, 'rcp_subscription_level', $this->level_id );
 
 		$this->assertTrue( $this->member->can_access( $this->post_id ) );
+	}
+
+	function test_cannot_access_post_restricted_by_taxonomy_term_with_member_status_cancelled_but_expired() {
+
+		wp_set_post_terms( $this->post_id, $this->term, 'category' );
+
+		$this->member->set_expiration_date( date( 'Y-n-d H:i:s', strtotime( '-1 week' ) ) );
+		$this->member->set_status( 'cancelled' );
+
+		update_user_meta( $this->member->ID, 'rcp_subscription_level', $this->level_id );
+
+		$this->assertFalse( $this->member->can_access( $this->post_id ) );
 	}
 
 	function test_cannot_access_post_restricted_by_taxonomy_term_with_member_status_expired() {
