@@ -837,13 +837,8 @@ function rcp_currency_decimal_filter( $decimals = 2 ) {
  * @return array An array of taxonomy term IDs connected to the post.
  */
 function rcp_get_connected_term_ids( $post_id = 0 ) {
-	$terms = get_terms(
-		array_values( get_taxonomies( array( 'public' => true ) ) ),
-		array(
-			'fields'     => 'ids',
-			'object_ids' => $post_id
-		)
-	);
+	$taxonomies = array_values( get_taxonomies( array( 'public' => true ) ) );
+	$terms      = wp_get_object_terms( $post_id, $taxonomies, array( 'fields' => 'ids' ) );
 
 	return $terms;
 }
