@@ -1,5 +1,18 @@
 <?php
+/**
+ * Members Page
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Members Page
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
 
+/**
+ * Render members table
+ *
+ * @return void
+ */
 function rcp_members_page() {
 	global $rcp_options, $rcp_db_name, $wpdb;
 	$current_page = admin_url( '/admin.php?page=rcp-members' ); ?>
@@ -8,7 +21,7 @@ function rcp_members_page() {
 		<?php if( isset( $_GET['edit_member'] ) || isset( $_GET['view_member'] ) ) :
 			include( 'edit-member.php' );
 		else : ?>
-			<h2><?php _e(' Paid Subscribers', 'rcp' ); ?></h2>
+			<h1><?php _e( 'Members', 'rcp' ); ?></h1>
 			<?php
 
 			$subscription_id = isset( $_GET['subscription'] ) && $_GET['subscription'] != 'all' ? urldecode( $_GET['subscription'] ) : null;
@@ -94,7 +107,7 @@ function rcp_members_page() {
 				<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
 				<input type="submit" name="" id="rcp-member-search-submit" class="button" value="<?php _e( 'Search members', 'rcp' ); ?>"/>
 			</form>
-			<form id="members-filter" action="" method="get">
+			<form id="rcp-members-filter" action="" method="get">
 				<?php
 				$levels = rcp_get_subscription_levels( 'all' );
 				if($levels) : ?>
@@ -123,8 +136,13 @@ function rcp_members_page() {
 						<option value="-1"><?php _e( 'Bulk Actions', 'rcp' ); ?></option>
 						<option value="mark-active"><?php _e( 'Mark as Active', 'rcp' ); ?></option>
 						<option value="mark-expired"><?php _e( 'Mark as Expired', 'rcp' ); ?></option>
-						<option value="mark-cancelled"><?php _e( 'Revoke Access', 'rcp' ); ?></option>
+						<option value="mark-cancelled"><?php _e( 'Mark as Cancelled', 'rcp' ); ?></option>
 					</select>
+					<span id="rcp-revoke-access-wrap">
+						<input type="checkbox" id="rcp-revoke-access" name="rcp-revoke-access" value="1">
+						<label for="rcp-revoke-access"><?php _e( 'Revoke access now', 'rcp' ); ?></label>
+						<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'If not enabled, the member(s) will retain access until the end of their current term. If checked, access will be revoked immediately.', 'rcp' ); ?>"></span>
+					</span>
 					<input type="text" class="rcp-datepicker" name="expiration" placeholder="<?php esc_attr_e( 'New Expiration Date', 'rcp' ); ?>" id="rcp-bulk-expiration" value=""/>
 					<input type="submit" id="rcp-submit-bulk-action" class="button action" value="<?php _e( 'Apply', 'rcp' ); ?>"/>
 				</div>
@@ -198,6 +216,9 @@ function rcp_members_page() {
 											<?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
 												<span> | <a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a></span>
 											<?php } ?>
+											<?php if( $rcp_member->is_pending_verification() ) : ?>
+												<span> | <a href="<?php echo wp_nonce_url( add_query_arg( 'send_verification', $member->ID, $current_page ), 'rcp-verification-nonce' ); ?>" class="rcp_send_verification"><?php _e( 'Re-send Verification', 'rcp' ); ?></a></span>
+											<?php endif; ?>
 											<span class="rcp-separator"> | </span>
 											<span class="id rcp-member-id"><?php echo __( 'ID:', 'rcp' ) . ' ' . $member->ID; ?></span>
 											<?php do_action( 'rcp_member_row_actions', $member->ID ); ?>
@@ -256,10 +277,10 @@ function rcp_members_page() {
 				</div><!--end .tablenav-->
 			<?php endif; ?>
 			<?php do_action('rcp_members_below_table'); ?>
-			<h3>
+			<h2>
 				<?php _e('Add New Subscription (for existing user)', 'rcp'); ?>
 				<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( 'If you wish to create a brand new account, that may be done from Users &rarr; Add New. <br/><strong>Note</strong>: this will not create a payment profile for the member. That must be done manually through your merchant account.', 'rcp' ); ?>"></span>
-			</h3>
+			</h2>
 			<form id="rcp-add-new-member" action="" method="post">
 				<table class="form-table">
 					<tbody>

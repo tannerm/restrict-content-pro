@@ -3,7 +3,8 @@
  * Manual Payment Gateway
  *
  * @package     Restrict Content Pro
- * @copyright   Copyright (c) 2012, Pippin Williamson
+ * @subpackage  Classes/Gateways/Manual
+ * @copyright   Copyright (c) 2017, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
 */
@@ -13,11 +14,11 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 	/**
 	 * Get things going
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function init() {
-
-		global $rcp_options;
 
 		$this->supports[]  = 'one-time';
 		$this->supports[]  = 'fees';
@@ -27,7 +28,9 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 	/**
 	 * Process registration
 	 *
-	 * @since 2.1
+	 * @access public
+	 * @since  2.1
+	 * @return void
 	 */
 	public function process_signup() {
 
@@ -54,7 +57,9 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 		);
 
 		$rcp_payments = new RCP_Payments();
-		$rcp_payments->insert( $payment_data );
+		$payment_id   = $rcp_payments->insert( $payment_data );
+
+		do_action( 'rcp_process_manual_signup', $member, $payment_id, $this );
 
 		wp_redirect( $this->return_url ); exit;
 
