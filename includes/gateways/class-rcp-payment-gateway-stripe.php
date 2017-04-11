@@ -313,6 +313,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$rcp_payments = new RCP_Payments();
 				$rcp_payments->insert( $payment_data );
 
+				// Subscription ID is not used when non-recurring.
+				delete_user_meta( $member->ID, 'rcp_merchant_subscription_id' );
+
 				$paid = true;
 
 			} catch ( \Stripe\Error\Card $e ) {
