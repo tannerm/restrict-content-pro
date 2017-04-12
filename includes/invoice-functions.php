@@ -24,7 +24,7 @@ function rcp_get_invoice_url( $payment_id = 0 ) {
 
 	$base = is_admin() ? admin_url( 'index.php' ) : home_url();
 
-	return wp_nonce_url( add_query_arg( array( 'payment_id' => $payment_id, 'rcp-action' => 'download_invoice' ), $base ), 'rcp_download_invoice_nonce' );
+	return add_query_arg( array( 'payment_id' => $payment_id, 'rcp-action' => 'download_invoice' ), $base );
 }
 
 /**
@@ -37,10 +37,6 @@ function rcp_get_invoice_url( $payment_id = 0 ) {
 function rcp_trigger_invoice_download() {
 
 	if( ! isset( $_GET['rcp-action'] ) || 'download_invoice' != $_GET['rcp-action'] ) {
-		return;
-	}
-
-	if( ! wp_verify_nonce( $_GET['_wpnonce'], 'rcp_download_invoice_nonce' ) ) {
 		return;
 	}
 
