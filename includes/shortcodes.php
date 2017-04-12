@@ -241,7 +241,9 @@ function rcp_registration_form( $atts, $content = null ) {
 
 	$atts = shortcode_atts( array(
 		'id' => null,
-		'registered_message' => __( 'You are already registered and have an active subscription.', 'rcp' )
+		'registered_message' => __( 'You are already registered and have an active subscription.', 'rcp' ),
+		'logged_out_header'  => __( 'Register New Account', 'rcp' ),
+		'logged_in_header'   => rcp_get_subscription_id() ? __( 'Upgrade or Renew Your Subscription', 'rcp' ) : __( 'Join Now', 'rcp' )
 	), $atts, 'register_form' );
 
 	global $user_ID;
@@ -255,7 +257,7 @@ function rcp_registration_form( $atts, $content = null ) {
 		$rcp_load_css = true;
 		$rcp_load_scripts = true;
 
-		$output = rcp_registration_form_fields( $atts['id'] );
+		$output = rcp_registration_form_fields( $atts['id'], $atts );
 
 	} else {
 		$output = $atts['registered_message'];

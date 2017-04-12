@@ -14,17 +14,17 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-global $rcp_options, $post, $rcp_levels_db;
+global $rcp_options, $post, $rcp_levels_db, $rcp_register_form_atts;
 $discount = ! empty( $_REQUEST['discount'] ) ? sanitize_text_field( $_REQUEST['discount'] ) : '';
 ?>
 
 <?php if( ! is_user_logged_in() ) { ?>
 	<h3 class="rcp_header">
-		<?php echo apply_filters( 'rcp_registration_header_logged_out', __( 'Register New Account', 'rcp' ) ); ?>
+		<?php echo apply_filters( 'rcp_registration_header_logged_out', $rcp_register_form_atts['logged_out_header'] ); ?>
 	</h3>
 <?php } else { ?>
 	<h3 class="rcp_header">
-		<?php echo apply_filters( 'rcp_registration_header_logged_in', __( 'Upgrade Your Subscription', 'rcp' ) ); ?>
+		<?php echo apply_filters( 'rcp_registration_header_logged_in', $rcp_register_form_atts['logged_in_header'] ); ?>
 	</h3>
 <?php }
 
