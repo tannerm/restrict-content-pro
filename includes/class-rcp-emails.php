@@ -480,6 +480,11 @@ class RCP_Emails {
 				'function'    => 'rcp_email_tag_amount'
 			),
 			array(
+				'tag'         => 'invoice_url',
+				'description' => __( 'The URL to the member\'s most recent invoice', 'rcp' ),
+				'function'    => 'rcp_email_tag_invoice_url'
+			),
+			array(
 				'tag'         => 'member_id',
 				'description' => __( 'The members&#8217;s ID', 'rcp' ),
 				'function'    => 'rcp_email_tag_member_id'
