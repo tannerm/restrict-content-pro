@@ -243,7 +243,7 @@ function rcp_registration_form( $atts, $content = null ) {
 		'id' => null,
 		'registered_message' => __( 'You are already registered and have an active subscription.', 'rcp' ),
 		'logged_out_header'  => __( 'Register New Account', 'rcp' ),
-		'logged_in_header'   => rcp_get_subscription_id() ? __( 'Upgrade or Renew Your Subscription', 'rcp' ) : __( 'Register New Account', 'rcp' )
+		'logged_in_header'   => rcp_get_subscription_id() ? __( 'Upgrade or Renew Your Subscription', 'rcp' ) : __( 'Join Now', 'rcp' )
 	), $atts, 'register_form' );
 
 	global $user_ID;
