@@ -72,6 +72,14 @@ $user       = get_userdata( $payment->user_id );
 					<p class="description"><?php _e( 'The status of this payment.', 'rcp' ); ?></p>
 				</td>
 			</tr>
+			<tr valign="top">
+				<th scope="row" valign="top">
+					<label for="rcp-status"><?php _e( 'Invoice', 'rcp' ); ?></label>
+				</th>
+				<td>
+					<a href="<?php echo esc_url( rcp_get_invoice_url( $payment_id ) ); ?>" class="button-secondary" target="_blank"><?php _e( 'View Invoice', 'rcp' ); ?></a>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	<p class="submit">
