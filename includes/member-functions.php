@@ -678,25 +678,25 @@ function rcp_print_user_payments_formatted( $user_id ) {
 				<th scope="col"><?php _e( 'Date', 'rcp' ); ?></th>
 				<th scope="col"><?php _e( 'Subscription', 'rcp' ); ?></th>
 				<th scope="col"><?php _e( 'Payment Type', 'rcp' ); ?></th>
-				<th scope="col"><?php _e( 'Subscription Key', 'rcp' ); ?></th>
 				<th scope="col"><?php _e( 'Transaction ID', 'rcp' ); ?></th>
 				<th scope="col"><?php _e( 'Amount', 'rcp' ); ?></th>
+				<th scope="col"><?php _e( 'Invoice', 'rcp' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach( $user_payments as $payment ) : ?>
 
 				<tr class="rcp_row<?php echo rcp_is_odd( $i ) ? ' alternate' : ''; ?>">
-					<td class="column-primary" data-colname="<?php _e( 'ID', 'rcp' ); ?>">
+					<td class="column-primary" data-colname="<?php esc_attr_e( 'ID', 'rcp' ); ?>">
 						<a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php echo esc_html( $payment->id ); ?></a>
 						<button type="button" class="toggle-row"><span class="screen-reader-text"><?php _e( 'Show more details', 'rcp' ); ?></span></button>
 					</td>
-					<td data-colname="<?php _e( 'Date', 'rcp' ); ?>"><?php echo esc_html( $payment->date ); ?></td>
-					<td data-colname="<?php _e( 'Subscription', 'rcp' ); ?>"><?php echo esc_html( $payment->subscription ); ?></td>
-					<td data-colname="<?php _e( 'Payment Type', 'rcp' ); ?>"><?php echo esc_html( $payment->payment_type ); ?></td>
-					<td data-colname="<?php _e( 'Subscription Key', 'rcp' ); ?>"><?php echo esc_html( $payment->subscription_key ); ?></td>
-					<td data-colname="<?php _e( 'Transaction ID', 'rcp' ); ?>"><?php echo rcp_get_merchant_transaction_id_link( $payment ); ?></td>
-					<td data-colname="<?php _e( 'Amount', 'rcp' ); ?>"><?php echo ( '' == $payment->amount ) ? esc_html( rcp_currency_filter( $payment->amount2 ) ) : esc_html( rcp_currency_filter( $payment->amount ) ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Date', 'rcp' ); ?>"><?php echo esc_html( $payment->date ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Subscription', 'rcp' ); ?>"><?php echo esc_html( $payment->subscription ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Payment Type', 'rcp' ); ?>"><?php echo esc_html( $payment->payment_type ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Transaction ID', 'rcp' ); ?>"><?php echo rcp_get_merchant_transaction_id_link( $payment ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Amount', 'rcp' ); ?>"><?php echo ( '' == $payment->amount ) ? esc_html( rcp_currency_filter( $payment->amount2 ) ) : esc_html( rcp_currency_filter( $payment->amount ) ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Invoice', 'rcp' ); ?>"><a href="<?php echo esc_url( rcp_get_invoice_url( $payment->id ) ); ?>" target="_blank"><?php _e( 'View Invoice', 'rcp' ); ?></a></td>
 				</tr>
 
 			<?php
