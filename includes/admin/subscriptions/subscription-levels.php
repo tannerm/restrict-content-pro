@@ -121,7 +121,7 @@ function rcp_member_levels_page() {
 									<label for="rcp-name"><?php _e('Name', 'rcp'); ?></label>
 								</th>
 								<td>
-									<input type="text" id="rcp-name" name="name" value="" style="width: 300px;"/>
+									<input type="text" id="rcp-name" name="name" value=""/>
 									<p class="description"><?php _e('The name of the membership level.', 'rcp'); ?></p>
 								</td>
 							</tr>
@@ -130,7 +130,7 @@ function rcp_member_levels_page() {
 									<label for="rcp-description"><?php _e('Description', 'rcp'); ?></label>
 								</th>
 								<td>
-									<textarea id="rcp-description" name="description" style="width: 300px;"></textarea>
+									<textarea id="rcp-description" name="description"></textarea>
 									<p class="description"><?php _e('Membership level description. This is shown on the registration form.', 'rcp'); ?></p>
 								</td>
 							</tr>
@@ -158,7 +158,7 @@ function rcp_member_levels_page() {
 									<label for="rcp-duration"><?php _e('Duration', 'rcp'); ?></label>
 								</th>
 								<td>
-									<input type="text" id="rcp-duration" style="width: 40px;" name="duration" value="0"/>
+									<input type="text" id="rcp-duration" name="duration" value="0"/>
 									<select name="duration_unit" id="rcp-duration-unit">
 										<option value="day"><?php _e('Day(s)', 'rcp'); ?></option>
 										<option value="month"><?php _e('Month(s)', 'rcp'); ?></option>
@@ -175,7 +175,7 @@ function rcp_member_levels_page() {
 									<label for="trial_duration"><?php _e('Free Trial Duration', 'rcp'); ?></label>
 								</th>
 								<td>
-									<input type="text" id="trial_duration" style="width: 40px;" name="trial_duration" value="0"/>
+									<input type="text" id="trial_duration" name="trial_duration" value="0"/>
 									<select name="trial_duration_unit" id="trial_duration_unit">
 										<option value="day"><?php _e('Day(s)', 'rcp'); ?></option>
 										<option value="month"><?php _e('Month(s)', 'rcp'); ?></option>
@@ -192,7 +192,7 @@ function rcp_member_levels_page() {
 									<label for="rcp-price"><?php _e('Price', 'rcp'); ?></label>
 								</th>
 								<td>
-									<input type="text" id="rcp-price" name="price" value="0" pattern="^(\d+\.\d{2})|(\d+)$" style="width: 40px;"/>
+									<input type="text" id="rcp-price" name="price" value="0" pattern="^(\d+\.\d{2})|(\d+)$"/>
 									<p class="description">
 										<?php _e('The price of this membership level. Enter 0 for free.', 'rcp'); ?>
 										<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( 'This price refers to the amount paid per duration period. For example, if duration period is set to 1 month, this would be the amount charged each month.', 'rcp' ); ?>"></span>
@@ -204,7 +204,7 @@ function rcp_member_levels_page() {
 									<label for="rcp-fee"><?php _e('Signup Fee', 'rcp'); ?></label>
 								</th>
 								<td>
-									<input type="text" id="rcp-fee" name="fee" value="0" style="width: 40px;"/>
+									<input type="text" id="rcp-fee" name="fee" value="0"/>
 									<p class="description"><?php _e('Optional signup fee to charge subscribers for the first billing cycle. Enter a negative number to give a discount on the first payment.', 'rcp'); ?></p>
 								</td>
 							</tr>

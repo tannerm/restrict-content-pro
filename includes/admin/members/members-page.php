@@ -289,7 +289,7 @@ function rcp_members_page() {
 								<label for="rcp-username"><?php _e('Username', 'rcp'); ?></label>
 							</th>
 							<td>
-								<input type="text" name="user" id="rcp-user" autocomplete="off" class="regular-text rcp-user-search" style="width: 120px;"/>
+								<input type="text" name="user" id="rcp-user" autocomplete="off" class="regular-text rcp-user-search"/>
 								<img class="rcp-ajax waiting" src="<?php echo admin_url('images/wpspin_light.gif'); ?>" style="display: none;"/>
 								<div id="rcp_user_search_results"></div>
 								<p class="description"><?php _e('Begin typing the user name to add a subscription to.', 'rcp'); ?></p>
@@ -317,7 +317,7 @@ function rcp_members_page() {
 								<label for="rcp-expiration"><?php _e('Expiration date', 'rcp'); ?></label>
 							</th>
 							<td>
-								<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker"/>
+								<input name="expiration" id="rcp-expiration" type="text" class="rcp-datepicker"/>
 								<label for="rcp-unlimited">
 									<input name="unlimited" id="rcp-unlimited" type="checkbox"/>
 									<span class="description"><?php _e( 'Never expires?', 'rcp' ); ?></span>

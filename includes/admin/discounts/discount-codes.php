@@ -123,7 +123,7 @@ function rcp_discounts_page() {
 									<label for="rcp-name"><?php _e( 'Name', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<input name="name" id="rcp-name" type="text" value="" style="width: 300px;"/>
+									<input name="name" id="rcp-name" type="text" value=""/>
 									<p class="description"><?php _e( 'The name of this discount', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -132,7 +132,7 @@ function rcp_discounts_page() {
 									<label for="rcp-description"><?php _e( 'Description', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<textarea name="description" id="rcp-description" style="width: 300px;"></textarea>
+									<textarea name="description" id="rcp-description"></textarea>
 									<p class="description"><?php _e( 'The description of this discount code', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -141,7 +141,7 @@ function rcp_discounts_page() {
 									<label for="rcp-code"><?php _e( 'Code', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<input type="text" id="rcp-code" name="code" value="" style="width: 300px;"/>
+									<input type="text" id="rcp-code" name="code" value=""/>
 									<p class="description"><?php _e( 'Enter a code for this discount, such as 10PERCENT', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -162,7 +162,7 @@ function rcp_discounts_page() {
 									<label for="rcp-amount"><?php _e( 'Amount', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<input type="text" id="rcp-amount" name="amount" value="" style="width: 40px;"/>
+									<input type="text" id="rcp-amount" name="amount" value=""/>
 									<p class="description"><?php _e( 'The amount of this discount code.', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -191,7 +191,7 @@ function rcp_discounts_page() {
 									<label for="rcp-expiration"><?php _e( 'Expiration date', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker"/>
+									<input name="expiration" id="rcp-expiration" type="text" class="rcp-datepicker"/>
 									<p class="description"><?php _e( 'Enter the expiration date for this discount code in the format of yyyy-mm-dd. For no expiration, leave blank', 'rcp' ); ?></p>
 								</td>
 							</tr>
@@ -200,7 +200,7 @@ function rcp_discounts_page() {
 									<label for="rcp-max-uses"><?php _e( 'Max Uses', 'rcp' ); ?></label>
 								</th>
 								<td>
-									<input type="text" id="rcp-max-uses" name="max" value="" style="width: 40px;"/>
+									<input type="text" id="rcp-max-uses" name="max" value=""/>
 									<p class="description"><?php _e( 'The maximum number of times this discount can be used. Leave blank for unlimited.', 'rcp' ); ?></p>
 								</td>
 							</tr>
