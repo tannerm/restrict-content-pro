@@ -81,7 +81,7 @@ $role_set_display  = '' != $user_role ? '' : ' style="display:none;"';
 			$roles = get_editable_roles();
 			$roles = array_merge( array( 'all' => array( 'name' => 'All' ) ), $roles );
 			foreach(  $roles as $key => $role ) : ?>
-				<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $user_role ); ?>><?php echo $role['name']; ?></option>
+				<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $user_role ); ?>><?php echo translate_user_role( $role['name'] ); ?></option>
 			<?php endforeach; ?>
 		</select>
 	</p>
