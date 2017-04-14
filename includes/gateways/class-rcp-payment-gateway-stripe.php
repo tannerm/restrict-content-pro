@@ -219,7 +219,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					'prorate'  => false,
 					'metadata' => array(
 						'rcp_subscription_level_id' => $this->subscription_id,
-					    'rcp_member_id'             => $this->user_id
+						'rcp_member_id'             => $this->user_id
 					)
 				);
 
