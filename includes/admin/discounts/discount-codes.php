@@ -57,7 +57,7 @@ function rcp_discounts_page() {
 										<?php } else { ?>
 											<a href="<?php echo esc_url( add_query_arg( 'activate_discount', $code->id, $page ) ); ?>"><?php _e( 'Activate', 'rcp' ); ?></a> |
 										<?php } ?>
-										<a href="<?php echo esc_url( add_query_arg( 'delete_discount', $code->id, $page ) ); ?>" class="rcp_delete_discount"><?php _e( 'Delete', 'rcp' ); ?></a>
+										<span class="trash"><a href="<?php echo esc_url( add_query_arg( 'delete_discount', $code->id, $page ) ); ?>" class="rcp_delete_discount"><?php _e( 'Delete', 'rcp' ); ?></a></span>
 									<?php endif; ?>
 								</div>
 								<button type="button" class="toggle-row"><span class="screen-reader-text"><?php _e( 'Show more details', 'rcp' ); ?></span></button>
