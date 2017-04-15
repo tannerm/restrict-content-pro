@@ -215,8 +215,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				}
 
 				$sub_args = array(
-					'plan'    => $plan_id,
-					'prorate' => false
+					'plan'     => $plan_id,
+					'prorate'  => false,
+					'metadata' => array(
+						'rcp_subscription_level_id' => $this->subscription_id,
+						'rcp_member_id'             => $this->user_id
+					)
 				);
 
 				if ( ! empty( $this->discount_code ) && ! isset( $rcp_options['one_time_discounts'] ) ) {
