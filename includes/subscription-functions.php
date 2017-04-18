@@ -360,39 +360,40 @@ function rcp_show_subscription_level( $level_id = 0, $user_id = 0 ) {
 
 	global $rcp_levels_db, $rcp_register_form_atts;
 
-	// First check if we only want to show specific levels.
+	if( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	$ret = true;
+
+	$user_level = rcp_get_subscription_id( $user_id );
+	$sub_length = rcp_get_subscription_length( $level_id );
+	$sub_price 	= rcp_get_subscription_price( $level_id );
+	$used_trial = rcp_has_used_trial( $user_id );
+	$trial_duration = $rcp_levels_db->trial_duration( $level_id );
+
+	// Don't show free trial if user has already used it. Don't show if sub is free and user is already free
+	if (
+		is_user_logged_in()
+		&&
+		( $sub_price == '0' && $sub_length->duration > 0 && $used_trial )
+		||
+		( $sub_price == '0' && $user_level == $level_id )
+		||
+		( ! empty( $trial_duration ) && $used_trial && ( $user_level == $level_id && ! rcp_is_expired( $user_id ) ) )
+	) {
+		$ret = false;
+	}
+
+	// If multiple levels are specified in shortcode, like [register_form id="1,2"]
 	if ( ! empty( $rcp_register_form_atts['id'] ) ) {
 
 		$levels_to_show = array_map( 'absint', explode( ',', $rcp_register_form_atts['id'] ) );
-		$ret            = in_array( $level_id, $levels_to_show );
 
-	} else {
-		// Check all levels.
-
-		if ( empty( $user_id ) ) {
-			$user_id = get_current_user_id();
-		}
-
-		$ret = true;
-
-		$user_level     = rcp_get_subscription_id( $user_id );
-		$sub_length     = rcp_get_subscription_length( $level_id );
-		$sub_price      = rcp_get_subscription_price( $level_id );
-		$used_trial     = rcp_has_used_trial( $user_id );
-		$trial_duration = $rcp_levels_db->trial_duration( $level_id );
-
-		// Don't show free trial if user has already used it. Don't show if sub is free and user is already free
-		if (
-			is_user_logged_in()
-			&&
-			( $sub_price == '0' && $sub_length->duration > 0 && $used_trial )
-			||
-			( $sub_price == '0' && $user_level == $level_id )
-			||
-			( ! empty( $trial_duration ) && $used_trial && ( $user_level == $level_id && ! rcp_is_expired( $user_id ) ) )
-		) {
+		if ( ! in_array( $level_id, $levels_to_show ) ) {
 			$ret = false;
 		}
+
 	}
 
 	return apply_filters( 'rcp_show_subscription_level', $ret, $level_id, $user_id );
