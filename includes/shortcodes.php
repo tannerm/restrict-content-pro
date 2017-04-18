@@ -45,6 +45,8 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 
 	$has_access = false;
 
+	$is_active = in_array( rcp_get_status(), array( 'active', 'free', 'cancelled' ) ) && ! rcp_is_expired();
+
 	if( $atts['paid'] ) {
 
 		if ( rcp_is_active( $user_ID ) && rcp_user_has_access( $user_ID, $atts['level'] ) ) {
@@ -63,7 +65,9 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 	}
 
 	if ( ! empty( $subscription ) && ! empty( $subscription[0] ) ) {
-		if ( ! in_array( rcp_get_subscription_id( $user_ID ), $subscription ) || ( in_array( rcp_get_subscription_id( $user_ID ), $subscription ) && rcp_is_expired( $user_ID ) ) ) {
+		if ( in_array( rcp_get_subscription_id( $user_ID ), $subscription ) && $is_active ) {
+			$has_access = true;
+		} else {
 			$has_access = false;
 		}
 	}
@@ -106,7 +110,7 @@ function rcp_restrict_shortcode( $atts, $content = null ) {
 	if ( $has_access ) {
 		return apply_filters( 'rcp_restrict_shortcode_return', $content );
 	} else {
-		return '<div class="' . $classes . '">' . rcp_format_teaser( $teaser ) . '</div>';
+		return '<div class="' . esc_attr( $classes ) . '">' . rcp_format_teaser( $teaser ) . '</div>';
 	}
 }
 add_shortcode( 'restrict', 'rcp_restrict_shortcode' );
