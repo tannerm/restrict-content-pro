@@ -386,9 +386,9 @@ function rcp_show_subscription_level( $level_id = 0, $user_id = 0 ) {
 	}
 
 	// If multiple levels are specified in shortcode, like [register_form id="1,2"]
-	if ( ! empty( $rcp_register_form_atts['id'] ) ) {
+	if ( ! empty( $rcp_register_form_atts['ids'] ) ) {
 
-		$levels_to_show = array_map( 'absint', explode( ',', $rcp_register_form_atts['id'] ) );
+		$levels_to_show = array_map( 'absint', explode( ',', $rcp_register_form_atts['ids'] ) );
 
 		if ( ! in_array( $level_id, $levels_to_show ) ) {
 			$ret = false;

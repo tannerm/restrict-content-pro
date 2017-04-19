@@ -106,7 +106,7 @@ function rcp_registration_form_fields( $id = null, $atts = array() ) {
 
 	do_action( 'rcp_before_register_form', $id );
 
-	if( ! is_null( $id ) && count( explode( ',', $id ) ) == 1 ) {
+	if( ! is_null( $id ) ) {
 
 		if( rcp_locate_template( array( 'register-single-' . $id . '.php' ), false ) ) {
 

@@ -240,7 +240,8 @@ add_shortcode( 'user_name', 'rcp_user_name' );
 function rcp_registration_form( $atts, $content = null ) {
 
 	$atts = shortcode_atts( array(
-		'id' => null,
+		'id'  => null, // Single specific level
+		'ids' => null, // Multiple specific levels
 		'registered_message' => __( 'You are already registered and have an active subscription.', 'rcp' ),
 		'logged_out_header'  => __( 'Register New Account', 'rcp' ),
 		'logged_in_header'   => rcp_get_subscription_id() ? __( 'Upgrade or Renew Your Subscription', 'rcp' ) : __( 'Join Now', 'rcp' )
