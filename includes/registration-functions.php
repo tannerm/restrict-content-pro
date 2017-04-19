@@ -1031,3 +1031,35 @@ function rcp_remove_subscription_data_on_failure( $gateway ) {
 
 }
 add_action( 'rcp_registration_failed', 'rcp_remove_subscription_data_on_failure' );
+
+/**
+ * Automatically add new users to a subscription level if enabled
+ *
+ * @param int $user_id ID of the newly created user.
+ *
+ * @since 2.9
+ * @return void
+ */
+function rcp_auto_register_user( $user_id ) {
+
+	global $rcp_options;
+
+	if ( empty( $rcp_options['auto_add_users'] ) ) {
+		return;
+	}
+
+	$level_id = absint( $rcp_options['auto_add_users_level'] );
+
+	if ( empty( $level_id ) ) {
+		return;
+	}
+
+	// Don't run if we're on the registration form.
+	if ( did_action( 'rcp_form_errors' ) ) {
+		return;
+	}
+
+	// @todo Use new function for adding a member.
+
+}
+add_action( 'user_register', 'rcp_auto_register_user' );

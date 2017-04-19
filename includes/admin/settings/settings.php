@@ -1445,6 +1445,31 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
+								<label for="rcp_settings[auto_add_users]"><?php _e( 'Auto Add Users to Level', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[auto_add_users]" id="rcp_settings[auto_add_users]" <?php if( isset( $rcp_options['auto_add_users'] ) ) checked('1', $rcp_options['auto_add_users']); ?>/>
+								<span class="description"><?php _e( 'Check this to automatically add new WordPress users to a subscription level.', 'rcp' ); ?></span>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[auto_add_users_level]">&nbsp;&mdash;&nbsp;<?php _e( 'Subscription Level', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<select id="rcp_settings[auto_add_users_level]" name="rcp_settings[auto_add_users_level]">
+									<?php
+									$selected_level = isset( $rcp_options['auto_add_users_level'] ) ? $rcp_options['auto_add_users_level'] : '';
+									foreach( rcp_get_subscription_levels( 'all' ) as $key => $level ) :
+										echo '<option value="' . esc_attr( absint( $level->id ) ) . '"' . selected( $level->id, $selected_level, false ) . '>' . esc_html( $level->name ) . '</option>';
+									endforeach;
+									?>
+								</select>
+								<p class="description"><?php _e( 'New WordPress users will be automatically added to this subscription level if the above option is checked.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
 								<label for="rcp_settings[content_excerpts]"><?php _e( 'Content Excerpts', 'rcp' ); ?></label>
 							</th>
 							<td>
