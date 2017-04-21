@@ -142,19 +142,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		}
 
-		$customer->description = 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name;
-		$customer->metadata    = array(
-			'user_id'      => $this->user_id,
-			'email'        => $this->email,
-			'subscription' => $this->subscription_name
-		);
-
-		try {
-			$customer->save();
-		} catch( Exception $e ) {
-			$this->handle_processing_error( $e );
-		}
-
 		if ( $this->auto_renew ) {
 
 			// process a subscription sign up
@@ -362,6 +349,20 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		}
 
 		if ( $paid ) {
+
+			// Add description and meta to Stripe Customer
+			$customer->description = 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name;
+			$customer->metadata    = array(
+				'user_id'      => $this->user_id,
+				'email'        => $this->email,
+				'subscription' => $this->subscription_name
+			);
+
+			try {
+				$customer->save();
+			} catch( Exception $e ) {
+				$this->handle_processing_error( $e );
+			}
 
 			// If this is a one-time signup and the customer has an existing subscription, we need to cancel it
 			if( ! $this->auto_renew && $member->just_upgraded() && $member->can_cancel() ) {
