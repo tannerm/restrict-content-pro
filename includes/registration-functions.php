@@ -555,7 +555,7 @@ function rcp_remove_new_subscription_flag( $status, $user_id ) {
 	delete_user_meta( $user_id, '_rcp_old_subscription_id' );
 	delete_user_meta( $user_id, '_rcp_new_subscription' );
 }
-add_action( 'rcp_set_status', 'rcp_remove_new_subscription_flag', 999999999999, 2 );
+add_action( 'rcp_set_status', 'rcp_remove_new_subscription_flag', 9999999, 2 );
 
 /**
  * When upgrading subscriptions, the new level / key are stored as pending. Once payment is received, the pending
