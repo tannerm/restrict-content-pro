@@ -16,7 +16,7 @@
  * @since 2.9
  * @return bool
  */
-function rcp_is_captcha_enabled() {
+function rcp_is_recaptcha_enabled() {
 
 	global $rcp_options;
 
@@ -32,7 +32,7 @@ function rcp_is_captcha_enabled() {
 function rcp_show_captcha() {
 	global $rcp_options;
 	// reCaptcha
-	if( rcp_is_captcha_enabled() ) : ?>
+	if( rcp_is_recaptcha_enabled() ) : ?>
 		<div id="rcp_recaptcha" data-callback="rcp_validate_recaptcha" class="g-recaptcha" data-sitekey="<?php echo esc_attr( $rcp_options['recaptcha_public_key'] ); ?>"></div>
 		<input type="hidden" name="g-recaptcha-remoteip" value=<?php echo esc_attr( rcp_get_ip() ); ?> /><br/>
 	<?php endif;
@@ -50,7 +50,7 @@ function rcp_validate_captcha( $data ) {
 
 	global $rcp_options;
 
-	if( ! rcp_is_captcha_enabled() ) {
+	if( ! rcp_is_recaptcha_enabled() ) {
 		return;
 	}
 
