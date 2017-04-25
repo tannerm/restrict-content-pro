@@ -232,7 +232,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	 * @return void
 	 */
 	function rcp_below_php_version_notice() {
-		if ( current_user_can( 'rcp_manage_settings' ) ) {
+		if ( current_user_can( 'activate_plugins' ) ) {
 			echo '<div class="error"><p>' . __( 'Your version of PHP is below the minimum version of PHP required by Restrict Content Pro. Please contact your host and request that your version be upgraded to 5.3 or later.', 'rcp' ) . '</p></div>';
 		}
 	}
