@@ -202,8 +202,12 @@ function rcp_process_registration() {
 		$force_now = true;
 	}
 
-	// Calculate the expiration date for the member
-	$member_expires = $member->calculate_expiration( $force_now, $trial_duration );
+	// Calculate the expiration date for the member. If full discount and auto renew is on, never expire.
+	if ( $full_discount && $auto_renew ) {
+		$member_expires = 'none';
+	} else {
+		$member_expires = $member->calculate_expiration( $force_now, $trial_duration );
+	}
 
 	update_user_meta( $user_data['id'], 'rcp_pending_expiration_date', $member_expires );
 
