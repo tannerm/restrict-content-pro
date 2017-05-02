@@ -195,10 +195,10 @@ function rcp_process_registration() {
 	// Delete pending expiration date in case a previous registration was never completed.
 	delete_user_meta( $user_data['id'], 'rcp_pending_expiration_date' );
 
-	// If they're given proration credits, calculate the expiration date from today.
+	// If they're given proration credits and not manually renewing, calculate the expiration date from today.
 	$force_now = $auto_renew;
 	$prorated  = $member->get_prorate_credit_amount();
-	if ( ! $force_now && ! empty( $prorated ) ) {
+	if ( ! $force_now && ! empty( $prorated ) && rcp_get_subscription_id() != $subscription_id ) {
 		$force_now = true;
 	}
 
