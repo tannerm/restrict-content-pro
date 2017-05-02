@@ -374,7 +374,7 @@ class RCP_WooCommerce {
 		$tag_restricted = true === $product_tag ? true : false;
 
 		// Return early if no restrictions
-		if ( ! $active_only && empty( $levels ) && ! $access_level && ! $cat_restricted && ! $tag_restricted ) {
+		if ( ! $active_only && empty( $levels[0] ) && ! $access_level && ! $cat_restricted && ! $tag_restricted ) {
 			return $template;
 		}
 
