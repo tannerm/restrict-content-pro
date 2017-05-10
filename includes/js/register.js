@@ -362,6 +362,7 @@ function rcp_calc_total() {
 	var discount        = $('#rcp_discount_code').val();
 	var subscription    = ( $('#rcp_subscription_levels input:checked').length ) ? $('#rcp_subscription_levels input:checked').val() : $('input[name="rcp_level"]').val();
 	var $gateway        = rcp_get_gateway();
+	var form            = $('#rcp_registration_form');
 
 	if ( ! $total.length ) {
 		return;
@@ -373,14 +374,11 @@ function rcp_calc_total() {
 		action: 'rcp_calc_discount',
 		rcp_level: subscription,
 		rcp_discount: discount,
-		rcp_gateway: $gateway.val()
+		rcp_gateway: $gateway.val(),
+		rcp_form_data: form.serialize()
 	};
 
-	if ( $('#rcp_auto_renew').is(':checked') ) {
-		data.rcp_auto_renew = true;
-	}
-
-	$.post(rcp_script_options.ajaxurl, data, function(response) {
+	$.post( rcp_script_options.ajaxurl, form.serialize() + '&action=rcp_calc_discount', function(response) {
 		rcp_calculating_total = false;
 
 		if (undefined !== response.total ) {
