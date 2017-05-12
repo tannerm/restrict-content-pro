@@ -1,13 +1,16 @@
 <?php
-
 /**
  * RCP Payments class
  *
  * This class handles querying, inserting, updating, and removing payments
  * Also handles calculating earnings
  *
- * @since 1.5
-*/
+ * @package     Restrict Content Pro
+ * @subpackage  Classes/Payments
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.5
+ */
 
 class RCP_Payments {
 
@@ -16,7 +19,7 @@ class RCP_Payments {
 	 *
 	 * @access  public
 	 * @since   1.5
-	*/
+	 */
 	public $db_name;
 
 	/**
@@ -24,7 +27,7 @@ class RCP_Payments {
 	 *
 	 * @access  public
 	 * @since   2.6
-	*/
+	 */
 	public $meta_db_name;
 
 	/**
@@ -32,10 +35,14 @@ class RCP_Payments {
 	 *
 	 * @access  public
 	 * @since   1.5
-	*/
+	 */
 	public $db_version;
 
-
+	/**
+	 * Get things going.
+	 *
+	 * @return void
+	 */
 	function __construct() {
 
 		$this->db_name      = rcp_get_payments_db_name();
@@ -49,9 +56,10 @@ class RCP_Payments {
 	 * Add a payment to the database
 	 *
 	 * @access  public
-	 * @param   $payment_data Array All of the payment data, such as amount, date, user ID, etc
+	 * @param   array $payment_data Array All of the payment data, such as amount, date, user ID, etc
 	 * @since   1.5
-	*/
+	 * @return  int|false ID of the newly created payment, or false on failure.
+	 */
 	public function insert( $payment_data = array() ) {
 
 		global $wpdb;
@@ -73,21 +81,23 @@ class RCP_Payments {
 			return;
 		}
 
-		$wpdb->insert( $this->db_name, $args, array( '%s', '%s', '%s', '%d', '%s', '%s', '%s' ) );
+		$add = $wpdb->insert( $this->db_name, $args, array( '%s', '%s', '%s', '%d', '%s', '%s', '%s' ) );
 
 		// if insert was succesful, return the payment ID
-		if( $wpdb->insert_id ) {
-			// clear the payment caches
+		if( $add ) {
 
+			$payment_id = $wpdb->insert_id;
+
+			// clear the payment caches
 			delete_transient( 'rcp_earnings' );
 			delete_transient( 'rcp_payments_count' );
 
 			// Remove trialing status, if it exists
 			delete_user_meta( $args['user_id'], 'rcp_is_trialing' );
 
-			do_action( 'rcp_insert_payment', $wpdb->insert_id, $args, $args['amount'] );
+			do_action( 'rcp_insert_payment', $payment_id, $args, $args['amount'] );
 
-			return $wpdb->insert_id;
+			return $payment_id;
 
 		}
 
@@ -99,10 +109,12 @@ class RCP_Payments {
 	/**
 	 * Checks if a payment exists in the DB
 	 *
+	 * @param   string $transaction_id The transaction ID of the payment record.
+	 *
 	 * @access  public
-	 * @param   $transaction_id The transaction ID of the payment recod
 	 * @since   1.5
-	*/
+	 * @return  bool
+	 */
 	public function payment_exists( $transaction_id = '' ) {
 
 		global $wpdb;
@@ -122,13 +134,25 @@ class RCP_Payments {
 	/**
 	 * Update a payment in the datbase.
 	 *
+	 * @param   int   $payment_id   ID of the payment record to update.
+	 * @param   array $payment_data Array of all payment data to update.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
+	 * @return  int|false The number of rows updated, or false on error.
+	 */
 	public function update( $payment_id = 0, $payment_data = array() ) {
 
 		global $wpdb;
 		do_action( 'rcp_update_payment', $payment_id, $payment_data );
+
+		if ( array_key_exists( 'status', $payment_data ) ) {
+			delete_transient( md5( 'rcp_payments_count_' . serialize( array( 'user_id' => 0, 'status' => '', 's' => '' ) ) ) );
+			delete_transient( md5( 'rcp_payments_count_' . serialize( array( 'user_id' => 0, 'status' => 'pending', 's' => '' ) ) ) );
+			delete_transient( md5( 'rcp_payments_count_' . serialize( array( 'user_id' => 0, 'status' => 'complete', 's' => '' ) ) ) );
+			delete_transient( md5( 'rcp_payments_count_' . serialize( array( 'user_id' => 0, 'status' => 'refunded', 's' => '' ) ) ) );
+		}
+
 		return $wpdb->update( $this->db_name, $payment_data, array( 'id' => $payment_id ) );
 	}
 
@@ -136,8 +160,11 @@ class RCP_Payments {
 	/**
 	 * Delete a payment from the datbase.
 	 *
+	 * @param   int $payment_id ID of the payment to delete.
+	 *
 	 * @access  public
 	 * @since   1.5
+	 * @return  void
 	*/
 	public function delete( $payment_id = 0 ) {
 		global $wpdb;
@@ -150,9 +177,12 @@ class RCP_Payments {
 	/**
 	 * Retrieve a specific payment
 	 *
+	 * @param   int $payment_id ID of the payment to retrieve.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
+	 * @return  object
+	 */
 	public function get_payment( $payment_id = 0 ) {
 
 		global $wpdb;
@@ -171,9 +201,13 @@ class RCP_Payments {
 	/**
 	 * Retrieve a specific payment by a field
 	 *
+	 * @param   string $field Name of the field to check against.
+	 * @param   mixed  $value Value of the field.
+	 *
 	 * @access  public
 	 * @since   1.8.2
-	*/
+	 * @return  object
+	 */
 	public function get_payment_by( $field = 'id', $value = '' ) {
 
 		global $wpdb;
@@ -192,9 +226,12 @@ class RCP_Payments {
 	/**
 	 * Retrieve payments from the database
 	 *
+	 * @param   array $args Query arguments to override the defaults.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
+	 * @return  array Array of objects.
+	 */
 	public function get_payments( $args = array() ) {
 
 		global $wpdb;
@@ -214,41 +251,41 @@ class RCP_Payments {
 
 		$args  = wp_parse_args( $args, $defaults );
 
-		$where = '';
+		$where  = ' WHERE 1=1 ';
+		$values = array();
 
 		// payments for a specific subscription level
 		if( ! empty( $args['subscription'] ) ) {
-			$where .= "WHERE `subscription`= '{$args['subscription']}' ";
+			$where   .= " AND `subscription`= %s ";
+			$values[] = $args['subscription'];
 		}
 
 		// payments for specific users
 		if( ! empty( $args['user_id'] ) ) {
 
-			if( is_array( $args['user_id'] ) )
-				$user_ids = implode( ',', $args['user_id'] );
-			else
-				$user_ids = intval( $args['user_id'] );
-
-			if( ! empty( $args['subscription'] ) ) {
-				$where .= "AND `user_id` IN( {$user_ids} ) ";
+			if( is_array( $args['user_id'] ) ) {
+				$user_ids = implode( ',', array_map( 'absint', $args['user_id'] ) );
 			} else {
-				$where .= "WHERE `user_id` IN( {$user_ids} ) ";
+				$user_ids = intval( $args['user_id'] );
 			}
+
+			$where .= " AND `user_id` IN( {$user_ids} ) ";
 
 		}
 
 		// payments for specific statuses
 		if( ! empty( $args['status'] ) ) {
 
-			if( is_array( $args['status'] ) )
-				$statuss = implode( ',', $args['status'] );
-			else
-				$statuss = intval( $args['status'] );
+			if( is_array( $args['status'] ) ) {
+				$status_count       = count( $args['status'] );
+				$status_placeholder = array_fill( 0, $status_count, '%s' );
+				$statuses           = implode( ', ', $status_placeholder );
 
-			if( ! empty( $args['subscription'] ) || ! empty( $args['user_id'] ) ) {
-				$where .= "AND `status` IN( {$statuss} ) ";
+				$where .= "AND `status` IN ( $statuses )";
+				$values = $values + $args['status'];
 			} else {
-				$where .= "WHERE `status` IN( {$statuss} ) ";
+				$where   .= "AND `status` = %s";
+				$values[] = $args['status'];
 			}
 
 		}
@@ -271,11 +308,7 @@ class RCP_Payments {
 				$date_where = $day . " = DAY ( date ) AND " . $date_where;
 			}
 
-			if( ! empty( $args['user_id'] ) || ! empty( $args['subscription'] ) ) {
-				$where .= "AND (" . $date_where . ")";
-			} else {
-				$where .= "WHERE ( " . $date_where . " ) ";
-			}
+			$where .= " AND (" . $date_where . ")";
 		}
 
 		// Fields to return
@@ -285,19 +318,18 @@ class RCP_Payments {
 			$fields = '*';
 		}
 
+		// Search
 		if( ! empty( $args['s'] ) ) {
-
-			if( empty( $where ) )
-				$where = "WHERE ";
-			else
-				$where = " AND ";
 
 			// Search by email
 			if( is_email( $args['s'] ) ) {
 
 				$user = get_user_by( 'email', $args['s'] );
 
-				$where .= "`user_id`=$user->ID ";
+				if ( is_a( $user, 'WP_User' ) ) {
+					$where   .= " AND `user_id` = %d";
+					$values[] = $user->ID;
+				}
 
 			} else {
 
@@ -306,14 +338,17 @@ class RCP_Payments {
 				// Search by subscription key
 				if( strlen( $args['s'] ) == 32 ) {
 
-					$where .= "`subscription_key`= '{$args['s']}' ";
+					$where   .= " AND `subscription_key` = %s";
+					$values[] = $args['s'];
 
 				} elseif( $levels_db->get_level_by( 'name', $args['s'] ) ) {
 
 					// Matching subscription level found so search for payments with this level
-					$where .= "`subscription`= '{$args['s']}' ";
+					$where   .= " AND `subscription` = %s";
+					$values[] = $args['s'];
 				} else {
-					$where .= "`transaction_id`='{$args['s']}' ";
+					$where   .= " AND `transaction_id` = %s";
+					$values[] = $args['s'];
 				}
 			}
 
@@ -337,7 +372,10 @@ class RCP_Payments {
 
 		$orderby = array_key_exists( $args['orderby'], $columns ) ? $args['orderby'] : 'id';
 
-		$payments = $wpdb->get_results( $wpdb->prepare( "SELECT {$fields} FROM " . $this->db_name . " {$where}ORDER BY {$orderby} {$order} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ) );
+		$values[] = absint( $args['offset'] );
+		$values[] = absint( $args['number'] );
+
+		$payments = $wpdb->get_results( $wpdb->prepare( "SELECT {$fields} FROM " . $this->db_name . " {$where} ORDER BY {$orderby} {$order} LIMIT %d,%d;", $values ) );
 
 		return $payments;
 
@@ -347,58 +385,109 @@ class RCP_Payments {
 	/**
 	 * Count the total number of payments in the database
 	 *
+	 * @param   array $args Query arguments to override the defaults.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
+	 * @return  int
+	 */
 	public function count( $args = array() ) {
 
 		global $wpdb;
 
 		$defaults = array(
 			'user_id' => 0,
-			'status'  => ''
+			'status'  => '',
+		    's'       => ''
 		);
 
 		$args  = wp_parse_args( $args, $defaults );
 
-		$where = '';
+		$where  = ' WHERE 1=1 ';
+		$values = array();
 
+		// Filter by user ID
 		if( ! empty( $args['user_id'] ) ) {
 
-			if( is_array( $args['user_id'] ) )
-				$user_ids = implode( ',', $args['user_id'] );
-			else
+			if( is_array( $args['user_id'] ) ) {
+				$user_ids = implode( ',', array_map( 'absint', $args['user_id'] ) );
+			} else {
 				$user_ids = intval( $args['user_id'] );
+			}
 
-			$where .= " WHERE `user_id` IN( {$user_ids} ) ";
+			$where .= " AND `user_id` IN( {$user_ids} ) ";
 
 		}
 
+		// Filter by status
 		if( ! empty( $args['status'] ) ) {
 
 			if( is_array( $args['status'] ) ) {
-				$statuss = implode( ',', $args['status'] );
-			} else {
-				$statuss = intval( $args['status'] );
-			}
+				$status_count       = count( $args['status'] );
+				$status_placeholder = array_fill( 0, $status_count, '%s' );
+				$statuses           = implode( ', ', $status_placeholder );
 
-			if( ! empty( $args['user_id'] ) ) {
-				$where .= " AND `status` IN( {$statuss} ) ";
+				$where .= "AND `status` IN ( $statuses )";
+				$values = $values + $args['status'];
 			} else {
-				$where .= " WHERE `status` IN( {$statuss} ) ";
+				$where   .= "AND `status` = %s";
+				$values[] = $args['status'];
 			}
 
 		}
 
-		$key   = md5( 'rcp_payments_' . serialize( $args ) );
+		// Search
+		if( ! empty( $args['s'] ) ) {
+
+			// Search by email
+			if( is_email( $args['s'] ) ) {
+
+				$user = get_user_by( 'email', $args['s'] );
+
+				if ( is_a( $user, 'WP_User' ) ) {
+					$where   .= " AND `user_id` = %d";
+					$values[] = $user->ID;
+				}
+
+			} else {
+
+				$levels_db = new RCP_Levels;
+
+				// Search by subscription key
+				if( strlen( $args['s'] ) == 32 ) {
+
+					$where   .= " AND `subscription_key` = %s";
+					$values[] = $args['s'];
+
+				} elseif( $levels_db->get_level_by( 'name', $args['s'] ) ) {
+
+					// Matching subscription level found so search for payments with this level
+					$where   .= " AND `subscription` = %s";
+					$values[] = $args['s'];
+				} else {
+					$where   .= " AND `transaction_id` = %s";
+					$values[] = $args['s'];
+				}
+			}
+
+		}
+
+		$key   = md5( 'rcp_payments_count_' . serialize( $args ) );
 		$count = get_transient( $key );
 
 		if( $count === false ) {
-			$count = $wpdb->get_var( "SELECT COUNT(ID) FROM " . $this->db_name . "{$where};" );
+
+			$query = "SELECT COUNT(ID) FROM " . $this->db_name . "{$where};";
+
+			if ( ! empty( $values ) ) {
+				$query = $wpdb->prepare( $query, $values );
+			}
+
+			$count = $wpdb->get_var( $query );
 			set_transient( $key, $count, 10800 );
 		}
 
-		return $count;
+		return absint( $count );
 
 	}
 
@@ -406,9 +495,12 @@ class RCP_Payments {
 	/**
 	 * Calculate the total earnings of all payments in the database
 	 *
+	 * @param   array $args Query arguments to override the defaults.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
+	 * @return  float
+	 */
 	public function get_earnings( $args = array() ) {
 
 		global $wpdb;
@@ -426,26 +518,22 @@ class RCP_Payments {
 		$cache_args['date'] = implode( ',', $args['date'] );
 		$cache_key = md5( implode( ',', $cache_args ) );
 
-		$where = '';
+		$where = ' WHERE 1=1 ';
 
 		// payments for a specific subscription level
 		if( ! empty( $args['subscription'] ) ) {
-			$where .= "WHERE `subscription`= '{$args['subscription']}' ";
+			$where .= $wpdb->prepare( " AND `subscription` = %s ", $args['subscription'] );
 		}
 
 		// payments for specific users
 		if( ! empty( $args['user_id'] ) ) {
 
 			if( is_array( $args['user_id'] ) )
-				$user_ids = implode( ',', $args['user_id'] );
+				$user_ids = implode( ',', array_map( 'absint', $args['user_id'] ) );
 			else
 				$user_ids = intval( $args['user_id'] );
 
-			if( ! empty( $args['subscription'] ) ) {
-				$where .= "`user_id` IN( {$user_ids} ) ";
-			} else {
-				$where .= "WHERE `user_id` IN( {$user_ids} ) ";
-			}
+			$where .= " AND `user_id` IN( {$user_ids} ) ";
 
 		}
 
@@ -467,23 +555,11 @@ class RCP_Payments {
 				$date_where = $day . " = DAY ( date ) AND " . $date_where;
 			}
 
-			if( ! empty( $args['user_id'] ) || ! empty( $args['subscription'] ) ) {
-				$where .= "AND (" . $date_where . ") ";
-			} else {
-				$where .= "WHERE ( " . $date_where . " ) ";
-			}
+			$where .= " AND (" . $date_where . ") ";
 		}
 
 		// Exclude refunded payments
-		if( false !== strpos( $where, 'WHERE' ) ) {
-
-			$where .= "AND ( `status` = 'complete' OR `status` IS NULL )";
-
-		} else {
-
-			$where .= "WHERE ( `status` = 'complete' OR `status` IS NULL )";
-
-		}
+		$where .= " AND ( `status` = 'complete' OR `status` IS NULL )";
 
 		$earnings = get_transient( $cache_key );
 
@@ -500,9 +576,12 @@ class RCP_Payments {
 	/**
 	 * Calculate the total refunds of all payments in the database
 	 *
+	 * @param   array $args Query arguments to override the defaults.
+	 *
 	 * @access  public
 	 * @since   2.5
-	*/
+	 * @return  float
+	 */
 	public function get_refunds( $args = array() ) {
 
 		global $wpdb;
@@ -594,8 +673,11 @@ class RCP_Payments {
 	/**
 	 * Retrieves the last payment made by a user
 	 *
+	 * @param   int $user_id ID of the user to check.
+	 *
 	 * @access  public
 	 * @since   1.5
+	 * @return  int|float|false Amount of last payment or false if none is found.
 	*/
 	public function last_payment_of_user( $user_id = 0 ) {
 		global $wpdb;
@@ -611,10 +693,10 @@ class RCP_Payments {
 	 * @param   int    $payment_id    Payment ID.
 	 * @param   string $meta_key      The meta key to retrieve.
 	 * @param   bool   $single        Whether to return a single value.
-	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 *
 	 * @access  public
 	 * @since   2.6
+	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 */
 	public function get_meta( $payment_id = 0, $meta_key = '', $single = false ) {
 		return get_metadata( 'payment', $payment_id, $meta_key, $single );
@@ -627,10 +709,10 @@ class RCP_Payments {
 	 * @param   string $meta_key      Metadata name.
 	 * @param   mixed  $meta_value    Metadata value.
 	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
-	 * @return  bool                  False for failure. True for success.
 	 *
 	 * @access  public
 	 * @since   2.6
+	 * @return  bool                  False for failure. True for success.
 	 */
 	public function add_meta( $payment_id = 0, $meta_key = '', $meta_value, $unique = false ) {
 		return add_metadata( 'payment', $payment_id, $meta_key, $meta_value, $unique );
@@ -648,10 +730,10 @@ class RCP_Payments {
 	 * @param   string $meta_key      Metadata key.
 	 * @param   mixed  $meta_value    Metadata value.
 	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
-	 * @return  bool                  False on failure, true if success.
 	 *
 	 * @access  public
 	 * @since   2.6
+	 * @return  bool                  False on failure, true if success.
 	 */
 	public function update_meta( $payment_id = 0, $meta_key = '', $meta_value, $prev_value = '' ) {
 		return update_metadata( 'payment', $payment_id, $meta_key, $meta_value, $prev_value );
@@ -667,10 +749,10 @@ class RCP_Payments {
 	 * @param   int    $payment_id    Payment ID.
 	 * @param   string $meta_key      Metadata name.
 	 * @param   mixed  $meta_value    Optional. Metadata value.
-	 * @return  bool                  False for failure. True for success.
 	 *
 	 * @access  public
 	 * @since   2.6
+	 * @return  bool                  False for failure. True for success.
 	 */
 	public function delete_meta( $payment_id = 0, $meta_key = '', $meta_value = '' ) {
 		return delete_metadata( 'payment', $payment_id, $meta_key, $meta_value );

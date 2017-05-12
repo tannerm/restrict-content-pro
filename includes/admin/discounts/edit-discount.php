@@ -1,12 +1,21 @@
 <?php
+/**
+ * Edit Discount Code
+ *
+ * @package     Restrict Content Pro
+ * @subpackage  Admin/Edit Discount
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ */
+
 $code = rcp_get_discount_details( urldecode( $_GET['edit_discount'] ) );
 ?>
-<h2>
+<h1>
 	<?php _e( 'Edit Discount Code:', 'rcp' ); echo ' ' . $code->name; ?>
 	<a href="<?php echo admin_url( '/admin.php?page=rcp-discounts' ); ?>" class="add-new-h2">
 		<?php _e( 'Cancel', 'rcp' ); ?>
 	</a>
-</h2>
+</h1>
 <form id="rcp-edit-discount" action="" method="post">
 	<table class="form-table">
 		<tbody>
@@ -33,7 +42,7 @@ $code = rcp_get_discount_details( urldecode( $_GET['edit_discount'] ) );
 					<label for="rcp-code"><?php _e(' Code', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="rcp-code" name="code" value="<?php echo esc_attr( $code->code ); ?>" style="width: 300px;"/>
+					<input type="text" id="rcp-code" name="code" value="<?php echo esc_attr( $code->code ); ?>"/>
 					<p class="description"><?php _e(' Enter a code for this discount, such as 10PERCENT', 'rcp' ); ?></p>
 				</td>
 			</tr>
@@ -54,7 +63,7 @@ $code = rcp_get_discount_details( urldecode( $_GET['edit_discount'] ) );
 					<label for="rcp-amount"><?php _e(' Amount', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="rcp-amount" name="amount" value="<?php echo esc_attr( $code->amount ); ?>" style="width: 40px;"/>
+					<input type="text" id="rcp-amount" name="amount" value="<?php echo esc_attr( $code->amount ); ?>"/>
 					<p class="description"><?php _e(' The amount of this discount code.', 'rcp' ); ?></p>
 				</td>
 			</tr>
@@ -83,7 +92,7 @@ $code = rcp_get_discount_details( urldecode( $_GET['edit_discount'] ) );
 					<label for="rcp-expiration"><?php _e(' Expiration date', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker" value="<?php echo $code->expiration == '' ? '' : esc_attr( date( 'Y-m-d', strtotime( $code->expiration, current_time( 'timestamp' ) ) ) ); ?>"/>
+					<input name="expiration" id="rcp-expiration" type="text" class="rcp-datepicker" value="<?php echo $code->expiration == '' ? '' : esc_attr( date( 'Y-m-d', strtotime( $code->expiration, current_time( 'timestamp' ) ) ) ); ?>"/>
 					<p class="description"><?php _e(' Enter the expiration date for this discount code in the format of yyyy-mm-dd. Leave blank for no expiration', 'rcp' ); ?></p>
 				</td>
 			</tr>
@@ -104,7 +113,7 @@ $code = rcp_get_discount_details( urldecode( $_GET['edit_discount'] ) );
 					<label for="rcp-max-uses"><?php _e(' Max Uses', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="rcp-max-uses" name="max" value="<?php echo esc_attr( absint( $code->max_uses ) ); ?>" style="width: 40px;"/>
+					<input type="text" id="rcp-max-uses" name="max" value="<?php echo esc_attr( absint( $code->max_uses ) ); ?>"/>
 					<p class="description"><?php _e(' The maximum number of times this discount can be used. Leave blank for unlimited.', 'rcp' ); ?></p>
 				</td>
 			</tr>

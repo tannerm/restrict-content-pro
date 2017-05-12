@@ -1,13 +1,16 @@
 <?php
-
 /**
  * RCP Subscription Levels class
  *
  * This class handles querying, inserting, updating, and removing subscription levels
- * Also includes other discount helper functions
+ * Also includes other subscription level helper functions
  *
- * @since 1.5
-*/
+ * @package     Restrict Content Pro
+ * @subpackage  Classes/Subscription Levels
+ * @copyright   Copyright (c) 2017, Restrict Content Pro
+ * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.5
+ */
 
 class RCP_Levels {
 
@@ -41,7 +44,8 @@ class RCP_Levels {
 	 * Get things started
 	 *
 	 * @since   1.5
-	*/
+	 * @return  void
+	 */
 	function __construct() {
 
 		$this->db_name      = rcp_get_levels_db_name();
@@ -54,10 +58,12 @@ class RCP_Levels {
 	/**
 	 * Retrieve a specific subscription level from the database
 	 *
+	 * @param   int $level_id ID of the level to retrieve.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  object
+	 */
 	public function get_level( $level_id = 0 ) {
 		global $wpdb;
 
@@ -78,10 +84,13 @@ class RCP_Levels {
 	/**
 	 * Retrieve a specific subscription level from the database
 	 *
+	 * @param   string $field Name of the field to check against.
+	 * @param   mixed  $value Value of the field.
+	 *
 	 * @access  public
 	 * @since   1.8.2
-	*/
-
+	 * @return  object
+	 */
 	public function get_level_by( $field = 'name', $value = '' ) {
 		global $wpdb;
 
@@ -104,10 +113,12 @@ class RCP_Levels {
 	/**
 	 * Retrieve all subscription levels from the database
 	 *
+	 * @param  array $args Query arguments to override the defaults.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  array|false Array of level objects or false if none are found.
+	 */
 	public function get_levels( $args = array() ) {
 		global $wpdb;
 
@@ -120,9 +131,9 @@ class RCP_Levels {
 		$args = wp_parse_args( $args, $defaults );
 
 		if( $args['status'] == 'active' ) {
-			$where = "WHERE `status` !='inactive'";
+			$where = "WHERE `status` = 'active'";
 		} elseif( $args['status'] == 'inactive' ) {
-			$where = "WHERE `status` ='{$status}'";
+			$where = "WHERE `status` = 'inactive'";
 		} else {
 			$where = "";
 		}
@@ -153,14 +164,56 @@ class RCP_Levels {
 		return false;
 	}
 
+	/**
+	 * Count the total number of subscription levels in the database
+	 *
+	 * @param array $args Query arguments to override the defaults.
+	 *
+	 * @access public
+	 * @return int
+	 */
+	public function count( $args = array() ) {
+
+		global $wpdb;
+
+		$defaults = array(
+			'status' => 'all'
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$where = '';
+
+		// Filter by status.
+		if ( $args['status'] == 'active' ) {
+			$where = "WHERE `status` = 'active'";
+		} elseif ( $args['status'] == 'inactive' ) {
+			$where = "WHERE `status` = 'inactive'";
+		}
+
+		$key   = md5( 'rcp_levels_count_' . serialize( $args ) );
+		$count = get_transient( $key );
+
+		if ( false === $count ) {
+			$count = $wpdb->get_var( "SELECT COUNT(ID) FROM {$this->db_name} {$where}" );
+			set_transient( $key, $count, 10800 );
+		}
+
+		return $count;
+
+	}
+
 
 	/**
 	 * Retrieve a field for a subscription level
 	 *
+	 * @param   int    $level_id ID of the level.
+	 * @param   string $field    Name of the field to retrieve the value for.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  mixed
+	 */
 	public function get_level_field( $level_id = 0, $field = '' ) {
 
 		global $wpdb;
@@ -186,25 +239,29 @@ class RCP_Levels {
 	/**
 	 * Insert a subscription level into the database
 	 *
+	 * @param   array $args Arguments to override the defaults.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  int|false ID of the newly created level or false on failure.
+	 */
 	public function insert( $args = array() ) {
 
 		global $wpdb;
 
 		$defaults = array(
-			'name'          => '',
-			'description'   => '',
-			'duration'      => 'unlimited',
-			'duration_unit' => 'month',
-			'price'         => '0',
-			'fee'           => '0',
-			'list_order'    => '0',
-			'level' 	    => '0',
-			'status'        => 'inactive',
-			'role'          => 'subscriber'
+			'name'                => '',
+			'description'         => '',
+			'duration'            => 'unlimited',
+			'duration_unit'       => 'month',
+			'trial_duration'      => '0',
+			'trial_duration_unit' => 'day',
+			'price'               => '0',
+			'fee'                 => '0',
+			'list_order'          => '0',
+			'level'               => '0',
+			'status'              => 'inactive',
+			'role'                => 'subscriber'
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -213,24 +270,55 @@ class RCP_Levels {
 
 		$args = apply_filters( 'rcp_add_subscription_args', $args );
 
+		foreach( array( 'price', 'fee' ) as $key ) {
+			if ( empty( $args[$key] ) ) {
+				$args[$key] = '0';
+			}
+			$args[$key] = str_replace( ',', '', $args[$key] );
+		}
+
+		// Validate price value
+		if ( false === $this->valid_amount( $args['price'] ) || $args['price'] < 0 ) {
+			return false;
+		}
+
+		// Validate fee value
+		if ( false === $this->valid_amount( $args['fee'] ) ) {
+			return false;
+		}
+
+		/**
+		 * Validate the trial settings.
+		 * If a trial is enabled, the level's regular price and duration must be > 0.
+		 */
+		if ( $args['trial_duration'] > 0 ) {
+			if ( $args['price'] <= 0 || $args['duration'] <= 0 ) {
+				return false;
+			}
+		}
+
 		$add = $wpdb->query(
 			$wpdb->prepare(
 				"INSERT INTO {$this->db_name} SET
-					`name`          = '%s',
-					`description`   = '%s',
-					`duration`      = '%d',
-					`duration_unit` = '%s',
-					`price`         = '%s',
-					`fee`           = '%s',
-					`list_order`    = '0',
-					`level`         = '%d',
-					`status`        = '%s',
-					`role`          = '%s'
+					`name`                = '%s',
+					`description`         = '%s',
+					`duration`            = '%d',
+					`duration_unit`       = '%s',
+					`trial_duration`      = '%d',
+					`trial_duration_unit` = '%s',
+					`price`               = '%s',
+					`fee`                 = '%s',
+					`list_order`          = '0',
+					`level`               = '%d',
+					`status`              = '%s',
+					`role`                = '%s'
 				;",
 				sanitize_text_field( $args['name'] ),
 				sanitize_text_field( $args['description'] ),
 				sanitize_text_field( $args['duration'] ),
 				sanitize_text_field( $args['duration_unit'] ),
+				absint( $args['trial_duration'] ),
+				in_array( $args['trial_duration_unit'], array( 'day', 'month', 'year' ) ) ? $args['trial_duration_unit'] : 'day',
 				sanitize_text_field( $args['price'] ),
 				sanitize_text_field( $args['fee'] ),
 				absint( $args['level'] ),
@@ -241,19 +329,23 @@ class RCP_Levels {
 
 		if( $add ) {
 
-			$args = array(
+			$level_id = $wpdb->insert_id;
+
+			$cache_args = array(
 				'status'  => 'all',
 				'limit'   => null,
 				'orderby' => 'list_order'
 			);
 
-			$cache_key = md5( implode( '|', $args ) );
+			$cache_key = md5( implode( '|', $cache_args ) );
 
 			wp_cache_delete( $cache_key, 'rcp' );
+			delete_transient( md5( 'rcp_levels_count_' . serialize( array( 'status' => 'all' ) ) ) );
+			delete_transient( md5( 'rcp_levels_count_' . serialize( array( 'status' => $args['status'] ) ) ) );
 
-			do_action( 'rcp_add_subscription', $wpdb->insert_id, $args );
+			do_action( 'rcp_add_subscription', $level_id, $args );
 
-			return $wpdb->insert_id;
+			return $level_id;
 		}
 
 		return false;
@@ -264,10 +356,13 @@ class RCP_Levels {
 	/**
 	 * Update an existing subscription level
 	 *
+	 * @param   int   $level_id ID of the level to update.
+	 * @param   array $args     Fields and values to update.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  bool Whether or not the update was successful.
+	 */
 	public function update( $level_id = 0, $args = array() ) {
 
 		global $wpdb;
@@ -275,28 +370,59 @@ class RCP_Levels {
 		$level = $this->get_level( $level_id );
 		$level = get_object_vars( $level );
 
-		$args     = array_merge( $level, $args );
+		$args = array_merge( $level, $args );
 
 		do_action( 'rcp_pre_edit_subscription_level', absint( $args['id'] ), $args );
+
+		foreach( array( 'price', 'fee' ) as $key ) {
+			if ( empty( $args[$key] ) ) {
+				$args[$key] = '0';
+			}
+			$args[$key] = str_replace( ',', '', $args[$key] );
+		}
+
+		// Validate price value
+		if ( false === $this->valid_amount( $args['price'] ) || $args['price'] < 0 ) {
+			return false;
+		}
+
+		// Validate fee value
+		if ( false === $this->valid_amount( $args['fee'] ) ) {
+			return false;
+		}
+
+		/**
+		 * Validate the trial settings.
+		 * If a trial is enabled, the level's regular price and duration must be > 0.
+		 */
+		if ( $args['trial_duration'] > 0 ) {
+			if ( $args['price'] <= 0 || $args['duration'] <= 0 ) {
+				return false;
+			}
+		}
 
 		$update = $wpdb->query(
 			$wpdb->prepare(
 				"UPDATE {$this->db_name} SET
-					`name`          = '%s',
-					`description`   = '%s',
-					`duration`      = '%d',
-					`duration_unit` = '%s',
-					`price`         = '%s',
-					`fee`           = '%s',
-					`level`         = '%d',
-					`status`        = '%s',
-					`role`          = '%s'
-					WHERE `id`      = '%d'
+					`name`                = '%s',
+					`description`         = '%s',
+					`duration`            = '%d',
+					`duration_unit`       = '%s',
+					`trial_duration`      = '%d',
+					`trial_duration_unit` = '%s',
+					`price`               = '%s',
+					`fee`                 = '%s',
+					`level`               = '%d',
+					`status`              = '%s',
+					`role`                = '%s'
+					WHERE `id`            = '%d'
 				;",
 				sanitize_text_field( $args['name'] ),
 				wp_kses( $args['description'], rcp_allowed_html_tags() ),
 				sanitize_text_field( $args['duration'] ),
 				sanitize_text_field( $args['duration_unit'] ),
+				absint( $args['trial_duration'] ),
+				in_array( $args['trial_duration_unit'], array( 'day', 'month', 'year' ) ) ? $args['trial_duration_unit'] : 'day',
 				sanitize_text_field( $args['price'] ),
 				sanitize_text_field( $args['fee'] ),
 				absint( $args['level'] ),
@@ -316,6 +442,9 @@ class RCP_Levels {
 
 		wp_cache_delete( $cache_key, 'rcp' );
 		wp_cache_delete( 'level_' . $level_id, 'rcp' );
+		delete_transient( md5( 'rcp_levels_count_' . serialize( array( 'status' => 'all' ) ) ) );
+		delete_transient( md5( 'rcp_levels_count_' . serialize( array( 'status' => 'active' ) ) ) );
+		delete_transient( md5( 'rcp_levels_count_' . serialize( array( 'status' => 'inactive' ) ) ) );
 
 		do_action( 'rcp_edit_subscription_level', absint( $args['id'] ), $args );
 
@@ -329,10 +458,12 @@ class RCP_Levels {
 	/**
 	 * Delete a subscription level
 	 *
+	 * @param   int $level_id ID of the level to delete.
+	 *
 	 * @access  public
 	 * @since   1.5
-	*/
-
+	 * @return  void
+	 */
 	public function remove( $level_id = 0 ) {
 
 		global $wpdb;
@@ -348,6 +479,9 @@ class RCP_Levels {
 		$cache_key = md5( implode( '|', $args ) );
 
 		wp_cache_delete( $cache_key, 'rcp' );
+		delete_transient( md5( 'rcp_levels_count_' . serialize( array( 'status' => 'all' ) ) ) );
+		delete_transient( md5( 'rcp_levels_count_' . serialize( array( 'status' => 'active' ) ) ) );
+		delete_transient( md5( 'rcp_levels_count_' . serialize( array( 'status' => 'inactive' ) ) ) );
 
 		do_action( 'rcp_remove_level', absint( $level_id ) );
 
@@ -359,10 +493,10 @@ class RCP_Levels {
 	 * @param   int    $level_id      Subscription level ID.
 	 * @param   string $meta_key      The meta key to retrieve.
 	 * @param   bool   $single        Whether to return a single value.
-	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 *
 	 * @access  public
 	 * @since   2.6
+	 * @return  mixed  Single metadata value, or array of values
 	 */
 	public function get_meta( $level_id = 0, $meta_key = '', $single = false ) {
 		return get_metadata( 'level', $level_id, $meta_key, $single );
@@ -375,10 +509,10 @@ class RCP_Levels {
 	 * @param   string $meta_key      Metadata name.
 	 * @param   mixed  $meta_value    Metadata value.
 	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
-	 * @return  bool                  False for failure. True for success.
 	 *
 	 * @access  public
 	 * @since   2.6
+	 * @return  int|false             The meta ID on success, false on failure.
 	 */
 	public function add_meta( $level_id = 0, $meta_key = '', $meta_value, $unique = false ) {
 		return add_metadata( 'level', $level_id, $meta_key, $meta_value, $unique );
@@ -396,10 +530,10 @@ class RCP_Levels {
 	 * @param   string $meta_key      Metadata key.
 	 * @param   mixed  $meta_value    Metadata value.
 	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
-	 * @return  bool                  False on failure, true if success.
 	 *
 	 * @access  public
 	 * @since   2.6
+	 * @return  int|bool              Meta ID if the key didn't exist, true on successful update, false on failure.
 	 */
 	public function update_meta( $level_id = 0, $meta_key = '', $meta_value, $prev_value = '' ) {
 		return update_metadata( 'level', $level_id, $meta_key, $meta_value, $prev_value );
@@ -415,10 +549,10 @@ class RCP_Levels {
 	 * @param   int    $level_id      Subscription level ID.
 	 * @param   string $meta_key      Metadata name.
 	 * @param   mixed  $meta_value    Optional. Metadata value.
-	 * @return  bool                  False for failure. True for success.
 	 *
 	 * @access  public
 	 * @since   2.6
+	 * @return  bool                  True on successful delete, false on failure.
 	 */
 	public function delete_meta( $level_id = 0, $meta_key = '', $meta_value = '' ) {
 		return delete_metadata( 'level', $level_id, $meta_key, $meta_value );
@@ -443,6 +577,86 @@ class RCP_Levels {
 		}
 
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->levelmeta} WHERE level_id = %d", absint( $level_id ) ) );
+	}
+
+	/**
+	 * Validates that the amount is a valid format.
+	 *
+	 * Private for now until we finish validation for all fields.
+	 *
+	 * @since 2.7
+	 * @access private
+	 * @return boolean true if valid, false if not.
+	 */
+	private function valid_amount( $amount ) {
+		return filter_var( $amount, FILTER_VALIDATE_FLOAT );
+	}
+
+	/**
+	 * Determines if the specified subscription level has a trial option.
+	 *
+	 * @access public
+	 * @since 2.7
+	 *
+	 * @param int $level_id The subscription level ID.
+	 * @return boolean true if the level has a trial option, false if not.
+	 */
+	public function has_trial( $level_id = 0 ) {
+
+		if ( empty( $level_id ) ) {
+			return;
+		}
+
+		$level_id = absint( $level_id );
+
+		$level = $this->get_level( $level_id );
+
+		return ! empty( $level->trial_duration );
+	}
+
+	/**
+	 * Retrieves the trial duration for the specified subscription level.
+	 *
+	 * @access public
+	 * @since 2.7
+	 *
+	 * @param int $level_id The subscription level ID.
+	 * @return int The duration of the trial. 0 if there is no trial.
+	 */
+	public function trial_duration( $level_id = 0 ) {
+
+		if ( empty( $level_id ) ) {
+			return;
+		}
+
+		$level_id = absint( $level_id );
+
+		$level = $this->get_level( $level_id );
+
+		return ! empty( $level->trial_duration ) ? $level->trial_duration : 0;
+
+	}
+
+	/**
+	 * Retrieves the trial duration unit for the specified subscription level.
+	 *
+	 * @access public
+	 * @since 2.7
+	 *
+	 * @param int $level_id The subscription level ID.
+	 * @return string The duration unit of the trial.
+	 */
+	public function trial_duration_unit( $level_id = 0 ) {
+
+		if ( empty( $level_id ) ) {
+			return;
+		}
+
+		$level_id = absint( $level_id );
+
+		$level = $this->get_level( $level_id );
+
+		return in_array( $level->trial_duration_unit, array( 'day', 'month', 'year' ) ) ? $level->trial_duration_unit : 'day';
 	}
 
 }
