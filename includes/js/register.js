@@ -438,11 +438,14 @@ function rcp_validate_discount() {
 
 function rcp_calc_total() {
 
-	var $               = jQuery;
-	var $total          = $('.rcp_registration_total');
-	var discount        = $('#rcp_discount_code').val();
-	var subscription    = ( $('#rcp_subscription_levels input:checked').length ) ? $('#rcp_subscription_levels input:checked').val() : $('input[name="rcp_level"]').val();
-	var $gateway        = rcp_get_gateway();
+	var $      = jQuery;
+	var $total = $( '.rcp_registration_total' );
+	var form   = $( '#rcp_registration_form' );
+	var values = form.serializeArray();
+	var skip   = [ 'rcp_register_nonce', 'rcp_user_pass', 'rcp_user_pass_confirm', 'rcp_card_number' ];
+	var data   = {
+		action: 'rcp_calc_discount'
+	};
 
 	if ( ! $total.length ) {
 		return;
@@ -450,18 +453,16 @@ function rcp_calc_total() {
 
 	rcp_calculating_total = true;
 
-	var data = {
-		action: 'rcp_calc_discount',
-		rcp_level: subscription,
-		rcp_discount: discount,
-		rcp_gateway: $gateway.val()
-	};
+	// loop through form values and exclude those we've marked to skip
+	for (var i = 0; i < values.length; i++) {
+		if (-1 !== skip.indexOf(values[i]['name'])) {
+			continue;
+		}
 
-	if ( $('#rcp_auto_renew').is(':checked') ) {
-		data.rcp_auto_renew = true;
+		data[values[i]['name']] = values[i]['value'];
 	}
 
-	$.post(rcp_script_options.ajaxurl, data, function(response) {
+	$.post( rcp_script_options.ajaxurl, data, function(response) {
 		rcp_calculating_total = false;
 
 		if (undefined !== response.total ) {
