@@ -115,7 +115,7 @@ class RCP_Member extends WP_User {
 			$expiration = date_i18n( get_option( 'date_format' ), strtotime( $expiration, current_time( 'timestamp' ) ) );
 		}
 
-		return apply_filters( 'rcp_member_get_expiration_date', $expiration, $this->ID, $this );
+		return apply_filters( 'rcp_member_get_expiration_date', $expiration, $this->ID, $this, $formatted, $pending );
 
 	}
 
