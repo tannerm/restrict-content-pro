@@ -566,7 +566,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 							die( 'rcp_stripe_charge_succeeded action fired successfully' );
 
-						} else {
+						} elseif ( ! empty( $payment_data['transaction_id'] ) && $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
 
 							die( 'duplicate payment found' );
 
