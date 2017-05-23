@@ -37,6 +37,15 @@ function rcp_process_edit_member() {
 	$expiration    = isset( $_POST['expiration'] ) ? sanitize_text_field( $_POST['expiration'] ) : 'none';
 	$expiration    = 'none' !== $expiration ? date( 'Y-m-d 23:59:59', strtotime( $_POST['expiration'], current_time( 'timestamp' ) ) ) : $expiration;
 	$revoke_access = isset( $_POST['rcp-revoke-access'] );
+	$current_user = wp_get_current_user();
+
+	rcp_log( sprintf( '%s has started editing member #%d.', $current_user->user_login, $user_id ) );
+
+	$previous_expiration = $member->get_expiration_date( false );
+
+	if ( $previous_expiration != $expiration ) {
+		rcp_log( sprintf( 'Updated member #%d expiration date from %s to %s.', $user_id, $previous_expiration, $expiration ) );
+	}
 
 	if ( isset( $_POST['notes'] ) ) {
 		update_user_meta( $user_id, 'rcp_notes', wp_kses( $_POST['notes'], array() ) );
@@ -55,6 +64,8 @@ function rcp_process_edit_member() {
 		$old_level  = $levels->get_level( $current_id );
 
 		if ( $current_id != $level_id ) {
+
+			rcp_log( sprintf( 'Changed member #%d subscription level from %d to %d.', $user_id, $current_id, $level_id ) );
 
 			$member->set_subscription_id( $level_id );
 
@@ -89,6 +100,7 @@ function rcp_process_edit_member() {
 	}
 
 	if ( isset( $_POST['cancel_subscription'] ) && $member->can_cancel() ) {
+		rcp_log( sprintf( 'Cancelling payment profile for member #%d.', $user_id ) );
 		$member->cancel_payment_profile();
 	}
 
@@ -101,8 +113,11 @@ function rcp_process_edit_member() {
 	}
 
 	if ( $email != $member->user_email ) {
+		rcp_log( sprintf( 'Changing email for member #%d.', $user_id ) );
 		wp_update_user( array( 'ID' => $user_id, 'user_email' => $email ) );
 	}
+
+	rcp_log( sprintf( '%s finished editing member #%d.', $current_user->user_login, $user_id ) );
 
 	wp_safe_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id . '&rcp_message=user_updated' ) );
 	exit;
@@ -132,6 +147,7 @@ function rcp_process_add_member_subscription() {
 
 	// Don't add if chosen expiration date is in the past.
 	if ( isset( $_POST['expiration'] ) && strtotime( 'NOW', current_time( 'timestamp' ) ) > strtotime( $_POST['expiration'], current_time( 'timestamp' ) ) && 'none' !== $_POST['expiration'] ) {
+		rcp_log( sprintf( 'Failed adding subscription to an existing user: chosen expiration date ( %s ) is in the past.', $_POST['expiration'] ) );
 		wp_safe_redirect( admin_url( 'admin.php?page=rcp-members&rcp_message=user_not_added' ) );
 		exit;
 	}
@@ -180,6 +196,8 @@ function rcp_process_add_member_subscription() {
 	} else {
 		delete_user_meta( $user->ID, 'rcp_recurring' );
 	}
+
+	rcp_log( sprintf( 'Successfully added new subscription for user #%d. Level ID: %d; Status: %s; Expiration Date: %s; Role: %s', $member->ID, $level_id, $status, $expiration, $role ) );
 
 	wp_safe_redirect( admin_url( 'admin.php?page=rcp-members&rcp_message=user_added' ) );
 	exit;
@@ -302,6 +320,10 @@ function rcp_process_resend_verification() {
 	if ( ! isset( $_GET['member_id'] ) ) {
 		wp_die( __( 'Please select a member.', 'rcp' ), __( 'Error', 'rcp' ), array( 'response' => 400 ) );
 	}
+
+	$current_user = wp_get_current_user();
+
+	rcp_log( sprintf( '%s re-sending email verification to member #%d.', $current_user->user_login, absint( $_GET['member_id'] ) ) );
 
 	rcp_send_email_verification( urldecode( absint( $_GET['member_id'] ) ) );
 	wp_safe_redirect( admin_url( add_query_arg( 'rcp_message', 'verification_sent', 'admin.php?page=rcp-members' ) ) );

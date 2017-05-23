@@ -302,7 +302,9 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				);
 
 				$rcp_payments = new RCP_Payments();
-				$rcp_payments->insert( $payment_data );
+				$payment_id   = $rcp_payments->insert( $payment_data );
+
+				do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
 
 				// Subscription ID is not used when non-recurring.
 				delete_user_meta( $member->ID, 'rcp_merchant_subscription_id' );
@@ -414,6 +416,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		$body = $e->getJsonBody();
 		$err  = $body['error'];
 
+		$this->error_message = $err['message'];
+
 		do_action( 'rcp_registration_failed', $this );
 		do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
 
@@ -491,6 +495,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						die( 'no subscription ID for member' );
 					}
 
+					if( $event->type == 'customer.subscription.created' ) {
+						do_action( 'rcp_webhook_recurring_payment_profile_created', $member, $this );
+					}
+
 					if( $event->type == 'charge.succeeded' || $event->type == 'invoice.payment_succeeded' ) {
 
 						// setup payment data
@@ -559,7 +567,13 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 							// record this payment if it hasn't been recorded yet and it's not a trial invoice
 							if ( empty( $payment_data['is_trial_invoice'] ) ) {
-								$rcp_payments->insert( $payment_data );
+								$payment_id = $rcp_payments->insert( $payment_data );
+
+								if ( $member->is_recurring() ) {
+									do_action( 'rcp_webhook_recurring_payment_processed', $member, $payment_id, $this );
+								}
+
+								do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
 							}
 
 							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data, $event );
@@ -567,6 +581,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							die( 'rcp_stripe_charge_succeeded action fired successfully' );
 
 						} elseif ( ! empty( $payment_data['transaction_id'] ) && $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
+
+							do_action( 'rcp_ipn_duplicate_payment', $payment_data['transaction_id'], $member, $this );
 
 							die( 'duplicate payment found' );
 
@@ -592,6 +608,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 						if( $payment_event->id == $member->get_merchant_subscription_id() ) {
 
 							$member->cancel();
+
+							do_action( 'rcp_webhook_cancel', $member, $this );
 
 							die( 'member cancelled successfully' );
 

@@ -28,6 +28,10 @@ function rcp_process_add_payment() {
 		wp_die( __( 'You do not have permission to perform this action.', 'rcp' ), __( 'Error', 'rcp' ), array( 'response' => 403 ) );
 	}
 
+	$current_user = wp_get_current_user();
+
+	rcp_log( sprintf( '%s manually inserting new payment record.', $current_user->user_login ) );
+
 	$payments = new RCP_Payments();
 	$user     = get_user_by( 'login', $_POST['user'] );
 
@@ -55,6 +59,7 @@ function rcp_process_add_payment() {
 
 		$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_added' );
 	} else {
+		rcp_log( sprintf( 'Failed adding new manual payment by %s: supplied user login doesn\'t exist.', $current_user->user_login ) );
 		$url = admin_url( 'admin.php?page=rcp-payments&rcp_message=payment_not_added' );
 	}
 
@@ -80,9 +85,12 @@ function rcp_process_edit_payment() {
 		wp_die( __( 'You do not have permission to perform this action.', 'rcp' ), __( 'Error', 'rcp' ), array( 'response' => 403 ) );
 	}
 
-	$payments   = new RCP_Payments();
-	$payment_id = absint( $_POST['payment-id'] );
-	$user       = get_user_by( 'login', $_POST['user'] );
+	$payments     = new RCP_Payments();
+	$payment_id   = absint( $_POST['payment-id'] );
+	$user         = get_user_by( 'login', $_POST['user'] );
+	$current_user = wp_get_current_user();
+
+	rcp_log( sprintf( '%s manually updating payment #%d.', $current_user->user_login, $payment_id ) );
 
 	if ( $user && $payment_id ) {
 
@@ -131,6 +139,10 @@ function rcp_process_delete_payment() {
 	if ( ! current_user_can( 'rcp_manage_payments' ) ) {
 		wp_die( __( 'You do not have permission to perform this action.', 'rcp' ), __( 'Error', 'rcp' ), array( 'response' => 403 ) );
 	}
+
+	$current_user = wp_get_current_user();
+
+	rcp_log( sprintf( '%s deleting payment #%d.', $current_user->user_login, absint( $_GET['payment_id'] ) ) );
 
 	$payments = new RCP_Payments();
 	$payments->delete( absint( $_GET['payment_id'] ) );

@@ -50,6 +50,8 @@ function rcp_process_registration() {
 		$gateway = sanitize_text_field( $_POST['rcp_gateway'] );
 	}
 
+	rcp_log( sprintf( 'Started new registration for subscription #%d via %s.', $subscription_id, $gateway ) );
+
 	/***********************
 	* validate the form
 	***********************/
@@ -102,6 +104,8 @@ function rcp_process_registration() {
 	$errors = rcp_errors()->get_error_messages();
 
 	if ( ! empty( $errors ) && $is_ajax ) {
+		rcp_log( sprintf( 'Registration cancelled with the following errors: %s.', implode( ', ', $errors ) ) );
+
 		wp_send_json_error( array(
 			'success'          => false,
 			'errors'           => rcp_get_error_messages_html( 'register' ),
@@ -248,6 +252,7 @@ function rcp_process_registration() {
 				$member->set_expiration_date( $member_expires );
 				$member->set_status( 'active' );
 				rcp_login_user_in( $user_data['id'], $user_data['login'] );
+				rcp_log( sprintf( 'Completed registration to level #%d with full discount for user #%d.', $subscription_id, $user_data['id'] ) );
 				wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 			}
 
@@ -343,6 +348,9 @@ function rcp_process_registration() {
 			rcp_login_user_in( $user_data['id'], $user_data['login'] );
 
 		}
+
+		rcp_log( sprintf( 'Completed free registration to level #%d for user #%d.', $subscription_id, $user_data['id'] ) );
+
 		// send the newly created user to the redirect page after logging them in
 		wp_redirect( rcp_get_return_url( $user_data['id'] ) ); exit;
 
@@ -913,6 +921,8 @@ function rcp_add_prorate_fee( $registration ) {
 	}
 
 	$registration->add_fee( -1 * $amount, __( 'Proration Credit', 'rcp' ), false, true );
+
+	rcp_log( sprintf( 'Adding %.2f proration credits to registration for user #%d.', $amount, get_current_user_id() ) );
 }
 add_action( 'rcp_registration_init', 'rcp_add_prorate_fee' );
 
@@ -1032,6 +1042,9 @@ function rcp_remove_subscription_data_on_failure( $gateway ) {
 			$discounts->remove_from_user( $gateway->user_id, $gateway->discount_code );
 		}
 	}
+
+	// Log error.
+	rcp_log( sprintf( '%s registration failed for user #%d. Error message: %s', rcp_get_gateway_name_from_object( $gateway ), $gateway->user_id, $gateway->error_message ) );
 
 }
 add_action( 'rcp_registration_failed', 'rcp_remove_subscription_data_on_failure' );

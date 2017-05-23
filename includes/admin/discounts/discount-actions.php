@@ -46,12 +46,15 @@ function rcp_process_add_discount() {
 	$add = $discounts->insert( $data );
 
 	if ( is_wp_error( $add ) ) {
+		rcp_log( sprintf( 'Error creating new discount code: %s', $add->get_error_message() ) );
 		wp_die( $add );
 	}
 
 	if ( $add ) {
+		rcp_log( sprintf( 'Successfully added discount #%d.', $add ) );
 		$url = admin_url( 'admin.php?page=rcp-discounts&rcp_message=discount_added' );
 	} else {
+		rcp_log( 'Error inserting new discount code into the database.' );
 		$url = admin_url( 'admin.php?page=rcp-discounts&rcp_message=discount_not_added' );
 	}
 
@@ -95,12 +98,16 @@ function rcp_process_edit_discount() {
 	$update = $discounts->update( $_POST['discount_id'], $data );
 
 	if ( is_wp_error( $update ) ) {
+		rcp_log( sprintf( 'Error editing discount code #%d: %s', $_POST['discount_id'], $update->get_error_message() ) );
+
 		wp_die( $update );
 	}
 
 	if ( $update ) {
+		rcp_log( sprintf( 'Successfully edited discount #%d.', $_POST['discount_id'] ) );
 		$url = admin_url( 'admin.php?page=rcp-discounts&discount-updated=1' );
 	} else {
+		rcp_log( sprintf( 'Error editing discount #%d.', $_POST['discount_id'] ) );
 		$url = admin_url( 'admin.php?page=rcp-discounts&discount-updated=0' );
 	}
 
@@ -134,6 +141,8 @@ function rcp_process_delete_discount() {
 	$discounts   = new RCP_Discounts();
 	$discounts->delete( $discount_id );
 
+	rcp_log( sprintf( 'Deleted discount #%d.', $discount_id ) );
+
 	wp_safe_redirect( add_query_arg( 'rcp_message', 'discount_deleted', 'admin.php?page=rcp-discounts' ) );
 	exit;
 
@@ -163,6 +172,8 @@ function rcp_process_activate_discount() {
 	$discounts = new RCP_Discounts();
 	$discounts->update( absint( $_GET['discount_id'] ), array( 'status' => 'active' ) );
 
+	rcp_log( sprintf( 'Successfully activated discount #%d.', $_GET['discount_id'] ) );
+
 	wp_safe_redirect( add_query_arg( 'rcp_message', 'discount_activated', 'admin.php?page=rcp-discounts' ) );
 	exit;
 
@@ -191,6 +202,8 @@ function rcp_process_deactivate_discount() {
 
 	$discounts = new RCP_Discounts();
 	$discounts->update( absint( $_GET['discount_id'] ), array( 'status' => 'disabled' ) );
+
+	rcp_log( sprintf( 'Successfully deactivated discount #%d.', $_GET['discount_id'] ) );
 
 	wp_safe_redirect( add_query_arg( 'rcp_message', 'discount_deactivated', 'admin.php?page=rcp-discounts' ) );
 	exit;

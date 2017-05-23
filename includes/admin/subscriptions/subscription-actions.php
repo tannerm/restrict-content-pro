@@ -29,6 +29,7 @@ function rcp_process_add_subscription_level() {
 	}
 
 	if ( empty( $_POST['name'] ) ) {
+		rcp_log( 'Failed creating new subscription level: empty subscription name.' );
 		$url = admin_url( 'admin.php?page=rcp-member-levels&rcp_message=level_missing_fields' );
 		wp_safe_redirect( esc_url_raw( $url ) );
 		exit;
@@ -39,9 +40,9 @@ function rcp_process_add_subscription_level() {
 	$level_id = $levels->insert( $_POST );
 
 	if ( $level_id ) {
-		$url = get_bloginfo( 'wpurl' ) . '/wp-admin/admin.php?page=rcp-member-levels&rcp_message=level_added';
+		$url = admin_url( 'admin.php?page=rcp-member-levels&rcp_message=level_added' );
 	} else {
-		$url = get_bloginfo( 'wpurl' ) . '/wp-admin/admin.php?page=rcp-member-levels&rcp_message=level_not_added';
+		$url = admin_url( 'admin.php?page=rcp-member-levels&rcp_message=level_not_added' );
 	}
 	wp_safe_redirect( $url );
 	exit;
@@ -69,9 +70,9 @@ function rcp_process_edit_subscription_level() {
 	$update = $levels->update( $_POST['subscription_id'], $_POST );
 
 	if ( $update ) {
-		$url = get_bloginfo( 'wpurl' ) . '/wp-admin/admin.php?page=rcp-member-levels&rcp_message=level_updated';
+		$url = admin_url( 'admin.php?page=rcp-member-levels&rcp_message=level_updated' );
 	} else {
-		$url = get_bloginfo( 'wpurl' ) . '/wp-admin/admin.php?page=rcp-member-levels&rcp_message=level_not_updated';
+		$url = admin_url( 'admin.php?page=rcp-member-levels&rcp_message=level_not_updated' );
 	}
 
 	wp_safe_redirect( $url );
@@ -146,6 +147,8 @@ function rcp_process_activate_subscription() {
 	$update   = $levels->update( $level_id, array( 'status' => 'active' ) );
 	delete_transient( 'rcp_subscription_levels' );
 
+	rcp_log( sprintf( 'Successfully activated subscription level #%d.', $level_id ) );
+
 	wp_safe_redirect( add_query_arg( 'rcp_message', 'level_activated', 'admin.php?page=rcp-member-levels' ) );
 	exit;
 
@@ -176,6 +179,8 @@ function rcp_process_deactivate_subscription() {
 	$levels   = new RCP_Levels();
 	$update   = $levels->update( $level_id, array( 'status' => 'inactive' ) );
 	delete_transient( 'rcp_subscription_levels' );
+
+	rcp_log( sprintf( 'Successfully deactivated subscription level #%d.', $level_id ) );
 
 	wp_safe_redirect( add_query_arg( 'rcp_message', 'level_deactivated', 'admin.php?page=rcp-member-levels' ) );
 	exit;
