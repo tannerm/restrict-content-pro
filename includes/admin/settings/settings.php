@@ -1449,7 +1449,7 @@ function rcp_settings_page() {
 							</th>
 							<td>
 								<input type="checkbox" value="1" name="rcp_settings[auto_add_users]" id="rcp_settings[auto_add_users]" <?php if( isset( $rcp_options['auto_add_users'] ) ) checked('1', $rcp_options['auto_add_users']); ?>/>
-								<span class="description"><?php _e( 'Check this to automatically add new WordPress users to a subscription level.', 'rcp' ); ?></span>
+								<span class="description"><?php _e( 'Check this to automatically add new WordPress users to a subscription level. This only needs to be turned on if you\'re adding users manually or through some means other than the registration form. This does not automatically take payment so it\'s best used for free levels.', 'rcp' ); ?></span>
 							</td>
 						</tr>
 						<tr valign="top">
