@@ -56,7 +56,14 @@ function rcp_redirect_from_wp_login() {
 	global $rcp_options;
 
 	if( isset( $rcp_options['hijack_login_url'] ) && isset( $rcp_options['login_redirect'] ) ) {
-		wp_redirect( get_permalink( $rcp_options['login_redirect'] ) ); exit;
+
+		if ( ! empty( $_GET['redirect_to'] ) ) {
+			$login_url = add_query_arg( 'redirect', urlencode( $_GET['redirect_to'] ), get_permalink( $rcp_options['login_redirect'] ) );
+		} else {
+			$login_url = get_permalink( $rcp_options['login_redirect'] );
+		}
+
+		wp_redirect( esc_url_raw( $login_url ) ); exit;
 	}
 }
 add_action( 'login_form_login', 'rcp_redirect_from_wp_login' );
