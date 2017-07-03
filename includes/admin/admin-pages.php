@@ -36,6 +36,15 @@ function rcp_settings_menu() {
 	// Remove the reminders page from the menu.
 	add_action( 'admin_head', 'rcp_hide_reminder_page' );
 
+	// Add "Restrict" submenu under each post type.
+	foreach ( rcp_get_metabox_post_types() as $post_type ) {
+		$post_type_details = get_post_type_object( $post_type );
+		$url               = ( 'post' == $post_type ) ? 'edit.php' : 'edit.php?post_type=' . $post_type;
+		$slug              = ( 'post' == $post_type ) ? 'rcp-restrict-post-type' : 'rcp-restrict-post-type-' . $post_type;
+		$capability        = isset( $post_type_details->cap->edit_posts ) ? $post_type_details->cap->edit_posts : 'edit_posts';
+		add_submenu_page( $url, __( 'Restrict Access', 'rcp' ), __( 'Restrict Access', 'rcp' ), $capability, $slug, 'rcp_restrict_post_type_page' );
+	}
+
 	if ( get_bloginfo('version') >= 3.3 ) {
 		// load each of the help tabs
 		add_action( "load-$rcp_members_page", "rcp_help_tabs" );

@@ -190,7 +190,7 @@ function rcp_admin_notices() {
 
 	// Discount messages.
 	if( current_user_can( 'rcp_manage_discounts' ) ) {
-		switch( $message ) {
+		switch ( $message ) {
 			case 'discount_added' :
 
 				$text = __( 'Discount code created', 'rcp' );
@@ -198,7 +198,7 @@ function rcp_admin_notices() {
 
 			case 'discount_not_added' :
 
-				$text = __( 'The discount code could not be created due to an error', 'rcp' );
+				$text  = __( 'The discount code could not be created due to an error', 'rcp' );
 				$class = 'error';
 				break;
 
@@ -215,6 +215,15 @@ function rcp_admin_notices() {
 			case 'discount_deactivated' :
 
 				$text = __( 'Discount code deactivated', 'rcp' );
+				break;
+		}
+	}
+
+	// Post type restriction messages.
+	if( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) ) {
+		switch ( $message ) {
+			case 'post-type-updated' :
+				$text = __( 'Post type restrictions updated.', 'rcp' );
 				break;
 		}
 	}
@@ -242,10 +251,10 @@ function rcp_admin_notices() {
 				$text = __( 'Test reminder sent successfully', 'rcp' );
 				break;
 		}
-	}
 
-	if( $message ) {
-		echo '<div class="' . $class . '"><p>' . $text . '</p></div>';
+		if( $message ) {
+			echo '<div class="' . $class . '"><p>' . $text . '</p></div>';
+		}
 	}
 }
 add_action( 'admin_notices', 'rcp_admin_notices' );

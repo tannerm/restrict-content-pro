@@ -1342,27 +1342,6 @@ function rcp_is_pending_verification( $user_id = 0 ) {
 }
 
 /**
- * Disallow access to restricted content if the user is pending email verification.
- *
- * @param bool       $can_access Whether or not the user can access the post.
- * @param int        $user_id    ID of the user being checked.
- * @param int        $post_id    ID of the post being checked.
- * @param RCP_Member $member     Member object.
- *
- * @return bool
- */
-function rcp_disallow_access_pending_verification( $can_access, $user_id, $post_id, $member ) {
-
-	if ( rcp_is_restricted_content( $post_id ) && $member->is_pending_verification() ) {
-		return false;
-	}
-
-	return $can_access;
-
-}
-add_filter( 'rcp_member_can_access', 'rcp_disallow_access_pending_verification', 10, 4 );
-
-/**
  * Generate email verification link for a user
  *
  * @param int $user_id ID of the user to create the link for.

@@ -456,6 +456,29 @@ function rcp_filter_restricted_category_content( $content ) {
 // add_filter( 'the_content', 'rcp_filter_restricted_category_content', 101 );
 
 /**
+ * Disallow access to restricted content if the user is pending email verification.
+ *
+ * @deprecated 2.9 Moved to RCP_Member::can_access()
+ *
+ * @param bool       $can_access Whether or not the user can access the post.
+ * @param int        $user_id    ID of the user being checked.
+ * @param int        $post_id    ID of the post being checked.
+ * @param RCP_Member $member     Member object.
+ *
+ * @return bool
+ */
+function rcp_disallow_access_pending_verification( $can_access, $user_id, $post_id, $member ) {
+
+	if ( rcp_is_restricted_content( $post_id ) && $member->is_pending_verification() ) {
+		return false;
+	}
+
+	return $can_access;
+
+}
+//add_filter( 'rcp_member_can_access', 'rcp_disallow_access_pending_verification', 10, 4 );
+
+/**
  * Retrieve the renewal reminder periods
  *
  * @deprecated 2.9 Use RCP_Reminders::get_notice_periods() instead.

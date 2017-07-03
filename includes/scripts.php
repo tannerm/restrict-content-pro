@@ -24,6 +24,10 @@ function rcp_admin_scripts( $hook ) {
 	$pages[] = 'post-new.php';
 	$pages[] = 'edit.php';
 
+	if( false !== strpos( $hook, 'rcp-restrict-post-type' ) ) {
+		$pages[] = $hook;
+	}
+
 	if( in_array( $hook, $pages ) ) {
 		wp_enqueue_script( 'jquery-ui-sortable' );
 		wp_enqueue_script( 'jquery-ui-datepicker' );
@@ -99,6 +103,10 @@ function rcp_admin_styles( $hook ) {
 		'edit.php',
 		'post-new.php'
 	);
+
+	if( false !== strpos( $hook, 'rcp-restrict-post-type' ) ) {
+		$pages[] = $hook;
+	}
 
 	if( in_array( $hook, $pages ) ) {
 		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
