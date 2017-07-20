@@ -386,6 +386,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		$token                = sanitize_text_field( $_GET['token'] );
 		$rcp_checkout_details = $this->get_checkout_details( $token );
 
+		if ( ! is_array( $rcp_checkout_details ) ) {
+			$error = is_wp_error( $rcp_checkout_details ) ? $rcp_checkout_details->get_error_message() : __( 'Invalid response code from PayPal', 'rcp' );
+			return '<p>' . sprintf( __( 'An unexpected PayPal error occurred. Error message: %s.', 'rcp' ), $error ) . '</p>';
+		}
+
 		ob_start();
 		rcp_get_template_part( 'paypal-express-confirm' );
 		return ob_get_clean();
@@ -650,7 +655,12 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			'TOKEN'     => $token
 		);
 
-		$request = wp_remote_get( add_query_arg( $args, $this->api_endpoint ), array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1' ) );
+		$request = wp_remote_post( $this->api_endpoint, array(
+			'timeout'     => 45,
+			'sslverify'   => false,
+			'httpversion' => '1.1',
+			'body'        => $args
+		) );
 		$body    = wp_remote_retrieve_body( $request );
 		$code    = wp_remote_retrieve_response_code( $request );
 		$message = wp_remote_retrieve_response_message( $request );
