@@ -245,6 +245,7 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 				// Approved
 				$renewal_amount = sanitize_text_field( $_POST['x_amount'] );
 				$transaction_id = sanitize_text_field( $_POST['x_trans_id'] );
+				$is_trialing    = $member->is_trialing();
 
 				$payment_data = array(
 					'date'             => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
@@ -266,7 +267,7 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 					$payment_id = $payments->insert( $payment_data );
 				}
 
-				if ( intval( $_POST['x_subscription_paynum'] ) > 1 ) {
+				if ( intval( $_POST['x_subscription_paynum'] ) > 1 || $is_trialing ) {
 
 					// Renewal payment.
 					$member->renew( $member->is_recurring() );
