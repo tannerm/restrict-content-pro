@@ -9,13 +9,13 @@
  */
 
 /**
- * Redirect non-subscribed users away from a premium post
+ * Redirect non-subscribed users away from a restricted post
  * If the redirect page is premium, users are sent to the home page
  *
  * @return void
  */
 function rcp_redirect_from_premium_post() {
-	global $rcp_options, $user_ID, $post;
+	global $rcp_options, $user_ID, $post, $wp_query;
 	if( isset($rcp_options['hide_premium'] ) && $rcp_options['hide_premium'] ) {
 		$member = new RCP_Member( $user_ID );
 		if( is_singular() && ! $member->can_access( $post->ID ) ) {
@@ -25,6 +25,17 @@ function rcp_redirect_from_premium_post() {
 				$redirect = home_url();
 			}
 			wp_redirect( $redirect ); exit;
+		} elseif( is_post_type_archive() && $wp_query->have_posts() && rcp_is_restricted_post_type( get_post_type() ) && ! $member->can_access( get_the_ID() ) ) {
+			if( isset( $rcp_options['redirect_from_premium'] ) ) {
+				$redirect = get_permalink( $rcp_options['redirect_from_premium'] );
+			} else {
+				// Avoid a crazy redirect loop.
+				$redirect = ! is_front_page() ? home_url() : false;
+			}
+
+			if ( $redirect ) {
+				wp_redirect( $redirect ); exit;
+			}
 		}
 	}
 }

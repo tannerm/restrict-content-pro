@@ -244,7 +244,8 @@ add_shortcode( 'user_name', 'rcp_user_name' );
 function rcp_registration_form( $atts, $content = null ) {
 
 	$atts = shortcode_atts( array(
-		'id' => null,
+		'id'  => null, // Single specific level
+		'ids' => null, // Multiple specific levels
 		'registered_message' => __( 'You are already registered and have an active subscription.', 'rcp' ),
 		'logged_out_header'  => __( 'Register New Account', 'rcp' ),
 		'logged_in_header'   => rcp_get_subscription_id() ? __( 'Upgrade or Renew Your Subscription', 'rcp' ) : __( 'Join Now', 'rcp' )
@@ -298,12 +299,13 @@ function rcp_register_form_stripe_checkout( $atts ) {
 	$member       = new RCP_Member( wp_get_current_user()->ID );
 	$subscription = rcp_get_subscription_details( $atts['id'] );
 	$amount       = $subscription->price + $subscription->fee;
+	$is_trial     = ! empty( $subscription->trial_duration ) && ! empty( $subscription->trial_duration_unit ) && ! $member->has_trialed();
 
 	if( $member->ID > 0 ) {
 		$amount -= $member->get_prorate_credit_amount();
 	}
 
-	if( $amount < 0 ) {
+	if( $amount < 0 || $is_trial ) {
 		$amount = 0;
 	}
 
@@ -313,7 +315,7 @@ function rcp_register_form_stripe_checkout( $atts ) {
 		'data-name'              => get_option( 'blogname' ),
 		'data-description'       => $subscription->description,
 		'data-label'             => sprintf( __( 'Join %s', 'rcp' ), $subscription->name ),
-		'data-panel-label'       => __( 'Register - {{amount}}', 'rcp' ),
+		'data-panel-label'       => $is_trial ? __( 'Start Trial', 'rcp' ) : __( 'Register', 'rcp' ),
 		'data-amount'            => $amount * rcp_stripe_get_currency_multiplier(),
 		'data-locale'            => 'auto',
 		'data-allow-remember-me' => true,

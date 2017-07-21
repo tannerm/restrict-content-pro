@@ -37,6 +37,10 @@ function rcp_setup_cron_jobs() {
 	if ( ! wp_next_scheduled( 'rcp_check_member_counts' ) ) {
 		wp_schedule_event( current_time( 'timestamp' ), 'daily', 'rcp_check_member_counts' );
 	}
+
+	if ( ! wp_next_scheduled( 'rcp_mark_abandoned_payments' ) ) {
+		wp_schedule_event( current_time( 'timestamp' ), 'daily', 'rcp_mark_abandoned_payments' );
+	}
 }
 add_action('wp', 'rcp_setup_cron_jobs');
 
@@ -100,54 +104,9 @@ add_action( 'rcp_expired_users_check', 'rcp_check_for_expired_users' );
  */
 function rcp_check_for_soon_to_expire_users() {
 
-	$renewal_period = rcp_get_renewal_reminder_period();
+	$reminders = new RCP_Reminders();
+	$reminders->send_reminders();
 
-	if( 'none' == $renewal_period )
-		return; // Don't send renewal reminders
-
-	$args = array(
-		'meta_query'     => array(
-			'relation'   => 'AND',
-			array(
-				'key'    => 'rcp_expiration',
-				'value'  => current_time( 'mysql' ),
-				'type'   => 'DATETIME',
-				'compare'=> '>='
-			),
-			array(
-				'key'    => 'rcp_expiration',
-				'value'  => date( 'Y-m-d H:i:s', strtotime( $renewal_period, current_time( 'timestamp' ) ) ),
-				'type'   => 'DATETIME',
-				'compare'=> '<='
-			),
-			array(
-				'key'    => 'rcp_recurring',
-				'compare'=> 'NOT EXISTS'
-			),
-			array(
-				'key'    => 'rcp_status',
-				'compare'=> '=',
-				'value'  => 'active'
-			)
-		),
-		'number' 		=> 9999,
-		'count_total' 	=> false,
-		'fields'        => 'ids'
-	);
-
-	$expiring_members = get_users( $args );
-	if( $expiring_members ) {
-		foreach( $expiring_members as $member ) {
-
-			if( get_user_meta( $member, '_rcp_expiring_soon_email_sent', true ) )
-				continue;
-
-			rcp_email_expiring_notice( $member );
-			add_user_meta( $member, '_rcp_expiring_soon_email_sent', 'yes' );
-			rcp_add_member_note( $member, __( 'Expiration notice was emailed to the member.', 'rcp' ) );
-
-		}
-	}
 }
 add_action( 'rcp_send_expiring_soon_notice', 'rcp_check_for_soon_to_expire_users' );
 
@@ -184,3 +143,36 @@ function rcp_check_member_counts() {
 	}
 }
 add_action( 'rcp_check_member_counts', 'rcp_check_member_counts' );
+
+/**
+ * Find pending payments that are more than a week old and mark them as abandoned.
+ *
+ * @since 2.9
+ * @return void
+ */
+function rcp_mark_abandoned_payments() {
+
+	/**
+	 * @var RCP_Payments $rcp_payments_db
+	 */
+	global $rcp_payments_db;
+
+	$args = array(
+		'fields' => 'id',
+		'number' => 9999,
+		'status' => 'pending',
+		'date'   => array(
+			'end' => date( 'Y-m-d', strtotime( '-7 days', current_time( 'timestamp' ) ) )
+		)
+	);
+
+	$payments = $rcp_payments_db->get_payments( $args );
+
+	if ( $payments ) {
+		foreach ( $payments as $payment ) {
+			$rcp_payments_db->update( $payment->id, array( 'status' => 'abandoned' ) );
+		}
+	}
+
+}
+add_action( 'rcp_mark_abandoned_payments', 'rcp_mark_abandoned_payments' );

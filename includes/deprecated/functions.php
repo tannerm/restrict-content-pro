@@ -454,3 +454,126 @@ function rcp_filter_restricted_category_content( $content ) {
 
 }
 // add_filter( 'the_content', 'rcp_filter_restricted_category_content', 101 );
+
+/**
+ * Disallow access to restricted content if the user is pending email verification.
+ *
+ * @deprecated 2.9 Moved to RCP_Member::can_access()
+ *
+ * @param bool       $can_access Whether or not the user can access the post.
+ * @param int        $user_id    ID of the user being checked.
+ * @param int        $post_id    ID of the post being checked.
+ * @param RCP_Member $member     Member object.
+ *
+ * @return bool
+ */
+function rcp_disallow_access_pending_verification( $can_access, $user_id, $post_id, $member ) {
+
+	if ( rcp_is_restricted_content( $post_id ) && $member->is_pending_verification() ) {
+		return false;
+	}
+
+	return $can_access;
+
+}
+//add_filter( 'rcp_member_can_access', 'rcp_disallow_access_pending_verification', 10, 4 );
+
+/**
+ * Retrieve the renewal reminder periods
+ *
+ * @deprecated 2.9 Use RCP_Reminders::get_notice_periods() instead.
+ * @see RCP_Reminders::get_notice_periods()
+ *
+ * @since       1.6
+ * @access      public
+ * @return      array
+ */
+function rcp_get_renewal_reminder_periods() {
+	$periods = array(
+		'none'      => __( 'None, reminders disabled', 'rcp' ),
+		'+1 day'    => __( 'One day before expiration', 'rcp' ),
+		'+2 days'   => __( 'Two days before expiration', 'rcp' ),
+		'+3 days'   => __( 'Three days before expiration', 'rcp' ),
+		'+4 days'   => __( 'Four days before expiration', 'rcp' ),
+		'+5 days'   => __( 'Five days before expiration', 'rcp' ),
+		'+6 days'   => __( 'Six days before expiration', 'rcp' ),
+		'+1 week'   => __( 'One week before expiration', 'rcp' ),
+		'+2 weeks'  => __( 'Two weeks before expiration', 'rcp' ),
+		'+3 weeks'  => __( 'Three weeks before expiration', 'rcp' ),
+		'+1 month'  => __( 'One month before expiration', 'rcp' ),
+		'+2 months' => __( 'Two months before expiration', 'rcp' ),
+		'+3 months' => __( 'Three months before expiration', 'rcp' ),
+	);
+	return apply_filters( 'rcp_renewal_reminder_periods', $periods );
+}
+
+
+/**
+ * Retrieve the renewal reminder period that is enabled
+ *
+ * @deprecated 2.9 Multiple periods are now available in new reminders feature.
+ * @see RCP_Reminders
+ *
+ * @since       1.6
+ * @access      public
+ * @return      string
+ */
+function rcp_get_renewal_reminder_period() {
+	global $rcp_options;
+	$period = isset( $rcp_options['renewal_reminder_period'] ) ? $rcp_options['renewal_reminder_period'] : 'none';
+	return apply_filters( 'rcp_get_renewal_reminder_period', $period );
+}
+
+/**
+ * Log Types.
+ *
+ * Sets up the valid log types for WP_Logging.
+ *
+ * @deprecated 2.9 Using new RCP_Logging class instead.
+ *
+ * @param array $types Existing log types.
+ *
+ * @access private
+ * @since  1.3.4
+ * @return array
+ */
+function rcp_log_types( $types ) {
+
+	$types = array(
+		'gateway_error'
+	);
+	return $types;
+
+}
+add_filter( 'wp_log_types', 'rcp_log_types' );
+
+/**
+ * Filter content in RSS feeds.
+ *
+ * @deprecated 2.9 The "hide from feed" meta field was removed and content is already filtered for RSS
+ *                 feeds in rcp_filter_restricted_content().
+ * @see        rcp_filter_restricted_content()
+ *
+ * @param string $content
+ *
+ * @return string
+ */
+function rcp_filter_feed_posts( $content ) {
+	global $rcp_options;
+
+	if( ! is_feed() )
+		return $content;
+
+	$hide_from_feed = get_post_meta( get_the_ID(), 'rcp_hide_from_feed', true );
+	if ( $hide_from_feed == 'on' ) {
+		if( rcp_is_paid_content( get_the_ID() ) ) {
+			return rcp_format_teaser( $rcp_options['paid_message'] );
+		} else {
+			return rcp_format_teaser( $rcp_options['free_message'] );
+		}
+	}
+	return do_shortcode( $content );
+
+}
+//add_action( 'the_excerpt', 'rcp_filter_feed_posts' );
+//add_action( 'the_content', 'rcp_filter_feed_posts' );

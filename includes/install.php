@@ -159,6 +159,16 @@ function rcp_options_install( $network_wide = false ) {
 
 	}
 
+	// Insert default notices.
+	$reminders = new RCP_Reminders();
+	$notices   = $reminders->get_notices();
+	if ( empty( $notices ) ) {
+		$notices[] = $reminders->get_default_notice( 'renewal' );
+		$notices[] = $reminders->get_default_notice( 'expiration' );
+
+		update_option( 'rcp_reminder_notices', $notices );
+	}
+
 	update_option( 'rcp_settings', $rcp_options );
 
 	// and option that allows us to make sure RCP is installed
@@ -256,13 +266,21 @@ function rcp_create_tables() {
 	$sql = "CREATE TABLE {$rcp_payments_db_name} (
 		id bigint(9) NOT NULL AUTO_INCREMENT,
 		subscription varchar(200) NOT NULL,
+		object_id bigint(9) NOT NULL,
+		object_type varchar(20) NOT NULL DEFAULT 'subscription',
 		date datetime NOT NULL,
 		amount mediumtext NOT NULL,
+		subtotal mediumtext NOT NULL,
+		credits mediumtext NOT NULL,
+		fees mediumtext NOT NULL,
+		discount_amount mediumtext NOT NULL,
+		discount_code tinytext NOT NULL,
 		user_id mediumint NOT NULL,
 		payment_type tinytext NOT NULL,
 		subscription_key varchar(32) NOT NULL,
 		transaction_id varchar(64) NOT NULL,
 		status varchar(12) NOT NULL,
+		gateway tinytext NOT NULL,
 		PRIMARY KEY id (id),
 		KEY subscription (subscription),
 		KEY user_id (user_id),

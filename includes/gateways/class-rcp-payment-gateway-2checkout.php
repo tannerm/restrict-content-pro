@@ -69,6 +69,11 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 		Twocheckout::sellerId( $this->seller_id );
 		Twocheckout::sandbox( $this->test_mode );
 
+		/**
+		 * @var RCP_Payments $rcp_payments_db
+		 */
+		global $rcp_payments_db;
+
 		$member = new RCP_Member( $this->user_id );
 
 		if( empty( $_POST['twoCheckoutToken'] ) ) {
@@ -129,27 +134,27 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				// Look to see if we have an existing subscription to cancel
 				if( $member->just_upgraded() && $member->can_cancel() ) {
-					$cancelled = $member->cancel_payment_profile( false );
+					$member->cancel_payment_profile( false );
 				}
 
-				$payment_data = array(
-					'date'             => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
-					'subscription'     => $this->subscription_name,
-					'payment_type'     => $payment_type,
-					'subscription_key' => $this->subscription_key,
-					'amount'           => $this->initial_amount,
-					'user_id'          => $this->user_id,
-					'transaction_id'   => $charge['response']['orderNumber']
-				);
+				$member->set_recurring( $this->auto_renew );
 
-				$rcp_payments = new RCP_Payments();
-				$rcp_payments->insert( $payment_data );
+				// This activates the user's account.
+				$rcp_payments_db->update( $this->payment->id, array(
+					'date'             => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
+					'payment_type'     => $payment_type,
+					'transaction_id'   => $charge['response']['orderNumber'],
+					'status'           => 'complete'
+				) );
+
+				do_action( 'rcp_gateway_payment_processed', $member, $this->payment->id, $this );
 
 				$paid = true;
 			}
 
 		} catch ( Twocheckout_Error $e ) {
 
+			$this->error_message = $e->getMessage();
 			do_action( 'rcp_registration_failed', $this );
 			wp_die( $e->getMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 
@@ -157,8 +162,6 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 		if ( $paid ) {
 
-			// set this user to active
-			$member->renew( $this->auto_renew );
 			$member->add_note( __( 'Subscription started in 2Checkout', 'rcp' ) );
 
 			$member->set_payment_profile_id( '2co_' . $charge['response']['orderNumber'] );
@@ -253,8 +256,11 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 					$recurring = ! empty( $_POST['recurring'] );
 					$member->renew( $recurring );
-					$payments->insert( $payment_data );
+					$payment_id = $payments->insert( $payment_data );
 					$member->add_note( __( 'Subscription renewed in 2Checkout', 'rcp' ) );
+
+					do_action( 'rcp_webhook_recurring_payment_processed', $member, $payment_id, $this );
+					do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
 
 					break;
 
@@ -275,6 +281,8 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 						$member->cancel();
 						$member->add_note( __( 'Subscription cancelled in 2Checkout', 'rcp' ) );
 
+						do_action( 'rcp_webhook_cancel', $member, $this );
+
 					}
 
 
@@ -288,6 +296,8 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 					$member->set_status( 'active' );
 					$member->add_note( __( 'Subscription restarted in 2Checkout', 'rcp' ) );
+
+					do_action( 'rcp_webhook_recurring_payment_profile_created', $member, $this );
 
 					break;
 

@@ -65,6 +65,11 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		global $rcp_options;
 
+		/**
+		 * @var RCP_Payments $rcp_payments_db
+		 */
+		global $rcp_payments_db;
+
 		if ( is_user_logged_in() ) {
 			$user_data  = get_userdata( $this->user_id );
 			$first_name = $user_data->first_name;
@@ -131,6 +136,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 		if( is_wp_error( $request ) ) {
 
+			$this->error_message = $request->get_error_message();
 			do_action( 'rcp_registration_failed', $this );
 			do_action( 'rcp_paypal_pro_signup_payment_failed', $request, $this );
 
@@ -147,6 +153,7 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 
 			if( false !== strpos( strtolower( $body['ACK'] ), 'failure' ) ) {
 
+				$this->error_message = $body['L_LONGMESSAGE0'];
 				do_action( 'rcp_registration_failed', $this );
 				do_action( 'rcp_paypal_pro_signup_payment_failed', $request, $this );
 
@@ -172,8 +179,14 @@ class RCP_Payment_Gateway_PayPal_Pro extends RCP_Payment_Gateway {
 				}
 
 				if ( isset( $body['TRANSACTIONID'] ) && false !== strpos( strtolower( $body['ACK'] ), 'success' ) ) {
-					// Confirm a one-time payment
-					$member->renew( $this->auto_renew );
+					// Confirm a one-time payment. Updating the payment activates the account.
+					$payment_data = array(
+						'payment_type'   => 'Credit Card One Time',
+						'transaction_id' => sanitize_text_field( $body['TRANSACTIONID'] ),
+						'status'         => 'complete'
+					);
+
+					$rcp_payments_db->update( $this->payment->id, $payment_data );
 				}
 
 				wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;

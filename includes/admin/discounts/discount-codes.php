@@ -14,14 +14,48 @@
  * @return void
  */
 function rcp_discounts_page() {
-	global $rcp_options, $rcp_discounts_db_name, $wpdb;
-	$page = admin_url( '/admin.php?page=rcp-discounts' );
+	/**
+	 * @var RCP_Discounts $rcp_discounts_db
+	 */
+	global $rcp_discounts_db;
+	$page   = admin_url( '/admin.php?page=rcp-discounts' );
+	$status = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : 'all';
+
+	// Query counts.
+	$all_count      = $rcp_discounts_db->count();
+	$active_count   = $rcp_discounts_db->count( array( 'status' => 'active' ) );
+	$inactive_count = $rcp_discounts_db->count( array( 'status' => 'disabled' ) );
 	?>
 	<div class="wrap">
 		<?php if( isset( $_GET['edit_discount'] ) ) :
 			include('edit-discount.php');
 		else : ?>
 			<h1><?php _e( 'Discount Codes', 'rcp' ); ?></h1>
+
+			<ul class="subsubsub">
+				<li>
+					<a href="<?php echo esc_url( remove_query_arg( 'status', $page ) ); ?>" title="<?php esc_attr_e( 'View all discount codes', 'rcp' ); ?>"<?php echo 'all' == $status ? ' class="current"' : ''; ?>>
+						<?php _e( 'All', 'rcp' ); ?>
+						<span class="count">(<?php echo $all_count; ?>)</span>
+					</a>
+				</li>
+				<?php if ( $active_count > 0 ) : ?>
+					<li>
+						|<a href="<?php echo esc_url( add_query_arg( 'status', 'active', $page ) ); ?>" title="<?php esc_attr_e( 'View active discount codes', 'rcp' ); ?>"<?php echo 'active' == $status ? ' class="current"' : ''; ?>>
+							<?php _e( 'Active', 'rcp' ); ?>
+							<span class="count">(<?php echo $active_count; ?>)</span>
+						</a>
+					</li>
+				<?php endif; ?>
+				<?php if ( $inactive_count > 0 ) : ?>
+					<li>
+						|<a href="<?php echo esc_url( add_query_arg( 'status', 'disabled', $page ) ); ?>" title="<?php esc_attr_e( 'View inactive discount codes', 'rcp' ); ?>"<?php echo 'disabled' == $status ? ' class="current"' : ''; ?>>
+							<?php _e( 'Inactive', 'rcp' ); ?>
+							<span class="count">(<?php echo $inactive_count; ?>)</span>
+						</a>
+					</li>
+				<?php endif; ?>
+			</ul>
 
 			<table class="wp-list-table widefat posts">
 				<thead>
@@ -40,7 +74,7 @@ function rcp_discounts_page() {
 					</tr>
 				</thead>
 				<tbody>
-				<?php $codes = rcp_get_discounts(); ?>
+				<?php $codes = rcp_get_discounts( array( 'status' => $status ) ); ?>
 				<?php
 				if($codes) :
 					$i = 1;
@@ -53,11 +87,11 @@ function rcp_discounts_page() {
 										<span class="id"><?php echo __( 'ID:', 'rcp' ) . ' ' . $code->id; ?></span>
 										<a href="<?php echo esc_url( add_query_arg( 'edit_discount', $code->id, $page ) ); ?>"><?php _e( 'Edit', 'rcp' ); ?></a> |
 										<?php if(rcp_get_discount_status($code->id) == 'active') { ?>
-											<a href="<?php echo esc_url( add_query_arg( 'deactivate_discount', $code->id, $page ) ); ?>"><?php _e( 'Deactivate', 'rcp' ); ?></a> |
+											<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'deactivate_discount', 'discount_id' => $code->id ), $page ), 'rcp-deactivate-discount' ) ); ?>"><?php _e( 'Deactivate', 'rcp' ); ?></a> |
 										<?php } else { ?>
-											<a href="<?php echo esc_url( add_query_arg( 'activate_discount', $code->id, $page ) ); ?>"><?php _e( 'Activate', 'rcp' ); ?></a> |
+											<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'activate_discount', 'discount_id' => $code->id ), $page ), 'rcp-activate-discount' ) ); ?>"><?php _e( 'Activate', 'rcp' ); ?></a> |
 										<?php } ?>
-										<span class="trash"><a href="<?php echo esc_url( add_query_arg( 'delete_discount', $code->id, $page ) ); ?>" class="rcp_delete_discount"><?php _e( 'Delete', 'rcp' ); ?></a></span>
+										<span class="trash"><a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'delete_discount_code', 'discount_id' => $code->id ), $page ), 'rcp-delete-discount' ) ); ?>" class="rcp_delete_discount"><?php _e( 'Delete', 'rcp' ); ?></a></span>
 									<?php endif; ?>
 								</div>
 								<button type="button" class="toggle-row"><span class="screen-reader-text"><?php _e( 'Show more details', 'rcp' ); ?></span></button>

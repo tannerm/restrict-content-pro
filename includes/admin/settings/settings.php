@@ -1024,45 +1024,25 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 							<tr valign="top">
-								<th colspan=2><h3><?php _e( 'Expiring Soon Email', 'rcp' ); ?></h3></th>
+								<th colspan="2"><h3><?php _e( 'Expiration Reminders', 'rcp' ); ?></h3></th>
 							</tr>
 							<tr valign="top">
 								<th>
-									<label for="rcp_settings[renewal_subject]"><?php _e( 'Subject', 'rcp' ); ?></label>
+									<?php _e( 'Subscription Expiration Reminders', 'rcp' ); ?>
 								</th>
 								<td>
-									<input class="regular-text" id="rcp_settings[renewal_subject]" style="width: 300px;" name="rcp_settings[renewal_subject]" value="<?php if( isset( $rcp_options['renewal_subject'] ) ) { echo $rcp_options['renewal_subject']; } ?>"/>
-									<p class="description"><?php _e( 'The subject line for the email sent to users before their subscription expires.', 'rcp' ); ?></p>
+									<?php rcp_subscription_reminder_table( 'expiration' ); ?>
 								</td>
 							</tr>
 							<tr valign="top">
-								<th>
-									<label for="rcp_settings[renew_notice_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
-								</th>
-								<td>
-									<?php
-									$renew_notice_email = isset( $rcp_options['renew_notice_email'] ) ? wptexturize( $rcp_options['renew_notice_email'] ) : '';
-									wp_editor( $renew_notice_email, 'rcp_settings_renew_notice_email', array( 'textarea_name' => 'rcp_settings[renew_notice_email]', 'teeny' => true ) );
-									?>
-									<p class="description"><?php _e( 'This is the email message that is sent to users before their subscription expires to encourage them to renew.', 'rcp' ); ?></p>
-								</td>
+								<th colspan="2"><h3><?php _e( 'Renewal Reminders', 'rcp' ); ?></h3></th>
 							</tr>
 							<tr valign="top">
 								<th>
-									<label for="rcp_settings[renewal_reminder_period]"><?php _e( 'Reminder Period', 'rcp' ); ?></label>
+									<?php _e( 'Subscription Renewal Reminders', 'rcp' ); ?>
 								</th>
 								<td>
-									<select id="rcp_settings[renewal_reminder_period]" name="rcp_settings[renewal_reminder_period]">
-										<?php
-										$periods = rcp_get_renewal_reminder_periods();
-										foreach ( $periods as $key => $period ) {
-										  	$option = '<option value="' . $key . '" ' . selected( $key, rcp_get_renewal_reminder_period(), false ) . '>' . $period . '</option>';
-											echo $option;
-										}
-
-										?>
-									</select>
-									<p class="description"><?php _e( 'When should the renewal reminder be sent? These are sent to members that do not have automatically recurring subscriptions.', 'rcp' ); ?></p>
+									<?php rcp_subscription_reminder_table( 'renewal' ); ?>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -1552,6 +1532,15 @@ function rcp_settings_page() {
 							<td>
 								<input id="rcp_settings[recaptcha_private_key]" style="width: 300px;" name="rcp_settings[recaptcha_private_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_private_key'] ) ) echo $rcp_options['recaptcha_private_key']; ?>" />
 								<p class="description"><?php _e( 'This your own personal reCaptcha Secret key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your secret key.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[debug_mode]"><?php _e( 'Enable Debug Mode', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[debug_mode]" id="rcp_settings[debug_mode]" <?php checked( true, ! empty( $rcp_options['debug_mode'] ) ); ?>/>
+								<span class="description"><?php printf( __( 'Turn on error logging to help identify issues. Logs are kept in <a href="%s">Restrict > Tools</a>.', 'rcp' ), esc_url( admin_url( 'admin.php?page=rcp-tools' ) ) ); ?></span>
 							</td>
 						</tr>
 						<tr valign="top">
