@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Register a new user
  *
- * @uses rcp_add_subscription_to_user()
+ * @uses rcp_add_user_to_subscription()
  *
  * @access public
  * @since  1.0
@@ -1012,7 +1012,7 @@ add_action( 'rcp_registration_failed', 'rcp_remove_subscription_data_on_failure'
  *      - Mark as trialing (if applicable).
  *      - Remove the role granted by the previous subscription level and apply new one.
  *
- * @uses rcp_add_subscription_to_user()
+ * @uses rcp_add_user_to_subscription()
  *
  * @param int    $payment_id ID of the payment being completed.
  *
@@ -1056,7 +1056,7 @@ function rcp_complete_registration( $payment_id ) {
 		$args['trial_duration_unit'] = $subscription->trial_duration_unit;
 	}
 
-	rcp_add_subscription_to_user( $payment->user_id, $args );
+	rcp_add_user_to_subscription( $payment->user_id, $args );
 
 	// Delete the pending payment record.
 	delete_user_meta( $member->ID, 'rcp_pending_payment_id' );
@@ -1085,7 +1085,7 @@ add_action( 'rcp_update_payment_status_complete', 'rcp_complete_registration' );
  * @since 2.9
  * @return bool
  */
-function rcp_add_subscription_to_user( $user_id, $args = array() ) {
+function rcp_add_user_to_subscription( $user_id, $args = array() ) {
 
 	$defaults = array(
 		'status'              => '',
@@ -1256,7 +1256,7 @@ function rcp_auto_register_user( $user_id ) {
 		return;
 	}
 
-	rcp_add_subscription_to_user( $user_id, array(
+	rcp_add_user_to_subscription( $user_id, array(
 		'subscription_id' => $level_id
 	) );
 

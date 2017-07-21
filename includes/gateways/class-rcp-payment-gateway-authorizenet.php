@@ -169,7 +169,7 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 					$member->set_status( 'active' );
 
 					/*
-					 * Set pending expiration date so this will be used in rcp_add_subscription_to_user() when the webhook
+					 * Set pending expiration date so this will be used in rcp_add_user_to_subscription() when the webhook
 					 * gets the transaction ID and completes the payment, which may take several hours.
 					 */
 					update_user_meta( $this->user_id, 'rcp_pending_expiration_date', $expiration );
