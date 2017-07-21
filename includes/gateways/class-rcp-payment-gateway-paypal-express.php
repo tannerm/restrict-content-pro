@@ -216,7 +216,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					unset( $args['INITAMT'] );
 				}
 
-				if ( $details['is_trial'] ) {
+				if ( ! empty( $details['is_trial'] ) ) {
 					// Set profile start date to the end of the free trial.
 					$args['PROFILESTARTDATE'] = date( 'Y-m-d\TH:i:s', strtotime( '+' . $details['subscription']['trial_duration'] . ' ' . $details['subscription']['trial_duration_unit'], current_time( 'timestamp' ) ) );
 
@@ -258,9 +258,6 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 							$cancelled = $member->cancel_payment_profile( false );
 						}
 
-						$member->set_payment_profile_id( $body['PROFILEID'] );
-
-						$member->renew( true );
 						$member->set_payment_profile_id( $body['PROFILEID'] );
 
 						wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
@@ -337,20 +334,21 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 						}
 
-						$member->renew( false );
-
 						$payment_data = array(
 							'date'             => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
-							'subscription'     => $member->get_subscription_name(),
+							'subscription'     => $member->get_pending_subscription_name(),
 							'payment_type'     => 'PayPal Express One Time',
-							'subscription_key' => $member->get_subscription_key(),
+							'subscription_key' => $member->get_pending_subscription_key(),
 							'amount'           => $body['PAYMENTINFO_0_AMT'],
 							'user_id'          => $member->ID,
-							'transaction_id'   => $body['PAYMENTINFO_0_TRANSACTIONID']
+							'transaction_id'   => $body['PAYMENTINFO_0_TRANSACTIONID'],
+							'status'           => 'complete'
 						);
 
 						$rcp_payments = new RCP_Payments;
-						$rcp_payments->insert( $payment_data );
+						$rcp_payments->update( $member->get_pending_payment_id(), $payment_data );
+
+						// Membership is activated via rcp_complete_registration()
 
 						wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
 
@@ -449,7 +447,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			die( 'no subscription for member found' );
 		}
 
-		if( ! rcp_get_subscription_details( $subscription_id ) ) {
+		if( ! $subscription_level = rcp_get_subscription_details( $subscription_id ) ) {
 			die( 'no subscription level found' );
 		}
 
@@ -458,12 +456,13 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		// setup the payment info in an array for storage
 		$payment_data = array(
 			'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'] ) ),
-			'subscription'     => $member->get_subscription_name(),
+			'subscription'     => $subscription_level->name,
 			'payment_type'     => $posted['txn_type'],
 			'subscription_key' => $member->get_subscription_key(),
 			'amount'           => $amount,
 			'user_id'          => $user_id,
-			'transaction_id'   => $posted['txn_id']
+			'transaction_id'   => $posted['txn_id'],
+			'status'           => 'complete'
 		);
 
 		do_action( 'rcp_valid_ipn', $payment_data, $user_id, $posted );
@@ -494,15 +493,9 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				}
 
 				// setup the payment info in an array for storage
-				$payment_data = array(
-					'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['time_created'] ) ),
-					'subscription'     => $member->get_subscription_name(),
-					'payment_type'     => $posted['txn_type'],
-					'subscription_key' => $member->get_subscription_key(),
-					'amount'           => number_format( (float) $posted['initial_payment_amount'], 2 ),
-					'user_id'          => $user_id,
-					'transaction_id'   => sanitize_text_field( $transaction_id ),
-				);
+				$payment_data['date']           = date( 'Y-m-d H:i:s', strtotime( $posted['time_created'] ) );
+				$payment_data['amount']         = number_format( (float) $posted['initial_payment_amount'], 2 );
+				$payment_data['transaction_id'] = sanitize_text_field( $transaction_id );
 
 				$payment_id = $rcp_payments->insert( $payment_data );
 
@@ -603,17 +596,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 							}
 						}
 
-						$payment_data = array(
-							'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'] ) ),
-							'subscription'     => $member->get_subscription_name(),
-							'payment_type'     => $posted['txn_type'],
-							'subscription_key' => $member->get_subscription_key(),
-							'amount'           => number_format( (float) $posted['mc_gross'], 2 ),
-							'user_id'          => $user_id,
-							'transaction_id'   => sanitize_text_field( $posted['txn_id'] ),
-						);
-
-						$rcp_payments->insert( $payment_data );
+						if ( empty( $payment_data['transaction_id'] ) || $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
+							rcp_log( sprintf( 'Not inserting PayPal Express web_accept payment. Transaction ID not given or payment already exists. TXN ID: %s', $payment_data['transaction_id'] ) );
+						} else {
+							$rcp_payments->insert( $payment_data );
+						}
 
 						// Member was already activated.
 

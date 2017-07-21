@@ -680,6 +680,7 @@ function rcp_print_user_payments_formatted( $user_id ) {
 				<th scope="col"><?php _e( 'Payment Type', 'rcp' ); ?></th>
 				<th scope="col"><?php _e( 'Transaction ID', 'rcp' ); ?></th>
 				<th scope="col"><?php _e( 'Amount', 'rcp' ); ?></th>
+				<th scope="col"><?php _e( 'Status', 'rcp' ); ?></th>
 				<th scope="col"><?php _e( 'Invoice', 'rcp' ); ?></th>
 			</tr>
 		</thead>
@@ -696,6 +697,7 @@ function rcp_print_user_payments_formatted( $user_id ) {
 					<td data-colname="<?php esc_attr_e( 'Payment Type', 'rcp' ); ?>"><?php echo esc_html( $payment->payment_type ); ?></td>
 					<td data-colname="<?php esc_attr_e( 'Transaction ID', 'rcp' ); ?>"><?php echo rcp_get_merchant_transaction_id_link( $payment ); ?></td>
 					<td data-colname="<?php esc_attr_e( 'Amount', 'rcp' ); ?>"><?php echo ( '' == $payment->amount ) ? esc_html( rcp_currency_filter( $payment->amount2 ) ) : esc_html( rcp_currency_filter( $payment->amount ) ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Status', 'rcp' ); ?>"><?php echo rcp_get_payment_status_label( $payment ); ?></td>
 					<td data-colname="<?php esc_attr_e( 'Invoice', 'rcp' ); ?>"><a href="<?php echo esc_url( rcp_get_invoice_url( $payment->id ) ); ?>" target="_blank"><?php _e( 'View Invoice', 'rcp' ); ?></a></td>
 				</tr>
 
@@ -713,19 +715,24 @@ function rcp_print_user_payments_formatted( $user_id ) {
 /**
  * Retrieve the payments for a specific user
  *
- * @param int $user_id The ID of the user to get payments for
+ * @param int   $user_id The ID of the user to get payments for
+ * @param array $args    Override the default query args.
  *
  * @since  1.5
  * @return array
 */
-function rcp_get_user_payments( $user_id = 0 ) {
+function rcp_get_user_payments( $user_id = 0, $args = array() ) {
 
 	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
 
+	$args = wp_parse_args( $args, array(
+		'user_id' => $user_id
+	) );
+
 	$payments = new RCP_Payments;
-	return $payments->get_payments( array( 'user_id' => $user_id ) );
+	return $payments->get_payments( $args );
 }
 
 /**

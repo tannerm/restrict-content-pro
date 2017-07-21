@@ -75,11 +75,13 @@ if( isset( $_GET['profile'] ) && 'cancelled' == $_GET['profile'] ) : ?>
 		</tr>
 	</thead>
 	<tbody>
-	<?php if( rcp_get_user_payments() ) : ?>
-		<?php foreach( rcp_get_user_payments() as $payment ) : ?>
+	<?php
+	$payments = rcp_get_user_payments( get_current_user_id() );
+	if( $payments ) : ?>
+		<?php foreach( $payments as $payment ) : ?>
 			<tr>
 				<td data-th="<?php esc_attr_e( 'Invoice #', 'rcp' ); ?>"><?php echo $payment->id; ?></td>
-				<td data-th="<?php esc_attr_e( 'Subscription', 'rcp' ); ?>"><?php echo $payment->subscription; ?></td>
+				<td data-th="<?php esc_attr_e( 'Subscription', 'rcp' ); ?>"><?php echo esc_html( $payment->subscription ); ?></td>
 				<td data-th="<?php esc_attr_e( 'Amount', 'rcp' ); ?>"><?php echo rcp_currency_filter( $payment->amount ); ?></td>
 				<td data-th="<?php esc_attr_e( 'Payment Status', 'rcp' ); ?>"><?php echo rcp_get_payment_status_label( $payment ); ?></td>
 				<td data-th="<?php esc_attr_e( 'Date', 'rcp' ); ?>"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->date, current_time( 'timestamp' ) ) ); ?></td>

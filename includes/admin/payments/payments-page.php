@@ -16,7 +16,35 @@
  */
 function rcp_payments_page() {
 	global $rcp_options;
-	$current_page = admin_url( '/admin.php?page=rcp-payments' ); ?>
+	$current_page = admin_url( '/admin.php?page=rcp-payments' );
+
+	$rcp_payments  = new RCP_Payments();
+	$page          = isset( $_GET['p'] ) ? absint( $_GET['p'] ) : 1;
+	$search        = ! empty( $_GET['s'] ) ? urldecode( $_GET['s'] ) : '';
+	$status        = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '';
+
+	$user          = get_current_user_id();
+	$screen        = get_current_screen();
+	$screen_option = $screen->get_option( 'per_page', 'option' );
+	$per_page      = get_user_meta( $user, $screen_option, true );
+	if ( empty ( $per_page) || $per_page < 1 ) {
+		$per_page  = $screen->get_option( 'per_page', 'default' );
+	}
+	$offset        = $per_page * ( $page-1 );
+
+	$user_id       = isset( $_GET['user_id'] ) ? $_GET['user_id'] : 0;
+
+	$payments      = $rcp_payments->get_payments( array( 'offset' => $offset, 'number' => $per_page, 'user_id' => $user_id, 's' => $search, 'status' => $status ) );
+	$payment_count = $rcp_payments->count( array( 'user_id' => $user_id, 's' => $search, 'status' => $status ) );
+	$total_pages   = ceil( $payment_count / $per_page );
+
+	// Status counts.
+	$all_count       = $rcp_payments->count();
+	$complete_count  = $rcp_payments->count( array( 'status' => 'complete' ) );
+	$pending_count   = $rcp_payments->count( array( 'status' => 'pending' ) );
+	$refunded_count  = $rcp_payments->count( array( 'status' => 'refunded' ) );
+	$failed_count    = $rcp_payments->count( array( 'status' => 'failed' ) );
+	?>
 
 	<div class="wrap">
 
@@ -33,34 +61,14 @@ function rcp_payments_page() {
 			</a>
 		</h1>
 
-		<?php do_action('rcp_payments_page_top');
+		<?php if ( 'pending' === $status ) : ?>
+			<div class="notice notice-large notice-warning">
+				<?php printf( __( 'Pending payments are converted to Complete when finalized. Read more about pending payments <a href="%s">here</a>.', 'rcp' ), 'http://docs.restrictcontentpro.com/' ); // @todo update link ?>
+			</div>
+		<?php endif; ?>
 
-		$rcp_payments  = new RCP_Payments();
-		$page          = isset( $_GET['p'] ) ? absint( $_GET['p'] ) : 1;
-		$search        = ! empty( $_GET['s'] ) ? urldecode( $_GET['s'] ) : '';
-		$status        = isset( $_GET['status'] ) ? sanitize_text_field( $_GET['status'] ) : '';
+		<?php do_action('rcp_payments_page_top'); ?>
 
-		$user          = get_current_user_id();
-		$screen        = get_current_screen();
-		$screen_option = $screen->get_option( 'per_page', 'option' );
-		$per_page      = get_user_meta( $user, $screen_option, true );
-		if ( empty ( $per_page) || $per_page < 1 ) {
-			$per_page  = $screen->get_option( 'per_page', 'default' );
-		}
-		$offset        = $per_page * ( $page-1 );
-
-		$user_id       = isset( $_GET['user_id'] ) ? $_GET['user_id'] : 0;
-
-		$payments      = $rcp_payments->get_payments( array( 'offset' => $offset, 'number' => $per_page, 'user_id' => $user_id, 's' => $search, 'status' => $status ) );
-		$payment_count = $rcp_payments->count( array( 'user_id' => $user_id, 's' => $search, 'status' => $status ) );
-		$total_pages   = ceil( $payment_count / $per_page );
-
-		// Status counts.
-		$all_count       = $rcp_payments->count();
-		$complete_count  = $rcp_payments->count( array( 'status' => 'complete' ) );
-		$pending_count   = $rcp_payments->count( array( 'status' => 'pending' ) );
-		$refunded_count  = $rcp_payments->count( array( 'status' => 'refunded' ) );
-		?>
 		<form id="rcp-member-search" method="get" action="<?php menu_page_url( 'rcp-payments' ); ?>">
 			<label class="screen-reader-text" for="rcp-member-search-input"><?php _e( 'Search Payments', 'rcp' ); ?></label>
 			<input type="search" id="rcp-member-search-input" name="s" value="<?php echo esc_attr( $search ); ?>"/>
@@ -102,12 +110,21 @@ function rcp_payments_page() {
 					</a>
 				</li>
 			<?php endif; ?>
+			<?php if ( $failed_count > 0 ) : ?>
+				<li>
+					|<a href="<?php echo esc_url( add_query_arg( 'status', 'failed', $current_page ) ); ?>" title="<?php esc_attr_e( 'View failed payments', 'rcp' ); ?>"<?php echo 'failed' == $status ? ' class="current"' : ''; ?>>
+						<?php _e( 'Failed', 'rcp' ); ?>
+						<span class="count">(<?php echo $failed_count; ?>)</span>
+					</a>
+				</li>
+		<?php endif; ?>
 		</ul>
 
 		<p class="total"><strong><?php _e( 'Total Earnings', 'rcp' ); ?>: <?php echo rcp_currency_filter( number_format_i18n( $rcp_payments->get_earnings(), 2 ) ); ?></strong></p>
 		<?php if( ! empty( $user_id ) ) : ?>
 		<p><a href="<?php echo admin_url( 'admin.php?page=rcp-payments' ); ?>" class="button-secondary" title="<?php _e( 'View all payments', 'rcp' ); ?>"><?php _e( 'Reset User Filter', 'rcp' ); ?></a></p>
 		<?php endif; ?>
+
 		<table class="wp-list-table widefat fixed posts rcp-payments">
 			<thead>
 				<tr>
@@ -154,7 +171,9 @@ function rcp_payments_page() {
 								</div>
 								<button type="button" class="toggle-row"><span class="screen-reader-text"><?php _e( 'Show more details', 'rcp' ); ?></span></button>
 							</td>
-							<td data-colname="<?php _e( 'Subscription', 'rcp' ); ?>"><?php echo esc_html( $payment->subscription ); ?></td>
+							<td data-colname="<?php _e( 'Subscription', 'rcp' ); ?>">
+								<?php echo esc_html( $payment->subscription ); ?>
+							</td>
 							<td data-colname="<?php _e( 'Date', 'rcp' ); ?>"><?php echo esc_html( $payment->date ); ?></td>
 							<td data-colname="<?php _e( 'Amount', 'rcp' ); ?>"><?php echo rcp_currency_filter( $payment->amount ); ?></td>
 							<td data-colname="<?php _e( 'Type', 'rcp' ); ?>"><?php echo esc_html( $payment->payment_type ); ?></td>

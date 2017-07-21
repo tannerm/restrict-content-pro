@@ -90,7 +90,10 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			);
 		}
 
-		global $rcp_options;
+		/**
+		 * @var RCP_Payments $rcp_payments_db
+		 */
+		global $rcp_payments_db;
 
 		$paid     = false;
 		$txn_args = array();
@@ -204,17 +207,12 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 
 					if ( $single_payment->success ) {
 
-						$payment_data = array(
-							'subscription'     => $this->subscription_data['subscription_name'],
-							'date'             => date( 'Y-m-d g:i:s', time() ),
-							'amount'           => $single_payment->transaction->amount,
-							'user_id'          => $this->user_id,
-							'payment_type'     => __( 'Braintree Credit Card Initial Payment', 'rcp' ),
-							'subscription_key' => $this->subscription_data['key'],
-							'transaction_id'   => $single_payment->transaction->id
-						);
-						$rcp_payments = new RCP_Payments;
-						$rcp_payments->insert( $payment_data );
+						$rcp_payments_db->update( $this->payment->id, array(
+							'date'           => date( 'Y-m-d g:i:s', time() ),
+							'payment_type'   => __( 'Braintree Credit Card Initial Payment', 'rcp' ),
+							'transaction_id' => $single_payment->transaction->id,
+							'status'         => 'complete'
+						) );
 
 
 					} else {
@@ -355,55 +353,40 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 				$cancelled = $member->cancel_payment_profile( false );
 			}
 
-			// Log the one-time payment
-			$payment_data = array(
-				'subscription'     => $this->subscription_data['subscription_name'],
-				'date'             => date( 'Y-m-d g:i:s', time() ),
-				'amount'           => $result->transaction->amount,
-				'user_id'          => $this->user_id,
-				'payment_type'     => __( 'Braintree Credit Card One Time', 'rcp' ),
-				'subscription_key' => $this->subscription_data['key'],
-				'transaction_id'   => $result->transaction->id
-			);
-			$rcp_payments = new RCP_Payments;
-			$payment_id   = $rcp_payments->insert( $payment_data );
+			// Log the one-time payment and activate the subscription.
+			$rcp_payments_db->update( $this->payment->id, array(
+				'date'           => date( 'Y-m-d g:i:s', time() ),
+				'payment_type'   => __( 'Braintree Credit Card One Time', 'rcp' ),
+				'transaction_id' => $result->transaction->id,
+				'status'         => 'complete'
+			) );
 
-			// Update the member
-			$member->renew( false, 'active', $member->calculate_expiration() );
-
-			do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
+			do_action( 'rcp_gateway_payment_processed', $member, $this->payment->id, $this );
 
 		}
 
 		if ( $paid && $this->auto_renew ) {
 
 			$member->set_merchant_subscription_id( $result->subscription->id );
+			$member->set_recurring( true );
 
 			/**
-			 * Set the member status to active if this is a trial.
+			 * Complete the payment if this is a trial. This also activates the membership.
 			 * Braintree does not send a webhook when a new trial
 			 * subscription is created.
 			 */
 			if ( $this->is_trial() ) {
 
-				$member->renew( true, 'active', $result->subscription->nextBillingDate->format( 'Y-m-d 23:59:59' ) );
-
-			/**
-			 * If this subscription used a one-time discount,
-			 * set the expiration date to the first billing date.
-			 */
-			} elseif ( $this->initial_amount != $this->amount ) {
-
-				$member->renew( true, 'active', $result->subscription->firstBillingDate->format( 'Y-m-d 23:59:59' ) );
-
-			/**
-			 * Set the expiration date for normal subscriptions.
-			 */
-			} else {
-
-				$member->renew( true, 'active', $result->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
+				$rcp_payments_db->update( $this->payment->id, array(
+					'payment_type'   => 'Braintree Credit Card',
+					'status'         => 'complete'
+				) );
 
 			}
+
+			/**
+			 * All other recurring subscriptions are activated in the webhook.
+			 */
 		}
 
 		wp_redirect( $this->return_url ); exit;
@@ -446,7 +429,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		 * Return early if this is a test webhook.
 		 */
 		if ( 'check' === $data->kind ) {
-			die(200);
+			die( 200 );
 		}
 
 		/**
@@ -456,7 +439,7 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		 * with the webhook. We need to get the customer ID
 		 * another way.
 		 */
-		if ( ! empty( $data->subscription->transactions) ) {
+		if ( ! empty( $data->subscription->transactions ) ) {
 
 			$transaction = $data->subscription->transactions[0];
 			$user_id     = rcp_get_member_id_from_profile_id( $transaction->customer['id'] );
@@ -471,9 +454,15 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			die( 'no user ID found' );
 		}
 
-		$member = new RCP_Member( $user_id );
+		$member             = new RCP_Member( $user_id );
+		$pending_payment_id = $member->get_pending_payment_id();
+		$subscription_id    = $member->get_pending_subscription_id();
 
-		if ( ! $member->get_subscription_id() ) {
+		if ( empty( $subscription_id ) ) {
+			$subscription_id = $member->get_subscription_id();
+		}
+
+		if ( empty( $subscription_id ) ) {
 			die( 'no subscription ID for member' );
 		}
 
@@ -528,21 +517,45 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 					die( 'duplicate payment found' );
 				}
 
-				$member->renew( true, 'active', $data->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
+				if ( ! empty( $pending_payment_id ) ) {
 
-				$payment_id = $rcp_payments->insert( array(
-					'date'             => date_i18n( $transaction->createdAt->format( 'Y-m-d g:i:s' ) ),
-					'payment_type'     => 'Braintree Credit Card',
-					'user_id'          => $member->ID,
-					'amount'           => $transaction->amount,
-					'transaction_id'   => $transaction->id,
-					'subscription'     => $member->get_subscription_name(),
-					'subscription_key' => $member->get_subscription_key()
-				) );
+					// First payment on a new membership.
 
-				$member->add_note( sprintf( __( 'Payment %s collected in Braintree', 'rcp' ), $payment_id ) );
+					$rcp_payments->update( $pending_payment_id, array(
+						'date'             => date_i18n( $transaction->createdAt->format( 'Y-m-d g:i:s' ) ),
+						'payment_type'     => 'Braintree Credit Card',
+						'user_id'          => $member->ID,
+						'transaction_id'   => $transaction->id,
+					    'status'           => 'complete'
+					) );
 
-				do_action( 'rcp_webhook_recurring_payment_processed', $member, $payment_id, $this );
+					$member->add_note( sprintf( __( 'Subscription %s started in Braintree', 'rcp' ), $pending_payment_id ) );
+
+					$payment_id = $pending_payment_id;
+
+				} else {
+
+					// Renewing an existing membership.
+
+					$member->renew( true, 'active', $data->subscription->paidThroughDate->format( 'Y-m-d 23:59:59' ) );
+
+					$payment_id = $rcp_payments->insert( array(
+						'date'             => date_i18n( $transaction->createdAt->format( 'Y-m-d g:i:s' ) ),
+						'payment_type'     => 'Braintree Credit Card',
+						'user_id'          => $member->ID,
+						'amount'           => $transaction->amount,
+						'transaction_id'   => $transaction->id,
+						'subscription'     => $member->get_subscription_name(),
+						'subscription_key' => $member->get_subscription_key(),
+						'object_type'      => 'subscription',
+						'object_id'        => $subscription_id
+					) );
+
+					$member->add_note( sprintf( __( 'Payment %s collected in Braintree', 'rcp' ), $payment_id ) );
+
+					do_action( 'rcp_webhook_recurring_payment_processed', $member, $payment_id, $this );
+				}
+
 				do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
 
 				die( 'braintree payment recorded' );
@@ -586,21 +599,16 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 */
 			case 'subscription_went_active':
 
-				$member->renew( true, 'active', $data->subscription->paidThroughDate->format( 'Y-m-d g:i:s' ) );
-
-				if ( ! $rcp_payments->payment_exists( $transaction->id ) ) {
-
-					$payment_id = $rcp_payments->insert( array(
+				if ( ! empty( $pending_payment_id ) ) {
+					$rcp_payments->update( $pending_payment_id, array(
 						'date'             => date_i18n( $transaction->createdAt->format( 'Y-m-d g:i:s' ) ),
 						'payment_type'     => 'Braintree Credit Card',
 						'user_id'          => $member->ID,
-						'amount'           => $transaction->amount,
 						'transaction_id'   => $transaction->id,
-						'subscription'     => $member->get_subscription_name(),
-						'subscription_key' => $member->get_subscription_key()
+					    'status'           => 'complete'
 					) );
 
-					$member->add_note( sprintf( __( 'Subscription %s started in Braintree', 'rcp' ), $payment_id ) );
+					$member->add_note( sprintf( __( 'Subscription %s started in Braintree', 'rcp' ), $pending_payment_id ) );
 				}
 
 				do_action( 'rcp_webhook_recurring_payment_profile_created', $member, $this );

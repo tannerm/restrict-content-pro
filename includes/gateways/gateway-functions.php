@@ -284,47 +284,70 @@ function rcp_get_merchant_transaction_id_link( $payment ) {
 
 	if( ! empty( $payment->transaction_id ) ) {
 
-		$type = strtolower( $payment->payment_type );
+		$gateway = strtolower( $payment->gateway );
+		$type    = strtolower( $payment->payment_type );
 
-		switch( $type ) {
+		if ( empty( $gateway ) && ! empty( $type ) ) {
 
-			case 'web_accept' :
-			case 'paypal express one time' :
-			case 'recurring_payment' :
-			case 'subscr_payment' :
-			case 'recurring_payment_profile_created' :
+			switch ( $type ) {
 
-				// PayPal
+				case 'web_accept' :
+				case 'paypal express one time' :
+				case 'recurring_payment' :
+				case 'subscr_payment' :
+				case 'recurring_payment_profile_created' :
+					$gateway = 'paypal';
+					break;
+
+				case 'credit card' :
+				case 'credit card one time' :
+					if ( false !== strpos( $payment->transaction_id, 'ch_' ) ) {
+						$gateway = 'stripe';
+					} elseif( false !== strpos( $payment->transaction_id, 'anet_' ) ) {
+						$gateway = 'authorizenet';
+					} elseif ( is_numeric( $payment->transaction_id ) ) {
+						$gateway = 'twocheckout';
+					}
+					break;
+
+				case 'braintree credit card one time' :
+				case 'braintree credit card initial payment' :
+				case 'braintree credit card' :
+					$gateway = 'braintree';
+					break;
+
+			}
+
+		}
+
+		switch( $gateway ) {
+
+			// PayPal
+			case 'paypal' :
 
 				$mode = $test ? 'sandbox.' : '';
 				$url  = 'https://www.' . $mode . 'paypal.com/webscr?cmd=_history-details-from-hub&id=' . $payment->transaction_id;
 
 				break;
 
-			case 'credit card' :
-			case 'credit card one time' :
+			// 2Checkout
+			case 'twocheckout' :
 
-				if( false !== strpos( $payment->transaction_id, 'ch_' ) ) {
-
-					// Stripe
-
-					$mode = $test ? 'test/' : '';
-					$url  = 'https://dashboard.stripe.com/' . $mode . 'payments/' . $payment->transaction_id;
-
-				} else if( is_numeric( $payment->transaction_id ) ) {
-
-					// 2Checkout
-
-					$mode = $test ? 'sandbox.' : '';
-					$url  = 'https://' . $mode . '2checkout.com/sandbox/sales/detail?sale_id=' . $payment->transaction_id;
-
-				}
+				$mode = $test ? 'sandbox.' : '';
+				$url  = 'https://' . $mode . '2checkout.com/sandbox/sales/detail?sale_id=' . $payment->transaction_id;
 
 				break;
 
-			case 'braintree credit card one time' :
-			case 'braintree credit card initial payment' :
-			case 'braintree credit card' :
+			// Stripe
+			case 'stripe' :
+
+				$mode = $test ? 'test/' : '';
+				$url  = 'https://dashboard.stripe.com/' . $mode . 'payments/' . $payment->transaction_id;
+
+				break;
+
+			// Braintree
+			case 'braintree' :
 
 				$mode        = $test ? 'sandbox.' : '';
 				$merchant_id = $test ? $rcp_options['braintree_sandbox_merchantId'] : $rcp_options['braintree_live_merchantId'];
@@ -418,6 +441,6 @@ add_action( 'rcp_ipn_duplicate_payment', 'rcp_log_duplicate_ipn_payment', 10, 3 
  * @return void
  */
 function rcp_log_gateway_payment_processed( $member, $payment_id, $gateway ) {
-	rcp_log( sprintf( 'New payment #%d inserted for member #%d via %s gateway.', $payment_id, $member->ID, rcp_get_gateway_name_from_object( $gateway ) ) );
+	rcp_log( sprintf( 'Payment #%d completed for member #%d via %s gateway.', $payment_id, $member->ID, rcp_get_gateway_name_from_object( $gateway ) ) );
 }
 add_action( 'rcp_gateway_payment_processed', 'rcp_log_gateway_payment_processed', 10, 3 );

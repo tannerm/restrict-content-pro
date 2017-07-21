@@ -37,6 +37,10 @@ function rcp_setup_cron_jobs() {
 	if ( ! wp_next_scheduled( 'rcp_check_member_counts' ) ) {
 		wp_schedule_event( current_time( 'timestamp' ), 'daily', 'rcp_check_member_counts' );
 	}
+
+	if ( ! wp_next_scheduled( 'rcp_mark_abandoned_payments' ) ) {
+		wp_schedule_event( current_time( 'timestamp' ), 'daily', 'rcp_mark_abandoned_payments' );
+	}
 }
 add_action('wp', 'rcp_setup_cron_jobs');
 
@@ -139,3 +143,36 @@ function rcp_check_member_counts() {
 	}
 }
 add_action( 'rcp_check_member_counts', 'rcp_check_member_counts' );
+
+/**
+ * Find pending payments that are more than a week old and mark them as abandoned.
+ *
+ * @since 2.9
+ * @return void
+ */
+function rcp_mark_abandoned_payments() {
+
+	/**
+	 * @var RCP_Payments $rcp_payments_db
+	 */
+	global $rcp_payments_db;
+
+	$args = array(
+		'fields' => 'id',
+		'number' => 9999,
+		'status' => 'pending',
+		'date'   => array(
+			'end' => date( 'Y-m-d', strtotime( '-7 days', current_time( 'timestamp' ) ) )
+		)
+	);
+
+	$payments = $rcp_payments_db->get_payments( $args );
+
+	if ( $payments ) {
+		foreach ( $payments as $payment ) {
+			$rcp_payments_db->update( $payment->id, array( 'status' => 'abandoned' ) );
+		}
+	}
+
+}
+add_action( 'rcp_mark_abandoned_payments', 'rcp_mark_abandoned_payments' );

@@ -65,23 +65,52 @@ class RCP_Payments {
 		global $wpdb;
 
 		$defaults = array(
-			'subscription'      => '',
-			'date'              => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
-			'amount'            => 0.00,
-			'user_id'           => 0,
-			'payment_type'      => '',
-			'subscription_key'  => '',
-			'transaction_id'    => '',
-			'status'            => 'complete'
+			'subscription'          => '',
+			'object_id'             => 0,
+			'object_type'           => 'subscription',
+			'date'                  => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
+			'amount'                => 0.00, // Total amount after fees/credits/discounts are added.
+			'user_id'               => 0,
+			'payment_type'          => '',
+			'subscription_key'      => '',
+			'transaction_id'        => '',
+			'status'                => 'complete',
+			'gateway'               => '',
+			'subtotal'              => 0.00, // Base price of the subscription level.
+			'credits'               => 0.00, // Proration credits.
+			'fees'                  => 0.00, // Fees.
+			'discount_amount'       => 0.00, // Discount amount from discount code.
+			'discount_code'         => ''
 		);
 
 		$args = wp_parse_args( $payment_data, $defaults );
 
-		if( $this->payment_exists( $args['transaction_id'] ) ) {
-			return;
+		if( ! empty( $args['transaction_id'] ) && $this->payment_exists( $args['transaction_id'] ) ) {
+			return false;
 		}
 
-		$add = $wpdb->insert( $this->db_name, $args, array( '%s', '%s', '%s', '%d', '%s', '%s', '%s' ) );
+		// Backwards compatibility: make sure we store the subscription ID as well.
+		if ( empty( $args['object_id'] ) && ! empty( $args['subscription'] ) ) {
+			$subscription = rcp_get_subscription_details_by_name( $args['subscription'] );
+
+			if ( $subscription ) {
+				$args['object_id'] = $subscription->id;
+			}
+		}
+
+		// Backwards compatibility: update pending payment instead of creating a new one.
+		if ( ! empty( $args['user_id'] ) && 'complete' == $args['status'] ) {
+			$last_pending_payment = get_user_meta( $args['user_id'], 'rcp_pending_payment_id', true );
+			$pending_payment      = ! empty( $last_pending_payment ) ? $this->get_payment( $last_pending_payment ) : false;
+
+			if ( ! empty( $pending_payment ) && $args['amount'] == $pending_payment->amount && $args['subscription'] == $pending_payment->subscription ) {
+				$this->update( $pending_payment->id, $args );
+
+				return $pending_payment->id;
+			}
+		}
+
+		$add = $wpdb->insert( $this->db_name, $args, array( '%s', '%d', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' ) );
 
 		// if insert was succesful, return the payment ID
 		if( $add ) {
@@ -95,9 +124,49 @@ class RCP_Payments {
 			// Remove trialing status, if it exists
 			delete_user_meta( $args['user_id'], 'rcp_is_trialing' );
 
-			rcp_log( sprintf( 'New payment inserted. ID: %d; User ID: %d; Amount: %.2f; Subscription: %s; Status: %s', $payment_id, $args['user_id'], $args['amount'], $args['subscription'], $args['status'] ) );
+			/**
+			 * Triggers when the payment's status is changed. This is here to spoof a status
+			 * change when a payment is first inserted.
+			 *
+			 * @see RCP_Payment::update() - Action is also run here when status is changed.
+			 *
+			 * @param string $new_status New status being set.
+			 * @param int    $payment_id ID of the payment.
+			 *
+			 * @since 2.9
+			 */
+			do_action( 'rcp_update_payment_status', $args['status'], $payment_id );
+			do_action( 'rcp_update_payment_status_' . $args['status'], $payment_id );
 
-			do_action( 'rcp_insert_payment', $payment_id, $args, $args['amount'] );
+			if ( 'complete' == $args['status'] ) {
+				/**
+				 * Runs only when a new payment is inserted as "complete". This is to
+				 * ensure backwards compatibility from before payments were inserted
+				 * as "pending" before payment is taken.
+				 *
+				 * @deprecated 2.9 - Use rcp_create_payment to run actions whenever a payment is
+				 *             inserted, regardless of status.
+				 *
+				 * @see RCP_Payment::update() - Action is also run here when status is updated to complete.
+				 *
+				 * @param int   $payment_id ID of the payment that was just inserted.
+				 * @param array $args       Array of all payment information.
+				 * @param float $amount     Amount the payment was for.
+				 */
+				do_action( 'rcp_insert_payment', $payment_id, $args, $args['amount'] );
+			}
+
+			/**
+			 * Runs when a new payment is successfully inserted.
+			 *
+			 * @param int   $payment_id ID of the payment that was just inserted.
+			 * @param array $args       Array of all payment information.
+			 *
+			 * @since 2.9
+			 */
+			do_action( 'rcp_create_payment', $payment_id, $args );
+
+			rcp_log( sprintf( 'New payment inserted. ID: %d; User ID: %d; Amount: %.2f; Subscription: %s; Status: %s', $payment_id, $args['user_id'], $args['amount'], $args['subscription'], $args['status'] ) );
 
 			return $payment_id;
 
@@ -160,7 +229,46 @@ class RCP_Payments {
 			delete_transient( md5( 'rcp_payments_count_' . serialize( array( 'user_id' => 0, 'status' => 'refunded', 's' => '' ) ) ) );
 		}
 
-		return $wpdb->update( $this->db_name, $payment_data, array( 'id' => $payment_id ) );
+		$updated = $wpdb->update( $this->db_name, $payment_data, array( 'id' => $payment_id ) );
+
+		if ( $updated && array_key_exists( 'status', $payment_data ) ) {
+
+			$payment = $this->get_payment( $payment_id );
+
+			/**
+			 * Triggers when the payment's status is changed.
+			 *
+			 * @param string $new_status   New status being set.
+			 * @param int    $payment_id   ID of the payment.
+			 *
+			 * @since 2.9
+			 */
+			do_action( 'rcp_update_payment_status', $payment_data['status'], $payment_id );
+			do_action( 'rcp_update_payment_status_' . $payment_data['status'], $payment_id );
+
+			if ( 'complete' == $payment_data['status'] ) {
+				$amount  = ! empty( $payment->amount ) ? $payment->amount : 0.00;
+
+				/**
+				 * Runs only when a payment is updated to "complete". This is to
+				 * ensure backwards compatibility from before payments were inserted
+				 * as "pending" before payment is taken.
+				 *
+				 * @deprecated 2.9 - Use rcp_create_payment to run actions whenever a payment is
+				 *             inserted, regardless of status.
+				 *
+				 * @see RCP_Payments::insert() - Action is also run here.
+				 *
+				 * @param int   $payment_id ID of the payment that was just updated.
+				 * @param array $args       Array of payment information that was just updated.
+				 * @param float $amount     Amount the payment was for.
+				 */
+				do_action( 'rcp_insert_payment', $payment_id, (array) $payment, $amount );
+			}
+
+		}
+
+		return $updated;
 	}
 
 
@@ -181,7 +289,7 @@ class RCP_Payments {
 
 		rcp_log( sprintf( 'Deleted payment #%d.', $payment_id ) );
 
-		$remove = $wpdb->query( $wpdb->prepare( "DELETE FROM {$this->db_name} WHERE `id` = '%d';", absint( $payment_id ) ) );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$this->db_name} WHERE `id` = '%d';", absint( $payment_id ) ) );
 
 	}
 
@@ -201,11 +309,84 @@ class RCP_Payments {
 
 		$payment = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$this->db_name} WHERE id = %d", absint( $payment_id ) ) );
 
-		if( empty( $payment->status ) ) {
+		if ( empty( $payment->status ) ) {
 			$payment->status = 'complete';
 		}
 
+		$payment = $this->backfill_payment_data( $payment );
+
 		return $payment;
+
+	}
+
+	/**
+	 * Attempt to guess the payment gateway from the "Payment Type"
+	 *
+	 * @param int|object $_payment_id_or_object Payment ID or database object.
+	 *
+	 * @access private
+	 * @since 2.9
+	 * @return string|false
+	 */
+	private function get_payment_gateway( $_payment_id_or_object ) {
+
+		if ( is_object( $_payment_id_or_object ) ) {
+			$payment = $_payment_id_or_object;
+		} elseif ( is_numeric( $_payment_id_or_object ) ) {
+			$payment = $this->get_payment( $_payment_id_or_object );
+		}
+
+		if ( empty( $payment ) ) {
+			return false;
+		}
+
+		$type    = strtolower( $payment->payment_type );
+		$gateway = false;
+
+		// If we already have a gateway in the DB, use that.
+		if ( ! empty( $payment->gateway ) ) {
+			return $payment->gateway;
+		}
+
+		// If "Payment Type" isn't set, we can't get the gateway.
+		if ( empty( $type ) ) {
+			return $gateway;
+		}
+
+		switch ( $type ) {
+
+			case 'web_accept' :
+			case 'paypal express one time' :
+			case 'recurring_payment' :
+			case 'subscr_payment' :
+			case 'recurring_payment_profile_created' :
+				$gateway = 'paypal';
+				break;
+
+			case 'credit card' :
+			case 'credit card one time' :
+				if ( false !== strpos( $payment->transaction_id, 'ch_' ) ) {
+					$gateway = 'stripe';
+				} elseif ( false !== strpos( $payment->transaction_id, 'anet_' ) ) {
+					$gateway = 'authorizenet';
+				} elseif ( is_numeric( $payment->transaction_id ) ) {
+					$gateway = 'twocheckout';
+				}
+				break;
+
+			case 'braintree credit card one time' :
+			case 'braintree credit card initial payment' :
+			case 'braintree credit card' :
+				$gateway = 'braintree';
+				break;
+
+			case 'manual' :
+				$gateway = 'manual';
+				break;
+
+		}
+
+		return $gateway;
 
 	}
 
@@ -258,7 +439,9 @@ class RCP_Payments {
 			'status'       => '',
 			's'            => '',
 			'order'        => 'DESC',
-			'orderby'      => 'id'
+			'orderby'      => 'id',
+			'object_type'  => '',
+			'object_id'    => ''
 		);
 
 		$args  = wp_parse_args( $args, $defaults );
@@ -305,22 +488,44 @@ class RCP_Payments {
 		// Setup the date query
 		if( ! empty( $args['date'] ) && is_array( $args['date'] ) ) {
 
-			$day   = ! empty( $args['date']['day'] )   ? absint( $args['date']['day'] )   : null;
-			$month = ! empty( $args['date']['month'] ) ? absint( $args['date']['month'] ) : null;
-			$year  = ! empty( $args['date']['year'] )  ? absint( $args['date']['year'] )  : null;
-			$date_where = '';
+			if ( ! empty( $args['date']['start'] ) || ! empty( $args['date']['end'] ) ) {
 
-			$date_where .= ! is_null( $year )  ? $year . " = YEAR ( date ) " : '';
+				if ( ! empty( $args['date']['start'] ) ) {
 
-			if( ! is_null( $month ) ) {
-				$date_where = $month  . " = MONTH ( date ) AND " . $date_where;
+					$start    = date( 'Y-m-d 00:00:00', strtotime( $args['date']['start'] ) );
+					$where   .= " AND `date` >= %s";
+					$values[] = $start;
+
+				}
+
+				if ( ! empty( $args['date']['end'] ) ) {
+
+					$end    = date( 'Y-m-d 23:59:59', strtotime( $args['date']['end'] ) );
+					$where   .= " AND `date` <= %s";
+					$values[] = $end;
+
+				}
+
+			} else {
+
+				$day        = ! empty( $args['date']['day'] ) ? absint( $args['date']['day'] ) : null;
+				$month      = ! empty( $args['date']['month'] ) ? absint( $args['date']['month'] ) : null;
+				$year       = ! empty( $args['date']['year'] ) ? absint( $args['date']['year'] ) : null;
+				$date_where = '';
+
+				$date_where .= ! is_null( $year ) ? $year . " = YEAR ( date ) " : '';
+
+				if ( ! is_null( $month ) ) {
+					$date_where = $month . " = MONTH ( date ) AND " . $date_where;
+				}
+
+				if ( ! is_null( $day ) ) {
+					$date_where = $day . " = DAY ( date ) AND " . $date_where;
+				}
+
+				$where .= " AND (" . $date_where . ")";
+
 			}
-
-			if( ! is_null( $day ) ) {
-				$date_where = $day . " = DAY ( date ) AND " . $date_where;
-			}
-
-			$where .= " AND (" . $date_where . ")";
 		}
 
 		// Fields to return
@@ -366,6 +571,16 @@ class RCP_Payments {
 
 		}
 
+		if ( ! empty( $args['object_type'] ) ) {
+			$where   .= " AND `object_type` = %s";
+			$values[] = $args['object_type'];
+		}
+
+		if ( ! empty( $args['object_id'] ) ) {
+			$where   .= " AND `object_id` = %d AND `object_id` != 0";
+			$values[] = $args['object_id'];
+		}
+
 		if ( 'DESC' === strtoupper( $args['order'] ) ) {
 			$order = 'DESC';
 		} else {
@@ -389,10 +604,63 @@ class RCP_Payments {
 
 		$payments = $wpdb->get_results( $wpdb->prepare( "SELECT {$fields} FROM " . $this->db_name . " {$where} ORDER BY {$orderby} {$order} LIMIT %d,%d;", $values ) );
 
+		foreach ( $payments as $key => $payment ) {
+
+			$payment = $this->backfill_payment_data( $payment );
+
+			$payments[ $key ] = $payment;
+
+		}
+
 		return $payments;
 
 	}
 
+	/**
+	 * Backfills any missing payment data introduced in RCP 2.9+
+	 * and updates the payment record accordingly.
+	 *
+	 * @access private
+	 * @since 2.9
+	 *
+	 * @param stdClass $payment The payment object.
+	 *
+	 * @return stdClass The updated payment object.
+	 */
+	private function backfill_payment_data( $payment ) {
+
+		$data_to_update = array();
+
+		/** Backfill the subscription level ID. */
+		if ( empty( $payment->object_id ) && ! empty( $payment->subscription ) ) {
+
+			$subscription = rcp_get_subscription_details_by_name( $payment->subscription );
+
+			if ( ! empty( $subscription ) ) {
+				$payment->object_id = $subscription->id;
+				$data_to_update['object_id'] = absint( $subscription->id );
+			}
+
+		}
+
+		/** Backfill the gateway */
+		if ( empty( $payment->gateway ) && ! empty( $payment->payment_type ) ) {
+
+			$gateway = $this->get_payment_gateway( $payment );
+
+			if ( ! empty( $gateway ) ) {
+				$payment->gateway = $gateway;
+				$data_to_update['gateway'] = $gateway;
+			}
+
+		}
+
+		if ( ! empty( $data_to_update ) ) {
+			$this->update( $payment->id, $data_to_update );
+		}
+
+		return $payment;
+	}
 
 	/**
 	 * Count the total number of payments in the database

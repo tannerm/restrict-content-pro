@@ -199,6 +199,7 @@ class RCP_Member extends WP_User {
 	 */
 	public function calculate_expiration( $force_now = false, $trial = false ) {
 
+		// Authorize.net still uses this.
 		$pending_exp = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
 
 		if( ! empty( $pending_exp ) ) {
@@ -292,7 +293,7 @@ class RCP_Member extends WP_User {
 			$subscription_id = $this->get_subscription_id();
 		}
 
-		$ret = update_user_meta( $this->ID, 'rcp_joined_date_' . $this->get_subscription_id(), $date );
+		$ret = update_user_meta( $this->ID, 'rcp_joined_date_' . $subscription_id, $date );
 
 		do_action( 'rcp_set_joined_date', $this->ID, $date, $this );
 
@@ -861,7 +862,20 @@ class RCP_Member extends WP_User {
 	 */
 	public function get_pending_subscription_id() {
 
-		return get_user_meta( $this->ID, 'rcp_pending_subscription_level', true );
+		/**
+		 * @var RCP_Payments $rcp_payments_db
+		 */
+		global $rcp_payments_db;
+
+		$pending_level_id = get_user_meta( $this->ID, 'rcp_pending_subscription_level', true );
+		$pending_payment  = $this->get_pending_payment_id();
+
+		if ( ! empty( $pending_payment ) ) {
+			$payment          = $rcp_payments_db->get_payment( absint( $pending_payment ) );
+			$pending_level_id = $payment->object_id;
+		}
+
+		return $pending_level_id;
 
 	}
 
@@ -912,7 +926,20 @@ class RCP_Member extends WP_User {
 	 */
 	public function get_pending_subscription_key() {
 
-		return get_user_meta( $this->ID, 'rcp_pending_subscription_key', true );
+		/**
+		 * @var RCP_Payments $rcp_payments_db
+		 */
+		global $rcp_payments_db;
+
+		$pending_key      = get_user_meta( $this->ID, 'rcp_pending_subscription_key', true );
+		$pending_payment  = $this->get_pending_payment_id();
+
+		if ( ! empty( $pending_payment ) ) {
+			$payment     = $rcp_payments_db->get_payment( absint( $pending_payment ) );
+			$pending_key = $payment->subscription_key;
+		}
+
+		return $pending_key;
 
 	}
 
@@ -963,6 +990,17 @@ class RCP_Member extends WP_User {
 		$payments = $payments->get_payments( array( 'user_id' => $this->ID ) );
 
 		return apply_filters( 'rcp_member_get_payments', $payments, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieves the ID number of the currently pending payment.
+	 *
+	 * @access public
+	 * @since 2.9
+	 * @return int|bool ID of the pending payment or false if none.
+	 */
+	public function get_pending_payment_id() {
+		return get_user_meta( $this->ID, 'rcp_pending_payment_id', true );
 	}
 
 	/**
@@ -1439,8 +1477,13 @@ class RCP_Member extends WP_User {
 			return 0;
 		}
 
-		$subscription    = rcp_get_subscription_details_by_name( $payment->subscription );
-		$subscription_id = $this->get_subscription_id();
+		if ( ! empty( $payment->object_id ) ) {
+			$subscription_id = absint( $payment->object_id );
+			$subscription    = rcp_get_subscription_details( $subscription_id );
+		} else {
+			$subscription    = rcp_get_subscription_details_by_name( $payment->subscription );
+			$subscription_id = $this->get_subscription_id();
+		}
 
 		// make sure the subscription payment matches the existing subscription
 		if ( empty( $subscription->id ) || empty( $subscription->duration ) || $subscription->id != $subscription_id ) {
