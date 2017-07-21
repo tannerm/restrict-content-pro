@@ -1256,5 +1256,11 @@ function rcp_auto_register_user( $user_id ) {
 		return;
 	}
 
+	rcp_add_subscription_to_user( $user_id, array(
+		'subscription_id' => $level_id
+	) );
+
+	update_user_meta( $user_id, 'rcp_signup_method', 'manual' );
+
 }
 add_action( 'user_register', 'rcp_auto_register_user' );
