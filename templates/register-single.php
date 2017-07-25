@@ -23,11 +23,11 @@ $has_trial = $rcp_levels_db->has_trial( $level->id );
 
 <?php if( ! is_user_logged_in() ) { ?>
 	<h3 class="rcp_header">
-		<?php echo apply_filters( 'rcp_registration_header_logged_in', $rcp_register_form_atts['logged_out_header'] ); ?>
+		<?php echo apply_filters( 'rcp_registration_header_logged_out', $rcp_register_form_atts['logged_out_header'] ); ?>
 	</h3>
 <?php } else { ?>
 	<h3 class="rcp_header">
-		<?php echo apply_filters( 'rcp_registration_header_logged_out', $rcp_register_form_atts['logged_in_header'] ); ?>
+		<?php echo apply_filters( 'rcp_registration_header_logged_in', $rcp_register_form_atts['logged_in_header'] ); ?>
 	</h3>
 <?php }
 
