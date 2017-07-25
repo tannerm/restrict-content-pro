@@ -1237,7 +1237,7 @@ function rcp_add_user_to_subscription( $user_id, $args = array() ) {
  * @since 2.9
  * @return void
  */
-function rcp_auto_register_user( $user_id ) {
+function rcp_user_register_add_subscription_level( $user_id ) {
 
 	global $rcp_options;
 
@@ -1263,4 +1263,4 @@ function rcp_auto_register_user( $user_id ) {
 	update_user_meta( $user_id, 'rcp_signup_method', 'manual' );
 
 }
-add_action( 'user_register', 'rcp_auto_register_user' );
+add_action( 'user_register', 'rcp_user_register_add_subscription_level' );
