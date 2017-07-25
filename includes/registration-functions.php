@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Register a new user
  *
- * @uses rcp_add_subscription_to_user()
+ * @uses rcp_add_user_to_subscription()
  *
  * @access public
  * @since  1.0
@@ -1012,7 +1012,7 @@ add_action( 'rcp_registration_failed', 'rcp_remove_subscription_data_on_failure'
  *      - Mark as trialing (if applicable).
  *      - Remove the role granted by the previous subscription level and apply new one.
  *
- * @uses rcp_add_subscription_to_user()
+ * @uses rcp_add_user_to_subscription()
  *
  * @param int    $payment_id ID of the payment being completed.
  *
@@ -1056,7 +1056,7 @@ function rcp_complete_registration( $payment_id ) {
 		$args['trial_duration_unit'] = $subscription->trial_duration_unit;
 	}
 
-	rcp_add_subscription_to_user( $payment->user_id, $args );
+	rcp_add_user_to_subscription( $payment->user_id, $args );
 
 	// Delete the pending payment record.
 	delete_user_meta( $member->ID, 'rcp_pending_payment_id' );
@@ -1085,7 +1085,7 @@ add_action( 'rcp_update_payment_status_complete', 'rcp_complete_registration' );
  * @since 2.9
  * @return bool
  */
-function rcp_add_subscription_to_user( $user_id, $args = array() ) {
+function rcp_add_user_to_subscription( $user_id, $args = array() ) {
 
 	$defaults = array(
 		'status'              => '',
@@ -1228,3 +1228,39 @@ function rcp_add_subscription_to_user( $user_id, $args = array() ) {
 	return true;
 
 }
+
+/**
+ * Automatically add new users to a subscription level if enabled
+ *
+ * @param int $user_id ID of the newly created user.
+ *
+ * @since 2.9
+ * @return void
+ */
+function rcp_user_register_add_subscription_level( $user_id ) {
+
+	global $rcp_options;
+
+	if ( empty( $rcp_options['auto_add_users'] ) ) {
+		return;
+	}
+
+	$level_id = absint( $rcp_options['auto_add_users_level'] );
+
+	if ( empty( $level_id ) ) {
+		return;
+	}
+
+	// Don't run if we're on the registration form.
+	if ( did_action( 'rcp_form_errors' ) ) {
+		return;
+	}
+
+	rcp_add_user_to_subscription( $user_id, array(
+		'subscription_id' => $level_id
+	) );
+
+	update_user_meta( $user_id, 'rcp_signup_method', 'manual' );
+
+}
+add_action( 'user_register', 'rcp_user_register_add_subscription_level' );
