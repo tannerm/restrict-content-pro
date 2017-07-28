@@ -1863,12 +1863,21 @@ function rcp_get_site_tracking_data() {
 		}
 	}
 
+	$enabled_gateways = array();
+	$gateways         = new RCP_Payment_Gateways;
+
+	foreach( $gateways->enabled_gateways  as $key => $gateway ) {
+		if( is_array( $gateway ) ) {
+			$enabled_gateways[ $key ] = $gateway['admin_label'];
+		}
+	}
+
 	$data['active_plugins']      = $active_plugins;
 	$data['inactive_plugins']    = $plugins;
 	$data['locale']              = get_locale();
 	$data['auto_renew']          = $rcp_options['auto_renew'];
 	$data['currency']            = $rcp_options['currency'];
-	$data['gateways']            = rcp_get_enabled_payment_gateways();
+	$data['gateways']            = $enabled_gateways;
 	$data['active_members']      = rcp_get_member_count( 'active' );
 	$data['free_members']        = rcp_get_member_count( 'free' );
 	$data['expired_members']     = rcp_get_member_count( 'expired' );
