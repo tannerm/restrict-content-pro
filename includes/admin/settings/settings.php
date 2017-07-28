@@ -1829,6 +1829,11 @@ function rcp_get_site_tracking_data() {
 	 */
 	global $rcp_levels_db;
 
+	/**
+	 * @var RCP_Payments $rcp_payments_db
+	 */
+	global $rcp_payments_db;
+
 	$data = array();
 
 	$theme_data = wp_get_theme();
@@ -1869,6 +1874,7 @@ function rcp_get_site_tracking_data() {
 	$data['expired_members']     = rcp_get_member_count( 'expired' );
 	$data['cancelled_members']   = rcp_get_member_count( 'cancelled' );
 	$data['subscription_levels'] = $rcp_levels_db->count();
+	$data['payments']            = $rcp_payments_db->count();
 
 	return $data;
 
