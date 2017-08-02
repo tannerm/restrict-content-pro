@@ -1798,7 +1798,7 @@ function rcp_check_license() {
 		set_transient( 'rcp_license_check', $license_data->license, DAY_IN_SECONDS );
 
 		if( ! empty( $api_params['site_data'] ) ) {
-			update_option( 'rcp_last_checkin', current_time( 'timestamp' ) );
+			update_option( 'rcp_last_checkin', current_time( 'timestamp' ), false );
 		}
 
 		$status = $license_data->license;
