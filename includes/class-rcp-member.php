@@ -59,8 +59,8 @@ class RCP_Member extends WP_User {
 		 *
 		 * @param string $new_status The new status to assign to the member.
 		 * @param int    $member_id The member ID.
-		 * @param string $old_status The previus status assigned to the member.
-		 * @param object $this Currenct instance of the RCP_Member object.
+		 * @param string $old_status The previous status assigned to the member.
+		 * @param object $this Current instance of the RCP_Member object.
 		 */
 		$new_status = apply_filters( 'rcp_set_status_value', $new_status, $this->ID, $old_status, $this );
 
