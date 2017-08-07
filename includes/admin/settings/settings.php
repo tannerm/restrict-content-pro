@@ -1776,6 +1776,12 @@ function rcp_check_license() {
 			'url'       => home_url()
 		);
 
+		// Send check-ins once per week.
+		$last_checked = get_option( 'rcp_last_checkin', false );
+		if( ! is_numeric( $last_checked ) || $last_checked < strtotime( '-1 week', current_time( 'timestamp' ) ) ) {
+			$api_params['site_data'] = rcp_get_site_tracking_data();
+		}
+
 		// Call the custom API.
 		$response = wp_remote_post( 'https://restrictcontentpro.com', array( 'timeout' => 35, 'sslverify' => false, 'body' => $api_params ) );
 
@@ -1791,6 +1797,10 @@ function rcp_check_license() {
 
 		set_transient( 'rcp_license_check', $license_data->license, DAY_IN_SECONDS );
 
+		if( ! empty( $api_params['site_data'] ) ) {
+			update_option( 'rcp_last_checkin', current_time( 'timestamp' ), false );
+		}
+
 		$status = $license_data->license;
 
 		if( 'valid' !== $status ) {
@@ -1803,6 +1813,81 @@ function rcp_check_license() {
 
 }
 add_action( 'admin_init', 'rcp_check_license' );
+
+/**
+ * Retrieves site data (plugin versions, etc.) to be sent along with the license check.
+ *
+ * @since 2.9
+ * @return array
+ */
+function rcp_get_site_tracking_data() {
+
+	global $rcp_options;
+
+	/**
+	 * @var RCP_Levels $rcp_levels_db
+	 */
+	global $rcp_levels_db;
+
+	/**
+	 * @var RCP_Payments $rcp_payments_db
+	 */
+	global $rcp_payments_db;
+
+	$data = array();
+
+	$theme_data = wp_get_theme();
+	$theme      = $theme_data->Name . ' ' . $theme_data->Version;
+
+	$data['php_version']  = phpversion();
+	$data['rcp_version']  = RCP_PLUGIN_VERSION;
+	$data['wp_version']   = get_bloginfo( 'version' );
+	$data['server']       = isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : '';
+	$data['install_date'] = get_post_field( 'post_date', $rcp_options['registration_page'] );
+	$data['multisite']    = is_multisite();
+	$data['url']          = home_url();
+	$data['theme']        = $theme;
+
+	// Retrieve current plugin information
+	if( ! function_exists( 'get_plugins' ) ) {
+		include ABSPATH . '/wp-admin/includes/plugin.php';
+	}
+
+	$plugins        = array_keys( get_plugins() );
+	$active_plugins = get_option( 'active_plugins', array() );
+
+	foreach ( $plugins as $key => $plugin ) {
+		if ( in_array( $plugin, $active_plugins ) ) {
+			// Remove active plugins from list so we can show active and inactive separately
+			unset( $plugins[ $key ] );
+		}
+	}
+
+	$enabled_gateways = array();
+	$gateways         = new RCP_Payment_Gateways;
+
+	foreach( $gateways->enabled_gateways  as $key => $gateway ) {
+		if( is_array( $gateway ) ) {
+			$enabled_gateways[ $key ] = $gateway['admin_label'];
+		}
+	}
+
+	$data['active_plugins']      = $active_plugins;
+	$data['inactive_plugins']    = $plugins;
+	$data['locale']              = get_locale();
+	$data['auto_renew']          = $rcp_options['auto_renew'];
+	$data['currency']            = $rcp_options['currency'];
+	$data['gateways']            = $enabled_gateways;
+	$data['active_members']      = rcp_get_member_count( 'active' );
+	$data['free_members']        = rcp_get_member_count( 'free' );
+	$data['expired_members']     = rcp_get_member_count( 'expired' );
+	$data['cancelled_members']   = rcp_get_member_count( 'cancelled' );
+	$data['subscription_levels'] = $rcp_levels_db->count();
+	$data['payments']            = $rcp_payments_db->count();
+
+	return $data;
+
+}
 
 
 /**
