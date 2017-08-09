@@ -444,6 +444,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 			return;
 		}
 
+		rcp_log( 'Starting to process Stripe webhook.' );
+
 		// Ensure listener URL is not cached by W3TC
 		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 			define( 'DONOTCACHEPAGE', true );
@@ -469,6 +471,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$payment_event = $event->data->object;
 
 				if( empty( $payment_event->customer ) ) {
+					rcp_log( 'Exiting Stripe webhook - no customer attached to event.' );
+
 					die( 'no customer attached' );
 				}
 
@@ -484,6 +488,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				}
 
 				if( empty( $user ) ) {
+					rcp_log( 'Exiting Stripe webhook - member ID not found.' );
+
 					die( 'no user ID found' );
 				}
 
@@ -492,9 +498,13 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// check to confirm this is a stripe subscriber
 				if ( $member ) {
 
+					rcp_log( sprintf( 'Processing webhook for member #%d.', $member->ID ) );
+
 				    $subscription_level_id = $member->get_subscription_id();
 
 					if( ! $subscription_level_id ) {
+						rcp_log( 'Exiting Stripe webhook - no subscription ID for member.' );
+
 						die( 'no subscription ID for member' );
 					}
 
@@ -503,6 +513,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					}
 
 					if( $event->type == 'charge.succeeded' || $event->type == 'invoice.payment_succeeded' ) {
+
+						rcp_log( sprintf( 'Processing Stripe %s webhook.', $event->type ) );
 
 						// setup payment data
 						$payment_data = array(
@@ -609,6 +621,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// failed payment
 					if ( $event->type == 'charge.failed' ) {
 
+						rcp_log( 'Processing Stripe charge.failed webhook.' );
+
 						$this->webhook_event_id = $event->id;
 
 						do_action( 'rcp_recurring_payment_failed', $member, $this );
@@ -620,6 +634,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					// Cancelled / failed subscription
 					if( $event->type == 'customer.subscription.deleted' ) {
+
+						rcp_log( 'Processing Stripe customer.subscription.deleted webhook.' );
 
 						if( $payment_event->id == $member->get_merchant_subscription_id() ) {
 
@@ -635,17 +651,23 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					do_action( 'rcp_stripe_' . $event->type, $payment_event, $event );
 
+				} else {
+					rcp_log( 'Exiting Stripe webhook - member not found.' );
 				}
 
 
 			} catch ( Exception $e ) {
 				// something failed
+				rcp_log( sprintf( 'Exiting Stripe webhook due to PHP exception: %s.', $e->getMessage() ) );
+
 				die( 'PHP exception: ' . $e->getMessage() );
 			}
 
 			die( '1' );
 
 		}
+
+		rcp_log( 'Exiting Stripe webhook - no event ID found.' );
 
 		die( 'no event ID found' );
 

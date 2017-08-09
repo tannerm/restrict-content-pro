@@ -405,6 +405,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 				$verify = Braintree_WebhookNotification::verify( $_GET['bt_challenge'] );
 				die( $verify );
 			} catch ( Exception $e ) {
+				rcp_log( 'Exiting Braintree webhook - verification failed.' );
+
 				wp_die( 'Verification failed' );
 			}
 		}
@@ -413,15 +415,21 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			return;
 		}
 
+		rcp_log( 'Starting to process Braintree webhook.' );
+
 		$data = false;
 
 		try {
 			$data = Braintree_WebhookNotification::parse( $_POST['bt_signature'], $_POST['bt_payload'] );
 		} catch ( Exception $e ) {
+			rcp_log( 'Exiting Braintree webhook - invalid signature.' );
+
 			die( 'Invalid signature' );
 		}
 
 		if ( empty( $data->kind ) ) {
+			rcp_log( 'Exiting Braintree webhook - invalid webhook.' );
+
 			die( 'Invalid webhook' );
 		}
 
@@ -429,6 +437,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		 * Return early if this is a test webhook.
 		 */
 		if ( 'check' === $data->kind ) {
+			rcp_log( 'Exiting Braintree webhook - this is a test webhook.' );
+
 			die( 200 );
 		}
 
@@ -451,6 +461,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		}
 
 		if ( empty( $user_id ) ) {
+			rcp_log( 'Exiting Braintree webhook - member ID not found.' );
+
 			die( 'no user ID found' );
 		}
 
@@ -458,11 +470,15 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 		$pending_payment_id = $member->get_pending_payment_id();
 		$subscription_id    = $member->get_pending_subscription_id();
 
+		rcp_log( sprintf( 'Processing webhook for member #%d.', $member->ID ) );
+
 		if ( empty( $subscription_id ) ) {
 			$subscription_id = $member->get_subscription_id();
 		}
 
 		if ( empty( $subscription_id ) ) {
+			rcp_log( 'Exiting Braintree webhook - no subscription ID for member.' );
+
 			die( 'no subscription ID for member' );
 		}
 
@@ -481,7 +497,11 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 */
 			case 'subscription_canceled':
 
+				rcp_log( 'Processing Braintree subscription_canceled webhook.' );
+
 				if ( $member->just_upgraded() ) {
+					rcp_log( 'Exiting Braintree webhook - member just upgraded.' );
+
 					die( 'subscription_canceled returned early. Member just upgraded.' );
 				}
 
@@ -510,6 +530,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * negative balance that covers the cost of the subscription.
 			 */
 			case 'subscription_charged_successfully':
+
+				rcp_log( 'Processing Braintree subscription_charged_successfully webhook.' );
 
 				if ( $rcp_payments->payment_exists( $transaction->id ) ) {
 					do_action( 'rcp_ipn_duplicate_payment', $transaction->id, $member, $this );
@@ -567,6 +589,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * subscription fails due to an unsuccessful transaction.
 			 */
 			case 'subscription_charged_unsuccessfully':
+				rcp_log( 'Processing Braintree subscription_charged_unsuccessfully webhook.' );
+
 				die( 'subscription_charged_unsuccessfully' );
 				break;
 
@@ -574,6 +598,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * A subscription reaches the specified number of billing cycles and expires.
 			 */
 			case 'subscription_expired':
+
+				rcp_log( 'Processing Braintree subscription_expired webhook.' );
 
 				$member->set_status( 'expired' );
 
@@ -588,6 +614,9 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * A subscription's trial period ends.
 			 */
 			case 'subscription_trial_ended':
+
+				rcp_log( 'Processing Braintree subscription_trial_ended webhook.' );
+
 				$member->renew( $member->is_recurring(), '', $data->subscription->billingPeriodEndDate->format( 'Y-m-d g:i:s' ) );
 				$member->add_note( __( 'Trial ended in Braintree', 'rcp' ) );
 				die( 'subscription_trial_ended processed' );
@@ -598,6 +627,8 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * Subscriptions with trial periods will never trigger this notification.
 			 */
 			case 'subscription_went_active':
+
+				rcp_log( 'Processing Braintree subscription_went_active webhook.' );
 
 				if ( ! empty( $pending_payment_id ) ) {
 					$rcp_payments->update( $pending_payment_id, array(
@@ -621,6 +652,9 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 			 * This occurs when a subscription’s initial transaction is declined.
 			 */
 			case 'subscription_went_past_due':
+
+				rcp_log( 'Processing Braintree subscription_went_past_due webhook.' );
+
 				$member->set_status( 'pending' );
 				$member->add_note( __( 'Subscription went past due in Braintree', 'rcp' ) );
 				die( 'subscription past due: member pending' );
