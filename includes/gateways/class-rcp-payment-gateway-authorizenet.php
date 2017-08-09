@@ -220,7 +220,11 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 			return;
 		}
 
+		rcp_log( 'Starting to process Authorize.net webhook.' );
+
 		if( ! $this->is_silent_post_valid( $_POST ) ) {
+			rcp_log( 'Exiting Authorize.net webhook - invalid MD5 hash.' );
+
 			die( 'invalid silent post' );
 		}
 
@@ -234,11 +238,15 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 			$member_id = rcp_get_member_id_from_profile_id( 'anet_' . $anet_subscription_id );
 
 			if( empty( $member_id ) ) {
+				rcp_log( 'Exiting Authorize.net webhook - member ID not found.' );
+
 				die( 'no member found' );
 			}
 
 			$member   = new RCP_Member( $member_id );
 			$payments = new RCP_Payments();
+
+			rcp_log( sprintf( 'Processing webhook for member #%d.', $member->ID ) );
 
 			if ( 1 == $response_code ) {
 
@@ -260,11 +268,19 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 
 				$pending_payment_id = $member->get_pending_payment_id();
 				if ( ! empty( $pending_payment_id ) ) {
+
+					rcp_log( 'Processing approved Authorize.net payment via webhook - updating pending payment.' );
+
 					// Completing a pending payment (this will be the first payment made via registration).
 					$rcp_payments_db->update( absint( $pending_payment_id ), $payment_data );
 					$payment_id = $pending_payment_id;
+
 				} else {
+
+					rcp_log( 'Processing approved Authorize.net payment via webhook - inserting new payment.' );
+
 					$payment_id = $payments->insert( $payment_data );
+
 				}
 
 				if ( intval( $_POST['x_subscription_paynum'] ) > 1 || $is_trialing ) {
@@ -288,6 +304,8 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 			} elseif ( 2 == $response_code ) {
 
 				// Declined
+				rcp_log( 'Processing Authorize.net webhook - declined payment.' );
+
 				if ( ! empty( $_POST['x_trans_id'] ) ) {
 					$this->webhook_event_id = sanitize_text_field( $_POST['x_trans_id'] );
 				}
@@ -298,6 +316,8 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 			} elseif ( 3 == $response_code || 8 == $reason_code ) {
 
 				// An expired card
+				rcp_log( 'Processing Authorize.net webhook - expired card.' );
+
 				if ( ! empty( $_POST['x_trans_id'] ) ) {
 					$this->webhook_event_id = sanitize_text_field( $_POST['x_trans_id'] );
 				}

@@ -407,6 +407,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			return;
 		}
 
+		rcp_log( 'Starting to process PayPal Express IPN.' );
+
 		$user_id = 0;
 		$posted  = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
 
@@ -432,6 +434,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		$member = new RCP_Member( $user_id );
 
 		if( ! $member || ! $member->ID > 0 ) {
+			rcp_log( 'Exiting PayPal Express IPN - member ID not found.' );
+
 			die( 'no member found' );
 		}
 
@@ -444,10 +448,14 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		}
 
 		if( ! $subscription_id ) {
+			rcp_log( 'Exiting PayPal Express IPN - no subscription ID for member.' );
+
 			die( 'no subscription for member found' );
 		}
 
 		if( ! $subscription_level = rcp_get_subscription_details( $subscription_id ) ) {
+			rcp_log( 'Exiting PayPal Express IPN - no subscription level found.' );
+
 			die( 'no subscription level found' );
 		}
 
@@ -480,6 +488,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			case "recurring_payment_profile_created":
 
+				rcp_log( 'Processing PayPal Express recurring_payment_profile_created IPN.' );
+
 				if ( isset( $posted['initial_payment_txn_id'] ) ) {
 					$transaction_id = ( 'Completed' == $posted['initial_payment_status'] ) ? $posted['initial_payment_txn_id'] : '';
 				} else {
@@ -508,6 +518,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				break;
 			case "recurring_payment" :
 
+				rcp_log( 'Processing PayPal Express recurring_payment IPN.' );
+
 				// when a user makes a recurring payment
 				update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
@@ -527,6 +539,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				break;
 
 			case "recurring_payment_profile_cancel" :
+
+				rcp_log( 'Processing PayPal Express recurring_payment_profile_cancel IPN.' );
 
 				if( ! $member->just_upgraded() ) {
 
@@ -558,6 +572,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			case "recurring_payment_failed" :
 			case "recurring_payment_suspended_due_to_max_failed_payment" :
 
+			rcp_log( 'Processing PayPal Express recurring_payment_failed or recurring_payment_suspended_due_to_max_failed_payment IPN.' );
+
 				if( 'cancelled' !== $member->get_status() ) {
 
 					$member->set_status( 'expired' );
@@ -582,6 +598,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				break;
 
 			case "web_accept" :
+
+				rcp_log( sprintf( 'Processing PayPal Express web_accept IPN. Payment status: %s', $posted['payment_status'] ) );
 
 				switch ( strtolower( $posted['payment_status'] ) ) :
 

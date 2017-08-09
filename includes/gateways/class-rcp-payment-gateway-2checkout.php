@@ -192,19 +192,27 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 		if ( isset( $_GET['listener'] ) && $_GET['listener'] == '2checkout' ) {
 
+			rcp_log( 'Starting to process 2Checkout webhook.' );
+
 			global $wpdb;
 
 			$hash  = strtoupper( md5( $_POST['sale_id'] . $this->seller_id . $_POST['invoice_id'] . $this->secret_word ) );
 
 			if ( ! hash_equals( $hash, $_POST['md5_hash'] ) ) {
+				rcp_log( 'Exiting 2Checkout webhook - invalid MD5 hash.' );
+
 				die('-1');
 			}
 
 			if ( empty( $_POST['message_type'] ) ) {
+				rcp_log( 'Exiting 2Checkout webhook - empty message_type.' );
+
 				die( '-2' );
 			}
 
 			if ( empty( $_POST['vendor_id'] ) ) {
+				rcp_log( 'Exiting 2Checkout webhook - empty vendor_id.' );
+
 				die( '-3' );
 			}
 
@@ -212,23 +220,33 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 			$member_id        = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'rcp_subscription_key' AND meta_value = %s LIMIT 1", $subscription_key ) );
 
 			if ( ! $member_id ) {
+				rcp_log( 'Exiting 2Checkout webhook - member ID not found.' );
+
 				die( '-4' );
 			}
 
 			$member = new RCP_Member( $member_id );
 
 			if( ! rcp_is_2checkout_subscriber( $member->ID ) ) {
+				rcp_log( 'Exiting 2Checkout webhook - member is not a 2Checkout subscriber.' );
+
 				return;
 			}
+
+			rcp_log( sprintf( 'Processing webhook for member #%d.', $member->ID ) );
 
 			$payments = new RCP_Payments();
 
 			switch( strtoupper( $_POST['message_type'] ) ) {
 
 				case 'ORDER_CREATED' :
+					rcp_log( 'Processing 2Checkout ORDER_CREATED webhook.' );
+
 					break;
 
 				case 'REFUND_ISSUED' :
+
+					rcp_log( sprintf( 'Processing 2Checkout REFUND_ISSUED webhook for invoice ID %s.', $_POST['invoice_id'] ) );
 
 					$payment = $payments->get_payment_by( 'transaction_id', $_POST['invoice_id'] );
 					$payments->update( $payment->id, array( 'status' => 'refunded' ) );
@@ -243,6 +261,8 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 					break;
 
 				case 'RECURRING_INSTALLMENT_SUCCESS' :
+
+					rcp_log( sprintf( 'Processing 2Checkout RECURRING_INSTALLMENT_SUCCESS webhook for member #%d.', $member->ID ) );
 
 					$payment_data = array(
 						'date'             => date( 'Y-m-d H:i:s', strtotime( $_POST['timestamp'], current_time( 'timestamp' ) ) ),
@@ -266,6 +286,8 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				case 'RECURRING_INSTALLMENT_FAILED' :
 
+					rcp_log( 'Processing 2Checkout RECURRING_INSTALLMENT_FAILED webhook.' );
+
 					if ( ! empty( $_POST['sale_id'] ) ) {
 						$this->webhook_event_id = sanitize_text_field( $_POST['sale_id'] );
 					}
@@ -275,6 +297,8 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 					break;
 
 				case 'RECURRING_STOPPED' :
+
+					rcp_log( 'Processing 2Checkout RECURRING_STOPPED webhook.' );
 
 					if( ! $member->just_upgraded() ) {
 
@@ -290,9 +314,13 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 				case 'RECURRING_COMPLETE' :
 
+					rcp_log( 'Processing 2Checkout RECURRING_COMPLETE webhook.' );
+
 					break;
 
 				case 'RECURRING_RESTARTED' :
+
+					rcp_log( 'Processing 2Checkout RECURRING_RESTARTED webhook.' );
 
 					$member->set_status( 'active' );
 					$member->add_note( __( 'Subscription restarted in 2Checkout', 'rcp' ) );
@@ -303,6 +331,8 @@ class RCP_Payment_Gateway_2Checkout extends RCP_Payment_Gateway {
 
 
 				case 'FRAUD_STATUS_CHANGED' :
+
+					rcp_log( sprintf( 'Processing 2Checkout FRAUD_STATUS_CHANGED webhook. Status: %s', $_POST['fraud_status'] ) );
 
 					switch ( $_POST['fraud_status'] ) {
 						case 'pass':

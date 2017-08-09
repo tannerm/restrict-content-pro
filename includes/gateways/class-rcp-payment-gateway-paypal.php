@@ -187,6 +187,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			return;
 		}
 
+		rcp_log( 'Starting to process PayPal Standard IPN.' );
+
 		global $rcp_options;
 
 		nocache_headers();
@@ -260,6 +262,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				rcp_log( sprintf( 'PayPal IPN Failed: unable to find associated member in RCP. Item Name: %s; Item Number: %d; TXN Type: %s; TXN ID: %s', $posted['item_name'], $posted['item_number'], $posted['txn_type'], $posted['txn_id'] ) );
 				die( 'no member found' );
 			}
+
+			rcp_log( sprintf( 'Processing IPN for member #%d.', $member->ID ) );
 
 			$subscription_id = $member->get_pending_subscription_id();
 
@@ -363,6 +367,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				case "subscr_signup" :
 					// when a new user signs up
 
+					rcp_log( 'Processing PayPal Standard subscr_signup IPN.' );
+
 					// store the recurring payment ID
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
@@ -389,6 +395,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				case "subscr_payment" :
 
 					// when a user makes a recurring payment
+
+					rcp_log( 'Processing PayPal Standard subscr_payment IPN.' );
 
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
@@ -422,6 +430,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 				case "subscr_cancel" :
 
+					rcp_log( 'Processing PayPal Standard subscr_cancel IPN.' );
+
 					if( ! $member->just_upgraded() ) {
 
 						// user is marked as cancelled but retains access until end of term
@@ -440,6 +450,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					break;
 
 				case "subscr_failed" :
+
+					rcp_log( 'Processing PayPal Standard subscr_failed IPN.' );
 
 					if ( ! empty( $posted['txn_id'] ) ) {
 
@@ -461,6 +473,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					// user's subscription has reached the end of its term
 
+					rcp_log( 'Processing PayPal Standard subscr_eot IPN.' );
+
 					if( isset( $posted['subscr_id'] ) && $posted['subscr_id'] == $member->get_payment_profile_id() && 'cancelled' !== $member->get_status() ) {
 
 						$member->set_status( 'expired' );
@@ -475,6 +489,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					break;
 
 				case "web_accept" :
+
+					rcp_log( sprintf( 'Processing PayPal Standard web_accept IPN. Payment status: %s', $payment_status ) );
 
 					switch ( strtolower( $payment_status ) ) :
 
