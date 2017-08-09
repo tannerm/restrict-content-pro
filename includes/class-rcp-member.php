@@ -400,7 +400,7 @@ class RCP_Member extends WP_User {
 	 */
 	public function renew( $recurring = false, $status = 'active', $expiration = '' ) {
 
-		rcp_log( sprintf( 'Starting membership renewal for user #%d. Subscription ID: %d; Current Expiration Date: %s; Current Status: %s', $this->ID, $this->get_subscription_id(), $this->get_expiration_date(), $this->get_status() ) );
+		rcp_log( sprintf( 'Starting membership renewal for user #%d. Subscription ID: %d; Current Expiration Date: %s', $this->ID, $this->get_subscription_id(), $this->get_expiration_date() ) );
 
 		$subscription_id = $this->get_pending_subscription_id();
 
