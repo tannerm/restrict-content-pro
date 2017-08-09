@@ -321,6 +321,13 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				'status'           => 'complete'
 			);
 
+			// We don't want any empty values in the array in order to avoid deleting a transaction ID or other data.
+			foreach ( $payment_data as $payment_key => $payment_value ) {
+				if ( empty( $payment_value ) ) {
+					unset( $payment_data[ $payment_key ] );
+				}
+			}
+
 			do_action( 'rcp_valid_ipn', $payment_data, $user_id, $posted );
 
 			if( $posted['txn_type'] == 'web_accept' || $posted['txn_type'] == 'subscr_payment' ) {
@@ -364,6 +371,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					}
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
+					$member->set_recurring( true );
 
 					if ( $has_trial && ! empty( $pending_payment_id ) ) {
 						// This activates the trial.
@@ -387,6 +395,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					$member->set_payment_profile_id( $posted['subscr_id'] );
 
 					if ( ! empty( $pending_payment_id ) ) {
+
+						$member->set_recurring( true );
 
 						// This activates the membership.
 						$rcp_payments->update( $pending_payment_id, $payment_data );
