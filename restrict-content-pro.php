@@ -3,7 +3,7 @@
  * Plugin Name: Restrict Content Pro
  * Plugin URL: https://restrictcontentpro.com
  * Description: Set up a complete subscription system for your WordPress site and deliver premium content to your subscribers. Unlimited subscription packages, membership management, discount codes, registration / login forms, and more.
- * Version: 2.8.6
+ * Version: 2.9-beta3
  * Author: Restrict Content Pro Team
  * Author URI: https://restrictcontentpro.com
  * Contributors: mordauk
@@ -20,7 +20,7 @@ if ( !defined( 'RCP_PLUGIN_FILE' ) ) {
 	define( 'RCP_PLUGIN_FILE', __FILE__ );
 }
 if ( !defined( 'RCP_PLUGIN_VERSION' ) ) {
-	define( 'RCP_PLUGIN_VERSION', '2.8.6' );
+	define( 'RCP_PLUGIN_VERSION', '2.9-beta3' );
 }
 if ( ! defined( 'CAL_GREGORIAN' ) ) {
 	define( 'CAL_GREGORIAN', 1 );
@@ -232,7 +232,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	 * @return void
 	 */
 	function rcp_below_php_version_notice() {
-		if ( current_user_can( 'rcp_manage_settings' ) ) {
+		if ( current_user_can( 'activate_plugins' ) ) {
 			echo '<div class="error"><p>' . __( 'Your version of PHP is below the minimum version of PHP required by Restrict Content Pro. Please contact your host and request that your version be upgraded to 5.3 or later.', 'rcp' ) . '</p></div>';
 		}
 	}
@@ -251,10 +251,12 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-emails.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-integrations.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-levels.php' );
+	include( RCP_PLUGIN_DIR . 'includes/class-rcp-logging.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-member.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-payments.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-discounts.php' );
 	include( RCP_PLUGIN_DIR . 'includes/class-rcp-registration.php' );
+	include( RCP_PLUGIN_DIR . 'includes/class-rcp-reminders.php' );
 	include( RCP_PLUGIN_DIR . 'includes/scripts.php' );
 	include( RCP_PLUGIN_DIR . 'includes/ajax-actions.php' );
 	include( RCP_PLUGIN_DIR . 'includes/cron-functions.php' );
@@ -284,8 +286,9 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	include( RCP_PLUGIN_DIR . 'includes/shortcodes.php' );
 	include( RCP_PLUGIN_DIR . 'includes/template-functions.php' );
 
-	if( !class_exists( 'WP_Logging' ) ) {
-		include( RCP_PLUGIN_DIR . 'includes/libraries/class-wp-logging.php' );
+	// @todo remove
+	if( ! class_exists( 'WP_Logging' ) ) {
+		include( RCP_PLUGIN_DIR . 'includes/deprecated/class-wp-logging.php' );
 	}
 
 	// admin only includes
@@ -293,26 +296,31 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 
 		include( RCP_PLUGIN_DIR . 'includes/admin/upgrades.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/class-rcp-upgrades.php' );
+		include( RCP_PLUGIN_DIR . 'includes/admin/admin-actions.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/admin-pages.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/admin-notices.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/admin-ajax-actions.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/class-rcp-add-on-updater.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/screen-options.php' );
+		include( RCP_PLUGIN_DIR . 'includes/admin/members/member-actions.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/members/members-page.php' );
+		include( RCP_PLUGIN_DIR . 'includes/admin/reminders/subscription-reminders.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/settings/settings.php' );
+		include( RCP_PLUGIN_DIR . 'includes/admin/subscriptions/subscription-actions.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/subscriptions/subscription-levels.php' );
+		include( RCP_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php' );
+		include( RCP_PLUGIN_DIR . 'includes/admin/payments/payment-actions.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/payments/payments-page.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/reports/reports-page.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/export.php' );
-		include( RCP_PLUGIN_DIR . 'includes/admin/logs.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/tools/tools-page.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/help/help-menus.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/metabox.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/add-ons.php' );
 		include( RCP_PLUGIN_DIR . 'includes/admin/terms.php' );
+		include( RCP_PLUGIN_DIR . 'includes/admin/post-types/restrict-post-type.php' );
 		include( RCP_PLUGIN_DIR . 'includes/user-page-columns.php' );
-		include( RCP_PLUGIN_DIR . 'includes/process-data.php' );
 		include( RCP_PLUGIN_DIR . 'includes/export-functions.php' );
 		include( RCP_PLUGIN_DIR . 'includes/deactivation.php' );
 		include( RCP_PLUGIN_DIR . 'RCP_Plugin_Updater.php' );
@@ -335,10 +343,7 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	} else {
 
 		include( RCP_PLUGIN_DIR . 'includes/content-filters.php' );
-		include( RCP_PLUGIN_DIR . 'includes/feed-functions.php' );
-		if( isset( $rcp_options['enable_recaptcha'] ) ) {
-			require_once( RCP_PLUGIN_DIR . 'includes/captcha-functions.php' );
-		}
+		require_once( RCP_PLUGIN_DIR . 'includes/captcha-functions.php' );
 		include( RCP_PLUGIN_DIR . 'includes/query-filters.php' );
 		include( RCP_PLUGIN_DIR . 'includes/redirects.php' );
 	}

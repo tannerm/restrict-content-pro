@@ -14,7 +14,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-global $rcp_options, $rcp_level, $post, $rcp_levels_db;
+global $rcp_options, $rcp_level, $post, $rcp_levels_db, $rcp_register_form_atts;
 
 $level = rcp_get_subscription_details( $rcp_level );
 $discount = ! empty( $_REQUEST['discount'] ) ? sanitize_text_field( $_REQUEST['discount'] ) : '';
@@ -23,11 +23,11 @@ $has_trial = $rcp_levels_db->has_trial( $level->id );
 
 <?php if( ! is_user_logged_in() ) { ?>
 	<h3 class="rcp_header">
-		<?php echo apply_filters( 'rcp_registration_header_logged_out', __( 'Register New Account', 'rcp' ) ); ?>
+		<?php echo apply_filters( 'rcp_registration_header_logged_out', $rcp_register_form_atts['logged_out_header'] ); ?>
 	</h3>
 <?php } else { ?>
 	<h3 class="rcp_header">
-		<?php echo apply_filters( 'rcp_registration_header_logged_in', __( 'Upgrade Your Subscription', 'rcp' ) ); ?>
+		<?php echo apply_filters( 'rcp_registration_header_logged_in', $rcp_register_form_atts['logged_in_header'] ); ?>
 	</h3>
 <?php }
 
@@ -40,8 +40,11 @@ rcp_show_error_messages( 'register' ); ?>
 
 	<?php if( ! is_user_logged_in() ) { ?>
 
-	<?php do_action( 'rcp_before_register_form_fields' ); ?>
+	<div class="rcp_login_link">
+		<p><?php printf( __( '<a href="%s">Log in</a> if you wish to renew an existing subscription.', 'rcp' ), esc_url( rcp_get_login_url( rcp_get_current_url() ) ) ); ?></p>
+	</div>
 
+	<?php do_action( 'rcp_before_register_form_fields' ); ?>
 
 	<fieldset class="rcp_user_fieldset">
 		<p id="rcp_user_login_wrap">

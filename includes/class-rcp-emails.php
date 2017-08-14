@@ -337,6 +337,10 @@ class RCP_Emails {
 		 */
 		do_action( 'rcp_email_send_after', $this );
 
+		if ( false === $sent ) {
+			rcp_log( 'wp_mail() failure in RCP_Emails class.' );
+		}
+
 		return $sent;
 	}
 
@@ -478,6 +482,11 @@ class RCP_Emails {
 				'tag'         => 'amount',
 				'description' => __( 'The amount of the last payment made by the member', 'rcp' ),
 				'function'    => 'rcp_email_tag_amount'
+			),
+			array(
+				'tag'         => 'invoice_url',
+				'description' => __( 'The URL to the member\'s most recent invoice', 'rcp' ),
+				'function'    => 'rcp_email_tag_invoice_url'
 			),
 			array(
 				'tag'         => 'member_id',

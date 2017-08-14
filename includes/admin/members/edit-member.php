@@ -38,7 +38,7 @@ $member = new RCP_Member( $member_id );
 					<label for="rcp-userlogin"><?php _e( 'User Login', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input id="rcp-userlogin" type="text" style="width: 200px;" value="<?php echo esc_attr( $member->user_login ); ?>" disabled="disabled"/>
+					<input id="rcp-userlogin" type="text" value="<?php echo esc_attr( $member->user_login ); ?>" disabled="disabled"/>
 					<p class="description"><?php _e( 'The member\'s login name. This cannot be changed.', 'rcp' ); ?></p>
 				</td>
 			</tr>
@@ -47,7 +47,7 @@ $member = new RCP_Member( $member_id );
 					<label for="rcp-email"><?php _e( 'User Email', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input id="rcp-email" name="email" type="text" style="width: 200px;" value="<?php echo esc_attr( $member->user_email ); ?>"/>
+					<input id="rcp-email" name="email" type="text" value="<?php echo esc_attr( $member->user_email ); ?>"/>
 					<p class="description"><?php _e( 'The member\'s email address.', 'rcp' ); ?> <a href="<?php echo esc_url( add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php _e( 'Edit User Account', 'rcp' ); ?></a></p>
 				</td>
 			</tr>
@@ -97,7 +97,7 @@ $member = new RCP_Member( $member_id );
 					<label for="rcp-key"><?php _e( 'Subscription Key', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input id="rcp-key" type="text" style="width: 200px;" value="<?php echo esc_attr( $member->get_subscription_key() ); ?>" disabled="disabled"/>
+					<input id="rcp-key" type="text" value="<?php echo esc_attr( $member->get_subscription_key() ); ?>" disabled="disabled"/>
 					<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( 'This key is used for reference purposes and may be shown on payment and subscription records in your merchant accounts.', 'rcp' ); ?>"></span>
 					<p class="description"><?php _e( 'The member\'s subscription key. This cannot be changed.', 'rcp' ); ?></p>
 				</td>
@@ -113,7 +113,7 @@ $member = new RCP_Member( $member_id );
 						$expiration_date = date( 'Y-m-d', strtotime( $expiration_date, current_time( 'timestamp' ) ) );
 					}
 					?>
-					<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker" value="<?php echo esc_attr( $expiration_date ); ?>"/>
+					<input name="expiration" id="rcp-expiration" type="text" class="rcp-datepicker" value="<?php echo esc_attr( $expiration_date ); ?>"/>
 					<label for="rcp-unlimited">
 						<input name="unlimited" id="rcp-unlimited" type="checkbox"<?php checked( $expiration_date, 'none' ); ?>/>
 						<span class="description"><?php _e( 'Never expires?', 'rcp' ); ?></span>
@@ -127,7 +127,7 @@ $member = new RCP_Member( $member_id );
 					<label for="rcp-payment-profile-id"><?php _e( 'Payment Profile ID', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input name="payment-profile-id" id="rcp-payment-profile-id" type="text" style="width: 200px;" value="<?php echo esc_attr( $member->get_payment_profile_id() ); ?>"/>
+					<input name="payment-profile-id" id="rcp-payment-profile-id" type="text" value="<?php echo esc_attr( $member->get_payment_profile_id() ); ?>"/>
 					<p class="description"><?php _e( 'This is the customer\'s payment profile ID in the payment processor', 'rcp' ); ?></p>
 				</td>
 			</tr>

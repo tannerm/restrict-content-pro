@@ -195,10 +195,16 @@ function rcp_email_subscription_status( $user_id, $status = 'active' ) {
 
 	if( ! empty( $message ) ) {
 		$emails->send( $user_info->user_email, $subject, $message, $attachments );
+		rcp_log( sprintf( '%s email sent to user #%d.', ucwords( $status ), $user_info->ID ) );
+	} else {
+		rcp_log( sprintf( '%s email not sent to user #%d - message is empty.', ucwords( $status ), $user_info->ID ) );
 	}
 
 	if( ! empty( $admin_message ) ) {
 		$emails->send( $admin_emails, $admin_subject, $admin_message );
+		rcp_log( sprintf( '%s email sent to admin(s).', ucwords( $status ) ) );
+	} else {
+		rcp_log( sprintf( '%s email not sent to admin(s) - message is empty.', ucwords( $status ) ) );
 	}
 }
 
@@ -337,15 +343,13 @@ add_action( 'rcp_set_status', 'rcp_email_on_cancellation', 11, 2 );
 /**
  * Triggers an email to the member when a payment is received.
  *
- * @param int   $payment_id ID of the payment.
- * @param array $args       Array of payment data.
- * @param float $amount     Amount of the payment.
+ * @param int    $payment_id ID of the payment being completed.
  *
  * @access  public
  * @since   2.3
  * @return  void
  */
-function rcp_email_payment_received( $payment_id, $args, $amount ) {
+function rcp_email_payment_received( $payment_id ) {
 
 	global $rcp_options;
 
@@ -353,27 +357,40 @@ function rcp_email_payment_received( $payment_id, $args, $amount ) {
 		return;
 	}
 
-	$user_info = get_userdata( $args['user_id'] );
+	/**
+	 * @var RCP_Payments $rcp_payments_db
+	 */
+	global $rcp_payments_db;
+
+	$payment = $rcp_payments_db->get_payment( $payment_id );
+
+	$user_info = get_userdata( $payment->user_id );
 
 	if( ! $user_info ) {
 		return;
 	}
 
+	$payment = (array) $payment;
+
 	$message = ! empty( $rcp_options['payment_received_email'] ) ? $rcp_options['payment_received_email'] : false;
-	$message = apply_filters( 'rcp_payment_received_email', $message, $payment_id, $args );
+	$message = apply_filters( 'rcp_payment_received_email', $message, $payment_id, $payment );
 
 	if( ! $message ) {
+		rcp_log( sprintf( 'Payment Received email not sent to user #%d - message is empty.', $user_info->ID ) );
+
 		return;
 	}
 
 	$emails = new RCP_Emails;
-	$emails->member_id = $args['user_id'];
+	$emails->member_id = $payment['user_id'];
 	$emails->payment_id = $payment_id;
 
 	$emails->send( $user_info->user_email, $rcp_options['payment_received_subject'], $message );
 
+	rcp_log( sprintf( 'Payment Received email sent to user #%d.', $user_info->ID ) );
+
 }
-add_action( 'rcp_insert_payment', 'rcp_email_payment_received', 10, 3 );
+add_action( 'rcp_update_payment_status_complete', 'rcp_email_payment_received' );
 
 /**
  * Emails a member when a renewal payment fails.
@@ -399,10 +416,16 @@ function rcp_email_member_on_renewal_payment_failure( RCP_Member $member, RCP_Pa
 	$subject = isset( $rcp_options['renewal_payment_failed_subject'] ) ? $rcp_options['renewal_payment_failed_subject'] : '';
 	$subject = apply_filters( 'rcp_subscription_renewal_payment_failed_subject', $subject, $member->ID, $status );
 
+	if ( empty( $subject ) || empty( $message ) ) {
+		return;
+	}
+
 	$emails = new RCP_Emails;
 	$emails->member_id = $member->ID;
 
 	$emails->send( $member->user_email, $subject, $message );
+
+	rcp_log( sprintf( 'Renewal Payment Failure email sent to user #%d.', $member->ID ) );
 }
 add_action( 'rcp_recurring_payment_failed', 'rcp_email_member_on_renewal_payment_failure', 10, 2 );
 
@@ -441,6 +464,8 @@ function rcp_email_admin_on_manual_payment( $member, $payment_id, $gateway ) {
 
 	$emails->send( $admin_emails, $admin_subject, $admin_message );
 
+	rcp_log( sprintf( 'New Manual Payment email sent to admin(s) regarding payment #%d.', $payment_id ) );
+
 }
 add_action( 'rcp_process_manual_signup', 'rcp_email_admin_on_manual_payment', 10, 3 );
 
@@ -469,6 +494,11 @@ function rcp_send_email_verification( $user_id ) {
 	if( ! empty( $message ) && ! empty( $subject ) ) {
 		$user_info = get_userdata( $user_id );
 		$emails->send( $user_info->user_email, $subject, $message );
+
+		rcp_add_member_note( $user_id, __( 'Verification email sent to member.', 'rcp' ) );
+		rcp_log( sprintf( 'Email Verification email sent to user #%d.', $user_id ) );
+	} else {
+		rcp_log( sprintf( 'Email Verification email not sent to user #%d - message or subject is empty.', $user_id ) );
 	}
 
 }
@@ -677,6 +707,52 @@ function rcp_email_tag_amount( $member_id = 0, $payment_id = 0 ) {
 	}
 
 	return html_entity_decode( rcp_currency_filter( $payment->amount ), ENT_COMPAT, 'UTF-8' );
+}
+
+/**
+ * Email template tag: invoice_url
+ * URL to the member's most recent invoice.
+ *
+ * @param int $member_id  The member ID.
+ * @param int $payment_id The payment ID.
+ *
+ * @since 2.9
+ * @return string URL to the invoice.
+ */
+function rcp_email_tag_invoice_url( $member_id = 0, $payment_id = 0 ) {
+
+	/**
+	 * @var RCP_Payments $rcp_payments_db
+	 */
+	global $rcp_payments_db;
+
+	if ( ! empty( $payment_id ) ) {
+		$payment = $rcp_payments_db->get_payment( $payment_id );
+	} else {
+		$payment = $rcp_payments_db->get_payments( array(
+			'user_id' => $member_id,
+			'order'   => 'DESC',
+			'number'  => 1
+		) );
+
+		$payment = reset( $payment );
+	}
+
+	if ( empty( $payment ) || ! is_object( $payment ) ) {
+		$url = '';
+
+		// Use the page with [subscription_details] instead.
+		global $rcp_options;
+
+		if ( ! empty( $rcp_options['account_page'] ) ) {
+			$url = esc_url( get_permalink( $rcp_options['account_page'] ) );
+		}
+	} else {
+		$url = esc_url( rcp_get_invoice_url( $payment->id ) );
+	}
+
+	return $url;
+
 }
 
 /**

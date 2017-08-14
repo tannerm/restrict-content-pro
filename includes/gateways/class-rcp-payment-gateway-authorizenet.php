@@ -82,6 +82,11 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 	 */
 	public function process_signup() {
 
+		/**
+		 * @var RCP_Payments $rcp_payments_db
+		 */
+		global $rcp_payments_db;
+
 		if ( empty( $this->api_login_id ) || empty( $this->transaction_key ) ) {
 			rcp_errors()->add( 'missing_authorize_settings', __( 'Authorize.net API Login ID or Transaction key is missing.', 'rcp' ) );
 		}
@@ -144,10 +149,34 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 				}
 
 				$member->set_recurring( $this->auto_renew );
-				$member->set_expiration_date( $member->calculate_expiration() );
-				$member->set_status( 'active' );
-				$member->add_note( __( 'Subscription started in Authorize.net', 'rcp' ) );
 				$member->set_payment_profile_id( 'anet_' . $response->getSubscriptionId() );
+
+				if ( $this->is_trial() ) {
+
+					// Complete $0 payment and activate account.
+					$rcp_payments_db->update( $this->payment->id, array(
+						'payment_type' => 'Credit Card',
+						'status'       => 'complete'
+					) );
+
+				} else {
+
+					// Manually set these values because webhook has a big delay and we want to activate the account ASAP.
+					$force_now  = $this->auto_renew || ( $member->get_subscription_id() != $this->subscription_id );
+					$expiration = $member->calculate_expiration( $force_now );
+					$member->set_subscription_id( $this->subscription_id );
+					$member->set_expiration_date( $expiration );
+					$member->set_status( 'active' );
+
+					/*
+					 * Set pending expiration date so this will be used in rcp_add_user_to_subscription() when the webhook
+					 * gets the transaction ID and completes the payment, which may take several hours.
+					 */
+					update_user_meta( $this->user_id, 'rcp_pending_expiration_date', $expiration );
+
+				}
+
+				$member->add_note( __( 'Subscription started in Authorize.net', 'rcp' ) );
 
 				if ( ! is_user_logged_in() ) {
 
@@ -160,6 +189,8 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 
 			} else {
 
+				$this->error_message = $response->getErrorMessage();
+
 				do_action( 'rcp_registration_failed', $this );
 
 				wp_die( $response->getErrorMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
@@ -167,6 +198,7 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 			}
 
 		} catch ( AuthorizeNetException $e ) {
+			$this->error_message = $e->getMessage();
 			do_action( 'rcp_registration_failed', $this );
 			wp_die( $e->getMessage(), __( 'Error', 'rcp' ), array( 'response' => '401' ) );
 		}
@@ -188,7 +220,11 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 			return;
 		}
 
+		rcp_log( 'Starting to process Authorize.net webhook.' );
+
 		if( ! $this->is_silent_post_valid( $_POST ) ) {
+			rcp_log( 'Exiting Authorize.net webhook - invalid MD5 hash.' );
+
 			die( 'invalid silent post' );
 		}
 
@@ -202,17 +238,22 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 			$member_id = rcp_get_member_id_from_profile_id( 'anet_' . $anet_subscription_id );
 
 			if( empty( $member_id ) ) {
+				rcp_log( 'Exiting Authorize.net webhook - member ID not found.' );
+
 				die( 'no member found' );
 			}
 
 			$member   = new RCP_Member( $member_id );
 			$payments = new RCP_Payments();
 
+			rcp_log( sprintf( 'Processing webhook for member #%d.', $member->ID ) );
+
 			if ( 1 == $response_code ) {
 
 				// Approved
 				$renewal_amount = sanitize_text_field( $_POST['x_amount'] );
 				$transaction_id = sanitize_text_field( $_POST['x_trans_id'] );
+				$is_trialing    = $member->is_trialing();
 
 				$payment_data = array(
 					'date'             => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
@@ -221,20 +262,50 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 					'subscription_key' => $member->get_subscription_key(),
 					'amount'           => $renewal_amount,
 					'user_id'          => $member->ID,
-					'transaction_id'   => $transaction_id
+					'transaction_id'   => $transaction_id,
+					'status'           => 'complete'
 				);
 
-				if ( intval( $_POST['x_subscription_paynum'] ) > 1 ) {
-					$member->renew( $member->is_recurring() );
+				$pending_payment_id = $member->get_pending_payment_id();
+				if ( ! empty( $pending_payment_id ) ) {
+
+					rcp_log( 'Processing approved Authorize.net payment via webhook - updating pending payment.' );
+
+					// Completing a pending payment (this will be the first payment made via registration).
+					$rcp_payments_db->update( absint( $pending_payment_id ), $payment_data );
+					$payment_id = $pending_payment_id;
+
+				} else {
+
+					rcp_log( 'Processing approved Authorize.net payment via webhook - inserting new payment.' );
+
+					$payment_id = $payments->insert( $payment_data );
+
 				}
-				$payments->insert( $payment_data );
+
+				if ( intval( $_POST['x_subscription_paynum'] ) > 1 || $is_trialing ) {
+
+					// Renewal payment.
+					$member->renew( $member->is_recurring() );
+					do_action( 'rcp_webhook_recurring_payment_processed', $member, $payment_id, $this );
+
+				} elseif ( $member->is_recurring() ) {
+
+					// Recurring profile first created.
+					do_action( 'rcp_webhook_recurring_payment_profile_created', $member, $this );
+
+				}
+
 				$member->add_note( __( 'Subscription processed in Authorize.net', 'rcp' ) );
 
 				do_action( 'rcp_authorizenet_silent_post_payment', $member, $this );
+				do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
 
 			} elseif ( 2 == $response_code ) {
 
 				// Declined
+				rcp_log( 'Processing Authorize.net webhook - declined payment.' );
+
 				if ( ! empty( $_POST['x_trans_id'] ) ) {
 					$this->webhook_event_id = sanitize_text_field( $_POST['x_trans_id'] );
 				}
@@ -245,6 +316,8 @@ class RCP_Payment_Gateway_Authorizenet extends RCP_Payment_Gateway {
 			} elseif ( 3 == $response_code || 8 == $reason_code ) {
 
 				// An expired card
+				rcp_log( 'Processing Authorize.net webhook - expired card.' );
+
 				if ( ! empty( $_POST['x_trans_id'] ) ) {
 					$this->webhook_event_id = sanitize_text_field( $_POST['x_trans_id'] );
 				}

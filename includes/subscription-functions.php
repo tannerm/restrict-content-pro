@@ -358,10 +358,11 @@ function rcp_generate_subscription_key() {
  */
 function rcp_show_subscription_level( $level_id = 0, $user_id = 0 ) {
 
-	global $rcp_levels_db;
+	global $rcp_levels_db, $rcp_register_form_atts;
 
-	if( empty( $user_id ) )
+	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
+	}
 
 	$ret = true;
 
@@ -382,6 +383,17 @@ function rcp_show_subscription_level( $level_id = 0, $user_id = 0 ) {
 		( ! empty( $trial_duration ) && $used_trial && ( $user_level == $level_id && ! rcp_is_expired( $user_id ) ) )
 	) {
 		$ret = false;
+	}
+
+	// If multiple levels are specified in shortcode, like [register_form ids="1,2"]
+	if ( ! empty( $rcp_register_form_atts['ids'] ) ) {
+
+		$levels_to_show = array_map( 'absint', explode( ',', $rcp_register_form_atts['ids'] ) );
+
+		if ( ! in_array( $level_id, $levels_to_show ) ) {
+			$ret = false;
+		}
+
 	}
 
 	return apply_filters( 'rcp_show_subscription_level', $ret, $level_id, $user_id );
@@ -409,47 +421,6 @@ function rcp_get_content_subscription_levels( $post_id = 0 ) {
 		$levels = array( $levels );
 	}
 	return apply_filters( 'rcp_get_content_subscription_levels', $levels, $post_id );
-}
-
-
-/**
- * Retrieve the renewal reminder periods
- *
- * @since       1.6
- * @access      public
- * @return      array
-*/
-function rcp_get_renewal_reminder_periods() {
-	$periods = array(
-		'none'      => __( 'None, reminders disabled', 'rcp' ),
-		'+1 day'    => __( 'One day before expiration', 'rcp' ),
-		'+2 days'   => __( 'Two days before expiration', 'rcp' ),
-		'+3 days'   => __( 'Three days before expiration', 'rcp' ),
-		'+4 days'   => __( 'Four days before expiration', 'rcp' ),
-		'+5 days'   => __( 'Five days before expiration', 'rcp' ),
-		'+6 days'   => __( 'Six days before expiration', 'rcp' ),
-		'+1 week'   => __( 'One week before expiration', 'rcp' ),
-		'+2 weeks'  => __( 'Two weeks before expiration', 'rcp' ),
-		'+3 weeks'  => __( 'Three weeks before expiration', 'rcp' ),
-		'+1 month'  => __( 'One month before expiration', 'rcp' ),
-		'+2 months' => __( 'Two months before expiration', 'rcp' ),
-		'+3 months' => __( 'Three months before expiration', 'rcp' ),
-	);
-	return apply_filters( 'rcp_renewal_reminder_periods', $periods );
-}
-
-
-/**
- * Retrieve the renewal reminder period that is enabled
- *
- * @since       1.6
- * @access      public
- * @return      string
-*/
-function rcp_get_renewal_reminder_period() {
-	global $rcp_options;
-	$period = isset( $rcp_options['renewal_reminder_period'] ) ? $rcp_options['renewal_reminder_period'] : 'none';
-	return apply_filters( 'rcp_get_renewal_reminder_period', $period );
 }
 
 /**

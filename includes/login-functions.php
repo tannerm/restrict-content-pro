@@ -130,7 +130,7 @@ function rcp_process_login_form() {
 		rcp_login_user_in( $user->ID, $_POST['rcp_user_login'], $remember );
 
 		// redirect the user back to the page they were previously on
-		wp_redirect( apply_filters( 'rcp_login_redirect_url', $redirect, $user ) ); exit;
+		wp_safe_redirect( apply_filters( 'rcp_login_redirect_url', esc_url_raw( $redirect ), $user ) ); exit;
 
 	} else {
 
@@ -299,7 +299,11 @@ function rcp_retrieve_password() {
 	$title   = apply_filters( 'retrieve_password_title', $title );
 	$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );
 
-	if ( $message && ! wp_mail( $user_email, wp_specialchars_decode( $title ), $message ) ) {
+	$emails = new RCP_Emails;
+	$emails->member_id = $user_data->ID;
+	$sent = $emails->send( $user_email, wp_specialchars_decode( $title ), $message );
+
+	if ( $message && ! $sent ) {
 		wp_die( __('The e-mail could not be sent.', 'rcp' ) . "<br />\n" . __('Possible reason: your host may have disabled the mail() function.', 'rcp' ) );
 	}
 

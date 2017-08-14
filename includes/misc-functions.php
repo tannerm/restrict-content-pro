@@ -29,15 +29,29 @@ function rcp_is_sandbox(){
  * @return bool True if the post is paid only, false if not.
  */
 function rcp_is_paid_content( $post_id ) {
-	if ( $post_id == '' || ! is_int( $post_id ) )
+	if ( $post_id == '' || ! is_int( $post_id ) ) {
 		$post_id = get_the_ID();
+	}
 
 	$return = false;
+	$post_type_restrictions = rcp_get_post_type_restrictions( get_post_type( $post_id) );
 
-	$is_paid = get_post_meta( $post_id, '_is_paid', true );
-	if ( $is_paid ) {
-		// this post is for paid users only
-		$return = true;
+	if ( ! empty( $post_type_restrictions ) ) {
+
+		// Check post type restrictions.
+		if ( array_key_exists( 'is_paid', $post_type_restrictions ) ) {
+			$return = true;
+		}
+
+	} else {
+
+		// Check regular post.
+		$is_paid = get_post_meta( $post_id, '_is_paid', true );
+		if ( $is_paid ) {
+			// this post is for paid users only
+			$return = true;
+		}
+
 	}
 
 	return (bool) apply_filters( 'rcp_is_paid_content', $return, $post_id );
@@ -83,32 +97,32 @@ function rcp_currency_filter( $price ) {
 	$position = isset( $rcp_options['currency_position'] ) ? $rcp_options['currency_position'] : 'before';
 	if ( $position == 'before' ) :
 		switch ( $currency ) :
-			case "USD" : return '&#36;' . $price; break;
-			case "EUR" : return '&#8364;' . $price; break;
-			case "GBP" : return '&#163;' . $price; break;
-			case "AUD" : return '&#36;' . $price; break;
-			case "BRL" : return '&#82;&#36;' . $price; break;
-			case "CAD" : return '&#36;' . $price; break;
-			case "CHF" : return '&#67;&#72;&#70;' . $price; break;
-			case "CZK" : return '&#75;&#269;' . $price; break;
-			case "DKK" : return '&#107;&#114;' . $price; break;
-			case "HKD" : return '&#36;' . $price; break;
-			case "HUF" : return '&#70;&#116;' . $price; break;
-			case "ILS" : return '&#8362;' . $price; break;
-			case "IRR" : return '&#65020;' . $price; break;
-			case "JPY" : return '&#165;' . $price; break;
-			case "MXN" : return '&#36;' . $price; break;
-			case "MYR" : return '&#82;&#77;' . $price; break;
-			case "NOK" : return '&#107;&#114;' . $price; break;
-			case "NZD" : return '&#36;' . $price; break;
-			case "PHP" : return '&#8369;' . $price; break;
-			case "PLN" : return '&#122;&#322;' . $price; break;
-			case "RUB" : return '&#1088;&#1091;&#1073;' . $price; break;
-			case "SEK" : return '&#107;&#114;' . $price; break;
-			case "SGD" : return '&#36;' . $price; break;
-			case "THB" : return '&#3647;' . $price; break;
-			case "TRY" : return '&#8356;' . $price; break;
-			case "TWD" : return '&#78;&#84;&#36;' . $price; break;
+			case "USD" : $formatted = '&#36;' . $price; break;
+			case "EUR" : $formatted = '&#8364;' . $price; break;
+			case "GBP" : $formatted = '&#163;' . $price; break;
+			case "AUD" : $formatted = '&#36;' . $price; break;
+			case "BRL" : $formatted = '&#82;&#36;' . $price; break;
+			case "CAD" : $formatted = '&#36;' . $price; break;
+			case "CHF" : $formatted = '&#67;&#72;&#70;' . $price; break;
+			case "CZK" : $formatted = '&#75;&#269;' . $price; break;
+			case "DKK" : $formatted = '&#107;&#114;' . $price; break;
+			case "HKD" : $formatted = '&#36;' . $price; break;
+			case "HUF" : $formatted = '&#70;&#116;' . $price; break;
+			case "ILS" : $formatted = '&#8362;' . $price; break;
+			case "IRR" : $formatted = '&#65020;' . $price; break;
+			case "JPY" : $formatted = '&#165;' . $price; break;
+			case "MXN" : $formatted = '&#36;' . $price; break;
+			case "MYR" : $formatted = '&#82;&#77;' . $price; break;
+			case "NOK" : $formatted = '&#107;&#114;' . $price; break;
+			case "NZD" : $formatted = '&#36;' . $price; break;
+			case "PHP" : $formatted = '&#8369;' . $price; break;
+			case "PLN" : $formatted = '&#122;&#322;' . $price; break;
+			case "RUB" : $formatted = '&#1088;&#1091;&#1073;' . $price; break;
+			case "SEK" : $formatted = '&#107;&#114;' . $price; break;
+			case "SGD" : $formatted = '&#36;' . $price; break;
+			case "THB" : $formatted = '&#3647;' . $price; break;
+			case "TRY" : $formatted = '&#8356;' . $price; break;
+			case "TWD" : $formatted = '&#78;&#84;&#36;' . $price; break;
 			default :
 				$formatted = $currency . ' ' . $price;
 				break;
@@ -116,32 +130,32 @@ function rcp_currency_filter( $price ) {
 		return apply_filters( 'rcp_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 	else :
 		switch ( $currency ) :
-			case "USD" : return $price . '&#36;'; break;
-			case "EUR" : return $price . '&#8364;'; break;
-			case "GBP" : return $price . '&#163;'; break;
-			case "AUD" : return $price . '&#36;'; break;
-			case "BRL" : return $price . '&#82;&#36;'; break;
-			case "CAD" : return $price . '&#36;'; break;
-			case "CHF" : return $price . '&#67;&#72;&#70;'; break;
-			case "CZK" : return $price . '&#75;&#269;'; break;
-			case "DKK" : return $price . '&#107;&#114;'; break;
-			case "HKD" : return $price . '&#36;'; break;
-			case "HUF" : return $price . '&#70;&#116;'; break;
-			case "ILS" : return $price . '&#8362;'; break;
-			case "IRR" : return $price . '&#65020;'; break;
-			case "JPY" : return $price . '&#165;'; break;
-			case "MXN" : return $price . '&#36;'; break;
-			case "MYR" : return $price . '&#82;&#77;'; break;
-			case "NOK" : return $price . '&#107;&#114;'; break;
-			case "NZD" : return $price . '&#36;'; break;
-			case "PHP" : return $price . '&#8369;'; break;
-			case "PLN" : return $price . '&#122;&#322;'; break;
-			case "RUB" : return $price . '&#1088;&#1091;&#1073;'; break;
-			case "SEK" : return $price . '&#107;&#114;'; break;
-			case "SGD" : return $price . '&#36;'; break;
-			case "THB" : return $price . '&#3647;'; break;
-			case "TRY" : return $price . '&#8356;'; break;
-			case "TWD" : return $price . '&#78;&#84;&#36;'; break;
+			case "USD" : $formatted = $price . '&#36;'; break;
+			case "EUR" : $formatted = $price . '&#8364;'; break;
+			case "GBP" : $formatted = $price . '&#163;'; break;
+			case "AUD" : $formatted = $price . '&#36;'; break;
+			case "BRL" : $formatted = $price . '&#82;&#36;'; break;
+			case "CAD" : $formatted = $price . '&#36;'; break;
+			case "CHF" : $formatted = $price . '&#67;&#72;&#70;'; break;
+			case "CZK" : $formatted = $price . '&#75;&#269;'; break;
+			case "DKK" : $formatted = $price . '&#107;&#114;'; break;
+			case "HKD" : $formatted = $price . '&#36;'; break;
+			case "HUF" : $formatted = $price . '&#70;&#116;'; break;
+			case "ILS" : $formatted = $price . '&#8362;'; break;
+			case "IRR" : $formatted = $price . '&#65020;'; break;
+			case "JPY" : $formatted = $price . '&#165;'; break;
+			case "MXN" : $formatted = $price . '&#36;'; break;
+			case "MYR" : $formatted = $price . '&#82;&#77;'; break;
+			case "NOK" : $formatted = $price . '&#107;&#114;'; break;
+			case "NZD" : $formatted = $price . '&#36;'; break;
+			case "PHP" : $formatted = $price . '&#8369;'; break;
+			case "PLN" : $formatted = $price . '&#122;&#322;'; break;
+			case "RUB" : $formatted = $price . '&#1088;&#1091;&#1073;'; break;
+			case "SEK" : $formatted = $price . '&#107;&#114;'; break;
+			case "SGD" : $formatted = $price . '&#36;'; break;
+			case "THB" : $formatted = $price . '&#3647;'; break;
+			case "TRY" : $formatted = $price . '&#8356;'; break;
+			case "TWD" : $formatted = $price . '&#78;&#84;&#36;'; break;
 			default :
 				$formatted = $price . ' ' . $currency;
 				break;
@@ -301,28 +315,6 @@ function rcp_get_current_url() {
 
 	return apply_filters( 'rcp_current_url', $current_url );
 }
-
-
-/**
- * Log Types.
- *
- * Sets up the valid log types for WP_Logging.
- *
- * @param array $types Existing log types.
- *
- * @access private
- * @since  1.3.4
- * @return array
- */
-function rcp_log_types( $types ) {
-
-    $types = array(
-    	'gateway_error'
-    );
-    return $types;
-
-}
-add_filter( 'wp_log_types', 'rcp_log_types' );
 
 
 /**
@@ -617,28 +609,29 @@ function rcp_get_payment_status_label( $payment ) {
 		return '';
 	}
 
-	$label  = '';
 	$status = ! empty( $payment->status ) ? $payment->status : 'complete';
 
 	switch( $status ) {
 
 		case 'pending' :
-
 			$label = __( 'Pending', 'rcp' );
-
 			break;
 
 		case 'refunded' :
-
 			$label = __( 'Refunded', 'rcp' );
+			break;
 
+		case 'abandoned' :
+			$label = __( 'Abandoned', 'rcp' );
+			break;
+
+		case 'failed' :
+			$label = __( 'Failed', 'rcp' );
 			break;
 
 		case 'complete' :
 		default :
-
 			$label = __( 'Complete', 'rcp' );
-
 			break;
 	}
 
@@ -686,8 +679,13 @@ function rcp_is_restricted_content( $post_id ) {
 
 	$post_id = absint( $post_id );
 
+	// Check post type restrictions.
+	$restricted = rcp_is_restricted_post_type( get_post_type( $post_id ) );
+
 	// Check post restrictions.
-	$restricted = rcp_has_post_restrictions( $post_id );
+	if ( ! $restricted ) {
+		$restricted = rcp_has_post_restrictions( $post_id );
+	}
 
 	// Check if the post is restricted via a term.
 	if ( ! $restricted ) {
@@ -720,7 +718,7 @@ function rcp_has_post_restrictions( $post_id ) {
 
 	$post_id = absint( $post_id );
 
-	if ( ! $restricted && rcp_is_paid_content( $post_id ) ) {
+	if ( ! $restricted && get_post_meta( $post_id, '_is_paid', true ) ) {
 		$restricted = true;
 	}
 
@@ -744,6 +742,44 @@ function rcp_has_post_restrictions( $post_id ) {
 
 	return (bool) apply_filters( 'rcp_has_post_restrictions', $restricted, $post_id );
 
+}
+
+/**
+ * Returns an array of all restricted post types (keys) and their restriction
+ * settings (values).
+ *
+ * @since 2.9
+ * @return array
+ */
+function rcp_get_restricted_post_types() {
+	return get_option( 'rcp_restricted_post_types', array() );
+}
+
+/**
+ * Get restrictions for a specific post type.
+ *
+ * @param string $post_type The post type to check.
+ *
+ * @since 2.9
+ * @return array Array of restriction settings.
+ */
+function rcp_get_post_type_restrictions( $post_type ) {
+	$restricted_post_types = rcp_get_restricted_post_types();
+	return array_key_exists( $post_type, $restricted_post_types ) ? $restricted_post_types[ $post_type ] : array();
+}
+
+/**
+ * Checks to see if a given post type has global restrictions applied.
+ *
+ * @param string $post_type The post type to check.
+ *
+ * @since 2.9
+ * @return bool True if the post type is restricted in some way.
+ */
+function rcp_is_restricted_post_type( $post_type ) {
+	$restrictions = rcp_get_post_type_restrictions( $post_type );
+
+	return ! empty( $restrictions );
 }
 
 /**
@@ -987,3 +1023,23 @@ function rcp_delete_transient_post_ids_assigned_to_restricted_terms( $term_id, $
 	delete_transient( 'rcp_post_ids_assigned_to_restricted_terms' );
 }
 add_action( 'edited_term', 'rcp_delete_transient_post_ids_assigned_to_restricted_terms', 10, 3 );
+
+/**
+ * Log a message to the debug file if debug mode is enabled.
+ *
+ * @param string $message Message to log.
+ * @param bool   $force   Whether to force log a message, even if debugging is disabled.
+ *
+ * @since 2.9
+ * @return void
+ */
+function rcp_log( $message = '', $force = false ) {
+	global $rcp_options;
+
+	if ( empty( $rcp_options['debug_mode'] ) && ! $force ) {
+		return;
+	}
+
+	$logs = new RCP_Logging();
+	$logs->log( $message );
+}

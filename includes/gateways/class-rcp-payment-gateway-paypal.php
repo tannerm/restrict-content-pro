@@ -187,6 +187,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			return;
 		}
 
+		rcp_log( 'Starting to process PayPal Standard IPN.' );
+
 		global $rcp_options;
 
 		nocache_headers();
@@ -257,8 +259,11 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			$member = new RCP_Member( $user_id );
 
 			if( ! $member || ! $member->ID > 0 ) {
+				rcp_log( sprintf( 'PayPal IPN Failed: unable to find associated member in RCP. Item Name: %s; Item Number: %d; TXN Type: %s; TXN ID: %s', $posted['item_name'], $posted['item_number'], $posted['txn_type'], $posted['txn_id'] ) );
 				die( 'no member found' );
 			}
+
+			rcp_log( sprintf( 'Processing IPN for member #%d.', $member->ID ) );
 
 			$subscription_id = $member->get_pending_subscription_id();
 
@@ -289,6 +294,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			$pending_amount = get_user_meta( $member->ID, 'rcp_pending_subscription_amount', true );
 			$pending_amount = number_format( (float) $pending_amount, 2 );
 
+			$pending_payment_id = $member->get_pending_payment_id();
+
 			// Check for invalid amounts in the IPN data
 			if ( ! empty( $pending_amount ) && ! empty( $amount ) && in_array( $posted['txn_type'], array( 'web_accept', 'subscr_payment' ) ) ) {
 
@@ -314,8 +321,16 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				'subscription_key' => $subscription_key,
 				'amount'           => $amount,
 				'user_id'          => $user_id,
-				'transaction_id'   => ! empty( $posted['txn_id'] ) ? $posted['txn_id'] : false
+				'transaction_id'   => ! empty( $posted['txn_id'] ) ? $posted['txn_id'] : false,
+				'status'           => 'complete'
 			);
+
+			// We don't want any empty values in the array in order to avoid deleting a transaction ID or other data.
+			foreach ( $payment_data as $payment_key => $payment_value ) {
+				if ( empty( $payment_value ) ) {
+					unset( $payment_data[ $payment_key ] );
+				}
+			}
 
 			do_action( 'rcp_valid_ipn', $payment_data, $user_id, $posted );
 
@@ -324,19 +339,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				// only check for an existing payment if this is a payment IPD request
 				if( ! empty( $posted['txn_id'] ) && $rcp_payments->payment_exists( $posted['txn_id'] ) ) {
 
-					$log_data = array(
-						'post_title'    => __( 'Duplicate Payment', 'rcp' ),
-						'post_content'  =>  __( 'A duplicate payment was detected. The new payment was still recorded, so you may want to check into both payments.', 'rcp' ),
-						'post_parent'   => 0,
-						'log_type'      => 'gateway_error'
-					);
-
-					$log_meta = array(
-						'user_subscription' => $posted['item_name'],
-						'user_id'           => $user_id
-					);
-					$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
-
+					do_action( 'rcp_ipn_duplicate_payment', $posted['txn_id'], $member, $this );
 
 					die( 'duplicate IPN detected' );
 				}
@@ -344,18 +347,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				if( ! rcp_is_valid_currency( $currency_code ) ) {
 					// the currency code is invalid
 
-					$log_data = array(
-						'post_title'    => __( 'Invalid Currency Code', 'rcp' ),
-						'post_content'  =>  sprintf( __( 'The currency code in an IPN request did not match the site currency code. Payment data: %s', 'rcp' ), json_encode( $payment_data ) ),
-						'post_parent'   => 0,
-						'log_type'      => 'gateway_error'
-					);
-
-					$log_meta = array(
-						'user_subscription' => $posted['item_name'],
-						'user_id'           => $user_id
-					);
-					$log_entry = WP_Logging::insert_log( $log_data, $log_meta );
+					rcp_log( sprintf( 'The currency code in a PayPal IPN request did not match the site currency code. Provided: %s', $currency_code ) );
 
 
 					die( 'invalid currency code' );
@@ -375,6 +367,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 				case "subscr_signup" :
 					// when a new user signs up
 
+					rcp_log( 'Processing PayPal Standard subscr_signup IPN.' );
+
 					// store the recurring payment ID
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
@@ -383,15 +377,15 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					}
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
+					$member->set_recurring( true );
 
-					if ( $has_trial ) {
-						$trial_expires = $member->calculate_expiration( true, true );
-						$member->set_expiration_date( $trial_expires );
-						$member->set_status( 'active' );
-						$member->set_recurring( true );
+					if ( $has_trial && ! empty( $pending_payment_id ) ) {
+						// This activates the trial.
+						$rcp_payments->update( $pending_payment_id, $payment_data );
 					}
 
 					do_action( 'rcp_ipn_subscr_signup', $user_id );
+					do_action( 'rcp_webhook_recurring_payment_profile_created', $member, $this );
 
 
 					die( 'successful subscr_signup' );
@@ -402,23 +396,41 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					// when a user makes a recurring payment
 
+					rcp_log( 'Processing PayPal Standard subscr_payment IPN.' );
+
 					update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
 
 					$member->set_payment_profile_id( $posted['subscr_id'] );
 
-					$member->renew( true );
+					if ( ! empty( $pending_payment_id ) ) {
 
-					// record this payment in the database
-					$rcp_payments->insert( $payment_data );
+						$member->set_recurring( true );
+
+						// This activates the membership.
+						$rcp_payments->update( $pending_payment_id, $payment_data );
+
+						$payment_id = $pending_payment_id;
+
+					} else {
+
+						$member->renew( true );
+
+						// record this payment in the database
+						$payment_id = $rcp_payments->insert( $payment_data );
+
+					}
 
 					do_action( 'rcp_ipn_subscr_payment', $user_id );
-
+					do_action( 'rcp_webhook_recurring_payment_processed', $member, $payment_id, $this );
+					do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
 
 					die( 'successful subscr_payment' );
 
 					break;
 
 				case "subscr_cancel" :
+
+					rcp_log( 'Processing PayPal Standard subscr_cancel IPN.' );
 
 					if( ! $member->just_upgraded() ) {
 
@@ -429,6 +441,7 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 						delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
 
 						do_action( 'rcp_ipn_subscr_cancel', $user_id );
+						do_action( 'rcp_webhook_cancel', $member, $this );
 
 						die( 'successful subscr_cancel' );
 
@@ -437,6 +450,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					break;
 
 				case "subscr_failed" :
+
+					rcp_log( 'Processing PayPal Standard subscr_failed IPN.' );
 
 					if ( ! empty( $posted['txn_id'] ) ) {
 
@@ -458,6 +473,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 
 					// user's subscription has reached the end of its term
 
+					rcp_log( 'Processing PayPal Standard subscr_eot IPN.' );
+
 					if( isset( $posted['subscr_id'] ) && $posted['subscr_id'] == $member->get_payment_profile_id() && 'cancelled' !== $member->get_status() ) {
 
 						$member->set_status( 'expired' );
@@ -472,6 +489,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 					break;
 
 				case "web_accept" :
+
+					rcp_log( sprintf( 'Processing PayPal Standard web_accept IPN. Payment status: %s', $payment_status ) );
 
 					switch ( strtolower( $payment_status ) ) :
 
@@ -489,7 +508,9 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 							// set this user to active
 							$member->renew();
 
-							$rcp_payments->insert( $payment_data );
+							$payment_id = $rcp_payments->insert( $payment_data );
+
+							do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
 
 							break;
 
@@ -516,6 +537,8 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 			endswitch;
 
 		} else {
+
+			rcp_log( 'Invalid PayPal IPN attempt.' );
 
 			if( isset( $rcp_options['email_ipn_reports'] ) ) {
 				// an invalid IPN attempt was made. Send an email to the admin account to investigate

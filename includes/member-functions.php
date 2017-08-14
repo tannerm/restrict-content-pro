@@ -678,25 +678,27 @@ function rcp_print_user_payments_formatted( $user_id ) {
 				<th scope="col"><?php _e( 'Date', 'rcp' ); ?></th>
 				<th scope="col"><?php _e( 'Subscription', 'rcp' ); ?></th>
 				<th scope="col"><?php _e( 'Payment Type', 'rcp' ); ?></th>
-				<th scope="col"><?php _e( 'Subscription Key', 'rcp' ); ?></th>
 				<th scope="col"><?php _e( 'Transaction ID', 'rcp' ); ?></th>
 				<th scope="col"><?php _e( 'Amount', 'rcp' ); ?></th>
+				<th scope="col"><?php _e( 'Status', 'rcp' ); ?></th>
+				<th scope="col"><?php _e( 'Invoice', 'rcp' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php foreach( $user_payments as $payment ) : ?>
 
 				<tr class="rcp_row<?php echo rcp_is_odd( $i ) ? ' alternate' : ''; ?>">
-					<td class="column-primary" data-colname="<?php _e( 'ID', 'rcp' ); ?>">
+					<td class="column-primary" data-colname="<?php esc_attr_e( 'ID', 'rcp' ); ?>">
 						<a href="<?php echo esc_url( add_query_arg( array( 'payment_id' => $payment->id, 'view' => 'edit-payment' ), admin_url( 'admin.php?page=rcp-payments' ) ) ); ?>" class="rcp-edit-payment"><?php echo esc_html( $payment->id ); ?></a>
 						<button type="button" class="toggle-row"><span class="screen-reader-text"><?php _e( 'Show more details', 'rcp' ); ?></span></button>
 					</td>
-					<td data-colname="<?php _e( 'Date', 'rcp' ); ?>"><?php echo esc_html( $payment->date ); ?></td>
-					<td data-colname="<?php _e( 'Subscription', 'rcp' ); ?>"><?php echo esc_html( $payment->subscription ); ?></td>
-					<td data-colname="<?php _e( 'Payment Type', 'rcp' ); ?>"><?php echo esc_html( $payment->payment_type ); ?></td>
-					<td data-colname="<?php _e( 'Subscription Key', 'rcp' ); ?>"><?php echo esc_html( $payment->subscription_key ); ?></td>
-					<td data-colname="<?php _e( 'Transaction ID', 'rcp' ); ?>"><?php echo rcp_get_merchant_transaction_id_link( $payment ); ?></td>
-					<td data-colname="<?php _e( 'Amount', 'rcp' ); ?>"><?php echo ( '' == $payment->amount ) ? esc_html( rcp_currency_filter( $payment->amount2 ) ) : esc_html( rcp_currency_filter( $payment->amount ) ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Date', 'rcp' ); ?>"><?php echo esc_html( $payment->date ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Subscription', 'rcp' ); ?>"><?php echo esc_html( $payment->subscription ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Payment Type', 'rcp' ); ?>"><?php echo esc_html( $payment->payment_type ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Transaction ID', 'rcp' ); ?>"><?php echo rcp_get_merchant_transaction_id_link( $payment ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Amount', 'rcp' ); ?>"><?php echo ( '' == $payment->amount ) ? esc_html( rcp_currency_filter( $payment->amount2 ) ) : esc_html( rcp_currency_filter( $payment->amount ) ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Status', 'rcp' ); ?>"><?php echo rcp_get_payment_status_label( $payment ); ?></td>
+					<td data-colname="<?php esc_attr_e( 'Invoice', 'rcp' ); ?>"><a href="<?php echo esc_url( rcp_get_invoice_url( $payment->id ) ); ?>" target="_blank"><?php _e( 'View Invoice', 'rcp' ); ?></a></td>
 				</tr>
 
 			<?php
@@ -713,19 +715,24 @@ function rcp_print_user_payments_formatted( $user_id ) {
 /**
  * Retrieve the payments for a specific user
  *
- * @param int $user_id The ID of the user to get payments for
+ * @param int   $user_id The ID of the user to get payments for
+ * @param array $args    Override the default query args.
  *
  * @since  1.5
  * @return array
 */
-function rcp_get_user_payments( $user_id = 0 ) {
+function rcp_get_user_payments( $user_id = 0, $args = array() ) {
 
 	if( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
 
+	$args = wp_parse_args( $args, array(
+		'user_id' => $user_id
+	) );
+
 	$payments = new RCP_Payments;
-	return $payments->get_payments( array( 'user_id' => $user_id ) );
+	return $payments->get_payments( $args );
 }
 
 /**
@@ -1342,27 +1349,6 @@ function rcp_is_pending_verification( $user_id = 0 ) {
 }
 
 /**
- * Disallow access to restricted content if the user is pending email verification.
- *
- * @param bool       $can_access Whether or not the user can access the post.
- * @param int        $user_id    ID of the user being checked.
- * @param int        $post_id    ID of the post being checked.
- * @param RCP_Member $member     Member object.
- *
- * @return bool
- */
-function rcp_disallow_access_pending_verification( $can_access, $user_id, $post_id, $member ) {
-
-	if ( rcp_is_restricted_content( $post_id ) && $member->is_pending_verification() ) {
-		return false;
-	}
-
-	return $can_access;
-
-}
-add_filter( 'rcp_member_can_access', 'rcp_disallow_access_pending_verification', 10, 4 );
-
-/**
  * Generate email verification link for a user
  *
  * @param int $user_id ID of the user to create the link for.
@@ -1513,6 +1499,8 @@ function rcp_add_recurring_payment_failure_note( $member, $gateway ) {
 	}
 
 	$member->add_note( $note );
+
+	rcp_log( sprintf( 'Recurring payment failed for user #%d. Gateway: %s; Subscription Level: %s; Expiration Date: %s', $member->ID, ucwords( $gateway_name ), $member->get_subscription_name(), $member->get_expiration_date() ) );
 
 }
 add_action( 'rcp_recurring_payment_failed', 'rcp_add_recurring_payment_failure_note', 10, 2 );

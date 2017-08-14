@@ -118,6 +118,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		if( is_wp_error( $request ) ) {
 
+			$this->error_message = $request->get_error_message();
 			do_action( 'rcp_registration_failed', $this );
 			do_action( 'rcp_paypal_express_signup_payment_failed', $request, $this );
 
@@ -134,6 +135,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			if( 'failure' === strtolower( $body['ACK'] ) ) {
 
+				$this->error_message = $body['L_LONGMESSAGE0'];
 				do_action( 'rcp_registration_failed', $this );
 
 				$error = '<p>' . __( 'PayPal token creation failed.', 'rcp' ) . '</p>';
@@ -214,7 +216,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 					unset( $args['INITAMT'] );
 				}
 
-				if ( $details['is_trial'] ) {
+				if ( ! empty( $details['is_trial'] ) ) {
 					// Set profile start date to the end of the free trial.
 					$args['PROFILESTARTDATE'] = date( 'Y-m-d\TH:i:s', strtotime( '+' . $details['subscription']['trial_duration'] . ' ' . $details['subscription']['trial_duration_unit'], current_time( 'timestamp' ) ) );
 
@@ -256,9 +258,6 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 							$cancelled = $member->cancel_payment_profile( false );
 						}
 
-						$member->set_payment_profile_id( $body['PROFILEID'] );
-
-						$member->renew( true );
 						$member->set_payment_profile_id( $body['PROFILEID'] );
 
 						wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
@@ -335,20 +334,21 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 						}
 
-						$member->renew( false );
-
 						$payment_data = array(
 							'date'             => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
-							'subscription'     => $member->get_subscription_name(),
+							'subscription'     => $member->get_pending_subscription_name(),
 							'payment_type'     => 'PayPal Express One Time',
-							'subscription_key' => $member->get_subscription_key(),
+							'subscription_key' => $member->get_pending_subscription_key(),
 							'amount'           => $body['PAYMENTINFO_0_AMT'],
 							'user_id'          => $member->ID,
-							'transaction_id'   => $body['PAYMENTINFO_0_TRANSACTIONID']
+							'transaction_id'   => $body['PAYMENTINFO_0_TRANSACTIONID'],
+							'status'           => 'complete'
 						);
 
 						$rcp_payments = new RCP_Payments;
-						$rcp_payments->insert( $payment_data );
+						$rcp_payments->update( $member->get_pending_payment_id(), $payment_data );
+
+						// Membership is activated via rcp_complete_registration()
 
 						wp_redirect( esc_url_raw( rcp_get_return_url() ) ); exit;
 
@@ -384,6 +384,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		$token                = sanitize_text_field( $_GET['token'] );
 		$rcp_checkout_details = $this->get_checkout_details( $token );
 
+		if ( ! is_array( $rcp_checkout_details ) ) {
+			$error = is_wp_error( $rcp_checkout_details ) ? $rcp_checkout_details->get_error_message() : __( 'Invalid response code from PayPal', 'rcp' );
+			return '<p>' . sprintf( __( 'An unexpected PayPal error occurred. Error message: %s.', 'rcp' ), $error ) . '</p>';
+		}
+
 		ob_start();
 		rcp_get_template_part( 'paypal-express-confirm' );
 		return ob_get_clean();
@@ -401,6 +406,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		if( ! isset( $_GET['listener'] ) || strtoupper( $_GET['listener'] ) != 'EIPN' ) {
 			return;
 		}
+
+		rcp_log( 'Starting to process PayPal Express IPN.' );
 
 		$user_id = 0;
 		$posted  = apply_filters('rcp_ipn_post', $_POST ); // allow $_POST to be modified
@@ -427,6 +434,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		$member = new RCP_Member( $user_id );
 
 		if( ! $member || ! $member->ID > 0 ) {
+			rcp_log( 'Exiting PayPal Express IPN - member ID not found.' );
+
 			die( 'no member found' );
 		}
 
@@ -439,10 +448,14 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		}
 
 		if( ! $subscription_id ) {
+			rcp_log( 'Exiting PayPal Express IPN - no subscription ID for member.' );
+
 			die( 'no subscription for member found' );
 		}
 
-		if( ! rcp_get_subscription_details( $subscription_id ) ) {
+		if( ! $subscription_level = rcp_get_subscription_details( $subscription_id ) ) {
+			rcp_log( 'Exiting PayPal Express IPN - no subscription level found.' );
+
 			die( 'no subscription level found' );
 		}
 
@@ -451,12 +464,13 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 		// setup the payment info in an array for storage
 		$payment_data = array(
 			'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'] ) ),
-			'subscription'     => $member->get_subscription_name(),
+			'subscription'     => $subscription_level->name,
 			'payment_type'     => $posted['txn_type'],
 			'subscription_key' => $member->get_subscription_key(),
 			'amount'           => $amount,
 			'user_id'          => $user_id,
-			'transaction_id'   => $posted['txn_id']
+			'transaction_id'   => $posted['txn_id'],
+			'status'           => 'complete'
 		);
 
 		do_action( 'rcp_valid_ipn', $payment_data, $user_id, $posted );
@@ -474,6 +488,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			case "recurring_payment_profile_created":
 
+				rcp_log( 'Processing PayPal Express recurring_payment_profile_created IPN.' );
+
 				if ( isset( $posted['initial_payment_txn_id'] ) ) {
 					$transaction_id = ( 'Completed' == $posted['initial_payment_status'] ) ? $posted['initial_payment_txn_id'] : '';
 				} else {
@@ -481,27 +497,28 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				}
 
 				if ( empty( $transaction_id ) || $rcp_payments->payment_exists( $transaction_id ) ) {
+					rcp_log( sprintf( 'Breaking out of PayPal Express IPN recurring_payment_profile_created. Transaction ID not given or payment already exists. TXN ID: %s', $transaction_id ) );
+
 					break;
 				}
 
 				// setup the payment info in an array for storage
-				$payment_data = array(
-					'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['time_created'] ) ),
-					'subscription'     => $member->get_subscription_name(),
-					'payment_type'     => $posted['txn_type'],
-					'subscription_key' => $member->get_subscription_key(),
-					'amount'           => number_format( (float) $posted['initial_payment_amount'], 2 ),
-					'user_id'          => $user_id,
-					'transaction_id'   => sanitize_text_field( $transaction_id ),
-				);
+				$payment_data['date']           = date( 'Y-m-d H:i:s', strtotime( $posted['time_created'] ) );
+				$payment_data['amount']         = number_format( (float) $posted['initial_payment_amount'], 2 );
+				$payment_data['transaction_id'] = sanitize_text_field( $transaction_id );
 
-				$rcp_payments->insert( $payment_data );
+				$payment_id = $rcp_payments->insert( $payment_data );
 
 				$expiration = date( 'Y-m-d 23:59:59', strtotime( $posted['next_payment_date'] ) );
 				$member->renew( $member->is_recurring(), 'active', $expiration );
 
+				do_action( 'rcp_webhook_recurring_payment_profile_created', $member, $this );
+				do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
+
 				break;
 			case "recurring_payment" :
+
+				rcp_log( 'Processing PayPal Express recurring_payment IPN.' );
 
 				// when a user makes a recurring payment
 				update_user_meta( $user_id, 'rcp_paypal_subscriber', $posted['payer_id'] );
@@ -511,15 +528,19 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				$member->renew( true );
 
 				// record this payment in the database
-				$rcp_payments->insert( $payment_data );
+				$payment_id = $rcp_payments->insert( $payment_data );
 
 				do_action( 'rcp_ipn_subscr_payment', $user_id );
+				do_action( 'rcp_webhook_recurring_payment_processed', $member, $payment_id, $this );
+				do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
 
 				die( 'successful recurring_payment' );
 
 				break;
 
 			case "recurring_payment_profile_cancel" :
+
+				rcp_log( 'Processing PayPal Express recurring_payment_profile_cancel IPN.' );
 
 				if( ! $member->just_upgraded() ) {
 
@@ -528,6 +549,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 						$member->set_status( 'pending' );
 						$member->add_note( __( 'Initial payment failed in PayPal Express.', 'rcp' ) );
 
+						$this->error_message = __( 'Initial payment failed.', 'rcp' );
 						do_action( 'rcp_registration_failed', $this );
 						do_action( 'rcp_paypal_express_initial_payment_failed', $member, $posted, $this );
 					} else {
@@ -538,6 +560,7 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 						delete_user_meta( $user_id, 'rcp_paypal_subscriber' );
 
 						do_action( 'rcp_ipn_subscr_cancel', $user_id );
+						do_action( 'rcp_webhook_cancel', $member, $this );
 					}
 
 					die( 'successful recurring_payment_profile_cancel' );
@@ -548,6 +571,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			case "recurring_payment_failed" :
 			case "recurring_payment_suspended_due_to_max_failed_payment" :
+
+			rcp_log( 'Processing PayPal Express recurring_payment_failed or recurring_payment_suspended_due_to_max_failed_payment IPN.' );
 
 				if( 'cancelled' !== $member->get_status() ) {
 
@@ -574,6 +599,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 			case "web_accept" :
 
+				rcp_log( sprintf( 'Processing PayPal Express web_accept IPN. Payment status: %s', $posted['payment_status'] ) );
+
 				switch ( strtolower( $posted['payment_status'] ) ) :
 
 					case 'completed' :
@@ -587,17 +614,11 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 							}
 						}
 
-						$payment_data = array(
-							'date'             => date( 'Y-m-d H:i:s', strtotime( $posted['payment_date'] ) ),
-							'subscription'     => $member->get_subscription_name(),
-							'payment_type'     => $posted['txn_type'],
-							'subscription_key' => $member->get_subscription_key(),
-							'amount'           => number_format( (float) $posted['mc_gross'], 2 ),
-							'user_id'          => $user_id,
-							'transaction_id'   => sanitize_text_field( $posted['txn_id'] ),
-						);
-
-						$rcp_payments->insert( $payment_data );
+						if ( empty( $payment_data['transaction_id'] ) || $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
+							rcp_log( sprintf( 'Not inserting PayPal Express web_accept payment. Transaction ID not given or payment already exists. TXN ID: %s', $payment_data['transaction_id'] ) );
+						} else {
+							$rcp_payments->insert( $payment_data );
+						}
 
 						// Member was already activated.
 
@@ -639,7 +660,12 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 			'TOKEN'     => $token
 		);
 
-		$request = wp_remote_get( add_query_arg( $args, $this->api_endpoint ), array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1' ) );
+		$request = wp_remote_post( $this->api_endpoint, array(
+			'timeout'     => 45,
+			'sslverify'   => false,
+			'httpversion' => '1.1',
+			'body'        => $args
+		) );
 		$body    = wp_remote_retrieve_body( $request );
 		$code    = wp_remote_retrieve_response_code( $request );
 		$message = wp_remote_retrieve_response_message( $request );

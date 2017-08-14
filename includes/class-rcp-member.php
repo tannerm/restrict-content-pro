@@ -25,6 +25,8 @@ class RCP_Member extends WP_User {
 		// double check that the status and expiration match. Update if needed
 		if( $status == 'active' && $this->is_expired() ) {
 
+			rcp_log( sprintf( 'Expiring member %d via get_status() method. Expiration Date: %s; Subscription Level: %s', $this->ID, $this->get_expiration_date(), $this->get_subscription_name() ) );
+
 			$status = 'expired';
 			$this->set_status( $status );
 
@@ -69,10 +71,12 @@ class RCP_Member extends WP_User {
 
 			// Record the status change
 			if( $old_status && ( $old_status != $new_status ) ) {
+				rcp_log( sprintf( 'Member #%d status changed from %s to %s.', $this->ID, $old_status, $new_status ) );
 				$this->add_note( sprintf( __( 'Member\'s status changed from %s to %s', 'rcp' ), $old_status, $new_status ) );
 			}
 
 			if ( ! $old_status ) {
+				rcp_log( sprintf( 'Member #%d status set to %s.', $this->ID, $new_status ) );
 				$this->add_note( sprintf( __( 'Member\'s status set to %s', 'rcp' ), $new_status ) );
 			}
 
@@ -115,7 +119,7 @@ class RCP_Member extends WP_User {
 			$expiration = date_i18n( get_option( 'date_format' ), strtotime( $expiration, current_time( 'timestamp' ) ) );
 		}
 
-		return apply_filters( 'rcp_member_get_expiration_date', $expiration, $this->ID, $this );
+		return apply_filters( 'rcp_member_get_expiration_date', $expiration, $this->ID, $this, $formatted, $pending );
 
 	}
 
@@ -195,6 +199,7 @@ class RCP_Member extends WP_User {
 	 */
 	public function calculate_expiration( $force_now = false, $trial = false ) {
 
+		// Authorize.net still uses this.
 		$pending_exp = get_user_meta( $this->ID, 'rcp_pending_expiration_date', true );
 
 		if( ! empty( $pending_exp ) ) {
@@ -288,7 +293,7 @@ class RCP_Member extends WP_User {
 			$subscription_id = $this->get_subscription_id();
 		}
 
-		$ret = update_user_meta( $this->ID, 'rcp_joined_date_' . $this->get_subscription_id(), $date );
+		$ret = update_user_meta( $this->ID, 'rcp_joined_date_' . $subscription_id, $date );
 
 		do_action( 'rcp_set_joined_date', $this->ID, $date, $this );
 
@@ -395,6 +400,8 @@ class RCP_Member extends WP_User {
 	 */
 	public function renew( $recurring = false, $status = 'active', $expiration = '' ) {
 
+		rcp_log( sprintf( 'Starting membership renewal for user #%d. Subscription ID: %d; Current Expiration Date: %s', $this->ID, $this->get_subscription_id(), $this->get_expiration_date() ) );
+
 		$subscription_id = $this->get_pending_subscription_id();
 
 		if( empty( $subscription_id ) ) {
@@ -424,6 +431,8 @@ class RCP_Member extends WP_User {
 		delete_user_meta( $this->ID, '_rcp_expired_email_sent' );
 
 		do_action( 'rcp_member_post_renew', $this->ID, $expiration, $this );
+
+		rcp_log( sprintf( 'Completed membership renewal for user #%d. Subscription ID: %d; New Expiration Date: %s; New Status: %s', $this->ID, $subscription_id, $expiration, $this->get_status() ) );
 
 	}
 
@@ -508,6 +517,8 @@ class RCP_Member extends WP_User {
 		$success = false;
 
 		if( ! $this->can_cancel() ) {
+			rcp_log( sprintf( 'Unable to cancel payment profile for member #%d.', $this->ID ) );
+
 			return $success;
 		}
 
@@ -718,6 +729,12 @@ class RCP_Member extends WP_User {
 			$this->cancel();
 		}
 
+		if( $success ) {
+			rcp_log( sprintf( 'Payment profile successfully cancelled for member #%d.', $this->ID ) );
+		} else {
+			rcp_log( sprintf( 'Failed cancelling payment profile for member #%d.', $this->ID ) );
+		}
+
 		return $success;
 
 	}
@@ -845,7 +862,20 @@ class RCP_Member extends WP_User {
 	 */
 	public function get_pending_subscription_id() {
 
-		return get_user_meta( $this->ID, 'rcp_pending_subscription_level', true );
+		/**
+		 * @var RCP_Payments $rcp_payments_db
+		 */
+		global $rcp_payments_db;
+
+		$pending_level_id = get_user_meta( $this->ID, 'rcp_pending_subscription_level', true );
+		$pending_payment  = $this->get_pending_payment_id();
+
+		if ( ! empty( $pending_payment ) ) {
+			$payment          = $rcp_payments_db->get_payment( absint( $pending_payment ) );
+			$pending_level_id = $payment->object_id;
+		}
+
+		return $pending_level_id;
 
 	}
 
@@ -896,7 +926,20 @@ class RCP_Member extends WP_User {
 	 */
 	public function get_pending_subscription_key() {
 
-		return get_user_meta( $this->ID, 'rcp_pending_subscription_key', true );
+		/**
+		 * @var RCP_Payments $rcp_payments_db
+		 */
+		global $rcp_payments_db;
+
+		$pending_key      = get_user_meta( $this->ID, 'rcp_pending_subscription_key', true );
+		$pending_payment  = $this->get_pending_payment_id();
+
+		if ( ! empty( $pending_payment ) ) {
+			$payment     = $rcp_payments_db->get_payment( absint( $pending_payment ) );
+			$pending_key = $payment->subscription_key;
+		}
+
+		return $pending_key;
 
 	}
 
@@ -947,6 +990,17 @@ class RCP_Member extends WP_User {
 		$payments = $payments->get_payments( array( 'user_id' => $this->ID ) );
 
 		return apply_filters( 'rcp_member_get_payments', $payments, $this->ID, $this );
+	}
+
+	/**
+	 * Retrieves the ID number of the currently pending payment.
+	 *
+	 * @access public
+	 * @since 2.9
+	 * @return int|bool ID of the pending payment or false if none.
+	 */
+	public function get_pending_payment_id() {
+		return get_user_meta( $this->ID, 'rcp_pending_payment_id', true );
 	}
 
 	/**
@@ -1044,6 +1098,8 @@ class RCP_Member extends WP_User {
 	 * @return  void
 	 */
 	public function set_recurring( $yes = true ) {
+
+		rcp_log( sprintf( 'Updating recurring status for member #%d. Previous: %s; New: %s', $this->ID, var_export( $this->is_recurring(), true ), var_export( $yes, true ) ) );
 
 		if( $yes ) {
 			update_user_meta( $this->ID, 'rcp_recurring', 'yes' );
@@ -1152,6 +1208,8 @@ class RCP_Member extends WP_User {
 
 		do_action( 'rcp_member_post_verify_email', $this->ID, $this );
 
+		rcp_log( sprintf( 'Email successfully verified for user #%d.', $this->ID ) );
+
 	}
 
 	/**
@@ -1179,16 +1237,29 @@ class RCP_Member extends WP_User {
 		 * From this point on we assume the post has some kind of restrictions added.
 		 */
 
+		// If the user is pending email verification, they don't get access.
+		if ( $this->is_pending_verification() ) {
+			return apply_filters( 'rcp_member_can_access', false, $this->ID, $post_id, $this );
+		}
+
 		// If the user doesn't have an active account, they don't get access.
 		if( $this->is_expired() || ! in_array( $this->get_status(), array( 'active', 'free', 'cancelled' ) ) ) {
 			return apply_filters( 'rcp_member_can_access', false, $this->ID, $post_id, $this );
 		}
 
-		// Post restrictions.
-		$subscription_levels = rcp_get_content_subscription_levels( $post_id );
-		$access_level        = get_post_meta( $post_id, 'rcp_access_level', true );
-		$user_level          = get_post_meta( $post_id, 'rcp_user_level', true );
-		$sub_id              = $this->get_subscription_id();
+		$post_type_restrictions = rcp_get_post_type_restrictions( get_post_type( $post_id ) );
+		$sub_id                 = $this->get_subscription_id();
+
+		// Post or post type restrictions.
+		if ( empty( $post_type_restrictions ) ) {
+			$subscription_levels = rcp_get_content_subscription_levels( $post_id );
+			$access_level        = get_post_meta( $post_id, 'rcp_access_level', true );
+			$user_level          = get_post_meta( $post_id, 'rcp_user_level', true );
+		} else {
+			$subscription_levels = array_key_exists( 'subscription_level', $post_type_restrictions ) ? $post_type_restrictions['subscription_level'] : false;
+			$access_level        = array_key_exists( 'access_level', $post_type_restrictions ) ? $post_type_restrictions['access_level'] : false;
+			$user_level          = array_key_exists( 'user_level', $post_type_restrictions ) ? $post_type_restrictions['user_level'] : false;
+		}
 
 		// Assume they have access until proven otherwise.
 		$ret = true;
@@ -1249,7 +1320,7 @@ class RCP_Member extends WP_User {
 		}
 
 		// Check post user role restrictions.
-		if ( $ret && ! empty( $user_level ) && 'All' != $user_level ) {
+		if ( $ret && ! empty( $user_level ) && 'all' != strtolower( $user_level ) ) {
 			if ( ! user_can( $this->ID, strtolower( $user_level ) ) ) {
 				$ret = false;
 			}
@@ -1406,8 +1477,13 @@ class RCP_Member extends WP_User {
 			return 0;
 		}
 
-		$subscription    = rcp_get_subscription_details_by_name( $payment->subscription );
-		$subscription_id = $this->get_subscription_id();
+		if ( ! empty( $payment->object_id ) ) {
+			$subscription_id = absint( $payment->object_id );
+			$subscription    = rcp_get_subscription_details( $subscription_id );
+		} else {
+			$subscription    = rcp_get_subscription_details_by_name( $payment->subscription );
+			$subscription_id = $this->get_subscription_id();
+		}
 
 		// make sure the subscription payment matches the existing subscription
 		if ( empty( $subscription->id ) || empty( $subscription->duration ) || $subscription->id != $subscription_id ) {

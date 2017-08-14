@@ -144,6 +144,7 @@ function rcp_members_page() {
 						<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'If not enabled, the member(s) will retain access until the end of their current term. If checked, access will be revoked immediately.', 'rcp' ); ?>"></span>
 					</span>
 					<input type="text" class="rcp-datepicker" name="expiration" placeholder="<?php esc_attr_e( 'New Expiration Date', 'rcp' ); ?>" id="rcp-bulk-expiration" value=""/>
+					<input type="hidden" name="rcp-action" value="bulk_edit_members">
 					<input type="submit" id="rcp-submit-bulk-action" class="button action" value="<?php _e( 'Apply', 'rcp' ); ?>"/>
 				</div>
 				<?php wp_nonce_field( 'rcp_bulk_edit_nonce', 'rcp_bulk_edit_nonce' ); ?>
@@ -211,13 +212,13 @@ function rcp_members_page() {
 												<a href="<?php echo esc_url( add_query_arg( 'user_id', $member->ID, admin_url( 'user-edit.php' ) ) ); ?>" title="<?php _e( 'View User\'s Profile', 'rcp' ); ?>"><?php _e( 'Edit User Account', 'rcp' ); ?></a>
 											</span>
 											<?php if( rcp_can_member_cancel( $member->ID ) ) { ?>
-												<span> | <a href="<?php echo wp_nonce_url( add_query_arg('cancel_member', $member->ID, $current_page ), 'rcp-cancel-nonce' ); ?>" class="trash rcp_cancel"><?php _e('Cancel', 'rcp'); ?></a></span>
+												<span> | <a href="<?php echo wp_nonce_url( add_query_arg( array( 'rcp-action' => 'cancel_member', 'member_id' => $member->ID ), $current_page ), 'rcp-cancel-nonce' ); ?>" class="trash rcp_cancel"><?php _e('Cancel', 'rcp'); ?></a></span>
 											<?php } ?>
 											<?php if( $switch_to_url = rcp_get_switch_to_url( $member->ID ) ) { ?>
 												<span> | <a href="<?php echo esc_url( $switch_to_url ); ?>" class="rcp_switch"><?php _e('Switch to User', 'rcp'); ?></a></span>
 											<?php } ?>
 											<?php if( $rcp_member->is_pending_verification() ) : ?>
-												<span> | <a href="<?php echo wp_nonce_url( add_query_arg( 'send_verification', $member->ID, $current_page ), 'rcp-verification-nonce' ); ?>" class="rcp_send_verification"><?php _e( 'Re-send Verification', 'rcp' ); ?></a></span>
+												<span> | <a href="<?php echo wp_nonce_url( add_query_arg( array( 'rcp-action' => 'send_verification', 'member_id' => $member->ID ), $current_page ), 'rcp-verification-nonce' ); ?>" class="rcp_send_verification"><?php _e( 'Re-send Verification', 'rcp' ); ?></a></span>
 											<?php endif; ?>
 											<span class="rcp-separator"> | </span>
 											<span class="id rcp-member-id"><?php echo __( 'ID:', 'rcp' ) . ' ' . $member->ID; ?></span>
@@ -289,7 +290,7 @@ function rcp_members_page() {
 								<label for="rcp-username"><?php _e('Username', 'rcp'); ?></label>
 							</th>
 							<td>
-								<input type="text" name="user" id="rcp-user" autocomplete="off" class="regular-text rcp-user-search" style="width: 120px;"/>
+								<input type="text" name="user" id="rcp-user" autocomplete="off" class="regular-text rcp-user-search"/>
 								<img class="rcp-ajax waiting" src="<?php echo admin_url('images/wpspin_light.gif'); ?>" style="display: none;"/>
 								<div id="rcp_user_search_results"></div>
 								<p class="description"><?php _e('Begin typing the user name to add a subscription to.', 'rcp'); ?></p>
@@ -317,7 +318,7 @@ function rcp_members_page() {
 								<label for="rcp-expiration"><?php _e('Expiration date', 'rcp'); ?></label>
 							</th>
 							<td>
-								<input name="expiration" id="rcp-expiration" type="text" style="width: 120px;" class="rcp-datepicker"/>
+								<input name="expiration" id="rcp-expiration" type="text" class="rcp-datepicker"/>
 								<label for="rcp-unlimited">
 									<input name="unlimited" id="rcp-unlimited" type="checkbox"/>
 									<span class="description"><?php _e( 'Never expires?', 'rcp' ); ?></span>

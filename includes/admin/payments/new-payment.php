@@ -34,7 +34,7 @@
 					<label for="rcp-amount"><?php _e( 'Amount', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input name="amount" id="rcp-amount" pattern="^[+\-]?[0-9]{1,3}(?:,?[0-9]{3})*(\.[0-9]{2})?$" title="<?php _e( 'Please enter a payment amount in the format of 1.99', 'rcp' ); ?>" min="0.00" value=""/>
+					<input type="text" name="amount" id="rcp-amount" pattern="^[+\-]?[0-9]{1,3}(?:,?[0-9]{3})*(\.[0-9]{2})?$" title="<?php _e( 'Please enter a payment amount in the format of 1.99', 'rcp' ); ?>" min="0.00" value=""/>
 					<p class="description"><?php _e( 'The amount of this payment', 'rcp' ); ?></p>
 				</td>
 			</tr>
@@ -62,8 +62,11 @@
 				</th>
 				<td>
 					<select name="status" id="rcp-status">
+						<option value="pending"><?php _e( 'Pending', 'rcp' ); ?></option>
 						<option value="complete"><?php _e( 'Complete', 'rcp' ); ?></option>
+						<option value="failed"><?php _e( 'Failed', 'rcp' ); ?></option>
 						<option value="refunded"><?php _e( 'Refunded', 'rcp' ); ?></option>
+						<option value="abandoned"><?php _e( 'Abandoned', 'rcp' ); ?></option>
 					</select>
 					<p class="description"><?php _e( 'The status of this payment.', 'rcp' ); ?></p>
 				</td>

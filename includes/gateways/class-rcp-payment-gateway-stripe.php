@@ -60,6 +60,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		global $rcp_options;
 
+		/**
+		 * @var RCP_Payments $rcp_payments_db
+		 */
+		global $rcp_payments_db;
+
 		\Stripe\Stripe::setApiKey( $this->secret_key );
 
 		if ( method_exists( '\Stripe\Stripe', 'setAppInfo' ) ) {
@@ -140,19 +145,12 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			$customer->source = $_POST['stripeToken'];
 
-		}
+			try {
+				$customer->save();
+			} catch( Exception $e ) {
+				$this->handle_processing_error( $e );
+			}
 
-		$customer->description = 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name;
-		$customer->metadata    = array(
-			'user_id'      => $this->user_id,
-			'email'        => $this->email,
-			'subscription' => $this->subscription_name
-		);
-
-		try {
-			$customer->save();
-		} catch( Exception $e ) {
-			$this->handle_processing_error( $e );
 		}
 
 		if ( $this->auto_renew ) {
@@ -304,18 +302,14 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					)
 				), $this ) );
 
-				$payment_data = array(
-					'date'              => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
-					'subscription'      => $this->subscription_name,
-					'payment_type' 		=> 'Credit Card One Time',
-					'subscription_key' 	=> $this->subscription_key,
-					'amount' 			=> $this->initial_amount,
-					'user_id' 			=> $this->user_id,
-					'transaction_id'    => $charge->id
-				);
+				// Complete pending payment. This also updates the expiration date, status, etc.
+				$rcp_payments_db->update( $this->payment->id, array(
+					'payment_type'   => 'Credit Card One Time',
+					'transaction_id' => $charge->id,
+					'status'         => 'complete'
+				) );
 
-				$rcp_payments = new RCP_Payments();
-				$rcp_payments->insert( $payment_data );
+				do_action( 'rcp_gateway_payment_processed', $member, $this->payment->id, $this );
 
 				// Subscription ID is not used when non-recurring.
 				delete_user_meta( $member->ID, 'rcp_merchant_subscription_id' );
@@ -363,6 +357,20 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 		if ( $paid ) {
 
+			// Add description and meta to Stripe Customer
+			$customer->description = 'User ID: ' . $this->user_id . ' - User Email: ' . $this->email . ' Subscription: ' . $this->subscription_name;
+			$customer->metadata    = array(
+				'user_id'      => $this->user_id,
+				'email'        => $this->email,
+				'subscription' => $this->subscription_name
+			);
+
+			try {
+				$customer->save();
+			} catch( Exception $e ) {
+				$this->handle_processing_error( $e );
+			}
+
 			// If this is a one-time signup and the customer has an existing subscription, we need to cancel it
 			if( ! $this->auto_renew && $member->just_upgraded() && $member->can_cancel() ) {
 				$cancelled = $member->cancel_payment_profile( false );
@@ -377,14 +385,10 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 			}
 
-			if( ! $this->auto_renew ) {
-				$member->set_expiration_date( $member->calculate_expiration() );
-				$member->set_status( 'active' );
-			}
-
 			if ( $this->auto_renew ) {
 				$member->set_expiration_date( date( 'Y-m-d 23:59:59', $subscription->current_period_end ) );
 				$member->set_status( 'active' );
+				$member->set_subscription_id( $this->subscription_id );
 			}
 
 			do_action( 'rcp_stripe_signup', $this->user_id, $this );
@@ -413,6 +417,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		$body = $e->getJsonBody();
 		$err  = $body['error'];
 
+		$this->error_message = $err['message'];
+
 		do_action( 'rcp_registration_failed', $this );
 		do_action( 'rcp_stripe_signup_payment_failed', $err, $this );
 
@@ -437,6 +443,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 		if( ! isset( $_GET['listener'] ) || strtolower( $_GET['listener'] ) != 'stripe' ) {
 			return;
 		}
+
+		rcp_log( 'Starting to process Stripe webhook.' );
 
 		// Ensure listener URL is not cached by W3TC
 		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
@@ -463,6 +471,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				$payment_event = $event->data->object;
 
 				if( empty( $payment_event->customer ) ) {
+					rcp_log( 'Exiting Stripe webhook - no customer attached to event.' );
+
 					die( 'no customer attached' );
 				}
 
@@ -478,6 +488,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				}
 
 				if( empty( $user ) ) {
+					rcp_log( 'Exiting Stripe webhook - member ID not found.' );
+
 					die( 'no user ID found' );
 				}
 
@@ -486,19 +498,33 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// check to confirm this is a stripe subscriber
 				if ( $member ) {
 
-					if( ! $member->get_subscription_id() ) {
+					rcp_log( sprintf( 'Processing webhook for member #%d.', $member->ID ) );
+
+				    $subscription_level_id = $member->get_subscription_id();
+
+					if( ! $subscription_level_id ) {
+						rcp_log( 'Exiting Stripe webhook - no subscription ID for member.' );
+
 						die( 'no subscription ID for member' );
+					}
+
+					if( $event->type == 'customer.subscription.created' ) {
+						do_action( 'rcp_webhook_recurring_payment_profile_created', $member, $this );
 					}
 
 					if( $event->type == 'charge.succeeded' || $event->type == 'invoice.payment_succeeded' ) {
 
+						rcp_log( sprintf( 'Processing Stripe %s webhook.', $event->type ) );
+
 						// setup payment data
 						$payment_data = array(
-							'date'              => date_i18n( 'Y-m-d g:i:s', $event->created ),
-							'payment_type' 		=> 'Credit Card',
-							'user_id' 			=> $member->ID,
-							'amount'            => '',
-							'transaction_id'    => '',
+							'date'                  => date_i18n( 'Y-m-d g:i:s', $event->created ),
+							'payment_type'          => 'Credit Card',
+							'user_id'               => $member->ID,
+							'amount'                => '',
+							'transaction_id'        => '',
+							'object_id'             => $subscription_level_id,
+							'status'                => 'complete'
 						);
 
 						if ( $event->type == 'charge.succeeded' ) {
@@ -516,6 +542,11 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 								$payment_data['amount']         = $invoice->amount_due / rcp_stripe_get_currency_multiplier();
 								$payment_data['transaction_id'] = $payment_event->id;
 
+								// @todo Not sure about this because I don't think we can do it with all gateways.
+								if ( ! empty( $payment_event->discount ) ) {
+									$payment_data['discount_code'] = $payment_event->discount->coupon_id;
+								}
+
 							}
 
 						} elseif ( $event->type == 'invoice.payment_succeeded' && empty( $payment_event->charge ) ) {
@@ -529,7 +560,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 							} else {
 								$payment_data['amount']           = $invoice->lines->data[0]->amount / rcp_stripe_get_currency_multiplier();
 								$payment_data['transaction_id']   = $invoice->subscription; // trials don't get a charge ID. set the subscription ID.
-								$payment_data['is_trial_invoice'] = true;
 							}
 
 						}
@@ -550,22 +580,37 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 							}
 
-							$member->renew( $member->is_recurring(), 'active', $expiration );
+							$pending_payment_id = $member->get_pending_payment_id();
+							if ( ! empty( $pending_payment_id ) ) {
 
-							// These must be retrieved after the status is set to active in order for upgrades to work properly
-							$payment_data['subscription']     = $member->get_subscription_name();
-							$payment_data['subscription_key'] = $member->get_subscription_key();
+								// Completing a pending payment. Account activation is handled in rcp_complete_registration()
+								$rcp_payments->update( $pending_payment_id, $payment_data );
+								$payment_id = $pending_payment_id;
 
-							// record this payment if it hasn't been recorded yet and it's not a trial invoice
-							if ( empty( $payment_data['is_trial_invoice'] ) ) {
-								$rcp_payments->insert( $payment_data );
+							} else {
+
+								// Inserting a new payment and renewing.
+								$member->renew( $member->is_recurring(), 'active', $expiration );
+
+								// These must be retrieved after the status is set to active in order for upgrades to work properly
+								$payment_data['subscription']     = $member->get_subscription_name();
+								$payment_data['subscription_key'] = $member->get_subscription_key();
+								$payment_id                       = $rcp_payments->insert( $payment_data );
+
+								if ( $member->is_recurring() ) {
+									do_action( 'rcp_webhook_recurring_payment_processed', $member, $payment_id, $this );
+								}
+
 							}
 
+							do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
 							do_action( 'rcp_stripe_charge_succeeded', $user, $payment_data, $event );
 
 							die( 'rcp_stripe_charge_succeeded action fired successfully' );
 
-						} else {
+						} elseif ( ! empty( $payment_data['transaction_id'] ) && $rcp_payments->payment_exists( $payment_data['transaction_id'] ) ) {
+
+							do_action( 'rcp_ipn_duplicate_payment', $payment_data['transaction_id'], $member, $this );
 
 							die( 'duplicate payment found' );
 
@@ -575,6 +620,8 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					// failed payment
 					if ( $event->type == 'charge.failed' ) {
+
+						rcp_log( 'Processing Stripe charge.failed webhook.' );
 
 						$this->webhook_event_id = $event->id;
 
@@ -588,9 +635,13 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					// Cancelled / failed subscription
 					if( $event->type == 'customer.subscription.deleted' ) {
 
+						rcp_log( 'Processing Stripe customer.subscription.deleted webhook.' );
+
 						if( $payment_event->id == $member->get_merchant_subscription_id() ) {
 
 							$member->cancel();
+
+							do_action( 'rcp_webhook_cancel', $member, $this );
 
 							die( 'member cancelled successfully' );
 
@@ -600,17 +651,23 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 					do_action( 'rcp_stripe_' . $event->type, $payment_event, $event );
 
+				} else {
+					rcp_log( 'Exiting Stripe webhook - member not found.' );
 				}
 
 
 			} catch ( Exception $e ) {
 				// something failed
+				rcp_log( sprintf( 'Exiting Stripe webhook due to PHP exception: %s.', $e->getMessage() ) );
+
 				die( 'PHP exception: ' . $e->getMessage() );
 			}
 
 			die( '1' );
 
 		}
+
+		rcp_log( 'Exiting Stripe webhook - no event ID found.' );
 
 		die( 'no event ID found' );
 

@@ -170,12 +170,27 @@ function rcp_admin_notices() {
 				$text = __( 'Subscription level fields are required', 'rcp' );
 				$class = 'error';
 				break;
+
+			case 'level_deleted' :
+
+				$text = __( 'Subscription level deleted', 'rcp' );
+				break;
+
+			case 'level_activated' :
+
+				$text = __( 'Subscription level activated', 'rcp' );
+				break;
+
+			case 'level_deactivated' :
+
+				$text = __( 'Subscription level deactivated', 'rcp' );
+				break;
 		}
 	}
 
 	// Discount messages.
 	if( current_user_can( 'rcp_manage_discounts' ) ) {
-		switch( $message ) {
+		switch ( $message ) {
 			case 'discount_added' :
 
 				$text = __( 'Discount code created', 'rcp' );
@@ -183,14 +198,63 @@ function rcp_admin_notices() {
 
 			case 'discount_not_added' :
 
-				$text = __( 'The discount code could not be created due to an error', 'rcp' );
+				$text  = __( 'The discount code could not be created due to an error', 'rcp' );
 				$class = 'error';
+				break;
+
+			case 'discount_deleted' :
+
+				$text = __( 'Discount code successfully deleted', 'rcp' );
+				break;
+
+			case 'discount_activated' :
+
+				$text = __( 'Discount code activated', 'rcp' );
+				break;
+
+			case 'discount_deactivated' :
+
+				$text = __( 'Discount code deactivated', 'rcp' );
 				break;
 		}
 	}
 
-	if( $message ) {
-		echo '<div class="' . $class . '"><p>' . $text . '</p></div>';
+	// Post type restriction messages.
+	if( current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' ) ) {
+		switch ( $message ) {
+			case 'post-type-updated' :
+				$text = __( 'Post type restrictions updated.', 'rcp' );
+				break;
+		}
+	}
+
+	// Subscription reminder messages.
+	if( current_user_can( 'rcp_manage_settings' ) ) {
+		switch( $message ) {
+			case 'reminder_added' :
+
+				$text = __( 'Subscription reminder added', 'rcp' );
+				break;
+
+			case 'reminder_updated' :
+
+				$text = __( 'Subscription reminder updated', 'rcp' );
+				break;
+
+			case 'reminder_deleted' :
+
+				$text = __( 'Subscription reminder deleted', 'rcp' );
+				break;
+
+			case 'test_reminder_sent' :
+
+				$text = __( 'Test reminder sent successfully', 'rcp' );
+				break;
+		}
+
+		if( $message ) {
+			echo '<div class="' . $class . '"><p>' . $text . '</p></div>';
+		}
 	}
 }
 add_action( 'admin_notices', 'rcp_admin_notices' );

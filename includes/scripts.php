@@ -17,12 +17,16 @@
  */
 function rcp_admin_scripts( $hook ) {
 
-	global $rcp_options, $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_help_page, $rcp_tools_page, $rcp_logs_page;
-	$pages = array( $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_logs_page, $rcp_export_page, $rcp_tools_page, $rcp_help_page );
+	global $rcp_options, $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_help_page, $rcp_tools_page;
+	$pages = array( $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_tools_page, $rcp_help_page );
 
 	$pages[] = 'post.php';
 	$pages[] = 'post-new.php';
 	$pages[] = 'edit.php';
+
+	if( false !== strpos( $hook, 'rcp-restrict-post-type' ) ) {
+		$pages[] = $hook;
+	}
 
 	if( in_array( $hook, $pages ) ) {
 		wp_enqueue_script( 'jquery-ui-sortable' );
@@ -43,6 +47,7 @@ function rcp_admin_scripts( $hook ) {
 				'delete_subscription' => __( 'If you delete this subscription, all members registered with this level will be canceled. Proceed?', 'rcp' ),
 				'delete_payment'      => __( 'Are you sure you want to delete this payment? This action is irreversible. Proceed?', 'rcp' ),
 				'delete_discount'     => __( 'Are you sure you want to delete this discount? This action is irreversible. Proceed?', 'rcp' ),
+				'delete_reminder'     => __( 'Are you sure you want to delete this reminder email? This action is irreversible. Proceed?', 'rcp' ),
 				'missing_username'    => __( 'You must choose a username', 'rcp' ),
 				'currency_sign'       => rcp_currency_filter(''),
 				'currency_pos'        => isset( $rcp_options['currency_position'] ) ? $rcp_options['currency_position'] : 'before',
@@ -82,7 +87,7 @@ add_action( 'admin_head', 'rcp_admin_help_url' );
  * @return void
  */
 function rcp_admin_styles( $hook ) {
-	global $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_logs_page, $rcp_help_page, $rcp_tools_page, $rcp_add_ons_page;
+	global $rcp_members_page, $rcp_subscriptions_page, $rcp_discounts_page, $rcp_payments_page, $rcp_reports_page, $rcp_settings_page, $rcp_export_page, $rcp_help_page, $rcp_tools_page, $rcp_add_ons_page;
 	$pages = array(
 		$rcp_members_page,
 		$rcp_subscriptions_page,
@@ -91,7 +96,6 @@ function rcp_admin_styles( $hook ) {
 		$rcp_reports_page,
 		$rcp_settings_page,
 		$rcp_export_page,
-		$rcp_logs_page,
 		$rcp_help_page,
 		$rcp_tools_page,
         $rcp_add_ons_page,
@@ -99,6 +103,10 @@ function rcp_admin_styles( $hook ) {
 		'edit.php',
 		'post-new.php'
 	);
+
+	if( false !== strpos( $hook, 'rcp-restrict-post-type' ) ) {
+		$pages[] = $hook;
+	}
 
 	if( in_array( $hook, $pages ) ) {
 		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
@@ -174,7 +182,7 @@ function rcp_print_scripts() {
 			'user_has_trialed'   => is_user_logged_in() && rcp_has_used_trial(),
 			'trial_levels'       => rcp_get_trial_level_ids(),
 			'auto_renew_default' => isset( $rcp_options['auto_renew_checked_on'] ),
-			'recaptcha_enabled'  => isset( $rcp_options['enable_recaptcha'] ) ? true : false
+			'recaptcha_enabled'  => rcp_is_recaptcha_enabled()
 		)
 	);
 

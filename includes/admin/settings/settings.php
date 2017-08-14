@@ -1024,45 +1024,25 @@ function rcp_settings_page() {
 								</td>
 							</tr>
 							<tr valign="top">
-								<th colspan=2><h3><?php _e( 'Expiring Soon Email', 'rcp' ); ?></h3></th>
+								<th colspan="2"><h3><?php _e( 'Expiration Reminders', 'rcp' ); ?></h3></th>
 							</tr>
 							<tr valign="top">
 								<th>
-									<label for="rcp_settings[renewal_subject]"><?php _e( 'Subject', 'rcp' ); ?></label>
+									<?php _e( 'Subscription Expiration Reminders', 'rcp' ); ?>
 								</th>
 								<td>
-									<input class="regular-text" id="rcp_settings[renewal_subject]" style="width: 300px;" name="rcp_settings[renewal_subject]" value="<?php if( isset( $rcp_options['renewal_subject'] ) ) { echo $rcp_options['renewal_subject']; } ?>"/>
-									<p class="description"><?php _e( 'The subject line for the email sent to users before their subscription expires.', 'rcp' ); ?></p>
+									<?php rcp_subscription_reminder_table( 'expiration' ); ?>
 								</td>
 							</tr>
 							<tr valign="top">
-								<th>
-									<label for="rcp_settings[renew_notice_email]"><?php _e( 'Email Body', 'rcp' ); ?></label>
-								</th>
-								<td>
-									<?php
-									$renew_notice_email = isset( $rcp_options['renew_notice_email'] ) ? wptexturize( $rcp_options['renew_notice_email'] ) : '';
-									wp_editor( $renew_notice_email, 'rcp_settings_renew_notice_email', array( 'textarea_name' => 'rcp_settings[renew_notice_email]', 'teeny' => true ) );
-									?>
-									<p class="description"><?php _e( 'This is the email message that is sent to users before their subscription expires to encourage them to renew.', 'rcp' ); ?></p>
-								</td>
+								<th colspan="2"><h3><?php _e( 'Renewal Reminders', 'rcp' ); ?></h3></th>
 							</tr>
 							<tr valign="top">
 								<th>
-									<label for="rcp_settings[renewal_reminder_period]"><?php _e( 'Reminder Period', 'rcp' ); ?></label>
+									<?php _e( 'Subscription Renewal Reminders', 'rcp' ); ?>
 								</th>
 								<td>
-									<select id="rcp_settings[renewal_reminder_period]" name="rcp_settings[renewal_reminder_period]">
-										<?php
-										$periods = rcp_get_renewal_reminder_periods();
-										foreach ( $periods as $key => $period ) {
-										  	$option = '<option value="' . $key . '" ' . selected( $key, rcp_get_renewal_reminder_period(), false ) . '>' . $period . '</option>';
-											echo $option;
-										}
-
-										?>
-									</select>
-									<p class="description"><?php _e( 'When should the renewal reminder be sent? These are sent to members that do not have automatically recurring subscriptions.', 'rcp' ); ?></p>
+									<?php rcp_subscription_reminder_table( 'renewal' ); ?>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -1445,6 +1425,31 @@ function rcp_settings_page() {
 						</tr>
 						<tr valign="top">
 							<th>
+								<label for="rcp_settings[auto_add_users]"><?php _e( 'Auto Add Users to Level', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[auto_add_users]" id="rcp_settings[auto_add_users]" <?php if( isset( $rcp_options['auto_add_users'] ) ) checked('1', $rcp_options['auto_add_users']); ?>/>
+								<span class="description"><?php _e( 'Check this to automatically add new WordPress users to a subscription level. This only needs to be turned on if you\'re adding users manually or through some means other than the registration form. This does not automatically take payment so it\'s best used for free levels.', 'rcp' ); ?></span>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[auto_add_users_level]">&nbsp;&mdash;&nbsp;<?php _e( 'Subscription Level', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<select id="rcp_settings[auto_add_users_level]" name="rcp_settings[auto_add_users_level]">
+									<?php
+									$selected_level = isset( $rcp_options['auto_add_users_level'] ) ? $rcp_options['auto_add_users_level'] : '';
+									foreach( rcp_get_subscription_levels( 'all' ) as $key => $level ) :
+										echo '<option value="' . esc_attr( absint( $level->id ) ) . '"' . selected( $level->id, $selected_level, false ) . '>' . esc_html( $level->name ) . '</option>';
+									endforeach;
+									?>
+								</select>
+								<p class="description"><?php _e( 'New WordPress users will be automatically added to this subscription level if the above option is checked.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
 								<label for="rcp_settings[content_excerpts]"><?php _e( 'Content Excerpts', 'rcp' ); ?></label>
 							</th>
 							<td>
@@ -1527,6 +1532,15 @@ function rcp_settings_page() {
 							<td>
 								<input id="rcp_settings[recaptcha_private_key]" style="width: 300px;" name="rcp_settings[recaptcha_private_key]" type="text" value="<?php if( isset( $rcp_options['recaptcha_private_key'] ) ) echo $rcp_options['recaptcha_private_key']; ?>" />
 								<p class="description"><?php _e( 'This your own personal reCaptcha Secret key. Go to', 'rcp' ); ?> <a href="https://www.google.com/recaptcha/"><?php _e( 'your account', 'rcp' ); ?></a>, <?php _e( 'then click on your domain (or add a new one) to find your secret key.', 'rcp' ); ?></p>
+							</td>
+						</tr>
+						<tr valign="top">
+							<th>
+								<label for="rcp_settings[debug_mode]"><?php _e( 'Enable Debug Mode', 'rcp' ); ?></label>
+							</th>
+							<td>
+								<input type="checkbox" value="1" name="rcp_settings[debug_mode]" id="rcp_settings[debug_mode]" <?php checked( true, ! empty( $rcp_options['debug_mode'] ) ); ?>/>
+								<span class="description"><?php printf( __( 'Turn on error logging to help identify issues. Logs are kept in <a href="%s">Restrict > Tools</a>.', 'rcp' ), esc_url( admin_url( 'admin.php?page=rcp-tools' ) ) ); ?></span>
 							</td>
 						</tr>
 						<tr valign="top">
@@ -1762,6 +1776,12 @@ function rcp_check_license() {
 			'url'       => home_url()
 		);
 
+		// Send check-ins once per week.
+		$last_checked = get_option( 'rcp_last_checkin', false );
+		if( ! is_numeric( $last_checked ) || $last_checked < strtotime( '-1 week', current_time( 'timestamp' ) ) ) {
+			$api_params['site_data'] = rcp_get_site_tracking_data();
+		}
+
 		// Call the custom API.
 		$response = wp_remote_post( 'https://restrictcontentpro.com', array( 'timeout' => 35, 'sslverify' => false, 'body' => $api_params ) );
 
@@ -1777,6 +1797,10 @@ function rcp_check_license() {
 
 		set_transient( 'rcp_license_check', $license_data->license, DAY_IN_SECONDS );
 
+		if( ! empty( $api_params['site_data'] ) ) {
+			update_option( 'rcp_last_checkin', current_time( 'timestamp' ), false );
+		}
+
 		$status = $license_data->license;
 
 		if( 'valid' !== $status ) {
@@ -1789,6 +1813,81 @@ function rcp_check_license() {
 
 }
 add_action( 'admin_init', 'rcp_check_license' );
+
+/**
+ * Retrieves site data (plugin versions, etc.) to be sent along with the license check.
+ *
+ * @since 2.9
+ * @return array
+ */
+function rcp_get_site_tracking_data() {
+
+	global $rcp_options;
+
+	/**
+	 * @var RCP_Levels $rcp_levels_db
+	 */
+	global $rcp_levels_db;
+
+	/**
+	 * @var RCP_Payments $rcp_payments_db
+	 */
+	global $rcp_payments_db;
+
+	$data = array();
+
+	$theme_data = wp_get_theme();
+	$theme      = $theme_data->Name . ' ' . $theme_data->Version;
+
+	$data['php_version']  = phpversion();
+	$data['rcp_version']  = RCP_PLUGIN_VERSION;
+	$data['wp_version']   = get_bloginfo( 'version' );
+	$data['server']       = isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : '';
+	$data['install_date'] = get_post_field( 'post_date', $rcp_options['registration_page'] );
+	$data['multisite']    = is_multisite();
+	$data['url']          = home_url();
+	$data['theme']        = $theme;
+
+	// Retrieve current plugin information
+	if( ! function_exists( 'get_plugins' ) ) {
+		include ABSPATH . '/wp-admin/includes/plugin.php';
+	}
+
+	$plugins        = array_keys( get_plugins() );
+	$active_plugins = get_option( 'active_plugins', array() );
+
+	foreach ( $plugins as $key => $plugin ) {
+		if ( in_array( $plugin, $active_plugins ) ) {
+			// Remove active plugins from list so we can show active and inactive separately
+			unset( $plugins[ $key ] );
+		}
+	}
+
+	$enabled_gateways = array();
+	$gateways         = new RCP_Payment_Gateways;
+
+	foreach( $gateways->enabled_gateways  as $key => $gateway ) {
+		if( is_array( $gateway ) ) {
+			$enabled_gateways[ $key ] = $gateway['admin_label'];
+		}
+	}
+
+	$data['active_plugins']      = $active_plugins;
+	$data['inactive_plugins']    = $plugins;
+	$data['locale']              = get_locale();
+	$data['auto_renew']          = $rcp_options['auto_renew'];
+	$data['currency']            = $rcp_options['currency'];
+	$data['gateways']            = $enabled_gateways;
+	$data['active_members']      = rcp_get_member_count( 'active' );
+	$data['free_members']        = rcp_get_member_count( 'free' );
+	$data['expired_members']     = rcp_get_member_count( 'expired' );
+	$data['cancelled_members']   = rcp_get_member_count( 'cancelled' );
+	$data['subscription_levels'] = $rcp_levels_db->count();
+	$data['payments']            = $rcp_payments_db->count();
+
+	return $data;
+
+}
 
 
 /**

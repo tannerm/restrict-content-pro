@@ -136,6 +136,35 @@
 	text-align: center;
 }
 
+.rcp-delete {
+	color: red;
+}
+
+/* Reminder Emails
+-------------------------------------------------------------- */
+.rcp-email-reminders th {
+	font-size: 14px;
+	padding-left: 10px !important;
+}
+
+/* Input Fields
+-------------------------------------------------------------- */
+#rcp-name, #rcp-description, #rcp-code, #rcp-user, #rcp-userlogin, #rcp-email, #rcp-key, #rcp-payment-profile-id {
+	width: 300px;
+}
+
+#rcp-price, #rcp-fee, #rcp-amount {
+	width: 100px;
+}
+
+#rcp-duration, #trial_duration, #rcp-max-uses {
+	width: 40px;
+}
+
+#rcp-expiration {
+	width: 120px;
+}
+
 /* Restrict This Content Metabox
 -------------------------------------------------------------- */
 
@@ -288,6 +317,10 @@
 	display: inline-block;
 }
 
+.restrict_page_rcp-payments .total {
+	clear: both;
+}
+
 /* Error Logs
 -------------------------------------------------------------- */
 
@@ -326,6 +359,10 @@
 	height: 400px;
 	font-family: Menlo, Monaco, monospace;
 	white-space: pre;
+}
+
+#rcp-debug-log .button {
+	margin-right: 8px;
 }
 
 /* Tables

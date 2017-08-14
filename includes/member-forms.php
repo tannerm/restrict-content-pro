@@ -90,19 +90,21 @@ function rcp_lostpassword_checkemail_message() {
 /**
  * Display registration form fields
  *
- * @param null|int $id ID of the subscription, to use register-single.php, or null to use register.php.
+ * @param null|int $id   ID of the subscription, to use register-single.php, or null to use register.php.
+ * @param array    $atts Attributes passed to the shortcode.
  *
  * @return string
  */
-function rcp_registration_form_fields( $id = null ) {
+function rcp_registration_form_fields( $id = null, $atts = array() ) {
 
-	global $rcp_level;
+	global $rcp_level, $rcp_register_form_atts;
 
-	$rcp_level = $id;
+	$rcp_level              = $id;
+	$rcp_register_form_atts = $atts;
 
 	ob_start();
 
-	do_action( 'rcp_before_register_form', $id );
+	do_action( 'rcp_before_register_form', $id, $atts );
 
 	if( ! is_null( $id ) ) {
 
@@ -122,7 +124,7 @@ function rcp_registration_form_fields( $id = null ) {
 
 	}
 
-	do_action( 'rcp_after_register_form', $id );
+	do_action( 'rcp_after_register_form', $id, $atts );
 
 	return ob_get_clean();
 }

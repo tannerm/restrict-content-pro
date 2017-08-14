@@ -14,17 +14,17 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-global $rcp_options, $post, $rcp_levels_db;
+global $rcp_options, $post, $rcp_levels_db, $rcp_register_form_atts;
 $discount = ! empty( $_REQUEST['discount'] ) ? sanitize_text_field( $_REQUEST['discount'] ) : '';
 ?>
 
 <?php if( ! is_user_logged_in() ) { ?>
 	<h3 class="rcp_header">
-		<?php echo apply_filters( 'rcp_registration_header_logged_out', __( 'Register New Account', 'rcp' ) ); ?>
+		<?php echo apply_filters( 'rcp_registration_header_logged_out', $rcp_register_form_atts['logged_out_header'] ); ?>
 	</h3>
 <?php } else { ?>
 	<h3 class="rcp_header">
-		<?php echo apply_filters( 'rcp_registration_header_logged_in', __( 'Upgrade Your Subscription', 'rcp' ) ); ?>
+		<?php echo apply_filters( 'rcp_registration_header_logged_in', $rcp_register_form_atts['logged_in_header'] ); ?>
 	</h3>
 <?php }
 
@@ -36,7 +36,7 @@ rcp_show_error_messages( 'register' ); ?>
 	<?php if( ! is_user_logged_in() ) { ?>
 
 	<div class="rcp_login_link">
-		<p><?php printf( __( '<a href="%s">Log in</a> if you wish to renew an existing subscription.', 'rcp' ), rcp_get_login_url( rcp_get_current_url() ) ); ?></p>
+		<p><?php printf( __( '<a href="%s">Log in</a> if you wish to renew an existing subscription.', 'rcp' ), esc_url( rcp_get_login_url( rcp_get_current_url() ) ) ); ?></p>
 	</div>
 
 	<?php do_action( 'rcp_before_register_form_fields' ); ?>
@@ -75,7 +75,9 @@ rcp_show_error_messages( 'register' ); ?>
 	<?php do_action( 'rcp_before_subscription_form_fields' ); ?>
 
 	<fieldset class="rcp_subscription_fieldset">
-	<?php $levels = rcp_get_subscription_levels( 'active' );
+	<?php
+	$levels = rcp_get_subscription_levels( 'active' );
+	$i      = 0;
 	if( $levels ) : ?>
 		<p class="rcp_subscription_message"><?php echo apply_filters ( 'rcp_registration_choose_subscription', __( 'Choose your subscription level', 'rcp' ) ); ?></p>
 		<ul id="rcp_subscription_levels">
@@ -84,7 +86,7 @@ rcp_show_error_messages( 'register' ); ?>
 					$has_trial = $rcp_levels_db->has_trial( $level->id );
 				?>
 				<li class="rcp_subscription_level rcp_subscription_level_<?php echo $level->id; ?>">
-					<input type="radio" id="rcp_subscription_level_<?php echo $level->id; ?>" class="required rcp_level" <?php if ( $key == 0 || ( isset( $_GET['level'] ) && $_GET['level'] == $level->id ) ) { echo 'checked="checked"'; } ?> name="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>" value="<?php echo esc_attr( absint( $level->id ) ); ?>" <?php if( $level->duration == 0 ) { echo 'data-duration="forever"'; } if ( ! empty( $has_trial ) ) { echo 'data-has-trial="true"'; } ?>/>
+					<input type="radio" id="rcp_subscription_level_<?php echo $level->id; ?>" class="required rcp_level" <?php if ( $i == 0 || ( isset( $_GET['level'] ) && $_GET['level'] == $level->id ) ) { echo 'checked="checked"'; } ?> name="rcp_level" rel="<?php echo esc_attr( $level->price ); ?>" value="<?php echo esc_attr( absint( $level->id ) ); ?>" <?php if( $level->duration == 0 ) { echo 'data-duration="forever"'; } if ( ! empty( $has_trial ) ) { echo 'data-has-trial="true"'; } ?>/>
 					<label for="rcp_subscription_level_<?php echo $level->id; ?>">
 						<span class="rcp_subscription_level_name"><?php echo rcp_get_subscription_name( $level->id ); ?></span><span class="rcp_separator">&nbsp;-&nbsp;</span><span class="rcp_price" rel="<?php echo esc_attr( $level->price ); ?>"><?php echo $level->price > 0 ? rcp_currency_filter( $level->price ) : __( 'free', 'rcp' ); ?><span class="rcp_separator">&nbsp;-&nbsp;</span></span>
 						<span class="rcp_level_duration"><?php echo $level->duration > 0 ? $level->duration . '&nbsp;' . rcp_filter_duration_unit( $level->duration_unit, $level->duration ) : __( 'unlimited', 'rcp' ); ?></span>
@@ -92,7 +94,7 @@ rcp_show_error_messages( 'register' ); ?>
 					</label>
 
 				</li>
-				<?php endif; ?>
+				<?php $i++; endif; ?>
 			<?php endforeach; ?>
 		</ul>
 	<?php else : ?>
