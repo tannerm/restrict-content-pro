@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Restrict Content Pro 2.7\n"
 "Report-Msgid-Bugs-To: https://restrictcontentpro.com/support/\n"
-"POT-Creation-Date: 2017-07-25 14:19-0400\n"
+"POT-Creation-Date: 2017-08-14 09:54-0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -110,7 +110,7 @@ msgstr ""
 #: includes/gateways/class-rcp-payment-gateway-2checkout.php:159
 #: includes/gateways/class-rcp-payment-gateway-authorizenet.php:196
 #: includes/gateways/class-rcp-payment-gateway-authorizenet.php:203
-#: includes/gateways/class-rcp-payment-gateway-braintree.php:646
+#: includes/gateways/class-rcp-payment-gateway-braintree.php:680
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:128
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:145
 #: includes/gateways/class-rcp-payment-gateway-paypal-express.php:158
@@ -4685,56 +4685,56 @@ msgstr ""
 msgid "Subscription started in 2Checkout"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:239
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:257
 msgid "Subscription cancelled via refund 2Checkout"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:260
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:280
 msgid "Subscription renewed in 2Checkout"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:282
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:306
 msgid "Subscription cancelled in 2Checkout"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:298
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:326
 msgid "Subscription restarted in 2Checkout"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:313
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:343
 msgid "Payment flagged as fraudulent in 2Checkout"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:425
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:455
 #: includes/gateways/class-rcp-payment-gateway-authorizenet.php:53
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:253
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:755
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:777
 msgid "The security code you have entered is invalid"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:429
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:459
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:233
 msgid "The address you have entered is invalid"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:433
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:463
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:237
 msgid "The city you have entered is invalid"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:437
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:467
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:241
 msgid "The state you have entered is invalid"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:441
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:471
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:245
 msgid "The country you have entered is invalid"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-2checkout.php:445
+#: includes/gateways/class-rcp-payment-gateway-2checkout.php:475
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:257
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:759
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:781
 msgid "The zip / postal code you have entered is invalid"
 msgstr ""
 
@@ -4756,7 +4756,7 @@ msgstr ""
 msgid "Subscription started in Authorize.net"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-authorizenet.php:283
+#: includes/gateways/class-rcp-payment-gateway-authorizenet.php:299
 msgid "Subscription processed in Authorize.net"
 msgstr ""
 
@@ -4808,30 +4808,30 @@ msgstr ""
 msgid "Braintree Credit Card One Time"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-braintree.php:498
+#: includes/gateways/class-rcp-payment-gateway-braintree.php:518
 msgid "Subscription cancelled in Braintree"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-braintree.php:532
-#: includes/gateways/class-rcp-payment-gateway-braintree.php:611
+#: includes/gateways/class-rcp-payment-gateway-braintree.php:554
+#: includes/gateways/class-rcp-payment-gateway-braintree.php:642
 #, php-format
 msgid "Subscription %s started in Braintree"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-braintree.php:554
+#: includes/gateways/class-rcp-payment-gateway-braintree.php:576
 #, php-format
 msgid "Payment %s collected in Braintree"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-braintree.php:582
+#: includes/gateways/class-rcp-payment-gateway-braintree.php:608
 msgid "Subscription expired in Braintree"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-braintree.php:592
+#: includes/gateways/class-rcp-payment-gateway-braintree.php:621
 msgid "Trial ended in Braintree"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-braintree.php:625
+#: includes/gateways/class-rcp-payment-gateway-braintree.php:659
 msgid "Subscription went past due in Braintree"
 msgstr ""
 
@@ -4887,16 +4887,16 @@ msgstr ""
 msgid "An unexpected PayPal error occurred. Error message: %s."
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:471
-#: includes/gateways/class-rcp-payment-gateway-paypal.php:348
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:479
+#: includes/gateways/class-rcp-payment-gateway-paypal.php:359
 msgid "IPN report"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:536
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:550
 msgid "Initial payment failed in PayPal Express."
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:538
+#: includes/gateways/class-rcp-payment-gateway-paypal-express.php:552
 msgid "Initial payment failed."
 msgstr ""
 
@@ -4905,33 +4905,33 @@ msgid "PayPal subscription creation failed."
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:249
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:751
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:773
 msgid "The card number you have entered is invalid"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:261
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:763
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:785
 msgid "The card holder name you have entered is invalid"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:265
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:767
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:789
 msgid "The card expiration month you have entered is invalid"
 msgstr ""
 
 #: includes/gateways/class-rcp-payment-gateway-paypal-pro.php:269
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:771
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:793
 msgid "The card expiration year you have entered is invalid"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-paypal.php:300
+#: includes/gateways/class-rcp-payment-gateway-paypal.php:304
 #, php-format
 msgid ""
 "Incorrect amount received in the IPN. Amount received was %s. The amount should "
 "have been %s. PayPal Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-paypal.php:519
+#: includes/gateways/class-rcp-payment-gateway-paypal.php:545
 msgid "Invalid IPN"
 msgstr ""
 
@@ -4974,13 +4974,13 @@ msgstr ""
 msgid "Error code: %s"
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:775
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:797
 msgid ""
 "Missing Stripe test keys. Please enter your test keys to use Stripe in Sandbox "
 "Mode."
 msgstr ""
 
-#: includes/gateways/class-rcp-payment-gateway-stripe.php:779
+#: includes/gateways/class-rcp-payment-gateway-stripe.php:801
 msgid ""
 "Missing Stripe live keys. Please enter your live keys to use Stripe in Live Mode."
 msgstr ""
