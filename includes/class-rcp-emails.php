@@ -490,7 +490,7 @@ class RCP_Emails {
 			),
 			array(
 				'tag'         => 'member_id',
-				'description' => __( 'The members&#8217;s ID', 'rcp' ),
+				'description' => __( 'The member&#8217;s ID number', 'rcp' ),
 				'function'    => 'rcp_email_tag_member_id'
 			),
 			array(
