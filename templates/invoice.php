@@ -290,7 +290,7 @@ global $rcp_options, $rcp_payment, $rcp_member; ?>
 				<header><?php _e( 'Additional Info:', 'rcp' ); ?></header>
 
 				<article>
-					<p><?php echo __( 'Payment Date:', 'rcp' ) . ' ' . date( 'dS F, Y', strtotime( $rcp_payment->date, current_time( 'timestamp' ) ) ); ?></p>
+					<p><?php echo __( 'Payment Date:', 'rcp' ) . ' ' . date_i18n( 'dS F, Y', strtotime( $rcp_payment->date, current_time( 'timestamp' ) ) ); ?></p>
 				</article>
 
 				<?php if( ! empty( $rcp_options['invoice_notes'] ) ) : ?>
