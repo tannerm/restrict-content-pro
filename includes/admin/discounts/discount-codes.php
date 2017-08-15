@@ -86,7 +86,7 @@ function rcp_discounts_page() {
 									<?php if( current_user_can( 'rcp_manage_discounts' ) ) : ?>
 										<span class="id"><?php echo __( 'ID:', 'rcp' ) . ' ' . $code->id; ?></span>
 										<a href="<?php echo esc_url( add_query_arg( 'edit_discount', $code->id, $page ) ); ?>"><?php _e( 'Edit', 'rcp' ); ?></a> |
-										<?php if(rcp_get_discount_status($code->id) == 'active') { ?>
+										<?php if( $code->status === 'active' ) { ?>
 											<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'deactivate_discount', 'discount_id' => $code->id ), $page ), 'rcp-deactivate-discount' ) ); ?>"><?php _e( 'Deactivate', 'rcp' ); ?></a> |
 										<?php } else { ?>
 											<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'activate_discount', 'discount_id' => $code->id ), $page ), 'rcp-activate-discount' ) ); ?>"><?php _e( 'Activate', 'rcp' ); ?></a> |
@@ -112,7 +112,7 @@ function rcp_discounts_page() {
 							<td data-colname="<?php _e( 'Status', 'rcp' ); ?>">
 								<?php
 									if(rcp_is_discount_not_expired( $code->id ) ) {
-										echo rcp_get_discount_status( $code->id ) == 'active' ? __( 'active', 'rcp' ) : __( 'disabled', 'rcp' );
+										echo $code->status === 'active' ? __( 'active', 'rcp' ) : __( 'disabled', 'rcp' );
 									} else {
 										_e( 'expired', 'rcp' );
 									}
