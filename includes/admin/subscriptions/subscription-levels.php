@@ -227,7 +227,7 @@ function rcp_member_levels_page() {
 									<label for="rcp-price"><?php _e('Price', 'rcp'); ?></label>
 								</th>
 								<td>
-									<input type="text" id="rcp-price" name="price" value="0" pattern="^(\d+\.\d{2})|(\d+)$"/>
+									<input type="text" id="rcp-price" name="price" value="0" pattern="^(\d+\.\d{1,2})|(\d+)$"/>
 									<p class="description">
 										<?php _e('The price of this membership level. Enter 0 for free.', 'rcp'); ?>
 										<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php _e( 'This price refers to the amount paid per duration period. For example, if duration period is set to 1 month, this would be the amount charged each month.', 'rcp' ); ?>"></span>

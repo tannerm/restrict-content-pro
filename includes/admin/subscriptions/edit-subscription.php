@@ -94,7 +94,7 @@ $trial_duration_unit = in_array( $level->trial_duration_unit, array( 'day', 'mon
 					<label for="rcp-price"><?php _e( 'Price', 'rcp' ); ?></label>
 				</th>
 				<td>
-					<input type="text" id="rcp-price" name="price" value="<?php echo esc_attr( $level->price ); ?>" pattern="^(\d+\.\d{2})|(\d+)$"/>
+					<input type="text" id="rcp-price" name="price" value="<?php echo esc_attr( $level->price ); ?>" pattern="^(\d+\.\d{1,2})|(\d+)$"/>
 					<p class="description"><?php _e( 'The price of this membership level. Enter 0 for free.', 'rcp' ); ?></p>
 				</td>
 			</tr>
