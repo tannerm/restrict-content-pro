@@ -44,7 +44,7 @@
 		</p>
 		<p id="rcp_card_zip_wrap">
 			<label><?php _e( 'Card ZIP or Postal Code', 'rcp' ); ?></label>
-			<input type="text" size="4" name="rcp_card_zip" class="rcp_card_zip card-zip" />
+			<input type="text" size="10" name="rcp_card_zip" class="rcp_card_zip card-zip" />
 		</p>
 		<p id="rcp_card_name_wrap">
 			<label><?php _e( 'Name on Card', 'rcp' ); ?></label>
