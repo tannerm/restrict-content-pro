@@ -95,6 +95,7 @@
 
 #rcp_user_search_results {
 	position: absolute;
+	z-index: 10;
 }
 
 #rcp_user_search_results ul {
