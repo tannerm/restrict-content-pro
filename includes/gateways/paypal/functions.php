@@ -179,7 +179,7 @@ function rcp_paypal_update_billing_card( $member_id = 0, $member_obj ) {
 		} elseif ( 200 == $code && 'OK' == $message ) {
 
 			if( is_string( $body ) ) {
-				$body = wp_parse_str( $body, $body );
+				wp_parse_str( $body, $body );
 			}
 
 			if ( 'failure' === strtolower( $body['ACK'] ) ) {
