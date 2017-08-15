@@ -1206,7 +1206,10 @@ function rcp_add_user_to_subscription( $user_id, $args = array() ) {
 	 */
 
 	// Set join date for this subscription.
-	$member->set_joined_date( '', $subscription_level->id );
+	$joined_date = $member->get_joined_date( $args['subscription_id'] );
+	if ( empty( $joined_date ) ) {
+		$member->set_joined_date( '', $subscription_level->id );
+	}
 
 	// Recurring.
 	$member->set_recurring( $args['recurring'] );
