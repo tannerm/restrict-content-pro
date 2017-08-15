@@ -750,7 +750,11 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 						var client = new braintree.api.Client({clientToken: token});
 						client.tokenizeCard({
 							number: rcp_form.querySelector("[data-braintree-name='number']").value,
-							expirationDate: rcp_form.querySelector("[data-braintree-name='expiration_month']").value + '/' + rcp_form.querySelector("[data-braintree-name='expiration_year']").value
+							expirationDate: rcp_form.querySelector("[data-braintree-name='expiration_month']").value + '/' + rcp_form.querySelector("[data-braintree-name='expiration_year']").value,
+							cvv: rcp_form.querySelector("[data-braintree-name='cvv']").value,
+							billingAddress: {
+								postalCode: rcp_form.querySelector("[data-braintree-name='postal_code']").value
+							}
 						}, function (err, nonce) {
 							rcp_form.querySelector("[name='payment_method_nonce']").value = nonce;
 							rcp_form.submit();
