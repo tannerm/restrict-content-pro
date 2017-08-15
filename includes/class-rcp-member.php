@@ -173,6 +173,9 @@ class RCP_Member extends WP_User {
 
 			}
 
+		} else {
+			// If update_user_meta() fails for some reason.
+			$note = sprintf( __( 'Member\'s expiration date failed to be updated to %s', 'rcp' ), $new_date );
 		}
 
 		$this->add_note( $note );
