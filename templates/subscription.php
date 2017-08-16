@@ -13,9 +13,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
-global $user_ID, $rcp_options, $rcp_load_css;
-
-$rcp_load_css = true;
+global $user_ID, $rcp_options;
 
 do_action( 'rcp_subscription_details_top' );
 
