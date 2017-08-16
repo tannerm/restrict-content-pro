@@ -452,7 +452,9 @@ function rcp_user_subscription_details( $atts, $content = null ) {
 		'option' => ''
 	), $atts, 'subscription_details' );
 
-	global $user_ID, $rcp_options;
+	global $user_ID, $rcp_options, $rcp_load_css;
+
+	$rcp_load_css = true;
 
 	ob_start();
 
