@@ -289,7 +289,7 @@ class RCP_Member extends WP_User {
 	public function set_joined_date( $date = '', $subscription_id = 0 ) {
 
 		if( empty( $date ) ) {
-			$date = date( 'Y-m-d H:i:s' );
+			$date = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) );
 		}
 
 		if( empty( $subscription_id ) ) {
