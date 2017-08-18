@@ -390,7 +390,7 @@ function rcp_email_payment_received( $payment_id ) {
 	rcp_log( sprintf( 'Payment Received email sent to user #%d.', $user_info->ID ) );
 
 }
-add_action( 'rcp_update_payment_status_complete', 'rcp_email_payment_received' );
+add_action( 'rcp_update_payment_status_complete', 'rcp_email_payment_received', 100 );
 
 /**
  * Emails a member when a renewal payment fails.
