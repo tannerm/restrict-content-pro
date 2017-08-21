@@ -795,7 +795,8 @@ class RCP_Payments {
 		$args = wp_parse_args( $args, $defaults );
 
 		$cache_args = $args;
-		$cache_args['date'] = implode( ',', $args['date'] );
+		$cache_args['user_id'] = is_array( $args['user_id'] ) ? implode( ',', $args['user_id'] ) : $args['user_id'];
+		$cache_args['date']    = implode( ',', $args['date'] );
 		$cache_key = md5( implode( ',', $cache_args ) );
 
 		$where = ' WHERE 1=1 ';
