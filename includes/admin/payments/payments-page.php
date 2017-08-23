@@ -166,6 +166,7 @@ function rcp_payments_page() {
 											<span class="view rcp-member-payments"><a href="<?php echo esc_url( add_query_arg( 'user_id', $payment->user_id, menu_page_url( 'rcp-payments', false ) ) ); ?>" title="<?php esc_attr_e( 'View all payments by this user', 'rcp' ); ?>"><?php _e( 'Member Payments', 'rcp' ); ?></a></span>
 											<span class="rcp-row-action-separator"> | </span>
 										<?php endif; ?>
+										<?php do_action( 'rcp_payments_page_table_row_actions', $payment ); ?>
 										<span class="id"><?php echo __( 'ID:', 'rcp' ) . ' ' . absint( $payment->id ); ?></span>
 									<?php endif; ?>
 								</div>
