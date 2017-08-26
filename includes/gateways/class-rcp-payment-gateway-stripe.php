@@ -237,7 +237,44 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 				$member->set_merchant_subscription_id( $subscription->id );
 
-				// subscription payments are recorded via webhook
+				// Complete payment and activate account.
+
+				$payment_data = array(
+					'payment_type'   => 'Credit Card',
+					'transaction_id' => '',
+					'status'         => 'complete'
+				);
+
+				if ( $this->is_trial() ) {
+
+					// Free trials use the subscription ID as the payment transaction ID.
+					$payment_data['transaction_id'] = $subscription->id;
+
+				} else {
+
+					// Try to get the invoice from the subscription we just added so we can add the transaction ID to the payment.
+					$invoices = \Stripe\Invoice::all( array(
+						'subscription' => $subscription->id,
+						'limit'        => 1
+					) );
+
+					if ( is_array( $invoices->data ) && isset( $invoices->data[0] ) ) {
+						$invoice = $invoices->data[0];
+
+						// We only want the transaction ID if it's actually been paid. If not, we'll let the webhook handle it.
+						if ( true === $invoice->paid ) {
+							$payment_data['transaction_id'] = $invoice->id;
+						}
+					}
+
+				}
+
+				// Only complete the payment if we have a transaction ID. If we don't, the webhook will complete the payment.
+				if ( ! empty( $payment_data['transaction_id'] ) ) {
+					$rcp_payments_db->update( $this->payment->id, $payment_data );
+
+					do_action( 'rcp_gateway_payment_processed', $member, $this->payment->id, $this );
+				}
 
 				$paid = true;
 
@@ -383,13 +420,6 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 				// log the new user in
 				rcp_login_user_in( $this->user_id, $this->user_name, $_POST['rcp_user_pass'] );
 
-			}
-
-			if ( $this->auto_renew ) {
-				$member->set_expiration_date( date( 'Y-m-d 23:59:59', $subscription->current_period_end ) );
-				$member->set_subscription_id( $this->subscription_id );
-				$member->set_subscription_key( $this->subscription_key );
-				$member->set_status( 'active' );
 			}
 
 			do_action( 'rcp_stripe_signup', $this->user_id, $this );
