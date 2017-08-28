@@ -481,7 +481,8 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 
 		/* now process the kind of subscription/payment */
 
-		$rcp_payments = new RCP_Payments();
+		$rcp_payments       = new RCP_Payments();
+		$pending_payment_id = $member->get_pending_payment_id();
 
 		// Subscriptions
 		switch ( $posted['txn_type'] ) :
@@ -507,10 +508,22 @@ class RCP_Payment_Gateway_PayPal_Express extends RCP_Payment_Gateway {
 				$payment_data['amount']         = number_format( (float) $posted['initial_payment_amount'], 2 );
 				$payment_data['transaction_id'] = sanitize_text_field( $transaction_id );
 
-				$payment_id = $rcp_payments->insert( $payment_data );
+				if ( ! empty( $pending_payment_id ) ) {
 
-				$expiration = date( 'Y-m-d 23:59:59', strtotime( $posted['next_payment_date'] ) );
-				$member->renew( $member->is_recurring(), 'active', $expiration );
+					$payment_id = $pending_payment_id;
+					$member->set_recurring( true );
+
+					// This activates the membership.
+					$rcp_payments->update( $pending_payment_id, $payment_data );
+
+				} else {
+
+					$payment_id = $rcp_payments->insert( $payment_data );
+
+					$expiration = date( 'Y-m-d 23:59:59', strtotime( $posted['next_payment_date'] ) );
+					$member->renew( $member->is_recurring(), 'active', $expiration );
+
+				}
 
 				do_action( 'rcp_webhook_recurring_payment_profile_created', $member, $this );
 				do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
