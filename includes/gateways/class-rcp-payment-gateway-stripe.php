@@ -263,7 +263,7 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 
 						// We only want the transaction ID if it's actually been paid. If not, we'll let the webhook handle it.
 						if ( true === $invoice->paid ) {
-							$payment_data['transaction_id'] = $invoice->id;
+							$payment_data['transaction_id'] = $invoice->charge;
 						}
 					}
 
