@@ -117,6 +117,8 @@ function rcp_process_edit_member() {
 		wp_update_user( array( 'ID' => $user_id, 'user_email' => $email ) );
 	}
 
+	do_action( 'rcp_edit_member', $user_id );
+
 	rcp_log( sprintf( '%s finished editing member #%d.', $current_user->user_login, $user_id ) );
 
 	wp_safe_redirect( admin_url( 'admin.php?page=rcp-members&edit_member=' . $user_id . '&rcp_message=user_updated' ) );
