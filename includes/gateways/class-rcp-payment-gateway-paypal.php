@@ -505,10 +505,25 @@ class RCP_Payment_Gateway_PayPal extends RCP_Payment_Gateway {
 								}
 							}
 
-							// set this user to active
-							$member->renew();
+							if ( ! empty( $pending_payment_id ) ) {
 
-							$payment_id = $rcp_payments->insert( $payment_data );
+								// Complete the pending payment.
+
+								$member->set_recurring( false );
+
+								// This activates the membership.
+								$rcp_payments->update( $pending_payment_id, $payment_data );
+
+								$payment_id = $pending_payment_id;
+
+							} else {
+
+								// Renew the account.
+								$member->renew();
+
+								$payment_id = $rcp_payments->insert( $payment_data );
+
+							}
 
 							do_action( 'rcp_gateway_payment_processed', $member, $payment_id, $this );
 
