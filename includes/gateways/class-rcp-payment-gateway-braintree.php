@@ -145,6 +145,15 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 				// Customer lookup/creation failed
 				$this->handle_processing_error( $e );
 			}
+		} else {
+
+			/**
+			 * Re-save the user's payment profile ID even if the customer already existed.
+			 * This ensures we override any old IDs that might have been set from another gateway.
+			 * @link https://github.com/restrictcontentpro/restrict-content-pro/issues/1308
+			 */
+			$member->set_payment_profile_id( $payment_profile_id );
+
 		}
 
 		if ( empty( $customer ) ) {
