@@ -29,7 +29,7 @@ $rcp_options = get_option( 'rcp_settings' );
 if( isset( $rcp_options['remove_data_on_uninstall'] ) ) {
 
 	// Delete all post meta.
-	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE 'rcp\_%'" );
+	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key LIKE 'rcp\_%' OR meta_key = '_is_paid'" );
 
 	// Delete all term meta.
 	$wpdb->query( "DELETE FROM $wpdb->termmeta WHERE meta_key = 'rcp_restricted_meta'" );
