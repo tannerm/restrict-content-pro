@@ -370,6 +370,14 @@ function rcp_email_payment_received( $payment_id ) {
 		return;
 	}
 
+	// Don't send an email if payment amount is 0.
+	$amount = (float) $payment->amount;
+	if ( empty( $amount ) ) {
+		rcp_log( sprintf( 'Payment Received email not sent to user #%d - payment amount is 0.', $user_info->ID ) );
+
+		return;
+	}
+
 	$payment = (array) $payment;
 
 	$message = ! empty( $rcp_options['payment_received_email'] ) ? $rcp_options['payment_received_email'] : false;
