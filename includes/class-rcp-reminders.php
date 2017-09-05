@@ -366,7 +366,16 @@ Your subscription for %subscription_name% will renew on %expiration%.';
 
 		}
 
-		//$args = apply_filters( 'rcp_reminder_subscription_args', $args, $period, $type );
+		/**
+		 * Filters the WP_User_Query arguments for getting relevant subscriptions.
+		 *
+		 * @param array  $args   Query arguments.
+		 * @param string $period Reminder period.
+		 * @param string $type   Type of notice to get the subscriptions for (renewal or expiration).
+		 *
+		 * @since 2.9.2
+		 */
+		$args = apply_filters( 'rcp_reminder_subscription_args', $args, $period, $type );
 
 		$subscriptions = get_users( $args );
 
