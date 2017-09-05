@@ -34,6 +34,9 @@ $subscription = rcp_get_subscription_details( $payment->object_id );
 			<td>
 				<input type="text" name="user" autocomplete="off" id="rcp-user" class="regular-text rcp-user-search" value="<?php echo is_object( $user ) ? esc_attr( $user->user_login ) : ''; ?>"/>
 				<img class="rcp-ajax waiting" src="<?php echo admin_url( 'images/wpspin_light.gif' ); ?>" style="display: none;"/>
+				<?php if ( is_object( $user ) ) : ?>
+					<a href="<?php echo esc_url( add_query_arg( 'edit_member', $user->ID, admin_url( 'admin.php?page=rcp-members' ) ) ); ?>"><?php _e( 'Edit Member', 'rcp' ); ?></a>
+				<?php endif; ?>
 				<div id="rcp_user_search_results"></div>
 				<p class="description"><?php _e( 'The user name this payment belongs to.', 'rcp' ); ?></p>
 			</td>
