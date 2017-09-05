@@ -1341,7 +1341,7 @@ function rcp_generate_verification_link( $user_id ) {
 
 	$verify_link = add_query_arg( array(
 		'rcp-verify-key' => urlencode( get_user_meta( $user_id, 'rcp_pending_email_verification', true ) ),
-		'rcp-user'       => urlencode( $user->user_email )
+		'rcp-user'       => urlencode( $user->ID )
 	), trailingslashit( home_url() ) );
 
 	return apply_filters( 'rcp_email_verification_link', $verify_link, $user );
@@ -1360,7 +1360,7 @@ function rcp_confirm_email_verification() {
 		return;
 	}
 
-	if ( ! $user = get_user_by( 'email', rawurldecode( $_GET['rcp-user'] ) ) ) {
+	if ( ! $user = get_user_by( 'id', rawurldecode( $_GET['rcp-user'] ) ) ) {
 		return;
 	}
 
