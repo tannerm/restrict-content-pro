@@ -112,6 +112,10 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
+								<?php if ( ! empty( $rcp_options['registration_page'] ) ) : ?>
+									<a href="<?php echo esc_url( get_edit_post_link( $rcp_options['registration_page'] ) ); ?>" class="button-secondary"><?php _e( 'Edit Page', 'rcp' ); ?></a>
+									<a href="<?php echo esc_url( get_permalink( $rcp_options['registration_page'] ) ); ?>" class="button-secondary"><?php _e( 'View Page', 'rcp' ); ?></a>
+								<?php endif; ?>
 								<p class="description"><?php printf( __( 'Choose the primary registration page. This must contain the [register_form] short code. Additional registration forms may be added to other pages with [register_form id="x"]. <a href="%s" target="_blank">See documentation</a>.', 'rcp' ), 'http://docs.restrictcontentpro.com/article/1597-registerform' ); ?></p>
 							</td>
 						</tr>
@@ -135,6 +139,10 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
+								<?php if ( ! empty( $rcp_options['redirect'] ) ) : ?>
+									<a href="<?php echo esc_url( get_edit_post_link( $rcp_options['redirect'] ) ); ?>" class="button-secondary"><?php _e( 'Edit Page', 'rcp' ); ?></a>
+									<a href="<?php echo esc_url( get_permalink( $rcp_options['redirect'] ) ); ?>" class="button-secondary"><?php _e( 'View Page', 'rcp' ); ?></a>
+								<?php endif; ?>
 								<p class="description"><?php _e( 'This is the page users are redirected to after a successful registration.', 'rcp' ); ?></p>
 							</td>
 						</tr>
@@ -159,6 +167,10 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
+								<?php if ( ! empty( $rcp_options['account_page'] ) ) : ?>
+									<a href="<?php echo esc_url( get_edit_post_link( $rcp_options['account_page'] ) ); ?>" class="button-secondary"><?php _e( 'Edit Page', 'rcp' ); ?></a>
+									<a href="<?php echo esc_url( get_permalink( $rcp_options['account_page'] ) ); ?>" class="button-secondary"><?php _e( 'View Page', 'rcp' ); ?></a>
+								<?php endif; ?>
 								<p class="description"><?php printf( __( 'This page displays the account and membership information for members. Contains <a href="%s" target="_blank">[subscription_details] short code</a>.', 'rcp' ), 'http://docs.restrictcontentpro.com/article/1600-subscriptiondetails' ); ?></p>
 							</td>
 						</tr>
@@ -183,6 +195,10 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
+								<?php if ( ! empty( $rcp_options['edit_profile'] ) ) : ?>
+									<a href="<?php echo esc_url( get_edit_post_link( $rcp_options['edit_profile'] ) ); ?>" class="button-secondary"><?php _e( 'Edit Page', 'rcp' ); ?></a>
+									<a href="<?php echo esc_url( get_permalink( $rcp_options['edit_profile'] ) ); ?>" class="button-secondary"><?php _e( 'View Page', 'rcp' ); ?></a>
+								<?php endif; ?>
 								<p class="description"><?php printf( __( 'This page displays a profile edit form for logged-in members. Contains <a href="%s" target="_blank">[rcp_profile_editor] shortcode.', 'rcp' ), 'http://docs.restrictcontentpro.com/article/1602-rcpprofileeditor' ); ?></p>
 							</td>
 						</tr>
@@ -207,6 +223,10 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
+								<?php if ( ! empty( $rcp_options['update_card'] ) ) : ?>
+									<a href="<?php echo esc_url( get_edit_post_link( $rcp_options['update_card'] ) ); ?>" class="button-secondary"><?php _e( 'Edit Page', 'rcp' ); ?></a>
+									<a href="<?php echo esc_url( get_permalink( $rcp_options['update_card'] ) ); ?>" class="button-secondary"><?php _e( 'View Page', 'rcp' ); ?></a>
+								<?php endif; ?>
 								<p class="description"><?php printf( __( 'This page displays a profile edit form for logged-in members. Contains <a href="%s" target="_blank">[rcp_update_card] short code</a>.', 'rcp' ), 'http://docs.restrictcontentpro.com/article/1608-rcpupdatecard' ); ?></p>
 							</td>
 						</tr>
@@ -1389,6 +1409,10 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
+								<?php if ( ! empty( $rcp_options['redirect_from_premium'] ) ) : ?>
+									<a href="<?php echo esc_url( get_edit_post_link( $rcp_options['redirect_from_premium'] ) ); ?>" class="button-secondary"><?php _e( 'Edit Page', 'rcp' ); ?></a>
+									<a href="<?php echo esc_url( get_permalink( $rcp_options['redirect_from_premium'] ) ); ?>" class="button-secondary"><?php _e( 'View Page', 'rcp' ); ?></a>
+								<?php endif; ?>
 								<p class="description"><?php _e( 'This is the page non-subscribed users are redirected to when attempting to access a premium post or page.', 'rcp' ); ?></p>
 							</td>
 						</tr>
@@ -1420,6 +1444,10 @@ function rcp_settings_page() {
 									endif;
 									?>
 								</select>
+								<?php if ( ! empty( $rcp_options['login_redirect'] ) ) : ?>
+									<a href="<?php echo esc_url( get_edit_post_link( $rcp_options['login_redirect'] ) ); ?>" class="button-secondary"><?php _e( 'Edit Page', 'rcp' ); ?></a>
+									<a href="<?php echo esc_url( get_permalink( $rcp_options['login_redirect'] ) ); ?>" class="button-secondary"><?php _e( 'View Page', 'rcp' ); ?></a>
+								<?php endif; ?>
 								<p class="description"><?php _e( 'This is the page the default login URL redirects to, if the option above is checked. This should be the page that contains the [login_form] short code.', 'rcp' ); ?></p>
 							</td>
 						</tr>
