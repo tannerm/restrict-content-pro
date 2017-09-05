@@ -37,7 +37,7 @@ function rcp_render_members_tab_content( $id ) {
 				<li><?php _e( 'Activate / Deactivate the subscription of any registered user', 'rcp' ); ?></li>
 				<li><?php _e( 'Add new subscriptions to pre-existing users', 'rcp' ); ?></li>
 			</ul>
-			<p><?php printf( __( 'You can also enter a username or email address in the search box to locate a specific member. To search by first or last name, prefix your search with one of the following: %s, %s', 'rcp' ), '<code>first_name:</code>', '<code>last_name:</code>' ); ?></p>
+			<p><?php printf( __( 'You can also enter a username or email address in the search box to locate a specific member. To search by first or last name, prefix your search with one of the following: %s, %s To search by payment profile ID, prefix your search with: %s', 'rcp' ), '<code>first_name:</code>', '<code>last_name:</code>', '<code>payment_profile:</code>' ); ?></p>
 			<?php
 			break;
 		case 'adding_subs' :
