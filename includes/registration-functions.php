@@ -289,6 +289,8 @@ function rcp_process_registration() {
 	// process a free or trial subscription
 	} else {
 
+		$member->set_recurring( false );
+
 		// Complete payment. This also activates the membership.
 		$rcp_payments->update( $payment_id, array( 'status' => 'complete' ) );
 
