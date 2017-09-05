@@ -1133,7 +1133,7 @@ function rcp_add_user_to_subscription( $user_id, $args = array() ) {
 	if ( empty( $expiration ) ) {
 		$force_now = $args['recurring'];
 
-		if ( ! $force_now && $member->get_subscription_id() != $subscription_level->id ) {
+		if ( ! $force_now && $old_subscription_id != $subscription_level->id ) {
 			$force_now = true;
 		}
 

@@ -41,15 +41,10 @@ class RCP_Payment_Gateway_Manual extends RCP_Payment_Gateway {
 
 		$member = new RCP_Member( $this->user_id );
 
-		$old_level = get_user_meta( $member->ID, '_rcp_old_subscription_id', true );
-		if ( ! empty( $old_level ) && $old_level == $this->subscription_id ) {
-			$expiration = $member->calculate_expiration();
-		} else {
-			delete_user_meta( $member->ID, 'rcp_pending_expiration_date' );
-			$expiration = $member->calculate_expiration( true );
-		}
-
-		$member->renew( false, 'pending', $expiration );
+		/**
+		 * Subscription activation is handled when the pending payment is manually updated to "Complete".
+		 * @see rcp_complete_registration()
+		 */
 
 		// Update payment record with transaction ID.
 		$rcp_payments_db->update( $this->payment->id, array(
