@@ -650,13 +650,17 @@ class RCP_Payment_Gateway_Stripe extends RCP_Payment_Gateway {
 					}
 
 					// failed payment
-					if ( $event->type == 'charge.failed' ) {
+					if ( $event->type == 'invoice.payment_failed' ) {
 
-						rcp_log( 'Processing Stripe charge.failed webhook.' );
+						rcp_log( 'Processing Stripe invoice.payment_failed webhook.' );
 
 						$this->webhook_event_id = $event->id;
 
-						do_action( 'rcp_recurring_payment_failed', $member, $this );
+						// Make sure this invoice is tied to a subscription and is the user's current subscription.
+						if ( ! empty( $event->object->subscription ) && $event->object->subscription == $member->get_merchant_subscription_id() ) {
+							do_action( 'rcp_recurring_payment_failed', $member, $this );
+						}
+
 						do_action( 'rcp_stripe_charge_failed', $payment_event, $event, $member );
 
 						die( 'rcp_stripe_charge_failed action fired successfully' );
