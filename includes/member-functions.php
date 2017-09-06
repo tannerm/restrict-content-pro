@@ -436,6 +436,12 @@ function rcp_user_can_access( $user_id = 0, $post_id = 0 ) {
 
 	if( empty( $post_id ) ) {
 		global $post;
+
+		// If we can't find a global $post object, assume the user can access the page.
+		if ( ! is_a( $post, 'WP_Post' ) ) {
+			return true;
+		}
+
 		$post_id = $post->ID;
 	}
 
