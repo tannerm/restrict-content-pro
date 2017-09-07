@@ -387,6 +387,13 @@ function rcp_clear_auth_cookie() {
 
 	$already_logged_in = get_transient( 'rcp_user_logged_in_' . $user_id );
 
+	if ( is_serialized( $already_logged_in ) ) {
+		preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $already_logged_in, $matches );
+		if ( ! empty( $matches ) ) {
+			$already_logged_in = false;
+		}
+	}
+
 	if( $already_logged_in !== false ) :
 
 		$data = maybe_unserialize( $already_logged_in );
@@ -428,6 +435,13 @@ function rcp_can_user_be_logged_in() {
 		$user_id = get_current_user_id();
 
 		$already_logged_in = get_transient( 'rcp_user_logged_in_' . $user_id );
+
+		if ( is_serialized( $already_logged_in ) ) {
+			preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $already_logged_in, $matches );
+			if ( ! empty( $matches ) ) {
+				$already_logged_in = false;
+			}
+		}
 
 		if( $already_logged_in !== false ) {
 
