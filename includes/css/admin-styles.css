@@ -233,8 +233,9 @@
 	margin: 0;
 }
 
-.rcp-member-id {
+.rcp-id-col {
 	color: #555;
+	white-space: nowrap;
 }
 
 #rcp-revoke-access-wrap {
@@ -250,18 +251,6 @@
 
 .rcp-sub-order-col {
 	width: 50px;
-}
-
-.rcp_delete_subscription {
-	color: red;
-}
-
-.rcp_delete_subscription:hover {
-	color: red;
-}
-
-.rcp_delete_subscription:focus {
-	color: red;
 }
 
 /* Discount Codes Page Columns

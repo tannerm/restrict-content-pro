@@ -84,14 +84,14 @@ function rcp_discounts_page() {
 								<strong><a href="<?php echo esc_url( add_query_arg( 'edit_discount', $code->id, $page ) ); ?>"><?php echo stripslashes( $code->name ); ?></a></strong>
 								<div class="row-actions">
 									<?php if( current_user_can( 'rcp_manage_discounts' ) ) : ?>
-										<span class="id"><?php echo __( 'ID:', 'rcp' ) . ' ' . $code->id; ?></span>
 										<a href="<?php echo esc_url( add_query_arg( 'edit_discount', $code->id, $page ) ); ?>"><?php _e( 'Edit', 'rcp' ); ?></a> |
 										<?php if( $code->status === 'active' ) { ?>
 											<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'deactivate_discount', 'discount_id' => $code->id ), $page ), 'rcp-deactivate-discount' ) ); ?>"><?php _e( 'Deactivate', 'rcp' ); ?></a> |
 										<?php } else { ?>
 											<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'activate_discount', 'discount_id' => $code->id ), $page ), 'rcp-activate-discount' ) ); ?>"><?php _e( 'Activate', 'rcp' ); ?></a> |
 										<?php } ?>
-										<span class="trash"><a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'delete_discount_code', 'discount_id' => $code->id ), $page ), 'rcp-delete-discount' ) ); ?>" class="rcp_delete_discount"><?php _e( 'Delete', 'rcp' ); ?></a></span>
+										<span class="trash"><a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'delete_discount_code', 'discount_id' => $code->id ), $page ), 'rcp-delete-discount' ) ); ?>" class="rcp_delete_discount"><?php _e( 'Delete', 'rcp' ); ?></a></span> |
+										<span class="id rcp-id-col"><?php echo __( 'ID:', 'rcp' ) . ' ' . $code->id; ?></span>
 									<?php endif; ?>
 								</div>
 								<button type="button" class="toggle-row"><span class="screen-reader-text"><?php _e( 'Show more details', 'rcp' ); ?></span></button>

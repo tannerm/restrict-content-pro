@@ -79,14 +79,14 @@ function rcp_member_levels_page() {
 								<strong><a href="<?php echo esc_url( add_query_arg( 'edit_subscription', $level->id, $page ) ); ?>"><?php echo stripslashes( $level->name ); ?></a></strong>
 								<?php if( current_user_can( 'rcp_manage_levels' ) ) : ?>
 									<div class="row-actions">
-										<span class="rcp-sub-id-col" data-colname="<?php esc_attr_e( 'ID:', 'rcp' ); ?>"> <?php echo __( 'ID:', 'rcp' ) . ' ' . $level->id; ?> | </span>
 										<a href="<?php echo esc_url( add_query_arg('edit_subscription', $level->id, $page) ); ?>"><?php _e('Edit', 'rcp'); ?></a> |
 										<?php if($level->status != 'inactive') { ?>
 											<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'deactivate_subscription', 'level_id' => $level->id ), $page ), 'rcp-deactivate-subscription-level' ) ); ?>"><?php _e('Deactivate', 'rcp'); ?></a> |
 										<?php } else { ?>
 											<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'activate_subscription', 'level_id' => $level->id ), $page ), 'rcp-activate-subscription-level' ) ); ?>"><?php _e('Activate', 'rcp'); ?></a> |
 										<?php } ?>
-										<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'delete_subscription', 'level_id' => $level->id ), $page ), 'rcp-delete-subscription-level' ) ); ?>" class="rcp_delete_subscription"><?php _e('Delete', 'rcp'); ?></a>
+										<span class="trash"><a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'rcp-action' => 'delete_subscription', 'level_id' => $level->id ), $page ), 'rcp-delete-subscription-level' ) ); ?>" class="rcp_delete_subscription"><?php _e('Delete', 'rcp'); ?></a></span> |
+										<span class="rcp-sub-id-col rcp-id-col" data-colname="<?php esc_attr_e( 'ID:', 'rcp' ); ?>"> <?php echo __( 'ID:', 'rcp' ) . ' ' . $level->id; ?></span>
 									</div>
 								<?php endif; ?>
 								<button type="button" class="toggle-row"><span class="screen-reader-text"><?php _e( 'Show more details', 'rcp' ); ?></span></button>

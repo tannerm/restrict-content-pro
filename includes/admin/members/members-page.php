@@ -221,7 +221,7 @@ function rcp_members_page() {
 												<span> | <a href="<?php echo wp_nonce_url( add_query_arg( array( 'rcp-action' => 'send_verification', 'member_id' => $member->ID ), $current_page ), 'rcp-verification-nonce' ); ?>" class="rcp_send_verification"><?php _e( 'Re-send Verification', 'rcp' ); ?></a></span>
 											<?php endif; ?>
 											<span class="rcp-separator"> | </span>
-											<span class="id rcp-member-id"><?php echo __( 'ID:', 'rcp' ) . ' ' . $member->ID; ?></span>
+											<span class="id rcp-member-id rcp-id-col"><?php echo __( 'ID:', 'rcp' ) . ' ' . $member->ID; ?></span>
 											<?php do_action( 'rcp_member_row_actions', $member->ID ); ?>
 										</div>
 									<?php endif; ?>

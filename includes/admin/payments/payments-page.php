@@ -167,7 +167,7 @@ function rcp_payments_page() {
 											<span class="rcp-row-action-separator"> | </span>
 										<?php endif; ?>
 										<?php do_action( 'rcp_payments_page_table_row_actions', $payment ); ?>
-										<span class="id"><?php echo __( 'ID:', 'rcp' ) . ' ' . absint( $payment->id ); ?></span>
+										<span class="id rcp-id-col"><?php echo __( 'ID:', 'rcp' ) . ' ' . absint( $payment->id ); ?></span>
 									<?php endif; ?>
 								</div>
 								<button type="button" class="toggle-row"><span class="screen-reader-text"><?php _e( 'Show more details', 'rcp' ); ?></span></button>
