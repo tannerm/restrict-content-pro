@@ -1400,7 +1400,7 @@ function rcp_confirm_email_verification() {
 		return;
 	}
 
-	wp_safe_redirect( $redirect );
+	wp_safe_redirect( apply_filters( 'rcp_verification_redirect_url', $redirect, $member ) );
 	exit;
 
 }
