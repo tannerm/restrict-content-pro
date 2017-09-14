@@ -1900,6 +1900,9 @@ function rcp_get_site_tracking_data() {
 		}
 	}
 
+	$plugins_str = implode( ',', $plugins );
+	$upgraded    = strpos( $plugins_str, 'restrictcontent.php' );
+
 	$data['active_plugins']      = $active_plugins;
 	$data['inactive_plugins']    = $plugins;
 	$data['locale']              = get_locale();
@@ -1912,6 +1915,7 @@ function rcp_get_site_tracking_data() {
 	$data['cancelled_members']   = rcp_get_member_count( 'cancelled' );
 	$data['subscription_levels'] = $rcp_levels_db->count();
 	$data['payments']            = $rcp_payments_db->count();
+	$data['upgraded_to_pro']     = ! empty( $upgraded );
 
 	return $data;
 
