@@ -1900,7 +1900,7 @@ function rcp_get_site_tracking_data() {
 		}
 	}
 
-	$plugins_str = implode( ',', $plugins );
+	$plugins_str = implode( ',', array_keys( get_plugins() ) );
 	$upgraded    = strpos( $plugins_str, 'restrictcontent.php' );
 
 	$data['active_plugins']      = $active_plugins;
