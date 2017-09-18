@@ -748,6 +748,18 @@ class RCP_Payment_Gateway_Braintree extends RCP_Payment_Gateway {
 					return;
 				}
 
+                // Get the subscription price
+                if( $('.rcp_level:checked').length ) {
+                    var price = $('.rcp_level:checked').closest('.rcp_subscription_level').find('span.rcp_price').attr('rel');
+                } else {
+                    var price = $('.rcp_level').attr('rel');
+                }
+
+                // Bail if this is a free subscription.
+                if ( ! price > 0 || $('.rcp_gateway_fields').hasClass('rcp_discounted_100') ) {
+                    return;
+				}
+
 				event.preventDefault();
 
 				var token = rcp_form.querySelector('#rcp-braintree-client-token').value;
