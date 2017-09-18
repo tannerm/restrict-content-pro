@@ -489,6 +489,11 @@ class RCP_Emails {
 				'function'    => 'rcp_email_tag_invoice_url'
 			),
 			array(
+				'tag'         => 'discount_code',
+				'description' => __( 'The discount code that was used with the most recent payment', 'rcp' ),
+				'function'    => 'rcp_email_tag_discount_code'
+			),
+			array(
 				'tag'         => 'member_id',
 				'description' => __( 'The member&#8217;s ID number', 'rcp' ),
 				'function'    => 'rcp_email_tag_member_id'
