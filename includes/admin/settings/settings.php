@@ -815,7 +815,7 @@ function rcp_settings_page() {
 										<option value="free" <?php selected( $verify, 'free' ); ?>><?php _e( 'On for free subscription levels', 'rcp' ); ?></option>
 										<option value="all" <?php selected( $verify, 'all' ); ?>><?php _e( 'On for all subscription levels', 'rcp' ); ?></option>
 									</select>
-									<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'A free subscription level is one with a 0 price in the level settings. It does not include registrations that have been made free with a discount code.', 'rcp' ); ?>"></span>
+									<span alt="f223" class="rcp-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'If "On for free subscription levels" is chosen, memberships with a 0 price in the level settings will require email verification. This does not include registrations that have been made free with a discount code or credits.', 'rcp' ); ?>"></span>
 									<p class="description"><?php _e( 'Require that new members verify their email address before gaining access to restricted content.', 'rcp' ); ?></p>
 								</td>
 							</tr>
