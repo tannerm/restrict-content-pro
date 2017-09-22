@@ -78,14 +78,7 @@ class RCP_Emails {
 	 * @since 2.7
 	 */
 	private $member_id;
-
-	/**
-	 * Payment ID
-	 *
-	 * @since 2.7
-	 */
-	private $payment_id;
-
+	
 	/**
 	 * Container for storing all tags
 	 *
