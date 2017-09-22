@@ -202,6 +202,9 @@ function rcp_process_registration() {
 	delete_user_meta( $user_data['id'], 'rcp_pending_subscription_level' );
 	delete_user_meta( $user_data['id'], 'rcp_pending_subscription_key' );
 
+	// Backwards compatibility pre-2.9: set pending subscription key.
+	update_user_meta( $user_data['id'], 'rcp_pending_subscription_key', $subscription_key );
+
 	// Create a pending payment
 	$amount = ( ! empty( $trial_duration ) && ! rcp_has_used_trial() ) ? 0.00 : rcp_get_registration()->get_total();
 	$payment_data = array(
