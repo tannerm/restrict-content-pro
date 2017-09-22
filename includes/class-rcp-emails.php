@@ -78,14 +78,7 @@ class RCP_Emails {
 	 * @since 2.7
 	 */
 	private $member_id;
-
-	/**
-	 * Payment ID
-	 *
-	 * @since 2.7
-	 */
-	private $payment_id;
-
+	
 	/**
 	 * Container for storing all tags
 	 *
@@ -298,22 +291,6 @@ class RCP_Emails {
 		}
 
 		$this->setup_email_tags();
-
-		if ( empty( $this->payment_id ) ) {
-
-			global $rcp_payments_db;
-
-			$payment = $rcp_payments_db->get_payments( array(
-				'user_id' => $this->member_id,
-				'order'   => 'DESC',
-				'number'  => 1
-			) );
-
-			$payment = reset( $payment );
-
-			$this->payment_id = ! empty( $payment ) && is_object( $payment ) ? $payment->id : 0;
-
-		}
 
 		/**
 		 * Hooks before email is sent
