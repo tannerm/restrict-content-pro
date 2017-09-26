@@ -244,6 +244,11 @@ function rcp_process_registration() {
 
 		if( ! empty( $discount ) && $full_discount ) {
 
+			// Cancel existing subscription.
+			if ( $member->can_cancel() ) {
+				$member->cancel_payment_profile( false );
+			}
+
 			// Full discount with auto renew should never expire.
 			if ( '2' != rcp_get_auto_renew_behavior() ) {
 				update_user_meta( $user_data['id'], 'rcp_pending_expiration_date', 'none' );
@@ -300,6 +305,11 @@ function rcp_process_registration() {
 
 	// process a free or trial subscription
 	} else {
+
+		// Cancel existing subscription.
+		if ( $member->can_cancel() ) {
+			$member->cancel_payment_profile( false );
+		}
 
 		$member->set_recurring( false );
 
